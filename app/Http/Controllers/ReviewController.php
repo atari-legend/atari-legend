@@ -34,7 +34,24 @@ class ReviewController extends Controller
 
     public function show(\App\Review $review)
     {
+        $otherReviews = collect([]);
+
+        if (isset($review->user)) {
+            $otherReviews = $review->user->reviews
+                ->reject(function ($value, $key) use ($review) {
+                    return $value->review_id === $review->review_id;
+                })
+                ->sort(function ($a, $b) {
+                    return strcmp(
+                        $a->games->first->get()->game_name,
+                        $b->games->first->get()->game_name);
+                });
+        }
+
         return view('reviews.show')
-            ->with(["review" => $review]);
+            ->with([
+                "review" => $review,
+                "otherReviews" => $otherReviews
+            ]);
     }
 }

@@ -24,7 +24,7 @@
     </div>
     <div class="card-body p-2 bg-darklight">
 
-        <h6>Score</h6>
+        <strong>Score</strong>
 
         <ul class="list-unstyled">
             <li>Graphics: {{ $review->score->review_graphics }}</li>

@@ -13,10 +13,6 @@ class HomeController extends Controller
             ->sortByDesc("news_date")
             ->take(6);
 
-        $reviews = \App\Review::all()
-            ->sortByDesc("review_date")
-            ->take(3);
-
         $triviaQuote = \App\TriviaQuote::all()
             ->random();
 
@@ -29,7 +25,6 @@ class HomeController extends Controller
 
         return view('home.index')->with([
             "news" => $news,
-            "reviews" => $reviews,
             "triviaQuote" => $triviaQuote,
             "triviaImages" => $triviaImages,
             "spotlight" => $spotlight,

@@ -12,7 +12,7 @@ class ScreenshotReview extends Model
 
     public function screenshot()
     {
-        return $this->hasOne(Screenshot::class, "screenshot_id");
+        return $this->belongsTo(Screenshot::class, "screenshot_id");
     }
 
     public function comment()

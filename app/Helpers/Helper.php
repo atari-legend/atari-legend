@@ -47,6 +47,8 @@ class Helper
 
         $builder = new \JBBCode\CodeDefinitionBuilder('frontpage', '{param}');
         $parser->addCodeDefinition($builder->build());
+        $builder = new \JBBCode\CodeDefinitionBuilder('screenstar', '{param}');
+        $parser->addCodeDefinition($builder->build());
 
         $parser->parse($bbCode);
         return $parser->getAsHtml();

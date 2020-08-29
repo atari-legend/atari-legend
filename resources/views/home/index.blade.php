@@ -20,7 +20,7 @@
                 @include('home.card_stats')
             </div>
             <div class="col">
-                @include('home.card_reviews')
+                <x-cards.reviews />
                 <x-cards.a-l-mobile />
                 <x-cards.about />
             </div>
