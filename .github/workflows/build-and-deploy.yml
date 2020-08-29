@@ -23,6 +23,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
+      - name: PHP Lint
+        run: ./vendor/bin/phplint ./ --exclude=vendor
+
       - name: Run tests
         run: php artisan test
 
