@@ -1,0 +1,64 @@
+name: Build
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Run tests
+        run: php artisan test
+
+      - name: Cache node_modules/
+        uses: actions/cache@v2
+        env:
+            cache-name: cache-node-modules
+        with:
+          path: node_modules/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-#
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2-beta
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Build frontend assets
+        run: npm run prod
+
+      - name: Production optimizations
+        # if: github.ref == 'refs/heads/master'
+        run: |
+          composer dump-autoload
+          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --optimize-autoloader
+          php artisan config:cache
+          echo "DISABLED FOR NOW: php artisan route:cache"
+          php artisan view:cache
+
+      - name: Deploy
+        # if: github.ref == 'refs/heads/master'
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "${{ secrets.PROD_DEPLOY_PATH }}"
