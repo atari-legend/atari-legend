@@ -1,0 +1,27 @@
+@use "sass:color";
+
+.card {
+    border-top: solid 10px $primary;
+    border-bottom: solid 3px $primary;
+}
+
+.card-header {
+    border-bottom: solid 2px $black;
+
+    h2 {
+        margin-top: 0.5rem;
+    }
+
+    a {
+        text-decoration: none;
+        color: $white;
+
+        &:hover {
+            color: $link-hover-color;
+        }
+    }
+}
+
+.card-body img {
+    border: solid 1px color.scale($primary, $lightness: -40%);
+}

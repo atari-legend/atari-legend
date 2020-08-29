@@ -1,0 +1,21 @@
+@use "sass:color";
+
+$fa-font-path: "../webfonts";
+
+$body-bg: #000;
+$body-color: #fff;
+
+$primary: #00d3d3;
+$dark: #122323;
+// $dark-light: color.scale($dark, $lightness: 5%);
+$dark-light: #0d2e2e;
+
+$border-width: 0;
+
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+
+$line-height-base: 1.25 !default;
+$line-height-sm: 1 !default;
+$line-height-lg: 1.5 !default;

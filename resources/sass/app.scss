@@ -1,0 +1,19 @@
+// Fonts
+@import 'font';
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Font Awesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+
+@import 'common';
+@import 'forms';
+@import 'cards';
+@import 'home/carousel';
+@import 'home/news';

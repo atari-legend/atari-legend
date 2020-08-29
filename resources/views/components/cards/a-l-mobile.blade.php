@@ -1,0 +1,22 @@
+<div class="card bg-dark mb-4">
+    <div class="card-header text-center">
+        <h2 class="text-uppercase">AL Mobile</h2>
+    </div>
+    <div class="card-body p-0">
+        <img class="w-100" src="{{ asset('img/cards/ALmobile.png') }}">
+        <p class="card-text p-2">
+           Did you know Atari Legend is fully responsive and mobile ready?
+           You want this site to behave like an app on your phone or tablet?
+           Simply open the site in your favorite browser and look for the
+           'Add to homescreen' button. In Safari on IOS, first press the
+           <a href="{{ asset('img/cards/ios1.jpg') }}">'share'</a>
+           icon, than <a href="{{ asset('img/cards/ios2.jpg') }}">this</a> pop
+           up appears. In Chrome on Android, you press the
+           <a href="{{ asset('img/cards/android1.png') }}">button</a> at the top
+           right, and select <a href="{{ asset('img/cards/android2.png') }}">
+           'add to homescreen'</a>. Once you have done this, the famous Atari bee
+           fits nicely on your homescreen and you can enjoy AL with the tap of a
+           finger.
+        </p>
+    </div>
+</div>

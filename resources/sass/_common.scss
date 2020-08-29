@@ -1,0 +1,34 @@
+h1,
+h2 {
+    font-family: Audiowide, $font-family-sans-serif;
+}
+
+h2 {
+    font-size: $font-size-base * 1.5;
+}
+
+.bg-darklight {
+    background: $dark-light;
+}
+
+.striped {
+    > div {
+        border-bottom: solid 1px $black;
+
+        &:nth-child(even) {
+            background: $dark;
+        }
+        &:nth-child(odd) {
+            background: $dark-light;
+        }
+    }
+}
+
+footer {
+    background-image: url('../../public/img/footer_bg.jpg');
+    height: 120px;
+
+    font-family: Audiowide, $font-family-sans-serif;
+
+    border-top: solid 10px $primary;
+}
