@@ -4,7 +4,7 @@
 set -eu
 
 RSYNC_FLAGS=(
-    -alvvzn
+    -alvvz
     # Delete all unknown files, except the ones excluded below
     --delete
     # Do not sync environment file
@@ -31,3 +31,14 @@ mkdir -p ~/.ssh/
 ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 
 rsync ${RSYNC_FLAGS[@]} . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+
+# Create link to production data folder, if it does not already exist
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../data public"
+
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan storage:link"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan config:cache"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan view:cache"
+
+# Cannot use below yet as we still have closure based routes
+# ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan route:cache"
+# ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan optimize"

@@ -51,16 +51,19 @@ jobs:
         run: npm run prod
 
       - name: Production optimizations
-        # if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
+        # Clear all caches, they will be rebuilt on the host
         run: |
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan optimize:clear
+          php artisan route:clear
+          php artisan view:clear
           composer dump-autoload
           composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --optimize-autoloader
-          php artisan config:cache
-          echo "DISABLED FOR NOW: php artisan route:cache"
-          php artisan view:cache
 
       - name: Deploy
-        # if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
