@@ -4,7 +4,7 @@
     </div>
     <div class="card-body p-0">
         @if (isset($interview->individual->text->file))
-        <img class="w-100" src="{{ asset('public/images/individual_screenshots/'.$interview->individual->text->file) }}">
+        <img class="w-100" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}">
         @endif
         <div class="p-2">
             <p class="card-text">

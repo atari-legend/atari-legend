@@ -15,7 +15,7 @@
             <div class="col-3 pl-2 text-center text-muted">
                 @foreach ($review->screenshots as $screenshot)
                     <div class="bg-dark">
-                        <img class="w-100 " src="{{ asset('public/images/game_screenshots/'.$screenshot->screenshot->file) }}">
+                        <img class="w-100 " src="{{ asset('storage/images/game_screenshots/'.$screenshot->screenshot->file) }}">
                         <p class="pb-5 mb-0">{{ $screenshot->comment->comment_text }}</p>
                     </div>
                 @endforeach
