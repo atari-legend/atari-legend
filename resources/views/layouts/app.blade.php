@@ -42,10 +42,45 @@
                         <a class="nav-link {{ Request::routeIs('about.*') ? 'active' : '' }}" href="{{ route('about.index') }}">About</a>
                     </li>
                 </ul>
-                <form class="d-flex">
+                <form class="d-flex mr-3">
                     <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-dark" type="submit"><i class="fas fa-search"></i></button>
                 </form>
+                <ul class="navbar-nav">
+                    @auth
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="user-menu" role="button" data-toggle="dropdown" aria-expanded="false">
+                            @if (Auth::user()->avatar_ext)
+                                <img class="rounded-circle mr-1" height="30" src="{{ asset('storage/images/user_avatars/'.Auth::user()->user_id.'.'.Auth::user()->avatar_ext) }}">
+                            @endif
+                            {{ Auth::user()->userid }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="user-menu">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li>
+                                <a class="dropdown-item"
+                                    href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Log out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endauth
+                    @guest
+                        <li class="nav-item">
+                            <a class="text-dark nav-link {{ Request::routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">Log-in</a>
+                        </li>
+                        @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="text-dark nav-link {{ Request::routeIs('register') ? 'active' : '' }}" href="{{ route('register') }}">Register</a>
+                        </li>
+                        @endif
+                    @endguest
+                </ul>
             </div>
         </div>
     </nav>
@@ -64,22 +99,6 @@
             </a>
         </p>
     </footer>
-
-    <div>
-        @if (Route::has('login'))
-        <div class="top-right links">
-            @auth
-            <a href="{{ url('/home') }}">Home</a>
-            @else
-            <a href="{{ route('login') }}">Login</a>
-
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}">Register</a>
-            @endif
-            @endauth
-        </div>
-        @endif
-    </div>
 
     <script src="{{ mix('js/app.js') }}"></script>
 </body>

@@ -23,3 +23,5 @@ Route::resource('/interviews', 'InterviewController')->only(['index', 'show']);
 Route::resource('/articles', 'ArticleController')->only(['index']);
 Route::resource('/links', 'LinkController')->only(['index']);
 Route::resource('/about', 'AboutController')->only(['index']);
+
+Auth::routes();
