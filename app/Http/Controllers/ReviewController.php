@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\GameComment;
+use App\Review;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -44,7 +47,8 @@ class ReviewController extends Controller
                 ->sort(function ($a, $b) {
                     return strcmp(
                         $a->games->first->get()->game_name,
-                        $b->games->first->get()->game_name);
+                        $b->games->first->get()->game_name
+                    );
                 });
         }
 
@@ -53,5 +57,17 @@ class ReviewController extends Controller
                 "review" => $review,
                 "otherReviews" => $otherReviews
             ]);
+    }
+
+    function postComment(Review $review, Request $request)
+    {
+        $comment = new GameComment;
+        $comment->comment = $request->comment;
+        $comment->timestamp = time();
+
+        Auth::user()->comments()->save($comment);
+        $review->comments()->save($comment);
+
+        return back();
     }
 }

@@ -29,4 +29,9 @@ class Review extends Model
     {
         return $this->hasOne(ReviewScore::class, "review_id");
     }
+
+    public function comments()
+    {
+        return $this->belongsToMany(GameComment::class, "review_user_comments", "review_id", "comment_id");
+    }
 }

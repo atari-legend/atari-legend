@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +21,7 @@ Route::get('/games', 'GameController@index')->name('games.index');
 Route::get('/games/search', 'GameController@search');
 Route::get('/games/{game}', 'GameController@show')->name('games.show');
 Route::resource('/reviews', 'ReviewController')->only(['index', 'show']);
+Route::post('/reviews/{review}/comment', 'ReviewController@postComment')->name('review.comment');
 Route::resource('/interviews', 'InterviewController')->only(['index', 'show']);
 Route::resource('/articles', 'ArticleController')->only(['index']);
 Route::resource('/links', 'LinkController')->only(['index']);
