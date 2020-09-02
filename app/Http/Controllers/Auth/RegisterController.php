@@ -79,7 +79,7 @@ class RegisterController extends Controller
             'user_af' => $data['af'],
             'permission' => User::PERMISSION_USER,
             'join_date' => time(),
-            'inactive' => 1,
+            'inactive' => 0,    // FIXME: Implement email verification
         ]);
     }
 }

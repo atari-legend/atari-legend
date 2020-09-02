@@ -89,6 +89,8 @@
         @yield('content')
     </div>
 
+    @include('layouts/online_users')
+
     <footer class="container-fluid text-center">
         <img class="mt-4 mb-1" src="{{ asset('img/footer_logo.png') }}" />
         <p>
