@@ -40,16 +40,9 @@ class ReviewController extends Controller
         $otherReviews = collect([]);
 
         if (isset($review->user)) {
-            $otherReviews = $review->user->reviews
-                ->reject(function ($value, $key) use ($review) {
-                    return $value->review_id === $review->review_id;
-                })
-                ->sort(function ($a, $b) {
-                    return strcmp(
-                        $a->games->first->get()->game_name,
-                        $b->games->first->get()->game_name
-                    );
-                });
+            $otherReviews = Review::where('user_id', $review->user->user_id)
+                ->where('review_id', '!=', $review->review_id)
+                ->get();
         }
 
         return view('reviews.show')
