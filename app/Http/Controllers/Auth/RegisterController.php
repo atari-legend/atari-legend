@@ -50,7 +50,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'userid' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -64,10 +64,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
+        $sha512Password = hash('sha512', $data['password']);
+        $hashedPassword = hash('sha512', $sha512Password . $salt);
+
         return User::create([
-            'name' => $data['name'],
+            'userid' => $data['userid'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'sha512_password' => $hashedPassword,
+            'salt' => $salt,
+            'user_website' => $data['website'],
+            'user_fb' => $data['facebook'],
+            'user_twitter' => $data['twitter'],
+            'user_af' => $data['af'],
+            'permission' => User::PERMISSION_USER,
+            'join_date' => time(),
+            'inactive' => 1,
         ]);
     }
 }
