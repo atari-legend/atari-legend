@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
-class InterviewController extends Controller {
+use App\Interview;
 
-    public function index() {
-        return view('interviews.index');
+class InterviewController extends Controller
+{
+
+    public function index()
+    {
+        $interviews = Interview::select()
+            ->join('interview_text', 'interview_text.interview_id', '=', 'interview_main.interview_id')
+            ->orderBy('interview_text.interview_date')
+            ->paginate(5);
+
+        return view('interviews.index')
+            ->with(['interviews' => $interviews]);
     }
-
 }

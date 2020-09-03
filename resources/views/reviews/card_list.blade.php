@@ -44,7 +44,7 @@
                             {{ $review->games()->get()->first()->game_name}}
                         </a>
                     </h3>
-                    <h6 class="card-subtitle text-muted">{{ date('F j, Y', $review->review_date) }} by {{ Helper::user($review->user) }}</h6>
+                    <h6 class="card-subtitle text-muted mb-2">{{ date('F j, Y', $review->review_date) }} by {{ Helper::user($review->user) }}</h6>
                     {!! Helper::bbCode(Helper::extractTag($review->review_text, "frontpage")) !!}<br>
                     <a class="d-block text-right" href="{{ route('reviews.show', ['review' => $review]) }}">
                         More <i class="fas fa-chevron-right"></i>
