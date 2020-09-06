@@ -20,10 +20,9 @@ class Interview extends Model
         return $this->belongsTo(Individual::class, "ind_id");
     }
 
-    public function text()
+    public function texts()
     {
-        // FIXME: The DB structure actually allows many
-        return $this->hasOne(InterviewText::class, "interview_text_id");
+        return $this->hasMany(InterviewText::class, "interview_id");
     }
 
     public function screenshots()

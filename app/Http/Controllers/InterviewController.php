@@ -11,7 +11,7 @@ class InterviewController extends Controller
     {
         $interviews = Interview::select()
             ->join('interview_text', 'interview_text.interview_id', '=', 'interview_main.interview_id')
-            ->orderBy('interview_text.interview_date')
+            ->orderByDesc('interview_text.interview_date')
             ->paginate(5);
 
         return view('interviews.index')
