@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Genre extends Model
 {
-    protected $table = "game_genre";
+    protected $table = 'game_genre';
     public $timestamps = false;
 }

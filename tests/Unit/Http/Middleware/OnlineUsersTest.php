@@ -9,13 +9,12 @@ use Tests\TestCase;
 
 class OnlineUsersTest extends TestCase
 {
-
     use RefreshDatabase;
 
     public function testNoUsers()
     {
-        $request = new Request;
-        $middleware = new OnlineUsers;
+        $request = new Request();
+        $middleware = new OnlineUsers();
 
         $middleware->handle($request, function ($req) {
             $this->assertTrue($req->attributes->get('onlineUsers')->isEmpty());
@@ -23,13 +22,12 @@ class OnlineUsersTest extends TestCase
         });
     }
 
-
     public function testUsers()
     {
         $user = factory(\App\User::class)->create();
 
-        $request = new Request;
-        $middleware = new OnlineUsers;
+        $request = new Request();
+        $middleware = new OnlineUsers();
 
         $middleware->handle($request, function ($req) use ($user) {
             $this->assertEquals(1, $req->attributes->get('onlineUsers')->count());

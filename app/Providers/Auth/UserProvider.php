@@ -7,15 +7,14 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class UserProvider extends EloquentUserProvider
 {
-
     /**
-     * Validate the credentials
+     * Validate the credentials.
      *
      * Unfortunately the DB is using a byzantine scheme for credentials that
      * we have to respect for now.
      *
-     * @param Authenticatable $user User attempting authentication
-     * @param array $credentials User credentials
+     * @param Authenticatable $user        User attempting authentication
+     * @param array           $credentials User credentials
      *
      * @return true if the user is authenticated, false otherwise
      */
@@ -26,7 +25,7 @@ class UserProvider extends EloquentUserProvider
         // not needed anymore
         $sha512Password = hash('sha512', $credentials['password']);
         // Then hash it again, with the user salt from the database
-        $hashedPassword = hash('sha512', $sha512Password . $user->salt);
+        $hashedPassword = hash('sha512', $sha512Password.$user->salt);
 
         return $user->inactive === 0 && $user->sha512_password === $hashedPassword;
     }

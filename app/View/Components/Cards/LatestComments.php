@@ -25,11 +25,11 @@ class LatestComments extends Component
     {
         $comments = \App\GameComment::select()
             ->join('game_user_comments', 'comments_id', '=', 'game_user_comments.comment_id')
-            ->orderBy("timestamp", "desc")
+            ->orderBy('timestamp', 'desc')
             ->limit(10)
             ->get();
 
         return view('components.cards.latest-comments')
-            ->with(["comments" => $comments,]);
+            ->with(['comments' => $comments]);
     }
 }

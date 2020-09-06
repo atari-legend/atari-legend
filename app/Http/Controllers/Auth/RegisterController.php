@@ -44,14 +44,15 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'userid' => ['required', 'string', 'max:255', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'userid'   => ['required', 'string', 'max:255', 'unique:users'],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -59,27 +60,28 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \App\User
      */
     protected function create(array $data)
     {
         $salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
         $sha512Password = hash('sha512', $data['password']);
-        $hashedPassword = hash('sha512', $sha512Password . $salt);
+        $hashedPassword = hash('sha512', $sha512Password.$salt);
 
         return User::create([
-            'userid' => $data['userid'],
-            'email' => $data['email'],
+            'userid'          => $data['userid'],
+            'email'           => $data['email'],
             'sha512_password' => $hashedPassword,
-            'salt' => $salt,
-            'user_website' => $data['website'],
-            'user_fb' => $data['facebook'],
-            'user_twitter' => $data['twitter'],
-            'user_af' => $data['af'],
-            'permission' => User::PERMISSION_USER,
-            'join_date' => time(),
-            'inactive' => 0,    // FIXME: Implement email verification
+            'salt'            => $salt,
+            'user_website'    => $data['website'],
+            'user_fb'         => $data['facebook'],
+            'user_twitter'    => $data['twitter'],
+            'user_af'         => $data['af'],
+            'permission'      => User::PERMISSION_USER,
+            'join_date'       => time(),
+            'inactive'        => 0,    // FIXME: Implement email verification
         ]);
     }
 }

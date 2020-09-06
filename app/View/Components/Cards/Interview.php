@@ -27,6 +27,6 @@ class Interview extends Component
             ->random();
 
         return view('components.cards.interview')
-            ->with(["interview" => $interview,]);
+            ->with(['interview' => $interview]);
     }
 }

@@ -25,7 +25,8 @@ class Trivia extends Component
     {
         $trivia = \App\Trivia::all()
             ->random();
+
         return view('components.cards.trivia')
-            ->with(["trivia" => $trivia,]);
+            ->with(['trivia' => $trivia]);
     }
 }

@@ -10,41 +10,40 @@ class HelperExtractTagTest extends TestCase
     public function testExtractNoTag()
     {
         $this->assertEquals(
-            "No tag there",
-            Helper::extractTag("No tag there", "tag")
+            'No tag there',
+            Helper::extractTag('No tag there', 'tag')
         );
     }
 
     public function testExtractTag()
     {
         $this->assertEquals(
-            "a tag",
-            Helper::extractTag("There is [tag]a tag[/tag] here", "tag")
+            'a tag',
+            Helper::extractTag('There is [tag]a tag[/tag] here', 'tag')
         );
     }
 
     public function testExtractPartialTag()
     {
         $this->assertEquals(
-            "There is a partial [tag] here",
-            Helper::extractTag("There is a partial [tag] here", "tag")
+            'There is a partial [tag] here',
+            Helper::extractTag('There is a partial [tag] here', 'tag')
         );
     }
 
     public function testExtractDoubleTag()
     {
         $this->assertEquals(
-            "Double [tag]a tag[tag] here",
-            Helper::extractTag("Double [tag]a tag[tag] here", "tag")
+            'Double [tag]a tag[tag] here',
+            Helper::extractTag('Double [tag]a tag[tag] here', 'tag')
         );
     }
 
     public function testExtractWithNewLines()
     {
-         $this->assertEquals(
+        $this->assertEquals(
             "and a\ntag here",
-            Helper::extractTag("Some\nNew lines\n[tag]and a\ntag here[/tag] more\nnew lines", "tag")
+            Helper::extractTag("Some\nNew lines\n[tag]and a\ntag here[/tag] more\nnew lines", 'tag')
         );
     }
-
 }

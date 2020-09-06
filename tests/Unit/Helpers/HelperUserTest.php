@@ -10,20 +10,19 @@ class HelperUserTest extends TestCase
     public function testNullUser()
     {
         $this->assertEquals(
-            "Former user",
-            Helper::user(NULL)
+            'Former user',
+            Helper::user(null)
         );
     }
 
     public function testNonNullUser()
     {
-        $user = new \App\User;
-        $user->userid = "John";
+        $user = new \App\User();
+        $user->userid = 'John';
 
         $this->assertEquals(
-            "John",
+            'John',
             Helper::user($user)
         );
     }
-
 }

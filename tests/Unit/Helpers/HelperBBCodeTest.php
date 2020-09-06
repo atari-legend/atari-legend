@@ -11,21 +11,21 @@ class HelperBBCodeTest extends TestCase
     {
         $this->assertEquals(
             '<a href="https://example.org">an example</a>',
-            Helper::bbCode("[url=https://example.org]an example[/url]")
+            Helper::bbCode('[url=https://example.org]an example[/url]')
         );
     }
 
     public function testNull()
     {
-         $this->assertEquals(
-            NULL,
-            Helper::bbCode(NULL)
+        $this->assertEquals(
+            null,
+            Helper::bbCode(null)
         );
     }
 
     public function testEmptyString()
     {
-         $this->assertEquals(
+        $this->assertEquals(
             '',
             Helper::bbCode('')
         );
