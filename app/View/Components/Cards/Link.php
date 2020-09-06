@@ -25,7 +25,8 @@ class Link extends Component
     {
         $website = \App\Website::all()
             ->random();
+
         return view('components.cards.link')
-            ->with(["website" => $website,]);
+            ->with(['website' => $website]);
     }
 }

@@ -4,34 +4,33 @@ namespace App\Http\Controllers;
 
 use App\GameComment;
 use App\Review;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-
     public function index(Request $request)
     {
-        $authors = \App\User::has("reviews")
+        $authors = \App\User::has('reviews')
             ->get();
 
         $reviews = \App\Review::select();
 
         if ($request->filled('author')) {
-            $reviews->whereHas("user", function (Builder $query) use ($request) {
-                $query->where("user_id", $request->input("author"));
+            $reviews->whereHas('user', function (Builder $query) use ($request) {
+                $query->where('user_id', $request->input('author'));
             });
         }
 
         $reviews = $reviews
-            ->orderByDesc("review_date")
+            ->orderByDesc('review_date')
             ->paginate(5);
 
         return view('reviews.index')
             ->with([
-                "reviews" => $reviews,
-                "authors" => $authors,
+                'reviews' => $reviews,
+                'authors' => $authors,
             ]);
     }
 
@@ -47,14 +46,14 @@ class ReviewController extends Controller
 
         return view('reviews.show')
             ->with([
-                "review" => $review,
-                "otherReviews" => $otherReviews
+                'review'       => $review,
+                'otherReviews' => $otherReviews,
             ]);
     }
 
-    function postComment(Review $review, Request $request)
+    public function postComment(Review $review, Request $request)
     {
-        $comment = new GameComment;
+        $comment = new GameComment();
         $comment->comment = $request->comment;
         $comment->timestamp = time();
 

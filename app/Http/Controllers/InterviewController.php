@@ -6,7 +6,6 @@ use App\Interview;
 
 class InterviewController extends Controller
 {
-
     public function index()
     {
         $interviews = Interview::select()

@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Website extends Model
 {
-    protected $table = "website";
-    protected $primaryKey = "website_id";
+    protected $table = 'website';
+    protected $primaryKey = 'website_id';
     public $timestamps = false;
 
     public function user()
@@ -15,7 +15,7 @@ class Website extends Model
         return $this->belongsTo(User::class);
     }
 
-        public function getFileAttribute()
+    public function getFileAttribute()
     {
         return $this->website_id
             .'.'

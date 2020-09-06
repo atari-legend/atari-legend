@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-    protected $table = "review_main";
-    protected $primaryKey = "review_id";
+    protected $table = 'review_main';
+    protected $primaryKey = 'review_id';
     public $timestamps = false;
 
     public function user()
     {
-        return $this->belongsTo(User::class, "user_id");
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function games()
@@ -27,11 +27,11 @@ class Review extends Model
 
     public function score()
     {
-        return $this->hasOne(ReviewScore::class, "review_id");
+        return $this->hasOne(ReviewScore::class, 'review_id');
     }
 
     public function comments()
     {
-        return $this->belongsToMany(GameComment::class, "review_user_comments", "review_id", "comment_id");
+        return $this->belongsToMany(GameComment::class, 'review_user_comments', 'review_id', 'comment_id');
     }
 }
