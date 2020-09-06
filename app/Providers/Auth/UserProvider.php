@@ -2,6 +2,7 @@
 
 namespace App\Providers\Auth;
 
+use App\User;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -16,10 +17,14 @@ class UserProvider extends EloquentUserProvider
      * @param Authenticatable $user        User attempting authentication
      * @param array           $credentials User credentials
      *
-     * @return true if the user is authenticated, false otherwise
+     * @return boolean true if the user is authenticated, false otherwise
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
+        if (!($user instanceof User)) {
+            throw new \Exception("Unsupported Authenticatable type: $user");
+        }
+
         // Hash the password with sha512. This was initially done client-side
         // so that only the hashed password would get sent. With HTTPS is this
         // not needed anymore

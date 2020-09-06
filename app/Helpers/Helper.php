@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\User;
+
 class Helper
 {
     /**
@@ -23,11 +25,11 @@ class Helper
     /**
      * Return the name of a user.
      *
-     * @param App\User $user Use to print the name of, or NULL
+     * @param \App\User $user Use to print the name of, or NULL
      *
      * @return string User name, or "Former user" if the user is NULL
      */
-    public static function user($user)
+    public static function user(?User $user)
     {
         if (isset($user)) {
             return $user->userid;
@@ -43,7 +45,7 @@ class Helper
      *
      * @return string HTML conversion of the BBCode
      */
-    public static function bbCode($bbCode)
+    public static function bbCode(string $bbCode)
     {
         $parser = new \JBBCode\Parser();
         $parser->addCodeDefinitionSet(new \JBBCode\DefaultCodeDefinitionSet());
