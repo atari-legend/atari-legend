@@ -50,7 +50,7 @@ class Helper
         if ($bbCode == null) {
             return null;
         }
-        
+
         $parser = new \JBBCode\Parser();
         $parser->addCodeDefinitionSet(new \JBBCode\DefaultCodeDefinitionSet());
 
