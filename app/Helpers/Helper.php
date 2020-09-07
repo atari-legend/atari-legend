@@ -45,8 +45,12 @@ class Helper
      *
      * @return string HTML conversion of the BBCode
      */
-    public static function bbCode(string $bbCode)
+    public static function bbCode(?string $bbCode)
     {
+        if ($bbCode == null) {
+            return null;
+        }
+
         $parser = new \JBBCode\Parser();
         $parser->addCodeDefinitionSet(new \JBBCode\DefaultCodeDefinitionSet());
 
