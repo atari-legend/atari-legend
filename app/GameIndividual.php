@@ -11,11 +11,11 @@ class GameIndividual extends Model
 
     public function role()
     {
-        return $this->belongsTo(IndividualRole::class, "individual_role_id");
+        return $this->belongsTo(IndividualRole::class, 'individual_role_id');
     }
 
     public function game()
     {
-        return $this->belongsTo(Game::class, "game_id");
+        return $this->belongsTo(Game::class, 'game_id');
     }
 }

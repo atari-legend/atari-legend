@@ -18,6 +18,6 @@ class Individual extends Model
 
     public function games()
     {
-        return $this->hasMany(GameIndividual::class, "individual_id");
+        return $this->hasMany(GameIndividual::class, 'individual_id');
     }
 }

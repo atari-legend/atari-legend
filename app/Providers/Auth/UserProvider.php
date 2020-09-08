@@ -17,7 +17,7 @@ class UserProvider extends EloquentUserProvider
      * @param Authenticatable $user        User attempting authentication
      * @param array           $credentials User credentials
      *
-     * @return boolean true if the user is authenticated, false otherwise
+     * @return bool true if the user is authenticated, false otherwise
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
