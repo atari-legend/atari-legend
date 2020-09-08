@@ -47,17 +47,16 @@ class Helper
      */
     public static function bbCode(?string $bbCode)
     {
-        if ($bbCode == null) {
+        if ($bbCode === null) {
             return null;
         }
 
         $parser = new \JBBCode\Parser();
         $parser->addCodeDefinitionSet(new \JBBCode\DefaultCodeDefinitionSet());
-
-        $builder = new \JBBCode\CodeDefinitionBuilder('frontpage', '{param}');
-        $parser->addCodeDefinition($builder->build());
-        $builder = new \JBBCode\CodeDefinitionBuilder('screenstar', '{param}');
-        $parser->addCodeDefinition($builder->build());
+        $parser->addBBCode('hotspot', '<a name="{option}">{param}</a>', true);
+        $parser->addBBCode('hotspotUrl', '<a href="{option}">{param}</a>', true);
+        $parser->addBBCode('frontpage', '{param}');
+        $parser->addBBCode('screenstar', '{param}');
 
         $parser->parse($bbCode);
 

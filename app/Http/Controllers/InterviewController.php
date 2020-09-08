@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Interview;
 
 class InterviewController extends Controller
@@ -15,5 +16,13 @@ class InterviewController extends Controller
 
         return view('interviews.index')
             ->with(['interviews' => $interviews]);
+    }
+
+    public function show(\App\Interview $interview)
+    {
+        return view('interviews.show')
+            ->with([
+                'interview'       => $interview,
+            ]);
     }
 }

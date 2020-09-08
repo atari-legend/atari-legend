@@ -27,6 +27,6 @@ class Interview extends Model
 
     public function screenshots()
     {
-        return $this->hasMany(ScreenshotGame::class, 'screenshot_id');
+        return $this->hasMany(ScreenshotInterview::class, 'interview_id');
     }
 }
