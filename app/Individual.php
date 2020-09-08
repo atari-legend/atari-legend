@@ -15,4 +15,9 @@ class Individual extends Model
         // FIXME: The DB structure actually allows many
         return $this->hasOne(IndividualText::class, 'ind_id');
     }
+
+    public function games()
+    {
+        return $this->hasMany(GameIndividual::class, "individual_id");
+    }
 }

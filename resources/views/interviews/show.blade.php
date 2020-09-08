@@ -3,9 +3,9 @@
 @section('content')
     <div class="row">
         <div class="col-3 pl-0">
-            BIO<br>
-            PROFILE<br>
-            CREDITS
+            @include('interviews.card_intro')
+            @include('interviews.card_profile')
+            @include('interviews.card_credits')
 
         </div>
         <div class="col-6">
