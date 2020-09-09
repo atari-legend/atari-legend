@@ -6,7 +6,6 @@ use App\GameComment;
 use App\Review;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -57,7 +56,7 @@ class ReviewController extends Controller
         $comment->comment = $request->comment;
         $comment->timestamp = time();
 
-        Auth::user()->comments()->save($comment);
+        $request->user()->comments()->save($comment);
         $review->comments()->save($comment);
 
         return back();

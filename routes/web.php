@@ -22,6 +22,7 @@ Route::get('/games/{game}', 'GameController@show')->name('games.show');
 Route::resource('/reviews', 'ReviewController')->only(['index', 'show']);
 Route::post('/reviews/{review}/comment', 'ReviewController@postComment')->name('review.comment');
 Route::resource('/interviews', 'InterviewController')->only(['index', 'show']);
+Route::post('/interviews/{interview}/comment', 'InterviewController@postComment')->name('interview.comment');
 Route::resource('/articles', 'ArticleController')->only(['index']);
 Route::resource('/links', 'LinkController')->only(['index']);
 Route::resource('/about', 'AboutController')->only(['index']);

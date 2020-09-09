@@ -12,8 +12,8 @@
             @include('interviews.card_interview')
         </div>
         <div class="col-3 pr-0">
-            INTERVIEW COMMENTS<br>
-            LATEST INTERVIEWS
+            @include('interviews.card_comments')
+            @include('interviews.card_latest_interviews')
         </div>
     </div>
 @endsection

@@ -29,4 +29,9 @@ class Interview extends Model
     {
         return $this->hasMany(ScreenshotInterview::class, 'interview_id');
     }
+
+    public function comments()
+    {
+        return $this->belongsToMany(GameComment::class, 'interview_user_comments', 'interview_id', 'comment_id');
+    }
 }
