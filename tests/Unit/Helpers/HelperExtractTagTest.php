@@ -42,8 +42,8 @@ class HelperExtractTagTest extends TestCase
     public function testExtractWithNewLines()
     {
         $this->assertEquals(
-            "and a\ntag here",
-            Helper::extractTag("Some\nNew lines\n[tag]and a\ntag here[/tag] more\nnew lines", 'tag')
+            'and a\ntag here',
+            Helper::extractTag('Some\nNew lines\n[tag]and a\ntag here[/tag] more\nnew lines', 'tag')
         );
     }
 
@@ -51,7 +51,7 @@ class HelperExtractTagTest extends TestCase
     {
         $this->assertEquals(
             'with options',
-            Helper::extractTag("Some tag [tag=http://example.org/]with options[/tag]", 'tag')
+            Helper::extractTag('Some tag [tag=http://example.org/]with options[/tag]', 'tag')
         );
     }
 }
