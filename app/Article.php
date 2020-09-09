@@ -10,6 +10,11 @@ class Article extends Model
     protected $primaryKey = 'article_id';
     public $timestamps = false;
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function texts()
     {
         return $this->hasMany(ArticleText::class, 'article_id');
@@ -23,5 +28,10 @@ class Article extends Model
     public function type()
     {
         return $this->belongsTo(ArticleType::class, 'article_type_id');
+    }
+
+    public function comments()
+    {
+        return $this->belongsToMany(GameComment::class, 'article_user_comments', 'article_id', 'comments_id');
     }
 }

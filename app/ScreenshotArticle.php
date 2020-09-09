@@ -14,4 +14,9 @@ class ScreenshotArticle extends Model
     {
         return $this->belongsTo(Screenshot::class, 'screenshot_id');
     }
+
+    public function comment()
+    {
+        return $this->hasOne(ScreenshotArticleComment::class, 'screenshot_article_id');
+    }
 }
