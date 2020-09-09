@@ -13,7 +13,7 @@
         @auth
         <form method="post" action="{{ route('interview.comment', ['interview' => $interview]) }}" class="text-center">
             @csrf
-            <textarea class="form-control" rows="5" name="comment" placeholder="Your comment here..."></textarea>
+            <textarea class="form-control" rows="5" name="comment" placeholder="Your comment here..." required></textarea>
             <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>
         @endauth

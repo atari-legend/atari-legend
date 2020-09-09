@@ -31,4 +31,9 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
     {
         return $this->hasMany(GameComment::class, 'user_id');
     }
+
+    public function newsSubmissions()
+    {
+        return $this->hasMany(NewsSubmission::class, 'user_id');
+    }
 }

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index')->name('home.index');
 Route::resource('/news', 'NewsController')->only(['index']);
+Route::post('/news/submit', 'NewsController@postNews')->name('news.submit');
 Route::get('/games', 'GameController@index')->name('games.index');
 Route::get('/games/search', 'GameController@search');
 Route::get('/games/{game}', 'GameController@show')->name('games.show');

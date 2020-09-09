@@ -9,7 +9,6 @@
                 <h6 class="card-subtitle text-muted mb-2">{{ date('F j, Y', $new->news_date) }} by {{ Helper::user($new->user) }}</h6>
                 <p class="card-text mb-0 ellipsis">
                     {!! Helper::bbCode(Helper::extractTag($new->news_text, "frontpage")) !!}
-
                 </p>
                 <a class="d-block text-right" href="{{ route('news.index') }}">
                     <i class="fas fa-chevron-right"></i>

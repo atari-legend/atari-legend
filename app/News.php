@@ -13,4 +13,9 @@ class News extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function image()
+    {
+        return $this->belongsTo(NewsImage::class, 'news_image_id');
+    }
 }
