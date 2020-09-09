@@ -15,8 +15,8 @@ class Helper
      */
     public static function extractTag(string $string, string $tag)
     {
-        if (preg_match("@\\[$tag\\](.*?)\\[/$tag\\]@s", $string, $matches, )) {
-            return $matches[1];
+        if (preg_match("@\\[$tag(=[^\\]]*)?\\](.*?)\\[/$tag\\]@s", $string, $matches, )) {
+            return $matches[2];
         } else {
             return $string;
         }
