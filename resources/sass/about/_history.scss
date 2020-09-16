@@ -1,0 +1,46 @@
+.card-about {
+    i.timeline-icon {
+        height: 3.5rem;
+        width: 3.5rem;
+        padding-top: 0.75rem;
+        color: black;
+        position: absolute;
+        z-index: 100;
+        box-shadow: 0 0 0 .25rem white, inset 0 .125rem 0 rgba(0, 0, 0, .08), 0 .125rem 0 .5rem rgba(0, 0, 0, .05);
+    }
+
+    .timeline-content {
+        background: #294f4f;
+        border: 1px solid $primary;
+        margin-left: 5rem;
+        position: relative;
+
+        // Caret
+        &::before {
+            content: '';
+            position: absolute;
+            top: 1.25rem;
+            left: -1rem;
+            height: 0;
+            width: 0;
+            border: .5rem solid transparent;
+            border-right: .5rem solid white;
+        }
+    }
+
+    section {
+        position: relative;
+
+        // Vertical line
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.625rem;
+            height: 100%;
+            width: .25rem;
+            background: white;
+        }
+    }
+
+}

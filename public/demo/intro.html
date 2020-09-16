@@ -1,0 +1,307 @@
+<!doctype html>
+<html>
+<head>
+	<meta name="description" content="Atari Legend : Legends never die!">
+	<meta name="keywords" content="atari, atari st, games, game, demo, demos, reviews, articles, interviews, st">
+	<title> Atari Legend | Legends Never Die</title>
+	
+	<!-- start - let the site behave like a mobile app on phone -->
+	<meta name="mobile-web-app-capable" content="yes"><!-- Chrome-->
+	<meta name="apple-mobile-web-app-capable" content="yes"><!-- apple -->
+	<!-- End - let the site behave like a mobile app on phone -->
+	<link rel="icon" href="intro/favicon.png"> <!-- fav icon -->
+	<!-- start - get the icons used for mobile devices -->
+	<link rel="apple-touch-icon-precomposed" sizes="57x57" href="intro/icon-57x57.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="intro/icon-72x72.png">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="intro/icon-114x114.png">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="intro/icon-144x144.png">
+	<!-- end - get the icons used for mobile devices -->  
+    <script src="intro/jquery-2.2.4.min.js"></script> 
+    <script src="intro/codef_core.js"></script> 
+    <script src="intro/codef_3d.js"></script> 
+    <script src="intro/codef_scrolltext.js"></script> 
+    <script src="intro/codef_music.js"></script> 
+	<script src="intro/howler.min.js"></script> 
+    <script src="intro/cube.js"></script> 
+    <script src="intro/extra.js"></script> 
+
+    <script>	
+		//***********************************************************************//
+		//This is the code used to play an MP3 in IE - No other way except MP3***//
+		//***********************************************************************//
+		//Create the audio tag
+		var soundFile = document.createElement("audio");
+		soundFile.preload = "auto";
+
+		//Load the sound file (using a source element for expandability)
+		var src = document.createElement("source");
+		src.src = "intro/LTC1B2.mp3";
+		soundFile.appendChild(src);
+
+		var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+		var ua = window.navigator.userAgent;
+		var msie = ua.indexOf("MSIE ");
+						
+		function play() {
+		   //Set the current time for the audio file to the beginning
+		   soundFile.currentTime = 0.01;
+		   soundFile.volume = volume;
+
+		   //Due to a bug in Firefox, the audio needs to be played after a delay
+		   //setTimeout(function(){soundFile.play();},1);
+		}
+		//***********************************************************************//
+		//End MP3 IE													      ***//
+		//***********************************************************************//
+		
+		//***********************************************************************//
+		//Scroller																*//
+		//***********************************************************************//
+		if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  
+		{
+			var text="OH? NO SWEET YM CHIPTUNES? ... HERE IT COMES!";
+		}
+		else if (/iPad|iPhone|iPod/.test(navigator.platform))
+		{
+			var text="OH? NO SWEET YM CHIPTUNES? ... HERE IT COMES!";
+		}
+		else
+		{
+			var text="WE ARE BACK!!!!";
+		}
+		text+="                           ";
+		text+="ST GRAVEYARD AT THE KEYS HERE ... IS IT 2017 ALREADY? TIME FLIES...BUT LEGENDS NEVER DIE! LET ME FIRST START BY SAYING THANK YOU TO DYNO OF EXO7 FOR THIS AWESOME INTRO SCREEN! ... "; 
+        text+="AFTER ALMOST 10 YEARS OF INACTIVITY WE ARE FINALLY BACK ON THE WEB. THE FIRST SIGN OF LIFE. ";
+		text+="WE HAVE BEEN WORKING SILENTLY FOR OVER 2 YEARS NOW ON A COMPLETELY NEW VERSION OF THE WEBSITE...ONCE YOU HAVE KIDS THESE KIND OF PROJECTS TAKE FOREVER TO COMPLETE!...";
+		text+="WE PLAN TO BRING A FIRST VERSION TO THE PUBLIC HOPEFULLY SHORTLY AFTER THE SUMMER OF 2017. THIS RELEASE WILL CONTAIN ALL THE CONTENT OF THE ORIGINAL SITE  ...REVIEWS...INTERVIEWS...GAMES... ";
+		text+="BUT IN A COMPLETELY NEW AND FULLY RESPONSIVE DESIGN ...ENJOY ATARI LEGEND ON YOUR SMARTPHONE... ";
+		text+="OTHER FEATURES WILL BE ... AN OPEN CONTROL PANEL ... EXPORTABLE DATABASE ... THE FIRST STEPS HAVE BEEN MADE ... MORE SOCIAL MEDIA FEATURES. ";
+		text+="BUT THERE WILL BE MORE IN LATER RELEASES ... MULTIPLE SKINS ... API ... MENU SECTION ... DEMO SECTION ... DOWNLOADS ... ";
+		text+="WE HAVE A NEW VISION FOR ATARI LEGEND. WE WANT THIS PROJECT TO BE AS OPEN AS POSSIBLE AND USABLE IN OTHER ATARI RELATED PROJECTS! IF YOU WANT TO HELP OUT IN ANY WAY PLEASE GET IN TOUCH WITH US. ";
+		text+="ATARI LEGEND ... A PROJECT BY SCENERS FOR THE SCENE! STAY TUNED. A BIG CHEERS TO TAO AND TOMCHI FOR THE AMAZING TUNES! ";
+		text+="INFERNAL HAILS TO ALL THE FINE PEOPLE OF THE ATARI ST SCENE. BUY THE AMAZING BOOK BREAKING THE BORDERS BY MARCO BREDDIN AT WWW.MICROZEIT.COM ... THIS IS STG ... SIGNING OFF ... ";
+		text+="                            ";
+		//***********************************************************************//
+		//End scroller																*//
+		//***********************************************************************//
+		
+
+        var // Screen parameters
+            screen_width = 800,
+            screen_height = 600,
+            // Pictures
+            back = new image('intro/back.png'),
+            fuji = new image('intro/fuji.png'),
+            logo = new image('intro/logo.png'),
+            soon = new image('intro/soon.png'),
+            font = new image('intro/text.png'),
+            // Counters
+            iteration = 0;
+			
+			
+		//***********************************************************************//
+		//This is the code used to play an MP3 in IOS
+		//***********************************************************************//
+		var basepath="intro/";
+		var isReady=0;
+
+		if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+			var tcbmusic = new Howl({
+				src: [basepath + 'LTC1B2.mp3'],
+				buffer: true,
+				loop: true,
+				autoplay: false,
+				rate: 1,
+				onload: function(){
+					console.log("SAMPLE LOADED...");
+					isReady++;
+
+				}
+			});
+		}else{isReady=2;}
+		//***********************************************************************//
+		//End MP3 IOS													      ***//
+		//***********************************************************************//
+
+		var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        /*===========*/
+        /* Animation */
+        /*===========*/
+        function anim() {
+            requestAnimFrame(anim);
+            // Background
+            back.draw(main_canvas, 0, 0, 1, 0, screen_width, 1);
+            // Atari Legend Logo
+            logo.draw(main_canvas, 139, 8);
+            // Fuji Logo
+            fuji.draw(main_canvas, 274, 296 - Math.round(Math.abs(150 * Math.sin(iteration / 20))), 0.5);
+            // 3D Cube
+            cube3d.group.rotation.x += 0.01;
+            cube3d.group.rotation.y -= 0.03;
+            cube3d.group.rotation.z += 0.02;
+            cube3d.camera.position.x = 120 * Math.sin(iteration / 64);
+            cube3d.draw();
+            // Overlay text
+            soon.print(main_canvas, "LEGENDS NEVER DIE!", 112, 528, 0.5);
+            // Scrolltext
+            scrolltext.draw(576);
+            // Next frame
+            iteration++;
+        }
+		
+		
+        /*=============*/
+        /* Entry point */
+        /*=============*/
+        function init() {
+            // Canvas
+            main_canvas = new canvas(screen_width, screen_height, 'main');
+            main_canvas.contex.imageSmoothingEnabled = false;
+            main_canvas.contex.mozImageSmoothingEnabled = false;
+            main_canvas.contex.oImageSmoothingEnabled = false;
+            main_canvas.contex.webkitImageSmoothingEnabled = false;
+			
+			// IOS stuff
+			var touchzone = document.getElementById("container");
+			touchzone.addEventListener("touchstart", touchHandler, false);
+			
+			prego();
+		}
+		
+		function touchHandler(event){
+			isReady++;
+		}
+		
+		function prego(){
+			if (isReady>=2){
+				go(); 
+			} else {
+				main_canvas.fill('#000000');
+
+				main_canvas.contex.fillStyle="#FFFFFF";
+				main_canvas.contex.font="64px Arial";
+				//We need a touch on IOS devices else the music will not autoplay!
+				if (/iPad|iPhone|iPod/.test(navigator.platform)) main_canvas.contex.fillText("PRESS TO BEGIN",120,220);
+				requestAnimFrame( prego );
+			}
+		}
+
+
+		function go(){
+            // Font
+            soon.initTile(32, 32, 32);
+            // Scrolltext
+            font.initTile(16, 16, 32);
+            scrolltext = new scrolltext_horizontal();
+            scrolltext.scrtxt = text;
+            scrolltext.init(main_canvas, font, 2);
+            // 3D Cube
+            cube3d = new codef3D(main_canvas, 450, 60, 1, 1200);
+            cube3d.faces4(cube_vertices, cube_faces, true, false);
+            cube3d.addAmbiLight(0xFFFFFF);
+            cube3d.addDirLight(0, 0, 1, 0xFFFFFF);
+            // Music player or IOS devices
+			if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+				//if (isReady==1){
+				tcbmusic.play();
+				//}
+				//addEventListener('touchstart', function (e) {
+				//	soundFile.load();
+				//	soundFile.volume = 1.000000;
+				//	soundFile.loop = true;
+				//	soundFile.play();
+				//});
+
+			}
+			//** IE sound file
+			else if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  
+			{
+				soundFile.load();
+				soundFile.volume = 1.000000;
+				soundFile.loop=true;
+				soundFile.play();
+				
+				//audioElement.addEventListener('ended', function() {
+				//	this.currentTime = 0;
+				//	this.play();
+				//}, false);
+			}
+			//** sound in safari browser
+			else if (isSafari)
+			{
+				soundFile.load();
+				soundFile.volume = 1.000000;
+				soundFile.loop = true;
+				soundFile.play();
+			}
+			//** all others
+			else{
+				new music('YM').LoadAndRun('intro/music.ym');
+			}
+            // Start anim
+            anim();
+        }
+
+    </script> 
+    <style type="text/css">
+        html, body, #container {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background: black;
+			background-image: url('intro/main_bg.png'), url('intro/main_bg.png');
+        }
+        #monitor {
+            position: absolute;
+            z-index: 2;
+            user-drag: none; 
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-drag: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        #main canvas {
+            position: absolute;
+            z-index: 1;
+        }
+        #main {
+            position: absolute;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <img ondragstart="return false;" id="monitor" src="intro/monitor.png" style="display:none" alt="">
+        <div id="main"></div>
+        <noscript> 
+            <br><br>
+            <p style="text-align:center;"><img src="intro/logo.png" style="float:center;max-width:100%;max-height:100%;"  alt=""></p>
+            <p style="color:white;text-align:center;font-weight:bold;font-size:20pt;">LEGENDS NEVER DIE!</p>
+            <br>   
+            <div style="border-style: solid;border-color: red; width:50%; margin: 0 auto;">
+               <p style="color:white;text-align:center;font-size:14pt">You have scripting disabled. Please activate javascript in your browser to enjoy our oldschool intro!</p>
+            </div>
+            <br>
+            <br>
+            <br>
+            <div style="border-style: solid;border-color: white; width:50%; margin: 0 auto;">
+               <p style="color:white;text-align:center;font-size:12pt;margin:5px;">
+                   ST Graveyard @ the keys here ... Is it 2017 already? Time flies! But legends NEVER die! After almost 10 years of inactivity, 
+                   AL is finally back. The first sign of life. We have been working silently for over 2 years now on a completely new 
+                   version of the website (once you have kids, these kind of projects take time! ;) ). We plan to bring a first version to the public 
+                   (hopefully) shortly after the summer of 2017. What can you expect in the first release? All the content of the original site (reviews, interviews, games...) 
+                   but in a completely new and fully responsive design (Enjoy AL on your smartphone!), an open control panel, exportable database (the first steps have been made), 
+                   more social media features. But there will be more in later releases - multiple skins, API's, menu section, demo section, downloads...We have a new vision for AL. 
+                   We want this project to be as open as possible and usable in other (Atari) related projects! If you want to help out in any way, please get in touch with us. 
+                   AL - A PROJECT BY SCENERS FOR THE SCENE! Stay tuned. Infernal hails to all the fine people of the Atari ST scene. BUY the amazing 'BREAKING THE BORDERS' by Marco Breddin @ www.microzeit.com ;-) 
+                   This is STG, signing of... 
+                </p>
+            </div>
+        </noscript>
+    </div>   
+</body> 
+</html>
