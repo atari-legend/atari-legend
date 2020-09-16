@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Article;
-use App\GameComment;
+use App\Comment;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -47,7 +47,7 @@ class ArticleController extends Controller
 
     public function postComment(Article $article, Request $request)
     {
-        $comment = new GameComment();
+        $comment = new Comment();
         $comment->comment = $request->comment;
         $comment->timestamp = time();
 

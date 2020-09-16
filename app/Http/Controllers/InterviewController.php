@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\GameComment;
+use App\Comment;
 use App\Interview;
 use Illuminate\Http\Request;
 
@@ -36,7 +36,7 @@ class InterviewController extends Controller
 
     public function postComment(Interview $interview, Request $request)
     {
-        $comment = new GameComment();
+        $comment = new Comment();
         $comment->comment = $request->comment;
         $comment->timestamp = time();
 

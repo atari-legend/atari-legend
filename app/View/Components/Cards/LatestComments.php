@@ -23,7 +23,7 @@ class LatestComments extends Component
      */
     public function render()
     {
-        $comments = \App\GameComment::select()
+        $comments = \App\Comment::select()
             ->join('game_user_comments', 'comments_id', '=', 'game_user_comments.comment_id')
             ->orderBy('timestamp', 'desc')
             ->limit(10)

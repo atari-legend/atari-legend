@@ -32,6 +32,6 @@ class Article extends Model
 
     public function comments()
     {
-        return $this->belongsToMany(GameComment::class, 'article_user_comments', 'article_id', 'comments_id');
+        return $this->belongsToMany(Comment::class, 'article_user_comments', 'article_id', 'comments_id');
     }
 }

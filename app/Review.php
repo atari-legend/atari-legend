@@ -32,6 +32,6 @@ class Review extends Model
 
     public function comments()
     {
-        return $this->belongsToMany(GameComment::class, 'review_user_comments', 'review_id', 'comment_id');
+        return $this->belongsToMany(Comment::class, 'review_user_comments', 'review_id', 'comment_id');
     }
 }

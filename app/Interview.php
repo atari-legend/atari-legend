@@ -32,6 +32,6 @@ class Interview extends Model
 
     public function comments()
     {
-        return $this->belongsToMany(GameComment::class, 'interview_user_comments', 'interview_id', 'comment_id');
+        return $this->belongsToMany(Comment::class, 'interview_user_comments', 'interview_id', 'comment_id');
     }
 }

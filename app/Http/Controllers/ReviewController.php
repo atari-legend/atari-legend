@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\GameComment;
+use App\Comment;
 use App\Review;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -52,7 +52,7 @@ class ReviewController extends Controller
 
     public function postComment(Review $review, Request $request)
     {
-        $comment = new GameComment();
+        $comment = new Comment();
         $comment->comment = $request->comment;
         $comment->timestamp = time();
 
