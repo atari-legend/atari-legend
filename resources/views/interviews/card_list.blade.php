@@ -22,7 +22,7 @@
                     @if (isset($interview->individual->text->ind_imgext))
                         <img class="w-100 " src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}">
                     @else
-                        <img class="w-100 " src="{{ asset('img/unknown.jpg') }}">
+                        <img class="w-100 " src="{{ asset('images/unknown.jpg') }}">
                     @endif
                 </div>
                 <div class="col-8 pl-2">
