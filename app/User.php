@@ -36,4 +36,9 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
     {
         return $this->hasMany(NewsSubmission::class, 'user_id');
     }
+
+    public function websiteSubmissions()
+    {
+        return $this->hasMany(WebsiteValidate::class, 'user_id');
+    }
 }

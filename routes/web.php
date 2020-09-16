@@ -15,18 +15,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'HomeController@index')->name('home.index');
+
 Route::resource('/news', 'NewsController')->only(['index']);
 Route::post('/news/submit', 'NewsController@postNews')->name('news.submit');
+
 Route::get('/games', 'GameController@index')->name('games.index');
 Route::get('/games/search', 'GameController@search');
 Route::get('/games/{game}', 'GameController@show')->name('games.show');
+
 Route::resource('/reviews', 'ReviewController')->only(['index', 'show']);
 Route::post('/reviews/{review}/comment', 'ReviewController@postComment')->name('review.comment');
+
 Route::resource('/interviews', 'InterviewController')->only(['index', 'show']);
 Route::post('/interviews/{interview}/comment', 'InterviewController@postComment')->name('interview.comment');
+
 Route::resource('/articles', 'ArticleController')->only(['index', 'show']);
 Route::post('/articles/{article}/comment', 'ArticleController@postComment')->name('article.comment');
+
 Route::resource('/links', 'LinkController')->only(['index']);
+Route::post('/links/submit', 'LinkController@postLink')->name('links.submit');
+
 Route::resource('/about', 'AboutController')->only(['index']);
 
 Auth::routes();
