@@ -14,7 +14,7 @@
         </p>
     </div>
     <div class="card-body p-2">
-        <form method="get" action="reviews">
+        <form method="get" action="{{ route('reviews.index') }}">
             <div class="row mb-3">
                 <label for="titleAZ" class="col-sm-2 col-form-label">Author</label>
                 <div class="col-sm-10">
@@ -53,6 +53,6 @@
             </div>
         @endforeach
 
-        {{ $reviews->links() }}
+        {{ $reviews->withQueryString()->links() }}
     </div>
 </div>

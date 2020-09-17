@@ -28,8 +28,8 @@
                     <a class="nav-link {{ Request::routeIs('about.*') ? 'active' : '' }}" href="{{ route('about.index') }}">About</a>
                 </li>
             </ul>
-            <form class="d-flex mr-3">
-                <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex mr-3" method="get" action="{{ route('games.search') }}">
+                <input class="form-control mr-2" name="title" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-dark" type="submit"><i class="fas fa-search"></i></button>
             </form>
             <ul class="navbar-nav">

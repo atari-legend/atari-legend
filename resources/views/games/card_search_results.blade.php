@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">Games</h2>
     </div>
     <div class="card-body p-2">
-        <form method="get" action="search">
+        <form method="get" action="{{ route('games.search') }}">
             <div class="row mb-3">
                 <label for="title" class="col-sm-2 col-form-label">Title</label>
                 <div class="col-sm-10">
@@ -66,6 +66,6 @@
             @endforeach
         </div>
 
-        {{ $games->fragment('results')->links() }}
+        {{ $games->withQueryString()->fragment('results')->links() }}
     </div>
 </div>

@@ -20,7 +20,7 @@ Route::resource('/news', 'NewsController')->only(['index']);
 Route::post('/news/submit', 'NewsController@postNews')->name('news.submit');
 
 Route::get('/games', 'GameController@index')->name('games.index');
-Route::get('/games/search', 'GameController@search');
+Route::get('/games/search', 'GameController@search')->name('games.search');
 Route::get('/games/{game}', 'GameController@show')->name('games.show');
 
 Route::resource('/reviews', 'ReviewController')->only(['index', 'show']);

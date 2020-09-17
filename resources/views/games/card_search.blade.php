@@ -14,7 +14,7 @@
         </p>
     </div>
     <div class="card-body p-2">
-        <form method="get" action="games/search">
+        <form method="get" action="{{ route('games.search') }}">
             <div class="row mb-3">
                 <label for="titleAZ" class="col-sm-2 col-form-label">Title (A-Z)</label>
                 <div class="col-sm-10">
