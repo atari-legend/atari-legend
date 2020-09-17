@@ -36,5 +36,6 @@ Route::resource('/links', 'LinkController')->only(['index']);
 Route::post('/links/submit', 'LinkController@postLink')->name('links.submit');
 
 Route::resource('/about', 'AboutController')->only(['index']);
+Route::get('/about/andreas', 'AboutController@andreas')->name('about.andreas');
 
 Auth::routes();
