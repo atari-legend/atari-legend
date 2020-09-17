@@ -77,6 +77,22 @@ class GameController extends Controller
         ]);
     }
 
+    public function show(Game $game)
+    {
+        $developersLogos = $game->developers
+            ->filter(function ($developer) {
+                return $developer->texts->isNotEmpty() && $developer->texts->first()->file !== null;
+            })
+            ->map(function ($developer) {
+                return $developer->texts->first()->file;
+            });
+
+        return view('games.show')->with([
+            'game'              => $game,
+            'developersLogos'   => $developersLogos,
+        ]);
+    }
+
     /**
      * Compute the number of updates per month, from the changelog table.
      *

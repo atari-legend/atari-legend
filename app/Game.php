@@ -37,11 +37,56 @@ class Game extends Model
 
     public function genres()
     {
-        return $this->belongsToMany(Genre::class, 'game_genre_cross', 'game_genre_id', 'game_id');
+        return $this->belongsToMany(Genre::class, 'game_genre_cross', 'game_id', 'game_genre_id');
     }
 
     public function releases()
     {
         return $this->hasMany(Release::class, 'game_id', 'game_id');
+    }
+
+    public function individuals()
+    {
+        return $this->hasMany(GameIndividual::class, 'game_id', 'game_id');
+    }
+
+    public function programmingLanguages()
+    {
+        return $this->belongsToMany(ProgrammingLanguage::class, 'game_programming_language', 'game_id');
+    }
+
+    public function engines()
+    {
+        return $this->belongsToMany(Engine::class, 'game_engine', 'game_id');
+    }
+
+    public function akas()
+    {
+        return $this->hasMany(GameAka::class, 'game_id');
+    }
+
+    public function port()
+    {
+        return $this->belongsTo(Port::class);
+    }
+
+    public function progressSystem()
+    {
+        return $this->belongsTo(ProgressSystem::class);
+    }
+
+    public function soundHardwares()
+    {
+        return $this->belongsToMany(SoundHardware::class, 'game_sound_hardware', 'game_id');
+    }
+
+    public function controls()
+    {
+        return $this->belongsToMany(Control::class, 'game_control', 'game_id');
+    }
+
+    public function vs()
+    {
+        return $this->hasMany(GameVs::class, 'atari_id');
     }
 }

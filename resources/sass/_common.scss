@@ -11,6 +11,10 @@ h2 {
     background: $dark-light;
 }
 
+.bg-black {
+    background: $black;
+}
+
 .striped {
     > div {
         border-bottom: solid 1px $black;

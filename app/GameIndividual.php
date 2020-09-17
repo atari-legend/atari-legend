@@ -18,4 +18,9 @@ class GameIndividual extends Model
     {
         return $this->belongsTo(Game::class, 'game_id');
     }
+
+    public function individual()
+    {
+        return $this->belongsTo(Individual::class, 'individual_id');
+    }
 }

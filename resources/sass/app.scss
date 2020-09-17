@@ -13,9 +13,13 @@
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/brands';
 
+// Country flags
+@import '~flag-icon-css/sass/flag-icon';
+
 @import 'common';
 @import 'forms';
 @import 'cards';
 @import 'home/carousel';
 @import 'home/news';
 @import 'about/history';
+@import 'game/game';
