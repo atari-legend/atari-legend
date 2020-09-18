@@ -8,4 +8,11 @@ class ReleaseScan extends Model
 {
     protected $table = 'game_release_scan';
     public $timestamps = false;
+
+    public function getFileAttribute()
+    {
+        return $this->id
+            .'.'
+            .$this->imgext;
+    }
 }

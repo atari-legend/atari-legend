@@ -88,9 +88,23 @@ class GameController extends Controller
                 return $developer->texts->first()->file;
             });
 
+        // Collect all release scans and game scans in a single list
+        // This is temporary until all game scans are moved to releases
+        $releaseBoxscans = $game->releases
+            ->flatMap(function ($release) {
+                return $release->boxscans->map(function ($boxscan) {
+                    return asset('storage/images/game_release_scans/'.$boxscan->file);
+                });
+            });
+
+        $gameBoxscans = $game->boxscans->map(function ($boxscan) {
+            return asset('storage/images/game_boxscans/'.$boxscan->file);
+        });
+
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
+            'boxscans'          => $releaseBoxscans->merge($gameBoxscans),
         ]);
     }
 
