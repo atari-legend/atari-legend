@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Comment;
 use App\Game;
+use App\GameSubmitInfo;
+use App\Screenshot;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
@@ -26,26 +29,26 @@ class GameController extends Controller
         $games = Game::select();
 
         if ($request->filled('title')) {
-            $games->where('game_name', 'like', '%' . $request->input('title') . '%');
+            $games->where('game_name', 'like', '%'.$request->input('title').'%');
         }
 
         if ($request->filled('developer')) {
             $games->whereHas('developers', function (Builder $query) use ($request) {
-                $query->where('pub_dev_name', 'like', '%' . $request->input('developer') . '%');
+                $query->where('pub_dev_name', 'like', '%'.$request->input('developer').'%');
             });
         }
 
         if ($request->filled('publisher')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereHas('publisher', function (Builder $query2) use ($request) {
-                    $query2->where('pub_dev_name', 'like', '%' . $request->input('publisher') . '%');
+                    $query2->where('pub_dev_name', 'like', '%'.$request->input('publisher').'%');
                 });
             });
         }
 
         if ($request->filled('genre')) {
             $games->whereHas('genres', function (Builder $query) use ($request) {
-                $query->where('name', 'like', '%' . $request->input('genre') . '%');
+                $query->where('name', 'like', '%'.$request->input('genre').'%');
             });
         }
 
@@ -93,11 +96,11 @@ class GameController extends Controller
         $releaseBoxscans = $game->releases
             ->flatMap(function ($release) {
                 return $release->boxscans->map(function ($boxscan) {
-                    return asset('storage/images/game_release_scans/' . $boxscan->file);
+                    return asset('storage/images/game_release_scans/'.$boxscan->file);
                 });
             });
         $gameBoxscans = $game->boxscans->map(function ($boxscan) {
-            return asset('storage/images/game_boxscans/' . $boxscan->file);
+            return asset('storage/images/game_boxscans/'.$boxscan->file);
         });
 
         // Collect interviews for individuals of the game. An individual may
@@ -124,6 +127,39 @@ class GameController extends Controller
 
         $request->user()->comments()->save($comment);
         $game->comments()->save($comment);
+
+        return back();
+    }
+
+    public function submitInfo(Game $game, Request $request)
+    {
+        $info = new GameSubmitInfo();
+        $info->timestamp = time();
+        $info->submit_text = $request->info;
+        $info->game_done = GameSubmitInfo::SUBMISSION_NEW;
+        $info->game()->save($game);
+
+        $game->infoSubmissions()->save($info);
+        $request->user()->gameSubmissions()->save($info);
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $screenshot = new Screenshot();
+                $screenshot->imgext = $file->extension();
+
+                $info->screenshots()->save($screenshot);
+
+                Log::debug('Saved screenshot: '.$screenshot->screenshot_id.', '.$screenshot->imgext);
+
+                $file->storeAs('images/game_submit_screenshots', $screenshot->screenshot_id.'.'.$screenshot->imgext, 'public');
+            }
+        }
+
+        $request->session()->flash('alert-title', 'Info submitted');
+        $request->session()->flash(
+            'alert-success',
+            'Thanks for your submission, a moderator will review it soon!'
+        );
 
         return back();
     }

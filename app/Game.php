@@ -109,4 +109,9 @@ class Game extends Model
     {
         return $this->belongsTo(GameSeries::class, 'game_series_id');
     }
+
+    public function infoSubmissions()
+    {
+        return $this->hasMany(GameSubmitInfo::class, 'game_id');
+    }
 }

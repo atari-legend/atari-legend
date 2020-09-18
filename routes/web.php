@@ -23,6 +23,7 @@ Route::get('/games', 'GameController@index')->name('games.index');
 Route::get('/games/search', 'GameController@search')->name('games.search');
 Route::get('/games/{game}', 'GameController@show')->name('games.show');
 Route::post('/games/{game}/comment', 'GameController@postComment')->name('games.comment');
+Route::post('/games/submitInfo', 'GameController@submitInfo')->name('games.submitInfo');
 
 Route::resource('/reviews', 'ReviewController')->only(['index', 'show']);
 Route::post('/reviews/{review}/comment', 'ReviewController@postComment')->name('review.comment');

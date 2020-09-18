@@ -17,7 +17,7 @@
             @include('games.card_similar')
             @include('games.card_facts')
             @include('games.card_interviews')
-            SUBMIT INFO<br>
+            @include('games.card_submit_info')
 
         </div>
     </div>
