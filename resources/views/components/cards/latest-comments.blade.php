@@ -10,7 +10,7 @@
                     <div class="float-right"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->game_name }}</a></div>
                 </h6>
                 <p class="card-text">
-                    {!! Helper::bbCode($comment->comment) !!}
+                    {!! Helper::bbCode(stripslashes($comment->comment)) !!}
                 </p>
                 @if (isset($comment->user))
                 <small class="text-muted float-left">

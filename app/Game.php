@@ -89,4 +89,9 @@ class Game extends Model
     {
         return $this->hasMany(GameVs::class, 'atari_id');
     }
+
+    public function comments()
+    {
+        return $this->belongsToMany(Comment::class, 'game_user_comments', 'game_id', 'comment_id');
+    }
 }

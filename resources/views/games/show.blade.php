@@ -5,7 +5,7 @@
         <div class="col-3 pl-0">
             @include('games.card_gameinfo')
             @include('games.card_releases')
-            COMMENTS
+            @include('games.card_comments')
         </div>
         <div class="col-6">
             @include('games.card_screenshots')

@@ -25,7 +25,7 @@
                     {{ Helper::user($comment->user) }}
                 </h6>
                 <p class="card-text">
-                    {!! Helper::bbCode($comment->comment) !!}
+                    {!! Helper::bbCode(stripslashes($comment->comment)) !!}
                 </p>
                 @if (isset($comment->user))
                 <small class="text-muted float-left">

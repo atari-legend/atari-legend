@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Game;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -91,6 +92,18 @@ class GameController extends Controller
             'game'              => $game,
             'developersLogos'   => $developersLogos,
         ]);
+    }
+
+    public function postComment(Game $game, Request $request)
+    {
+        $comment = new Comment();
+        $comment->comment = $request->comment;
+        $comment->timestamp = time();
+
+        $request->user()->comments()->save($comment);
+        $game->comments()->save($comment);
+
+        return back();
     }
 
     /**
