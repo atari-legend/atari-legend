@@ -2,6 +2,9 @@ php:
   preset: laravel
   disabled:
     - unused_use
+    - concat_without_spaces
+  enabled:
+    - concat_with_spaces
   finder:
     not-name:
       - index.php
