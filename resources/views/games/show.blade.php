@@ -5,7 +5,7 @@
         <div class="col-3 pl-0">
             @include('games.card_gameinfo')
             @include('games.card_releases')
-            SERIES<br>
+            @include('games.card_series')
             @include('games.card_comments')
         </div>
         <div class="col-6">
@@ -14,9 +14,9 @@
         </div>
         <div class="col-3 pr-0">
             @include('games.card_boxscan')
-            SIMILAR<br>
-            FACTS<br>
-            INTERVIEW<br>
+            @include('games.card_similar')
+            @include('games.card_facts')
+            @include('games.card_interviews')
             SUBMIT INFO<br>
 
         </div>

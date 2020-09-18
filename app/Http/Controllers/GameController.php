@@ -26,26 +26,26 @@ class GameController extends Controller
         $games = Game::select();
 
         if ($request->filled('title')) {
-            $games->where('game_name', 'like', '%'.$request->input('title').'%');
+            $games->where('game_name', 'like', '%' . $request->input('title') . '%');
         }
 
         if ($request->filled('developer')) {
             $games->whereHas('developers', function (Builder $query) use ($request) {
-                $query->where('pub_dev_name', 'like', '%'.$request->input('developer').'%');
+                $query->where('pub_dev_name', 'like', '%' . $request->input('developer') . '%');
             });
         }
 
         if ($request->filled('publisher')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereHas('publisher', function (Builder $query2) use ($request) {
-                    $query2->where('pub_dev_name', 'like', '%'.$request->input('publisher').'%');
+                    $query2->where('pub_dev_name', 'like', '%' . $request->input('publisher') . '%');
                 });
             });
         }
 
         if ($request->filled('genre')) {
             $games->whereHas('genres', function (Builder $query) use ($request) {
-                $query->where('name', 'like', '%'.$request->input('genre').'%');
+                $query->where('name', 'like', '%' . $request->input('genre') . '%');
             });
         }
 
@@ -93,18 +93,26 @@ class GameController extends Controller
         $releaseBoxscans = $game->releases
             ->flatMap(function ($release) {
                 return $release->boxscans->map(function ($boxscan) {
-                    return asset('storage/images/game_release_scans/'.$boxscan->file);
+                    return asset('storage/images/game_release_scans/' . $boxscan->file);
                 });
             });
-
         $gameBoxscans = $game->boxscans->map(function ($boxscan) {
-            return asset('storage/images/game_boxscans/'.$boxscan->file);
+            return asset('storage/images/game_boxscans/' . $boxscan->file);
         });
+
+        // Collect interviews for individuals of the game. An individual may
+        // have multiple role so make sure to get unique interviews
+        $interviews = $game->individuals
+            ->flatMap(function ($gameIndividual) {
+                return $gameIndividual->individual->interviews;
+            })
+            ->unique('interview_id');
 
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
             'boxscans'          => $releaseBoxscans->merge($gameBoxscans),
+            'interviews'        => $interviews,
         ]);
     }
 

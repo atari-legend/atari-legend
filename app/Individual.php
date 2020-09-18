@@ -20,4 +20,9 @@ class Individual extends Model
     {
         return $this->hasMany(GameIndividual::class, 'individual_id');
     }
+
+    public function interviews()
+    {
+        return $this->hasMany(Interview::class, 'ind_id');
+    }
 }

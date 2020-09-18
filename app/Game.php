@@ -94,4 +94,19 @@ class Game extends Model
     {
         return $this->belongsToMany(Comment::class, 'game_user_comments', 'game_id', 'comment_id');
     }
+
+    public function similarGames()
+    {
+        return $this->belongsToMany(Game::class, 'game_similar', 'game_id', 'game_similar_cross');
+    }
+
+    public function facts()
+    {
+        return $this->hasMany(GameFact::class, 'game_id');
+    }
+
+    public function series()
+    {
+        return $this->belongsTo(GameSeries::class, 'game_series_id');
+    }
 }
