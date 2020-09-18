@@ -1,6 +1,8 @@
 <div class="row g-0 p-2">
     <div class="col-4 pr-2 align-self-center">
-        <img class="w-100 " src="{{ asset('storage/images/game_screenshots/'.$review->screenshots->random()->screenshot->file) }}">
+        @if ($review->screenshots->isNotEmpty())
+            <img class="w-100 " src="{{ asset('storage/images/game_screenshots/'.$review->screenshots->random()->screenshot->file) }}">
+        @endif
     </div>
     <div class="col-8 pl-2">
         <h3>

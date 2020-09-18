@@ -4,12 +4,12 @@
     </div>
     <div class="card-body p-4">
         <p class="card-text text-center">
-            Feel inspired to write your own review? Please click <a href="#">here</a> and get started!
+            Feel inspired to write your own review? Please click <a href="{{ route('reviews.submit', ['game' => $game]) }}">here</a> and get started!
         </p>
     </div>
-    @if ($game->reviews->isNotEmpty())
+    @if ($reviews->isNotEmpty())
         <div class="striped">
-            @foreach ($game->reviews as $review)
+            @foreach ($reviews as $review)
             <div class="card-body p-2">
                 @include('reviews.partial_list', ['review' => $review])
             </div>

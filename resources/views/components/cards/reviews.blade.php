@@ -15,7 +15,7 @@
                 </a>
             </div>
         @empty
-            No news!
+            No reviews!
         @endforelse
     </div>
 </div>

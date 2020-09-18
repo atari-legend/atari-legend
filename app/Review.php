@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
+    const REVIEW_UNPUBLISHED = 1;
+    const REVIEW_PUBLISHED = 0;
+
     protected $table = 'review_main';
     protected $primaryKey = 'review_id';
     public $timestamps = false;

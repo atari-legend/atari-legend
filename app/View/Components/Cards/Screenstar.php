@@ -23,7 +23,8 @@ class Screenstar extends Component
      */
     public function render()
     {
-        $screenstar = \App\Review::all()
+        $screenstar = \App\Review::where('review_edit', 0)
+            ->get()
             ->random();
 
         return view('components.cards.screenstar')

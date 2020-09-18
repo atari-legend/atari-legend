@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Game;
 use App\GameSubmitInfo;
+use App\Review;
 use App\Screenshot;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
@@ -111,11 +111,17 @@ class GameController extends Controller
             })
             ->unique('interview_id');
 
+        // Filter unpublishes reviews
+        $reviews = $game->reviews->reject(function ($review) {
+            return $review->review_edit !== Review::REVIEW_PUBLISHED;
+        });
+
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
             'boxscans'          => $releaseBoxscans->merge($gameBoxscans),
             'interviews'        => $interviews,
+            'reviews'           => $reviews,
         ]);
     }
 
@@ -148,8 +154,6 @@ class GameController extends Controller
                 $screenshot->imgext = $file->extension();
 
                 $info->screenshots()->save($screenshot);
-
-                Log::debug('Saved screenshot: '.$screenshot->screenshot_id.', '.$screenshot->imgext);
 
                 $file->storeAs('images/game_submit_screenshots', $screenshot->screenshot_id.'.'.$screenshot->imgext, 'public');
             }

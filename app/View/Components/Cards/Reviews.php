@@ -23,8 +23,9 @@ class Reviews extends Component
      */
     public function render()
     {
-        $reviews = \App\Review::all()
-            ->sortByDesc('review_date')
+        $reviews = \App\Review::where('review_edit', 0)
+            ->orderByDesc('review_date')
+            ->get()
             ->take(3);
 
         return view('components.cards.reviews')
