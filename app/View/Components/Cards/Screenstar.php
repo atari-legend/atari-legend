@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Cards;
 
+use App\Review;
 use Illuminate\View\Component;
 
 class Screenstar extends Component
@@ -23,7 +24,7 @@ class Screenstar extends Component
      */
     public function render()
     {
-        $screenstar = \App\Review::where('review_edit', 0)
+        $screenstar = Review::where('review_edit', Review::REVIEW_PUBLISHED)
             ->get()
             ->random();
 

@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Cards;
 
+use App\Review;
 use Illuminate\View\Component;
 
 class Reviews extends Component
@@ -23,7 +24,7 @@ class Reviews extends Component
      */
     public function render()
     {
-        $reviews = \App\Review::where('review_edit', 0)
+        $reviews = Review::where('review_edit', Review::REVIEW_PUBLISHED)
             ->orderByDesc('review_date')
             ->get()
             ->take(3);
