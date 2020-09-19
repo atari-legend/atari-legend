@@ -33,7 +33,18 @@
                 </div>
             </div>
         @empty
-            No comments!
+            <div class="card-body p-2">
+                @if ($user !== null)
+                    <p class="card-text text-center">
+                        You haven't written any game comments. Browse the library,
+                        share some memories and upgrade your karma stats ;-)
+                    </p>
+                @else
+                    <p class="card-text text-center">
+                        No comments!
+                    </p>
+                @endif
+            </div>
         @endforelse
     </div>
 </div>

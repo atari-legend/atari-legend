@@ -10,7 +10,7 @@
             @include('reviews.card_submit')
         </div>
         <div class="col-3 pr-0">
-            COMMENTS<br>
+            <x-cards.latest-comments :user="Auth::user()" />
         </div>
     </div>
 @endsection
