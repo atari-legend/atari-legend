@@ -1,0 +1,13 @@
+.card-open {
+    .card-body {
+        background-image: url('../../../public/images/datequote_bg.jpg');
+
+        h3 {
+            font-size: 8rem;
+        }
+
+        .bg-translucent {
+            background: rgba(0, 80, 80, 0.6);
+        }
+    }
+}
