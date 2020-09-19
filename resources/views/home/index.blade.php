@@ -2,31 +2,31 @@
 
 @section('content')
 <div class="row">
-    <div class="col-3 pl-0">
+    <div class="col order-2 order-lg-1">
         <x-cards.screenstar />
         @include('home.card_altv')
         <x-cards.social />
         @include('home.card_open')
     </div>
-    <div class="col-6">
-        <div class="row">
-            <div class="col">
+    <div class="col-12 col-lg-6 order-1 order-lg-2">
+        <div class="row d-none d-sm-flex">
+            <div class="col-12">
                 @include('home.card_carousel')
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-12 col-sm-6">
                 @include('home.card_news')
                 @include('home.card_stats')
             </div>
-            <div class="col">
+            <div class="col-12 col-sm-6">
                 <x-cards.reviews />
                 <x-cards.a-l-mobile />
                 <x-cards.about />
             </div>
         </div>
     </div>
-    <div class="col-3 pr-0">
+    <div class="col order-3 order-lg-3">
         <x-cards.interview />
         <x-cards.link />
         <x-cards.trivia />
