@@ -16,4 +16,9 @@ class Screenshot extends Model
             .'.'
             .$this->imgext;
     }
+
+    public function reviewScreenshots()
+    {
+        return $this->hasMany(ScreenshotReview::class, 'screenshot_review_id');
+    }
 }

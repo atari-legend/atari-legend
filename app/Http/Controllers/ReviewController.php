@@ -6,6 +6,8 @@ use App\Comment;
 use App\Game;
 use App\Review;
 use App\ReviewScore;
+use App\ScreenshotReview;
+use App\ScreenshotReviewComment;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -91,6 +93,27 @@ class ReviewController extends Controller
         $score->review_overall = $request->overall ?? 0;
 
         $review->score()->save($score);
+
+        // Process screenshots comments. Screenshots were ordered by screenshot_id
+        // so we should iterate over the same ordered list of game screenshots to
+        // associate the comment with the correct screenshot
+        $gameScreenshots = $game->screenshots->sortBy('screenshot_id');
+        if ($request->filled('screenshot')) {
+            $i = 0;
+            foreach ($request->screenshot as $screenshotComment) {
+                $gameScreenshot = $gameScreenshots[$i++];
+
+                $screenshotReview = new ScreenshotReview();
+                $screenshotReview->review_id = $review->review_id;
+                $screenshotReview->screenshot_id = $gameScreenshot->screenshot_id;
+
+                $screenshotReview->save();
+
+                $comment = new ScreenshotReviewComment();
+                $comment->comment_text = $screenshotComment;
+                $screenshotReview->comment()->save($comment);
+            }
+        }
 
         $request->session()->flash('alert-title', 'Review submitted');
         $request->session()->flash(

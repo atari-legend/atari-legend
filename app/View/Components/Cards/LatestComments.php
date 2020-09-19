@@ -7,9 +7,8 @@ use Illuminate\View\Component;
 
 class LatestComments extends Component
 {
-
     /**
-     * Optional user to get the comments for
+     * Optional user to get the comments for.
      */
     public ?User $user = null;
 
