@@ -5,18 +5,24 @@
 
     <div class="card-body p-2 bg-darklight">
         <p class="card-text">
-            {{ Helper::user($review->user) }} has written {{ $otherReviews->count() }} additional reviews
+            @if (isset($mode) && $mode === 'submit' && $reviews->isEmpty())
+                You haven't written any reviews before. This is your first. Congratulations and good luck!
+                For some examples, see the card 'Indepth reviews'.
+            @else
+                {{ Helper::user($user) }} has written {{ $reviews->count() }} additional reviews
+            @endif
 
-            @if ($otherReviews->isNotEmpty())
+            @if ($reviews->isNotEmpty())
                 <ul>
-                    @foreach ($otherReviews as $r)
+                    @foreach ($reviews as $r)
                         <li>
                             <a href="{{ route('reviews.show', ['review' => $r ]) }}">{{ $r->games->first()->game_name }}</a>
                         </li>
                     @endforeach
                 </ul>
             @endif
-
         </p>
+
+
     </div>
 </div>

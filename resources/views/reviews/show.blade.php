@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-3 pl-0">
-            @include('reviews.card_author')
+            @include('reviews.card_author', ['user' => $review->user, 'reviews' => $otherReviews])
         </div>
         <div class="col-6">
             @include('reviews.card_review')

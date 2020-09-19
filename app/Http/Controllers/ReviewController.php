@@ -9,6 +9,7 @@ use App\ReviewScore;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -41,8 +42,7 @@ class ReviewController extends Controller
         $otherReviews = collect([]);
 
         if (isset($review->user)) {
-            $otherReviews = Review::where('user_id', $review->user->user_id)
-                ->where('review_edit', Review::REVIEW_PUBLISHED)
+            $otherReviews = $this->getReviewsForUser($review->user)
                 ->where('review_id', '!=', $review->review_id)
                 ->get();
         }
@@ -62,9 +62,13 @@ class ReviewController extends Controller
 
         $game = Game::find($request->game);
 
+        $otherReviews = $this->getReviewsForUser(Auth::user())
+            ->get();
+
         return view('reviews.submit')
             ->with([
-                'game'  => $game,
+                'game'          => $game,
+                'otherReviews'  => $otherReviews,
             ]);
     }
 
@@ -107,5 +111,11 @@ class ReviewController extends Controller
         $review->comments()->save($comment);
 
         return back();
+    }
+
+    private function getReviewsForUser(User $user)
+    {
+        return Review::where('user_id', $user->user_id)
+            ->where('review_edit', Review::REVIEW_PUBLISHED);
     }
 }

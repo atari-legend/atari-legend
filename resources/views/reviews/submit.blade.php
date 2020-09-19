@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-3 pl-0">
-            GAME REVIEWS
+            @include('reviews.card_author', ['user' => Auth::user(), 'reviews' => $otherReviews, 'mode' => 'submit'])
             <x-cards.reviews />
         </div>
         <div class="col-6">
