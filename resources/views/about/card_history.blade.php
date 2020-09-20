@@ -13,15 +13,17 @@
                     <h4 class="text-primary">The future of Atari Legend</h4>
                     <p>
                         We have a lot of ambition, and this project will be updated regularly. What new
-                        features can you expect in the future? <br>
-                        <ul class="text-center">
-                            <li>API</li>
-                            <li>Multiple skins</li>
-                            <li>More social media features</li>
-                            <li>Menu section</li>
-                            <li>Downloads</li>
-                            <li>…</li>
-                        </ul>
+                        features can you expect in the future?
+                    </p>
+                    <ul>
+                        <li>API</li>
+                        <li>Multiple skins</li>
+                        <li>More social media features</li>
+                        <li>Menu section</li>
+                        <li>Downloads</li>
+                        <li>…</li>
+                    </ul>
+                    <p>
                         If you have something in mind you like to see in the future on this website, please let
                         us know. We have an open mind and are interested in your opinion.
                     </p>
