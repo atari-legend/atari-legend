@@ -53,7 +53,7 @@ class Helper
 
         $parser = new \JBBCode\Parser();
         $parser->addCodeDefinitionSet(new \JBBCode\DefaultCodeDefinitionSet());
-        $parser->addBBCode('hotspot', '<a name="{option}">{param}</a>', true);
+        $parser->addBBCode('hotspot', '<a id="{option}">{param}</a>', true);
         $parser->addBBCode('hotspotUrl', '<a href="{option}">{param}</a>', true);
         $parser->addBBCode('frontpage', '{param}');
         $parser->addBBCode('screenstar', '{param}');
