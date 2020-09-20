@@ -1,4 +1,4 @@
-<div class="card bg-dark mb-4">
+<div class="card bg-dark mb-4 card-screenshots">
     <div class="card-header text-center">
         <h2 class="text-uppercase">{{ $game->game_name }}</h2>
     </div>
@@ -6,11 +6,13 @@
         @if ($game->screenshots->isNotEmpty())
             <div class="row">
                 <div class="col-2">
-                    @foreach($game->screenshots as $screenshot)
-                        <a href="#carousel-screenshots" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
-                            <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
-                        </a>
-                    @endforeach
+                    <div class="carousel-thumbnails">
+                        @foreach($game->screenshots as $screenshot)
+                            <a href="#carousel-screenshots" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
+                                <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="col-10">
                     <div class="carousel slide" id="carousel-screenshots" data-ride="carousel">

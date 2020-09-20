@@ -18,7 +18,7 @@
         "indent": ["error", 4],
         "key-spacing": ["error", {}],
         "keyword-spacing": ["error"],
-        "max-len": ["error", {"code": 80}],
+        "max-len": ["error", {"code": 120}],
         "no-lonely-if": ["error"],
         "no-trailing-spaces": ["error"],
         "object-curly-spacing": ["error"],

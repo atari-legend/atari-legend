@@ -1,3 +1,6 @@
+/*
+ * Handle truncating content to make it fit into a given height
+ */
 document.addEventListener('DOMContentLoaded', () => {
     function ellipsizeTextBox(el) {
         var wordArray = el.innerHTML.split(' ');

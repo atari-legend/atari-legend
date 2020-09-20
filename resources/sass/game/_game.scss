@@ -3,3 +3,22 @@
         max-height: 5rem;
     }
 }
+
+.card-screenshots, .card-boxscans {
+    .carousel-thumbnails {
+        img {
+            opacity: 0.5;
+
+                &:hover {
+                    opacity: 1;
+                }
+        }
+
+        .active {
+            img {
+                border: solid 1px white;
+                opacity: 1;
+            }
+        }
+    }
+}
