@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">AL Mobile</h2>
     </div>
     <div class="card-body p-0">
-        <img class="w-100" src="{{ asset('images/cards/ALmobile.png') }}">
+        <img class="w-100" src="{{ asset('images/cards/ALmobile.png') }}" alt="Screenshot of the site on a mobile phone">
         <p class="card-text p-2">
            Did you know Atari Legend is fully responsive and mobile ready?
            You want this site to behave like an app on your phone or tablet?

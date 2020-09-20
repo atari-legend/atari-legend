@@ -12,7 +12,7 @@
             <div class="p-2 clearfix">
                 <p class="card-text">
                     @if (isset($new->image))
-                        <img class="col-3 float-left mt-2 mr-2 mb-2" src="{{ asset('storage/images/news_images/'.$new->image->news_image_id.'.'.$new->image->news_image_ext) }}">
+                        <img class="col-3 float-left mt-2 mr-2 mb-2" src="{{ asset('storage/images/news_images/'.$new->image->news_image_id.'.'.$new->image->news_image_ext) }}" alt="News illustration image">
                     @endif
                     {!! Helper::bbCode(nl2br($new->news_text)) !!}
                 </p>

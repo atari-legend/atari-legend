@@ -40,7 +40,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="user-menu" role="button" data-toggle="dropdown" aria-expanded="false">
                         @if (Auth::user()->avatar_ext)
-                            <img class="rounded-circle mr-1" height="30" src="{{ asset('storage/images/user_avatars/'.Auth::user()->user_id.'.'.Auth::user()->avatar_ext) }}">
+                            <img class="rounded-circle mr-1" height="30" src="{{ asset('storage/images/user_avatars/'.Auth::user()->user_id.'.'.Auth::user()->avatar_ext) }}" alt="User avatar">
                         @endif
                         {{ Auth::user()->userid }}
                     </a>

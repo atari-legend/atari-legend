@@ -4,7 +4,7 @@
     </div>
     <div class="card-body p-0">
         @if ($website->website_imgext)
-        <img class="w-100" src="{{ asset('storage/images/website_images/'.$website->file) }}">
+        <img class="w-100" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of the website {{ $website->website_name }}">
         @endif
         <div class="p-2">
             <p class="card-text">{{ $website->description }}</p>

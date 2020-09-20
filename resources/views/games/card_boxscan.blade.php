@@ -7,13 +7,13 @@
         @if ($boxscans->isNotEmpty())
             <div class="row">
                 <div class="col">
-                    <img class="w-100 mb-2" src="{{ $boxscans->first() }}">
+                    <img class="w-100 mb-2" src="{{ $boxscans->first() }}" alt="Large scan of the game box">
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     @foreach ($boxscans->skip(1) as $boxscan)
-                        <img class="w-25 mr-2" src="{{ $boxscan }}">
+                        <img class="w-25 mr-2" src="{{ $boxscan }}" alt="Thumbnail of other scans of the game box">
                     @endforeach
                 </div>
             </div>

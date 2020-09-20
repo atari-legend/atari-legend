@@ -3,7 +3,7 @@
         <h2 class="text-uppercase"><a href="{{ route('reviews.index') }}">Screenstar</a></h2>
     </div>
     <div class="card-body p-0">
-        <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$screenstar->games[0]->screenshots[0]->file) }}">
+        <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$screenstar->games[0]->screenshots[0]->file) }}" alt="Screenshot of {{ $screenstar->games->first()->game_name }}">
         <div class="p-2">
             <p class="card-text">
                 {!! Helper::bbCode(Helper::extractTag($screenstar->review_text, "screenstar")) !!}

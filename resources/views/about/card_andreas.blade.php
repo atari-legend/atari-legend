@@ -30,7 +30,7 @@
             Even though I never met him in real life, after 4 years of chatting, you just know he was a cool, friendly bloke who had a lot to offer. It so sad I never met him in real life.
         </p>
         <p class="card-text text-center">
-            <img class="w-50" src="{{ asset('images/class_al/Andreas2.jpg') }}">
+            <img class="w-50" src="{{ asset('images/class_al/Andreas2.jpg') }}" alt="Andreas doing the Vulcan salute">
         </p>
         <p class="card-text">
             Andreas Wahlin was killed on the 24th of February when getting of the tram in Gothenborg. He was attacked by two muggers and stabbed in the back. He died on the way to the hospital. He was
@@ -54,7 +54,7 @@
             <strong>Maarten Martens (ST Graveyard) - March 7 2007</strong>
         </p>
         <p class="card-text text-center">
-            <img class="w-50" src="{{ asset('images/class_al/Andreas.jpg') }}">
+            <img class="w-50" src="{{ asset('images/class_al/Andreas.jpg') }}" alt="Andreas doing martial arts">
         </p>
     </div>
     <div class="card-body p-2">

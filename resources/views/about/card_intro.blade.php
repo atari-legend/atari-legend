@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">AL Intro</h2>
     </div>
     <div class="card-body p-0">
-        <img class="w-100" src="{{ asset('images/class_al/ALintro.png') }}">
+        <img class="w-100" src="{{ asset('images/class_al/ALintro.png') }}" alt="Screenshot of the AL intro">
         <p class="card-text p-2">
            In July 2017, a Javascript intro screen was created by Dyno of EXO7,
            to promote the upcomming new website. Click and enjoy!

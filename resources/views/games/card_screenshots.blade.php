@@ -7,11 +7,11 @@
             <div class="row">
                 <div class="col-2">
                     @foreach($game->screenshots->skip(1) as $screenshot)
-                        <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
+                        <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
                     @endforeach
                 </div>
                 <div class="col-10">
-                    <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->first()->file) }}">
+                    <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->first()->file) }}" alt="Large screenshots of {{ $game->game_name }}">
                 </div>
             </div>
         @else

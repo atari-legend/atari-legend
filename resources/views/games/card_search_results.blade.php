@@ -40,7 +40,7 @@
                 <div class="col-4 text-center p-3 align-self-center">
                     @if ($game->screenshots->isNotEmpty())
                     <a href="{{ route('games.show', ['game' => $game]) }}">
-                        <img class="w-100 mb-2 bg-dark" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->get(0)->file) }}">
+                        <img class="w-100 mb-2 bg-dark" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->get(0)->file) }}" alt="Screenshot of {{ $game->game_name }}">
                     </a>
                     @endif
 

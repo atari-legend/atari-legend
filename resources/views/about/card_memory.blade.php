@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">In Loving Memory</h2>
     </div>
     <div class="card-body p-0">
-        <img class="w-100" src="{{ asset('images/class_al/Andreas3.jpg') }}">
+        <img class="w-100" src="{{ asset('images/class_al/Andreas3.jpg') }}" alt="Picture of Andreas Wahlin">
         <p class="card-text p-2">
             Gone but not forgotten…
         </p>

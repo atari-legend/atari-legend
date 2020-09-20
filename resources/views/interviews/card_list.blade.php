@@ -20,15 +20,15 @@
             <div class="row g-0 p-2">
                 <div class="col-4 pr-2 align-self-center">
                     @if (isset($interview->individual->text->ind_imgext))
-                        <img class="w-100 " src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}">
+                        <img class="w-100 " src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}" alt="Picture of {{ $interview->individual->ind_name }}">
                     @else
-                        <img class="w-100 " src="{{ asset('images/unknown.jpg') }}">
+                        <img class="w-100 " src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
                     @endif
                 </div>
                 <div class="col-8 pl-2">
                     <h3>
                         <a href="{{ route('interviews.show', ['interview' => $interview]) }}">
-                            {{ $interview->individual->ind_name}}
+                            {{ $interview->individual->ind_name }}
                         </a>
                     </h3>
                     <h6 class="card-subtitle text-muted mb-2">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</h6>

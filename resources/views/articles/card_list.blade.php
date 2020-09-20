@@ -15,13 +15,13 @@
             <div class="row g-0 p-2">
                 <div class="col-4 pr-2 align-self-center">
                     @if (isset($article->screenshots))
-                        <img class="w-100 " src="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}">
+                        <img class="w-100 " src="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}" alt="Article screenshot">
                     @endif
                 </div>
                 <div class="col-8 pl-2">
                     <h3>
                         <a href="{{ route('articles.show', ['article' => $article]) }}">
-                            {{ $article->article_title}}
+                            {{ $article->article_title }}
                         </a>
                     </h3>
                     <h6 class="card-subtitle text-muted mb-2">

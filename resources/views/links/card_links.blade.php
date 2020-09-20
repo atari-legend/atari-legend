@@ -29,7 +29,7 @@
             <div class="row g-0 p-2">
                 <div class="col-md-4">
                     @if ($website->website_imgext)
-                        <img class="w-100" src="{{ asset('storage/images/website_images/'.$website->file) }}">
+                        <img class="w-100" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
                     @endif
                 </div>
                 <div class="col-md-8 pl-2">

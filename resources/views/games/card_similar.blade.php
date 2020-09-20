@@ -8,7 +8,7 @@
         </div>
         <div class="card-body p-0">
             <a href="{{ route('games.show', ['game' => $similar]) }}">
-                <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$similar->screenshots[0]->file) }}" alt="{{ $similar->game_name }}">
+                <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$similar->screenshots[0]->file) }}" alt="Screenshot of {{ $similar->game_name }}">
             </a>
         </div>
     </div>
