@@ -7,13 +7,36 @@
         @if ($boxscans->isNotEmpty())
             <div class="row">
                 <div class="col">
-                    <img class="w-100 mb-2" src="{{ $boxscans->first() }}" alt="Large scan of the game box">
+                    <div class="carousel slide carousel-fade" id="carousel-boxscans" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            @foreach($boxscans as $boxscan)
+                                <li data-target="#carousel-boxscans" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif></li>
+                            @endforeach
+                        </ol>
+                        <div class="carousel-inner">
+                            @foreach ($boxscans as $boxscan)
+                                <div class="carousel-item @if ($loop->first) active @endif">
+                                    <img class="w-100 d-block" src="{{ $boxscan }}" alt="Large scan of the game box">
+                                </div>
+                            @endforeach
+                        </div>
+                        <a class="carousel-control-prev text-decoration-none" href="#carousel-boxscans" role="button" data-slide="prev">
+                            <span class="fas fa-chevron-left fa-3x"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next text-decoration-none" href="#carousel-boxscans" role="button" data-slide="next">
+                            <i class="fas fa-chevron-right fa-3x"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    @foreach ($boxscans->skip(1) as $boxscan)
-                        <img class="w-25 mr-2" src="{{ $boxscan }}" alt="Thumbnail of other scans of the game box">
+                    @foreach ($boxscans as $boxscan)
+                        <a href="#carousel-boxscans" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
+                            <img class="w-25 mr-2" src="{{ $boxscan }}" alt="Thumbnail of other scans of the game box">
+                        </a>
                     @endforeach
                 </div>
             </div>
