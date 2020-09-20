@@ -16,7 +16,7 @@ h2 {
 }
 
 .striped {
-    > div {
+    > * {
         border-bottom: solid 1px $black;
 
         &:nth-child(even) {
