@@ -16,7 +16,7 @@
     <div class="card-body p-2">
         <form method="get" action="{{ route('reviews.index') }}">
             <div class="row mb-3">
-                <label for="titleAZ" class="col-sm-2 col-form-label">Author</label>
+                <label for="author" class="col-sm-2 col-form-label">Author</label>
                 <div class="col-sm-10">
                     <select class="form-select" id="author" name="author">
                         <option value="" selected>-</option>
