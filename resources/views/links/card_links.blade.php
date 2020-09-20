@@ -4,24 +4,22 @@
     </div>
 
     <div class="card-header p-2">
-        <p class="card-text">
-            <ul class="list-unstyled">
+        <ul class="list-unstyled">
+            <li class="w-45 d-inline-block">
+                <a href="{{ route('links.index') }}" class="{{ isset($category) ? '' : 'font-weight-bold text-white' }}">All</a>
+            </li>
+            @foreach ($categories as $c)
                 <li class="w-45 d-inline-block">
-                    <a href="{{ route('links.index') }}" class="{{ isset($category) ? '' : 'font-weight-bold text-white' }}">All</a>
+                    @if ($c->websites->count() > 0)
+                        <a href="{{ route('links.index', ['category' => $c]) }}"
+                            class="{{ (isset($category) && $category->website_category_id === $c->website_category_id) ? 'font-weight-bold text-white' : '' }}">{{ $c->website_category_name }}</a>
+                    @else
+                        <span class="text-muted">{{ $c->website_category_name }}</span>
+                    @endif
+                    <small class="text-muted">({{ $c->websites->count() }})</small>
                 </li>
-                @foreach ($categories as $c)
-                    <li class="w-45 d-inline-block">
-                        @if ($c->websites->count() > 0)
-                            <a href="{{ route('links.index', ['category' => $c]) }}"
-                                class="{{ (isset($category) && $category->website_category_id === $c->website_category_id) ? 'font-weight-bold text-white' : '' }}">{{ $c->website_category_name }}</a>
-                        @else
-                            <span class="text-muted">{{ $c->website_category_name }}</span>
-                        @endif
-                        <small class="text-muted">({{ $c->websites->count() }})</small>
-                    </li>
-                @endforeach
-            </ul>
-        </p>
+            @endforeach
+        </ul>
     </div>
 
     <div class="card-body p-0 striped">
