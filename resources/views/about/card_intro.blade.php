@@ -8,7 +8,7 @@
            In July 2017, a Javascript intro screen was created by Dyno of EXO7,
            to promote the upcomming new website. Click and enjoy!
         </p>
-        <a class="d-block p-2 text-right" href="demo/intro.html">
+        <a class="d-block p-2 text-right" href="{{ asset('demo/intro.html') }}">
             More <i class="fas fa-chevron-right"></i>
         </a>
     </div>
