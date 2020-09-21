@@ -4,7 +4,7 @@
         <!-- Hide full size banner on small screens -->
         <img class="d-none d-sm-inline" src="{{ asset('images/'.request()->attributes->get('logos')->random()) }}" alt="Header banner">
         <!-- Show small banner on small screens -->
-        <img class="d-inline d-sm-none mb-2 mb-sm-0" src="{{ asset('images/top_logo01_480.png') }}" alt="Header banner">
+        <img class="d-inline d-sm-none mb-2 mb-sm-0 w-100" src="{{ asset('images/top_logo01_480.png') }}" alt="Header banner">
         <!-- Only show the right logo on large screens -->
         <img class="float-right d-none d-lg-inline" src="{{ asset('images/'.request()->attributes->get('rightLogos')->random() ) }}" alt="">
 
