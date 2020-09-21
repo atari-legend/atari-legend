@@ -38,7 +38,7 @@ class Header
     }
 
     /**
-     * Get all sprite animations
+     * Get all sprite animations.
      */
     private function getAnimations()
     {
