@@ -14,6 +14,7 @@ class Header
     {
         $request->attributes->set('logos', $this->getLogos());
         $request->attributes->set('rightLogos', $this->getRightLogos());
+        $request->attributes->set('animations', $this->getAnimations());
 
         return $next($request);
     }
@@ -34,5 +35,13 @@ class Header
         return collect(Storage::disk('images')->files())->filter(function ($file) {
             return strpos($file, 'top_right') === 0;
         });
+    }
+
+    /**
+     * Get all sprite animations
+     */
+    private function getAnimations()
+    {
+        return collect(Storage::disk('images')->files('animations/'));
     }
 }

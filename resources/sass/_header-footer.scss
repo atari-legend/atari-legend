@@ -25,6 +25,58 @@ header {
     }
 }
 
+@keyframes sprite {
+    0% {
+        top: 58px;
+        left: -3rem;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        top: 58px;
+        left: 45%;
+        opacity: 0;
+    }
+}
+
+@keyframes sprite-vertical {
+    0% {
+        top: 58px;
+        left: 3rem;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+        left: 9rem;
+    }
+    100% {
+        top: -80px;
+        left: 12rem;
+        opacity: 0;
+    }
+}
+
+#header-sprite {
+    position: relative;
+    animation-name: sprite;
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+    &.vertical {
+        animation-name: sprite-vertical;
+        animation-duration: 10s;
+    }
+}
+
 footer {
     background-image: url('../../public/images/footer_bg.jpg');
     height: 120px;
