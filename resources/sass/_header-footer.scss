@@ -1,0 +1,35 @@
+header {
+    background: linear-gradient(#175f5f, black);
+    box-shadow: 0 0 7px $primary;
+
+    // Full size header/banner for larger screens
+    @include media-breakpoint-up(sm) {
+        box-shadow: none;
+
+        height: 217px;
+        background-image: url('../../public/images/top_bg_left.jpg'),
+            url('../../public/images/top_bg_right.jpg'),
+            url('../../public/images/top_bg_sides.jpg');
+        background-position: left 2px,
+            right 2px,
+            320px 0px;
+        background-repeat: no-repeat,
+            no-repeat,
+            repeat-x;
+
+        .header-inner {
+            max-width: 1280px;
+            height: 217px;
+            background-image: url('../../public/images/top_bg.jpg');
+        }
+    }
+}
+
+footer {
+    background-image: url('../../public/images/footer_bg.jpg');
+    height: 120px;
+
+    font-family: Audiowide, $font-family-sans-serif;
+
+    border-top: solid 10px $primary;
+}
