@@ -1,0 +1,40 @@
+nav {
+    border-bottom: 3px solid #008b8b;
+    border-left: 2px solid #008b8b;
+    border-right: 2px solid #008b8b;
+
+    li {
+        white-space: nowrap;
+    }
+
+    .navbar-main {
+        li {
+            font-family: $font-audiowide;
+            text-transform: uppercase;
+            border-left: solid 1px #008b8b;
+
+            &:hover {
+                background-color: #00a9a9;
+                color: #182727;
+            }
+
+            &:last-child {
+                border-right: solid 1px #008b8b;
+            }
+        }
+    }
+
+    form {
+        button.btn {
+            color: $dark;
+            &:hover {
+                color: #008b8b;
+            }
+        }
+    }
+
+    ul.navbar-profile {
+        border-left: solid 1px #008b8b;
+    }
+
+}
