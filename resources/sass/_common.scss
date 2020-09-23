@@ -37,3 +37,8 @@ h2 {
 .w-45 {
     width: 45% !important;
 }
+
+img.cropped {
+    object-fit: cover;
+    object-position: top left;
+}

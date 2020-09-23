@@ -1,4 +1,4 @@
-<div class="card bg-dark mb-4">
+<div class="card bg-dark mb-4 card-links">
     <div class="card-header text-center">
         <h2 class="text-uppercase">Links</h2>
     </div>
@@ -27,7 +27,7 @@
             <div class="row g-0 p-2">
                 <div class="col-md-4">
                     @if ($website->website_imgext)
-                        <img class="w-100" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
+                        <img class="w-100 cropped" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
                     @endif
                 </div>
                 <div class="col-md-8 pl-2">
