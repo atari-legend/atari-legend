@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-light bg-primary mb-4 p-0">
-    <div class="container-fluid pr-0">
+    <div class="container-fluid">
         <a class="navbar-brand" href="{{ route('home.index') }}"><i class="fas fa-home"></i></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
             <span class="navbar-toggler-icon"></span>
