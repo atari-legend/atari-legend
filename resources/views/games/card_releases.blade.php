@@ -27,6 +27,12 @@
                             @if ($release->publisher->texts->isNotEmpty() && $release->publisher->texts->first->file !== null)
                                 <i class="far fa-image"></i>
                             @endif
+                            @if ($release->publisher->texts->isNotEmpty() && $release->publisher->texts->first()->pub_dev_profile !== null && $release->publisher->texts->first()->pub_dev_profile !== '')
+                                <a href="javascript:;" class="ml-1" data-target="#profile-publisher-{{ $release->id }}-{{ $release->publisher->pub_dev_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-publisher-{{ $release->id }}-{{ $release->publisher->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
+                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-publisher-{{ $release->id }}-{{ $release->publisher->pub_dev_id }}">
+                                    {!! Helper::bbCode($release->publisher->texts->first()->pub_dev_profile) !!}
+                                </p>
+                            @endif
                         </div>
                     </div>
                 @endif

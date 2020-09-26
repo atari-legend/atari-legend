@@ -24,6 +24,12 @@
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first->file !== null)
                                 <i class="far fa-image"></i>
                             @endif
+                            @if ($developer->texts->isNotEmpty() && $developer->texts->first()->pub_dev_profile !== null && $developer->texts->first()->pub_dev_profile !== '')
+                                <a href="javascript:;" class="ml-1" data-target="#profile-developer-{{ $developer->pub_dev_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
+                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->pub_dev_id }}">
+                                    {!! Helper::bbCode($developer->texts->first()->pub_dev_profile) !!}
+                                </p>
+                            @endif
                         </div>
                     @endforeach
                 </div>
@@ -38,8 +44,17 @@
                 <div class="col-8">
                     @foreach ($game->individuals as $gameIndividual)
                         <div class="mb-1">
-                            {{ $gameIndividual->individual->ind_name }}<br>
+                            {{ $gameIndividual->individual->ind_name }}
+                            @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && $gameIndividual->individual->text->ind_profile !== '')
+                                <a href="javascript:;" class="ml-1" data-target="#profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
+                            @endif
+                            <br>
                             <small class="text-muted">{{ $gameIndividual->role->name }}</small>
+                            @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && $gameIndividual->individual->text->ind_profile !== '')
+                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}">
+                                    {!! Helper::bbCode($gameIndividual->individual->text->ind_profile) !!}
+                                </p>
+                            @endif
                         </div>
                     @endforeach
                 </div>
