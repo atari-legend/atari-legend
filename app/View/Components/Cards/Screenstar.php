@@ -28,7 +28,17 @@ class Screenstar extends Component
             ->get()
             ->random();
 
+        $firstRelease = $screenstar->games->first()->releases
+            ->filter(function ($release) {
+                return $release->date !== null;
+            })
+            ->sortBy('date')
+            ->first();
+
         return view('components.cards.screenstar')
-            ->with(['screenstar' => $screenstar]);
+            ->with([
+                'screenstar'    => $screenstar,
+                'firstRelease'  => $firstRelease,
+            ]);
     }
 }

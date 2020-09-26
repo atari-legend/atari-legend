@@ -8,8 +8,10 @@
             <figcaption class="py-2 px-3">
                 <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                 <div class="figcaption-title"><a href="{{ route('games.show', ['game' => $screenstar->games->first()]) }}">{{ $screenstar->games->first()->game_name }}</a></div>
-                @if ($screenstar->games->first()->releases->isNotEmpty())
-                    <div class="figcaption-note">{{ $screenstar->games->first()->releases->first()->date->year }}</div>
+                @if ($firstRelease !== null)
+                    <div class="figcaption-note">
+                        <a href="{{ route('games.search', ['year' => $firstRelease->date->year]) }}">{{ $firstRelease->date->year }}</a>
+                    </div>
                 @endif
                 <div class="figcaption-subtitle mb-2"><strong>Random review</strong></div>
             </figcaption>

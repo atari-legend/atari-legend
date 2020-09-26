@@ -23,7 +23,7 @@
                     <div class="row p-2 g-0">
                         <div class="col-4 text-muted">Publisher</div>
                         <div class="col-8">
-                            {{ $release->publisher->pub_dev_name }}
+                            <a href="{{ route('games.search', ['publisher' => $release->publisher->pub_dev_name]) }}">{{ $release->publisher->pub_dev_name }}</a>
                             @if ($release->publisher->texts->isNotEmpty() && $release->publisher->texts->first->file !== null)
                                 <i class="far fa-image"></i>
                             @endif

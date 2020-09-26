@@ -20,9 +20,9 @@
                 <div class="col-8">
                     @foreach ($game->developers as $developer)
                         <div>
-                            {{ $developer->pub_dev_name }}
+                            <a href="{{ route('games.search', ['developer' => $developer->pub_dev_name]) }}">{{ $developer->pub_dev_name }}</a>
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first->file !== null)
-                                <i class="far fa-image"></i>
+                                <i class="far fa-image ml-1"></i>
                             @endif
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first()->pub_dev_profile !== null && $developer->texts->first()->pub_dev_profile !== '')
                                 <a href="javascript:;" class="ml-1" data-target="#profile-developer-{{ $developer->pub_dev_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
@@ -116,7 +116,7 @@
                 </div>
                 <div class="col-8">
                     @foreach ($game->genres as $genre)
-                        {{ $genre->name }}@if (!$loop->last), @endif
+                        <a href="{{ route('games.search', ['genre' => $genre->name]) }}">{{ $genre->name }}</a>@if (!$loop->last), @endif
                     @endforeach
                 </div>
             </div>
