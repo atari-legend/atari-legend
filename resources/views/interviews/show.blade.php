@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Interview with '.$interview->individual->ind_name)
 
 @section('content')
     <div class="row">

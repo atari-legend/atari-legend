@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', $article->texts->first()->article_title)
 
 @section('content')
     <div class="row">

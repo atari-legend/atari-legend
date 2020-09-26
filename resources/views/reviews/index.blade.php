@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Latest Atari ST game reviews')
 
 @section('content')
     <div class="row">

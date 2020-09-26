@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Atari ST games, reviews, interviews, news and more | Atari Legend</title>
+    <title>@yield('title', 'Atari ST games, reviews, interviews, news and more') | Atari Legend</title>
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 

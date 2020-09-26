@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', $game->game_name.' - Atari ST game')
 
 @section('content')
     <div class="row">

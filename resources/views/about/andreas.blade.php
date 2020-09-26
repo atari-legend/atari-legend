@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'In loving memory of Andreas Wahlin')
 
 @section('content')
     <div class="row">
