@@ -8,6 +8,20 @@
     <title>Atari ST games, reviews, interviews, news and more | Atari Legend</title>
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "url": "{{ URL::to('/') }}",
+            "name": "Atari Legend",
+            "logo": "{{ asset('images/card/class.png') }}",
+            "sameAs": [
+                "https://www.facebook.com/atarilegend",
+                "https://twitter.com/AtariLegend"
+            ]
+        }
+    </script>
 </head>
 
 <body>
