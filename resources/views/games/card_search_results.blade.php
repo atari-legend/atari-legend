@@ -39,28 +39,39 @@
             @foreach ($games as $game)
                 <div class="col-4 text-center p-3 align-self-center">
                     @if ($game->screenshots->isNotEmpty())
-                    <a href="{{ route('games.show', ['game' => $game]) }}">
-                        <img class="w-100 mb-2 bg-dark" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->get(0)->file) }}" alt="Screenshot of {{ $game->game_name }}">
-                    </a>
+                        <a href="{{ route('games.show', ['game' => $game]) }}">
+                            <img class="w-100 mb-2 bg-dark" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->random()->file) }}" alt="Screenshot of {{ $game->game_name }}">
+                        </a>
                     @endif
 
                     <a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->game_name }}</a><br>
 
-                    @forelse ($game->developers as $developer)
-                        <!-- FIXME: Links to search on developer -->
-                        {{ $developer->pub_dev_name }}<br>
-                    @empty
-                        n/a<br>
-                    @endforelse
+                    @if ($game->developers->isNotEmpty())
+                        <span class="text-muted">by</span>
+                        @forelse ($game->developers as $developer)
+                            <a href="{{ route('games.search', ['developer' => $developer->pub_dev_name]) }}">{{ $developer->pub_dev_name }}</a>@if (!$loop->last), @endif
+                        @endforeach
+                    @else
+                        <span class="text-muted">n/a</span>
+                    @endif
+                    <br>
 
                     @if ($game->screenshots->isNotEmpty())
-                        <i class="fas fa-camera"></i>
+                        <i class="fas fa-camera fa-fw mt-1" title="{{ $game->screenshots->count() }} {{ Str::plural('screenshot', $game->screenshots->count()) }}"></i>
+                    @endif
+                    @if ($game->releases->isNotEmpty())
+                        @foreach ($game->releases as $release)
+                            @if ($release->boxscans->isNotEmpty())
+                                <i class="fas fa-box fa-fw mt-1" title="Has boxscans"></i>
+                                @break
+                            @endif
+                        @endforeach
                     @endif
                     @if ($game->musics->isNotEmpty())
-                        <i class="fas fa-music"></i>
+                        <i class="fas fa-music fa-fw mt-1" title="{{ $game->musics->count() }} {{ Str::plural('music', $game->musics->count()) }}"></i>
                     @endif
                     @if ($game->reviews->isNotEmpty())
-                        <i class="fas fa-newspaper"></i>
+                        <i class="fas fa-newspaper fa-fw mt-1" title="{{ $game->reviews->count() }} {{ Str::plural('review', $game->reviews->count()) }}"></i>
                     @endif
                 </div>
             @endforeach
