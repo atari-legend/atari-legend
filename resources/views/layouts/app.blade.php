@@ -34,6 +34,26 @@
             gtag('config', '{{ env('GOOGLE_ANALYTICS_ID') }}');
         </script>
     @endif
+
+    {{-- Installation as mobile app --}}
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    {{-- IOS app icons --}}
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('images/icons/icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('images/icons/icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('images/icons/icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('images/icons/icon-144x144.png') }}">
+
+    {{-- Social media metadata --}}
+    <meta property="og:title" content="Atari Legend: Legends Never Die">
+    <meta property="og:description" content="Nostalgia trippin' down the Atari ST memory lane">
+    <meta property="og:image" content="{{ asset('images/AL.jpg') }}">
+    <meta property="og:url" content="{{ URL::to('/') }}">
+    <meta property="og:site_name" content="Atari Legend">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:alt" content="Atari Legend">
+
 </head>
 
 <body>
