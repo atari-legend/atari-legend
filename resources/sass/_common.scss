@@ -42,3 +42,7 @@ img.cropped {
     object-fit: cover;
     object-position: top left;
 }
+
+.form-control, .form-select {
+    border: solid 1px $primary-dark;
+}

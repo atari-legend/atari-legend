@@ -1,9 +1,12 @@
+@use "sass:color";
+
 $fa-font-path: "../webfonts";
 
 $body-bg: #000;
 $body-color: #fff;
 
 $primary: #00d3d3;
+$primary-dark: color.scale($primary, $lightness: -40%);
 $dark: #122323;
 $dark-light: #0d2e2e;
 
