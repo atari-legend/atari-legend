@@ -28,6 +28,14 @@ class GameController extends Controller
     {
         $games = Game::select();
 
+        if ($request->filled('titleAZ')) {
+            if ($request->input('titleAZ') === '0-9') {
+                $games->where('game_name', 'regexp', '^[0-9]+');
+            } else {
+                $games->where('game_name', 'like', $request->input('titleAZ').'%');
+            }
+        }
+
         if ($request->filled('title')) {
             $games->where('game_name', 'like', '%'.$request->input('title').'%');
         }

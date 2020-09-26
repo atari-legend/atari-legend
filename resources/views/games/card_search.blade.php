@@ -14,12 +14,24 @@
         </p>
     </div>
     <div class="card-body p-2">
+        <div class="row-mb-4 text-center">
+            <ul class="list-inline">
+                <li class="list-inline-item mx-0 my-1">
+                    <a href="{{ route('games.search', ['titleAZ' => '0-9']) }}" class="btn btn-primary text-light bg-darklight m-1 p-1 border-secondary">#</a>
+                </li>
+                @foreach (range('A', 'Z') as $letter)
+                    <li class="list-inline-item mx-0 my-1">
+                        <a href="{{ route('games.search', ['titleAZ' => $letter]) }}" class="btn btn-primary text-light bg-darklight m-1 p-1 border-secondary">{{ $letter }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
         <form method="get" action="{{ route('games.search') }}">
             <div class="row mb-3">
                 <label for="titleAZ" class="col-sm-2 col-form-label">Title (A-Z)</label>
                 <div class="col-sm-10">
                     <select class="form-select" id="titleAZ" name="titleAZ">
-                        <option selected>-</option>
+                        <option selected value="">-</option>
                         <option value="0-9">0-9</option>
                         @foreach (range('A', 'Z') as $letter)
                             <option value="{{ $letter }}">{{ $letter }}</option>
