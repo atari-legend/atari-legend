@@ -6,7 +6,7 @@
         @forelse ($game->releases as $release)
             <div class="card-body px-0 py-1 text-center">
                 @if ($release->date !== null)
-                    <h4 class="m-0">{{ date('Y', strtotime($release->date)) }}</h4>
+                    <h4 class="m-0">{{ $release->date->year }}</h4>
                 @else
                     <h4 class="m-0">[no date]</h4>
                 @endif
