@@ -54,6 +54,8 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image:alt" content="Atari Legend">
 
+    <meta name="description" content="@yield('description', 'Information, reviews and comments about Atari ST games, interviews of famous Atari ST game developers, contribute missing information to the database.')">
+
 </head>
 
 <body>
