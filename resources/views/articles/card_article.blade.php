@@ -13,10 +13,12 @@
             <div class="col-9">
                 {!! Helper::bbCode(nl2br($article->texts->first()->article_text)) !!}
             </div>
-            <div class="col-3 pl-2 text-center text-muted">
+            <div class="col-3 pl-2 text-center text-muted lightbox-gallery">
                 @foreach ($article->screenshots as $screenshot)
                     <div class="bg-dark">
-                        <img class="w-100 " src="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" alt="{{ $screenshot->comment->comment_text }}">
+                        <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" title="{{ $screenshot->comment->comment_text }}">
+                            <img class="w-100 " src="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" alt="{{ $screenshot->comment->comment_text }}">
+                        </a>
                         <p class="pb-5 mb-0">{{ $screenshot->comment->comment_text }}</p>
                     </div>
                 @endforeach

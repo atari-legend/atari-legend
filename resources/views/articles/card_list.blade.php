@@ -13,9 +13,11 @@
     <div class="card-body p-0 striped">
         @foreach ($articles as $article)
             <div class="row g-0 p-2">
-                <div class="col-4 pr-2 align-self-center">
+                <div class="col-4 pr-2 align-self-center lightbox-gallery">
                     @if (isset($article->screenshots))
-                        <img class="w-100 " src="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}" alt="Article screenshot">
+                        <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}">
+                            <img class="w-100" src="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}" alt="Article screenshot">
+                        </a>
                     @endif
                 </div>
                 <div class="col-8 pl-2">

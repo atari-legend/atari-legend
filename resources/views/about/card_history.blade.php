@@ -2,7 +2,7 @@
     <div class="card-header text-center">
         <h2 class="text-uppercase">History</h2>
     </div>
-    <div class="card-body">
+    <div class="card-body lightbox-gallery">
         <p class="text-center">By STG - September 2017</p>
         <section id="cd-timeline" class="cd-container">
             <div class="cd-timeline-block">
@@ -40,7 +40,9 @@
                     <p>
                         After almost 3 years in the making, Atari Legend is finally re-released.<br>
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/class.png') }}" alt="AtariLegend logo">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/class.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/class.png') }}" alt="AtariLegend logo">
+                    </a>
                     <h6 class="text-muted">October 2017</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -99,7 +101,9 @@
                         menu discs and is a recreation of his PACIGAME website from the past.
                         Brume manages to preserve some very rare menu collections which weren't available before.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/Stonish.png') }}" alt="Stonish screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/Stonish.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/Stonish.png') }}" alt="Stonish screenshot">
+                    </a>
                     <h6 class="text-muted">October 2014</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -159,7 +163,9 @@
                         Atari Legend is created - Legends never die! All content of previous projects is now merged
                         into a fully, db driven web project.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/atarilegend.png') }}" alt="Atari Legend screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/atarilegend.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/atarilegend.png') }}" alt="Atari Legend screenshot">
+                    </a>
                     <h6 class="text-muted">March 2004</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -189,7 +195,9 @@
                         And yet another project by the almighty Brume. This time 'Missing Atari ST'
                         website covering all games that are still wanted but never found.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/Missing%20Atari%20ST%20Games.png') }}" alt="Missing Atari ST Games screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/Missing%20Atari%20ST%20Games.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/Missing%20Atari%20ST%20Games.png') }}" alt="Missing Atari ST Games screenshot">
+                    </a>
                     <h6 class="text-muted">November 2002</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -203,7 +211,9 @@
                     <p>
                         The second version of The ST Graveyard is released.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/The%20ST%20Graveyard2.png') }}" alt="ST Graveyard screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/The%20ST%20Graveyard2.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/The%20ST%20Graveyard2.png') }}" alt="ST Graveyard screenshot">
+                    </a>
                     <h6 class="text-muted">November 2002</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -219,7 +229,9 @@
                         Work on a second version is quickly canned in favor of the Atari Legend project.
                         (Even though that name didn't exist yet)
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/atarizone.png') }}" alt="Atarizone screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/atarizone.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/atarizone.png') }}" alt="Atarizone screenshot">
+                    </a>
                     <h6 class="text-muted">May 2002</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -238,7 +250,9 @@
                         to phpBB soon follows. Hence Atari-Forum is born. The very first release of the biggest ST
                         forum on the net to date.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/atari-forum.png') }}" alt="Atari-Forum screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/atari-forum.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/atari-forum.png') }}" alt="Atari-Forum screenshot">
+                    </a>
                     <h6 class="text-muted">May 2002</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -253,7 +267,9 @@
                         New Atari ST scener STG releases the first version of 'The ST Graveyard',
                         featuring loads of self written reviews and articles on Atari ST games.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/The%20ST%20Graveyard.png') }}" alt="ST Graveyard screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/The%20ST%20Graveyard.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/The%20ST%20Graveyard.png') }}" alt="ST Graveyard screenshot">
+                    </a>
                     <h6 class="text-muted">June 2001</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -268,7 +284,9 @@
                         Brume creates another incredible resource for Atari ST gamers,
                         this time focussing on rare menu disks.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/pacigame.png') }}" alt="Pacigame screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/pacigame.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/pacigame.png') }}" alt="Pacigame screenshot">
+                    </a>
                     <h6 class="text-muted">May 2001</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
@@ -286,7 +304,9 @@
                         After this conversation, the mother of all Atari ST demo websites, Pacidemo (Pacifist demos)
                         is released. Pacidemo was one of the oldest and most respected demoscene sites on the net.
                     </p>
-                    <img class="w-75" src="{{ asset('images/class_al/pacidemo.png') }}" alt="Pacidemo screenshot">
+                    <a class="lightbox-link" href="{{ asset('images/class_al/pacidemo.png') }}">
+                        <img class="w-75" src="{{ asset('images/class_al/pacidemo.png') }}" alt="Pacidemo screenshot">
+                    </a>
                     <h6 class="text-muted">August 1997</h6>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->

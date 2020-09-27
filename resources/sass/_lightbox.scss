@@ -1,0 +1,18 @@
+.slbElement {
+    .slbOverlay {
+        opacity: 0.8;
+    }
+
+    .slbCaption {
+        bottom: inherit;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+
+        white-space: normal;
+    }
+
+    .slbArrows {
+        font-size: 2rem;
+    }
+}

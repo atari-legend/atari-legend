@@ -41,12 +41,14 @@
                 </fieldset>
 
                 @if ($game->screenshots->isNotEmpty())
-                    <fieldset>
+                    <fieldset class="lightbox-gallery">
                         <legend>Screenshots</legend>
                         @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
                             <div class="row mb-3">
                                 <div class="col-2">
-                                    <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Game screenshot">
+                                    <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
+                                        <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Game screenshot">
+                                    </a>
                                 </div>
                                 <div class="col-10 d-flex">
                                     <input type="text" class="form-control align-self-center" name="screenshot[]" placeholder="Comment for this screenshot">

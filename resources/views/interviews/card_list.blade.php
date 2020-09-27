@@ -18,9 +18,11 @@
     <div class="card-body p-0 striped">
         @foreach ($interviews as $interview)
             <div class="row g-0 p-2">
-                <div class="col-4 pr-2 align-self-center">
+                <div class="col-4 pr-2 align-self-center lightbox-gallery">
                     @if (isset($interview->individual->text->ind_imgext))
-                        <img class="w-100 " src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}" alt="Picture of {{ $interview->individual->ind_name }}">
+                        <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}">
+                            <img class="w-100 " src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}" alt="Picture of {{ $interview->individual->ind_name }}">
+                        </a>
                     @else
                         <img class="w-100 " src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
                     @endif

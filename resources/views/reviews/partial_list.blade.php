@@ -1,7 +1,12 @@
 <div class="row g-0 p-2">
-    <div class="col-4 pr-2 align-self-center">
+    <div class="col-4 pr-2 align-self-center lightbox-gallery">
         @if ($review->screenshots->isNotEmpty())
-            <img class="w-100 " src="{{ asset('storage/images/game_screenshots/'.$review->screenshots->random()->screenshot->file) }}" alt="Screenshot of {{ $review->games->first()->game_name }}">
+            @php
+                $screenshot = $review->screenshots->random()->screenshot
+            @endphp
+            <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
+                <img class="w-100 " src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Screenshot of {{ $review->games->first()->game_name }}">
+            </a>
         @endif
     </div>
     <div class="col-8 pl-2">

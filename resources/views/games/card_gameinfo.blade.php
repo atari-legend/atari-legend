@@ -5,9 +5,11 @@
     <div class="card-body p-0 striped">
         @if ($developersLogos->isNotEmpty())
             <div class="row p-2 g-0">
-                <div class="col text-center">
+                <div class="col text-center lightbox-gallery">
                     @foreach ($developersLogos as $logo)
-                        <img class="company-logo bg-black" src="{{ asset('storage/images/company_logos/'.$logo) }}" alt="Logo of the developer company">
+                        <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$logo) }}">
+                            <img class="company-logo bg-black" src="{{ asset('storage/images/company_logos/'.$logo) }}" alt="Logo of the developer company">
+                        </a>
                     @endforeach
                 </div>
             </div>

@@ -22,12 +22,14 @@
         </ul>
     </div>
 
-    <div class="card-body p-0 striped">
+    <div class="card-body p-0 striped lightbox-gallery">
         @foreach ($websites as $website)
             <div class="row g-0 p-2">
                 <div class="col-md-4">
                     @if ($website->website_imgext)
-                        <img class="w-100 cropped" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
+                        <a class="lightbox-link" href="{{ asset('storage/images/website_images/'.$website->file) }}">
+                            <img class="w-100 cropped" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
+                        </a>
                     @endif
                 </div>
                 <div class="col-md-8 pl-2">
