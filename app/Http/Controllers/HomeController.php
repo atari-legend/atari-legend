@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\StatisticsHelper;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
@@ -21,14 +20,11 @@ class HomeController extends Controller
         $spotlight = \App\Spotlight::all()
             ->random();
 
-        $stats = StatisticsHelper::getStatistics();
-
         return view('home.index')->with([
             'news'         => $news,
             'triviaQuote'  => $triviaQuote,
             'triviaImages' => $triviaImages,
             'spotlight'    => $spotlight,
-            'stats'        => $stats,
         ]);
     }
 

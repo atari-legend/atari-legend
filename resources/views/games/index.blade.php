@@ -11,6 +11,7 @@
         </div>
         <div class="col-3 pr-0">
             @include('games.card_updates')
+            <x-cards.statistics />
         </div>
     </div>
 @endsection

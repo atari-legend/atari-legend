@@ -7,9 +7,8 @@
             Welcome to the game section. The place to be for every Atari ST and retro
             gaming nutcase. Enjoy your stay! Search for a game by using any of the
             functionalities below. Combinations are allowed. There are currently {{ $gamesCount }}
-            games in the database. For more statistics of the db, click
-            <!-- FIXME --><a href="#">here</a>.
-            if there is data missing and you are willing to contribute, please get in touch with
+            games in the database. Check out the statistics on the database in the 'Statistics'
+            card! If there is data missing and you are willing to contribute, please get in touch with
             the team.
         </p>
     </div>

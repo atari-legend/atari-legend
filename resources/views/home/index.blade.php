@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-12 col-sm-6">
                 @include('home.card_news')
-                @include('home.card_stats')
+                <x-cards.statistics />
             </div>
             <div class="col-12 col-sm-6">
                 <x-cards.reviews />
