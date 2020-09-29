@@ -40,32 +40,47 @@
             </div>
             <div class="row mb-3">
                 <label for="title" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="title" name="title">
+                <div class="col-sm-10 position-relative">
+                    <input type="text" class="autocomplete form-control"
+                        data-autocomplete-endpoint="{{ URL::to('/ajax/games.json/') }}"
+                        data-autocomplete-key="game_name"
+                        id="title" name="title" autocomplete="off">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="publisher" class="col-sm-2 col-form-label">Publisher</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="publisher" name="publisher">
+                <div class="col-sm-10 position-relative">
+                    <input type="text" class="autocomplete form-control"
+                        data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
+                        data-autocomplete-key="pub_dev_name"
+                        id="publisher" name="publisher" autocomplete="off">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="developer" class="col-sm-2 col-form-label">Developer</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="developer" name="developer">
+                <div class="col-sm-10 position-relative">
+                    <input type="text" class="autocomplete form-control"
+                        data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
+                        data-autocomplete-key="pub_dev_name"
+                        id="developer" name="developer" autocomplete="off">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="year" class="col-sm-2 col-form-label">Release year</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="year" name="year">
+                <div class="col-sm-10 position-relative">
+                    <input type="text" class="autocomplete form-control"
+                        data-autocomplete-endpoint="{{ URL::to('/ajax/release-years.json') }}"
+                        data-autocomplete-key="year"
+                        id="year" name="year" autocomplete="off">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="genre" class="col-sm-2 col-form-label">Genre</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="genre" name="genre">
+                <div class="col-sm-10 position-relative">
+                    <input type="text" class="autocomplete form-control"
+                        data-autocomplete-endpoint="{{ URL::to('/ajax/genres.json') }}"
+                        data-autocomplete-key="name"
+                        id="genre" name="genre" autocomplete="off">
                 </div>
             </div>
             <div class="row mb-3">

@@ -42,4 +42,11 @@ Route::post('/links/submit', 'LinkController@postLink')->name('links.submit');
 Route::resource('/about', 'AboutController')->only(['index']);
 Route::get('/about/andreas', 'AboutController@andreas')->name('about.andreas');
 
+Route::prefix('/ajax')->group(function () {
+    Route::get('companies.json', 'Ajax\CompanyController@companies');
+    Route::get('release-years.json', 'Ajax\ReleaseYearController@releaseYears');
+    Route::get('genres.json', 'Ajax\GenreController@genres');
+    Route::get('games.json', 'Ajax\GameController@games');
+});
+
 Auth::routes();

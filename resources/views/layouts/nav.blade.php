@@ -29,7 +29,12 @@
                 </li>
             </ul>
             <form class="d-flex search" method="get" action="{{ route('games.search') }}">
-                <input class="form-control bg-black" name="title" type="search" placeholder="Search" aria-label="Search" required>
+                <div class="position-relative">
+                    <input class="autocomplete form-control bg-black" name="title" type="search"
+                        data-autocomplete-endpoint="{{ URL::to('/ajax/games.json') }}"
+                        data-autocomplete-key="game_name"
+                        placeholder="Search" aria-label="Search" autocomplete="off" required>
+                </div>
                 <button class="btn" type="submit"><i class="fas fa-search"></i></button>
             </form>
             <ul class="navbar-nav navbar-profile">
