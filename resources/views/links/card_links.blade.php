@@ -28,7 +28,7 @@
                 <div class="col-md-4">
                     @if ($website->website_imgext)
                         <a class="lightbox-link" href="{{ asset('storage/images/website_images/'.$website->file) }}">
-                            <img class="w-100 cropped" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
+                            <img class="w-100 mb-2 cropped" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
                         </a>
                     @endif
                 </div>

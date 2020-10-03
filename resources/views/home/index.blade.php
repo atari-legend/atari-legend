@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="col order-3 order-lg-3">
+    <div class="col order-3">
         <x-cards.interview />
         <x-cards.link />
         <x-cards.trivia />
