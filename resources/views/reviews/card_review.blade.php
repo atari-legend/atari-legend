@@ -11,6 +11,17 @@
         <div class="row g-0">
             <div class="col-9">
                 {!! Helper::bbCode(nl2br($review->review_text)) !!}
+
+                <hr>
+                <h5>Score</h5>
+
+                <ul class="list-unstyled">
+                    <li>Graphics: {{ $review->score->review_graphics }}</li>
+                    <li>Sound: {{ $review->score->review_sound }}</li>
+                    <li>Gameplay: {{ $review->score->review_gameplay }}</li>
+                    <li>Overall: {{ $review->score->review_overall }}</li>
+                </ul>
+
             </div>
             <div class="col-3 pl-2 text-center text-muted lightbox-gallery">
                 @foreach ($review->screenshots as $screenshot)
@@ -23,16 +34,5 @@
                 @endforeach
             </div>
         </div>
-    </div>
-    <div class="card-body p-2 bg-darklight">
-
-        <strong>Score</strong>
-
-        <ul class="list-unstyled">
-            <li>Graphics: {{ $review->score->review_graphics }}</li>
-            <li>Sound: {{ $review->score->review_sound }}</li>
-            <li>Gameplay: {{ $review->score->review_gameplay }}</li>
-            <li>Overall: {{ $review->score->review_overall }}</li>
-        </ul>
     </div>
 </div>

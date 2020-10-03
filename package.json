@@ -12,6 +12,7 @@
     "devDependencies": {
         "@tarekraafat/autocomplete.js": "^7.2.0",
         "axios": "^0.19",
+        "bbcode-parser": "^1.0.10",
         "bootstrap": "^5.0.0-alpha1",
         "chart.js": "^2.9.3",
         "cross-env": "^7.0",
