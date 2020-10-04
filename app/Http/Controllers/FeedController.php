@@ -32,14 +32,14 @@ class FeedController extends Controller
             $news = News::orderByDesc('news_date')->limit(20)->get();
             foreach ($news as $new) {
                 $items[] = [
-                    'title' => $new->news_headline,
+                    'title'  => $new->news_headline,
                     'author' => $new->user->userid,
                     // Use an ID so that articles in the feed have different IDs
                     // The ID is effectively ignored in the News page
-                    'link' => route('news.index', ['news' => $new->news_id]),
+                    'link'    => route('news.index', ['news' => $new->news_id]),
                     'updated' => $new->news_date,
                     'summary' => null,
-                    'content' => Helper::bbCode(nl2br($new->news_text))
+                    'content' => Helper::bbCode(nl2br($new->news_text)),
                 ];
             }
 
@@ -49,12 +49,12 @@ class FeedController extends Controller
                 ->get();
             foreach ($reviews as $review) {
                 $items[] = [
-                    'title' => 'Review: ' . $review->games->first()->game_name,
-                    'author' => $review->user->userid,
-                    'link' => route('reviews.show', ['review' => $review]),
+                    'title'   => 'Review: '.$review->games->first()->game_name,
+                    'author'  => $review->user->userid,
+                    'link'    => route('reviews.show', ['review' => $review]),
                     'updated' => $review->review_date,
-                    'summary' => Helper::bbCode(Helper::extractTag($review->review_text, "frontpage")),
-                    'content' => null
+                    'summary' => Helper::bbCode(Helper::extractTag($review->review_text, 'frontpage')),
+                    'content' => null,
                 ];
             }
 
@@ -65,12 +65,12 @@ class FeedController extends Controller
                 ->get();
             foreach ($interviews as $interview) {
                 $items[] = [
-                    'title' => 'Interview: ' . $interview->individual->ind_name,
-                    'author' => $interview->user->userid,
-                    'link' => route('interviews.show', ['interview' => $interview]),
+                    'title'   => 'Interview: '.$interview->individual->ind_name,
+                    'author'  => $interview->user->userid,
+                    'link'    => route('interviews.show', ['interview' => $interview]),
                     'updated' => $interview->texts->first()->interview_date,
                     'summary' => Helper::bbCode($interview->texts->first()->interview_intro),
-                    'content' => null
+                    'content' => null,
                 ];
             }
 
@@ -81,12 +81,12 @@ class FeedController extends Controller
                 ->get();
             foreach ($articles as $article) {
                 $items[] = [
-                    'title' => 'Article: ' . $article->article_title,
-                    'author' => $article->user->userid,
-                    'link' => route('articles.show', ['article' => $article]),
+                    'title'   => 'Article: '.$article->article_title,
+                    'author'  => $article->user->userid,
+                    'link'    => route('articles.show', ['article' => $article]),
                     'updated' => $article->texts->first()->article_date,
                     'summary' => Helper::bbCode($article->texts->first()->article_intro),
-                    'content' => null
+                    'content' => null,
                 ];
             }
 
@@ -107,6 +107,7 @@ class FeedController extends Controller
         }
 
         $feed->setCustomView('feed');
+
         return $feed->render('atom');
     }
 }
