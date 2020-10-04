@@ -26,6 +26,8 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/interviews/{interview}/comment', 'InterviewController@postComment')->name('interview.comment');
     Route::post('/articles/{article}/comment', 'ArticleController@postComment')->name('article.comment');
     Route::post('/links/submit', 'LinkController@postLink')->name('links.submit');
+    Route::post('/comments/delete', 'CommentController@delete')->name('comments.delete');
+    Route::post('/comments/update', 'CommentController@update')->name('comments.update');
 });
 
 Route::resource('/news', 'NewsController')->only(['index']);

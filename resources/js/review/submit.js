@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Handle previewing of submitted reviews
      */
-    document.querySelector('a[data-toggle="tab"][href="#preview"')
+    document.querySelectorAll('a[data-toggle="tab"][href="#preview"').forEach(el => {
         // When the preview tab is selected...
-        .addEventListener('show.bs.tab', () => {
+        el.addEventListener('show.bs.tab', () => {
             // Convert the BBCode into HTML and inject in the preview area
 
             // Only allow some tags, not all the default ones from the BBCode parser
@@ -31,4 +31,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector(`#preview-${el.id}`).innerText = el.value;
             });
         });
+    });
 });

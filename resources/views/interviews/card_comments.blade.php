@@ -20,33 +20,7 @@
     </div>
     <div class="striped">
         @foreach ($interview->comments->sortByDesc("timestamp") as $comment)
-            <div class="card-body p-2">
-                <h6 class="card-subtitle text-muted mb-2">
-                    {{ Helper::user($comment->user) }}
-                </h6>
-                <p class="card-text">
-                    {!! Helper::bbCode(stripslashes($comment->comment)) !!}
-                </p>
-                @if (isset($comment->user))
-                <small class="text-muted float-left">
-                    @if ($comment->user->user_twitter)
-                        <a href="{{ $comment->user->user_twitter }}"><i class="fab fa-twitter"></i></a>
-                    @endif
-                    @if ($comment->user->user_fb)
-                        <a href="{{ $comment->user->user_fb }}"><i class="fab fa-facebook-square"></i></a>
-                    @endif
-                    @if ($comment->user->user_af)
-                        <a href="{{ $comment->user->user_af }}"><i class="fas fa-gamepad"></i></a>
-                    @endif
-                    @if ($comment->user->user_website)
-                        <a href="{{ $comment->user->user_website }}"><i class="fas fa-globe"></i></a>
-                    @endif
-                </small>
-                @endif
-                <div class="text-muted text-right">
-                    {{ date('F j, Y', $comment->timestamp) }}
-                </div>
-            </div>
+            @include('components.cards.partial_comment')
         @endforeach
     </div>
 </div>

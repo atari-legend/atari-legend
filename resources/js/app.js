@@ -5,5 +5,5 @@ require('./carousel');
 require('./lightbox');
 require('./autocomplete');
 require('./bbcode');
-
 require('./review/submit');
+require('./comments');
