@@ -48,7 +48,7 @@ class LinkController extends Controller
 
         $request->user()->websiteSubmissions()->save($submission);
 
-        $request->session()->flash('alert-title', 'Website submitted');
+        $request->session()->flash('alert-title', 'Link submitted');
         $request->session()->flash(
             'alert-success',
             'Thanks for your submission, a moderator will review it soon!'
