@@ -1,5 +1,6 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
+        <a class="float-right" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
         <h2 class="text-uppercase">Interviews</h2>
     </div>
     <div class="card-body p-2 mb-3">

@@ -35,6 +35,8 @@
         </script>
     @endif
 
+    <link href="{{ route('feed') }}" type="application/atom+xml" rel="alternate" title="Latest News, Reviews and Interviews Atom Feed" />
+
     {{-- Installation as mobile app --}}
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">

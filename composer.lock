@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4d268ac36baf2e0378f5f7c756fec41",
+    "content-hash": "854d0a8c494715764bcaebb04c6565a9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1062,6 +1062,70 @@
                 "ui"
             ],
             "time": "2020-06-30T20:56:33+00:00"
+        },
+        {
+            "name": "laravelium/feed",
+            "version": "v7.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Laravelium/laravel-feed.git",
+                "reference": "e7f108f49abec3a3c836636a5c8fb1d3b8d3d1d7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Laravelium/laravel-feed/zipball/e7f108f49abec3a3c836636a5c8fb1d3b8d3d1d7",
+                "reference": "e7f108f49abec3a3c836636a5c8fb1d3b8d3d1d7",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/filesystem": "^7.0",
+                "illuminate/support": "^7.0",
+                "php": ">=7.2.5"
+            },
+            "require-dev": {
+                "laravel/framework": "^7.0",
+                "orchestra/testbench-core": "^5.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravelium\\Feed\\FeedServiceProvider"
+                    ],
+                    "aliases": {
+                        "Feed": "Laravelium\\Feed\\Feed"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Laravelium\\Feed": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rumen Damyanov",
+                    "email": "r@alfamatter.com",
+                    "homepage": "https://darumen.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravelium Feed package for Laravel.",
+            "homepage": "https://gitlab.com/Laravelium",
+            "keywords": [
+                "atom",
+                "feed",
+                "generator",
+                "laravel",
+                "laravelium",
+                "rss"
+            ],
+            "time": "2020-03-28T10:53:42+00:00"
         },
         {
             "name": "league/commonmark",
