@@ -47,6 +47,8 @@ Route::resource('/links', 'LinkController')->only(['index']);
 Route::resource('/about', 'AboutController')->only(['index']);
 Route::get('/about/andreas', 'AboutController@andreas')->name('about.andreas');
 
+Route::get('/feed', 'FeedController@feed')->name('feed');
+
 Route::prefix('/ajax')->group(function () {
     Route::get('companies.json', 'Ajax\CompanyController@companies');
     Route::get('release-years.json', 'Ajax\ReleaseYearController@releaseYears');
