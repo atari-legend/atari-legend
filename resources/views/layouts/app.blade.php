@@ -58,6 +58,8 @@
 
     <meta name="description" content="@yield('description', 'Information, reviews and comments about Atari ST games, interviews of famous Atari ST game developers, contribute missing information to the database.')">
 
+    <link rel="icon" href="{{ asset('images/favicon.png') }}">
+
 </head>
 
 <body>
