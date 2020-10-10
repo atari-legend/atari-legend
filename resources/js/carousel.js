@@ -10,10 +10,23 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hook to the slide event
         el.addEventListener('slide.bs.carousel', e => {
 
-            // Set the active class on the thumbnail the carousel is sliding to
+            // For the thumbnail the carousel is sliding to...
             document.querySelectorAll(`.carousel-thumbnails a[href="#${el.id}"][data-slide-to="${e.to}"]`)
                 .forEach(thumbnail => {
+                    // ...set the active class on
                     thumbnail.classList.toggle('active');
+
+                    // ...scroll the parent to make the thumbnail visible, either
+                    // on the X or Y axis depending if the thumbnails are horizontal
+                    // or vertical
+                    if (el.classList.contains('carousel-thumbnails-vertical')) {
+                        document.querySelector(`.carousel-thumbnails[data-carousel="${el.id}"]`)
+                            .scrollTo(0, thumbnail.offsetTop - 250);
+                    } else if (el.classList.contains('carousel-thumbnails-horizontal')) {
+                        document.querySelector(`.carousel-thumbnails[data-carousel="${el.id}"]`)
+                            .scrollTo(thumbnail.offsetLeft - 150, 0);
+                    }
+
                 });
 
             // Remove the active class on the thumbnail the carousel is sliding from
@@ -23,4 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     });
+
+    // Always reset the scroll on the thumbnails on load. Browsers may preserve the scroll
+    // across reload rather than scroll back to zero
+    document.querySelectorAll('.carousel-thumbnails').forEach(el => el.scrollTo(0, 0));
 });

@@ -6,6 +6,13 @@
 
 .card-screenshots, .card-boxscans {
     .carousel-thumbnails {
+
+        &[data-carousel="carousel-boxscans"] {
+            img {
+                width: 5rem;
+            }
+        }
+
         img {
             opacity: 0.5;
 

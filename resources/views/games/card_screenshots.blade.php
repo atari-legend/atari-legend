@@ -6,7 +6,7 @@
         @if ($game->screenshots->isNotEmpty())
             <div class="row">
                 <div class="col-2">
-                    <div class="carousel-thumbnails">
+                    <div class="carousel-thumbnails overflow-hidden" data-carousel="carousel-screenshots">
                         @foreach($game->screenshots as $screenshot)
                             <a href="#carousel-screenshots" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
                                 <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="col-10">
-                    <div class="carousel slide" id="carousel-screenshots" data-ride="carousel">
+                    <div class="carousel slide carousel-thumbnails-vertical" id="carousel-screenshots" data-ride="carousel">
                         <ol class="carousel-indicators">
                             @foreach($game->screenshots as $screenshot)
                                 <li data-target="#carousel-screenshots" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif></li>

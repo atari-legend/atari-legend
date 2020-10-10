@@ -7,3 +7,4 @@ require('./autocomplete');
 require('./bbcode');
 require('./review/submit');
 require('./comments');
+require('./game/screenshots');

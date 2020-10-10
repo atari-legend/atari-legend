@@ -7,7 +7,7 @@
         @if ($boxscans->isNotEmpty())
             <div class="row mb-2">
                 <div class="col">
-                    <div class="carousel slide carousel-fade" id="carousel-boxscans" data-ride="carousel">
+                    <div class="carousel slide carousel-fade carousel-thumbnails-horizontal" id="carousel-boxscans" data-ride="carousel">
                         <ol class="carousel-indicators">
                             @foreach($boxscans as $boxscan)
                                 <li data-target="#carousel-boxscans" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif></li>
@@ -31,13 +31,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-4">
                 <div class="col">
-                    <div class="carousel-thumbnails">
+                    <div class="carousel-thumbnails d-flex flex-nowrap overflow-hidden" data-carousel="carousel-boxscans">
                         @foreach ($boxscans as $boxscan)
-                            <a href="#carousel-boxscans" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
-                                <img class="w-25 mr-2" src="{{ $boxscan }}" alt="Thumbnail of other scans of the game box">
-                            </a>
+                            <a href="#carousel-boxscans" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif><img class="mr-2" src="{{ $boxscan }}" alt="Thumbnail of other scans of the game box"></a>
                         @endforeach
                     </div>
                 </div>
