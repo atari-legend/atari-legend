@@ -49,6 +49,12 @@ Route::get('/about/andreas', 'AboutController@andreas')->name('about.andreas');
 
 Route::get('/feed', 'FeedController@feed')->name('feed');
 
+Route::get('/sitemap', 'SitemapController@index')->name('sitemap.index');
+Route::get('/sitemap/general', 'SitemapController@general')->name('sitemap.general');
+Route::get('/sitemap/games/{letter}', 'SitemapController@games')->name('sitemap.games');
+
+Route::get('/robots.txt', 'RobotsController@index');
+
 Route::prefix('/ajax')->group(function () {
     Route::get('companies.json', 'Ajax\CompanyController@companies');
     Route::get('release-years.json', 'Ajax\ReleaseYearController@releaseYears');

@@ -12,7 +12,7 @@
                 <li class="w-45 d-inline-block">
                     @if ($c->websites->count() > 0)
                         <a href="{{ route('links.index', ['category' => $c]) }}"
-                            class="{{ (isset($category) && $category->website_category_id === $c->website_category_id) ? 'font-weight-bold text-white' : '' }}">{{ $c->website_category_name }}</a>
+                            class="{{ (isset($category) && $category->website_category_id === $c->website_category_id) ? 'font-weight-bold text-primary' : '' }}">{{ $c->website_category_name }}</a>
                     @else
                         <span class="text-muted">{{ $c->website_category_name }}</span>
                     @endif
