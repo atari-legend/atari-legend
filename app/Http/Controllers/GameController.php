@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Game;
 use App\GameSubmitInfo;
+use App\Genre;
+use App\PublisherDeveloper;
 use App\Review;
 use App\Screenshot;
 use Carbon\Carbon;
@@ -18,10 +20,14 @@ class GameController extends Controller
     {
         $gamesCount = DB::table('game')->count();
 
-        return view('games.index')->with([
-            'gamesCount' => $gamesCount,
-            'updates'    => $this->getUpdates(),
-        ]);
+        $referenceData = $this->getSearchReferenceData();
+
+        return view('games.index')->with(
+            array_merge($referenceData, [
+                'gamesCount' => $gamesCount,
+                'updates'    => $this->getUpdates(),
+            ])
+        );
     }
 
     public function search(Request $request)
@@ -46,10 +52,24 @@ class GameController extends Controller
             });
         }
 
+        if ($request->filled('developer_id')) {
+            $games->whereHas('developers', function (Builder $query) use ($request) {
+                $query->where('pub_dev_id', $request->input('developer_id'));
+            });
+        }
+
         if ($request->filled('publisher')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereHas('publisher', function (Builder $query2) use ($request) {
                     $query2->where('pub_dev_name', 'like', '%'.$request->input('publisher').'%');
+                });
+            });
+        }
+
+        if ($request->filled('publisher_id')) {
+            $games->whereHas('releases', function (Builder $query) use ($request) {
+                $query->whereHas('publisher', function (Builder $query2) use ($request) {
+                    $query2->where('pub_dev_id', $request->input('publisher_id'));
                 });
             });
         }
@@ -60,9 +80,21 @@ class GameController extends Controller
             });
         }
 
+        if ($request->filled('genre_id')) {
+            $games->whereHas('genres', function (Builder $query) use ($request) {
+                $query->where('id', $request->input('genre_id'));
+            });
+        }
+
         if ($request->filled('year')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereYear('date', $request->input('year'));
+            });
+        }
+
+        if ($request->filled('year_id')) {
+            $games->whereHas('releases', function (Builder $query) use ($request) {
+                $query->whereYear('date', $request->input('year_id'));
             });
         }
 
@@ -84,9 +116,13 @@ class GameController extends Controller
             ->orderBy('game_name')
             ->paginate(12);
 
-        return view('games.search')->with([
-            'games' => $games,
-        ]);
+        $referenceData = $this->getSearchReferenceData();
+
+        return view('games.search')->with(
+            array_merge($referenceData, [
+                'games' => $games,
+            ])
+        );
     }
 
     public function show(Game $game)
@@ -198,5 +234,34 @@ class GameController extends Controller
         }
 
         return $updates;
+    }
+
+    /**
+     * Get the reference data used to populate the various dropdowns of the
+     * search form.
+     *
+     * @return array Reference data
+     */
+    public function getSearchReferenceData()
+    {
+        $companies = PublisherDeveloper::all()
+            ->sortBy('pub_dev_name');
+
+        $years = DB::table('game_release')
+            ->selectRaw('CAST(YEAR(date) AS CHAR) as year')
+            ->distinct('YEAR(date)')
+            ->whereNotNull('date')
+            ->where('date', '!=', 0)
+            ->orderBy('year')
+            ->get();
+
+        $genres = Genre::all()
+            ->sortBy('name');
+
+        return [
+            'companies' => $companies,
+            'years'     => $years,
+            'genres'    => $genres,
+        ];
     }
 }

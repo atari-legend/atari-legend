@@ -5,8 +5,8 @@
     <div class="card-body p-2">
         <form method="get" action="{{ route('games.search') }}">
             <div class="row mb-3">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10 position-relative">
+                <label for="title" class="col-3 col-xxl-2 col-form-label">Title</label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/games.json/') }}"
                         data-autocomplete-key="game_name"
@@ -14,30 +14,57 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="publisher" class="col-sm-2 col-form-label">Publisher</label>
-                <div class="col-sm-10 position-relative">
+                <label for="publisher" class="col-3 col-xxl-2 col-form-label">
+                    Publisher
+                    <a href="#" data-dropdown-toggle="publisher,publisher_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
                         data-autocomplete-key="pub_dev_name"
                         id="publisher" name="publisher" autocomplete="off">
+                    <select class="form-select d-none" id="publisher_id" name="publisher_id">
+                        <option value="">-</option>
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="developer" class="col-sm-2 col-form-label">Developer</label>
-                <div class="col-sm-10 position-relative">
+                <label for="developer" class="col-3 col-xxl-2 col-form-label">
+                    Developer
+                    <a href="#" data-dropdown-toggle="developer,developer_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
                         data-autocomplete-key="pub_dev_name"
                         id="developer" name="developer" autocomplete="off">
+                    <select class="form-select d-none" id="developer_id" name="developer_id">
+                        <option value="">-</option>
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="year" class="col-sm-2 col-form-label">Release year</label>
-                <div class="col-sm-10 position-relative">
+                <label for="year" class="col-3 col-xxl-2 col-form-label">
+                    Release year
+                    <a href="#" data-dropdown-toggle="year,year_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/release-years.json') }}"
                         data-autocomplete-key="year"
                         id="year" name="year" autocomplete="off">
+                    <select class="form-select d-none" id="year_id" name="year_id">
+                        <option value="">-</option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year->year }}">{{ $year->year }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="text-center">

@@ -27,8 +27,8 @@
         </div>
         <form method="get" action="{{ route('games.search') }}">
             <div class="row mb-3">
-                <label for="titleAZ" class="col-sm-2 col-form-label">Title (A-Z)</label>
-                <div class="col-sm-10">
+                <label for="titleAZ" class="col-3 col-xxl-2 col-form-label">Title (A-Z)</label>
+                <div class="col">
                     <select class="form-select" id="titleAZ" name="titleAZ">
                         <option selected value="">-</option>
                         <option value="0-9">0-9</option>
@@ -39,8 +39,8 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10 position-relative">
+                <label for="title" class="col-3 col-xxl-2 col-form-label">Title</label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/games.json/') }}"
                         data-autocomplete-key="game_name"
@@ -48,44 +48,80 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="publisher" class="col-sm-2 col-form-label">Publisher</label>
-                <div class="col-sm-10 position-relative">
+                <label for="publisher" class="col-3 col-xxl-2 col-form-label">
+                    Publisher
+                    <a href="#" data-dropdown-toggle="publisher,publisher_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
                         data-autocomplete-key="pub_dev_name"
                         id="publisher" name="publisher" autocomplete="off">
+                    <select class="form-select d-none" id="publisher_id" name="publisher_id">
+                        <option value="">-</option>
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="developer" class="col-sm-2 col-form-label">Developer</label>
-                <div class="col-sm-10 position-relative">
+                <label for="developer" class="col-3 col-xxl-2 col-form-label">
+                    Developer
+                    <a href="#" data-dropdown-toggle="developer,developer_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
                         data-autocomplete-key="pub_dev_name"
                         id="developer" name="developer" autocomplete="off">
+                    <select class="form-select d-none" id="developer_id" name="developer_id">
+                        <option value="">-</option>
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="year" class="col-sm-2 col-form-label">Release year</label>
-                <div class="col-sm-10 position-relative">
+                <label for="year" class="col-3 col-xxl-2 col-form-label">
+                    Release year
+                    <a href="#" data-dropdown-toggle="year,year_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/release-years.json') }}"
                         data-autocomplete-key="year"
                         id="year" name="year" autocomplete="off">
+                    <select class="form-select d-none" id="year_id" name="year_id">
+                        <option value="">-</option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year->year }}">{{ $year->year }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="genre" class="col-sm-2 col-form-label">Genre</label>
-                <div class="col-sm-10 position-relative">
+                <label for="genre" class="col-3 col-xxl-2 col-form-label">
+                    Genre
+                    <a href="#" data-dropdown-toggle="genre,genre_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/genres.json') }}"
                         data-autocomplete-key="name"
                         id="genre" name="genre" autocomplete="off">
+                    <select class="form-select d-none" id="genre_id" name="genre_id">
+                        <option value="">-</option>
+                        @foreach ($genres as $genre)
+                            <option value="{{ $genre->id }}">{{ $genre->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-sm-2 col-form-label"></div>
-                <div class="col-sm-10">
+                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="download">
                         <label class="form-check-label" for="download">
@@ -95,8 +131,8 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-sm-2 col-form-label"></div>
-                <div class="col-sm-10">
+                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="screenshot" name="screenshot">
                         <label class="form-check-label" for="screenshot">
@@ -106,8 +142,8 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-sm-2 col-form-label"></div>
-                <div class="col-sm-10">
+                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="boxscan" name="boxscan">
                         <label class="form-check-label" for="boxscan">
@@ -117,8 +153,8 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-sm-2 col-form-label"></div>
-                <div class="col-sm-10">
+                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="review" name="review">
                         <label class="form-check-label" for="review">
@@ -128,8 +164,8 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-sm-2 col-form-label"></div>
-                <div class="col-sm-10">
+                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="export">
                         <label class="form-check-label" for="export">
