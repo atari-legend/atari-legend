@@ -4,7 +4,7 @@
     </div>
 
     <div class="card-body p-2 bg-darklight">
-        <h5>Written by {{ Helper::user($interview->user) }}</h5>
+        <h3 class="text-h5 text-audiowide">Written by {{ Helper::user($interview->user) }}</h3>
         <span class="text-muted">{{ date('F j, Y', $interview->review_date) }}</span>
     </div>
     <div class="card-body p-2 bg-darklight">

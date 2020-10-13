@@ -27,10 +27,10 @@
                             {{ $article->article_title }}
                         </a>
                     </h3>
-                    <h6 class="card-subtitle text-muted mb-2">
+                    <p class="card-subtitle text-muted mb-2">
                         {{ date('F j, Y', $article->texts->first()->article_date) }} by {{ Helper::user($article->user) }}
                         <span class="badge bg-secondary ml-2">{{ $article->type->article_type }}</span>
-                    </h6>
+                    </p>
                     {!! Helper::bbCode($article->texts->first()->article_intro) !!}<br>
                     <a class="d-block text-right" href="{{ route('articles.show', ['article' => $article]) }}">
                         More <i class="fas fa-chevron-right"></i>

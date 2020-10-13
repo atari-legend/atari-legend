@@ -6,10 +6,10 @@
     <div class="striped">
         @foreach ($interviews as $interview)
             <div class="card-body p-2">
-                <h5 class="card-title">
+                <h3 class="card-title text-h5 text-audiowide">
                     <a href="{{ route('interviews.show', ['interview' => $interview]) }}">{{ $interview->individual->ind_name }}</a>
-                </h5>
-                <h6 class="card-subtitle text-muted mb-2">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</h6>
+                </h3>
+                <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</p>
                 <p class="card-text ellipsis">
                     {!! Helper::bbCode($interview->texts->first()->interview_intro) !!}
                 </p>

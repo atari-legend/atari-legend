@@ -46,7 +46,7 @@
         </form>
     </div>
     <div class="card-body p-2" id="results">
-        <h5 class="text-center">{{ $games->total() }} games found</h5>
+        <h3 class="text-center text-h5">{{ $games->total() }} games found</h3>
         <div class="row">
             @foreach ($games as $game)
                 <div class="col-4 text-center p-3 align-self-center">

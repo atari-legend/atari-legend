@@ -34,7 +34,7 @@
                             {{ $interview->individual->ind_name }}
                         </a>
                     </h3>
-                    <h6 class="card-subtitle text-muted mb-2">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</h6>
+                    <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</p>
                     {!! Helper::bbCode($interview->texts->first()->interview_intro) !!}<br>
                     <a class="d-block text-right" href="{{ route('interviews.show', ['interview' => $interview]) }}">
                         More <i class="fas fa-chevron-right"></i>

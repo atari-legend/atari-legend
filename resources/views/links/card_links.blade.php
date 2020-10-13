@@ -37,8 +37,8 @@
                         <small class="text-warning mt-1 float-right"><i class="fas fa-exclamation-triangle"></i> Appears to be inactive</small>
                     @endif
 
-                    <h4 class="card-title"><a href="{{ $website->website_url }}">{{ $website->website_name }}</a></h4>
-                    <h6 class="card-subtitle text-muted">Added on {{ date('F j, Y', $website->website_date) }} by {{ Helper::user($website->user) }}</h6>
+                    <h3 class="card-title text-h5 text-audiowide"><a href="{{ $website->website_url }}">{{ $website->website_name }}</a></h3>
+                    <p class="card-subtitle text-muted">Added on {{ date('F j, Y', $website->website_date) }} by {{ Helper::user($website->user) }}</p>
                     <div class="mb-2"><small><a href="{{ $website->website_url }}">{{ $website->website_url }}</a></small></div>
                     <p class="card-text">{{ $website->description }}</p>
                 </div>

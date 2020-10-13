@@ -2,6 +2,7 @@
 @section('title', 'Interview with '.$interview->individual->ind_name)
 
 @section('content')
+    <h1 class="sr-only">{{ $interview->individual->ind_name }}</h1>
     <div class="row">
         <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1">
             @include('interviews.card_intro')

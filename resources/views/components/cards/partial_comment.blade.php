@@ -1,5 +1,5 @@
 <div class="card-body p-2">
-    <h6 class="card-subtitle text-muted mb-2">
+    <div class="card-subtitle text-muted mb-2">
         {{ Helper::user($comment->user) }}
 
         {{-- Edition controls --}}
@@ -30,7 +30,7 @@
         @if (isset($showGame) && $showGame === true && $comment->games->isNotEmpty())
             <span class="float-right"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->game_name }}</a></span>
         @endif
-    </h6>
+    </div>
     <p class="card-text">
         <div id="comment-{{ $comment->comments_id }}">{!! Helper::bbCode(stripslashes($comment->comment)) !!}</div>
 
