@@ -5,11 +5,9 @@
     <div class="card-body p-0 striped">
         @if ($developersLogos->isNotEmpty())
             <div class="row p-2 g-0">
-                <div class="col text-center lightbox-gallery">
+                <div class="col text-center">
                     @foreach ($developersLogos as $logo)
-                        <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$logo) }}">
-                            <img class="company-logo bg-black" src="{{ asset('storage/images/company_logos/'.$logo) }}" alt="Logo of the developer company">
-                        </a>
+                        <img class="company-logo bg-black" src="{{ asset('storage/images/company_logos/'.$logo) }}" alt="Logo of the developer company">
                     @endforeach
                 </div>
             </div>
@@ -23,8 +21,10 @@
                     @foreach ($game->developers as $developer)
                         <div>
                             <a href="{{ route('games.search', ['developer' => $developer->pub_dev_name]) }}">{{ $developer->pub_dev_name }}</a>
-                            @if ($developer->texts->isNotEmpty() && $developer->texts->first->file !== null)
-                                <i class="far fa-image ml-1"></i>
+                            @if ($developer->texts->isNotEmpty() && $developer->texts->first()->file !== null)
+                                <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$developer->texts->first()->file) }}">
+                                    <i class="far fa-image ml-1"></i>
+                                </a>
                             @endif
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first()->pub_dev_profile !== null && $developer->texts->first()->pub_dev_profile !== '')
                                 <a href="javascript:;" class="ml-1" data-target="#profile-developer-{{ $developer->pub_dev_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>

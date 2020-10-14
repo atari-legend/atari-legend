@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="sr-only">{{ $game->game_name }}</h1>
     <div class="row">
-        <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1">
+        <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1 lightbox-gallery">
             @include('games.card_gameinfo')
             @include('games.card_releases')
             @include('games.card_series')

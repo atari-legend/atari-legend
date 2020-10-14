@@ -24,8 +24,10 @@
                         <div class="col-4 text-muted">Publisher</div>
                         <div class="col-8">
                             <a href="{{ route('games.search', ['publisher' => $release->publisher->pub_dev_name]) }}">{{ $release->publisher->pub_dev_name }}</a>
-                            @if ($release->publisher->texts->isNotEmpty() && $release->publisher->texts->first->file !== null)
-                                <i class="far fa-image"></i>
+                            @if ($release->publisher->texts->isNotEmpty() && $release->publisher->texts->first()->file !== null)
+                                <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$release->publisher->texts->first()->file) }}">
+                                    <i class="far fa-image"></i>
+                                </a>
                             @endif
                             @if ($release->publisher->texts->isNotEmpty() && $release->publisher->texts->first()->pub_dev_profile !== null && $release->publisher->texts->first()->pub_dev_profile !== '')
                                 <a href="javascript:;" class="ml-1" data-target="#profile-publisher-{{ $release->id }}-{{ $release->publisher->pub_dev_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-publisher-{{ $release->id }}-{{ $release->publisher->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
@@ -46,8 +48,10 @@
                             @foreach ($release->distributors as $distributor)
                                 <div>
                                     {{ $distributor->pub_dev_name }}
-                                    @if ($distributor->texts->isNotEmpty() && $distributor->texts->first->file !== null)
-                                        <i class="far fa-image"></i>
+                                    @if ($distributor->texts->isNotEmpty() && $distributor->texts->first()->file !== null)
+                                        <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$distributor->texts->first()->file) }}">
+                                            <i class="far fa-image"></i>
+                                        </a>
                                     @endif
                                 </div>
                             @endforeach
