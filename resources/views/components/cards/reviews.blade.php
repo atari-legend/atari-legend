@@ -5,9 +5,9 @@
     <div class="striped">
         @forelse ($reviews as $review)
             <div class="card-body p-2">
-                <h3 class="card-title text-h6 text-audiowide"><a href="{{ route('games.show', ['game' => $review->games[0]->game_id]) }}">{{ $review->games[0]->game_name }}</a></h3>
+                <h3 class="card-title text-h6 text-audiowide"><a class="text-nowrap overflow-hidden overflow-ellipsis d-block" href="{{ route('games.show', ['game' => $review->games[0]->game_id]) }}">{{ $review->games[0]->game_name }}</a></h3>
                 <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $review->review_date) }} by {{ Helper::user($review->user) }}</p>
-                <p class="card-text ellipsis">
+                <p class="card-text mb-0 ellipsis">
                     {!! Helper::bbCode(Helper::extractTag($review->review_text, "frontpage")) !!}
                 </p>
                 <a class="d-block text-right" href="{{ route('reviews.show', ['review' => $review->review_id]) }}">

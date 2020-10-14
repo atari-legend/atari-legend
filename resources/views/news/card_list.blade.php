@@ -8,7 +8,7 @@
         @foreach ($news as $new)
             <div class="p-2 bg-darklight clearfix">
                 <p class="card-subtitle text-muted mt-1 float-right">{{ date('F j, Y', $new->news_date) }} by {{ Helper::user($new->user) }}</p>
-                <h3 class="card-title text-h5 text-audiowide">{{ $new->news_headline }}</h3>
+                <h3 class="card-title text-h5 text-primary text-audiowide">{{ $new->news_headline }}</h3>
             </div>
             <div class="p-2 clearfix">
                 <p class="card-text">
