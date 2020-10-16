@@ -3,6 +3,7 @@
 namespace Tests\Unit\Http\Middleware;
 
 use App\Http\Middleware\OnlineUsers;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Tests\TestCase;
@@ -24,7 +25,7 @@ class OnlineUsersTest extends TestCase
 
     public function testUsers()
     {
-        $user = factory(\App\User::class)->create();
+        $user = User::factory()->create();
 
         $request = new Request();
         $middleware = new OnlineUsers();

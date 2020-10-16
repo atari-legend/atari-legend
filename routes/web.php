@@ -1,5 +1,21 @@
 <?php
 
+use App\Http\Controllers\Ajax\CompanyController;
+use App\Http\Controllers\Ajax\GameController as AjaxGameController;
+use App\Http\Controllers\Ajax\GenreController;
+use App\Http\Controllers\Ajax\ReleaseYearController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\LinkController;
+use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\FeedController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -14,52 +30,52 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@index')->name('home.index');
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
 Route::middleware('auth:web')->group(function () {
-    Route::post('/news/submit', 'NewsController@postNews')->name('news.submit');
-    Route::post('/games/{game}/comment', 'GameController@postComment')->name('games.comment');
-    Route::post('/games/submitInfo', 'GameController@submitInfo')->name('games.submitInfo');
-    Route::get('/reviews/submit', 'ReviewController@prepareSubmit')->name('reviews.submit');
-    Route::post('/reviews/submit', 'ReviewController@submit')->name('reviews.submit');
-    Route::post('/reviews/{review}/comment', 'ReviewController@postComment')->name('review.comment');
-    Route::post('/interviews/{interview}/comment', 'InterviewController@postComment')->name('interview.comment');
-    Route::post('/articles/{article}/comment', 'ArticleController@postComment')->name('article.comment');
-    Route::post('/links/submit', 'LinkController@postLink')->name('links.submit');
-    Route::post('/comments/delete', 'CommentController@delete')->name('comments.delete');
-    Route::post('/comments/update', 'CommentController@update')->name('comments.update');
+    Route::post('/news/submit', [NewsController::class, 'postNews'])->name('news.submit');
+    Route::post('/games/{game}/comment', [GameController::class, 'postComment'])->name('games.comment');
+    Route::post('/games/submitInfo', [GameController::class, 'submitInfo'])->name('games.submitInfo');
+    Route::get('/reviews/submit', [ReviewController::class, 'prepareSubmit'])->name('reviews.submit');
+    Route::post('/reviews/submit', [ReviewController::class, 'submit'])->name('reviews.submit');
+    Route::post('/reviews/{review}/comment', [ReviewController::class, 'postComment'])->name('review.comment');
+    Route::post('/interviews/{interview}/comment', [InterviewController::class, 'postComment'])->name('interview.comment');
+    Route::post('/articles/{article}/comment', [ArticleController::class, 'postComment'])->name('article.comment');
+    Route::post('/links/submit', [LinkController::class, 'postLink'])->name('links.submit');
+    Route::post('/comments/delete', [CommentController::class, 'delete'])->name('comments.delete');
+    Route::post('/comments/update', [CommentController::class, 'update'])->name('comments.update');
 });
 
-Route::resource('/news', 'NewsController')->only(['index']);
+Route::resource('/news', NewsController::class)->only(['index']);
 
-Route::get('/games', 'GameController@index')->name('games.index');
-Route::get('/games/search', 'GameController@search')->name('games.search');
-Route::get('/games/{game}', 'GameController@show')->name('games.show');
+Route::get('/games', [GameController::class, 'index'])->name('games.index');
+Route::get('/games/search', [GameController::class, 'search'])->name('games.search');
+Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
 
-Route::resource('/reviews', 'ReviewController')->only(['index', 'show']);
+Route::resource('/reviews', ReviewController::class)->only(['index', 'show']);
 
-Route::resource('/interviews', 'InterviewController')->only(['index', 'show']);
+Route::resource('/interviews', InterviewController::class)->only(['index', 'show']);
 
-Route::resource('/articles', 'ArticleController')->only(['index', 'show']);
+Route::resource('/articles', ArticleController::class)->only(['index', 'show']);
 
-Route::resource('/links', 'LinkController')->only(['index']);
+Route::resource('/links', LinkController::class)->only(['index']);
 
-Route::resource('/about', 'AboutController')->only(['index']);
-Route::get('/about/andreas', 'AboutController@andreas')->name('about.andreas');
+Route::resource('/about', AboutController::class)->only(['index']);
+Route::get('/about/andreas', [AboutController::class, 'andreas'])->name('about.andreas');
 
-Route::get('/feed', 'FeedController@feed')->name('feed');
+Route::get('/feed', [FeedController::class, 'feed'])->name('feed');
 
-Route::get('/sitemap', 'SitemapController@index')->name('sitemap.index');
-Route::get('/sitemap/general', 'SitemapController@general')->name('sitemap.general');
-Route::get('/sitemap/games/{letter}', 'SitemapController@games')->name('sitemap.games');
+Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/sitemap/general', [SitemapController::class, 'general'])->name('sitemap.general');
+Route::get('/sitemap/games/{letter}', [SitemapController::class, 'games'])->name('sitemap.games');
 
-Route::get('/robots.txt', 'RobotsController@index');
+Route::get('/robots.txt', [RobotsController::class, 'index']);
 
 Route::prefix('/ajax')->group(function () {
-    Route::get('companies.json', 'Ajax\CompanyController@companies');
-    Route::get('release-years.json', 'Ajax\ReleaseYearController@releaseYears');
-    Route::get('genres.json', 'Ajax\GenreController@genres');
-    Route::get('games.json', 'Ajax\GameController@games');
+    Route::get('companies.json', [CompanyController::class, 'companies']);
+    Route::get('release-years.json', [ReleaseYearController::class, 'releaseYears']);
+    Route::get('genres.json', [GenreController::class, 'genres']);
+    Route::get('games.json', [AjaxGameController::class, 'games']);
 });
 
 Auth::routes();

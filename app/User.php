@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
     use Authenticatable;
+    use HasFactory;
 
     const PERMISSION_ADMIN = 1;
     const PERMISSION_USER = 2;
