@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Ajax;
 
-use App\Models\Genre;
 use App\Http\Controllers\Controller;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller

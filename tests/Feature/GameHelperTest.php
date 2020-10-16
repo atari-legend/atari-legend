@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Helpers\GameHelper;
 use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\Genre;
-use App\Helpers\GameHelper;
 use App\Models\PublisherDeveloper;
 use App\Models\Release;
 use App\Models\ReleaseScan;

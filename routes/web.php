@@ -1,21 +1,21 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Ajax\CompanyController;
 use App\Http\Controllers\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Ajax\GenreController;
 use App\Http\Controllers\Ajax\ReleaseYearController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\LinkController;
-use App\Http\Controllers\InterviewController;
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\RobotsController;
-use App\Http\Controllers\GameController;
-use App\Http\Controllers\FeedController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FeedController;
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\LinkController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 

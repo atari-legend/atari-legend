@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Ajax;
 
-use App\Models\Game;
 use App\Http\Controllers\Controller;
+use App\Models\Game;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
