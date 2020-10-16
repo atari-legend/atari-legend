@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
 use App\Helpers\Helper;
+use App\Models\Article;
 use App\Models\Interview;
 use App\Models\News;
 use App\Models\Review;
@@ -49,7 +49,7 @@ class FeedController extends Controller
                 ->get();
             foreach ($reviews as $review) {
                 $items[] = [
-                    'title'   => 'Review: ' . $review->games->first()->game_name,
+                    'title'   => 'Review: '.$review->games->first()->game_name,
                     'author'  => $review->user->userid,
                     'link'    => route('reviews.show', ['review' => $review]),
                     'updated' => $review->review_date,
@@ -65,7 +65,7 @@ class FeedController extends Controller
                 ->get();
             foreach ($interviews as $interview) {
                 $items[] = [
-                    'title'   => 'Interview: ' . $interview->individual->ind_name,
+                    'title'   => 'Interview: '.$interview->individual->ind_name,
                     'author'  => $interview->user->userid,
                     'link'    => route('interviews.show', ['interview' => $interview]),
                     'updated' => $interview->texts->first()->interview_date,
@@ -81,7 +81,7 @@ class FeedController extends Controller
                 ->get();
             foreach ($articles as $article) {
                 $items[] = [
-                    'title'   => 'Article: ' . $article->article_title,
+                    'title'   => 'Article: '.$article->article_title,
                     'author'  => $article->user->userid,
                     'link'    => route('articles.show', ['article' => $article]),
                     'updated' => $article->texts->first()->article_date,
@@ -99,7 +99,7 @@ class FeedController extends Controller
                     'link'        => $item['link'],
                     'pubdate'     => date('c', $item['updated']),
                     'description' => $item['summary'],
-                    'content'     => $item['content']
+                    'content'     => $item['content'],
                 ]);
             }
 
