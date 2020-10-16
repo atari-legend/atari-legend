@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Ajax;
 
-use App\Genre;
+use App\Models\Genre;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Comment;
-use App\Game;
-use App\Review;
-use App\ReviewScore;
-use App\ScreenshotReview;
-use App\ScreenshotReviewComment;
-use App\User;
+use App\Models\Comment;
+use App\Models\Game;
+use App\Models\Review;
+use App\Models\ReviewScore;
+use App\Models\ScreenshotReview;
+use App\Models\ScreenshotReviewComment;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\User;
+use App\Models\User;
 
 class Helper
 {
@@ -25,7 +25,7 @@ class Helper
     /**
      * Return the name of a user.
      *
-     * @param \App\User $user Use to print the name of, or NULL
+     * @param \App\Models\User $user Use to print the name of, or NULL
      *
      * @return string User name, or "Former user" if the user is NULL
      */

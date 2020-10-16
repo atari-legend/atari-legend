@@ -3,7 +3,7 @@
 namespace Tests\Unit\Http\Middleware;
 
 use App\Http\Middleware\OnlineUsers;
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Tests\TestCase;

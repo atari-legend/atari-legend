@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Website;
-use App\WebsiteCategory;
-use App\WebsiteValidate;
+use App\Models\Website;
+use App\Models\WebsiteCategory;
+use App\Models\WebsiteValidate;
 use Illuminate\Http\Request;
 
 class LinkController extends Controller

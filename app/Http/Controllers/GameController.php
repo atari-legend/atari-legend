@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Comment;
-use App\Game;
-use App\GameSubmitInfo;
-use App\Genre;
-use App\PublisherDeveloper;
-use App\Review;
-use App\Screenshot;
+use App\Models\Comment;
+use App\Models\Game;
+use App\Models\GameSubmitInfo;
+use App\Models\Genre;
+use App\Models\PublisherDeveloper;
+use App\Models\Review;
+use App\Models\Screenshot;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;

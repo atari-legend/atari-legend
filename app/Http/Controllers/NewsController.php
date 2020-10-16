@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\News;
-use App\NewsSubmission;
+use App\Models\News;
+use App\Models\NewsSubmission;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller

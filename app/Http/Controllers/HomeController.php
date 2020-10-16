@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\News;
+use App\Models\Spotlight;
+use App\Models\TriviaQuote;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $news = \App\News::all()
+        $news = News::all()
             ->sortByDesc('news_date')
             ->take(6);
 
-        $triviaQuote = \App\TriviaQuote::all()
+        $triviaQuote = TriviaQuote::all()
             ->random();
 
         $triviaImages = $this->getTriviaImages();
 
-        $spotlight = \App\Spotlight::all()
+        $spotlight = Spotlight::all()
             ->random();
 
         return view('home.index')->with([

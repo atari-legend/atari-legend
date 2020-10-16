@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Cards;
 
+use App\Models\Interview as ModelsInterview;
 use Illuminate\View\Component;
 
 class Interview extends Component
@@ -23,7 +24,7 @@ class Interview extends Component
      */
     public function render()
     {
-        $interview = \App\Interview::all()
+        $interview = ModelsInterview::all()
             ->random();
 
         return view('components.cards.interview')

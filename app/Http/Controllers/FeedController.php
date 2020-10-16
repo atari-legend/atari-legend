@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Article;
+use App\Models\Article;
 use App\Helpers\Helper;
-use App\Interview;
-use App\News;
-use App\Review;
+use App\Models\Interview;
+use App\Models\News;
+use App\Models\Review;
 use Illuminate\Support\Facades\App;
 
 class FeedController extends Controller

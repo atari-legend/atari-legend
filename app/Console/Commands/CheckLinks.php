@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Website;
+use App\Models\Website;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;

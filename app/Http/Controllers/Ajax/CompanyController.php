@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
-use App\PublisherDeveloper;
+use App\Models\PublisherDeveloper;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller

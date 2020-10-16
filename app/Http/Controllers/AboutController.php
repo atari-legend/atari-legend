@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Andreas;
+use App\Models\Andreas;
 
 class AboutController extends Controller
 {

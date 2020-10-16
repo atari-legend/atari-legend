@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Comment;
-use App\Interview;
+use App\Models\Comment;
+use App\Models\Interview;
 use Illuminate\Http\Request;
 
 class InterviewController extends Controller

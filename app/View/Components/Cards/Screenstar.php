@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Cards;
 
-use App\Review;
+use App\Models\Review;
 use Illuminate\View\Component;
 
 class Screenstar extends Component

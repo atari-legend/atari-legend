@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Game;
+use App\Models\Game;
 use Illuminate\Support\Str;
 
 /**

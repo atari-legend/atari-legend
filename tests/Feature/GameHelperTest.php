@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Game;
-use App\GameAka;
-use App\Genre;
+use App\Models\Game;
+use App\Models\GameAka;
+use App\Models\Genre;
 use App\Helpers\GameHelper;
-use App\PublisherDeveloper;
-use App\Release;
-use App\ReleaseScan;
-use App\Review;
-use App\Screenshot;
+use App\Models\PublisherDeveloper;
+use App\Models\Release;
+use App\Models\ReleaseScan;
+use App\Models\Review;
+use App\Models\Screenshot;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

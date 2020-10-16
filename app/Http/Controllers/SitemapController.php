@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Game;
-use App\Interview;
-use App\Review;
-use App\WebsiteCategory;
+use App\Models\Game;
+use App\Models\Interview;
+use App\Models\Review;
+use App\Models\WebsiteCategory;
 
 class SitemapController extends Controller
 {

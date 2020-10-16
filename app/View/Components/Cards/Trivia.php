@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Cards;
 
+use App\Models\Trivia as ModelsTrivia;
 use Illuminate\View\Component;
 
 class Trivia extends Component
@@ -23,7 +24,7 @@ class Trivia extends Component
      */
     public function render()
     {
-        $trivia = \App\Trivia::all()
+        $trivia = ModelsTrivia::all()
             ->random();
 
         return view('components.cards.trivia')
