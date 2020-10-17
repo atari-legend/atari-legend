@@ -167,7 +167,7 @@
                 <div class="col-3 col-xxl-2 col-form-label"></div>
                 <div class="col">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="export">
+                        <input class="form-check-input" type="checkbox" id="export" name="export">
                         <label class="form-check-label" for="export">
                             Export mode
                         </label>

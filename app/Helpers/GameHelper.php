@@ -92,4 +92,37 @@ class GameHelper
 
         return $desc;
     }
+
+    /**
+     * Check if a game has boxscans.
+     *
+     * Currently looks both at the game-level boxscans, and release-level ones.
+     *
+     * @param App\Game $game Game to check for boxscans.
+     *
+     * @return bool true if the game has boxscans, false otherwise.
+     */
+    public static function hasBoxscan(Game $game)
+    {
+        return $game->boxscans->isNotEmpty() || $game->releases
+            ->filter(function ($release) {
+                return $release->boxscans->isNotEmpty();
+            })
+            ->isNotEmpty();
+    }
+
+    /**
+     * List developers for a game.
+     *
+     * @param App\Game $game Game to list the developers for
+     *
+     * @return string List of developers, comma-delimited
+     */
+    public static function developers(Game $game)
+    {
+        return $game->developers->map(function ($developer) {
+            return $developer->pub_dev_name;
+        })
+            ->join(', ');
+    }
 }

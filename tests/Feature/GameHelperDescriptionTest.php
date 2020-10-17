@@ -14,7 +14,7 @@ use App\Models\Screenshot;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class GameHelperTest extends TestCase
+class GameHelperDescriptionTest extends TestCase
 {
     use RefreshDatabase;
 

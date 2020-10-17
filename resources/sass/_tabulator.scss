@@ -1,0 +1,47 @@
+@use "sass:color";
+
+$rowHoverBackground: $light;
+@import '~tabulator-tables/src/scss/tabulator';
+
+.tabulator {
+    .tabulator-header {
+        .tabulator-col {
+            background-color: $primary-dark;
+            color: white;
+
+            &.tabulator-sortable:hover {
+                background-color: $dark;
+            }
+        }
+
+        .tabulator-header-filter {
+            input {
+                background-color: black;
+                color: white;
+                border: solid 1px $primary-dark;
+            }
+        }
+    }
+
+    .tabulator-row-odd {
+        background-color: $primary;
+    }
+    .tabulator-row-even {
+        background-color: color.scale($primary-dark, $lightness: 10%);
+    }
+
+    .tabulator-footer {
+        background-color: $primary-dark;
+
+        .tabulator-paginator {
+            .tabulator-page {
+                color: white;
+
+                &.active {
+                    font-weight: bold;
+                    color: $dark;
+                }
+            }
+        }
+    }
+}

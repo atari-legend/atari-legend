@@ -98,13 +98,8 @@
                     @if ($game->screenshots->isNotEmpty())
                         <i class="fas fa-camera fa-fw mt-1" title="{{ $game->screenshots->count() }} {{ Str::plural('screenshot', $game->screenshots->count()) }}"></i>
                     @endif
-                    @if ($game->releases->isNotEmpty())
-                        @foreach ($game->releases as $release)
-                            @if ($release->boxscans->isNotEmpty())
-                                <i class="fas fa-box fa-fw mt-1" title="Has boxscans"></i>
-                                @break
-                            @endif
-                        @endforeach
+                    @if (GameHelper::hasBoxscan($game))
+                        <i class="fas fa-box fa-fw mt-1" title="Has boxscans"></i>
                     @endif
                     @if ($game->musics->isNotEmpty())
                         <i class="fas fa-music fa-fw mt-1" title="{{ $game->musics->count() }} {{ Str::plural('music', $game->musics->count()) }}"></i>

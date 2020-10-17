@@ -113,14 +113,20 @@ class GameController extends Controller
         }
 
         $games = $games
-            ->orderBy('game_name')
-            ->paginate(12);
+            ->orderBy('game_name');
+
+        if (!$request->boolean('export')) {
+            $games = $games->paginate(12);
+        } else {
+            $games = $games->get();
+        }
 
         $referenceData = $this->getSearchReferenceData();
 
         return view('games.search')->with(
             array_merge($referenceData, [
-                'games' => $games,
+                'games'  => $games,
+                'export' => $request->boolean('export'),
             ])
         );
     }
