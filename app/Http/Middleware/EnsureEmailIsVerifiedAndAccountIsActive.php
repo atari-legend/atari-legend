@@ -11,16 +11,17 @@ use Illuminate\Support\Facades\URL;
 /**
  * Checks that an account has its emails verified (built-in Laravel
  * 'email_verified_at' column) and that a user is active (legacy AtariLegend
- * 'inactive' column)
+ * 'inactive' column).
  */
 class EnsureEmailIsVerifiedAndAccountIsActive
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $redirectToRoute
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string|null              $redirectToRoute
+     *
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle($request, Closure $next, $redirectToRoute = null)

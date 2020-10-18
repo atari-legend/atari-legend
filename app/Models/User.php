@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -40,7 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasVerifiedEmail()
     {
-        return ! is_null($this->email_verified_at) && $this->inactive === User::ACTIVE;
+        return !is_null($this->email_verified_at) && $this->inactive === User::ACTIVE;
     }
 
     /**
