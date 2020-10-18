@@ -27,4 +27,24 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * Set the user's password.
+     *
+     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
+     * @param  string  $password
+     * @return void
+     */
+    protected function setUserPassword($user, $password)
+    {
+        $salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
+        $sha512Password = hash('sha512', $password);
+        $hashedPassword = hash('sha512', $sha512Password.$salt);
+
+        $user->sha512_password = $hashedPassword;
+        $user->salt = $salt;
+        // Empty old MD5 password
+        $user->password = null;
+    }
+
 }

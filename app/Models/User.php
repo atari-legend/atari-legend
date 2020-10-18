@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use Authenticatable;
     use HasFactory;
+    use Notifiable;
+    use CanResetPassword;
 
     const PERMISSION_ADMIN = 1;
     const PERMISSION_USER = 2;
