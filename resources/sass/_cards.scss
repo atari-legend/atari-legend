@@ -1,6 +1,9 @@
 .card {
     border-top: solid 10px $primary;
     border-bottom: solid 3px $primary;
+
+    border-left: none;
+    border-right: none;
 }
 
 .card-header {
