@@ -15,13 +15,19 @@ class HomeController extends Controller
             ->sortByDesc('news_date')
             ->take(6);
 
-        $triviaQuote = TriviaQuote::all()
-            ->random();
+        $triviaQuote = null;
+        TriviaQuote::all()
+            ->whenNotEmpty(function ($collection) use (&$triviaQuote) {
+                $triviaQuote = $collection->random();
+            });
 
         $triviaImages = $this->getTriviaImages();
 
-        $spotlight = Spotlight::all()
-            ->random();
+        $spotlight = null;
+        Spotlight::all()
+            ->whenNotEmpty(function ($collection) use (&$spotlight) {
+                $spotlight = $collection->random();
+            });
 
         return view('home.index')->with([
             'news'         => $news,

@@ -24,16 +24,20 @@ class Screenstar extends Component
      */
     public function render()
     {
-        $screenstar = Review::where('review_edit', Review::REVIEW_PUBLISHED)
+        $screenstar = null;
+        $firstRelease = null;
+        Review::where('review_edit', Review::REVIEW_PUBLISHED)
             ->get()
-            ->random();
+            ->whenNotEmpty(function ($collection) use (&$screenstar, &$firstRelease) {
+                $screenstar = $collection->random();
+                $firstRelease = $screenstar->games->first()->releases
+                    ->filter(function ($release) {
+                        return $release->date !== null;
+                    })
+                    ->sortBy('date')
+                    ->first();
+            });
 
-        $firstRelease = $screenstar->games->first()->releases
-            ->filter(function ($release) {
-                return $release->date !== null;
-            })
-            ->sortBy('date')
-            ->first();
 
         return view('components.cards.screenstar')
             ->with([
