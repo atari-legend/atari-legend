@@ -31,8 +31,9 @@ class ResetPasswordController extends Controller
     /**
      * Set the user's password.
      *
-     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
-     * @param  string  $password
+     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
+     * @param string                                      $password
+     *
      * @return void
      */
     protected function setUserPassword($user, $password)
@@ -46,5 +47,4 @@ class ResetPasswordController extends Controller
         // Empty old MD5 password
         $user->password = null;
     }
-
 }

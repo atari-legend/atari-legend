@@ -38,7 +38,6 @@ class Screenstar extends Component
                     ->first();
             });
 
-
         return view('components.cards.screenstar')
             ->with([
                 'screenstar'    => $screenstar,
