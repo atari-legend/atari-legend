@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use Authenticatable;
     use HasFactory;
+    use Notifiable;
+    use CanResetPassword;
 
     const PERMISSION_ADMIN = 1;
     const PERMISSION_USER = 2;
+
+    const ACTIVE = 0;
+    const INACTIVE = 1;
 
     protected $primaryKey = 'user_id';
     public $timestamps = false;
@@ -23,6 +29,35 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
         'permission', 'join_date', 'inactive',
         'sha512_password', 'salt',
     ];
+
+    /**
+     * Determine if the user has verified their email address.
+     *
+     * We must consider both the Laravel 'email_verified_at' column and the
+     * legacy AtariLegend 'inactive' one.
+     *
+     * @return bool
+     */
+    public function hasVerifiedEmail()
+    {
+        return !is_null($this->email_verified_at) && $this->inactive === User::ACTIVE;
+    }
+
+    /**
+     * Mark the given user's email as verified.
+     *
+     * We must update the Laravel 'email_verified_at'  column, and the legacy
+     * AtariLegend 'inactive' one
+     *
+     * @return bool
+     */
+    public function markEmailAsVerified()
+    {
+        return $this->forceFill([
+            'email_verified_at' => $this->freshTimestamp(),
+            'inactive'          => User::ACTIVE,
+        ])->save();
+    }
 
     public function reviews()
     {

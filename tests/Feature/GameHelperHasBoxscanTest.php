@@ -42,6 +42,8 @@ class GameHelperHasBoxscanTest extends TestCase
         $game->releases()->save($release);
 
         $scan = new ReleaseScan();
+        $scan->imgext = 'png';
+        $scan->type = 'Other';
         $release->boxscans()->save($scan);
 
         $this->assertTrue(GameHelper::hasBoxscan($game));
@@ -60,6 +62,8 @@ class GameHelperHasBoxscanTest extends TestCase
         $game->releases()->save($release);
 
         $scan = new ReleaseScan();
+        $scan->imgext = 'png';
+        $scan->type = 'Other';
         $release->boxscans()->save($scan);
 
         $this->assertTrue(GameHelper::hasBoxscan($game));

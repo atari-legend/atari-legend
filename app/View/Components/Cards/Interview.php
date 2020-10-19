@@ -24,8 +24,11 @@ class Interview extends Component
      */
     public function render()
     {
-        $interview = ModelsInterview::all()
-            ->random();
+        $interview = null;
+        ModelsInterview::all()
+            ->whenNotEmpty(function ($collection) use (&$interview) {
+                $interview = $collection->random();
+            });
 
         return view('components.cards.interview')
             ->with(['interview' => $interview]);

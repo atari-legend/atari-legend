@@ -3,8 +3,10 @@
         <h2 class="text-uppercase">Did you know?</h2>
     </div>
     <div class="card-body p-2">
-        <p class="card-text">
-            {{ $trivia->trivia_text }}
-        </p>
+        @isset ($trivia)
+            <p class="card-text">
+                {{ $trivia->trivia_text }}
+            </p>
+        @endisset
     </div>
 </div>

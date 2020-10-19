@@ -42,7 +42,7 @@ class GameHelper
             $boxscans = $game->releases
                 ->flatMap(function ($release) {
                     return $release->boxscans;
-                })->count();
+                })->count() + $game->boxscans()->count();
             if ($boxscans > 0) {
                 $extraInfo[] = $boxscans.' '.Str::plural('boxscan', $boxscans);
             }

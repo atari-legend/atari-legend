@@ -32,6 +32,6 @@ class UserProvider extends EloquentUserProvider
         // Then hash it again, with the user salt from the database
         $hashedPassword = hash('sha512', $sha512Password.$user->salt);
 
-        return $user->inactive === 0 && $user->sha512_password === $hashedPassword;
+        return $user->inactive === User::ACTIVE && $user->sha512_password === $hashedPassword;
     }
 }

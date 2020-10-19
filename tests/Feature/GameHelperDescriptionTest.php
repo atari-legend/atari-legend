@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Helpers\GameHelper;
+use App\Models\BoxScan;
 use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\Genre;
@@ -24,6 +25,10 @@ class GameHelperDescriptionTest extends TestCase
         $game->game_name = 'Name of the game';
 
         $game->save();
+
+        // Game-level boxscans, deprecated but still in use
+        $boxscan = new BoxScan();
+        $game->boxscans()->save($boxscan);
 
         $genre1 = new Genre();
         $genre1->name = 'Genre 1';
@@ -71,6 +76,8 @@ class GameHelperDescriptionTest extends TestCase
         $game->releases()->save($release1);
 
         $scan1 = new ReleaseScan();
+        $scan1->imgext = 'png';
+        $scan1->type = 'Other';
         $release1->boxscans()->save($scan1);
 
         $release2 = new Release();
@@ -79,13 +86,17 @@ class GameHelperDescriptionTest extends TestCase
         $game->releases()->save($release2);
 
         $scan2 = new ReleaseScan();
+        $scan2->imgext = 'png';
+        $scan2->type = 'Other';
         $release2->boxscans()->save($scan2);
         $scan3 = new ReleaseScan();
+        $scan3->imgext = 'png';
+        $scan3->type = 'Other';
         $release2->boxscans()->save($scan3);
 
         $this->assertEquals(
             'Name of the game is a Genre 1, Genre 2 game for the Atari ST developed by Dev 1, Dev 2 released in 1988 (by Pub 1), 1989 (by Pub 2)'
-                .' (2 releases, 3 boxscans, 1 screenshot, 3 reviews). It is also known as: AKA 1, AKA 2.',
+                .' (2 releases, 4 boxscans, 1 screenshot, 3 reviews). It is also known as: AKA 1, AKA 2.',
             GameHelper::description($game)
         );
     }
@@ -102,6 +113,8 @@ class GameHelperDescriptionTest extends TestCase
         $game->releases()->save($release1);
 
         $scan1 = new ReleaseScan();
+        $scan1->imgext = 'png';
+        $scan1->type = 'Other';
         $release1->boxscans()->save($scan1);
 
         $release2 = new Release();
