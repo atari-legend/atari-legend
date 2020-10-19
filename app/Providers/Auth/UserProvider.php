@@ -2,6 +2,7 @@
 
 namespace App\Providers\Auth;
 
+use App\Helpers\UserHelper;
 use App\Models\User;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -25,12 +26,7 @@ class UserProvider extends EloquentUserProvider
             throw new \Exception("Unsupported Authenticatable type: $user");
         }
 
-        // Hash the password with sha512. This was initially done client-side
-        // so that only the hashed password would get sent. With HTTPS is this
-        // not needed anymore
-        $sha512Password = hash('sha512', $credentials['password']);
-        // Then hash it again, with the user salt from the database
-        $hashedPassword = hash('sha512', $sha512Password.$user->salt);
+        $hashedPassword = UserHelper::hashPassword($credentials['password'], $user->salt);
 
         return $user->inactive === User::ACTIVE && $user->sha512_password === $hashedPassword;
     }

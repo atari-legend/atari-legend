@@ -6,6 +6,7 @@ use App\Http\Controllers\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Ajax\GenreController;
 use App\Http\Controllers\Ajax\ReleaseYearController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\GameController;
@@ -45,6 +46,10 @@ Route::middleware('verified')->group(function () {
         Route::post('/links/submit', [LinkController::class, 'postLink'])->name('links.submit');
         Route::post('/comments/delete', [CommentController::class, 'delete'])->name('comments.delete');
         Route::post('/comments/update', [CommentController::class, 'update'])->name('comments.update');
+
+        Route::get('/profile', [UserController::class, 'profile'])->name('auth.profile');
+        Route::post('/profile', [UserController::class, 'update'])->name('auth.profile');
+        Route::post('/profile/password', [UserController::class, 'password'])->name('auth.password');
     });
 
     Route::resource('/news', NewsController::class)->only(['index']);

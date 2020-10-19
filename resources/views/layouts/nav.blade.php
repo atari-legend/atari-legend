@@ -50,7 +50,7 @@
                         {{ Auth::user()->userid }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="user-menu">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('auth.profile') }}">Profile</a></li>
                         <li>
                             <a class="dropdown-item"
                                 href="{{ route('logout') }}"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
@@ -38,9 +39,8 @@ class ResetPasswordController extends Controller
      */
     protected function setUserPassword($user, $password)
     {
-        $salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
-        $sha512Password = hash('sha512', $password);
-        $hashedPassword = hash('sha512', $sha512Password.$salt);
+        $salt = UserHelper::salt();
+        $hashedPassword = UserHelper::hashPassword($password, $salt);
 
         $user->sha512_password = $hashedPassword;
         $user->salt = $salt;

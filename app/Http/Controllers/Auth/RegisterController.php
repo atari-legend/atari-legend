@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -50,11 +50,10 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        return Validator::make($data, array_merge([
             'userid'   => ['required', 'string', 'max:255', 'unique:users'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        ], UserHelper::validationRules()));
     }
 
     /**
@@ -66,9 +65,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
-        $sha512Password = hash('sha512', $data['password']);
-        $hashedPassword = hash('sha512', $sha512Password.$salt);
+        $salt = UserHelper::salt();
+        $hashedPassword = UserHelper::hashPassword($data['password'], $salt);
 
         return User::create([
             'userid'          => $data['userid'],
