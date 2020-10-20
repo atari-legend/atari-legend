@@ -24,8 +24,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public $timestamps = false;
 
     protected $fillable = [
-        'userid', 'email', 'password', 'user_website',
-        'user_fb', 'user_twitter', 'user_af',
+        'userid', 'email', 'password', 'avatar_ext',
+        'user_website', 'user_fb', 'user_twitter', 'user_af',
         'permission', 'join_date', 'inactive',
         'sha512_password', 'salt',
     ];

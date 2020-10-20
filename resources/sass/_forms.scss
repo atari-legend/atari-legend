@@ -1,6 +1,19 @@
 .bg-dark {
+
     form {
-        input, select, textarea {
+        .form-control, .form-select, .form-file-label {
+            border: solid 1px $primary-dark;
+        }
+
+        .form-file-label {
+            border-width: 0px;
+        }
+
+        .form-file-button {
+            background-color: $primary;
+        }
+
+        input, select, textarea, .form-file-text {
             background-color: $black;
             color: $light;
 

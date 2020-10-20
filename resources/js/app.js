@@ -10,3 +10,4 @@ require('./comments');
 require('./game/screenshots');
 require('./game/search');
 require('./tabulator');
+require('./user');

@@ -7,13 +7,15 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     public function profile()
     {
-        return view('auth.profile');
+        return view('auth.profile')
+            ->with(['user' => Auth::user()]);
     }
 
     public function update(Request $request)
@@ -28,6 +30,16 @@ class UserController extends Controller
             'user_twitter' => $request->twitter,
             'user_af'      => $request->af,
         ]);
+
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $avatar->storeAs('images/user_avatars/', $user->user_id.'.'.$avatar->extension(), 'public');
+            $user->avatar_ext = $avatar->extension();
+        } elseif ($request->has('avatar-removed')) {
+            Storage::disk('public')->delete('images/user_avatars/'.$user->user_id.'.'.$user->avatar_ext);
+            $user->avatar_ext = null;
+        }
+
         $user->save();
 
         $request->flash();
@@ -38,7 +50,8 @@ class UserController extends Controller
             'Your profile has been updated'
         );
 
-        return view('auth.profile');
+        return view('auth.profile')
+            ->with(['user' => $user]);
     }
 
     public function password(Request $request)
@@ -69,6 +82,7 @@ class UserController extends Controller
             'Your password has been changed'
         );
 
-        return view('auth.profile');
+        return view('auth.profile')
+            ->with(['user' => $user]);
     }
 }
