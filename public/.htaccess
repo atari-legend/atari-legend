@@ -4,6 +4,8 @@
     </IfModule>
 
     RewriteEngine On
+    # Needed for 1and1 hosting
+    RewriteBase /
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
