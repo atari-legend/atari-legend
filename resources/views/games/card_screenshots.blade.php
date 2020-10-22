@@ -24,7 +24,7 @@
                         <div class="carousel-inner">
                             @foreach($game->screenshots as $screenshot)
                                 <div class="carousel-item @if ($loop->first) active @endif">
-                                    <img class="w-100 d-block" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Large screenshot of {{ $game->game_name }}">
+                                    <img class="w-100 d-block pixelated" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Large screenshot of {{ $game->game_name }}">
                                 </div>
                             @endforeach
                         </div>

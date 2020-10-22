@@ -5,7 +5,7 @@
                 $screenshot = $review->screenshots->random()->screenshot
             @endphp
             <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
-                <img class="w-100 " src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Screenshot of {{ $review->games->first()->game_name }}">
+                <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Screenshot of {{ $review->games->first()->game_name }}">
             </a>
         @endif
     </div>

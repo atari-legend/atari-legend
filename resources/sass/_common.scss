@@ -43,6 +43,12 @@ img.cropped {
     object-position: top left;
 }
 
+img.pixelated {
+    // Need both variants for different browsers
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
 .text-h1 { font-size: $h1-font-size; }
 .text-h2 { font-size: $h2-font-size; }
 .text-h3 { font-size: $h3-font-size; }
