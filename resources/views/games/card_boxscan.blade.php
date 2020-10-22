@@ -22,11 +22,11 @@
                         </div>
                         <a class="carousel-control-prev text-decoration-none" href="#carousel-boxscans" role="button" data-slide="prev">
                             <span class="fas fa-chevron-left fa-3x"></span>
-                            <span class="sr-only">Previous</span>
+                            <span class="visually-hidden">Previous</span>
                         </a>
                         <a class="carousel-control-next text-decoration-none" href="#carousel-boxscans" role="button" data-slide="next">
                             <i class="fas fa-chevron-right fa-3x"></i>
-                            <span class="sr-only">Next</span>
+                            <span class="visually-hidden">Next</span>
                         </a>
                     </div>
                 </div>

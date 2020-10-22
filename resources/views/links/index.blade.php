@@ -2,7 +2,7 @@
 @section('title', 'Atari ST links and resources')
 
 @section('content')
-    <h1 class="sr-only">Links</h1>
+    <h1 class="visually-hidden">Links</h1>
     <div class="row">
         <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1">
             @include('links.card_submit')

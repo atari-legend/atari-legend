@@ -2,7 +2,7 @@
 @section('title', 'Latest Atari ST articles')
 
 @section('content')
-    <h1 class="sr-only">Articles</h1>
+    <h1 class="visually-hidden">Articles</h1>
     <div class="row">
         <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1">
             <x-cards.screenstar />

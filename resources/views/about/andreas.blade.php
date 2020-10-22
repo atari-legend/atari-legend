@@ -2,7 +2,7 @@
 @section('title', 'In loving memory of Andreas Wahlin')
 
 @section('content')
-    <h1 class="sr-only">Andreas Wahlin</h1>
+    <h1 class="visually-hidden">Andreas Wahlin</h1>
     <div class="row">
         <div class="col-3 pl-0">
             @include('about.card_memory')

@@ -2,7 +2,7 @@
 @section('title', 'Log-in')
 
 @section('content')
-<h1 class="sr-only">Log-in</h1>
+<h1 class="visually-hidden">Log-in</h1>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

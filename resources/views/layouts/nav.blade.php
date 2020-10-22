@@ -42,14 +42,18 @@
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
+                @if (Auth::user()->avatar_ext)
+                    <li class="nav-item">
+                        <a class="nav-link py-2 pr-0">
+                                <img id="avatar" class="rounded-circle mr-1" src="{{ asset('storage/images/user_avatars/'.Auth::user()->user_id.'.'.Auth::user()->avatar_ext) }}" alt="User avatar">
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item dropdown p-0">
-                    <a class="text-dark nav-link dropdown-toggle py-3 px-2 px-lg-3" href="#" id="user-menu" role="button" data-toggle="dropdown" aria-expanded="false">
-                        @if (Auth::user()->avatar_ext)
-                            <img class="rounded-circle mr-1" height="30" src="{{ asset('storage/images/user_avatars/'.Auth::user()->user_id.'.'.Auth::user()->avatar_ext) }}" alt="User avatar">
-                        @endif
+                    <a class="text-dark nav-link dropdown-toggle py-3 @if (Auth::user()->avatar_ext) pl-0 @endif" href="#" id="user-menu" role="button" data-toggle="dropdown" aria-expanded="false">
                         {{ Auth::user()->userid }}
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="user-menu">
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="user-menu">
                         <li><a class="dropdown-item" href="{{ route('auth.profile') }}">Profile</a></li>
                         <li>
                             <a class="dropdown-item"

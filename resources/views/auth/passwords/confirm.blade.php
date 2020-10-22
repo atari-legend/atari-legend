@@ -2,7 +2,7 @@
 @section('title', 'Password confirmation')
 
 @section('content')
-<h1 class="sr-only">Password confirmation</h1>
+<h1 class="visually-hidden">Password confirmation</h1>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
