@@ -53,6 +53,7 @@ class RegisterController extends Controller
         return Validator::make($data, array_merge([
             'userid'   => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'license'  => ['required', 'accepted'],
         ], UserHelper::validationRules()));
     }
 

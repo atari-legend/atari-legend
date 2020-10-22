@@ -121,6 +121,27 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <div class="col-md-6 offset-md-4">
+                                <div class="form-check @error('license') is-invalid @enderror">
+                                    <input class="form-check-input @error('license') is-invalid @enderror" type="checkbox" name="license" id="license" required {{ old('license') ? 'checked' : '' }}>
+
+                                    <label class="form-check-label" for="license">
+                                        I accept to make my contributions publicly available with a
+                                        <a rel="license"
+                                            href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons BY-NC-SA v4.0</a>
+                                        license
+                                    </label>
+                                </div>
+
+                                @error('license')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="row mb-3 mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
