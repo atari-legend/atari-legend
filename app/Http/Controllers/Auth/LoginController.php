@@ -13,7 +13,7 @@ class LoginController extends Controller
     /**
      * Name of the 'remember me' cookie used by the legacy site
      * We set it so that logging in to the new site also logs in
-     * to the legacy site
+     * to the legacy site.
      */
     const LEGACY_SITE_COOKIE_NAME = 'cooksession';
 
@@ -58,8 +58,9 @@ class LoginController extends Controller
     /**
      * The user has been authenticated.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
+     * @param \Illuminate\Http\Request $request
+     * @param mixed                    $user
+     *
      * @return mixed
      */
     protected function authenticated(Request $request, $user)
@@ -79,7 +80,8 @@ class LoginController extends Controller
     /**
      * The user has logged out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return mixed
      */
     protected function loggedOut(Request $request)
