@@ -65,7 +65,7 @@ class UserController extends Controller
                 $validator->errors()->add('password_current', 'The password does not match your current password');
             }
         });
-        $validator->validate($request);
+        $validator->validate();
 
         $salt = UserHelper::salt();
         $hashedPassword = UserHelper::hashPassword($request->password, $salt);

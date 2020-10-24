@@ -13,7 +13,7 @@ class GameHelper
     /**
      * Generate a description for a game, suitable to use as a HTML description meta tag.
      *
-     * @param App\Game $game Game to generate the description for.
+     * @param \App\Models\Game $game Game to generate the description for.
      *
      * @return string The game description.
      */

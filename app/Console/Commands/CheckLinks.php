@@ -49,7 +49,7 @@ class CheckLinks extends Command
 
         Website::all()
             ->sortBy('website_name')
-            ->each(function ($website, $id) use (&$current, $total) {
+            ->each(function ($website) use (&$current, $total) {
                 $current++;
                 $this->info("Checking $current/$total: $website->website_name ($website->website_url)");
 
