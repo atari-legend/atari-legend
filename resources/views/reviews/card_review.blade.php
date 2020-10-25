@@ -1,6 +1,13 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">{{ $review->games->first()->game_name }}</h2>
+        <h2 class="text-uppercase">
+            {{ $review->games->first()->game_name }}
+            @contributor
+                <a href="{{ URL::to('/legacy/admin/games/games_review_edit.php?game_id='.$review->games->first()->game_id.'&reviewid='.$review->review_id) }}">
+                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                </a>
+            @endcontributor
+        </h2>
     </div>
 
     <div class="card-body p-2 bg-darklight">

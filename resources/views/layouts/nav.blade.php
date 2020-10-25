@@ -27,6 +27,11 @@
                 <li class="nav-item p-0">
                     <a class="text-dark nav-link py-3 px-2 px-lg-3 {{ Request::routeIs('about.*') ? 'active' : '' }}" href="{{ route('about.index') }}">About</a>
                 </li>
+                @contributor
+                    <li class="nav-item p-0">
+                        <a class="text-dark nav-link py-3 px-2 px-lg-3 text-contributor" href="{{ URL::to('/legacy/admin/.') }}">CPanel</a>
+                    </li>
+                @endcontributor
             </ul>
             <form class="d-flex search" method="get" action="{{ route('games.search') }}">
                 <div class="position-relative">

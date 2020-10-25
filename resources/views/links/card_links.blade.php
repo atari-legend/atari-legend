@@ -37,7 +37,14 @@
                         <small class="text-warning mt-1 float-right"><i class="fas fa-exclamation-triangle"></i> Appears to be inactive</small>
                     @endif
 
-                    <h3 class="card-title text-h5 text-audiowide"><a href="{{ $website->website_url }}">{{ $website->website_name }}</a></h3>
+                    <h3 class="card-title text-h5 text-audiowide">
+                        <a href="{{ $website->website_url }}">{{ $website->website_name }}</a>
+                        @contributor
+                            <a href="{{ URL::to('/legacy/admin/links/link_mod.php?website_id='.$website->website_id) }}">
+                                <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                            </a>
+                        @endcontributor
+                    </h3>
                     <p class="card-subtitle text-muted">Added on {{ date('F j, Y', $website->website_date) }} by {{ Helper::user($website->user) }}</p>
                     <div class="mb-2"><small><a href="{{ $website->website_url }}">{{ $website->website_url }}</a></small></div>
                     <p class="card-text">{{ $website->description }}</p>

@@ -1,6 +1,13 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">{{ $article->texts->first()->article_title }}</h2>
+        <h2 class="text-uppercase">
+            {{ $article->texts->first()->article_title }}
+            @contributor
+                <a href="{{ URL::to('/legacy/admin/articles/articles_edit.php?article_id='.$article->article_id) }}">
+                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                </a>
+            @endcontributor
+        </h2>
     </div>
 
     <div class="card-body p-2 bg-darklight">

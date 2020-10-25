@@ -21,6 +21,11 @@
                     @foreach ($game->developers as $developer)
                         <div>
                             <a href="{{ route('games.search', ['developer' => $developer->pub_dev_name]) }}">{{ $developer->pub_dev_name }}</a>
+                            @contributor
+                                <a href="{{ URL::to('/legacy/admin/company/company_edit.php?comp_id='.$developer->pub_dev_id) }}">
+                                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                                </a>
+                            @endcontributor
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first()->file !== null)
                                 <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$developer->texts->first()->file) }}">
                                     <i class="far fa-image ml-1"></i>

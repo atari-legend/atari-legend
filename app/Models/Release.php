@@ -13,6 +13,11 @@ class Release extends Model
         'date' => 'date',
     ];
 
+    public function game()
+    {
+        return $this->belongsTo(Game::class, 'game_id');
+    }
+
     public function publisher()
     {
         return $this->belongsTo(PublisherDeveloper::class, 'pub_dev_id');

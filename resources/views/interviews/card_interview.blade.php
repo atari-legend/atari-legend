@@ -1,6 +1,13 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">Interview</h2>
+        <h2 class="text-uppercase">
+            Interview
+            @contributor
+                <a href="{{ URL::to('/legacy/admin/interviews/interviews_edit.php?interview_id='.$interview->interview_id) }}">
+                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                </a>
+            @endcontributor
+        </h2>
     </div>
 
     <div class="card-body p-2 bg-darklight">

@@ -1,6 +1,13 @@
 <div class="card bg-dark mb-4 card-screenshots">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">{{ $game->game_name }}</h2>
+        <h2 class="text-uppercase">
+            {{ $game->game_name }}
+            @contributor
+                <a href="{{ URL::to('/legacy/admin/games/games_detail.php?game_id='.$game->game_id) }}">
+                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                </a>
+            @endcontributor
+        </h2>
     </div>
     <div class="card-body p-2">
         @if ($game->screenshots->isNotEmpty())

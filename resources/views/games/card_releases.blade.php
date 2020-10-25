@@ -5,11 +5,18 @@
     <div class="striped">
         @forelse ($game->releases as $release)
             <div class="card-body px-0 py-1 text-center">
-                @if ($release->date !== null)
-                    <h3 class="m-0 text-h6 text-audiowide">{{ $release->date->year }}</h3>
-                @else
-                    <h3 class="m-0 text-h6 text-audiowide">[no date]</h3>
-                @endif
+                <h3 class="m-0 text-h6 text-audiowide">
+                    @if ($release->date !== null)
+                        {{ $release->date->year }}
+                    @else
+                        [no date]
+                    @endif
+                    @contributor
+                        <a href="{{ URL::to('/legacy/admin/games/games_release_detail.php?release_id='.$release->id.'&game_id='.$release->game->game_id) }}">
+                            <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                        </a>
+                    @endcontributor
+                </h3>
             </div>
             <div class="card-body p-0">
                 @if ($release->name !== null && $release->name !== '')
@@ -24,6 +31,11 @@
                         <div class="col-4 text-muted">Publisher</div>
                         <div class="col-8">
                             <a href="{{ route('games.search', ['publisher' => $release->publisher->pub_dev_name]) }}">{{ $release->publisher->pub_dev_name }}</a>
+                            @contributor
+                                <a href="{{ URL::to('/legacy/admin/company/company_edit.php?comp_id='.$release->publisher->pub_dev_id) }}">
+                                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                                </a>
+                            @endcontributor
                             @if ($release->publisher->texts->isNotEmpty() && $release->publisher->texts->first()->file !== null)
                                 <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$release->publisher->texts->first()->file) }}">
                                     <i class="far fa-image"></i>
