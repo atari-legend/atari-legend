@@ -16,6 +16,8 @@ RSYNC_FLAGS=(
     # Exclude public storage folders
     --exclude public/public
     --exclude storage/app/public
+    # Exclude folder storing the legacy site
+    --exclude public/legacy
 )
 
 DEPLOY_USER=$1
