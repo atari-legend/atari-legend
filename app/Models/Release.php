@@ -106,4 +106,9 @@ class Release extends Model
     {
         return $this->belongsToMany(Language::class, 'game_release_language', 'release_id', 'language_id');
     }
+
+    public function medias()
+    {
+        return $this->hasMany(Media::class);
+    }
 }

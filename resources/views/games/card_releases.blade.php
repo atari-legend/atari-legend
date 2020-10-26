@@ -6,11 +6,13 @@
         @forelse ($game->releases as $release)
             <div class="card-body px-0 py-1 text-center">
                 <h3 class="m-0 text-h6 text-audiowide">
-                    @if ($release->date !== null)
-                        {{ $release->date->year }}
-                    @else
-                        [no date]
-                    @endif
+                    <a href="{{ route('games.releases.show', ['release' => $release]) }}">
+                        @if ($release->date !== null)
+                            {{ $release->date->year }}
+                        @else
+                            [no date]
+                        @endif
+                    </a>
                     @contributor
                         <a href="{{ URL::to('/legacy/admin/games/games_release_detail.php?release_id='.$release->id.'&game_id='.$release->game->game_id) }}">
                             <small><i class="fas fa-pencil-alt text-contributor"></i></small>
