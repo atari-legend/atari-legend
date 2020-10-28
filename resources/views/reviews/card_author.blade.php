@@ -3,8 +3,8 @@
         <h2 class="text-uppercase">Author</h2>
     </div>
 
-    <div class="card-body p-2 bg-darklight">
-        <p class="card-text">
+    <div class="card-body p-0 bg-darklight">
+        <p class="card-text p-2 pb-0">
             @if (isset($mode) && $mode === 'submit' && $reviews->isEmpty())
                 You haven't written any reviews before. This is your first. Congratulations and good luck!
                 For some examples, see the card 'Indepth reviews'.
@@ -13,9 +13,9 @@
             @endif
 
             @if ($reviews->isNotEmpty())
-                <ul>
+                <ul class="striped list-unstyled">
                     @foreach ($reviews as $r)
-                        <li>
+                        <li class="p-1 pl-4">
                             <a href="{{ route('reviews.show', ['review' => $r ]) }}">{{ $r->games->first()->game_name }}</a>
                         </li>
                     @endforeach
