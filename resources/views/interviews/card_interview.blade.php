@@ -24,7 +24,7 @@
             </div>
             <div class="col-3 pl-2 text-center text-muted lightbox-gallery">
                 @foreach ($interview->screenshots as $screenshot)
-                    <div class="bg-dark">
+                    <div class="bg-dark p-2">
                         <a class="lightbox-link" href="{{ asset('storage/images/interview_screenshots/'.$screenshot->screenshot->file) }}" title="{{ $screenshot->comment->comment_text }}">
                             <img class="w-100 mb-2" src="{{ asset('storage/images/interview_screenshots/'.$screenshot->screenshot->file) }}" alt="{{ $screenshot->comment->comment_text }}">
                         </a>

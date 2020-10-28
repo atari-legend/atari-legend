@@ -103,7 +103,7 @@
 
                             <div class="col-3 pl-2 text-center text-muted lightbox-gallery">
                                 @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
-                                    <div class="bg-dark">
+                                    <div class="bg-dark p-2">
                                         <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
                                             <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
                                         </a>
