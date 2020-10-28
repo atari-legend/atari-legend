@@ -3,6 +3,7 @@
 namespace App\View\Components\Cards;
 
 use App\Models\Interview as ModelsInterview;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\Component;
 
 class Interview extends Component
@@ -25,7 +26,16 @@ class Interview extends Component
     public function render()
     {
         $interview = null;
-        ModelsInterview::all()
+
+        // Only select interviews for which we have a picture
+        // of the individual
+        ModelsInterview::whereHas('individual', function (Builder $queryIndividual) {
+            return $queryIndividual->whereHas('text', function (Builder $queryText) {
+                return $queryText->whereNotNull('ind_imgext')
+                    ->where('ind_imgext', '!=', '');
+            });
+        })
+            ->get()
             ->whenNotEmpty(function ($collection) use (&$interview) {
                 $interview = $collection->random();
             });
