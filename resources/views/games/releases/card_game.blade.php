@@ -16,20 +16,4 @@
             </p>
         @endif
     </div>
-    <div class="card-body">
-        @if ($release->game->releases->count() > 1)
-            <h3>Releases</h3>
-            <ul class="list-unstyled ml-2">
-            @foreach ($release->game->releases as $r)
-                <li>
-                    @if ($r->id === $release->id)
-                        <i class="fas fa-caret-right text-muted"></i> <strong class="text-muted">{{ Helper::releaseName($r) }}</strong>
-                    @else
-                        <a href="{{ route('games.releases.show', ['release' => $r]) }}">{{ Helper::releaseName($r) }}</a>
-                    @endif
-                </li>
-            @endforeach
-            </ul>
-        @endif
-    </div>
 </div>

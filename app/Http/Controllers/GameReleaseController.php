@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ReleaseDescriptionHelper;
 use App\Models\Release;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,7 @@ class GameReleaseController extends Controller
         return view('games.releases.show')
             ->with([
                 'release'        => $release,
+                'descriptions'    => ReleaseDescriptionHelper::descriptions($release),
                 'mediaTypeIcons' => GameReleaseController::FA_MEDIA_TYPE_ICONS,
             ]);
     }

@@ -12,6 +12,8 @@
         </h2>
     </div>
     <div class="card-body">
-
+        @foreach ($descriptions as $description)
+            <p class="card-text">{{ $description }}</p>
+        @endforeach
     </div>
 </div>
