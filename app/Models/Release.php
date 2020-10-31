@@ -14,6 +14,9 @@ class Release extends Model
         'hd_installable' => 'boolean',
     ];
 
+    /**
+     * @return string Year of a release, or '[no date] if the release has no date.
+     */
     public function getYearAttribute()
     {
         if ($this->date !== null) {
@@ -23,6 +26,9 @@ class Release extends Model
         }
     }
 
+    /**
+     * @return array[] All dumps for this release, across all media
+     */
     public function getDumpsAttribute()
     {
         return $this->medias
