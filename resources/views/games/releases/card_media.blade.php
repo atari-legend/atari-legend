@@ -53,6 +53,7 @@
                                         <td>
                                             <abbr title="{{ $dump->sha512 }}">
                                                 {{ Str::limit($dump->sha512, 7, '') }}
+                                                <a class="ml-1" data-copy-text="{{ $dump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
                                             </abbr>
                                         </td>
                                         <td>{{ Helper::fileSize($dump->size) }}</td>
