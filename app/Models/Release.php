@@ -10,8 +10,32 @@ class Release extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'date' => 'date',
+        'date'           => 'date',
+        'hd_installable' => 'boolean',
     ];
+
+    /**
+     * @return string Year of a release, or '[no date] if the release has no date.
+     */
+    public function getYearAttribute()
+    {
+        if ($this->date !== null) {
+            return $this->date->year;
+        } else {
+            return '[no date]';
+        }
+    }
+
+    /**
+     * @return array[] All dumps for this release, across all media
+     */
+    public function getDumpsAttribute()
+    {
+        return $this->medias
+            ->flatMap(function ($media) {
+                return $media->dumps;
+            });
+    }
 
     public function game()
     {
@@ -105,5 +129,10 @@ class Release extends Model
     public function languages()
     {
         return $this->belongsToMany(Language::class, 'game_release_language', 'release_id', 'language_id');
+    }
+
+    public function medias()
+    {
+        return $this->hasMany(Media::class);
     }
 }
