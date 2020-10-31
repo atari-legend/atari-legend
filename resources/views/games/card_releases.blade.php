@@ -19,9 +19,15 @@
 
                         @foreach ($release->locations as $location)
                             @if ($location->country_iso2 !== null)
-                                <span class="flag-icon flag-icon-{{ strtolower($location->country_iso2) }} mx-1"></span>
+                                <span title="{{ $location->name }}" class="flag-icon flag-icon-{{ strtolower($location->country_iso2) }} mx-1"></span>
                             @endif
                         @endforeach
+
+                        @if ($release->dumps->isNotEmpty())
+                            <span class="ml-2">
+                                <i title="Donwloads" class="far fa-save"></i> &times; {{ $release->dumps->count() }}
+                            </span>
+                        @endif
                     </div>
                 </div>
 

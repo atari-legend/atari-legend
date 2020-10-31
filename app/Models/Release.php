@@ -23,6 +23,14 @@ class Release extends Model
         }
     }
 
+    public function getDumpsAttribute()
+    {
+        return $this->medias
+            ->flatMap(function ($media) {
+                return $media->dumps;
+            });
+    }
+
     public function game()
     {
         return $this->belongsTo(Game::class, 'game_id');
