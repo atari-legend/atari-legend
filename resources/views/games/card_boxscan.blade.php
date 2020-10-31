@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">Boxscan</h2>
     </div>
 
-    <div class="card-body p-2">
+    <div class="card-body p-2 lightbox-gallery">
         @if ($boxscans->isNotEmpty())
             <div class="row mb-2">
                 <div class="col">
@@ -16,7 +16,9 @@
                         <div class="carousel-inner">
                             @foreach ($boxscans as $boxscan)
                                 <div class="carousel-item @if ($loop->first) active @endif">
-                                    <img class="w-100 d-block" src="{{ $boxscan }}" alt="Large scan of the game box">
+                                    <a class="lightbox-link" href="{{ $boxscan }}">
+                                        <img class="w-100 d-block" src="{{ $boxscan }}" alt="Large scan of the game box">
+                                    </a>
                                 </div>
                             @endforeach
                         </div>
@@ -41,9 +43,9 @@
                 </div>
             </div>
         @else
-            <p class="card-text text-center">
+            <p class="card-text text-center text-muted">
                 There is no boxscan in the database. You have one? Please use the
-                submit card to sent it to us.
+                Submit Info card to sent it to us.
             </p>
         @endif
     </div>

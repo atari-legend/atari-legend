@@ -1,6 +1,6 @@
 <div class="card bg-dark mb-4 card-game">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">Media</h2>
+        <h2 class="text-uppercase">Media & Downloads</h2>
     </div>
 
     @if ($release->medias->isNotEmpty())
@@ -10,7 +10,7 @@
                     @guest
                         @if ($loop->first)
                             <p class="float-right text-danger">
-                                Please <a href="{{ route('login') }}">log-in</a> to download dumps
+                                Please <a href="{{ route('login') }}">log-in</a> to download files
                             </p>
 
                         @endif
@@ -65,7 +65,7 @@
                         </table>
                     @else
                         <p class="card-text text-muted">
-                            No dump of this media.
+                            No download for this media.
                         </p>
                     @endif
                 </div>
@@ -74,8 +74,8 @@
     @else
         <div class="card-body">
             <p class="card-text text-center text-muted">
-                No media or dump for this release. Please consider uploading
-                if you have one.
+                No media or download for this release. Please consider uploading
+                one via the Submit Info card.
             </p>
         </div>
     @endif

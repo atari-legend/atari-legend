@@ -10,7 +10,8 @@ class Release extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'date' => 'date',
+        'date'           => 'date',
+        'hd_installable' => 'boolean',
     ];
 
     public function game()

@@ -100,7 +100,7 @@
                     </div>
                 @endif
 
-                @if ($release->hd_installable === 1)
+                @if ($release->hd_installable)
                     <div class="row p-2 g-0">
                         <div class="col-4 text-muted">HD Ready</div>
                         <div class="col-8">

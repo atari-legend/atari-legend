@@ -12,7 +12,35 @@ use Illuminate\Support\Str;
 class ReleaseDescriptionHelper
 {
 
+    /**
+     * Get an editorial-style release description, from all the release attributes.
+     *
+     * @param \App\Models\Release Release to get the description for.
+     *
+     * @return array[] Textual description of the release split into separate strings.
+     */
     public static function descriptions(Release $release)
+    {
+        return collect([
+            ReleaseDescriptionHelper::getMainDescriptionText($release),
+            ReleaseDescriptionHelper::getLanguagesText($release),
+            join(' ', [
+                ReleaseDescriptionHelper::getResolutionsText($release),
+                ReleaseDescriptionHelper::getEnhancementsText($release),
+                ReleaseDescriptionHelper::getHDText($release),
+            ]),
+            join(' ', [
+                ReleaseDescriptionHelper::getMemoryText($release),
+                ReleaseDescriptionHelper::getIncompatibleText($release),
+            ]),
+            ReleaseDescriptionHelper::getProtectionsText($release),
+            ReleaseDescriptionHelper::getTrainerText($release),
+        ])->reject(function ($s) {
+            return trim($s) === '';
+        });
+    }
+
+    private static function getMainDescriptionText(Release $release)
     {
         $desc = '';
 
@@ -27,12 +55,27 @@ class ReleaseDescriptionHelper
         if ($release->date !== null) {
             $desc .= $release->date->year . ' ';
         }
-        $desc .= 'release of ' . $release->game->game_name . '. ';
+        $desc .= 'release ';
+
+        if ($release->type !== null || $release->status !== null) {
+            $desc .= '(';
+            if ($release->type !== null) {
+                $desc .= strtolower($release->type);
+            }
+            if ($release->status !== null) {
+                if ($release->type !== null) {
+                    $desc .= ', ';
+                }
+                $desc .= strtolower($release->status);
+            }
+            $desc .= ') ';
+        }
+
+        $desc .= 'of ' . $release->game->game_name . '. ';
 
         if ($release->locations->isNotEmpty()) {
             $desc .= 'It was released in ';
-            $desc .= $release->locations->pluck('name')
-                ->join(', ');
+            $desc .= $release->locations->pluck('name')->join(', ');
         }
 
         if ($release->publisher !== null || $release->distributors->isNotEmpty()) {
@@ -57,10 +100,12 @@ class ReleaseDescriptionHelper
             }
         }
 
-        $desc .= '.';
+        if ($release->locations->isNotEmpty() || $release->publisher !== null || $release->distributors->isNotEmpty()) {
+            $desc .= '.';
+        }
 
         if ($release->license !== null && $release->license !== '') {
-            $desc .= ' Its license is ' . $release->license . '.';
+            $desc .= ' Its license is ' . strtolower($release->license) . '.';
         }
 
         if ($release->akas->isNotEmpty()) {
@@ -77,18 +122,10 @@ class ReleaseDescriptionHelper
                 . '.';
         }
 
-        return [
-            $desc,
-            join(' ', [
-                ReleaseDescriptionHelper::getResolutionsText($release),
-                ReleaseDescriptionHelper::getEnhancementsText($release),
-            ]),
-            ReleaseDescriptionHelper::getMemoryText($release),
-            ReleaseDescriptionHelper::getProtectionsText($release),
-        ];
+        return $desc;
     }
 
-    public static function getResolutionsText(Release $release)
+    private static function getResolutionsText(Release $release)
     {
         $desc = '';
 
@@ -106,7 +143,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    public static function getEnhancementsText(Release $release)
+    private static function getEnhancementsText(Release $release)
     {
         $desc = '';
         if ($release->memoryEnhanced->isNotEmpty() || $release->systemEnhanced->isNotEmpty()) {
@@ -145,7 +182,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    public static function getMemoryText(Release $release)
+    private static function getMemoryText(Release $release)
     {
         $desc = '';
 
@@ -176,7 +213,8 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    public static function getProtectionsText(Release $release) {
+    private static function getProtectionsText(Release $release)
+    {
         $desc = '';
 
         if ($release->copyProtections->isNotEmpty()) {
@@ -185,7 +223,7 @@ class ReleaseDescriptionHelper
                 ->map(function ($protection) {
                     $s = $protection->name;
                     if ($protection->pivot->notes !== null && $protection->pivot->notes !== '') {
-                        $s .= '('.$protection->pivot->notes.')';
+                        $s .= '(' . $protection->pivot->notes . ')';
                     }
                     return $s;
                 })
@@ -211,7 +249,7 @@ class ReleaseDescriptionHelper
                     } else {
                         $s = $protection->name;
                         if ($protection->pivot->notes !== null && $protection->pivot->notes !== '') {
-                            $s .= ' ('.$protection->pivot->notes.')';
+                            $s .= ' (' . $protection->pivot->notes . ')';
                         }
                     }
                     return $s;
@@ -224,5 +262,76 @@ class ReleaseDescriptionHelper
         }
 
         return $desc;
+    }
+
+    private static function getHDText(Release $release)
+    {
+        if ($release->hd_installable) {
+            return 'It can be installed on a hard-drive';
+        } else {
+            return '';
+        }
+    }
+
+    private static function getLanguagesText(Release $release)
+    {
+        if ($release->languages->isNotEmpty()) {
+            return 'The following languages are supported: ' .
+                $release->languages->pluck('name')->join(', ');
+        } else {
+            return '';
+        }
+    }
+
+    private static function getIncompatibleText(Release $release)
+    {
+        $desc = '';
+        if ($release->systemIncompatibles->isNotEmpty() || $release->emulatorIncompatibles->isNotEmpty() || $release->tosIncompatibles->isNotEmpty()) {
+            $desc .= 'It is incompatible with ';
+
+            if ($release->systemIncompatibles->isNotEmpty()) {
+                $desc .= $release->systemIncompatibles->pluck('name')->join(', ');
+            }
+
+            if ($release->emulatorIncompatibles->isNotEmpty()) {
+                if ($release->systemIncompatibles->isNotEmpty()) {
+                    $desc .= ', ';
+                }
+                $desc .= $release->emulatorIncompatibles->pluck('name')->join(', ');
+            }
+
+            if ($release->tosIncompatibles->isNotEmpty()) {
+                if ($release->systemIncompatibles->isNotEmpty() || $release->emulatorIncompatibles->isNotEmpty()) {
+                    $desc .= ', ';
+                }
+                $desc .= 'TOS ';
+                $desc .= $release->tosIncompatibles->map(function ($incompatible) {
+                    $s = $incompatible->tos->name;
+                    if ($incompatible->language !== null) {
+                        $s .= ' (' . $incompatible->language->name . ')';
+                    }
+                    return $s;
+                })->join(', ');
+            }
+
+            $desc .= '.';
+        }
+
+        return $desc;
+    }
+
+    private static function getTrainerText(Release $release)
+    {
+        if ($release->trainers->isNotEmpty()) {
+            return Str::plural('The trainer', $release->trainers->count()) . ' ' . $release->trainers
+                ->pluck('name')
+                ->map(function ($name) {
+                    return strtolower($name);
+                })
+                ->join(', ') .
+                ' can be used.';
+        } else {
+            return '';
+        }
     }
 }

@@ -7,13 +7,15 @@
         <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1 lightbox-gallery">
             @include('games.releases.card_game')
             @include('games.releases.card_releases')
+            @include('games.card_submit_info')
         </div>
         <div class="col-12 col-lg-6 order-1 order-lg-2">
             @include('games.releases.card_release')
             @include('games.releases.card_media')
         </div>
         <div class="col col-sm-6 col-lg-3 order-3">
-            @include('games.card_submit_info')
+
+            @include('games.card_boxscan')
         </div>
     </div>
 @endsection
