@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Models\Game;
 use App\Models\Release;
 use Illuminate\Support\Str;
 
@@ -11,7 +10,6 @@ use Illuminate\Support\Str;
  */
 class ReleaseDescriptionHelper
 {
-
     /**
      * Get an editorial-style release description, from all the release attributes.
      *
@@ -53,7 +51,7 @@ class ReleaseDescriptionHelper
         $desc .= ' is a ';
 
         if ($release->date !== null) {
-            $desc .= $release->date->year . ' ';
+            $desc .= $release->date->year.' ';
         }
         $desc .= 'release ';
 
@@ -71,7 +69,7 @@ class ReleaseDescriptionHelper
             $desc .= ') ';
         }
 
-        $desc .= 'of ' . $release->game->game_name . '. ';
+        $desc .= 'of '.$release->game->game_name.'. ';
 
         if ($release->locations->isNotEmpty()) {
             $desc .= 'It was released in ';
@@ -86,14 +84,14 @@ class ReleaseDescriptionHelper
             }
 
             if ($release->publisher !== null) {
-                $desc .= 'published by ' . $release->publisher->pub_dev_name;
+                $desc .= 'published by '.$release->publisher->pub_dev_name;
             }
             if ($release->distributors->isNotEmpty()) {
                 if ($release->publisher !== null) {
                     $desc .= ', ';
                 }
 
-                $desc .= 'distributed by ' . $release
+                $desc .= 'distributed by '.$release
                     ->distributors
                     ->pluck('pub_dev_name')
                     ->join(', ');
@@ -105,21 +103,22 @@ class ReleaseDescriptionHelper
         }
 
         if ($release->license !== null && $release->license !== '') {
-            $desc .= ' Its license is ' . strtolower($release->license) . '.';
+            $desc .= ' Its license is '.strtolower($release->license).'.';
         }
 
         if ($release->akas->isNotEmpty()) {
-            $desc .= 'It is also known as ' . $release
+            $desc .= 'It is also known as '.$release
                 ->akas
                 ->map(function ($aka) {
                     $s = $aka->name;
                     if ($aka->language !== null) {
-                        $s .= ' (' . $aka->language->name . ')';
+                        $s .= ' ('.$aka->language->name.')';
                     }
+
                     return $s;
                 })
                 ->join(', ')
-                . '.';
+                .'.';
         }
 
         return $desc;
@@ -130,9 +129,9 @@ class ReleaseDescriptionHelper
         $desc = '';
 
         if ($release->resolutions->isNotEmpty()) {
-            $desc .= 'It supports the following ' .
-                Str::plural('resolution', $release->resolutions->count()) .
-                ': ' . $release
+            $desc .= 'It supports the following '.
+                Str::plural('resolution', $release->resolutions->count()).
+                ': '.$release
                 ->resolutions
                 ->pluck('name')
                 ->join(', ');
@@ -154,8 +153,9 @@ class ReleaseDescriptionHelper
                     ->map(function ($enhanced) {
                         $s = $enhanced->system->name;
                         if ($enhanced->enhancement !== null) {
-                            $s .= ' (' . $enhanced->enhancement->name . ')';
+                            $s .= ' ('.$enhanced->enhancement->name.')';
                         }
+
                         return $s;
                     })
                     ->join(', ');
@@ -169,8 +169,9 @@ class ReleaseDescriptionHelper
                     ->map(function ($enhanced) {
                         $s = $enhanced->memory->memory;
                         if ($enhanced->enhancement !== null) {
-                            $s .= ' (' . $enhanced->enhancement->name . ')';
+                            $s .= ' ('.$enhanced->enhancement->name.')';
                         }
+
                         return $s;
                     })
                     ->join(', ');
@@ -223,8 +224,9 @@ class ReleaseDescriptionHelper
                 ->map(function ($protection) {
                     $s = $protection->name;
                     if ($protection->pivot->notes !== null && $protection->pivot->notes !== '') {
-                        $s .= '(' . $protection->pivot->notes . ')';
+                        $s .= '('.$protection->pivot->notes.')';
                     }
+
                     return $s;
                 })
                 ->join(', ');
@@ -249,9 +251,10 @@ class ReleaseDescriptionHelper
                     } else {
                         $s = $protection->name;
                         if ($protection->pivot->notes !== null && $protection->pivot->notes !== '') {
-                            $s .= ' (' . $protection->pivot->notes . ')';
+                            $s .= ' ('.$protection->pivot->notes.')';
                         }
                     }
+
                     return $s;
                 })
                 ->join(', ');
@@ -276,7 +279,7 @@ class ReleaseDescriptionHelper
     private static function getLanguagesText(Release $release)
     {
         if ($release->languages->isNotEmpty()) {
-            return 'The following languages are supported: ' .
+            return 'The following languages are supported: '.
                 $release->languages->pluck('name')->join(', ');
         } else {
             return '';
@@ -308,8 +311,9 @@ class ReleaseDescriptionHelper
                 $desc .= $release->tosIncompatibles->map(function ($incompatible) {
                     $s = $incompatible->tos->name;
                     if ($incompatible->language !== null) {
-                        $s .= ' (' . $incompatible->language->name . ')';
+                        $s .= ' ('.$incompatible->language->name.')';
                     }
+
                     return $s;
                 })->join(', ');
             }
@@ -323,12 +327,12 @@ class ReleaseDescriptionHelper
     private static function getTrainerText(Release $release)
     {
         if ($release->trainers->isNotEmpty()) {
-            return Str::plural('The trainer', $release->trainers->count()) . ' ' . $release->trainers
+            return Str::plural('The trainer', $release->trainers->count()).' '.$release->trainers
                 ->pluck('name')
                 ->map(function ($name) {
                     return strtolower($name);
                 })
-                ->join(', ') .
+                ->join(', ').
                 ' can be used.';
         } else {
             return '';

@@ -16,7 +16,7 @@ class Helper
      */
     public static function extractTag(string $string, string $tag)
     {
-        if (preg_match("@\\[$tag(=[^\\]]*)?\\](.*?)\\[/$tag\\]@s", $string, $matches,)) {
+        if (preg_match("@\\[$tag(=[^\\]]*)?\\](.*?)\\[/$tag\\]@s", $string, $matches, )) {
             return $matches[2];
         } else {
             return $string;
@@ -64,16 +64,19 @@ class Helper
         return $parser->getAsHtml();
     }
 
-
-    public static function fileSize(int $size, string $unit = "")
+    public static function fileSize(int $size, string $unit = '')
     {
-        if ((!$unit && $size >= 1 << 30) || $unit == "GB")
-            return number_format($size / (1 << 30), 2) . " GB";
-        if ((!$unit && $size >= 1 << 20) || $unit == "MB")
-            return number_format($size / (1 << 20), 2) . " MB";
-        if ((!$unit && $size >= 1 << 10) || $unit == "kB")
-            return number_format($size / (1 << 10), 0) . " kB";
-        return number_format($size) . " bytes";
+        if ((!$unit && $size >= 1 << 30) || $unit == 'GB') {
+            return number_format($size / (1 << 30), 2).' GB';
+        }
+        if ((!$unit && $size >= 1 << 20) || $unit == 'MB') {
+            return number_format($size / (1 << 20), 2).' MB';
+        }
+        if ((!$unit && $size >= 1 << 10) || $unit == 'kB') {
+            return number_format($size / (1 << 10), 0).' kB';
+        }
+
+        return number_format($size).' bytes';
     }
 
     public static function releaseName(Release $release)
