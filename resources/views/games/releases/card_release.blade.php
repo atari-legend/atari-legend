@@ -1,11 +1,7 @@
 <div class="card bg-dark mb-4 card-game">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
-            @if ($release->date !== null)
-                {{ $release->date->year }}
-            @else
-                [no date]
-            @endif
+            {{ $release->year }}
             @if ($release->name !== null && $release->name !== '')
                 / {{ $release->name }}
             @endif

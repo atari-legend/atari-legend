@@ -14,6 +14,15 @@ class Release extends Model
         'hd_installable' => 'boolean',
     ];
 
+    public function getYearAttribute()
+    {
+        if ($this->date !== null) {
+            return $this->date->year;
+        } else {
+            return '[no date]';
+        }
+    }
+
     public function game()
     {
         return $this->belongsTo(Game::class, 'game_id');
