@@ -8,19 +8,25 @@ nav.navbar {
     }
 
     .navbar-main {
+
         li {
             font-family: $font-audiowide;
+            font-size: 1.25rem;
             text-transform: uppercase;
-            border-left: solid 1px #008b8b;
+
+            @include media-breakpoint-up(xl) {
+                border-left: solid 1px #008b8b;
+
+                &:last-child {
+                    border-right: solid 1px #008b8b;
+                }
+            }
 
             &:hover {
                 background-color: #00a9a9;
                 color: #182727;
             }
 
-            &:last-child {
-                border-right: solid 1px #008b8b;
-            }
         }
     }
 
@@ -33,12 +39,13 @@ nav.navbar {
         }
     }
 
-    ul.navbar-profile {
-        border-left: solid 1px #008b8b;
+    @include media-breakpoint-up(xl) {
+        ul.navbar-profile {
+            border-left: solid 1px #008b8b;
+        }
     }
-
 }
 
 #avatar {
-    height: 2.25rem;
+    height: 1.5rem;
 }
