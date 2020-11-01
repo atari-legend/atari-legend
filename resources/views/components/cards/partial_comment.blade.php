@@ -31,18 +31,18 @@
             <span class="float-right"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->game_name }}</a></span>
         @endif
     </div>
-    <p class="card-text">
-        <div id="comment-{{ $comment->comments_id }}">{!! Helper::bbCode(stripslashes($comment->comment)) !!}</div>
 
-        {{-- Comment edit form --}}
-        @if (Auth::check() && Auth::user()->user_id === $comment->user->user_id)
-            <form id="comment-edit-{{ $comment->comments_id }}" method="post" action="{{ route('comments.update') }}" class="text-center d-none">
-                @csrf
-                <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
-                <textarea class="form-control" rows="5" name="comment" required>{{ stripslashes($comment->comment) }}</textarea>
-            </form>
-        @endif
-    </p>
+    <div class="py-2 mb-1" id="comment-{{ $comment->comments_id }}">{!! Helper::bbCode(stripslashes($comment->comment)) !!}</div>
+
+    {{-- Comment edit form --}}
+    @if (Auth::check() && Auth::user()->user_id === $comment->user->user_id)
+        <form id="comment-edit-{{ $comment->comments_id }}" method="post" action="{{ route('comments.update') }}" class="text-center d-none">
+            @csrf
+            <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
+            <textarea class="form-control" rows="5" name="comment" required>{{ stripslashes($comment->comment) }}</textarea>
+        </form>
+    @endif
+
     @if (isset($comment->user))
     <small class="text-muted float-left">
         @if ($comment->user->user_twitter)
