@@ -39,7 +39,11 @@ nav.navbar {
         }
     }
 
-    @include media-breakpoint-up(xl) {
+    .navbar-profile {
+        font-size: 1.25rem;
+    }
+
+    @include media-breakpoint-up(xxl) {
         ul.navbar-profile {
             border-left: solid 1px #008b8b;
         }

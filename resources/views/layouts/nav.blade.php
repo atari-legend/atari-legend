@@ -71,13 +71,12 @@
                 </li>
                 @endauth
                 @guest
-                    @if (Route::has('register'))
-                    <li class="nav-item d-flex p-0">
-                        <a class="text-dark nav-link py-3 pl-3 px-2 {{ Request::routeIs('register') ? 'active' : '' }}" href="{{ route('register') }}" title="Register">
-                            <i class="fas fa-user-plus"></i>
-                        </a>
-
-                    @endif
+                    <li class="nav-item d-flex justify-content-center p-0">
+                        @if (Route::has('register'))
+                            <a class="text-dark nav-link py-3 px-2 pl-3 {{ Request::routeIs('register') ? 'active' : '' }}" href="{{ route('register') }}" title="Register">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        @endif
                         <a class="text-dark nav-link py-3 px-2 {{ Request::routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}" title="Log in">
                             <i class="fas fa-sign-in-alt"></i>
                         </a>
