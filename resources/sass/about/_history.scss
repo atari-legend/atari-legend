@@ -1,32 +1,4 @@
 .card-about {
-    i.timeline-icon {
-        height: 3.5rem;
-        width: 3.5rem;
-        padding-top: 0.75rem;
-        color: black;
-        position: absolute;
-        z-index: 100;
-        box-shadow: 0 0 0 .25rem white, inset 0 .125rem 0 rgba(0, 0, 0, .08), 0 .125rem 0 .5rem rgba(0, 0, 0, .05);
-    }
-
-    .timeline-content {
-        background: #294f4f;
-        border: 1px solid $primary;
-        margin-left: 5rem;
-        position: relative;
-
-        // Caret
-        &::before {
-            content: '';
-            position: absolute;
-            top: 1.25rem;
-            left: -1rem;
-            height: 0;
-            width: 0;
-            border: .5rem solid transparent;
-            border-right: .5rem solid white;
-        }
-    }
 
     section {
         position: relative;
@@ -40,6 +12,159 @@
             height: 100%;
             width: .25rem;
             background: white;
+        }
+
+        i.timeline-icon {
+            height: 3.5rem;
+            width: 3.5rem;
+            padding-top: 0.75rem;
+            color: black;
+            position: absolute;
+            z-index: 100;
+            box-shadow: 0 0 0 .25rem white, inset 0 .125rem 0 rgba(0, 0, 0, .08), 0 .125rem 0 .5rem rgba(0, 0, 0, .05);
+        }
+
+        .timeline-content {
+            background: #294f4f;
+            border: 1px solid $primary;
+            margin-left: 5rem;
+            position: relative;
+
+            // Caret
+            &::before {
+                content: '';
+                position: absolute;
+                top: 1.25rem;
+                left: -1rem;
+                height: 0;
+                width: 0;
+                border: .5rem solid transparent;
+                border-right: .5rem solid white;
+            }
+        }
+    }
+
+    @include media-breakpoint-up(xl) {
+
+        @keyframes icon-bounce-in {
+            0% {
+                opacity: 0;
+                transform: scale(.5);
+            }
+
+            60% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes block-bounce-in-left {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+
+            60% {
+                opacity: 1;
+                transform: translateX(20px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes block-bounce-in-right {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+
+            60% {
+                opacity: 1;
+                transform: translateX(-20px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        section {
+
+            // Do not use the Bootstrap invisible class as it
+            // should only be invisible on large screens
+            // and when outside of the viewport (controlled by JS)
+            .block-invisible {
+                visibility: hidden;
+            }
+
+            &::before {
+                left: 50%;
+            }
+
+            .cd-timeline-img {
+                position: absolute;
+                left: 47%;
+
+                transform-origin: center;
+
+                &.bounce-in {
+                    animation: icon-bounce-in .6s;
+                }
+            }
+
+            p.text-muted {
+                position: absolute;
+                top: 1rem;
+                white-space: nowrap;
+            }
+
+            .cd-timeline-block:nth-child(odd) {
+                .timeline-content {
+                    width: 38%;
+                    margin-left: 0;
+
+                    &.bounce-in {
+                        animation: block-bounce-in-left .6s;
+                    }
+
+                    // Caret
+                    &::before {
+                        left: initial;
+                        right: -0.5rem;
+
+                        border-right: none;
+                        border-left: .5rem solid white;
+                    }
+
+                    p.text-muted {
+                        left: 160%;
+                    }
+
+                }
+            }
+
+            .cd-timeline-block:nth-child(even) {
+                .timeline-content {
+                    width: 38%;
+                    margin-left: auto;
+                    margin-right: 0;
+
+                    &.bounce-in {
+                        animation: block-bounce-in-right .6s;
+                    }
+
+                    p.text-muted {
+                        left: -95%;
+                    }
+
+                }
+            }
         }
     }
 

@@ -12,3 +12,4 @@ require('./game/search');
 require('./game/media');
 require('./tabulator');
 require('./user');
+require('./about/history');
