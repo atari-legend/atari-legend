@@ -16,18 +16,18 @@
         <div class="row-mb-4 text-center">
             <ul class="list-inline">
                 <li class="list-inline-item mx-0 my-1">
-                    <a href="{{ route('games.search', ['titleAZ' => '0-9']) }}" class="btn btn-primary text-light bg-darklight m-1 p-1 border-secondary">#</a>
+                    <a href="{{ route('games.search', ['titleAZ' => '0-9']) }}" class="m-1">#</a>
                 </li>
                 @foreach (range('A', 'Z') as $letter)
-                    <li class="list-inline-item mx-0 my-1">
-                        <a href="{{ route('games.search', ['titleAZ' => $letter]) }}" class="btn btn-primary text-light bg-darklight m-1 p-1 border-secondary">{{ $letter }}</a>
+                    <li class="list-inline-item mx-0 my-0">
+                        <a href="{{ route('games.search', ['titleAZ' => $letter]) }}" class="m-1">{{ $letter }}</a>
                     </li>
                 @endforeach
             </ul>
         </div>
         <form method="get" action="{{ route('games.search') }}">
             <div class="row mb-3">
-                <label for="titleAZ" class="col-3 col-xxl-2 col-form-label">Title (A-Z)</label>
+                <label for="titleAZ" class="col-3 col-form-label">Title (A-Z)</label>
                 <div class="col">
                     <select class="form-select" id="titleAZ" name="titleAZ">
                         <option selected value="">-</option>
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="title" class="col-3 col-xxl-2 col-form-label">Title</label>
+                <label for="title" class="col-3 col-form-label">Title</label>
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/games.json/') }}"
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="publisher" class="col-3 col-xxl-2 col-form-label">
+                <label for="publisher" class="col-3 col-form-label">
                     Publisher
                     <a href="#" data-dropdown-toggle="publisher,publisher_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="developer" class="col-3 col-xxl-2 col-form-label">
+                <label for="developer" class="col-3 col-form-label">
                     Developer
                     <a href="#" data-dropdown-toggle="developer,developer_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
@@ -84,7 +84,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="year" class="col-3 col-xxl-2 col-form-label">
+                <label for="year" class="col-3 col-form-label">
                     Release year
                     <a href="#" data-dropdown-toggle="year,year_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
@@ -102,7 +102,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="genre" class="col-3 col-xxl-2 col-form-label">
+                <label for="genre" class="col-3 col-form-label">
                     Genre
                     <a href="#" data-dropdown-toggle="genre,genre_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
@@ -120,7 +120,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col-3 col-form-label"></div>
                 <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="download">
@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col-3 col-form-label"></div>
                 <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="screenshot" name="screenshot">
@@ -142,7 +142,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col-3 col-form-label"></div>
                 <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="boxscan" name="boxscan">
@@ -153,7 +153,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col-3 col-form-label"></div>
                 <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="review" name="review">
@@ -164,7 +164,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-3 col-xxl-2 col-form-label"></div>
+                <div class="col-3 col-form-label"></div>
                 <div class="col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="export" name="export">
