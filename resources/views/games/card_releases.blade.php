@@ -5,16 +5,22 @@
         </div>
         <div class="striped">
             @foreach ($game->releases as $release)
-                <div class="card-body pl-2 py-2">
+                <div class="card-body pl-2 py-2 ">
                     <div class="m-0">
-                        <a href="{{ route('games.releases.show', ['release' => $release]) }}">{{ $release->year }}</a>
+                        @if (isset($currentRelease) && $currentRelease->id === $release->id)
+                            <i class="fas fa-chevron-right"></i> {{ $release->year }}
+                        @else
+                            <a href="{{ route('games.releases.show', ['release' => $release]) }}">{{ $release->year }}</a>
+                        @endif
                         @contributor
-                            <a href="{{ URL::to('/legacy/admin/games/games_release_detail.php?release_id='.$release->id.'&game_id='.$release->game->game_id) }}">
+                            <a class="d-inline-block ml-1" href="{{ URL::to('/legacy/admin/games/games_release_detail.php?release_id='.$release->id.'&game_id='.$release->game->game_id) }}">
                                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                             </a>
                         @endcontributor
                         @if ($release->name !== null)
                             <span class="ml-2">{{ $release->name }}</span>
+                        @elseif ($release->publisher !== null)
+                            <span class="ml-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
                         @endif
 
                         @foreach ($release->locations as $location)
