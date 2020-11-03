@@ -107,7 +107,7 @@ class ReleaseDescriptionHelper
         }
 
         if ($release->akas->isNotEmpty()) {
-            $desc .= 'It is also known as '.$release
+            $desc .= ' It is also known as '.$release
                 ->akas
                 ->map(function ($aka) {
                     $s = $aka->name;
