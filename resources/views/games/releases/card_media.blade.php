@@ -12,10 +12,9 @@
                             <p class="float-right text-danger">
                                 Please <a href="{{ route('login') }}">log-in</a> to download files
                             </p>
-
                         @endif
                     @endguest
-                    <div class="mb-2">
+                    <div class="mb-2 d-flex float-left">
                         @isset ($mediaTypeIcons[$media->type->id])
                             <i class="{{ $mediaTypeIcons[$media->type->id] }} mr-1"></i>
                         @endif
@@ -29,10 +28,10 @@
                                 <tr>
                                     <th></th>
                                     <th>Format</th>
-                                    <th>SHA-512</th>
+                                    <th class="d-none d-sm-table-cell">SHA-512</th>
                                     <th>Size</th>
-                                    <th>Added</th>
-                                    <th>By</th>
+                                    <th class="d-none d-sm-table-cell">Added</th>
+                                    <th class="d-none d-sm-table-cell">By</th>
                                     <th>Info</th>
                                 </tr>
                             </thead>
@@ -50,15 +49,15 @@
                                             @endguest
                                         </td>
                                         <td>{{ $dump->format }}</td>
-                                        <td>
+                                        <td class="d-none d-sm-table-cell">
                                             <abbr title="{{ $dump->sha512 }}">
                                                 {{ Str::limit($dump->sha512, 7, '') }}
                                                 <a class="ml-1" data-copy-text="{{ $dump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
                                             </abbr>
                                         </td>
                                         <td>{{ Helper::fileSize($dump->size) }}</td>
-                                        <td>{{ date('F j, Y', $dump->date) }}
-                                        <td>{{ Helper::user($dump->user )}}</td>
+                                        <td class="d-none d-sm-table-cell">{{ date('F j, Y', $dump->date) }}
+                                        <td class="d-none d-sm-table-cell">{{ Helper::user($dump->user )}}</td>
                                         <td>{{ $dump->info }}</td>
                                     </tr>
                                 @endforeach
