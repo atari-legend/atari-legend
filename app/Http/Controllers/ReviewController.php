@@ -56,7 +56,7 @@ class ReviewController extends Controller
             ]);
     }
 
-    public function prepareSubmit(Request $request)
+    public function edit(Request $request)
     {
         if (!$request->filled('game')) {
             return response(400);

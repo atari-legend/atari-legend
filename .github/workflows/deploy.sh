@@ -39,9 +39,4 @@ ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public ||
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan storage:link"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan migrate --force"
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan config:cache"
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan view:cache"
-
-# Cannot use below yet as we still have closure based routes
-# ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan route:cache"
-# ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan optimize"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan optimize"

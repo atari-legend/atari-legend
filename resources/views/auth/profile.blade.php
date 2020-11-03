@@ -10,7 +10,7 @@
                 <div class="card-header">Update profile</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('auth.profile') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('auth.update') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="row mb-3">

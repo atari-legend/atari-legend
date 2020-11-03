@@ -39,7 +39,7 @@ Route::middleware('verified')->group(function () {
         Route::post('/news/submit', [NewsController::class, 'postNews'])->name('news.submit');
         Route::post('/games/{game}/comment', [GameController::class, 'postComment'])->name('games.comment');
         Route::post('/games/submitInfo', [GameController::class, 'submitInfo'])->name('games.submitInfo');
-        Route::get('/reviews/submit', [ReviewController::class, 'prepareSubmit'])->name('reviews.submit');
+        Route::get('/reviews/submit', [ReviewController::class, 'edit'])->name('reviews.edit');
         Route::post('/reviews/submit', [ReviewController::class, 'submit'])->name('reviews.submit');
         Route::post('/reviews/{review}/comment', [ReviewController::class, 'postComment'])->name('review.comment');
         Route::post('/interviews/{interview}/comment', [InterviewController::class, 'postComment'])->name('interview.comment');
@@ -49,7 +49,7 @@ Route::middleware('verified')->group(function () {
         Route::post('/comments/update', [CommentController::class, 'update'])->name('comments.update');
 
         Route::get('/profile', [UserController::class, 'profile'])->name('auth.profile');
-        Route::post('/profile', [UserController::class, 'update'])->name('auth.profile');
+        Route::post('/profile', [UserController::class, 'update'])->name('auth.update');
         Route::post('/profile/password', [UserController::class, 'password'])->name('auth.password');
     });
 

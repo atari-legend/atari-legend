@@ -10,7 +10,7 @@
         @endguest
         @auth
             <p class="card-text text-center">
-                Feel inspired to write your own review? Please click <a href="{{ route('reviews.submit', ['game' => $game]) }}">here</a> and get started!
+                Feel inspired to write your own review? Please click <a href="{{ route('reviews.edit', ['game' => $game]) }}">here</a> and get started!
             </p>
         @endauth
     </div>
