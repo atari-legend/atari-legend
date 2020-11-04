@@ -13,7 +13,7 @@
                             <a href="{{ route('games.releases.show', ['release' => $release]) }}">{{ $release->year }}</a>
                         @endif
                         @contributor
-                            <a class="d-inline-block ml-1" href="{{ URL::to('/legacy/admin/games/games_release_detail.php?release_id='.$release->id.'&game_id='.$release->game->game_id) }}">
+                            <a class="d-inline-block ml-1" href="{{ config('al.legacy.base_url').'/admin/games/games_release_detail.php?release_id='.$release->id.'&game_id='.$release->game->game_id }}">
                                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                             </a>
                         @endcontributor

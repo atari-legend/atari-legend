@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">
             {{ $article->texts->first()->article_title }}
             @contributor
-                <a href="{{ URL::to('/legacy/admin/articles/articles_edit.php?article_id='.$article->article_id) }}">
+                <a href="{{ config('al.legacy.base_url').'/admin/articles/articles_edit.php?article_id='.$article->article_id }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                 </a>
             @endcontributor

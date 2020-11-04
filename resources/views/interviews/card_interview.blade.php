@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">
             Interview
             @contributor
-                <a href="{{ URL::to('/legacy/admin/interviews/interviews_edit.php?interview_id='.$interview->interview_id) }}">
+                <a href="{{ config('al.legacy.base_url').'/admin/interviews/interviews_edit.php?interview_id='.$interview->interview_id }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                 </a>
             @endcontributor

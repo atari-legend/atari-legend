@@ -11,7 +11,7 @@
                 <h3 class="card-title text-h6 mt-1 text-audiowide mb-0">
                     {{ $new->news_headline }}
                     @contributor
-                        <a href="{{ URL::to('/legacy/admin/news/news_edit.php') }}">
+                        <a href="{{ config('al.legacy.base_url').'/admin/news/news_edit.php' }}">
                             <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                         </a>
                     @endcontributor

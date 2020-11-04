@@ -40,7 +40,7 @@
                     <h3 class="card-title text-h5 text-audiowide">
                         <a href="{{ $website->website_url }}">{{ $website->website_name }}</a>
                         @contributor
-                            <a href="{{ URL::to('/legacy/admin/links/link_mod.php?website_id='.$website->website_id) }}">
+                            <a href="{{ config('al.legacy.base_url').'/admin/links/link_mod.php?website_id='.$website->website_id }}">
                                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                             </a>
                         @endcontributor

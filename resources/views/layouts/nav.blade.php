@@ -64,7 +64,7 @@
                         </li>
                         @contributor
                             <li>
-                                <a class="dropdown-item text-contributor font-weight-bold" href="{{ URL::to('/legacy/admin/.') }}">Control panel</a>
+                                <a class="dropdown-item text-contributor font-weight-bold" href="{{ config('al.legacy.base_url').'/admin/' }}">Control panel</a>
                             </li>
                         @endcontributor
                     </ul>
