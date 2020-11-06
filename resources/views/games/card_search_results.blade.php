@@ -5,7 +5,7 @@
     <div class="card-body p-2">
         <form method="get" action="{{ route('games.search') }}">
             <div class="row mb-3">
-                <label for="title" class="col-3 col-form-label">Title</label>
+                <label for="title" class="col-4 col-sm-3 col-form-label text-nowrap">Title</label>
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/games.json/') }}"
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="publisher" class="col-3 col-form-label">
+                <label for="publisher" class="col-4 col-sm-3 col-form-label text-nowrap">
                     Publisher
                     <a href="#" data-dropdown-toggle="publisher,publisher_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="developer" class="col-3 col-form-label">
+                <label for="developer" class="col-4 col-sm-3 col-form-label text-nowrap">
                     Developer
                     <a href="#" data-dropdown-toggle="developer,developer_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="year" class="col-3 col-form-label">
+                <label for="year" class="col-4 col-sm-3 col-form-label text-nowrap">
                     Release year
                     <a href="#" data-dropdown-toggle="year,year_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
