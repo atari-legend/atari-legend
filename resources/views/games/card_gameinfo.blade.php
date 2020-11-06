@@ -22,7 +22,7 @@
                         <div>
                             <a href="{{ route('games.search', ['developer' => $developer->pub_dev_name]) }}">{{ $developer->pub_dev_name }}</a>
                             @contributor
-                                <a href="{{ config('al.legacy.base_url').'/admin/company/company_edit.php?comp_id='.$developer->pub_dev_id }}">
+                                <a class="d-inline-block" href="{{ config('al.legacy.base_url').'/admin/company/company_edit.php?comp_id='.$developer->pub_dev_id }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                                 </a>
                             @endcontributor
