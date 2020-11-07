@@ -10,6 +10,7 @@
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/games.json/') }}"
                         data-autocomplete-key="game_name"
+                        value="{{ old('title', $title) }}"
                         id="title" name="title" autocomplete="off">
                 </div>
             </div>
@@ -19,14 +20,15 @@
                     <a href="#" data-dropdown-toggle="publisher,publisher_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
                 <div class="col position-relative">
-                    <input type="text" class="autocomplete form-control"
+                    <input type="text" class="autocomplete form-control @isset ($publisher_id) d-none @endif"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
                         data-autocomplete-key="pub_dev_name"
+                        value="{{ old('publisher', $publisher) }}"
                         id="publisher" name="publisher" autocomplete="off">
-                    <select class="form-select d-none" id="publisher_id" name="publisher_id">
+                    <select class="form-select @if (!isset($publisher_id)) d-none @endif" id="publisher_id" name="publisher_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->pub_dev_id }}" @if (isset($publisher_id) && (int) $publisher_id === $company->pub_dev_id) selected @endif>{{ $company->pub_dev_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -37,14 +39,15 @@
                     <a href="#" data-dropdown-toggle="developer,developer_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
                 <div class="col position-relative">
-                    <input type="text" class="autocomplete form-control"
+                    <input type="text" class="autocomplete form-control @isset ($developer_id) d-none @endif"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
                         data-autocomplete-key="pub_dev_name"
+                        value="{{ old('developer', $developer) }}"
                         id="developer" name="developer" autocomplete="off">
-                    <select class="form-select d-none" id="developer_id" name="developer_id">
+                    <select class="form-select @if (!isset($developer_id)) d-none @endif" id="developer_id" name="developer_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->pub_dev_id }}" @if (isset($developer_id) && (int) $developer_id === $company->pub_dev_id) selected @endif>{{ $company->pub_dev_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -55,14 +58,15 @@
                     <a href="#" data-dropdown-toggle="year,year_id"><i class="fas fa-chevron-circle-down"></i></a>
                 </label>
                 <div class="col position-relative">
-                    <input type="text" class="autocomplete form-control"
+                    <input type="text" class="autocomplete form-control @isset ($year_id) d-none @endif"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/release-years.json') }}"
                         data-autocomplete-key="year"
+                        value="{{ old('year', $year) }}"
                         id="year" name="year" autocomplete="off">
-                    <select class="form-select d-none" id="year_id" name="year_id">
+                    <select class="form-select @if (!isset($year_id)) d-none @endif" id="year_id" name="year_id">
                         <option value="">-</option>
                         @foreach ($years as $year)
-                            <option value="{{ $year->year }}">{{ $year->year }}</option>
+                            <option value="{{ $year->year }}" @if (isset($year_id) && $year_id === $year->year) selected @endif>{{ $year->year }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -125,8 +125,15 @@ class GameController extends Controller
 
         return view('games.search')->with(
             array_merge($referenceData, [
-                'games'  => $games,
-                'export' => $request->boolean('export'),
+                'games'        => $games,
+                'title'        => $request->title,
+                'publisher'    => $request->publisher,
+                'publisher_id' => $request->publisher_id,
+                'developer'    => $request->developer,
+                'developer_id' => $request->developer_id,
+                'year'         => $request->year,
+                'year_id'      => $request->year_id,
+                'export'       => $request->boolean('export'),
             ])
         );
     }
