@@ -2,6 +2,9 @@
 
 namespace App\Helpers;
 
+use App\Helpers\BBCode\CompanyBBCodeTag;
+use App\Helpers\BBCode\GameBBCodeTag;
+use App\Helpers\BBCode\ReleaseYearBBCodeTag;
 use App\Models\Release;
 use App\Models\User;
 
@@ -58,6 +61,9 @@ class Helper
         $parser->addBBCode('hotspotUrl', '<a href="{option}">{param}</a>', true);
         $parser->addBBCode('frontpage', '{param}');
         $parser->addBBCode('screenstar', '{param}');
+        $parser->addCodeDefinition(new GameBBCodeTag());
+        $parser->addCodeDefinition(new CompanyBBCodeTag('publisher'));
+        $parser->addCodeDefinition(new ReleaseYearBBCodeTag());
 
         $parser->parse($bbCode);
 

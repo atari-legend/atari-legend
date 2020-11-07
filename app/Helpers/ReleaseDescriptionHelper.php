@@ -51,7 +51,7 @@ class ReleaseDescriptionHelper
         $desc .= ' is a ';
 
         if ($release->date !== null) {
-            $desc .= $release->date->year.' ';
+            $desc .= '[releaseYear]'.$release->date->year.'[/releaseYear] ';
         }
         $desc .= 'release ';
 
@@ -69,7 +69,7 @@ class ReleaseDescriptionHelper
             $desc .= ') ';
         }
 
-        $desc .= 'of '.$release->game->game_name.'. ';
+        $desc .= 'of [game='.$release->game->game_id.']'.$release->game->game_name.'[/game]. ';
 
         if ($release->locations->isNotEmpty()) {
             $desc .= 'It was released in ';
@@ -84,7 +84,10 @@ class ReleaseDescriptionHelper
             }
 
             if ($release->publisher !== null) {
-                $desc .= 'published by '.$release->publisher->pub_dev_name;
+                $desc .= 'published by '.
+                    '[publisher='.$release->publisher->pub_dev_id.']'.
+                    $release->publisher->pub_dev_name.
+                    '[/publisher]';
             }
             if ($release->distributors->isNotEmpty()) {
                 if ($release->publisher !== null) {

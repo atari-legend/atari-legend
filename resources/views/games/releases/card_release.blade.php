@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
         @foreach ($descriptions as $description)
-            <p class="card-text">{{ $description }}</p>
+            <p class="card-text">{!! Helper::bbCode($description) !!}</p>
         @endforeach
     </div>
 </div>
