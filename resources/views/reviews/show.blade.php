@@ -6,6 +6,7 @@
     <div class="row">
         <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1">
             @include('reviews.card_author', ['user' => $review->user, 'reviews' => $otherReviews])
+            <x-cards.a-l-mobile />
         </div>
         <div class="col-12 col-lg-6 order-1 order-lg-2">
             @include('reviews.card_review')
