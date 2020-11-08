@@ -11,6 +11,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameReleaseController;
+use App\Http\Controllers\GameSearchController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\LinkController;
@@ -55,8 +56,8 @@ Route::middleware('verified')->group(function () {
 
     Route::resource('/news', NewsController::class)->only(['index']);
 
-    Route::get('/games', [GameController::class, 'index'])->name('games.index');
-    Route::get('/games/search', [GameController::class, 'search'])->name('games.search');
+    Route::get('/games', [GameSearchController::class, 'index'])->name('games.index');
+    Route::get('/games/search', [GameSearchController::class, 'search'])->name('games.search');
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
 
