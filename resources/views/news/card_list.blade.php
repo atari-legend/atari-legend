@@ -7,7 +7,7 @@
     <div class="card-body p-0">
         @foreach ($news as $new)
             <div class="p-2 bg-darklight clearfix">
-                <h3 class="card-title text-h6 text-audiowide mb-0">
+                <h3 class="card-title text-h5 text-audiowide mb-0">
                     {{ $new->news_headline }}
                     @contributor
                         <a href="{{ config('al.legacy.base_url').'/admin/news/news_edit.php' }}">
