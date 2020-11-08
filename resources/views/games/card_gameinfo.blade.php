@@ -51,13 +51,15 @@
                 <div class="col-8">
                     @foreach ($game->individuals as $gameIndividual)
                         <div class="mb-1">
-                            <a href="{{ route('games.search', ['individual_id' => $gameIndividual->individual->ind_id]) }}">{{ $gameIndividual->individual->ind_name }}</a>
+                            <a class="text-white" href="{{ route('games.search', ['individual_id' => $gameIndividual->individual->ind_id]) }}">{{ $gameIndividual->individual->ind_name }}</a>
                             {{-- We have to use trim() here because the profile columnin the database contains 'empty' profiles full of spaces --}}
                             @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && trim($gameIndividual->individual->text->ind_profile) !== '')
                                 <a href="javascript:;" class="ml-1" data-target="#profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
                             <br>
-                            <small class="text-muted">{{ $gameIndividual->role->name }}</small>
+                            @if ($gameIndividual->role !== null)
+                                <small class="text-muted">{{ $gameIndividual->role->name }}</small>
+                            @endif
                             @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && $gameIndividual->individual->text->ind_profile !== '')
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}">
                                     {!! Helper::bbCode($gameIndividual->individual->text->ind_profile) !!}
