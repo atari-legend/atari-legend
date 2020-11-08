@@ -15,7 +15,7 @@
         @foreach ($articles as $article)
             <div class="p-2 lightbox-gallery">
                 <div class="clearfix mb-2">
-                    <h3 class="text-h4">
+                    <h3 class="text-h5 text-audiowide">
                         <a href="{{ route('articles.show', ['article' => $article]) }}">
                             {{ $article->article_title }}
                         </a>

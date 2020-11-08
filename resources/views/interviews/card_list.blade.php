@@ -20,7 +20,7 @@
         @foreach ($interviews as $interview)
             <div class="p-2 lightbox-gallery">
                 <div class="clearfix mb-2">
-                    <h3 class="text-h4">
+                    <h3 class="text-h5 text-audiowide">
                         <a href="{{ route('interviews.show', ['interview' => $interview]) }}">
                             {{ $interview->individual->ind_name }}
                         </a>
