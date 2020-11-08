@@ -21,7 +21,7 @@
                 @endforeach
             </div>
         @empty
-            <p class="card-text text-center p-2">There are currently no credits for this person in our database</p>
+            <p class="card-text text-center text-muted bg-dark p-2">There are currently no credits for this person in our database</p>
         @endforelse
     </div>
 </div>
