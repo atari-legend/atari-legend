@@ -27,7 +27,7 @@
                                 </a>
                             @endcontributor
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first()->file !== null)
-                                <a class="lightbox-link" href="{{ asset('storage/images/company_logos/'.$developer->texts->first()->file) }}">
+                                <a class="lightbox-link d-inline-block" href="{{ asset('storage/images/company_logos/'.$developer->texts->first()->file) }}">
                                     <i class="far fa-image ml-1"></i>
                                 </a>
                             @endif
