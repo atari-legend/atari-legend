@@ -3,7 +3,7 @@
         <a class="float-right" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
         <h2 class="text-uppercase">Articles</h2>
     </div>
-    <div class="card-body p-2">
+    <div class="card-body p-2 mb-3">
         <p class="card-text">
             This is the blog section of Atari Legend. In here we will try to deliver
             informative and entertaining articles on all that is Atari. There are

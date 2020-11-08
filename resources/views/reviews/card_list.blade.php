@@ -14,7 +14,7 @@
             available in the Atari Legend database.
         </p>
     </div>
-    <div class="card-body p-2">
+    <div class="card-body p-2 mb-3">
         <form method="get" action="{{ route('reviews.index') }}">
             <div class="row mb-3">
                 <label for="author" class="col-sm-2 col-form-label">Author</label>
