@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
-            {{ $review->games->first()->game_name }}
+            <a href="{{ route('games.show', ['game' => $review->games->first()]) }}">{{ $review->games->first()->game_name }}</a>
             @contributor
                 <a href="{{ config('al.legacy.base_url').'/admin/games/games_review_edit.php?game_id='.$review->games->first()->game_id.'&reviewid='.$review->review_id }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
