@@ -16,9 +16,21 @@
                         <div class="carousel-inner">
                             @foreach ($boxscans as $boxscan)
                                 <div class="carousel-item @if ($loop->first) active @endif">
-                                    <a class="lightbox-link" href="{{ $boxscan }}">
-                                        <img class="w-100 d-block" src="{{ $boxscan }}" alt="Large scan of the game box">
+                                    <a class="lightbox-link" href="{{ $boxscan['boxscan'] }}">
+                                        <img class="w-100 d-block" src="{{ $boxscan['boxscan'] }}" alt="Large scan of the game box">
                                     </a>
+                                    @if (isset($game) && $boxscan['release'] !== null)
+                                        {{-- When displaing boxscans in the game page, display the specific
+                                            release the scan is for --}}
+                                        <div class="carousel-caption">
+                                            <div class="text-h5">
+                                            Release: {{ Helper::releaseName($boxscan['release']) }}
+                                            @if ($boxscan['release']->publisher !== null)
+                                                by {{ $boxscan['release']->publisher->pub_dev_name }}
+                                            @endif
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
@@ -37,7 +49,7 @@
                 <div class="col">
                     <div class="carousel-thumbnails d-flex flex-nowrap overflow-hidden" data-carousel="carousel-boxscans">
                         @foreach ($boxscans as $boxscan)
-                            <a href="#carousel-boxscans" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif><img class="mr-2" src="{{ $boxscan }}" alt="Thumbnail of other scans of the game box"></a>
+                            <a href="#carousel-boxscans" data-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif><img class="mr-2" src="{{ $boxscan['boxscan'] }}" alt="Thumbnail of other scans of the game box"></a>
                         @endforeach
                     </div>
                 </div>
@@ -51,7 +63,11 @@
     </div>
     @if ($boxscans->isNotEmpty())
         <div class="card-footer text-muted">
-            <strong>{{ $boxscans->count() }}</strong> {{ Str::plural('boxscan', $boxscans->count() )}} loaded
+            <strong>{{ $boxscans->count() }}</strong> {{ Str::plural('boxscan', $boxscans->count() )}}
+            @isset ($game)
+                for {{ $game->releases->count() }} {{ Str::plural('release', $game->releases->count())}}
+            @endif
+            loaded
         </div>
     @endif
 </div>

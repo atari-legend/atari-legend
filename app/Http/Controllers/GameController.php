@@ -152,12 +152,18 @@ class GameController extends Controller
         // This is temporary until all game scans are moved to releases
         $releaseBoxscans = $game->releases
             ->flatMap(function ($release) {
-                return $release->boxscans->map(function ($boxscan) {
-                    return asset('storage/images/game_release_scans/'.$boxscan->file);
+                return $release->boxscans->map(function ($boxscan) use ($release) {
+                    return [
+                        'release' => $release,
+                        'boxscan' => asset('storage/images/game_release_scans/'.$boxscan->file),
+                    ];
                 });
             });
         $gameBoxscans = $game->boxscans->map(function ($boxscan) {
-            return asset('storage/images/game_boxscans/'.$boxscan->file);
+            return [
+                'release' => null,
+                'boxscan' => asset('storage/images/game_boxscans/'.$boxscan->file),
+            ];
         });
 
         // Collect interviews for individuals of the game. An individual may

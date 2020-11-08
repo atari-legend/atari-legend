@@ -16,8 +16,11 @@ class GameReleaseController extends Controller
 
     public function show(Release $release)
     {
-        $boxscans = $release->boxscans->map(function ($boxscan) {
-            return asset('storage/images/game_release_scans/'.$boxscan->file);
+        $boxscans = $release->boxscans->map(function ($boxscan) use ($release) {
+            return [
+                'release' => $release,
+                'boxscan' => asset('storage/images/game_release_scans/'.$boxscan->file),
+            ];
         });
 
         return view('games.releases.show')

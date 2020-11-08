@@ -17,7 +17,7 @@
                                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                             </a>
                         @endcontributor
-                        @if ($release->name !== null)
+                        @if ($release->name !== null && trim($release->name) !== '')
                             <span class="ml-2">{{ $release->name }}</span>
                         @elseif ($release->publisher !== null)
                             <span class="ml-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
