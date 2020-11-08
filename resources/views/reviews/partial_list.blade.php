@@ -19,9 +19,8 @@
         @endif
 
         {!! Helper::bbCode(Helper::extractTag($review->review_text, "frontpage")) !!}<br>
-        <a class="d-block text-right" href="{{ route('reviews.show', ['review' => $review]) }}">
+        <a class="d-block text-right mt-2" href="{{ route('reviews.show', ['review' => $review]) }}">
             More <i class="fas fa-chevron-right"></i>
         </a>
     </div>
-
 </div>

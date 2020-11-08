@@ -18,25 +18,27 @@
 
     <div class="card-body p-0 striped">
         @foreach ($interviews as $interview)
-            <div class="row g-0 p-2">
-                <div class="col-4 pr-2 align-self-center lightbox-gallery">
-                    @if (isset($interview->individual->text->ind_imgext))
-                        <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}">
-                            <img class="w-100 " src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}" alt="Picture of {{ $interview->individual->ind_name }}">
-                        </a>
-                    @else
-                        <img class="w-100 " src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
-                    @endif
-                </div>
-                <div class="col-8 pl-2">
-                    <h3>
+            <div class="p-2 lightbox-gallery">
+                <div class="clearfix mb-2">
+                    <h3 class="text-h4">
                         <a href="{{ route('interviews.show', ['interview' => $interview]) }}">
                             {{ $interview->individual->ind_name }}
                         </a>
                     </h3>
-                    <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</p>
+                    <p class="card-subtitle text-muted">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</p>
+                </div>
+
+                <div class="clearfix">
+                    @if (isset($interview->individual->text->ind_imgext))
+                        <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}">
+                            <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}" alt="Picture of {{ $interview->individual->ind_name }}">
+                        </a>
+                    @else
+                        <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
+                    @endif
+
                     {!! Helper::bbCode($interview->texts->first()->interview_intro) !!}<br>
-                    <a class="d-block text-right" href="{{ route('interviews.show', ['interview' => $interview]) }}">
+                    <a class="d-block text-right mt-2" href="{{ route('interviews.show', ['interview' => $interview]) }}">
                         More <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>

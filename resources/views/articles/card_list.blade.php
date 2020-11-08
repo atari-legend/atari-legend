@@ -13,26 +13,28 @@
 
     <div class="card-body p-0 striped">
         @foreach ($articles as $article)
-            <div class="row g-0 p-2">
-                <div class="col-4 pr-2 align-self-center lightbox-gallery">
-                    @if (isset($article->screenshots))
-                        <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}">
-                            <img class="w-100" src="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}" alt="Article screenshot">
-                        </a>
-                    @endif
-                </div>
-                <div class="col-8 pl-2">
-                    <h3>
+            <div class="p-2 lightbox-gallery">
+                <div class="clearfix mb-2">
+                    <h3 class="text-h4">
                         <a href="{{ route('articles.show', ['article' => $article]) }}">
                             {{ $article->article_title }}
                         </a>
                     </h3>
-                    <p class="card-subtitle text-muted mb-2">
+                    <p class="card-subtitle text-muted">
                         {{ date('F j, Y', $article->texts->first()->article_date) }} by {{ Helper::user($article->user) }}
                         <span class="badge bg-secondary ml-2">{{ $article->type->article_type }}</span>
                     </p>
+                </div>
+
+                <div class="clearfix">
+                    @if (isset($article->screenshots))
+                        <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}">
+                            <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}" alt="Article screenshot">
+                        </a>
+                    @endif
+
                     {!! Helper::bbCode($article->texts->first()->article_intro) !!}<br>
-                    <a class="d-block text-right" href="{{ route('articles.show', ['article' => $article]) }}">
+                    <a class="d-block text-right mt-2" href="{{ route('articles.show', ['article' => $article]) }}">
                         More <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
