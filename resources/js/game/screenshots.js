@@ -19,6 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (el) {
         window.addEventListener('resize', setThumbnailsHeight);
         // Set initial size
-        setThumbnailsHeight();
+        setTimeout(setThumbnailsHeight, 50);
     }
 });
