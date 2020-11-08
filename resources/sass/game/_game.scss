@@ -31,5 +31,10 @@
 
     .carousel-inner {
         text-shadow: -1px -1px 0 #005050, 1px -1px 0 #005050, -1px 1px 0 #005050, 1px 1px 0 #005050;
+
+        .carousel-caption .text-h5 {
+            background-color: rgba(0, 80, 80, .6);
+            border: solid 1px #005050;
+        }
     }
 }

@@ -23,7 +23,7 @@
                                         {{-- When displaing boxscans in the game page, display the specific
                                             release the scan is for --}}
                                         <div class="carousel-caption">
-                                            <div class="text-h5">
+                                            <div class="text-h5 p-1">
                                             Release: {{ Helper::releaseName($boxscan['release']) }}
                                             @if ($boxscan['release']->publisher !== null)
                                                 by {{ $boxscan['release']->publisher->pub_dev_name }}
@@ -62,7 +62,7 @@
         @endif
     </div>
     @if ($boxscans->isNotEmpty())
-        <div class="card-footer text-muted">
+        <div class="card-footer text-muted text-center">
             <strong>{{ $boxscans->count() }}</strong> {{ Str::plural('boxscan', $boxscans->count() )}}
             @isset ($game)
                 for {{ $game->releases->count() }} {{ Str::plural('release', $game->releases->count())}}
