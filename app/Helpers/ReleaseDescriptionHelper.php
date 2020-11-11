@@ -273,7 +273,7 @@ class ReleaseDescriptionHelper
     private static function getHDText(Release $release)
     {
         if ($release->hd_installable) {
-            return 'It can be installed on a hard-drive';
+            return 'It can be installed on a hard-drive.';
         } else {
             return '';
         }
