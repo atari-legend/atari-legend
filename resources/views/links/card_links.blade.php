@@ -24,7 +24,7 @@
 
     <div class="card-body p-0 striped lightbox-gallery">
         @foreach ($websites as $website)
-            <div class="row g-0 p-2">
+            <div class="row g-0 p-2 pb-4">
                 <div class="col-md-4">
                     @if ($website->website_imgext)
                         <a class="lightbox-link" href="{{ asset('storage/images/website_images/'.$website->file) }}">
