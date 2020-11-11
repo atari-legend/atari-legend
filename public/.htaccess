@@ -7,6 +7,23 @@
     # Needed for 1and1 hosting
     RewriteBase /
 
+    # Legacy site rewrite rules
+    # Games
+    RewriteCond %{QUERY_STRING} "game_id=([0-9]+)"
+    RewriteRule "^games/games_detail\.php" "games/%1" [QSD,R=301,L]
+    # Reviews
+    RewriteCond %{QUERY_STRING} "review_id=([0-9]+)"
+    RewriteRule "^games/games_reviews_detail\.php" "reviews/%1" [QSD,R=301,L]
+    # Interviews
+    RewriteCond %{QUERY_STRING} "selected_interview_id=([0-9]+)"
+    RewriteRule "^interviews/interviews_detail\.php" "interviews/%1" [QSD,R=301,L]
+    # Interviews (old old site)
+    RewriteCond %{QUERY_STRING} "interview_id=([0-9]+)"
+    RewriteRule "^interviews/interview\.php" "interviews/%1" [QSD,R=301,L]
+    # Articles
+    RewriteCond %{QUERY_STRING} "selected_article_id=([0-9]+)"
+    RewriteRule "^articles/articles_detail\.php" "articles/%1" [QSD,R=301,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
