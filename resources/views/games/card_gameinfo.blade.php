@@ -199,7 +199,7 @@
                             {{ $game->number_players_on_same_machine }} <small class="text-muted">(Same machine)</small><br>
                         @endif
                         @if ($game->number_players_multiple_machines !== null)
-                            {{ $game->number_players_multiple_machines }} <small class="text-muted">(Multiple machine)</small>
+                            {{ $game->number_players_multiple_machines }} <small class="text-muted">(Multiple machines)</small>
                         @endif
                     </div>
                 </div>
