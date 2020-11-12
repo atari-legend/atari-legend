@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
-use App\Models\Game;
-use App\Models\GameAka;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,7 +24,7 @@ class GameController extends Controller
 
         if ($request->filled('q')) {
             $games = $games->where('game_name', 'like', '%'.$request->q.'%');
-            $akas = $akas->where('aka_name',  'like', '%'.$request->q.'%');
+            $akas = $akas->where('aka_name', 'like', '%'.$request->q.'%');
         }
 
         $all = $games->get()
