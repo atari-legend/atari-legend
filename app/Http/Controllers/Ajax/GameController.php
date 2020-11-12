@@ -4,20 +4,37 @@ namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
 use App\Models\Game;
+use App\Models\GameAka;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GameController extends Controller
 {
+    const MAX = 10;
+
     public function games(Request $request)
     {
-        $games = Game::select('game_name')
+        $games = DB::table('game')
+            ->select('game_name')
             ->orderBy('game_name')
-            ->limit(10);
+            ->limit(GameController::MAX);
+
+        $akas = DB::table('game_aka')
+            ->select('aka_name as game_name')
+            ->orderBy('aka_name')
+            ->limit(GameController::MAX);
 
         if ($request->filled('q')) {
             $games = $games->where('game_name', 'like', '%'.$request->q.'%');
+            $akas = $akas->where('aka_name',  'like', '%'.$request->q.'%');
         }
 
-        return response()->json($games->get());
+        $all = $games->get()
+            ->merge($akas->get())
+            ->sortBy('game_name')
+            ->values()
+            ->take(GameController::MAX);
+
+        return response()->json($all);
     }
 }
