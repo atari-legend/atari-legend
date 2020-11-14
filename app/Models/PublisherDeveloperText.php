@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
 
 class PublisherDeveloperText extends Model
@@ -12,13 +13,6 @@ class PublisherDeveloperText extends Model
 
     public function getFileAttribute()
     {
-        $id = $this->pub_dev_id;
-        $ext = $this->pub_dev_imgext;
-
-        if (isset($id) && isset($ext) && $ext != '') {
-            return "${id}.${ext}";
-        } else {
-            return null;
-        }
+        return Helper::filename($this->pub_dev_id, $this->pub_dev_imgext);
     }
 }

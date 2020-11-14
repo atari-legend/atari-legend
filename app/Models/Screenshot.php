@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
 
 class Screenshot extends Model
@@ -12,9 +13,7 @@ class Screenshot extends Model
 
     public function getFileAttribute()
     {
-        return $this->screenshot_id
-            .'.'
-            .$this->imgext;
+        return Helper::filename($this->screenshot_id, $this->imgext);
     }
 
     public function reviewScreenshots()

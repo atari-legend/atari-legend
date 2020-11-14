@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
 
 class IndividualText extends Model
@@ -12,13 +13,6 @@ class IndividualText extends Model
 
     public function getFileAttribute()
     {
-        $id = $this->ind_id;
-        $ext = $this->ind_imgext;
-
-        if (isset($id) && isset($ext) && $ext != '') {
-            return "${id}.${ext}";
-        } else {
-            return null;
-        }
+        return Helper::filename($this->ind_id, $this->ind_imgext);
     }
 }

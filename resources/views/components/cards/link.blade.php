@@ -4,7 +4,7 @@
     </div>
     <div class="card-body p-0">
         @isset ($website)
-            @if ($website->website_imgext)
+            @if ($website->file !== null)
                 <figure>
                     <img class="w-100 cropped" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of the website {{ $website->website_name }}">
                     <figcaption class="py-2 px-3">

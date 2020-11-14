@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
 
 class BoxScan extends Model
@@ -12,8 +13,6 @@ class BoxScan extends Model
 
     public function getFileAttribute()
     {
-        return $this->game_boxscan_id
-            .'.'
-            .$this->imgext;
+        return Helper::filename($this->game_boxscan_id, $this->imgext);
     }
 }

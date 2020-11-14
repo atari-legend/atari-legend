@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
 
 class ReleaseScan extends Model
@@ -11,8 +12,6 @@ class ReleaseScan extends Model
 
     public function getFileAttribute()
     {
-        return $this->id
-            .'.'
-            .$this->imgext;
+        return Helper::filename($this->id, $this->imgext);
     }
 }

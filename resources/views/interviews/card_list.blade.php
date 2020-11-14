@@ -29,9 +29,9 @@
                 </div>
 
                 <div class="clearfix">
-                    @if (isset($interview->individual->text->ind_imgext))
-                        <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}">
-                            <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->ind_id.'.'.$interview->individual->text->ind_imgext) }}" alt="Picture of {{ $interview->individual->ind_name }}">
+                    @if ($interview->individual->text->file !== null)
+                        <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}">
+                            <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}" alt="Picture of {{ $interview->individual->ind_name }}">
                         </a>
                     @else
                         <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">

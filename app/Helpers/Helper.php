@@ -111,4 +111,23 @@ class Helper
 
         return join(' ', $parts);
     }
+
+    /**
+     * Get a filename from an ID and an image extension. Intended to be used
+     * to generate filenames out of the database information, where the image
+     * extension is sometimes missing or set blank.
+     *
+     * @param int    $id     Identifier, used as the file name
+     * @param string $imgext Extension, possibly null
+     *
+     * @return string Filename, or NULL if there's no file extension
+     */
+    public static function filename(int $id, ?string $imgext)
+    {
+        if ($imgext !== null && trim($imgext) !== '') {
+            return $id.'.'.$imgext;
+        } else {
+            return null;
+        }
+    }
 }

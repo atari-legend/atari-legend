@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
 
 class Website extends Model
@@ -17,8 +18,6 @@ class Website extends Model
 
     public function getFileAttribute()
     {
-        return $this->website_id
-            .'.'
-            .$this->website_imgext;
+        return Helper::filename($this->website_id, $this->website_imgext);
     }
 }

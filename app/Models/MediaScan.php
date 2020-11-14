@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
 
 class MediaScan extends Model
@@ -11,11 +12,7 @@ class MediaScan extends Model
 
     public function getFileAttribute()
     {
-        if ($this->imgext !== null) {
-            return $this->id
-                .'.'
-                .$this->imgext;
-        }
+        return Helper::filename($this->id, $this->imgext);
     }
 
     public function type()
