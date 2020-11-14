@@ -19,7 +19,7 @@
                             <i class="{{ $mediaTypeIcons[$media->type->id] }} mr-1"></i>
                         @endif
                         <span class="badge bg-secondary">{{ $media->type->name }}</span>
-                        @isset ($media->label) {{ $media->label }} @endif
+                        @isset ($media->label) <span class="ml-1">{{ $media->label }}</span> @endif
                     </div>
 
                     @if ($media->dumps->isNotEmpty())
@@ -67,6 +67,19 @@
                         <p class="card-text text-muted">
                             No download for this media.
                         </p>
+                    @endif
+
+                    @if ($media->scans->isNotEmpty())
+                        <div class="lightbox-gallery d-flex mt-4">
+                            @foreach ($media->scans as $scan)
+                                <div class="col-3 col-sm-2 mr-4 text-center text-muted">
+                                    <a class="lightbox-link" href="{{ asset('storage/images/media_scans/'.$scan->file) }}">
+                                        <img class="w-100 mb-1" src="{{ asset('storage/images/media_scans/'.$scan->file) }}">
+                                    </a>
+                                    {{ $scan->type->name ?? '' }}
+                                </div>
+                            @endforeach
+                        </div>
                     @endif
                 </div>
             @endforeach
