@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="clearfix">
-                    @if ($interview->individual->text->file !== null)
+                    @if ($interview->individual->text !== null && $interview->individual->text->file !== null)
                         <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}">
                             <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}" alt="Picture of {{ $interview->individual->ind_name }}">
                         </a>
