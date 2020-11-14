@@ -47,6 +47,10 @@ class GameController extends Controller
         // Collect interviews for individuals of the game. An individual may
         // have multiple role so make sure to get unique interviews
         $interviews = $game->individuals
+            // Display only interviews where we have a picture of the individual
+            ->filter(function ($gameIndividual) {
+                return $gameIndividual->individual->text !== null && $gameIndividual->individual->text->file !== null;
+            })
             ->flatMap(function ($gameIndividual) {
                 return $gameIndividual->individual->interviews;
             })
