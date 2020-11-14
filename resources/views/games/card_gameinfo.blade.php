@@ -52,7 +52,12 @@
                     @foreach ($game->individuals as $gameIndividual)
                         <div class="mb-1">
                             <a href="{{ route('games.search', ['individual_id' => $gameIndividual->individual->ind_id]) }}">{{ $gameIndividual->individual->ind_name }}</a>
-                            {{-- We have to use trim() here because the profile columnin the database contains 'empty' profiles full of spaces --}}
+                            @contributor
+                                <a class="d-inline-block" href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_edit.php?ind_id='.$gameIndividual->individual->ind_id }}">
+                                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                                </a>
+                            @endcontributor
+                            {{-- We have to use trim() here because the profile column in the database contains 'empty' profiles full of spaces --}}
                             @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && trim($gameIndividual->individual->text->ind_profile) !== '')
                                 <a href="javascript:;" class="ml-1" data-target="#profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
