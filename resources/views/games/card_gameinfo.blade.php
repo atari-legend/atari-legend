@@ -56,6 +56,16 @@
                             @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && trim($gameIndividual->individual->text->ind_profile) !== '')
                                 <a href="javascript:;" class="ml-1" data-target="#profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
+                            @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->file !== null)
+                                <a class="lightbox-link d-inline-block" href="{{ asset('storage/images/individual_screenshots/'.$gameIndividual->individual->text->file) }}">
+                                    <i class="far fa-image"></i>
+                                </a>
+                            @endif
+                            @if ($gameIndividual->individual->interviews->isNotEmpty())
+                                <a class="d-inline-block" href="{{ route('interviews.show', ['interview' => $gameIndividual->individual->interviews->first()]) }}">
+                                    <i class="far fa-newspaper"></i>
+                                </a>
+                            @endif
                             <br>
                             @if ($gameIndividual->role !== null)
                                 <small class="text-muted">{{ $gameIndividual->role->name }}</small>
