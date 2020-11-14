@@ -39,7 +39,7 @@ class Release extends Model
     }
 
     /**
-     * @return boolean true if the release has goodies scans, false otherwise
+     * @return bool true if the release has goodies scans, false otherwise
      */
     public function getHasGoodiesAttribute()
     {
@@ -47,7 +47,6 @@ class Release extends Model
             ->contains(function ($boxscan) {
                 return !Str::startsWith($boxscan->type, 'Box');
             });
-
     }
 
     public function game()
