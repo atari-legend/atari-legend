@@ -25,4 +25,9 @@ class Individual extends Model
     {
         return $this->hasMany(Interview::class, 'ind_id');
     }
+
+    public function nicknames()
+    {
+        return $this->hasMany(IndividualNick::class, 'ind_id');
+    }
 }

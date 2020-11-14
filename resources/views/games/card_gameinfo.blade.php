@@ -72,6 +72,15 @@
                                 </a>
                             @endif
                             <br>
+                            @if ($gameIndividual->individual->nicknames->isNotEmpty())
+                                <small class="text-muted">
+                                    AKA
+                                    @foreach ($gameIndividual->individual->nicknames as $nickname)
+                                        {{ $nickname->nick->ind_name }}@if (!$loop->last), @endif
+                                    @endforeach
+                                </small>
+                                <br>
+                            @endif
                             @if ($gameIndividual->role !== null)
                                 <small class="text-muted">{{ $gameIndividual->role->name }}</small>
                             @endif
