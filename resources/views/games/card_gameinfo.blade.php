@@ -195,11 +195,11 @@
                 </div>
                 <div class="col-8">
                     <div class="mb-1">
-                        @if ($game->number_players_on_same_machine !== null)
+                        @if ($game->number_players_on_same_machine !== null && $game->number_players_on_same_machine !== 0)
                             {{ $game->number_players_on_same_machine }} <small class="text-muted">(Same machine)</small><br>
                         @endif
-                        @if ($game->number_players_multiple_machines !== null)
-                            {{ $game->number_players_multiple_machines }} <small class="text-muted">(Multiple machines)</small>
+                        @if ($game->number_players_multiple_machines !== null && $game->number_players_multiple_machines !== 0)
+                            {{ $game->number_players_multiple_machines }} <small class="text-muted">(Multiple linked machines)</small>
                         @endif
                     </div>
                 </div>
