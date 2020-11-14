@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Release extends Model
 {
@@ -35,6 +36,18 @@ class Release extends Model
             ->flatMap(function ($media) {
                 return $media->dumps;
             });
+    }
+
+    /**
+     * @return boolean true if the release has goodies scans, false otherwise
+     */
+    public function getHasGoodiesAttribute()
+    {
+        return $this->boxscans
+            ->contains(function ($boxscan) {
+                return !Str::startsWith($boxscan->type, 'Box');
+            });
+
     }
 
     public function game()

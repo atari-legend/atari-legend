@@ -8,6 +8,7 @@ use App\Models\GameSubmitInfo;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
@@ -25,12 +26,16 @@ class GameController extends Controller
         // This is temporary until all game scans are moved to releases
         $releaseBoxscans = $game->releases
             ->flatMap(function ($release) {
-                return $release->boxscans->map(function ($boxscan) use ($release) {
-                    return [
-                        'release' => $release,
-                        'boxscan' => asset('storage/images/game_release_scans/'.$boxscan->file),
-                    ];
-                });
+                return $release->boxscans
+                    ->filter(function ($boxscan) {
+                        return Str::startsWith($boxscan->type, 'Box');
+                    })
+                    ->map(function ($boxscan) use ($release) {
+                        return [
+                            'release' => $release,
+                            'boxscan' => asset('storage/images/game_release_scans/'.$boxscan->file),
+                        ];
+                    });
             });
         $gameBoxscans = $game->boxscans->map(function ($boxscan) {
             return [
