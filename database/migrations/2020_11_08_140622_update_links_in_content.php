@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\Review;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class UpdateLinksInContent extends Migration
@@ -42,73 +43,77 @@ class UpdateLinksInContent extends Migration
      */
     public function up()
     {
-        collect(UpdateLinksInContent::REPLACEMENTS)->each(function ($replacement) {
-            News::where('news_text', 'regexp', $replacement['sql'])
-                ->each(function ($news) use ($replacement) {
-                    $text = preg_replace(
-                        $replacement['regexp'],
-                        $replacement['replacement'],
-                        $news->news_text
-                    );
-                    $news->news_text = $text;
-                    $news->save();
-                });
+        // Only do on MySQL. SQLite does not support regexp by default,
+        // and this migration is unimportant for unit tests
+        if (DB::connection()->getDriverName() === 'mysql') {
+            collect(UpdateLinksInContent::REPLACEMENTS)->each(function ($replacement) {
+                News::where('news_text', 'regexp', $replacement['sql'])
+                    ->each(function ($news) use ($replacement) {
+                        $text = preg_replace(
+                            $replacement['regexp'],
+                            $replacement['replacement'],
+                            $news->news_text
+                        );
+                        $news->news_text = $text;
+                        $news->save();
+                    });
 
-            Review::where('review_text', 'regexp', $replacement['sql'])
-                ->each(function ($review) use ($replacement) {
-                    $text = preg_replace(
-                        $replacement['regexp'],
-                        $replacement['replacement'],
-                        $review->review_text
-                    );
-                    $review->review_text = $text;
-                    $review->save();
-                });
+                Review::where('review_text', 'regexp', $replacement['sql'])
+                    ->each(function ($review) use ($replacement) {
+                        $text = preg_replace(
+                            $replacement['regexp'],
+                            $replacement['replacement'],
+                            $review->review_text
+                        );
+                        $review->review_text = $text;
+                        $review->save();
+                    });
 
-            InterviewText::where('interview_text', 'regexp', $replacement['sql'])
-                ->each(function ($interview) use ($replacement) {
-                    $text = preg_replace(
-                        $replacement['regexp'],
-                        $replacement['replacement'],
-                        $interview->interview_text
-                    );
-                    $interview->interview_text = $text;
-                    $interview->save();
-                });
+                InterviewText::where('interview_text', 'regexp', $replacement['sql'])
+                    ->each(function ($interview) use ($replacement) {
+                        $text = preg_replace(
+                            $replacement['regexp'],
+                            $replacement['replacement'],
+                            $interview->interview_text
+                        );
+                        $interview->interview_text = $text;
+                        $interview->save();
+                    });
 
-            InterviewText::where('interview_intro', 'regexp', $replacement['sql'])
-                ->each(function ($interview) use ($replacement) {
-                    $text = preg_replace(
-                        $replacement['regexp'],
-                        $replacement['replacement'],
-                        $interview->interview_intro
-                    );
-                    $interview->interview_intro = $text;
-                    $interview->save();
-                });
+                InterviewText::where('interview_intro', 'regexp', $replacement['sql'])
+                    ->each(function ($interview) use ($replacement) {
+                        $text = preg_replace(
+                            $replacement['regexp'],
+                            $replacement['replacement'],
+                            $interview->interview_intro
+                        );
+                        $interview->interview_intro = $text;
+                        $interview->save();
+                    });
 
-            ArticleText::where('article_text', 'regexp', $replacement['sql'])
-                ->each(function ($article) use ($replacement) {
-                    $text = preg_replace(
-                        $replacement['regexp'],
-                        $replacement['replacement'],
-                        $article->article_text
-                    );
-                    $article->article_text = $text;
-                    $article->save();
-                });
+                ArticleText::where('article_text', 'regexp', $replacement['sql'])
+                    ->each(function ($article) use ($replacement) {
+                        $text = preg_replace(
+                            $replacement['regexp'],
+                            $replacement['replacement'],
+                            $article->article_text
+                        );
+                        $article->article_text = $text;
+                        $article->save();
+                    });
 
-            GameFact::where('game_fact', 'regexp', $replacement['sql'])
-            ->each(function ($fact) use ($replacement) {
-                $text = preg_replace(
-                    $replacement['regexp'],
-                    $replacement['replacement'],
-                    $fact->game_fact
-                );
-                $fact->game_fact = $text;
-                $fact->save();
+                GameFact::where('game_fact', 'regexp', $replacement['sql'])
+                    ->each(function ($fact) use ($replacement) {
+                        $text = preg_replace(
+                            $replacement['regexp'],
+                            $replacement['replacement'],
+                            $fact->game_fact
+                        );
+                        $fact->game_fact = $text;
+                        $fact->save();
+                    });
             });
-    });
+        }
     }
 
     /**
