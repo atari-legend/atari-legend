@@ -6,13 +6,13 @@
     <div class="card-header p-2">
         <ul class="list-unstyled">
             <li class="w-45 d-inline-block">
-                <a href="{{ route('links.index') }}" class="{{ isset($category) ? '' : 'font-weight-bold text-white' }}">All</a>
+                <a href="{{ route('links.index') }}" class="{{ isset($category) ? '' : 'fw-bold text-white' }}">All</a>
             </li>
             @foreach ($categories as $c)
                 <li class="w-45 d-inline-block">
                     @if ($c->websites->count() > 0)
                         <a href="{{ route('links.index', ['category' => $c]) }}"
-                            class="{{ (isset($category) && $category->website_category_id === $c->website_category_id) ? 'font-weight-bold text-primary' : '' }}">{{ $c->website_category_name }}</a>
+                            class="{{ (isset($category) && $category->website_category_id === $c->website_category_id) ? 'fw-bold text-primary' : '' }}">{{ $c->website_category_name }}</a>
                     @else
                         <span class="text-muted">{{ $c->website_category_name }}</span>
                     @endif
@@ -37,7 +37,7 @@
                         <small class="text-warning mt-1 float-right"><i class="fas fa-exclamation-triangle"></i> Appears to be inactive</small>
                     @endif
 
-                    <h3 class="card-title text-h5 text-audiowide">
+                    <h3 class="card-title fs-5 text-audiowide">
                         <a href="{{ $website->website_url }}">{{ $website->website_name }}</a>
                         @contributor
                             <a href="{{ config('al.legacy.base_url').'/admin/links/link_mod.php?website_id='.$website->website_id }}">

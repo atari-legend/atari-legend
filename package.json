@@ -13,7 +13,7 @@
         "@tarekraafat/autocomplete.js": "^7.2.0",
         "axios": "^0.19",
         "bbcode-parser": "^1.0.10",
-        "bootstrap": "^5.0.0-alpha2",
+        "bootstrap": "^5.0.0-alpha3",
         "chart.js": "^2.9.3",
         "cross-env": "^7.0",
         "eslint": "^7.9.0",

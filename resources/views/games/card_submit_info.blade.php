@@ -22,13 +22,8 @@
         <form method="post" action="{{ route('games.submitInfo', ['game' => $game]) }}" enctype="multipart/form-data" class="text-center">
             @csrf
             <textarea class="form-control mb-2" rows="5" name="info" placeholder="Your info here..." required></textarea>
-            <div class="form-file">
-                <input type="file" class="form-file-input" id="files" name="files[]" multiple>
-                <label class="form-file-label" for="files">
-                    <span class="form-file-text">Choose files…</span>
-                    <span class="form-file-button">Browse</span>
-                </label>
-            </div>
+            <input type="file" class="form-control" id="files" name="files[]" multiple>
+
             <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>
         @endauth

@@ -11,7 +11,7 @@
     </div>
 
     <div class="card-body p-2 bg-darklight">
-        <h3 class="text-h5 text-audiowide">Written by {{ Helper::user($interview->user) }}</h3>
+        <h3 class="fs-5 text-audiowide">Written by {{ Helper::user($interview->user) }}</h3>
         <span class="text-muted">{{ date('F j, Y', $interview->texts->first()->interview_date) }}</span>
     </div>
     <div class="card-body p-2 bg-darklight">

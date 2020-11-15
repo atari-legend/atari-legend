@@ -19,6 +19,10 @@
             &.form-control-plaintext {
                 background-color: inherit;
             }
+
+            &:focus {
+                background-color: $black;
+            }
         }
     }
 }

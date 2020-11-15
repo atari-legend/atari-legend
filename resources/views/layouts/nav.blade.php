@@ -55,18 +55,18 @@
 
                     <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="user-menu">
                         <li><a class="dropdown-item" href="{{ route('auth.profile') }}">Profile</a></li>
-                        <li>
+                        @contributor
+                            <li>
+                                <a class="dropdown-item text-contributor fw-bold" href="{{ config('al.legacy.base_url').'/admin/' }}">Control panel</a>
+                            </li>
+                        @endcontributor
+                        <li class="mt-3">
                             <a class="dropdown-item"
                                 href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Log out
                             </a>
                         </li>
-                        @contributor
-                            <li>
-                                <a class="dropdown-item text-contributor font-weight-bold" href="{{ config('al.legacy.base_url').'/admin/' }}">Control panel</a>
-                            </li>
-                        @endcontributor
                     </ul>
                 </li>
                 @endauth

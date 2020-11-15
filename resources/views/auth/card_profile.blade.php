@@ -22,13 +22,8 @@
                         <a class="ml-2" id="delete-avatar" href="#"><i class="fas fa-trash-alt text-danger"></i></a>
                     @endif
 
-                    <div class="form-file mt-2 @error('avatar') is-invalid @enderror">
-                        <input type="file" class="form-file-input @error('avatar') is-invalid @enderror" id="avatar" name="avatar">
-                        <label class="form-file-label" for="avatar">
-                            <span class="form-file-text text-muted">Choose file...</span>
-                            <span class="form-file-button">Browse</span>
-                        </label>
-                    </div>
+                    <input type="file" class="form-control mt-2 @error('avatar') is-invalid @enderror" name="avatar">
+
                     <input type="hidden" name="avatar-removed" id="avatar-removed">
 
                     @error('avatar')
