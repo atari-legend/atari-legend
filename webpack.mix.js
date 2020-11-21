@@ -18,3 +18,13 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .version()
     .sourceMaps();
+
+mix.js('resources/js/tabulator.js', 'public/js')
+    .eslint()
+    .version()
+    .sourceMaps();
+
+mix.js('resources/js/charts.js', 'public/js')
+    .eslint()
+    .version()
+    .sourceMaps();

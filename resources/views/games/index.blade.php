@@ -16,3 +16,7 @@
         </div>
     </div>
 @endsection
+
+@section('scripts')
+    <script src="{{ mix('js/charts.js') }}"></script>
+@endsection

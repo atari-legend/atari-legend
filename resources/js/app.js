@@ -1,6 +1,5 @@
 require('./bootstrap');
 require('./ellipsis');
-require('./charts');
 require('./carousel');
 require('./lightbox');
 require('./autocomplete');
@@ -10,6 +9,5 @@ require('./comments');
 require('./game/screenshots');
 require('./game/search');
 require('./game/media');
-require('./tabulator');
 require('./user');
 require('./about/history');

@@ -19,3 +19,9 @@
         </div>
     </div>
 @endsection
+
+@section('scripts')
+    @if ($export)
+        <script src="{{ mix('js/tabulator.js') }}"></script>
+    @endif
+@endsection
