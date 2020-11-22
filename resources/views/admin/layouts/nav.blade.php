@@ -12,14 +12,15 @@
             <div id="games" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Editor</a></li>
+                        <li><a href="#">Add</a></li>
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Issues</a></li>
                         <li><a href="#">Configuration</a></li>
                         <li><a href="#">Series</a></li>
-                        <li><a href="#">Submission</a></li>
+                        <li><a href="#">Submissions</a></li>
                         <li><a href="#">Individuals</a></li>
                         <li><a href="#">Companies</a></li>
                         <li><a href="#">Company Logos</a></li>
-                        <li><a href="#">Interviews</a></li>
                     </ul>
                 </div>
             </div>

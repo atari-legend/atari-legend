@@ -1,51 +1,48 @@
 @extends('admin.layouts.admin')
 
 @section('content')
-    <h1>Administration</h1>
+    <h1>Welcome, {{ Auth::user()->userid }}.</h1>
 
-    <div class="row">
+    <div class="row mb-3">
         <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Last {{ $users->count() }} users</h2>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Email</th>
-                                <th>Joined</th>
-                                <th>Avatar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $user)
-                                <tr>
-                                    <td>{{ $user->userid }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>
-                                        <abbr title="{{ date('F j, Y H:i', $user->join_date) }}">
-                                            {{ Carbon\Carbon::createFromTimestamp($user->join_date)->diffForHumans()}}
-                                        </abbr>
-                                    </td>
-                                    <td>
-                                        @if ($user->avatar !== null)
-                                            <img class="rounded-circle border border-dark" src="{{ $user->avatar }}" height="24" alt="User avatar">
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <a href="#">View all users</a>
-                </div>
-            </div>
+            @include('admin.home.card_stat', [
+                'count' => $gamesCount,
+                'label' => "Games",
+                'icon'  => "fas fa-gamepad"
+            ])
         </div>
         <div class="col">
-
+            @include('admin.home.card_stat', [
+                'count' => $releasesCount,
+                'label' => "Releases",
+                'icon'  => "fas fa-database"
+            ])
+        </div>
+        <div class="col">
+            @include('admin.home.card_stat', [
+                'count' => $individualsCount,
+                'label' => "Individuals",
+                'icon'  => "fas fa-user-tie"
+            ])
+        </div>
+        <div class="col">
+            @include('admin.home.card_stat', [
+                'count' => $companiesCount,
+                'label' => "Companies",
+                'icon'  => "fas fa-building"
+            ])
+        </div>
+        <div class="col">
+            @include('admin.home.card_stat', [
+                'count' => $usersCount,
+                'label' => "Users",
+                'icon'  => "fas fa-user-friends"
+            ])
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @include('admin.home.card_activity')
         </div>
     </div>
 @endsection

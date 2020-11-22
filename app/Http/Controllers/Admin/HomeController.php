@@ -3,21 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $users = User::where('join_date', 'regexp', '[0-9]+')
-            ->limit(10)
-            ->orderBy('join_date', 'desc')
+        $changes = Changelog::where('user_id', Auth::user()->user_id)
+            ->orderBy('timestamp', 'desc')
+            ->limit(15)
             ->get();
+
+        $gamesCount = DB::table('game')->count();
+        $releasesCount = DB::table('game_release')->count();
+        $usersCount = DB::table('users')->count();
+        $individualsCount = DB::table('individuals')->count();
+        $companiesCount = DB::table('pub_dev')->count();
 
         return view('admin.home.index')
             ->with([
-                'users' => $users,
+                'changes' => $changes,
+                'gamesCount'   => $gamesCount,
+                'releasesCount' => $releasesCount,
+                'usersCount' => $usersCount,
+                'individualsCount' => $individualsCount,
+                'companiesCount' => $companiesCount,
             ]);
     }
 }
