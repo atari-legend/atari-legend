@@ -1,0 +1,22 @@
+aside {
+    img.avatar {
+        max-width: 3rem;
+        max-height: 3rem;
+    }
+    nav {
+        .accordion-button {
+            &::after {
+                transform: scale(0.5);
+            }
+
+            &:not(.collapsed)::after {
+                transform: scale(0.5) rotate(180deg);
+            }
+        }
+
+        a.active {
+            font-weight: bold;
+            color: $info;
+        };
+    }
+}

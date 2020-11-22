@@ -1,0 +1,22 @@
+@use "sass:color";
+
+.admin-layout {
+    height: 100vh;
+    grid-template-areas: 'sidebar main';
+    gap: 1.5rem;
+
+    grid-template-columns: 15rem 1fr;
+
+    aside {
+        grid-area: sidebar;
+        box-shadow: 0 0 2rem -1rem color.scale($light, $lightness: -50%);
+    }
+
+    main {
+        grid-area: main;
+    }
+
+    @include media-breakpoint-up(md) {
+        display: grid;
+    }
+}

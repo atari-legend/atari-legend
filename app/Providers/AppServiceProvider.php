@@ -33,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('contributor', function () {
             return Auth::user() !== null && Auth::user()->permission === User::PERMISSION_ADMIN;
         });
+
+        Blade::directive('activeroute', function($expression) {
+            return "<?php echo Request::routeIs('$expression') ? 'active' : ''; ?>";
+        });
     }
 }

@@ -16,6 +16,7 @@ require('laravel-mix-eslint-config');
 mix.js('resources/js/app.js', 'public/js')
     .eslint()
     .sass('resources/sass/app.scss', 'public/css')
+    .sass('resources/sass/admin/admin.scss', 'public/css')
     .version()
     .sourceMaps();
 

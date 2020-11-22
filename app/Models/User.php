@@ -59,6 +59,15 @@ class User extends Authenticatable implements MustVerifyEmail
         ])->save();
     }
 
+    public function getAvatarAttribute()
+    {
+        if ($this->avatar_ext !== null) {
+            return asset('storage/images/user_avatars/'.$this->user_id.'.'.$this->avatar_ext);
+        } else {
+            return null;
+        }
+    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class, 'user_id');
