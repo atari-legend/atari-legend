@@ -2,9 +2,12 @@
 
 namespace App\Helpers;
 
+use App\Helpers\BBCode\ArticleBBCodeTag;
 use App\Helpers\BBCode\CompanyBBCodeTag;
 use App\Helpers\BBCode\GameBBCodeTag;
+use App\Helpers\BBCode\InterviewBBCodeTag;
 use App\Helpers\BBCode\ReleaseYearBBCodeTag;
+use App\Helpers\BBCode\ReviewBBCodeTag;
 use App\Models\Release;
 use App\Models\User;
 
@@ -62,6 +65,9 @@ class Helper
         $parser->addBBCode('frontpage', '{param}');
         $parser->addBBCode('screenstar', '{param}');
         $parser->addCodeDefinition(new GameBBCodeTag());
+        $parser->addCodeDefinition(new InterviewBBCodeTag());
+        $parser->addCodeDefinition(new ReviewBBCodeTag());
+        $parser->addCodeDefinition(new ArticleBBCodeTag());
         $parser->addCodeDefinition(new CompanyBBCodeTag('publisher'));
         $parser->addCodeDefinition(new ReleaseYearBBCodeTag());
 
