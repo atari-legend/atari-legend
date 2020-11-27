@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Schema;
 
 class UpdateLinksInContent extends Migration
 {
-
     const REPLACEMENTS = [
         [
             'sql'         => '\[url=[^]]*/interviews/interviews_detail\.php\?selected_interview_id=',
