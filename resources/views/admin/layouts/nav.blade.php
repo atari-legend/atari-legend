@@ -1,20 +1,20 @@
 <nav>
-    <a class="d-block py-1 text-decoration-none pl-1 @activeroute(admin.home.index)" href="{{ route('admin.home.index') }}">
+    <a class="d-block py-1 text-decoration-none pl-1 @activeroute('admin.home.index')" href="{{ route('admin.home.index') }}">
         <i class="fas fa-home fa-fw"></i> Home
     </a>
     <div class="accordion">
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#games" aria-expanded="fakse" aria-controls="games">
+                <button class="accordion-button @collapsedroute('admin.games.*') p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#games" aria-expanded="true" aria-controls="games">
                     <i class="fas fa-gamepad fa-fw mr-1"></i> Games
                 </button>
             </h2>
-            <div id="games" class="accordion-collapse collapse border-0">
+            <div id="games" class="accordion-collapse collapse @showroute('admin.games.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a href="#">Add</a></li>
                         <li><a href="#">Edit</a></li>
-                        <li><a href="#">Issues</a></li>
+                        <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
                         <li><a href="#">Configuration</a></li>
                         <li><a href="#">Series</a></li>
                         <li><a href="#">Submissions</a></li>

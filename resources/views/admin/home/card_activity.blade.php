@@ -1,4 +1,4 @@
-<div class="card bg-light">
+<div class="card mb-3 bg-light">
     <div class="card-body">
         <h2 class="card-title">Your recent activity</h2>
         <table class="table table-striped table-sm">

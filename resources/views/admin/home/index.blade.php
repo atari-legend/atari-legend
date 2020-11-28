@@ -1,9 +1,17 @@
 @extends('admin.layouts.admin')
 
-@section('content')
-    <h1>Welcome, {{ Auth::user()->userid }}.</h1>
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Home</li>
+        </ol>
+    </nav>
+@endsection
 
-    <div class="row mb-3">
+@section('content')
+    <p>Welcome back, {{ Auth::user()->userid }}.</p>
+
+    <div class="row">
         <div class="col">
             @include('admin.home.card_stat', [
                 'count' => $gamesCount,

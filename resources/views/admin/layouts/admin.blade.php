@@ -37,7 +37,9 @@
                 <hr>
                 @include('admin.layouts.nav')
             </aside>
-            <main>
+            <main class="pt-3">
+                @yield('breadcrumbs')
+                <hr>
                 @yield('content')
             </main>
         </div>

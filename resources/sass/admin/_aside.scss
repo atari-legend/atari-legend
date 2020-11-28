@@ -16,7 +16,8 @@ aside {
 
         a.active {
             font-weight: bold;
-            color: $info;
+            color: $text-muted;
+            text-decoration: none;
         };
     }
 }

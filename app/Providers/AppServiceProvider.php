@@ -35,7 +35,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::directive('activeroute', function($expression) {
-            return "<?php echo Request::routeIs('$expression') ? 'active' : ''; ?>";
+            return "<?php echo Request::routeIs($expression) ? 'active' : ''; ?>";
+        });
+
+        Blade::directive('collapsedroute', function($expression) {
+            return "<?php echo Request::routeIs($expression) ? '' : 'collapsed'; ?>";
+        });
+
+        Blade::directive('showroute', function($expression) {
+            return "<?php echo Request::routeIs($expression) ? 'show' : ''; ?>";
         });
     }
 }
