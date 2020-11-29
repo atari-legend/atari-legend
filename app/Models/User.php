@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, ChangeLogable
 {
     use HasFactory;
     use Notifiable;
@@ -66,6 +66,36 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             return null;
         }
+    }
+
+    public function getSection(): string
+    {
+        return 'Users';
+    }
+
+    public function getSectionId(): int
+    {
+        return $this->getKey();
+    }
+
+    public function getSectionName(): string
+    {
+        return  $this->userid;
+    }
+
+    public function getSubSection(): string
+    {
+        return 'User';
+    }
+
+    public function getSubSectionId(): int
+    {
+        return $this->getSectionId();
+    }
+
+    public function getSubSectionName(): string
+    {
+        return $this->getSectionName();
     }
 
     public function reviews()

@@ -34,7 +34,8 @@ class OnlineUsers
 
         if (Auth::check()) {
             Auth::user()->last_visit = time();
-            Auth::user()->save();
+            // Do not trigger an event otherwise it will be logged in the changelog
+            Auth::user()->saveQuietly();
         }
 
         return $response;

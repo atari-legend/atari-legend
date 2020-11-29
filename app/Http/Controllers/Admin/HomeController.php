@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -26,12 +24,12 @@ class HomeController extends Controller
 
         return view('admin.home.index')
             ->with([
-                'changes' => $changes,
-                'gamesCount'   => $gamesCount,
-                'releasesCount' => $releasesCount,
-                'usersCount' => $usersCount,
+                'changes'          => $changes,
+                'gamesCount'       => $gamesCount,
+                'releasesCount'    => $releasesCount,
+                'usersCount'       => $usersCount,
                 'individualsCount' => $individualsCount,
-                'companiesCount' => $companiesCount,
+                'companiesCount'   => $companiesCount,
             ]);
     }
 }
