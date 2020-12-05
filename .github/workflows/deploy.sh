@@ -24,7 +24,7 @@ RSYNC_FLAGS=(
 
 DEPLOY_USER=$1
 DEPLOY_HOST=$2
-DEPLOY_PATH=$3
+DEPLOY_PATH=www.atarilegend.com
 
 if [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_PATH" ]; then
     echo "Missing mandatory deployment arguments"
@@ -37,7 +37,7 @@ ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 rsync ${RSYNC_FLAGS[@]} . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 
 # Create link to production data folder, if it does not already exist
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../atarilegend/data public"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../legacy.atarilegend.com/data public"
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan storage:link"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan migrate --force"
