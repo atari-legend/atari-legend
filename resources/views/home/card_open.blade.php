@@ -15,13 +15,13 @@
             <p class="card-text">
                 Currently, exporting to different formats is already possible using
                 the <a href="{{ route('games.index') }}">game section</a>, daily database and screenshot dumps
-                <a href="/data/database-dumps/">can be downloaded
+                <a href="{{ config('al.legacy.base_url') }}/data/database-dumps/">can be downloaded
                 HERE</a> and an API is planned.
             </p>
 
             <p class="card-text">
                 In addition the source code for the AtariLegend website is available
-                <a href="https://github.com/atari-legend/atari-legend/">on GitHub</a>.
+                <a href="https://github.com/atari-legend/">on GitHub</a>.
             </p>
 
             <p class="card-text">
