@@ -15,22 +15,22 @@ class UpdateLinksInContent extends Migration
     const REPLACEMENTS = [
         [
             'sql'         => '\[url=[^]]*/interviews/interviews_detail\.php\?selected_interview_id=',
-            'regexp'      => "@\[url=.*?\/interviews\/interviews_detail\.php\?selected_interview_id=([0-9]+)](.*?)\[\/url\]@i",
+            'regexp'      => "@\[url=[^]]+?\/interviews\/interviews_detail\.php\?selected_interview_id=([0-9]+)](.*?)\[\/url\]@i",
             'replacement' => '[interview=$1]$2[/interview]',
         ],
         [
             'sql'         => '\[url=[^]]*/games/games_detail\.php\?game_id=',
-            'regexp'      => "@\[url=.*?\/games\/games_detail\.php\?game_id=([0-9]+)](.*?)\[\/url\]@i",
+            'regexp'      => "@\[url=[^]]+?\/games\/games_detail\.php\?game_id=([0-9]+)](.*?)\[\/url\]@i",
             'replacement' => '[game=$1]$2[/game]',
         ],
         [
             'sql'         => '\[url=[^]]*/games/games_reviews_detail\.php\?review_id=',
-            'regexp'      => "@\[url=.*?\/games\/games_reviews_detail\.php\?review_id=([0-9]+)](.*?)\[\/url\]@i",
+            'regexp'      => "@\[url=[^]]+?\/games\/games_reviews_detail\.php\?review_id=([0-9]+)](.*?)\[\/url\]@i",
             'replacement' => '[review=$1]$2[/review]',
         ],
         [
             'sql'         => '\[url=[^]]*/articles/articles_detail\.php\?selected_article_id=',
-            'regexp'      => "@\[url=.*?\/articles\/articles_detail\.php\?selected_article_id=([0-9]+)](.*?)\[\/url\]@i",
+            'regexp'      => "@\[url=[^]]+?\/articles\/articles_detail\.php\?selected_article_id=([0-9]+)](.*?)\[\/url\]@i",
             'replacement' => '[article=$1]$2[/article]',
         ],
     ];
