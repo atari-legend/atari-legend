@@ -7,6 +7,11 @@
     # Needed for 1and1 hosting
     RewriteBase /
 
+    # Send all traffic to HTTPS, except when serving on localhost for development
+    RewriteCond "%{HTTPS}" "off"
+    RewriteCond "%{SERVER_NAME}" atarilegend\.com
+    RewriteRule (.*) https://%{SERVER_NAME}/$1 [R=301,L]
+
     # Legacy site rewrite rules
     # Games
     RewriteCond %{QUERY_STRING} "game_id=([0-9]+)"
