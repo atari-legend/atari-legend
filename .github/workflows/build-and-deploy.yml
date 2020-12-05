@@ -67,4 +67,4 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
-          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "${{ secrets.PROD_DEPLOY_PATH }}"
+          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}"
