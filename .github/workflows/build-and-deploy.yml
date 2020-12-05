@@ -62,9 +62,16 @@ jobs:
           composer dump-autoload
           composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --optimize-autoloader
 
-      - name: Deploy
+      - name: Deploy development
+        if: github.ref == 'refs/heads/development'
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "dev.atarilegend.com" "legacydev.atarilegend.com"
+
+      - name: Deploy production
         if: github.ref == 'refs/heads/master'
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
-          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}"
+          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "www.atarilegend.com" "legacy.atarilegend.com"

@@ -18,15 +18,29 @@ RSYNC_FLAGS=(
     --exclude storage/app/public
     # Exclude folder storing user sessions
     --exclude storage/framework/sessions
-    # Exclude folder storing the legacy site
-    --exclude public/legacy
+
+    # Some safety patterns below in case the development points to the
+    # wrong older, as the deployment user has access to the root folder
+    # containing other things...
+
+    # data/ folder containing images, etc. from the legacy site
+    --exclude data
+    # _elite folder containing another site
+    --exclude _elite
+    # _stonish folder containing another site
+    --exclude _stonish
+    # Exclude the atarilegend folder which contains the legacy dev site
+    --exclude atarilegend
+    # Do not delete logs
+    --exclude logs
 )
 
 DEPLOY_USER=$1
 DEPLOY_HOST=$2
-DEPLOY_PATH=www.atarilegend.com
+DEPLOY_PATH=$3
+LEGACY_PATH=$4
 
-if [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_PATH" ]; then
+if [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_PATH" ] || [ -z "$LEGACY_PATH" ]; then
     echo "Missing mandatory deployment arguments"
     exit
 fi
@@ -37,7 +51,7 @@ ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 rsync ${RSYNC_FLAGS[@]} . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 
 # Create link to production data folder, if it does not already exist
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../legacy.atarilegend.com/data public"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../$LEGACY_PATH/data public"
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan storage:link"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan migrate --force"
