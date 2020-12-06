@@ -35,7 +35,7 @@ class ReleaseDescriptionHelper
             ReleaseDescriptionHelper::getTrainerText($release),
         ])->reject(function ($s) {
             return trim($s) === '';
-        });
+        })->all();
     }
 
     private static function getMainDescriptionText(Release $release)

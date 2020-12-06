@@ -84,7 +84,7 @@ class LoginController extends Controller
      *
      * @return mixed
      */
-    protected function loggedOut(Request $request)
+    protected function loggedOut()
     {
         // Remove session cookie used by the legacy site
         if (isset($_COOKIE[LoginController::LEGACY_SITE_COOKIE_NAME])) {

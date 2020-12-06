@@ -98,7 +98,7 @@ class GameHelper
      *
      * Currently looks both at the game-level boxscans, and release-level ones.
      *
-     * @param App\Game $game Game to check for boxscans.
+     * @param App\Models\Game $game Game to check for boxscans.
      *
      * @return bool true if the game has boxscans, false otherwise.
      */

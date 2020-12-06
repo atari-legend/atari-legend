@@ -14,7 +14,7 @@ class UserHelper
     /**
      * Get the standard validation rules to create or modify a user profile.
      *
-     * @param \App\Model\User $currentUser User to get the validation rules for. Allows
+     * @param \App\Models\User $currentUser User to get the validation rules for. Allows
      *                                     ignoring that user in the uniqueness constraint
      *                                     for the email field
      */

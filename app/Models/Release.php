@@ -28,7 +28,7 @@ class Release extends Model
     }
 
     /**
-     * @return array[] All dumps for this release, across all media
+     * @return Illuminate\Database\Eloquent\Collection All dumps for this release, across all media
      */
     public function getDumpsAttribute()
     {
