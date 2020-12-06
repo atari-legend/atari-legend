@@ -7,6 +7,7 @@ RSYNC_FLAGS=(
     -alvvz
     # Delete all unknown files, except the ones excluded below
     --delete
+
     # Do not sync environment file
     --exclude .env
     # Do not sync NPM modules
@@ -23,14 +24,10 @@ RSYNC_FLAGS=(
     # wrong older, as the deployment user has access to the root folder
     # containing other things...
 
-    # data/ folder containing images, etc. from the legacy site
-    --exclude data
     # _elite folder containing another site
     --exclude _elite
     # _stonish folder containing another site
     --exclude _stonish
-    # Exclude the atarilegend folder which contains the legacy dev site
-    --exclude atarilegend
     # Do not delete logs
     --exclude logs
 )
