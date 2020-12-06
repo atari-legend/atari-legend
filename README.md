@@ -1,8 +1,8 @@
 # The AtariLegend Project
 
-[![Build Status](https://github.com/atari-legend/laravel-prototype/workflows/Build/badge.svg)](https://github.com/atari-legend/laravel-prototype/actions)
+[![Build Status](https://github.com/atari-legend/atari-legend/workflows/Build/badge.svg)](https://github.com/atari-legend/atari-legend/actions)
 [![Style CI](https://github.styleci.io/repos/291270023/shield)](https://github.styleci.io/repos/291270023)
-[![Quality Score](https://scrutinizer-ci.com/g/atari-legend/laravel-prototype/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/atari-legend/laravel-prototype/)
+[![Quality Score](https://scrutinizer-ci.com/g/atari-legend/atari-legend/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/atari-legend/atari-legend/)
 
 This is the source code for [AtariLegend](https://www.atarilegend.com/), a website for Atari ST enthusiasts.
 
