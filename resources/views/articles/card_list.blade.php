@@ -22,12 +22,12 @@
                     </h3>
                     <p class="card-subtitle text-muted">
                         {{ date('F j, Y', $article->texts->first()->article_date) }} by {{ Helper::user($article->user) }}
-                        <span class="badge bg-secondary ml-2">{{ $article->type->article_type }}</span>
+                        <span class="badge bg-secondary ml-2">{{ $article->type->article_type ?? ''}}</span>
                     </p>
                 </div>
 
                 <div class="clearfix">
-                    @if (isset($article->screenshots))
+                    @if ($article->screenshots->isNotEmpty())
                         <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}">
                             <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file) }}" alt="Article screenshot">
                         </a>
