@@ -3,7 +3,14 @@
         <p class="my-1 pt-1">Currently {{ request()->attributes->get('onlineUsers')->count() }} registered {{ Str::plural('user', request()->attributes->get('onlineUsers')->count()) }} online</p>
         <ul class="list-inline my-0 p-1 bg-primary">
             @foreach (request()->attributes->get('onlineUsers') as $user)
-                <li class="list-inline-item"><i class="far fa-user"></i> {{ $user->userid }}</li>
+                <li class="list-inline-item">
+                    <i class="far fa-user"></i> {{ $user->userid }}
+                    @contributor
+                        <a href="{{ config('al.legacy.base_url').'/admin/user/user_detail.php?user_id_selected='.$user->user_id }}">
+                            <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                        </a>
+                    @endcontributor
+                </li>
             @endforeach
         </ul>
     </div>
@@ -14,7 +21,14 @@
         <p class="my-1 pt-1">In the past 24h there were {{ request()->attributes->get('pastDayUsers')->count() }} registered {{ Str::plural('user', request()->attributes->get('pastDayUsers')->count()) }} online</p>
         <ul class="list-inline my-0 p-1 bg-primary">
             @foreach (request()->attributes->get('pastDayUsers') as $user)
-                <li class="list-inline-item"><i class="far fa-user"></i> {{ $user->userid }}</li>
+                <li class="list-inline-item">
+                    <i class="far fa-user"></i> {{ $user->userid }}
+                    @contributor
+                        <a href="{{ config('al.legacy.base_url').'/admin/user/user_detail.php?user_id_selected='.$user->user_id }}">
+                            <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                        </a>
+                    @endcontributor
+                </li>
             @endforeach
         </ul>
     </div>
