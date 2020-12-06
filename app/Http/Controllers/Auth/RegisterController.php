@@ -51,9 +51,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, array_merge([
-            'userid'   => ['required', 'string', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'license'  => ['required', 'accepted'],
+            'userid'             => ['required', 'string', 'max:255', 'unique:users'],
+            'password'           => ['required', 'string', 'min:8', 'confirmed'],
+            'license'            => ['required', 'accepted'],
+            'h-captcha-response' => ['required', 'captcha'],
         ], UserHelper::validationRules()));
     }
 
