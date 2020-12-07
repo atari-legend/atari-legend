@@ -28,11 +28,11 @@
                             @endcontributor
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first()->file !== null)
                                 <a class="lightbox-link d-inline-block" href="{{ asset('storage/images/company_logos/'.$developer->texts->first()->file) }}">
-                                    <i class="far fa-image ml-1"></i>
+                                    <i class="far fa-image ms-1"></i>
                                 </a>
                             @endif
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first()->pub_dev_profile !== null && trim($developer->texts->first()->pub_dev_profile) !== '')
-                                <a href="javascript:;" class="ml-1" data-target="#profile-developer-{{ $developer->pub_dev_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
+                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->pub_dev_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->pub_dev_id }}">
                                     {!! Helper::bbCode($developer->texts->first()->pub_dev_profile) !!}
                                 </p>
@@ -59,7 +59,7 @@
                             @endcontributor
                             {{-- We have to use trim() here because the profile column in the database contains 'empty' profiles full of spaces --}}
                             @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && trim($gameIndividual->individual->text->ind_profile) !== '')
-                                <a href="javascript:;" class="ml-1" data-target="#profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
+                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
                             @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->file !== null)
                                 <a class="lightbox-link d-inline-block" href="{{ asset('storage/images/individual_screenshots/'.$gameIndividual->individual->text->file) }}">

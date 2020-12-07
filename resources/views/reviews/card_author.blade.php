@@ -16,7 +16,7 @@
         @if ($reviews->isNotEmpty())
             <ul class="striped mb-0 list-unstyled">
                 @foreach ($reviews as $r)
-                    <li class="p-1 pl-4">
+                    <li class="p-1 ps-4">
                         <a href="{{ route('reviews.show', ['review' => $r ]) }}">{{ $r->games->first()->game_name }}</a>
                     </li>
                 @endforeach

@@ -32,9 +32,9 @@
                         </a>
                     @endif
                 </div>
-                <div class="col-md-8 pl-2">
+                <div class="col-md-8 ps-2">
                     @if ($website->inactive === 1)
-                        <small class="text-warning mt-1 float-right"><i class="fas fa-exclamation-triangle"></i> Appears to be inactive</small>
+                        <small class="text-warning mt-1 float-end"><i class="fas fa-exclamation-triangle"></i> Appears to be inactive</small>
                     @endif
 
                     <h3 class="card-title fs-5 text-audiowide">

@@ -7,7 +7,7 @@
         <div class="card-body lightbox-gallery d-flex">
             @foreach ($release->boxscans as $boxscan)
                 @if (!Str::startsWith($boxscan->type, 'Box'))
-                    <div class="col-3 col-sm-2 mr-4 text-center text-muted">
+                    <div class="col-3 col-sm-2 me-4 text-center text-muted">
                         <a class="lightbox-link" href="{{ asset('storage/images/game_release_scans/'.$boxscan->file) }}">
                             <img class="w-100 mb-1" src="{{ asset('storage/images/game_release_scans/'.$boxscan->file) }}">
                         </a>

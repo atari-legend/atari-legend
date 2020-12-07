@@ -10,7 +10,7 @@
                 <p class="card-text mb-0 ellipsis">
                     {!! Helper::bbCode(Helper::extractTag($review->review_text, "frontpage")) !!}
                 </p>
-                <a class="d-block text-right" href="{{ route('reviews.show', ['review' => $review->review_id]) }}">
+                <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $review->review_id]) }}">
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </div>

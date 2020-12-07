@@ -20,7 +20,7 @@
             <div class="col-7 col-sm-9">
                 {!! Helper::bbCode(nl2br($article->texts->first()->article_text)) !!}
             </div>
-            <div class="col-5 col-sm-3 pl-2 text-center text-muted lightbox-gallery">
+            <div class="col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
                 @foreach ($article->screenshots as $screenshot)
                     <div class="bg-dark p-2">
                         <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" title="{{ $screenshot->comment->comment_text }}">

@@ -10,10 +10,10 @@
 
                 <ul class="nav nav-pills mb-2">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#edit">Edit</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#edit">Edit</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#preview">Preview</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#preview">Preview</a>
                     </li>
                 </ul>
 
@@ -22,10 +22,10 @@
                         <fieldset>
                             <legend>Review text</legend>
                             <div class="mb-2">
-                                <button type="button" class="btn btn-primary mr-2" data-bbcode-target="#text" data-bbcode-tag="b">B</button>
-                                <button type="button" class="btn btn-primary mr-2" data-bbcode-target="#text" data-bbcode-tag="u">U</button>
-                                <button type="button" class="btn btn-primary mr-2" data-bbcode-target="#text" data-bbcode-tag="i">I</button>
-                                <button type="button" class="btn btn-primary mr-2" data-bbcode-target="#text" data-bbcode-tag='url="http://example.org/"'>URL</button>
+                                <button type="button" class="btn btn-primary me-2" data-bbcode-target="#text" data-bbcode-tag="b">B</button>
+                                <button type="button" class="btn btn-primary me-2" data-bbcode-target="#text" data-bbcode-tag="u">U</button>
+                                <button type="button" class="btn btn-primary me-2" data-bbcode-target="#text" data-bbcode-tag="i">I</button>
+                                <button type="button" class="btn btn-primary me-2" data-bbcode-target="#text" data-bbcode-tag='url="http://example.org/"'>URL</button>
                             </div>
                             <div class="mb-4">
                                 <textarea class="form-control" rows="20" id="text" name="text" placeholder="Your review here..." required></textarea>
@@ -93,7 +93,7 @@
                                 <hr>
                                 <h5>Score</h5>
 
-                                <ul class="list-unstyled pl-2">
+                                <ul class="list-unstyled ps-2">
                                     <li>Graphics: <span id="preview-graphics"></span></li>
                                     <li>Sound: <span id="preview-sound"></span></li>
                                     <li>Gameplay: <span id="preview-gameplay"></span></li>
@@ -101,7 +101,7 @@
                                 </ul>
                             </div>
 
-                            <div class="col-3 pl-2 text-center text-muted lightbox-gallery">
+                            <div class="col-3 ps-2 text-center text-muted lightbox-gallery">
                                 @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
                                     <div class="bg-dark p-2">
                                         <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">

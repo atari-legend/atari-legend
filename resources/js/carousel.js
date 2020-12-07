@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('slide.bs.carousel', e => {
 
             // For the thumbnail the carousel is sliding to...
-            document.querySelectorAll(`.carousel-thumbnails a[href="#${el.id}"][data-slide-to="${e.to}"]`)
+            document.querySelectorAll(`.carousel-thumbnails a[href="#${el.id}"][data-bs-slide-to="${e.to}"]`)
                 .forEach(thumbnail => {
                     // ...set the active class on
                     thumbnail.classList.toggle('active');
@@ -20,17 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     // on the X or Y axis depending if the thumbnails are horizontal
                     // or vertical
                     if (el.classList.contains('carousel-thumbnails-vertical')) {
-                        document.querySelector(`.carousel-thumbnails[data-carousel="${el.id}"]`)
+                        document.querySelector(`.carousel-thumbnails[data-bs-carousel="${el.id}"]`)
                             .scrollTo(0, thumbnail.offsetTop - 250);
                     } else if (el.classList.contains('carousel-thumbnails-horizontal')) {
-                        document.querySelector(`.carousel-thumbnails[data-carousel="${el.id}"]`)
+                        document.querySelector(`.carousel-thumbnails[data-bs-carousel="${el.id}"]`)
                             .scrollTo(thumbnail.offsetLeft - 150, 0);
                     }
 
                 });
 
             // Remove the active class on the thumbnail the carousel is sliding from
-            document.querySelectorAll(`.carousel-thumbnails a[href="#${el.id}"][data-slide-to="${e.from}"]`)
+            document.querySelectorAll(`.carousel-thumbnails a[href="#${el.id}"][data-bs-slide-to="${e.from}"]`)
                 .forEach(thumbnail => {
                     thumbnail.classList.toggle('active');
                 });

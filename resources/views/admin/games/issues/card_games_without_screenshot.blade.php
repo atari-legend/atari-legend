@@ -11,7 +11,7 @@
                     …
                     @break
                 @endif
-                <a href="{{ config('al.legacy.base_url').'/admin/games/games_detail.php?game_id='.$game->game_id }}">{{ $game->game_name }}</a>@if(!$loop->last)<span class="mr-2">,</span>@endif
+                <a href="{{ config('al.legacy.base_url').'/admin/games/games_detail.php?game_id='.$game->game_id }}">{{ $game->game_name }}</a>@if(!$loop->last)<span class="me-2">,</span>@endif
             @endforeach
         </p>
     </div>

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function setThumbnailsHeight() {
         var el = document.getElementById('carousel-screenshots');
-        document.querySelector('[data-carousel="carousel-screenshots"]').style.height = `${el.offsetHeight}px`;
+        document.querySelector('[data-bs-carousel="carousel-screenshots"]').style.height = `${el.offsetHeight}px`;
     }
 
     var el = document.getElementById('carousel-screenshots');

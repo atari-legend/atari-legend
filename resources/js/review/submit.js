@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Handle previewing of submitted reviews
      */
-    document.querySelectorAll('a[data-toggle="tab"][href="#preview"').forEach(el => {
+    document.querySelectorAll('a[data-bs-toggle="tab"][href="#preview"').forEach(el => {
         // When the preview tab is selected...
         el.addEventListener('show.bs.tab', () => {
             // Convert the BBCode into HTML and inject in the preview area

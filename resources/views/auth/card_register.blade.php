@@ -6,7 +6,7 @@
             @csrf
 
             <div class="row mb-3">
-                <label for="userid" class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
+                <label for="userid" class="col-md-4 col-form-label text-md-end">{{ __('Username') }}</label>
 
                 <div class="col-md-6">
                     <input id="userid" type="text" class="form-control @error('userid') is-invalid @enderror" name="userid" value="{{ old('userid') }}" required autocomplete="name" autofocus>
@@ -20,7 +20,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('E-Mail Address') }}</label>
 
                 <div class="col-md-6">
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -34,7 +34,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
                 <div class="col-md-6">
                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
@@ -48,7 +48,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
 
                 <div class="col-md-6">
                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
@@ -58,7 +58,7 @@
             <br>
 
             <div class="row mb-3">
-                <label for="website" class="col-md-4 col-form-label text-md-right">{{ __('Website') }}</label>
+                <label for="website" class="col-md-4 col-form-label text-md-end">{{ __('Website') }}</label>
 
                 <div class="col-md-6">
                     <input id="website" type="url" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website') }}" placeholder="e.g. https://example.org/">
@@ -72,7 +72,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="facebook" class="col-md-4 col-form-label text-md-right">{{ __('Facebook') }}</label>
+                <label for="facebook" class="col-md-4 col-form-label text-md-end">{{ __('Facebook') }}</label>
 
                 <div class="col-md-6">
                     <input id="facebook" type="url" class="form-control @error('facebook') is-invalid @enderror" name="facebook" value="{{ old('facebook') }}" placeholder="e.g. https://www.facebook.com/...">
@@ -86,7 +86,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="twitter" class="col-md-4 col-form-label text-md-right">{{ __('Twitter') }}</label>
+                <label for="twitter" class="col-md-4 col-form-label text-md-end">{{ __('Twitter') }}</label>
 
                 <div class="col-md-6">
                     <input id="twitter" type="url" class="form-control @error('twitter') is-invalid @enderror" name="twitter" value="{{ old('twitter') }}" placeholder="e.g. https://twitter.com/...">
@@ -100,7 +100,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="af" class="col-md-4 col-form-label text-md-right">{{ __('Atari-Forum profile') }}</label>
+                <label for="af" class="col-md-4 col-form-label text-md-end">{{ __('Atari-Forum profile') }}</label>
 
                 <div class="col-md-6">
                     <input id="af" type="url" class="form-control @error('af') is-invalid @enderror" name="af" value="{{ old('af') }}" placeholder="e.g. https://www.atari-forum.com/memberlist.php?mode=viewprofile&u=...">

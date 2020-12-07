@@ -11,8 +11,8 @@
     </div>
 
     <div class="card-body p-2">
-        <button class="btn btn-primary mr-2" id="download-csv">Download CSV</button>
-        <button class="btn btn-primary mr-2" id="download-json">Download JSON</button>
+        <button class="btn btn-primary me-2" id="download-csv">Download CSV</button>
+        <button class="btn btn-primary me-2" id="download-json">Download JSON</button>
         <button class="btn btn-primary" id="download-xlsx">Download XLSX</button>
 
         <div id="tabulator-table" class="mt-3"></div>

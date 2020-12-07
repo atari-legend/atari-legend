@@ -9,17 +9,17 @@
                 <div class="card-body">
                     @guest
                         @if ($loop->first)
-                            <p class="float-right text-danger">
+                            <p class="float-end text-danger">
                                 Please <a href="{{ route('login') }}">log-in</a> to download files
                             </p>
                         @endif
                     @endguest
-                    <div class="mb-2 d-flex float-left">
+                    <div class="mb-2 d-flex float-start">
                         @isset ($mediaTypeIcons[$media->type->id])
-                            <i class="{{ $mediaTypeIcons[$media->type->id] }} mr-1"></i>
+                            <i class="{{ $mediaTypeIcons[$media->type->id] }} me-1"></i>
                         @endif
                         <span class="badge bg-secondary">{{ $media->type->name }}</span>
-                        @isset ($media->label) <span class="ml-1">{{ $media->label }}</span> @endif
+                        @isset ($media->label) <span class="ms-1">{{ $media->label }}</span> @endif
                     </div>
 
                     @if ($media->dumps->isNotEmpty())
@@ -52,7 +52,7 @@
                                         <td class="d-none d-sm-table-cell">
                                             <abbr title="{{ $dump->sha512 }}">
                                                 {{ Str::limit($dump->sha512, 7, '') }}
-                                                <a class="ml-1" data-copy-text="{{ $dump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
+                                                <a class="ms-1" data-copy-text="{{ $dump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
                                             </abbr>
                                         </td>
                                         <td>{{ Helper::fileSize($dump->size) }}</td>
@@ -72,7 +72,7 @@
                     @if ($media->scans->isNotEmpty())
                         <div class="lightbox-gallery d-flex mt-4">
                             @foreach ($media->scans as $scan)
-                                <div class="col-3 col-sm-2 mr-4 text-center text-muted">
+                                <div class="col-3 col-sm-2 me-4 text-center text-muted">
                                     <a class="lightbox-link" href="{{ asset('storage/images/media_scans/'.$scan->file) }}">
                                         <img class="w-100 mb-1" src="{{ asset('storage/images/media_scans/'.$scan->file) }}">
                                     </a>

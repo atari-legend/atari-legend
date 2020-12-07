@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4">
     <div class="card-body p-0">
         @isset ($triviaQuote)
-            <div class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @foreach ($triviaImages->random(10) as $image)
                         <div class="carousel-item {{ $loop->first ? 'active' : '' }}">

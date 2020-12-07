@@ -4,14 +4,14 @@
 
         {{-- Edition controls --}}
         @if (Auth::check() && Auth::user()->user_id === $comment->user->user_id)
-            <div class="float-right ml-2">
+            <div class="float-end ms-2">
                 {{-- Save button --}}
-                <small class="mr-1 d-none" data-comment-save="{{ $comment->comments_id }}">
+                <small class="me-1 d-none" data-comment-save="{{ $comment->comments_id }}">
                     <a href="#" onclick="event.preventDefault(); document.getElementById('comment-edit-{{ $comment->comments_id }}').submit()"><i class="far fa-save text-success" title="Save comment"></i></a>
                 </small>
 
                 {{-- Edit / Cancel edit button --}}
-                <small class="mr-1">
+                <small class="me-1">
                     <a href="#" data-comment-edit="{{ $comment->comments_id }}"><i class="fas fa-pencil-alt" title="Edit comment"></i></a>
                 </small>
 
@@ -28,7 +28,7 @@
         @endif
 
         @if (isset($showGame) && $showGame === true && $comment->games->isNotEmpty())
-            <span class="float-right"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->game_name }}</a></span>
+            <span class="float-end"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->game_name }}</a></span>
         @endif
     </div>
 
@@ -44,7 +44,7 @@
     @endif
 
     @if (isset($comment->user))
-    <small class="text-muted float-left">
+    <small class="text-muted float-start">
         @if ($comment->user->user_twitter)
             <a href="{{ $comment->user->user_twitter }}"><i class="fab fa-twitter"></i></a>
         @endif
@@ -59,7 +59,7 @@
         @endif
     </small>
     @endif
-    <div class="text-muted text-right">
+    <div class="text-muted text-end">
         {{ date('F j, Y', $comment->timestamp) }}
     </div>
 </div>

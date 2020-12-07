@@ -10,7 +10,7 @@
                 <p class="card-text mb-0 ellipsis">
                     {!! Helper::bbCode(Helper::extractTag($new->news_text, "frontpage")) !!}
                 </p>
-                <a class="d-block text-right" href="{{ route('news.index') }}">
+                <a class="d-block text-end" href="{{ route('news.index') }}">
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </div>

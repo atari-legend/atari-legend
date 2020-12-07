@@ -1,6 +1,6 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <a class="float-right" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
+        <a class="float-end" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
         <h2 class="text-uppercase">Latest News</h2>
     </div>
 
@@ -20,7 +20,7 @@
             <div class="p-2 clearfix mb-4 ">
                 <p class="card-text pt-2">
                     @if (isset($new->image))
-                        <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/news_images/'.$new->image->news_image_id.'.'.$new->image->news_image_ext) }}" alt="News illustration image">
+                        <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('storage/images/news_images/'.$new->image->news_image_id.'.'.$new->image->news_image_ext) }}" alt="News illustration image">
                     @endif
                     {!! Helper::bbCode(nl2br($new->news_text)) !!}
                 </p>

@@ -1,6 +1,6 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <a class="float-right" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
+        <a class="float-end" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
         <h2 class="text-uppercase">Interviews</h2>
     </div>
     <div class="card-body p-2 mb-3">
@@ -31,14 +31,14 @@
                 <div class="clearfix">
                     @if ($interview->individual->text !== null && $interview->individual->text->file !== null)
                         <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}">
-                            <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}" alt="Picture of {{ $interview->individual->ind_name }}">
+                            <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}" alt="Picture of {{ $interview->individual->ind_name }}">
                         </a>
                     @else
-                        <img class="col-4 col-sm-3 float-left mt-1 mr-2 mb-1" src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
+                        <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
                     @endif
 
                     {!! Helper::bbCode($interview->texts->first()->interview_intro) !!}<br>
-                    <a class="d-block text-right mt-2" href="{{ route('interviews.show', ['interview' => $interview]) }}">
+                    <a class="d-block text-end mt-2" href="{{ route('interviews.show', ['interview' => $interview]) }}">
                         More <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>

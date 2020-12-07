@@ -9,7 +9,7 @@
             Or maybe you are curious and want to take a peak at what is still to come?
             Who are the people behind this project? Or maybe you feel like helping out?
             Check out this section.
-            <a class="d-block text-right" href="{{ route('about.index') }}">
+            <a class="d-block text-end" href="{{ route('about.index') }}">
                 More <i class="fas fa-chevron-right"></i>
             </a>
         </p>

@@ -30,7 +30,7 @@
                 </ul>
 
             </div>
-            <div class="col-5 col-sm-3 pl-2 text-center text-muted lightbox-gallery">
+            <div class="col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
                 @foreach ($review->screenshots as $screenshot)
                     <div class="bg-dark p-2">
                         <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->screenshot->file) }}" title="{{ $screenshot->comment->comment_text }}">

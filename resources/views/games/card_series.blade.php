@@ -6,7 +6,7 @@
         <div class="card-body p-2">
             <p class="card-text">
                 The <em>{{ $game->series->name }}</em> series contains:
-                <ul class="list-unstyled ml-2">
+                <ul class="list-unstyled ms-2">
                     @foreach ($game->series->games->sortBy('game_name') as $g)
                         <li>
                             @if ($g->game_id === $game->game_id)

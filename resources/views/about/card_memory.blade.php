@@ -14,7 +14,7 @@
         <p class="card-text p-2">
             Gone but not forgotten…
         </p>
-        <a class="d-block p-2 text-right" href="{{ route('about.andreas') }}">
+        <a class="d-block p-2 text-end" href="{{ route('about.andreas') }}">
             More <i class="fas fa-chevron-right"></i>
         </a>
     </div>

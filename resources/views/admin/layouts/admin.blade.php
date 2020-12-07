@@ -29,7 +29,7 @@
 
     @include('admin.layouts.navbar')
 
-    <div class="container-fluid pl-0">
+    <div class="container-fluid ps-0">
 
         <div class="admin-layout d-md-grid">
             <aside id="aside" class="collapse d-md-block bg-light p-2">

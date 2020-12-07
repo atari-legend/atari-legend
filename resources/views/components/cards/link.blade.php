@@ -17,7 +17,7 @@
             <div class="p-2">
                 <p class="card-text">{{ $website->description }}</p>
                 <p class="card-subtitle text-muted">{{ date('F j, Y', $website->website_date) }} by {{ Helper::user($website->user) }}</p>
-                <a class="d-block text-right" href="{{ $website->website_url }}">
+                <a class="d-block text-end" href="{{ $website->website_url }}">
                     More <i class="fas fa-chevron-right"></i>
                 </a>
             </div>

@@ -13,7 +13,7 @@
                 <p class="card-text ellipsis">
                     {!! Helper::bbCode($interview->texts->first()->interview_intro) !!}
                 </p>
-                <a class="d-block text-right" href="{{ route('interviews.show', ['interview' => $interview]) }}">
+                <a class="d-block text-end" href="{{ route('interviews.show', ['interview' => $interview]) }}">
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </div>

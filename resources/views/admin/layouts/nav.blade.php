@@ -1,12 +1,12 @@
 <nav>
-    <a class="d-block py-1 text-decoration-none pl-1 @activeroute('admin.home.index')" href="{{ route('admin.home.index') }}">
+    <a class="d-block py-1 text-decoration-none ps-1 @activeroute('admin.home.index')" href="{{ route('admin.home.index') }}">
         <i class="fas fa-home fa-fw"></i> Home
     </a>
     <div class="accordion">
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button @collapsedroute('admin.games.*') p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#games" aria-expanded="true" aria-controls="games">
-                    <i class="fas fa-gamepad fa-fw mr-1"></i> Games
+                <button class="accordion-button @collapsedroute('admin.games.*') p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#games" aria-expanded="true" aria-controls="games">
+                    <i class="fas fa-gamepad fa-fw me-1"></i> Games
                 </button>
             </h2>
             <div id="games" class="accordion-collapse collapse @showroute('admin.games.*') border-0">
@@ -28,8 +28,8 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#reviews" aria-expanded="false" aria-controls="reviews">
-                    <i class="fas fa-check-double fa-fw mr-1"></i> Reviews
+                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#reviews" aria-expanded="false" aria-controls="reviews">
+                    <i class="fas fa-check-double fa-fw me-1"></i> Reviews
                 </button>
             </h2>
             <div id="reviews" class="accordion-collapse collapse border-0">
@@ -45,8 +45,8 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#interviews" aria-expanded="false" aria-controls="interviews">
-                    <i class="fas fa-microphone fa-fw mr-1"></i> Interviews
+                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#interviews" aria-expanded="false" aria-controls="interviews">
+                    <i class="fas fa-microphone fa-fw me-1"></i> Interviews
                 </button>
             </h2>
             <div id="interviews" class="accordion-collapse collapse border-0">
@@ -61,8 +61,8 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#news" aria-expanded="false" aria-controls="news">
-                    <i class="far fa-newspaper fa-fw mr-1"></i> News
+                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#news" aria-expanded="false" aria-controls="news">
+                    <i class="far fa-newspaper fa-fw me-1"></i> News
                 </button>
             </h2>
             <div id="news" class="accordion-collapse collapse border-0">
@@ -79,8 +79,8 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#links" aria-expanded="false" aria-controls="links">
-                    <i class="fas fa-link fa-fw mr-1"></i> Links
+                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#links" aria-expanded="false" aria-controls="links">
+                    <i class="fas fa-link fa-fw me-1"></i> Links
                 </button>
             </h2>
             <div id="links" class="accordion-collapse collapse border-0">
@@ -96,8 +96,8 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#articles" aria-expanded="false" aria-controls="articles">
-                    <i class="far fa-file-alt fa-fw mr-1"></i> Articles
+                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#articles" aria-expanded="false" aria-controls="articles">
+                    <i class="far fa-file-alt fa-fw me-1"></i> Articles
                 </button>
             </h2>
             <div id="links" class="accordion-collapse collapse border-0">
@@ -113,8 +113,8 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#users" aria-expanded="false" aria-controls="users">
-                    <i class="fas fa-user-friends fa-fw mr-1"></i> Users
+                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#users" aria-expanded="false" aria-controls="users">
+                    <i class="fas fa-user-friends fa-fw me-1"></i> Users
                 </button>
             </h2>
             <div id="users" class="accordion-collapse collapse border-0">
@@ -129,8 +129,8 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-toggle="collapse" data-target="#other" aria-expanded="false" aria-controls="other">
-                    <i class="fas fa-tools fa-fw mr-1"></i> Other
+                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#other" aria-expanded="false" aria-controls="other">
+                    <i class="fas fa-tools fa-fw me-1"></i> Other
                 </button>
             </h2>
             <div id="other" class="accordion-collapse collapse border-0">

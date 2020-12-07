@@ -13,7 +13,7 @@
                 <p class="card-text ellipsis">
                     {!! Helper::bbCode($article->texts->first()->article_intro) !!}
                 </p>
-                <a class="d-block text-right" href="{{ route('articles.show', ['article' => $article]) }}">
+                <a class="d-block text-end" href="{{ route('articles.show', ['article' => $article]) }}">
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </div>

@@ -7,7 +7,7 @@
 .card-screenshots, .card-boxscans {
     .carousel-thumbnails {
 
-        &[data-carousel="carousel-boxscans"] {
+        &[data-bs-carousel="carousel-boxscans"] {
             img {
                 width: 5rem;
             }
