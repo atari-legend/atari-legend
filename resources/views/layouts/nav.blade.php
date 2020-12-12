@@ -53,7 +53,7 @@
                         {{ Auth::user()->userid }}
                     </a>
 
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="user-menu">
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="user-menu">
                         <li><a class="dropdown-item" href="{{ route('auth.profile') }}">Profile</a></li>
                         @contributor
                             <li>
