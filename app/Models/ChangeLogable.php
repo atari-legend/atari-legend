@@ -8,15 +8,18 @@ namespace App\Models;
  */
 interface ChangeLogable
 {
-    public function getSection(): string;
 
-    public function getSectionId(): int;
+    /** List of keys the changelog data must have */
+    const CHANGELOG_KEYS = [
+        'section', 'section_id', 'section_name',
+        'sub_section', 'sub_section_id', 'sub_section_name'
+    ];
 
-    public function getSectionName(): string;
+    /**
+     * Get data to populate the changelog
+     *
+     * @return array Changelog data
+     */
+    public function getChangelogData(): array;
 
-    public function getSubSection(): string;
-
-    public function getSubSectionId(): int;
-
-    public function getSubSectionName(): string;
 }

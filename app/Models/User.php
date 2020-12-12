@@ -68,34 +68,16 @@ class User extends Authenticatable implements MustVerifyEmail, ChangeLogable
         }
     }
 
-    public function getSection(): string
+    public function getChangelogData(): array
     {
-        return 'Users';
-    }
-
-    public function getSectionId(): int
-    {
-        return $this->getKey();
-    }
-
-    public function getSectionName(): string
-    {
-        return  $this->userid;
-    }
-
-    public function getSubSection(): string
-    {
-        return 'User';
-    }
-
-    public function getSubSectionId(): int
-    {
-        return $this->getSectionId();
-    }
-
-    public function getSubSectionName(): string
-    {
-        return $this->getSectionName();
+        return [
+            'section'          => 'Users',
+            'section_id'       => $this->getKey(),
+            'section_name'     => $this->userid,
+            'sub_section'      => 'User',
+            'sub_section_id'   => $this->getKey(),
+            'sub_section_name' => $this->userid,
+        ];
     }
 
     public function reviews()

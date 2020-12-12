@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Changelog;
 use App\Models\ChangeLogable;
 use App\Models\User;
+use ErrorException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +17,7 @@ use Illuminate\Support\ServiceProvider;
  */
 class ChangeLogServiceProvider extends ServiceProvider
 {
+
     /**
      * Register services.
      *
@@ -57,17 +59,24 @@ class ChangeLogServiceProvider extends ServiceProvider
                 return $model instanceof ChangeLogable;
             })
             ->each(function ($model) use ($action) {
-                $log = Changelog::create([
-                    'section'          => $model->getSection(),
-                    'section_id'       => $model->getSectionId(),
-                    'section_name'     => $model->getSectionName(),
-                    'sub_section'      => $model->getSubSection(),
-                    'sub_section_id'   => $model->getSubSectionId(),
-                    'sub_section_name' => $model->getSubSectionName(),
-                    'user_id'          => Auth::user()->user_id ?? -1,   // No user available during registration
-                    'action'           => $action,
-                    'timestamp'        => time(),
-                ]);
+                $changelogData = $model->getChangelogData();
+
+                // Check if all keys are present in the data
+                $missingKeys = $this->getMissingKeys($changelogData);
+                if (count($missingKeys) > 0) {
+                    throw new ErrorException('Missing changelog key(s) \''
+                        . join(', ', $missingKeys)
+                        . '\' in ' . get_class($model)
+                        . '. Check its getChangelogData() function');
+                }
+
+                $log = Changelog::create(
+                    array_merge($changelogData, [
+                        'user_id'          => Auth::user()->user_id ?? -1,   // No user available during registration
+                        'action'           => $action,
+                        'timestamp'        => time(),
+                    ])
+                );
 
                 // Special case for user registration: There's no authenticated user
                 // yet, so assign the ID of the new user being created
@@ -78,5 +87,22 @@ class ChangeLogServiceProvider extends ServiceProvider
                 Log::debug("Saving changelog: {$log}");
                 $log->save();
             });
+    }
+
+    /**
+     * Find missing keys in the changelog data
+     *
+     * @param array $data Changelog data
+     *
+     * @return array Missing keys, or an empty array if no keys are missing
+     */
+    private function getMissingKeys(array $data): array
+    {
+        $keys = array_keys($data);
+        return collect(ChangeLogable::CHANGELOG_KEYS)
+            ->reject(function ($item) use ($keys) {
+                return in_array($item, $keys);
+            })
+            ->all();
     }
 }
