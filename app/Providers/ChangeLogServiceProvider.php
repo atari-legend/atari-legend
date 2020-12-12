@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Changelog;
 use App\Models\ChangeLogable;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
@@ -67,6 +68,13 @@ class ChangeLogServiceProvider extends ServiceProvider
                     'action'           => $action,
                     'timestamp'        => time(),
                 ]);
+
+                // Special case for user registration: There's no authenticated user
+                // yet, so assign the ID of the new user being created
+                if ($model instanceof User && !Auth::check()) {
+                    $log->user_id = $model->user_id;
+                }
+
                 Log::debug("Saving changelog: {$log}");
                 $log->save();
             });
