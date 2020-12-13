@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Interview extends Model
@@ -9,6 +10,11 @@ class Interview extends Model
     protected $table = 'interview_main';
     protected $primaryKey = 'interview_id';
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new NonDraftScope);
+    }
 
     public function user()
     {

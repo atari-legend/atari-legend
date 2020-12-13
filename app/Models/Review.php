@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
@@ -12,6 +13,11 @@ class Review extends Model
     protected $table = 'review_main';
     protected $primaryKey = 'review_id';
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new NonDraftScope);
+    }
 
     public function user()
     {

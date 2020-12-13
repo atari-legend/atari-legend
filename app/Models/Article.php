@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
@@ -9,6 +10,11 @@ class Article extends Model
     protected $table = 'article_main';
     protected $primaryKey = 'article_id';
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new NonDraftScope);
+    }
 
     public function user()
     {

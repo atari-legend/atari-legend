@@ -20,8 +20,12 @@ class Helper
      *
      * @return string Extracted content, or the input string if no content was extracted
      */
-    public static function extractTag(string $string, string $tag)
+    public static function extractTag(?string $string, string $tag)
     {
+        if ($string === null) {
+            return null;
+        }
+
         if (preg_match("@\\[$tag(=[^\\]]*)?\\](.*?)\\[/$tag\\]@s", $string, $matches, )) {
             return $matches[2];
         } else {

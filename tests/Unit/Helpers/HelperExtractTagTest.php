@@ -7,6 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 class HelperExtractTagTest extends TestCase
 {
+
+    public function testNull()
+    {
+        $this->assertNull(Helper::extractTag(null, 'tag'));
+    }
+
     public function testExtractNoTag()
     {
         $this->assertEquals(
