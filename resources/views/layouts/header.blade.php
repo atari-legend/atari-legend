@@ -1,6 +1,6 @@
 <header class="mb-3 mb-sm-2">
     <!-- Center the logo on small screens, align left on large ones -->
-    <div class="header-inner mx-auto text-center text-lg-end">
+    <div class="header-inner mx-auto text-center text-lg-start">
         <!-- Hide full size banner on small screens -->
         <img class="d-none d-sm-inline" src="{{ asset('images/'.request()->attributes->get('logos')->random()) }}" alt="Header banner">
         <!-- Show small banner on small screens -->
