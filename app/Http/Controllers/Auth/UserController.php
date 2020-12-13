@@ -35,7 +35,7 @@ class UserController extends Controller
             $avatar = $request->file('avatar');
             $avatar->storeAs('images/user_avatars/', $user->user_id.'.'.$avatar->extension(), 'public');
             $user->avatar_ext = $avatar->extension();
-        } elseif ($request->has('avatar-removed')) {
+        } elseif ($request->filled('avatar-removed')) {
             Storage::disk('public')->delete('images/user_avatars/'.$user->user_id.'.'.$user->avatar_ext);
             $user->avatar_ext = null;
         }
@@ -49,6 +49,10 @@ class UserController extends Controller
             'alert-success',
             'Your profile has been updated'
         );
+
+        // Refresh current user otherwise the changes will "lag"  one
+        // request behind
+        Auth::setUser($user);
 
         return view('auth.profile')
             ->with(['user' => $user]);
