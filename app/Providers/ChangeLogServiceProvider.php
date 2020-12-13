@@ -65,9 +65,9 @@ class ChangeLogServiceProvider extends ServiceProvider
                 $missingKeys = $this->getMissingKeys($changelogData);
                 if (count($missingKeys) > 0) {
                     throw new ErrorException('Missing changelog key(s) \''
-                        . join(', ', $missingKeys)
-                        . '\' in ' . get_class($model)
-                        . '. Check its getChangelogData() function');
+                        .join(', ', $missingKeys)
+                        .'\' in ' . get_class($model)
+                        .'. Check its getChangelogData() function');
                 }
 
                 $log = Changelog::create(
@@ -90,7 +90,7 @@ class ChangeLogServiceProvider extends ServiceProvider
     }
 
     /**
-     * Find missing keys in the changelog data
+     * Find missing keys in the changelog data.
      *
      * @param array $data Changelog data
      *

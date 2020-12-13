@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
 /**
- * Scope to select non-draft interviews, articles, reviews
+ * Scope to select non-draft interviews, articles, reviews.
  */
 class NonDraftScope implements Scope
 {

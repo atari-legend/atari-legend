@@ -12,11 +12,11 @@ interface ChangeLogable
     /** List of keys the changelog data must have */
     const CHANGELOG_KEYS = [
         'section', 'section_id', 'section_name',
-        'sub_section', 'sub_section_id', 'sub_section_name'
+        'sub_section', 'sub_section_id', 'sub_section_name',
     ];
 
     /**
-     * Get data to populate the changelog
+     * Get data to populate the changelog.
      *
      * @return array Changelog data
      */

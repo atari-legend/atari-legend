@@ -13,7 +13,7 @@ class Interview extends Model
 
     protected static function booted()
     {
-        static::addGlobalScope(new NonDraftScope);
+        static::addGlobalScope(new NonDraftScope());
     }
 
     public function user()
