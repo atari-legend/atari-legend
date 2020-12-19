@@ -17,7 +17,6 @@ use Illuminate\Support\ServiceProvider;
  */
 class ChangeLogServiceProvider extends ServiceProvider
 {
-
     /**
      * Register services.
      *
@@ -66,7 +65,7 @@ class ChangeLogServiceProvider extends ServiceProvider
                 if (count($missingKeys) > 0) {
                     throw new ErrorException('Missing changelog key(s) \''
                         .join(', ', $missingKeys)
-                        .'\' in ' . get_class($model)
+                        .'\' in '.get_class($model)
                         .'. Check its getChangelogData() function');
                 }
 
@@ -99,6 +98,7 @@ class ChangeLogServiceProvider extends ServiceProvider
     private function getMissingKeys(array $data): array
     {
         $keys = array_keys($data);
+
         return collect(ChangeLogable::CHANGELOG_KEYS)
             ->reject(function ($item) use ($keys) {
                 return in_array($item, $keys);

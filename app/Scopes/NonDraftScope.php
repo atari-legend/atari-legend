@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Scope;
  */
 class NonDraftScope implements Scope
 {
-
     public function apply(Builder $builder, Model $model)
     {
         $builder->where('draft', false);

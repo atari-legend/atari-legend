@@ -8,7 +8,6 @@ namespace App\Models;
  */
 interface ChangeLogable
 {
-
     /** List of keys the changelog data must have */
     const CHANGELOG_KEYS = [
         'section', 'section_id', 'section_name',
@@ -21,5 +20,4 @@ interface ChangeLogable
      * @return array Changelog data
      */
     public function getChangelogData(): array;
-
 }
