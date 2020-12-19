@@ -6,15 +6,16 @@ use Closure;
 use Illuminate\Http\Request;
 
 /**
- * Output security-related response headers
+ * Output security-related response headers.
  */
 class SecurityHeaders
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
