@@ -85,6 +85,15 @@
                         <a href="{{ route('games.show', ['game' => $game]) }}">
                             <img class="w-100 mb-2 bg-dark" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->random()->file) }}" alt="Screenshot of {{ $game->game_name }}">
                         </a>
+                    @else
+                        <div class="text-center position-relative">
+                            <div class="position-absolute text-center w-100 text-muted mt-3">
+                                n/a
+                            </div>
+                            <a href="{{ route('games.show', ['game' => $game]) }}">
+                                <img class="w-100 mb-2" src="{{ asset('images/32x20.png') }}">
+                            </a>
+                        </div>
                     @endif
 
                     <a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->game_name }}</a><br>
