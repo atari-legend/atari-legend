@@ -59,9 +59,3 @@
     AddOutputFilterByType DEFLATE application/json
     AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>
-
-<IfModule mod_headers.c>
-    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
-    Header always set X-Frame-Options SAMEORIGIN
-    Header always set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' data:"
-</IfModule>
