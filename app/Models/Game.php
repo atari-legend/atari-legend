@@ -4,11 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Game extends Model
+class Game extends Model implements ChangeLogable
 {
     protected $table = 'game';
     protected $primaryKey = 'game_id';
     public $timestamps = false;
+
+    public function getChangelogData(): array
+    {
+        return [
+            'section'          => 'Games',
+            'section_id'       => $this->getKey(),
+            'section_name'     => $this->game_name,
+            'sub_section'      => 'Game',
+            'sub_section_id'   => $this->getKey(),
+            'sub_section_name' => $this->game_name,
+        ];
+    }
 
     public function screenshots()
     {

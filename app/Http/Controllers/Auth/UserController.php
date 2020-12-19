@@ -23,7 +23,7 @@ class UserController extends Controller
         $request->validate(UserHelper::validationRules(Auth::user()));
 
         $user = User::find(Auth::user()->user_id);
-        $user->update([
+        $user->fill([
             'email'        => $request->email,
             'user_website' => $request->website,
             'user_fb'      => $request->facebook,
@@ -74,7 +74,7 @@ class UserController extends Controller
         $salt = UserHelper::salt();
         $hashedPassword = UserHelper::hashPassword($request->password, $salt);
         $user = User::find(Auth::user()->user_id);
-        $user->update([
+        $user->fill([
             'sha512_password' => $hashedPassword,
             'salt'            => $salt,
         ]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Games;
 use App\Http\Controllers\Controller;
 use App\Models\Game;
 use App\Models\Genre;
+use Illuminate\Http\Request;
 
 class IssuesController extends Controller
 {
@@ -32,8 +33,11 @@ class IssuesController extends Controller
             ]);
     }
 
-    public function setGenres()
+    public function setGenres(Request $request, Game $game)
     {
+        $game->genres()->attach($request->genres);
+        $game->save();
+
         return redirect()->route('admin.games.issues');
     }
 }

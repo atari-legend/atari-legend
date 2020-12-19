@@ -34,14 +34,11 @@ class ChangeLogServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Event::listen(['eloquent.created: *'], function ($event, $data) {
-            $this->processModels('Insert', $data);
-        });
-        Event::listen(['eloquent.updated: *'], function ($event, $data) {
-            $this->processModels('Update', $data);
+        Event::listen(['eloquent.saved: *'], function ($event, $data) {
+            $this->processModels($event, $data);
         });
         Event::listen(['eloquent.deleted: *'], function ($event, $data) {
-            $this->processModels('Delete', $data);
+            $this->processModels($event, $data);
         });
     }
 
@@ -51,13 +48,45 @@ class ChangeLogServiceProvider extends ServiceProvider
      * @param string $action Changelog action
      * @param array  $models List of models to process
      */
-    private function processModels($action, $models)
+    private function processModels($event, $models)
     {
+        $eventName = preg_replace('/.+\.(.+): .*/', '\1', $event);
+
+        Log::debug("Event {$event}");
+
         collect($models)
             ->filter(function ($model) {
                 return $model instanceof ChangeLogable;
             })
-            ->each(function ($model) use ($action) {
+            ->reject(function ($model) {
+                // Special case for the User model. When logging out the remember-me token
+                // is updated for Laravel. We must ignore this event as it should not show
+                // inthe changelog
+                if ($model instanceof User) {
+                    // Compare original remember-me token and new value
+                    // If they differ the token was updated and we should ignore the event
+                    if ($model->getOriginal($model->getRememberTokenName()) !== $model->getRememberToken()) {
+                        return true;
+                    }
+                }
+
+                return false;
+            })
+            ->each(function ($model) use ($eventName) {
+
+                $action = '';
+                if ($eventName === 'deleted') {
+                    $action = 'Delete';
+                } else if ($eventName === 'saved') {
+                    if ($model->getOriginal($model->getKeyName()) === null) {
+                        $action = 'Insert';
+                    } else {
+                        $action = 'Update';
+                    }
+                } else {
+                    throw new ErrorException('Unsupported event: '.$eventName);
+                }
+
                 $changelogData = $model->getChangelogData();
 
                 // Check if all keys are present in the data

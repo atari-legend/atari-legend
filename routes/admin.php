@@ -11,7 +11,7 @@ Route::middleware('verified')->group(function () {
                 Route::get('/', [AdminHomeController::class, 'index'])->name('home.index');
 
                 Route::get('/games/issues', [IssuesController::class, 'index'])->name('games.issues');
-                Route::post('/games/issues/genres', [IssuesController::class, 'setGenres'])->name('games.issues.genres');
+                Route::post('/games/issues/genres/{game}', [IssuesController::class, 'setGenres'])->name('games.issues.genres');
             });
         });
     });
