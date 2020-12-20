@@ -1,0 +1,141 @@
+<?php
+
+use Carbon\Carbon;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+class CreateNewMenuStructure extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('menu_sets', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name', 64);
+        });
+        DB::statement("ALTER TABLE `menu_sets` comment 'Sets of menus'");
+
+        Schema::create('crew_menu_sets', function (Blueprint $table) {
+            $table->integer('crew_id');
+            $table->foreignId('menu_set_id')->constrained();
+            $table->primary('crew_id', 'menu_set_id');
+
+            $table->foreign('crew_id')->references('crew_id')->on('crew');
+        });
+        DB::statement("ALTER TABLE `crew_menu_sets` comment 'Pivot between menu sets and crews'");
+
+        Schema::create('menus', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->integer('number')->nullable()->comment('Sequence number within the menu set');
+            $table->date('date')->nullable()->comment('Release date');
+            $table->integer('version')->nullable();
+            $table->foreignId('menu_set_id')->constrained();
+        });
+        DB::statement("ALTER TABLE `menus` comment 'An individual menu'");
+
+        Schema::create('menu_disks', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('menu_id')->constrained();
+            $table->integer('number')->nullable()->comment('Disk number within the menu');
+            $table->string('part', 16)->nullable()->comment('Arbitrary part identifier (e.g. A, B, C, or Part I, Part II, …)');
+            $table->text('scrolltext')->nullable()->comment('Content of the scrolltext');
+            $table->string('notes', 512)->nullable();
+        });
+        DB::statement("ALTER TABLE `menu_disks` comment 'A single disk part of a menu'");
+
+        Schema::create('menu_disk_conditions', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name', 64);
+        });
+        DB::statement("ALTER TABLE `menu_disk_conditions` comment 'Condition of a menu disk dump'");
+        DB::table('menu_disk_conditions')->insert([
+            ['name' => 'Missing', 'created_at' => Carbon::now()],
+            ['name' => 'Intro only or partially damaged', 'created_at' => Carbon::now()],
+            ['name' => 'Slightly damaged', 'created_at' => Carbon::now()],
+            ['name' => 'Intact', 'created_at' => Carbon::now()],
+        ]);
+
+        Schema::create('menu_disk_dumps', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->enum('format', ['STX', 'MSA', 'RAW', 'SCP', 'ST']);
+            $table->string('sha512', 128);
+            $table->date('date')->comment('Date the dump was added');
+            $table->integer('size')->comment('File size in bytes');
+            $table->string('notes', 512)->nullable();
+            $table->integer('user_id');
+            $table->foreignId('menu_disk_id')->constrained();
+            $table->integer('donated_by_individual_id')->comment('Who donated this dump');
+            $table->foreignId('menu_disk_condition_id')->nullable()->constrained();
+
+            $table->foreign('user_id')->references('user_id')->on('users');
+            $table->foreign('donated_by_individual_id')->references('ind_id')->on('individuals');
+        });
+        DB::statement("ALTER TABLE `menu_disk_dumps` comment 'Binary dump of a menu disk'");
+
+        Schema::create('menu_disk_screenshots', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('menu_disk_id')->constrained();
+            $table->string('imgext', 4);
+        });
+        DB::statement("ALTER TABLE `menu_disk_screenshots` comment 'Screenshots of a menu disk'");
+
+        Schema::create('menu_disk_content_types', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name', 64);
+        });
+        DB::statement("ALTER TABLE `menu_disk_content_types` comment 'Type of software part of a menu disk'");
+        DB::table('menu_disk_content_types')->insert([
+            ['name' => 'Game', 'created_at' => Carbon::now()],
+            ['name' => 'Demo', 'created_at' => Carbon::now()],
+            ['name' => 'Utility', 'created_at' => Carbon::now()],
+            ['name' => 'Music', 'created_at' => Carbon::now()],
+            ['name' => 'Picture', 'created_at' => Carbon::now()],
+            ['name' => 'Documentation', 'created_at' => Carbon::now()],
+            ['name' => 'E-zine', 'created_at' => Carbon::now()],
+            ['name' => 'Source code', 'created_at' => Carbon::now()],
+        ]);
+
+        Schema::create('menu_disk_contents', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('menu_disk_id')->constrained();
+            $table->string('name', 64);
+            $table->foreignId('menu_disk_content_type_id')->constrained();
+            $table->integer('game_id');
+            $table->integer('demozoo_id')->comment('ID of the DemoZoo production');
+            $table->string('notes', 512);
+        });
+        DB::statement("ALTER TABLE `menu_disk_contents` comment 'A software present on a menu disk'");
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('menu_disk_contents');
+        Schema::dropIfExists('menu_disk_content_types');
+        Schema::dropIfExists('menu_disk_screenshots');
+        Schema::dropIfExists('menu_disk_dumps');
+        Schema::dropIfExists('menu_disk_conditions');
+        Schema::dropIfExists('menu_disks');
+        Schema::dropIfExists('menus');
+        Schema::dropIfExists('crew_menu_sets');
+        Schema::dropIfExists('menu_sets');
+    }
+}
