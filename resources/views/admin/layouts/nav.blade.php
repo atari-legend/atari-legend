@@ -12,15 +12,15 @@
             <div id="games" class="accordion-collapse collapse @showroute('admin.games.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Add</a></li>
-                        <li><a href="#">Edit</a></li>
+                        <li><a>Add</a></li>
+                        <li><a>Edit</a></li>
                         <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
-                        <li><a href="#">Configuration</a></li>
-                        <li><a href="#">Series</a></li>
-                        <li><a href="#">Submissions</a></li>
-                        <li><a href="#">Individuals</a></li>
-                        <li><a href="#">Companies</a></li>
-                        <li><a href="#">Company Logos</a></li>
+                        <li><a>Configuration</a></li>
+                        <li><a>Series</a></li>
+                        <li><a>Submissions</a></li>
+                        <li><a>Individuals</a></li>
+                        <li><a>Companies</a></li>
+                        <li><a>Company Logos</a></li>
                     </ul>
                 </div>
             </div>
@@ -35,9 +35,9 @@
             <div id="reviews" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Add</a></li>
-                        <li><a href="#">Edit</a></li>
-                        <li><a href="#">Submissions</a></li>
+                        <li><a>Add</a></li>
+                        <li><a>Edit</a></li>
+                        <li><a>Submissions</a></li>
                     </ul>
                 </div>
             </div>
@@ -52,8 +52,8 @@
             <div id="interviews" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Add</a></li>
-                        <li><a href="#">Edit</a></li>
+                        <li><a>Add</a></li>
+                        <li><a>Edit</a></li>
                     </ul>
                 </div>
             </div>
@@ -68,10 +68,10 @@
             <div id="news" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Add</a></li>
-                        <li><a href="#">Edit</a></li>
-                        <li><a href="#">Approve</a></li>
-                        <li><a href="#">Images</a></li>
+                        <li><a>Add</a></li>
+                        <li><a>Edit</a></li>
+                        <li><a>Approve</a></li>
+                        <li><a>Images</a></li>
                     </ul>
                 </div>
             </div>
@@ -86,9 +86,9 @@
             <div id="links" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Add</a></li>
-                        <li><a href="#">Edit</a></li>
-                        <li><a href="#">Categories</a></li>
+                        <li><a>Add</a></li>
+                        <li><a>Edit</a></li>
+                        <li><a>Categories</a></li>
                     </ul>
                 </div>
             </div>
@@ -103,9 +103,27 @@
             <div id="links" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Add</a></li>
-                        <li><a href="#">Edit</a></li>
-                        <li><a href="#">Types</a></li>
+                        <li><a>Add</a></li>
+                        <li><a>Edit</a></li>
+                        <li><a>Types</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button @collapsedroute('admin.menus.*') p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#menus" aria-expanded="false" aria-controls="menus">
+                    <i class="fas fa-skull-crossbones fa-fw me-1"></i> Menus
+                </button>
+            </h2>
+            <div id="menus" class="accordion-collapse collapse @showroute('admin.menus.*') border-0">
+                <div class="accordion-body">
+                    <ul class="list-unstyled mb-2">
+                        <li><a>Add</a></li>
+                        <li><a>Edit</a></li>
+                        <li><a class="@activeroute('admin.menus.conditions.*')" href="{{ route('admin.menus.conditions.index') }}">Conditions</a></li>
+                        <li><a class="@activeroute('admin.menus.content-types.*')" href="{{ route('admin.menus.content-types.index') }}">Content Types</a></li>
                     </ul>
                 </div>
             </div>
@@ -120,8 +138,8 @@
             <div id="users" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Edit</a></li>
-                        <li><a href="#">Comments</a></li>
+                        <li><a>Edit</a></li>
+                        <li><a>Comments</a></li>
                     </ul>
                 </div>
             </div>
@@ -136,11 +154,11 @@
             <div id="other" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a href="#">Statistics</a></li>
-                        <li><a href="#">Changelog</a></li>
-                        <li><a href="#">Did You Know</a></li>
-                        <li><a href="#">Trivia Quotes</a></li>
-                        <li><a href="#">Spotlight</a></li>
+                        <li><a>Statistics</a></li>
+                        <li><a>Changelog</a></li>
+                        <li><a>Did You Know</a></li>
+                        <li><a>Trivia Quotes</a></li>
+                        <li><a>Spotlight</a></li>
                     </ul>
                 </div>
             </div>

@@ -59,10 +59,10 @@ class CreateNewMenuStructure extends Migration
         });
         DB::statement("ALTER TABLE `menu_disk_conditions` comment 'Condition of a menu disk dump'");
         DB::table('menu_disk_conditions')->insert([
-            ['name' => 'Missing', 'created_at' => Carbon::now()],
-            ['name' => 'Intro only or partially damaged', 'created_at' => Carbon::now()],
-            ['name' => 'Slightly damaged', 'created_at' => Carbon::now()],
-            ['name' => 'Intact', 'created_at' => Carbon::now()],
+            ['name' => 'Missing', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Intro only or partially damaged', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Slightly damaged', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Intact', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
         Schema::create('menu_disk_dumps', function (Blueprint $table) {
@@ -98,14 +98,14 @@ class CreateNewMenuStructure extends Migration
         });
         DB::statement("ALTER TABLE `menu_disk_content_types` comment 'Type of software part of a menu disk'");
         DB::table('menu_disk_content_types')->insert([
-            ['name' => 'Game', 'created_at' => Carbon::now()],
-            ['name' => 'Demo', 'created_at' => Carbon::now()],
-            ['name' => 'Utility', 'created_at' => Carbon::now()],
-            ['name' => 'Music', 'created_at' => Carbon::now()],
-            ['name' => 'Picture', 'created_at' => Carbon::now()],
-            ['name' => 'Documentation', 'created_at' => Carbon::now()],
-            ['name' => 'E-zine', 'created_at' => Carbon::now()],
-            ['name' => 'Source code', 'created_at' => Carbon::now()],
+            ['name' => 'Game', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Demo', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Utility', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Music', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Picture', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Documentation', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'E-zine', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Source code', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
         Schema::create('menu_disk_contents', function (Blueprint $table) {

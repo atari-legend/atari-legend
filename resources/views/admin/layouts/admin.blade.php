@@ -17,7 +17,7 @@
 
     @include('admin.layouts.navbar')
 
-    <div class="container-fluid ps-0">
+    <div class="container-fluid">
 
         <div class="admin-layout d-md-grid">
             <aside id="aside" class="collapse d-md-block bg-light p-2">
@@ -26,7 +26,7 @@
                 @include('admin.layouts.nav')
             </aside>
             <main class="pt-3">
-                @yield('breadcrumbs')
+                <x-admin.breadcrumbs :crumbs="$breadcrumbs ?? []" />
                 <hr>
                 @yield('content')
             </main>

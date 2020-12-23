@@ -8,6 +8,7 @@ use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use App\View\Components\Admin\Crumb;
 
 class IssuesController extends Controller
 {
@@ -28,6 +29,10 @@ class IssuesController extends Controller
 
         return view('admin.games.issues.index')
             ->with([
+                'breadcrumbs'            => [
+                    new Crumb('#', 'Games'),
+                    new Crumb(route('admin.games.issues'), 'Issues'),
+                ],
                 'gamesWithoutRelease'    => $gamesWithoutRelease,
                 'gameWithoutGenre'       => $gameWithoutGenre,
                 'gamesWithoutScreenshot' => $gamesWithoutScreenshot,

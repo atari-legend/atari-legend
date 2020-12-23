@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
+use App\View\Components\Admin\Crumb;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -24,6 +25,9 @@ class HomeController extends Controller
 
         return view('admin.home.index')
             ->with([
+                'breadcrumbs'       => [
+                    new Crumb(route('admin.home.index'), 'Home'),
+                ],
                 'changes'          => $changes,
                 'gamesCount'       => $gamesCount,
                 'releasesCount'    => $releasesCount,

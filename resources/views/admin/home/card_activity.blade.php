@@ -1,6 +1,6 @@
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title">Your recent activity</h2>
+        <h2 class="card-title fs-4">Your recent activity</h2>
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
