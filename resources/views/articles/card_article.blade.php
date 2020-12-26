@@ -23,10 +23,12 @@
             <div class="col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
                 @foreach ($article->screenshots as $screenshot)
                     <div class="bg-dark p-2">
-                        <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" title="{{ $screenshot->comment->comment_text }}">
-                            <img class="w-100 " src="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" alt="{{ $screenshot->comment->comment_text }}">
+                        <a class="lightbox-link" href="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" title="@isset($screenshot->comment) {{ $screenshot->comment->comment_text }} @endif">
+                            <img class="w-100 " src="{{ asset('storage/images/article_screenshots/'.$screenshot->screenshot->file) }}" alt="@isset($screenshot->comment) {{ $screenshot->comment->comment_text }} @endif">
                         </a>
-                        <p class="pb-5 mb-0">{{ $screenshot->comment->comment_text }}</p>
+                        @if (isset($screenshot->comment))
+                            <p class="pb-5 mb-0">{{ $screenshot->comment->comment_text }}</p>
+                        @endif
                     </div>
                 @endforeach
             </div>
