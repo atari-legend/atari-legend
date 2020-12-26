@@ -23,15 +23,15 @@
         }
     </script>
 
-    @if (env('GOOGLE_ANALYTICS_ID'))
+    @if (config('al.analytics.id'))
         <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="//www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_ID') }}"></script>
+        <script async src="//www.googletagmanager.com/gtag/js?id={{ config('al.analytics.id') }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', '{{ env('GOOGLE_ANALYTICS_ID') }}');
+            gtag('config', '{{ config('al.analytics.id') }}');
         </script>
     @endif
 
