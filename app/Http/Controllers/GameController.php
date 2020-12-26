@@ -66,10 +66,10 @@ class GameController extends Controller
         // Similar games, only the ones with screenshots
         $similar = null;
         $game->similarGames
-            ->filter(function($similar) {
+            ->filter(function ($similar) {
                 return $similar->screenshots->isNotEmpty();
             })
-            ->whenNotEmpty(function ($collection) use(&$similar) {
+            ->whenNotEmpty(function ($collection) use (&$similar) {
                 $similar = $collection->random();
             });
 

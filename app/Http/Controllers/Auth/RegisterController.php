@@ -91,8 +91,9 @@ class RegisterController extends Controller
     /**
      * The user has been registered.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
+     * @param \Illuminate\Http\Request $request
+     * @param mixed                    $user
+     *
      * @return mixed
      */
     protected function registered(Request $request, $user)
@@ -107,5 +108,4 @@ class RegisterController extends Controller
             'sub_section_name' => $user->userid,
         ]);
     }
-
 }

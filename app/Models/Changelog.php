@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Changelog extends Model
 {
-
     const INSERT = 'Insert';
     const UPDATE = 'Update';
     const DELETE = 'Delete';

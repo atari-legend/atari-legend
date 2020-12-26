@@ -96,7 +96,8 @@ class UserController extends Controller
             ->with(['user' => $user]);
     }
 
-    public function insertChangelog($user) {
+    public function insertChangelog($user)
+    {
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Users',
