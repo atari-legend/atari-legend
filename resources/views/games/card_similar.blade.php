@@ -1,7 +1,4 @@
-@if ($game->similarGames->isNotEmpty())
-    @php
-        $similar = $game->similarGames->random()
-    @endphp
+@if ($similar)
     <div class="card bg-dark mb-4">
         <div class="card-header text-center">
             <h2 class="text-uppercase">Similar Game</h2>

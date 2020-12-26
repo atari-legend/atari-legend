@@ -61,12 +61,20 @@ class GameController extends Controller
             return $review->review_edit !== Review::REVIEW_PUBLISHED;
         });
 
+        // Similar games, only the ones with screenshots
+        $similar = $game->similarGames
+            ->filter(function($similar) {
+                return $similar->screenshots->isNotEmpty();
+            })
+            ->random();
+
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
             'boxscans'          => $releaseBoxscans->merge($gameBoxscans),
             'interviews'        => $interviews,
             'reviews'           => $reviews,
+            'similar'           => $similar,
         ]);
     }
 
