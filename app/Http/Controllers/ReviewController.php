@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ChangelogHelper;
+use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
@@ -115,6 +117,16 @@ class ReviewController extends Controller
             }
         }
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Reviews',
+            'section_id'       => $game->getKey(),
+            'section_name'     => $game->game_name,
+            'sub_section'      => 'Submission',
+            'sub_section_id'   => $game->getKey(),
+            'sub_section_name' => $game->game_name,
+        ]);
+
         $request->session()->flash('alert-title', 'Review submitted');
         $request->session()->flash(
             'alert-success',
@@ -132,6 +144,16 @@ class ReviewController extends Controller
 
         $request->user()->comments()->save($comment);
         $review->comments()->save($comment);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Reviews',
+            'section_id'       => $review->getKey(),
+            'section_name'     => $review->games->first()->game_name,
+            'sub_section'      => 'Comment',
+            'sub_section_id'   => $comment->getKey(),
+            'sub_section_name' => $review->games->first()->game_name,
+        ]);
 
         return back();
     }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail, ChangeLogable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
     use Notifiable;
@@ -66,18 +66,6 @@ class User extends Authenticatable implements MustVerifyEmail, ChangeLogable
         } else {
             return null;
         }
-    }
-
-    public function getChangelogData(): array
-    {
-        return [
-            'section'          => 'Users',
-            'section_id'       => $this->getKey(),
-            'section_name'     => $this->userid,
-            'sub_section'      => 'User',
-            'sub_section_id'   => $this->getKey(),
-            'sub_section_name' => $this->userid,
-        ];
     }
 
     public function reviews()

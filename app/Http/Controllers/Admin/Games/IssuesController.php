@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Games;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Genre;
 use Illuminate\Http\Request;
@@ -37,6 +39,16 @@ class IssuesController extends Controller
     {
         $game->genres()->attach($request->genres);
         $game->save();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Games',
+            'section_id'       => $game->getKey(),
+            'section_name'     => $game->game_name,
+            'sub_section'      => 'Game',
+            'sub_section_id'   => $game->getKey(),
+            'sub_section_name' => $game->game_name,
+        ]);
 
         return redirect()->route('admin.games.issues');
     }

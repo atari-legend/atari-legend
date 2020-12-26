@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ChangelogHelper;
+use App\Models\Changelog;
 use App\Models\Website;
 use App\Models\WebsiteCategory;
 use App\Models\WebsiteValidate;
@@ -47,6 +49,16 @@ class LinkController extends Controller
         $submission->website_date = time();
 
         $request->user()->websiteSubmissions()->save($submission);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Links',
+            'section_id'       => $submission->getKey(),
+            'section_name'     => $submission->website_name,
+            'sub_section'      => 'Link submit',
+            'sub_section_id'   => $submission->getKey(),
+            'sub_section_name' => $submission->website_name,
+        ]);
 
         $request->session()->flash('alert-title', 'Link submitted');
         $request->session()->flash(

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ChangelogHelper;
 use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +56,8 @@ class UserController extends Controller
         // request behind
         Auth::setUser($user);
 
+        $this->insertChangelog($user);
+
         return view('auth.profile')
             ->with(['user' => $user]);
     }
@@ -86,7 +90,21 @@ class UserController extends Controller
             'Your password has been changed'
         );
 
+        $this->insertChangelog($user);
+
         return view('auth.profile')
             ->with(['user' => $user]);
+    }
+
+    public function insertChangelog($user) {
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Users',
+            'section_id'       => $user->getKey(),
+            'section_name'     => $user->userid,
+            'sub_section'      => 'User',
+            'sub_section_id'   => $user->getKey(),
+            'sub_section_name' => $user->userid,
+        ]);
     }
 }

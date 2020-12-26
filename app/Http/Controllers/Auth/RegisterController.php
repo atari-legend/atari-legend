@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ChangelogHelper;
 use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -84,4 +87,25 @@ class RegisterController extends Controller
             'inactive'        => User::INACTIVE,
         ]);
     }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(Request $request, $user)
+    {
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Users',
+            'section_id'       => $user->getKey(),
+            'section_name'     => $user->userid,
+            'sub_section'      => 'User',
+            'sub_section_id'   => $user->getKey(),
+            'sub_section_name' => $user->userid,
+        ]);
+    }
+
 }

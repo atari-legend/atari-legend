@@ -20,6 +20,11 @@ class GameSubmitInfo extends Model
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_game_submitinfo', 'screenshot_id', 'game_submitinfo_id');
+        return $this->belongsToMany(Screenshot::class, 'screenshot_game_submitinfo', 'game_submitinfo_id', 'screenshot_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 }

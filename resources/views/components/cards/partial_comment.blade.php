@@ -39,6 +39,8 @@
         <form id="comment-edit-{{ $comment->comments_id }}" method="post" action="{{ route('comments.update') }}" class="text-center d-none">
             @csrf
             <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
+            <input type="hidden" name="context" value="{{ $context ?? ''}}">
+            <input type="hidden" name="id" value="{{ $id ?? ''}}">
             <textarea class="form-control" rows="5" name="comment" required>{{ stripslashes($comment->comment) }}</textarea>
         </form>
     @endif

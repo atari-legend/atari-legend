@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ChangelogHelper;
+use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Interview;
 use Illuminate\Http\Request;
@@ -42,6 +44,16 @@ class InterviewController extends Controller
 
         $request->user()->comments()->save($comment);
         $interview->comments()->save($comment);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Interviews',
+            'section_id'       => $interview->getKey(),
+            'section_name'     => $interview->individual->ind_name,
+            'sub_section'      => 'Comment',
+            'sub_section_id'   => $interview->individual->getKey(),
+            'sub_section_name' => $interview->individual->ind_name,
+        ]);
 
         return back();
     }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ChangelogHelper;
 use App\Models\Article;
+use App\Models\Changelog;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 
@@ -53,6 +55,16 @@ class ArticleController extends Controller
 
         $request->user()->comments()->save($comment);
         $article->comments()->save($comment);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Articles',
+            'section_id'       => $article->getKey(),
+            'section_name'     => $article->texts()->first()->article_title,
+            'sub_section'      => 'Comment',
+            'sub_section_id'   => $comment->getKey(),
+            'sub_section_name' => $article->texts()->first()->article_title,
+        ]);
 
         return back();
     }

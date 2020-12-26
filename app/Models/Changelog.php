@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Changelog extends Model
 {
+
+    const INSERT = 'Insert';
+    const UPDATE = 'Update';
+    const DELETE = 'Delete';
+
     protected $table = 'change_log';
     protected $primaryKey = 'change_log_id';
     public $timestamps = false;

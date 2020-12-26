@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ChangelogHelper;
+use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\GameSubmitInfo;
@@ -90,6 +92,16 @@ class GameController extends Controller
         $request->user()->comments()->save($comment);
         $game->comments()->save($comment);
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Games',
+            'section_id'       => $game->getKey(),
+            'section_name'     => $game->game_name,
+            'sub_section'      => 'Comment',
+            'sub_section_id'   => $comment->getKey(),
+            'sub_section_name' => $game->game_name,
+        ]);
+
         return back();
     }
 
@@ -99,10 +111,9 @@ class GameController extends Controller
         $info->timestamp = time();
         $info->submit_text = $request->info;
         $info->game_done = GameSubmitInfo::SUBMISSION_NEW;
-        $info->game()->save($game);
 
+        $info->user()->associate($request->user());
         $game->infoSubmissions()->save($info);
-        $request->user()->gameSubmissions()->save($info);
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
@@ -114,6 +125,16 @@ class GameController extends Controller
                 $file->storeAs('images/game_submit_screenshots', $screenshot->screenshot_id.'.'.$screenshot->imgext, 'public');
             }
         }
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Games',
+            'section_id'       => $game->getKey(),
+            'section_name'     => $game->game_name,
+            'sub_section'      => 'Submission',
+            'sub_section_id'   => $game->getKey(),
+            'sub_section_name' => $game->game_name,
+        ]);
 
         $request->session()->flash('alert-title', 'Info submitted');
         $request->session()->flash(

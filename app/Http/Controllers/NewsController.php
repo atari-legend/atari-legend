@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ChangelogHelper;
+use App\Models\Changelog;
 use App\Models\News;
 use App\Models\NewsSubmission;
 use Illuminate\Http\Request;
@@ -28,6 +30,16 @@ class NewsController extends Controller
         $submission->news_date = time();
 
         $request->user()->newsSubmissions()->save($submission);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'News',
+            'section_id'       => $submission->getKey(),
+            'section_name'     => $submission->news_headline,
+            'sub_section'      => 'News submit',
+            'sub_section_id'   => $submission->getKey(),
+            'sub_section_name' => $submission->news_headline,
+        ]);
 
         $request->session()->flash('alert-title', 'News submitted');
         $request->session()->flash(

@@ -20,7 +20,7 @@
     </div>
     <div class="striped">
         @foreach ($interview->comments->sortByDesc("timestamp") as $comment)
-            @include('components.cards.partial_comment')
+            @include('components.cards.partial_comment', ['context' => 'interview', 'id' => $interview->getKey()])
         @endforeach
     </div>
 </div>
