@@ -52,4 +52,5 @@ ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public ||
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan storage:link"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan migrate --force"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan optimize:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan optimize"
