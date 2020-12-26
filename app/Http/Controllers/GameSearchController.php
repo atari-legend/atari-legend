@@ -126,6 +126,13 @@ class GameSearchController extends Controller
             $games = $games->get();
         }
 
+        // If only one match with the requested title, redirect to it
+        if ($games->count() === 1
+            && $request->filled('title')
+            && strtolower($games->first()->game_name) === strtolower($request->title)) {
+            return redirect()->route('games.show', $games->first());
+        }
+
         $referenceData = $this->getSearchReferenceData();
 
         return view('games.search')->with(
