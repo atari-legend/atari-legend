@@ -25,7 +25,7 @@ class SecurityHeaders
         $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
         $response->headers->set(
             'Content-Security-Policy',
-            "default-src 'self' www.googletagmanager.com 'unsafe-inline' 'unsafe-eval' data:"
+            "default-src 'self' www.googletagmanager.com www.google-analytics.com 'unsafe-inline' 'unsafe-eval' data:"
         );
 
         return $response;
