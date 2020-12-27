@@ -22,14 +22,14 @@ class CreateNewMenuStructure extends Migration
         });
         DB::statement("ALTER TABLE `menu_sets` comment 'Sets of menus'");
 
-        Schema::create('crew_menu_sets', function (Blueprint $table) {
+        Schema::create('crew_menu_set', function (Blueprint $table) {
             $table->integer('crew_id');
-            $table->foreignId('menu_set_id')->constrained();
+            $table->foreignId('menu_set_id')->constrained()->cascadeOnDelete();
             $table->primary('crew_id', 'menu_set_id');
 
             $table->foreign('crew_id')->references('crew_id')->on('crew');
         });
-        DB::statement("ALTER TABLE `crew_menu_sets` comment 'Pivot between menu sets and crews'");
+        DB::statement("ALTER TABLE `crew_menu_set` comment 'Pivot between menu sets and crews'");
 
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
@@ -128,6 +128,15 @@ class CreateNewMenuStructure extends Migration
      */
     public function down()
     {
+        DB::table('menu_disk_contents')->delete();
+        DB::table('menu_disk_content_types')->delete();
+        DB::table('menu_disk_screenshots')->delete();
+        DB::table('menu_disk_dumps')->delete();
+        DB::table('menu_disk_conditions')->delete();
+        DB::table('menu_disks')->delete();
+        DB::table('menus')->delete();
+        DB::table('crew_menu_set')->delete();
+        DB::table('menu_sets')->delete();
         Schema::dropIfExists('menu_disk_contents');
         Schema::dropIfExists('menu_disk_content_types');
         Schema::dropIfExists('menu_disk_screenshots');
@@ -135,7 +144,7 @@ class CreateNewMenuStructure extends Migration
         Schema::dropIfExists('menu_disk_conditions');
         Schema::dropIfExists('menu_disks');
         Schema::dropIfExists('menus');
-        Schema::dropIfExists('crew_menu_sets');
+        Schema::dropIfExists('crew_menu_set');
         Schema::dropIfExists('menu_sets');
     }
 }

@@ -120,8 +120,7 @@
             <div id="menus" class="accordion-collapse collapse @showroute('admin.menus.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Add</a></li>
-                        <li><a>Edit</a></li>
+                        <li><a class="@activeroute('admin.menus.sets.*')" href="{{ route('admin.menus.sets.index') }}">Sets</a></li>
                         <li><a class="@activeroute('admin.menus.conditions.*')" href="{{ route('admin.menus.conditions.index') }}">Conditions</a></li>
                         <li><a class="@activeroute('admin.menus.content-types.*')" href="{{ route('admin.menus.content-types.index') }}">Content Types</a></li>
                     </ul>

@@ -1,28 +1,32 @@
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">Menu content types</h2>
+        <h2 class="card-title fs-4">Menu sets</h2>
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Crew(s)</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($contentTypes as $contentType)
+                @foreach ($sets as $set)
                     <tr>
-                        <td><a href="{{ route('admin.menus.content-types.edit', $contentType) }}">{{ $contentType->name }}</a></td>
-                        <td>{{ $contentType->created_at ? $contentType->created_at->diffForHumans() : '-' }}</td>
-                        <td>{{ $contentType->updated_at ? $contentType->updated_at->diffForHumans() : '-' }}</td>
+                        <td><a href="{{ route('admin.menus.sets.edit', $set) }}">{{ $set->name }}</a></td>
                         <td>
-                            <form action="{{ route('admin.menus.content-types.destroy', $contentType) }}"
+                            {{ $set->crews()->pluck('crew_name')->join(', ') }}
+                        </td>
+                        <td>{{ $set->created_at ? $set->created_at->diffForHumans() : '-' }}</td>
+                        <td>{{ $set->updated_at ? $set->updated_at->diffForHumans() : '-' }}</td>
+                        <td>
+                            <form action="{{ route('admin.menus.sets.destroy', $set) }}"
                                 method="POST"
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf
                                 @method('DELETE')
-                                <button title="Delete content-type '{{ $contentType->name }}'" class="btn">
+                                <button title="Delete set '{{ $set->name }}'" class="btn">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
                             </form>
@@ -31,8 +35,8 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('admin.menus.content-types.create') }}" class="btn btn-success">
-            <i class="fas fa-plus-square fa-fw"></i> Add a new menu content-type
+        <a href="{{ route('admin.menus.sets.create') }}" class="btn btn-success">
+            <i class="fas fa-plus-square fa-fw"></i> Add a new menu set
         </a>
     </div>
 </div>
