@@ -17,7 +17,7 @@ class MenuContentTypesController extends Controller
         return view('admin.menus.content-types.index')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.content-types.index'), 'Content Types'),
                 ],
                 'contentTypes'  => $contentTypes,
@@ -29,7 +29,7 @@ class MenuContentTypesController extends Controller
         return view('admin.menus.content-types.edit')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.content-types.index'), 'Content Types'),
                     new Crumb('', 'Create'),
                 ],
@@ -50,7 +50,7 @@ class MenuContentTypesController extends Controller
         return view('admin.menus.content-types.edit')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.content-types.index'), 'Content Types'),
                     new Crumb(route('admin.menus.content-types.edit', $contentType), $contentType->name),
                 ],

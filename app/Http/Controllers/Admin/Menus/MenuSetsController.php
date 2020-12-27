@@ -18,7 +18,7 @@ class MenuSetsController extends Controller
         return view('admin.menus.sets.index')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.sets.index'), 'Sets'),
                 ],
                 'sets'        => $sets,
@@ -30,7 +30,7 @@ class MenuSetsController extends Controller
         return view('admin.menus.sets.edit')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.sets.index'), 'Sets'),
                     new Crumb('', 'Create'),
                 ],
@@ -51,7 +51,7 @@ class MenuSetsController extends Controller
         return view('admin.menus.sets.edit')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.sets.index'), 'Sets'),
                     new Crumb(route('admin.menus.sets.edit', $set), $set->name),
                 ],

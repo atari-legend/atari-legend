@@ -17,7 +17,7 @@ class MenuConditionsController extends Controller
         return view('admin.menus.conditions.index')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.conditions.index'), 'Conditions'),
                 ],
                 'conditions'  => $conditions,
@@ -29,7 +29,7 @@ class MenuConditionsController extends Controller
         return view('admin.menus.conditions.edit')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.conditions.index'), 'Conditions'),
                     new Crumb('', 'Create'),
                 ],
@@ -50,7 +50,7 @@ class MenuConditionsController extends Controller
         return view('admin.menus.conditions.edit')
             ->with([
                 'breadcrumbs' => [
-                    new Crumb('#', 'Menus'),
+                    new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.conditions.index'), 'Conditions'),
                     new Crumb(route('admin.menus.conditions.edit', $condition), $condition->name),
                 ],

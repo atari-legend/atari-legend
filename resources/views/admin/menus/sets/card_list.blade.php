@@ -6,6 +6,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Crew(s)</th>
+                    <th>Menus</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th></th>
@@ -18,18 +19,25 @@
                         <td>
                             {{ $set->crews()->pluck('crew_name')->join(', ') }}
                         </td>
+                        <td>{{ $set->menus()->count() }}</td>
                         <td>{{ $set->created_at ? $set->created_at->diffForHumans() : '-' }}</td>
                         <td>{{ $set->updated_at ? $set->updated_at->diffForHumans() : '-' }}</td>
                         <td>
-                            <form action="{{ route('admin.menus.sets.destroy', $set) }}"
-                                method="POST"
-                                onsubmit="javascript:return confirm('This item will be permanently deleted')">
-                                @csrf
-                                @method('DELETE')
-                                <button title="Delete set '{{ $set->name }}'" class="btn">
-                                    <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
+                            @if ($set->menus->isEmpty())
+                                <form action="{{ route('admin.menus.sets.destroy', $set) }}"
+                                    method="POST"
+                                    onsubmit="javascript:return confirm('This item will be permanently deleted')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button title="Delete set '{{ $set->name }}'" class="btn">
+                                        <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+                            @else
+                                <button title="Delete set '{{ $set->name }}'" class="btn" disabled>
+                                    <i class="fas fa-trash fa-fw text-muted" aria-hidden="true"></i>
                                 </button>
-                            </form>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

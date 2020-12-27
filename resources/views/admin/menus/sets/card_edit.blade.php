@@ -28,7 +28,7 @@
 
             <div class="mb-3">
                 <label for="crews" class="form-label">Crews</label>
-                <select class="form-select" multiple size="10" name="crews[]">
+                <select class="form-select" multiple size="6" name="crews[]">
                     @foreach ($crews as $crew)
                         <option value="{{ $crew->crew_id }}" @if (isset($set) && $set->crews->contains($crew)) selected @endif>{{ $crew->crew_name }}</option>
                     @endforeach

@@ -20,6 +20,7 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/menus')->name('menus.')->group(function () {
                     Route::resource('sets', MenuSetsController::class);
+                    Route::resource('menus', MenusController::class);
                     Route::resource('conditions', MenuConditionsController::class);
                     Route::resource('content-types', MenuContentTypesController::class);
                 });

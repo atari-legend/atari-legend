@@ -100,7 +100,7 @@
                     <i class="far fa-file-alt fa-fw me-1"></i> Articles
                 </button>
             </h2>
-            <div id="links" class="accordion-collapse collapse border-0">
+            <div id="articles" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a>Add</a></li>

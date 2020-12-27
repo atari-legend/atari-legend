@@ -14,7 +14,7 @@
             @endif
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control @error('email') is-invalid @enderror"
+                <input type="text" class="form-control @error('name') is-invalid @enderror"
                     id="name" name="name" placeholder="e.g.: Intact" required
                     value="{{ old('name', $condition->name ?? '') }}">
 
