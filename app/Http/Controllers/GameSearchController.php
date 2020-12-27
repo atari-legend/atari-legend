@@ -121,7 +121,7 @@ class GameSearchController extends Controller
             ->orderBy('game_name');
 
         if (!$request->boolean('export')) {
-            $games = $games->paginate(12);
+            $games = $games->paginate(48);
         } else {
             $games = $games->get();
         }
