@@ -32,8 +32,10 @@ class MenusController extends Controller
         $set = MenuSet::find($request->set);
         Menu::create([
             'number'       => $request->number,
+            'issue'        => $request->issue,
             'version'      => $request->version,
             'date'         => $request->date,
+            'notes'        => $request->notes,
             'menu_set_id'  => $set->id,
         ]);
 
@@ -48,7 +50,7 @@ class MenusController extends Controller
                     new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.sets.index'), 'Sets'),
                     new Crumb(route('admin.menus.sets.edit', $menu->menuSet), $menu->menuSet->name),
-                    new Crumb('', 'Create menu'),
+                    new Crumb(route('admin.menus.menus.edit', $menu), $menu->label),
                 ],
                 'set'         => $menu->menuSet,
                 'menu'        => $menu,
@@ -59,8 +61,10 @@ class MenusController extends Controller
     {
         $menu->update([
             'number'       => $request->number,
+            'issue'        => $request->issue,
             'version'      => $request->version,
             'date'         => $request->date,
+            'notes'        => $request->notes,
         ]);
 
         return redirect()->route('admin.menus.sets.edit', $menu->menuSet);

@@ -35,8 +35,10 @@ class CreateNewMenuStructure extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('number')->nullable()->comment('Sequence number within the menu set');
+            $table->string('issue', 16)->nullable()->comment('Menu issue (number or letter, etc.)');
             $table->date('date')->nullable()->comment('Release date');
-            $table->integer('version')->nullable();
+            $table->string('version', 8)->nullable();
+            $table->string('notes', 512)->nullable();
             $table->foreignId('menu_set_id')->constrained();
         });
         DB::statement("ALTER TABLE `menus` comment 'An individual menu'");
@@ -45,7 +47,6 @@ class CreateNewMenuStructure extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('menu_id')->constrained();
-            $table->integer('number')->nullable()->comment('Disk number within the menu');
             $table->string('part', 16)->nullable()->comment('Arbitrary part identifier (e.g. A, B, C, or Part I, Part II, …)');
             $table->text('scrolltext')->nullable()->comment('Content of the scrolltext');
             $table->string('notes', 512)->nullable();
@@ -70,15 +71,15 @@ class CreateNewMenuStructure extends Migration
             $table->timestamps();
             $table->enum('format', ['STX', 'MSA', 'RAW', 'SCP', 'ST']);
             $table->string('sha512', 128);
-            $table->date('date')->comment('Date the dump was added');
             $table->integer('size')->comment('File size in bytes');
             $table->string('notes', 512)->nullable();
             $table->integer('user_id');
             $table->foreignId('menu_disk_id')->constrained();
-            $table->integer('donated_by_individual_id')->comment('Who donated this dump');
+            $table->integer('donated_by_individual_id')->nullable()->comment('Who donated this dump');
             $table->foreignId('menu_disk_condition_id')->nullable()->constrained();
 
-            $table->foreign('user_id')->references('user_id')->on('users');
+            // No foreign constraint possible as users may get deleted
+            // $table->foreign('user_id')->references('user_id')->on('users');
             $table->foreign('donated_by_individual_id')->references('ind_id')->on('individuals');
         });
         DB::statement("ALTER TABLE `menu_disk_dumps` comment 'Binary dump of a menu disk'");

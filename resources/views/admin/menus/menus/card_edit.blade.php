@@ -2,7 +2,7 @@
     <div class="card-body">
         <h2 class="card-title fs-4">
             @if (isset($menu))
-                Edit <em>{{ $menu->label }}</em> of set: {{ $set->name }}
+                Edit menu <em>{{ $menu->label }}</em> of set: {{ $set->name }}
             @else
                 Add a new menu in set: {{ $set->name }}
             @endif
@@ -15,7 +15,7 @@
             @endif
 
             <div class="row mb-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label for="number" class="form-label">Number</label>
                     <input type="number" class="form-control @error('number') is-invalid @enderror"
                         id="number" name="number" placeholder="e.g.: 1"
@@ -27,9 +27,21 @@
                         </span>
                     @enderror
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <label for="issue" class="form-label">Issue</label>
+                    <input type="text" class="form-control @error('issue') is-invalid @enderror"
+                        id="issue" name="issue" placeholder="e.g.: A"
+                        value="{{ old('issue', $menu->issue ?? '') }}">
+
+                    @error('issue')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="col-md-4">
                     <label for="version" class="form-label">Version</label>
-                    <input type="number" class="form-control @error('version') is-invalid @enderror"
+                    <input type="text" class="form-control @error('version') is-invalid @enderror"
                         id="version" name="version" placeholder="e.g.: 3"
                         value="{{ old('version', $menu->version ?? '') }}">
 
@@ -53,6 +65,18 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea class="form-control @error('number') is-invalid @enderror"
+                    id="notes" name="notes" rows="5">{{ old('notes', $menu->notes ?? '') }}</textarea>
+
+                @error('notes')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

@@ -6,6 +6,8 @@
                 <tr>
                     <th>Label</th>
                     <th>Released</th>
+                    <th>Disks</th>
+                    <th>Notes</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th></th>
@@ -20,6 +22,8 @@
                                 {{ $menu->date->format('F j, Y') }}
                             @endif
                         </td>
+                        <td>{{ $menu->disks->count() }}</td>
+                        <td>{{ Str::limit($menu->notes, 30) }}</td>
                         <td>{{ $menu->created_at ? $menu->created_at->diffForHumans() : '-' }}</td>
                         <td>{{ $menu->updated_at ? $menu->updated_at->diffForHumans() : '-' }}</td>
                         <td>
