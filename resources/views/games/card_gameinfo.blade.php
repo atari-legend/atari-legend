@@ -20,7 +20,7 @@
                 <div class="col-8">
                     @foreach ($game->developers as $developer)
                         <div>
-                            <a href="{{ route('games.search', ['developer' => $developer->pub_dev_name]) }}">{{ $developer->pub_dev_name }}</a>
+                            <a href="{{ route('games.search', ['developer_id' => $developer->pub_dev_id]) }}">{{ $developer->pub_dev_name }}</a>
                             @contributor
                                 <a class="d-inline-block" href="{{ config('al.legacy.base_url').'/admin/company/company_edit.php?comp_id='.$developer->pub_dev_id }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -150,7 +150,7 @@
                 </div>
                 <div class="col-8">
                     @foreach ($game->genres as $genre)
-                        <a href="{{ route('games.search', ['genre' => $genre->name]) }}">{{ $genre->name }}</a>@if (!$loop->last), @endif
+                        <a href="{{ route('games.search', ['genre_id' => $genre->id]) }}">{{ $genre->name }}</a>@if (!$loop->last), @endif
                     @endforeach
                 </div>
             </div>
