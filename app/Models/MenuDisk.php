@@ -18,4 +18,14 @@ class MenuDisk extends Model
     {
         return $this->hasMany(MenuDiskDump::class);
     }
+
+    public function contents()
+    {
+        return $this->hasMany(MenuDiskContent::class);
+    }
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
+    }
 }

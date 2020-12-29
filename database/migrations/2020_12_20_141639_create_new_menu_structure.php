@@ -103,23 +103,29 @@ class CreateNewMenuStructure extends Migration
             ['name' => 'Demo', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Utility', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Music', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'Picture', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'Documentation', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'E-zine', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Source code', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Picture', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'E-zine / Documentation', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
         Schema::create('menu_disk_contents', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('menu_disk_id')->constrained();
-            $table->string('name', 64);
+            $table->string('name', 255)->nullable();
             $table->foreignId('menu_disk_content_type_id')->constrained();
-            $table->integer('game_id');
-            $table->integer('demozoo_id')->comment('ID of the DemoZoo production');
-            $table->string('notes', 512);
+            $table->string('subtype', 64)->nullable();
+            $table->integer('demozoo_id')->nullable()->comment('ID of the DemoZoo production');
+            $table->string('notes', 512)->nullable();
         });
         DB::statement("ALTER TABLE `menu_disk_contents` comment 'A software present on a menu disk'");
+
+        Schema::table('game_release', function (Blueprint $table) {
+            $table->foreignId('menu_disk_content_id')
+                ->nullable()
+                ->constrained()
+                ->comment('Link to a menu, if this release is part of one');
+        });
     }
 
     /**
@@ -129,6 +135,15 @@ class CreateNewMenuStructure extends Migration
      */
     public function down()
     {
+        DB::table('game_release')
+            ->whereNotNull('menu_disk_content_id')
+            ->delete();
+
+        Schema::table('game_release', function (Blueprint $table) {
+            $table->dropForeign('game_release_menu_disk_content_id_foreign');
+            $table->dropColumn('menu_disk_content_id');
+        });
+
         DB::table('menu_disk_contents')->delete();
         DB::table('menu_disk_content_types')->delete();
         DB::table('menu_disk_screenshots')->delete();

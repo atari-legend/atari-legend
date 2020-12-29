@@ -5,12 +5,15 @@ namespace App\Console\Commands;
 use App\Helpers\ChangelogHelper;
 use App\Models\Changelog;
 use App\Models\Crew;
+use App\Models\Game;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
+use App\Models\MenuDiskContent;
 use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
+use App\Models\Release;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -55,6 +58,8 @@ class ImportStonishData extends Command
 
         pcntl_signal(SIGINT, [$this, 'interrupt']);
 
+        Release::has('menuDiskContent')->delete();
+        DB::table('menu_disk_contents')->delete();
         DB::table('menu_disk_dumps')->delete();
         DB::table('menu_disk_screenshots')->delete();
         DB::table('menu_disks')->delete();
@@ -91,40 +96,52 @@ class ImportStonishData extends Command
             $menuset = $this->getMenuSet($crew, $stonishMenu);
             $menu = $this->getMenu($menuset, $stonishMenu);
             $disk = $this->getMenuDisk($menu, $stonishMenu);
+            $dump = $this->getDump($disk, $stonishMenu);
 
-            if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
-                $dumpFile = env('STONISH_ROOT')
-                    . 'download/' . preg_replace('/\s/', '_', $stonishMenu->name_menus)
-                    . '/' . $stonishMenu->download;
-                if (file_exists($dumpFile)) {
-                    $this->info("\t\tFound dump {$dumpFile}");
+            $contents = $db->table('allcontent')
+                ->join('software', 'content', '=', 'software.id_software')
+                ->select('allcontent.*', 'software.*')
+                ->where('id_menus', '=', $stonishMenu->id_allmenus)
+                ->get();
 
-                    $dump = new MenuDiskDump();
-                    $dump->user_id = 0; // FIXME
-                    $dump->menu_disk_condition_id = $stonishMenu->stateofdisk;
+            foreach ($contents as $content) {
+                $this->info("\t\t\t{$content->titlesoft} Type:{$content->typeofsoftware} AL:{$content->idlegend} DZ:{$content->iddemozoo}");
+                $menuDiskContent = new MenuDiskContent();
+                $menuDiskContent->name = $content->titlesoft;   // Remove if AL link?
 
-                    $zip = new ZipArchive();
-                    if ($zip->open($dumpFile) === true) {
-                        if ($zip->count() !== 1) {
-                            $this->error("Unexpected number of files found in ZIP archive {$dumpFile}: {$zip->count()}");
-                            exit(1);
-                        }
-
-                        $filename = $zip->getNameIndex(0);
-                        $ext = strtoupper(pathinfo($filename, PATHINFO_EXTENSION));
-                        $dump->format = $ext;
-
-                        $content = $zip->getFromIndex(0);
-                        $dump->sha512 = hash('sha512', $content);
-                        $dump->size = strlen($content);
-                    } else {
-                        $this->error("Error opening ZIP file {$dumpFile}");
-                        exit(1);
-                    }
-
-                    $disk->dumps()->save($dump);
-                    Storage::disk('public')->put('zips/menus/' . $dump->id . '.zip', file_get_contents($dumpFile));
+                $notes = [];
+                if ($content->version_software !== null && trim($content->version_software) !== '') {
+                    $notes[] = trim($content->version_software);
                 }
+                if ($content->requirement !== null && trim($content->requirement) !== '') {
+                    $notes[] = trim($content->requirement);
+                }
+                $menuDiskContent->notes = (count($notes) > 0) ? join("'\n", $notes) : null;
+
+                if ($menuDiskContent->demozoo_id) {
+                    $menuDiskContent->demozoo_id = $content->iddemozoo;
+                }
+                $menuDiskContent->menu_disk_content_type_id = $content->typeofsoftware;
+                if ($content->type !== null && trim($content->type) !== '') {
+                    $menuDiskContent->subtype = trim($content->type);
+                }
+                $disk->contents()->save($menuDiskContent);
+
+                if ($content->idlegend) {
+                    $game = Game::find($content->idlegend);
+                    if ($game !== null) {
+                        $release = new Release();
+                        $release->game_id = $game->game_id;
+                        $release->menu_disk_content_id = $menuDiskContent->id;
+                        if ($menu->date) {
+                            $release->date = $menu->date;
+                        }
+                        $release->save();
+                    } else {
+                        $this->warn("Could not find AL game with ID {$content->idlegend} for title {$content->titlesoft}");
+                    }
+                }
+
             }
 
 
@@ -250,6 +267,48 @@ class ImportStonishData extends Command
         }
 
         return $disk;
+    }
+
+    private function getDump(MenuDisk $disk, object $stonishMenu): ?MenuDiskDump
+    {
+        if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
+            $dumpFile = env('STONISH_ROOT')
+                . 'download/' . preg_replace('/\s/', '_', $stonishMenu->name_menus)
+                . '/' . $stonishMenu->download;
+            if (file_exists($dumpFile)) {
+                $this->info("\t\tFound dump {$dumpFile}");
+
+                $dump = new MenuDiskDump();
+                $dump->user_id = 0; // FIXME
+                $dump->menu_disk_condition_id = $stonishMenu->stateofdisk;
+
+                $zip = new ZipArchive();
+                if ($zip->open($dumpFile) === true) {
+                    if ($zip->count() !== 1) {
+                        $this->error("Unexpected number of files found in ZIP archive {$dumpFile}: {$zip->count()}");
+                        exit(1);
+                    }
+
+                    $filename = $zip->getNameIndex(0);
+                    $ext = strtoupper(pathinfo($filename, PATHINFO_EXTENSION));
+                    $dump->format = $ext;
+
+                    $content = $zip->getFromIndex(0);
+                    $dump->sha512 = hash('sha512', $content);
+                    $dump->size = strlen($content);
+                } else {
+                    $this->error("Error opening ZIP file {$dumpFile}");
+                    exit(1);
+                }
+
+                $disk->dumps()->save($dump);
+                Storage::disk('public')->put('zips/menus/' . $dump->id . '.zip', file_get_contents($dumpFile));
+
+                return $dump;
+            }
+        }
+
+        return null;
     }
 
     public function interrupt()

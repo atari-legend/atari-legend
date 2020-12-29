@@ -23,6 +23,18 @@
                             <span class="ms-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
                         @endif
 
+                        @if ($release->menuDiskContent)
+                            <span class="ms-2 text-muted">
+                                on
+                                {{ $release->menuDiskContent->menuDisk->menu->menuSet->name }}
+                                #{{ $release->menuDiskContent->menuDisk->menu->label}}
+                                {{ $release->menuDiskContent->menuDisk->part}}
+                                @if ($release->menuDiskContent->subtype)
+                                    ({{ $release->menuDiskContent->subtype }})
+                                @endif
+                            </span>
+                        @endif
+
                         @foreach ($release->locations as $location)
                             @if ($location->country_iso2 !== null)
                                 <span title="{{ $location->name }}" class="flag-icon flag-icon-{{ strtolower($location->country_iso2) }} mx-1"></span>

@@ -147,4 +147,9 @@ class Release extends Model
     {
         return $this->hasMany(Media::class);
     }
+
+    public function menuDiskContent()
+    {
+        return $this->belongsTo(MenuDiskContent::class);
+    }
 }
