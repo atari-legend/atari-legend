@@ -21,6 +21,15 @@ class MenuDiskContent extends Model
 
     public function release()
     {
-        return $this->hasOne(Release::class);
+        return $this->belongsTo(Release::class, 'game_release_id');
+    }
+
+    public function getContentNameAttribute()
+    {
+        if ($this->release) {
+            return $this->release->name ?? $this->release->game->game_name;
+        } else {
+            return $this->name;
+        }
     }
 }

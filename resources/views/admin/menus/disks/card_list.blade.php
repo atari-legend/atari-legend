@@ -34,15 +34,15 @@
                 @endif
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        @foreach ($disk->contents as $content)
+                        @foreach ($disk->contents->sortBy('contentName') as $content)
                             <li>
                                 @if ($content->release)
-                                    <a href="{{ route('games.releases.show', $content->release) }}">{{ $content->release->game->game_name }}</a>
+                                    <a href="{{ route('games.releases.show', $content->release) }}">{{ $content->contentName }}</a>
                                 @elseif ($content->demozoo_id)
                                     <img src="{{ asset('images/demozoo-16x16.png') }}">
-                                    <a href="https://demozoo.org/productions/{{ $content->demozoo_id }}/">{{ $content->name }}</a>
+                                    <a href="https://demozoo.org/productions/{{ $content->demozoo_id }}/">{{ $content->contentName }}</a>
                                 @else
-                                    {{ $content->name }}
+                                    {{ $content->contentName }}
                                 @endif
 
                                 <small class="text-muted">{{ $content->menuDiskContentType->name }}</small>

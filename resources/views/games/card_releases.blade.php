@@ -23,18 +23,23 @@
                             <span class="ms-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
                         @endif
 
-                        @if ($release->menuDiskContent)
+                        @if ($release->menuDiskContents->isNotEmpty())
                             <span class="ms-2 text-muted">
                                 on
-                                {{ $release->menuDiskContent->menuDisk->menu->menuSet->name }}
-                                #{{ $release->menuDiskContent->menuDisk->menu->label}}
-                                {{ $release->menuDiskContent->menuDisk->part}}
-                                @if ($release->menuDiskContent->subtype)
-                                    ({{ $release->menuDiskContent->subtype }})
+                                {{ $release->menuDiskContents->first()->menuDisk->menu->menuSet->name }}
+                                #{{ $release->menuDiskContents->first()->menuDisk->menu->label}}
+                                {{ $release->menuDiskContents->first()->menuDisk->part}}
+
+                                @php
+                                    $extra = $release->menuDiskContents
+                                        ->whereNotNull('subtype')
+                                        ->pluck('subtype')
+                                        ->join(', ')
+                                @endphp
+                                @if ($extra)
+                                    (+ {{ $extra }})
                                 @endif
-                                @if ($release->notes !== null)
-                                    [+ {{ $release->notes }}]
-                                @endif
+
                             </span>
                         @endif
 

@@ -148,8 +148,8 @@ class Release extends Model
         return $this->hasMany(Media::class);
     }
 
-    public function menuDiskContent()
+    public function menuDiskContents()
     {
-        return $this->belongsTo(MenuDiskContent::class);
+        return $this->hasMany(MenuDiskContent::class, 'game_release_id');
     }
 }

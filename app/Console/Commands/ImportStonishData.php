@@ -10,6 +10,7 @@ use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
+use App\Models\MenuDiskContentType;
 use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
@@ -59,7 +60,14 @@ class ImportStonishData extends Command
 
         pcntl_signal(SIGINT, [$this, 'interrupt']);
 
-        Release::has('menuDiskContent')->delete();
+        Release::has('menuDiskContents')->each(function ($release) {
+            $release->menuDiskContents->each(function ($content) {
+                $content->release()->dissociate();
+                $content->save();
+            });
+            $release->delete();
+        });
+
         DB::table('menu_disk_contents')->delete();
         DB::table('menu_disk_dumps')->delete();
         DB::table('menu_disk_screenshots')->delete();
@@ -80,7 +88,6 @@ class ImportStonishData extends Command
         $menus = $db->table('allmenus')
             ->join('namemenus', 'name', '=', 'namemenus.id_namemenus')
             ->select('allmenus.*', 'namemenus.name_menus')
-            ->where('name', '=', 4)
             ->orderBy('name_menus')
             ->orderBy('issue')
             ->orderBy('letter')
@@ -118,6 +125,7 @@ class ImportStonishData extends Command
                 if ($content->requirement !== null && trim($content->requirement) !== '') {
                     $notes[] = trim($content->requirement);
                 }
+
                 $menuDiskContent->notes = (count($notes) > 0) ? join("'\n", $notes) : null;
 
                 if ($content->iddemozoo) {
@@ -127,7 +135,6 @@ class ImportStonishData extends Command
                 if ($content->type !== null && trim($content->type) !== '') {
                     $menuDiskContent->subtype = trim($content->type);
                 }
-                $disk->contents()->save($menuDiskContent);
 
                 if ($content->idlegend) {
                     $game = Game::find($content->idlegend);
@@ -135,39 +142,33 @@ class ImportStonishData extends Command
                         // Remove the software name, since it should be read
                         // from the release / game
                         $menuDiskContent->name = null;
-                        $menuDiskContent->save();
 
                         // Find if there is already a release of this game on the same
                         // disk
-                        $release = Release::whereHas('menuDiskContent', function (Builder $query) use ($disk) {
+                        $release = Release::whereHas('menuDiskContents', function (Builder $query) use ($disk) {
                             $query->where('menu_disk_id', '=', $disk->id);
                         })
                             ->where('game_id', '=', $game->game_id)
                             ->first();
-                        if ($release) {
-                            if ($content->type !== null && trim($content->type) !== '') {
-                                if ($release->notes !== null) {
-                                    $release->notes .= ', ' . trim($content->type);
-                                } else {
-                                    $release->notes = trim($content->type);
-                                }
-                                $release->save();
-                            }
-                        } else {
+                        if (!$release) {
                             // Create a new release
                             $release = new Release();
                             $release->type = 'Unofficial';
                             $release->game_id = $game->game_id;
-                            $release->menu_disk_content_id = $menuDiskContent->id;
                             if ($menu->date) {
                                 $release->date = $menu->date;
                             }
                             $release->save();
                         }
+
+                        // Associate release with content
+                        $menuDiskContent->game_release_id = $release->id;
                     } else {
                         $this->warn("Could not find AL game with ID {$content->idlegend} for title {$content->titlesoft}");
                     }
                 }
+
+                $disk->contents()->save($menuDiskContent);
             }
 
 
@@ -286,7 +287,9 @@ class ImportStonishData extends Command
                 $disk->scrolltext = preg_replace('/[[:^print:]]/', '', $scrolltext);
             }
         }
-        $disk->notes = $stonishMenu->comments;
+        if ($stonishMenu->comments !== null && trim($stonishMenu->comments) !== '') {
+            $disk->notes = trim($stonishMenu->comments);
+        }
         $menu->disks()->save($disk);
 
         if ($stonishMenu->screenshot !== null && trim($stonishMenu->screenshot) !== '') {
