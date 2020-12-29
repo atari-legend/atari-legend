@@ -13,4 +13,14 @@ class MenuDiskContent extends Model
     {
         return $this->belongsTo(MenuDisk::class);
     }
+
+    public function menuDiskContentType()
+    {
+        return $this->belongsTo(MenuDiskContentType::class);
+    }
+
+    public function release()
+    {
+        return $this->hasOne(Release::class);
+    }
 }

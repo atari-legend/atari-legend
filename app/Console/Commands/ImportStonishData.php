@@ -119,7 +119,7 @@ class ImportStonishData extends Command
                 }
                 $menuDiskContent->notes = (count($notes) > 0) ? join("'\n", $notes) : null;
 
-                if ($menuDiskContent->demozoo_id) {
+                if ($content->iddemozoo) {
                     $menuDiskContent->demozoo_id = $content->iddemozoo;
                 }
                 $menuDiskContent->menu_disk_content_type_id = $content->typeofsoftware;
@@ -131,6 +131,10 @@ class ImportStonishData extends Command
                 if ($content->idlegend) {
                     $game = Game::find($content->idlegend);
                     if ($game !== null) {
+                        // Remove the software name, since it should be read
+                        // from the release / game
+                        $menuDiskContent->name = null;
+                        $menuDiskContent->save();
 
                         // Find if there is already a release of this game on the same
                         // disk
@@ -231,7 +235,12 @@ class ImportStonishData extends Command
         } else if ($stonishMenu->letter !== null && trim($stonishMenu->letter) !== '') {
             $menus = $menus->where('issue', trim($stonishMenu->letter));
         } else {
-            $menus = $menus->whereNull('number');
+            // Special case: Menu has no issue, and no letter. This is a menu lacking
+            // some information. In that case we do not want to attach all disks to
+            // a single menu with no number / no issue. Instead we want to create a new
+            // menu for each, so force the search to not return any result so
+            // that we create a new menu later on
+            $menus = $menus->where('number', '=', -1);
         }
 
         $menus = $menus->where('version', (trim($stonishMenu->version) !== '') ? trim($stonishMenu->version) : null);
