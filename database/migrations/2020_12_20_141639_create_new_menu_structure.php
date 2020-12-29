@@ -19,6 +19,9 @@ class CreateNewMenuStructure extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name', 64);
+            $table->enum('menus_sort', ['ascending', 'descending'])
+                ->default('ascending')
+                ->comment('How to sort menus of this set');
         });
         DB::statement("ALTER TABLE `menu_sets` comment 'Sets of menus'");
 

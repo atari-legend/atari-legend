@@ -5,6 +5,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Menu disks count</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th></th>
@@ -12,8 +13,10 @@
             </thead>
             <tbody>
                 @foreach ($contentTypes as $contentType)
+
                     <tr>
                         <td><a href="{{ route('admin.menus.content-types.edit', $contentType) }}">{{ $contentType->name }}</a></td>
+                        <td>{{ $contentType->contents->count() }}</td>
                         <td>{{ $contentType->created_at ? $contentType->created_at->diffForHumans() : '-' }}</td>
                         <td>{{ $contentType->updated_at ? $contentType->updated_at->diffForHumans() : '-' }}</td>
                         <td>

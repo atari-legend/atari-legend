@@ -41,7 +41,8 @@ class MenuSetsController extends Controller
     public function store(Request $request)
     {
         $set = MenuSet::create([
-            'name' => $request->name,
+            'name'       => $request->name,
+            'menus_sort' => $request->sort,
         ]);
         return $this->update($request, $set);
     }
@@ -72,7 +73,10 @@ class MenuSetsController extends Controller
                 $set->crews()->attach($crew);
             });
 
-        $set->update(['name' => $request->name]);
+        $set->update([
+            'name'       => $request->name,
+            'menus_sort' => $request->sort,
+        ]);
 
         return redirect()->route('admin.menus.sets.index');
     }

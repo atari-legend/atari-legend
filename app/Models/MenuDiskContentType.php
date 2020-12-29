@@ -10,4 +10,9 @@ class MenuDiskContentType extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function contents()
+    {
+        return $this->hasMany(MenuDiskContent::class);
+    }
 }

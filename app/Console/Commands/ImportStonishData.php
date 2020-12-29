@@ -80,6 +80,7 @@ class ImportStonishData extends Command
         $menus = $db->table('allmenus')
             ->join('namemenus', 'name', '=', 'namemenus.id_namemenus')
             ->select('allmenus.*', 'namemenus.name_menus')
+            ->where('name', '=', 4)
             ->orderBy('name_menus')
             ->orderBy('issue')
             ->orderBy('letter')
@@ -106,7 +107,7 @@ class ImportStonishData extends Command
                 ->get();
 
             foreach ($contents as $content) {
-                $this->info("\t\t\t{$content->titlesoft} Type:{$content->typeofsoftware} AL:{$content->idlegend} DZ:{$content->iddemozoo}");
+                $this->info("\t\t\t{$content->titlesoft} Type:{$content->typeofsoftware} SubType:{$content->type} AL:{$content->idlegend} DZ:{$content->iddemozoo}");
                 $menuDiskContent = new MenuDiskContent();
                 $menuDiskContent->name = $content->titlesoft;   // Remove if AL link?
 
@@ -216,6 +217,10 @@ class ImportStonishData extends Command
             $this->warn("\tNo menu set found with name {$menu->name_menus}. Creating a new one");
             $menuset = new MenuSet();
             $menuset->name = $menu->name_menus;
+            if ($crew->crew_name === 'Euroswap') {
+                // Special case: Euroswap menus are sorted from highest to lowest
+                $menuset->menus_sort = 'descending';
+            }
             $crew->menuSets()->save($menuset);
         } else if ($menusets->count() > 2) {
             $this->error("\tMore than 1 menu set found for {$menu->name_menus}");
