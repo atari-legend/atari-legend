@@ -15,6 +15,7 @@ use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\Release;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
@@ -130,18 +131,38 @@ class ImportStonishData extends Command
                 if ($content->idlegend) {
                     $game = Game::find($content->idlegend);
                     if ($game !== null) {
-                        $release = new Release();
-                        $release->game_id = $game->game_id;
-                        $release->menu_disk_content_id = $menuDiskContent->id;
-                        if ($menu->date) {
-                            $release->date = $menu->date;
+
+                        // Find if there is already a release of this game on the same
+                        // disk
+                        $release = Release::whereHas('menuDiskContent', function (Builder $query) use ($disk) {
+                            $query->where('menu_disk_id', '=', $disk->id);
+                        })
+                            ->where('game_id', '=', $game->game_id)
+                            ->first();
+                        if ($release) {
+                            if ($content->type !== null && trim($content->type) !== '') {
+                                if ($release->notes !== null) {
+                                    $release->notes .= ', ' . trim($content->type);
+                                } else {
+                                    $release->notes = trim($content->type);
+                                }
+                                $release->save();
+                            }
+                        } else {
+                            // Create a new release
+                            $release = new Release();
+                            $release->type = 'Unofficial';
+                            $release->game_id = $game->game_id;
+                            $release->menu_disk_content_id = $menuDiskContent->id;
+                            if ($menu->date) {
+                                $release->date = $menu->date;
+                            }
+                            $release->save();
                         }
-                        $release->save();
                     } else {
                         $this->warn("Could not find AL game with ID {$content->idlegend} for title {$content->titlesoft}");
                     }
                 }
-
             }
 
 

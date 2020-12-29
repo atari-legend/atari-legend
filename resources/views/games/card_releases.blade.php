@@ -32,6 +32,9 @@
                                 @if ($release->menuDiskContent->subtype)
                                     ({{ $release->menuDiskContent->subtype }})
                                 @endif
+                                @if ($release->notes !== null)
+                                    [+ {{ $release->notes }}]
+                                @endif
                             </span>
                         @endif
 
