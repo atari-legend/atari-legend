@@ -46,22 +46,12 @@ class CreateNewMenuStructure extends Migration
         });
         DB::statement("ALTER TABLE `menus` comment 'An individual menu'");
 
-        Schema::create('menu_disks', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->foreignId('menu_id')->constrained();
-            $table->string('part', 16)->nullable()->comment('Arbitrary part identifier (e.g. A, B, C, or Part I, Part II, …)');
-            $table->text('scrolltext')->nullable()->comment('Content of the scrolltext');
-            $table->string('notes', 512)->nullable();
-        });
-        DB::statement("ALTER TABLE `menu_disks` comment 'A single disk part of a menu'");
-
         Schema::create('menu_disk_conditions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name', 64);
         });
-        DB::statement("ALTER TABLE `menu_disk_conditions` comment 'Condition of a menu disk dump'");
+        DB::statement("ALTER TABLE `menu_disk_conditions` comment 'Condition of a menu disk'");
         DB::table('menu_disk_conditions')->insert([
             ['name' => 'Missing', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Intro only or partially damaged', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
@@ -69,23 +59,24 @@ class CreateNewMenuStructure extends Migration
             ['name' => 'Intact', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
-        Schema::create('menu_disk_dumps', function (Blueprint $table) {
+        Schema::create('menu_disks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->enum('format', ['STX', 'MSA', 'RAW', 'SCP', 'ST']);
-            $table->string('sha512', 128);
-            $table->integer('size')->comment('File size in bytes');
-            $table->string('notes', 512)->nullable();
-            $table->integer('user_id');
-            $table->foreignId('menu_disk_id')->constrained();
-            $table->integer('donated_by_individual_id')->nullable()->comment('Who donated this dump');
+            $table->foreignId('menu_id')->constrained();
+            $table->string('part', 16)->nullable()->comment('Arbitrary part identifier (e.g. A, B, C, or Part I, Part II, …)');
+            $table->text('scrolltext')->nullable()->comment('Content of the scrolltext');
+            $table->enum('dump_format', ['STX', 'MSA', 'RAW', 'SCP', 'ST'])->nullable();
+            $table->string('dump_sha512', 128)->nullable();
+            $table->integer('dump_size')->nullable()->comment('File size in bytes');
+            // No constraint on user as users can get deleted
+            $table->integer('dump_user_id')->nullable()->comment('User who uploaded the dump');
+            $table->integer('donated_by_individual_id')->nullable()->comment('Who donated this menu/dump');
             $table->foreignId('menu_disk_condition_id')->nullable()->constrained();
+            $table->string('notes', 512)->nullable();
 
-            // No foreign constraint possible as users may get deleted
-            // $table->foreign('user_id')->references('user_id')->on('users');
             $table->foreign('donated_by_individual_id')->references('ind_id')->on('individuals');
         });
-        DB::statement("ALTER TABLE `menu_disk_dumps` comment 'Binary dump of a menu disk'");
+        DB::statement("ALTER TABLE `menu_disks` comment 'A single disk part of a menu'");
 
         Schema::create('menu_disk_screenshots', function (Blueprint $table) {
             $table->id();
@@ -137,18 +128,16 @@ class CreateNewMenuStructure extends Migration
         DB::table('menu_disk_contents')->delete();
         DB::table('menu_disk_content_types')->delete();
         DB::table('menu_disk_screenshots')->delete();
-        DB::table('menu_disk_dumps')->delete();
-        DB::table('menu_disk_conditions')->delete();
         DB::table('menu_disks')->delete();
+        DB::table('menu_disk_conditions')->delete();
         DB::table('menus')->delete();
         DB::table('crew_menu_set')->delete();
         DB::table('menu_sets')->delete();
         Schema::dropIfExists('menu_disk_contents');
         Schema::dropIfExists('menu_disk_content_types');
         Schema::dropIfExists('menu_disk_screenshots');
-        Schema::dropIfExists('menu_disk_dumps');
-        Schema::dropIfExists('menu_disk_conditions');
         Schema::dropIfExists('menu_disks');
+        Schema::dropIfExists('menu_disk_conditions');
         Schema::dropIfExists('menus');
         Schema::dropIfExists('crew_menu_set');
         Schema::dropIfExists('menu_sets');

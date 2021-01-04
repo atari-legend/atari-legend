@@ -6,6 +6,7 @@ use App\Helpers\ChangelogHelper;
 use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
+use App\Models\Individual;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
@@ -69,7 +70,6 @@ class ImportStonishData extends Command
         });
 
         DB::table('menu_disk_contents')->delete();
-        DB::table('menu_disk_dumps')->delete();
         DB::table('menu_disk_screenshots')->delete();
         DB::table('menu_disks')->delete();
         DB::table('crew_menu_set')->delete();
@@ -105,7 +105,6 @@ class ImportStonishData extends Command
             $menuset = $this->getMenuSet($crew, $stonishMenu);
             $menu = $this->getMenu($menuset, $stonishMenu);
             $disk = $this->getMenuDisk($menu, $stonishMenu);
-            $dump = $this->getDump($disk, $stonishMenu);
 
             $contents = $db->table('allcontent')
                 ->join('software', 'content', '=', 'software.id_software')
@@ -290,7 +289,9 @@ class ImportStonishData extends Command
         if ($stonishMenu->comments !== null && trim($stonishMenu->comments) !== '') {
             $disk->notes = trim($stonishMenu->comments);
         }
+
         $menu->disks()->save($disk);
+        $this->setDump($disk, $stonishMenu);
 
         if ($stonishMenu->screenshot !== null && trim($stonishMenu->screenshot) !== '') {
             $screenshotFile = env('STONISH_ROOT') . 'screenshot/' . $stonishMenu->screenshot;
@@ -307,7 +308,7 @@ class ImportStonishData extends Command
         return $disk;
     }
 
-    private function getDump(MenuDisk $disk, object $stonishMenu): ?MenuDiskDump
+    private function setDump(MenuDisk $disk, object $stonishMenu)
     {
         if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
             $dumpFile = env('STONISH_ROOT')
@@ -317,8 +318,8 @@ class ImportStonishData extends Command
                 $this->info("\t\tFound dump {$dumpFile}");
 
                 $dump = new MenuDiskDump();
-                $dump->user_id = 0; // FIXME
-                $dump->menu_disk_condition_id = $stonishMenu->stateofdisk;
+                $disk->dump_user_id = 4; // ID of Brume
+                $disk->menu_disk_condition_id = $stonishMenu->stateofdisk;
 
                 $zip = new ZipArchive();
                 if ($zip->open($dumpFile) === true) {
@@ -329,24 +330,20 @@ class ImportStonishData extends Command
 
                     $filename = $zip->getNameIndex(0);
                     $ext = strtoupper(pathinfo($filename, PATHINFO_EXTENSION));
-                    $dump->format = $ext;
+                    $disk->dump_format = $ext;
 
                     $content = $zip->getFromIndex(0);
-                    $dump->sha512 = hash('sha512', $content);
-                    $dump->size = strlen($content);
+                    $disk->dump_sha512 = hash('sha512', $content);
+                    $disk->dump_size = strlen($content);
                 } else {
                     $this->error("Error opening ZIP file {$dumpFile}");
                     exit(1);
                 }
 
-                $disk->dumps()->save($dump);
-                Storage::disk('public')->put('zips/menus/' . $dump->id . '.zip', file_get_contents($dumpFile));
-
-                return $dump;
+                $disk->save();
+                Storage::disk('public')->put('zips/menus/' . $disk->id . '.zip', file_get_contents($dumpFile));
             }
         }
-
-        return null;
     }
 
     public function interrupt()

@@ -14,10 +14,17 @@
                             <i class="fas fa-comment fa-fw text-muted" title="Has comments"></i>
                         @endif
 
+                        @if ($disk->dump_sha512 !== null)
+                            <i class="far fa-save fa-fw text-success" title="Has dump"></i>
+                        @else
+                            <i class="far fa-save fa-fw text-error" title="No dump"></i>
+                        @endif
+
                         @if ($disk->screenshots->isNotEmpty())
                             <i class="fas fa-camera fa-fw text-muted" title="Has screenshots"></i>
                             <small class="text-muted">&times; {{ $disk->screenshots->count() }}</small>
                         @endif
+
                     </div>
                     <h3 class="card-title fs-5">
                         <a href="{{ route('admin.menus.disks.edit', $disk) }}">Part {{ $disk->label }}</a>

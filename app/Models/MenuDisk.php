@@ -16,11 +16,6 @@ class MenuDisk extends Model
         return $this->hasMany(MenuDiskScreenshot::class);
     }
 
-    public function dumps()
-    {
-        return $this->hasMany(MenuDiskDump::class);
-    }
-
     public function contents()
     {
         return $this->hasMany(MenuDiskContent::class);
