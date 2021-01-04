@@ -4,7 +4,7 @@
             <h2 class="text-uppercase">Releases</h2>
         </div>
         <div class="striped">
-            @foreach ($game->releases as $release)
+            @foreach ($game->releases->filter(function($release) { return $release->menuDiskContents->isEmpty(); }) as $release)
                 <div class="card-body ps-2 py-2 ">
                     <div class="m-0">
                         @if (isset($currentRelease) && $currentRelease->id === $release->id)
@@ -21,26 +21,6 @@
                             <span class="ms-2">{{ $release->name }}</span>
                         @elseif ($release->publisher !== null)
                             <span class="ms-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
-                        @endif
-
-                        @if ($release->menuDiskContents->isNotEmpty())
-                            <span class="ms-2 text-muted">
-                                on
-                                {{ $release->menuDiskContents->first()->menuDisk->menu->menuSet->name }}
-                                #{{ $release->menuDiskContents->first()->menuDisk->menu->label}}
-                                {{ $release->menuDiskContents->first()->menuDisk->part}}
-
-                                @php
-                                    $extra = $release->menuDiskContents
-                                        ->whereNotNull('subtype')
-                                        ->pluck('subtype')
-                                        ->join(', ')
-                                @endphp
-                                @if ($extra)
-                                    (+ {{ $extra }})
-                                @endif
-
-                            </span>
                         @endif
 
                         @foreach ($release->locations as $location)

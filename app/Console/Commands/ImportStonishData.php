@@ -12,7 +12,6 @@ use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
 use App\Models\MenuDiskContentType;
-use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\Release;
@@ -317,7 +316,6 @@ class ImportStonishData extends Command
             if (file_exists($dumpFile)) {
                 $this->info("\t\tFound dump {$dumpFile}");
 
-                $dump = new MenuDiskDump();
                 $disk->dump_user_id = 4; // ID of Brume
                 $disk->menu_disk_condition_id = $stonishMenu->stateofdisk;
 
