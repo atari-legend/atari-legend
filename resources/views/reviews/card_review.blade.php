@@ -31,7 +31,7 @@
 
             </div>
             <div class="col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
-                @foreach ($review->screenshots as $screenshot)
+                @foreach ($review->screenshots->whereNotNull('screenshot') as $screenshot)
                     <div class="bg-dark p-2">
                         <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->screenshot->file) }}" title="{{ $screenshot->comment->comment_text }}">
                             <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->screenshot->file) }}" alt="{{ $screenshot->comment->comment_text }}">
