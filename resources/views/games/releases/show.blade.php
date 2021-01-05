@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', ($release->date ? $release->date->year : '').' release of '.$release->game->game_name.' - Atari ST game release')
+@section('robots', 'follow,noindex')
 
 @section('content')
     <h1 class="visually-hidden">{{ $release->game->game_name }}</h1>
