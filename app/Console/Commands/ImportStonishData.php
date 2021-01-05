@@ -61,7 +61,8 @@ class ImportStonishData extends Command
 
         pcntl_signal(SIGINT, [$this, 'interrupt']);
 
-        Release::has('menuDiskContents')->each(function ($release) {
+        $this->info("Deleting existing release data...");
+        $this->withProgressBar(Release::has('menuDiskContents')->get(), function ($release) {
             $release->menuDiskContents->each(function ($content) {
                 $content->release()->dissociate();
                 $content->save();

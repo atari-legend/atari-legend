@@ -132,12 +132,12 @@ class CreateNewMenuStructure extends Migration
      */
     public function down()
     {
-        DB::table('menu_disk_dumps')->delete();
         DB::table('menu_disk_contents')->delete();
         DB::table('menu_disk_content_types')->delete();
         DB::table('menu_disk_screenshots')->delete();
         DB::table('menu_disks')->delete();
         DB::table('menu_disk_conditions')->delete();
+        DB::table('menu_disk_dumps')->delete();
         DB::table('menus')->delete();
         DB::table('crew_menu_set')->delete();
         DB::table('menu_sets')->delete();
