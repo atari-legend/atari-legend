@@ -127,7 +127,7 @@ class ImportStonishData extends Command
                     $notes[] = trim($content->requirement);
                 }
 
-                $menuDiskContent->notes = (count($notes) > 0) ? join("'\n", $notes) : null;
+                $menuDiskContent->notes = (count($notes) > 0) ? join("\n", $notes) : null;
 
                 if ($content->iddemozoo) {
                     $menuDiskContent->demozoo_id = $content->iddemozoo;
