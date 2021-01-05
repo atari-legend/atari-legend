@@ -59,19 +59,26 @@ class CreateNewMenuStructure extends Migration
             ['name' => 'Intact', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
+        Schema::create('menu_disk_dumps', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->enum('format', ['STX', 'MSA', 'RAW', 'SCP', 'ST'])->nullable();
+            $table->string('sha512', 128)->nullable();
+            $table->integer('size')->nullable()->comment('File size in bytes');
+            // No constraint on user as users can get deleted
+            $table->integer('user_id')->nullable()->comment('User who uploaded the dump');
+        });
+        DB::statement("ALTER TABLE `menu_disk_dumps` comment 'Dump of the physical menu disk'");
+
         Schema::create('menu_disks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('menu_id')->constrained();
             $table->string('part', 16)->nullable()->comment('Arbitrary part identifier (e.g. A, B, C, or Part I, Part II, …)');
             $table->text('scrolltext')->nullable()->comment('Content of the scrolltext');
-            $table->enum('dump_format', ['STX', 'MSA', 'RAW', 'SCP', 'ST'])->nullable();
-            $table->string('dump_sha512', 128)->nullable();
-            $table->integer('dump_size')->nullable()->comment('File size in bytes');
-            // No constraint on user as users can get deleted
-            $table->integer('dump_user_id')->nullable()->comment('User who uploaded the dump');
             $table->integer('donated_by_individual_id')->nullable()->comment('Who donated this menu/dump');
             $table->foreignId('menu_disk_condition_id')->nullable()->constrained();
+            $table->foreignId('menu_disk_dump_id')->nullable()->constrained();
             $table->string('notes', 512)->nullable();
 
             $table->foreign('donated_by_individual_id')->references('ind_id')->on('individuals');
@@ -125,6 +132,7 @@ class CreateNewMenuStructure extends Migration
      */
     public function down()
     {
+        DB::table('menu_disk_dumps')->delete();
         DB::table('menu_disk_contents')->delete();
         DB::table('menu_disk_content_types')->delete();
         DB::table('menu_disk_screenshots')->delete();
@@ -138,6 +146,7 @@ class CreateNewMenuStructure extends Migration
         Schema::dropIfExists('menu_disk_screenshots');
         Schema::dropIfExists('menu_disks');
         Schema::dropIfExists('menu_disk_conditions');
+        Schema::dropIfExists('menu_disk_dumps');
         Schema::dropIfExists('menus');
         Schema::dropIfExists('crew_menu_set');
         Schema::dropIfExists('menu_sets');

@@ -55,15 +55,15 @@
                             </div>
 
                             <div class="card-footer text-end">
-                                @if ($disk->dump_sha512)
+                                @if ($disk->menuDiskDump !== null)
 
                                         @auth
-                                        <a class="ms-1 text-muted" data-copy-text="{{ $disk->dump_sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
-                                            <abbr class="text-muted d-inline-block me-2" title="{{ $disk->dump_sha512 }}">
-                                                <small>{{ Str::limit($disk->dump_sha512, 7, '') }}</small>
+                                        <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
+                                            <abbr class="text-muted d-inline-block me-2" title="{{ $disk->menuDiskDump->sha512 }}">
+                                                <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
                                             </abbr>
 
-                                            <a href="{{ asset('storage/zips/menus/'.$disk->id.'.zip') }}">
+                                            <a href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}">
                                                 <i class="fas fa-download"></i>
                                             </a>
                                         @endauth

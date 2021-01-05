@@ -26,6 +26,11 @@ class MenuDisk extends Model
         return $this->belongsTo(Menu::class);
     }
 
+    public function menuDiskDump()
+    {
+        return $this->belongsTo(MenuDiskDump::class);
+    }
+
     public function getLabelAttribute()
     {
         return $this->part ?? '[no part]';

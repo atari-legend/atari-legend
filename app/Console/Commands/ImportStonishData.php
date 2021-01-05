@@ -12,6 +12,7 @@ use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
 use App\Models\MenuDiskContentType;
+use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\Release;
@@ -104,6 +105,7 @@ class ImportStonishData extends Command
             $menuset = $this->getMenuSet($crew, $stonishMenu);
             $menu = $this->getMenu($menuset, $stonishMenu);
             $disk = $this->getMenuDisk($menu, $stonishMenu);
+            $dump = $this->getDump($disk, $stonishMenu);
 
             $contents = $db->table('allcontent')
                 ->join('software', 'content', '=', 'software.id_software')
@@ -256,6 +258,7 @@ class ImportStonishData extends Command
             $this->warn("\t\tNo menu found for {$stonishMenu->issue}. Creating a new one");
             $menu = new Menu();
             $menu->number = $stonishMenu->issue;
+            // If no issue number but a letter, use this as the menu issue
             if ($stonishMenu->issue === null && $stonishMenu->letter !== null && trim($stonishMenu->letter) !== '') {
                 $menu->issue = $stonishMenu->letter;
             }
@@ -274,7 +277,12 @@ class ImportStonishData extends Command
     private function getMenuDisk(Menu $menu, object $stonishMenu): MenuDisk
     {
         $disk = new MenuDisk();
-        $disk->part = ($stonishMenu->letter !== null && trim($stonishMenu->letter) !== '') ? trim($stonishMenu->letter) : null;
+        // Only consider using the Stonish menu letter as the the disk part
+        // if the menu letter is not already used as the menu issue
+        if ($stonishMenu->letter !== null && trim($stonishMenu->letter) !== '' && trim($stonishMenu->letter) !== $menu->issue) {
+            $disk->part = trim($stonishMenu->letter);
+        }
+        $disk->menu_disk_condition_id = $stonishMenu->stateofdisk;
 
         // Read scrolltext from disk if it exists
         if ($stonishMenu->scrolltext !== null && trim($stonishMenu->scrolltext) !== '') {
@@ -290,7 +298,6 @@ class ImportStonishData extends Command
         }
 
         $menu->disks()->save($disk);
-        $this->setDump($disk, $stonishMenu);
 
         if ($stonishMenu->screenshot !== null && trim($stonishMenu->screenshot) !== '') {
             $screenshotFile = env('STONISH_ROOT') . 'screenshot/' . $stonishMenu->screenshot;
@@ -307,7 +314,7 @@ class ImportStonishData extends Command
         return $disk;
     }
 
-    private function setDump(MenuDisk $disk, object $stonishMenu)
+    private function getDump(MenuDisk $disk, object $stonishMenu): ?MenuDiskDump
     {
         if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
             $dumpFile = env('STONISH_ROOT')
@@ -316,8 +323,8 @@ class ImportStonishData extends Command
             if (file_exists($dumpFile)) {
                 $this->info("\t\tFound dump {$dumpFile}");
 
-                $disk->dump_user_id = 4; // ID of Brume
-                $disk->menu_disk_condition_id = $stonishMenu->stateofdisk;
+                $dump = new MenuDiskDump();
+                $dump->user_id = 4; // ID of Brume
 
                 $zip = new ZipArchive();
                 if ($zip->open($dumpFile) === true) {
@@ -328,20 +335,26 @@ class ImportStonishData extends Command
 
                     $filename = $zip->getNameIndex(0);
                     $ext = strtoupper(pathinfo($filename, PATHINFO_EXTENSION));
-                    $disk->dump_format = $ext;
+                    $dump->format = $ext;
 
                     $content = $zip->getFromIndex(0);
-                    $disk->dump_sha512 = hash('sha512', $content);
-                    $disk->dump_size = strlen($content);
+                    $dump->sha512 = hash('sha512', $content);
+                    $dump->size = strlen($content);
                 } else {
                     $this->error("Error opening ZIP file {$dumpFile}");
                     exit(1);
                 }
 
+                $dump->save();
+                $disk->menuDiskDump()->associate($dump);
                 $disk->save();
-                Storage::disk('public')->put('zips/menus/' . $disk->id . '.zip', file_get_contents($dumpFile));
+                Storage::disk('public')->put('zips/menus/' . $dump->id . '.zip', file_get_contents($dumpFile));
+
+                return $dump;
             }
         }
+
+        return null;
     }
 
     public function interrupt()
