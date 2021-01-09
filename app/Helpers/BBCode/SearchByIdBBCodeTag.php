@@ -5,8 +5,18 @@ namespace App\Helpers\BBCode;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
-class CompanyBBCodeTag extends CodeDefinition
+/**
+ * A tag to run a search by id in one of the search fields
+ * of the search page.
+ */
+class SearchByIdBBCodeTag extends CodeDefinition
 {
+    /**
+     * Create a new search tag.
+     *
+     * @param string $name Name of the tag, is also used as a search parameter
+     *                     (for example '[developer=123]' will search for 'developer_id=123')
+     */
     public function __construct(string $name)
     {
         parent::__construct();

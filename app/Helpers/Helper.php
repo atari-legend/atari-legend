@@ -3,11 +3,11 @@
 namespace App\Helpers;
 
 use App\Helpers\BBCode\ArticleBBCodeTag;
-use App\Helpers\BBCode\CompanyBBCodeTag;
 use App\Helpers\BBCode\GameBBCodeTag;
 use App\Helpers\BBCode\InterviewBBCodeTag;
 use App\Helpers\BBCode\ReleaseYearBBCodeTag;
 use App\Helpers\BBCode\ReviewBBCodeTag;
+use App\Helpers\BBCode\SearchByIdBBCodeTag;
 use App\Models\Release;
 use App\Models\User;
 
@@ -72,7 +72,9 @@ class Helper
         $parser->addCodeDefinition(new InterviewBBCodeTag());
         $parser->addCodeDefinition(new ReviewBBCodeTag());
         $parser->addCodeDefinition(new ArticleBBCodeTag());
-        $parser->addCodeDefinition(new CompanyBBCodeTag('publisher'));
+        $parser->addCodeDefinition(new SearchByIdBBCodeTag('publisher'));
+        $parser->addCodeDefinition(new SearchByIdBBCodeTag('developer'));
+        $parser->addCodeDefinition(new SearchByIdBBCodeTag('individual'));
         $parser->addCodeDefinition(new ReleaseYearBBCodeTag());
 
         $parser->parse($bbCode);
