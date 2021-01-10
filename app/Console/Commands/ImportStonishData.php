@@ -88,7 +88,8 @@ class ImportStonishData extends Command
 
         $menus = $db->table('allmenus')
             ->join('namemenus', 'name', '=', 'namemenus.id_namemenus')
-            ->select('allmenus.*', 'namemenus.name_menus')
+            ->join('people', 'donator', '=', 'people.id_people')
+            ->select('allmenus.*', 'namemenus.name_menus', 'people.*')
             ->orderBy('name_menus')
             ->orderBy('issue')
             ->orderBy('letter')
@@ -284,6 +285,7 @@ class ImportStonishData extends Command
             $disk->part = trim($stonishMenu->letter);
         }
         $disk->menu_disk_condition_id = $stonishMenu->stateofdisk;
+        $disk->donated_by_individual_id = $this->getIndividual($stonishMenu)->ind_id;
 
         // Read scrolltext from disk if it exists
         if ($stonishMenu->scrolltext !== null && trim($stonishMenu->scrolltext) !== '') {
@@ -313,6 +315,58 @@ class ImportStonishData extends Command
         }
 
         return $disk;
+    }
+
+    private function getIndividual(object $stonishMenu): Individual
+    {
+        $names = collect([
+            $stonishMenu->realname_people,
+            $stonishMenu->nickname1,
+            $stonishMenu->nickname2,
+            $stonishMenu->nickname3,
+        ])->filter(function ($name) {
+            return $name !== null && trim($name) !== '';
+        });
+
+        $name = $names->first();
+
+        $individuals = Individual::whereRaw('LOWER(TRIM(ind_name)) = ?', strtolower(trim($name)));
+        $individual = null;
+        if ($individuals->count() === 1) {
+            $individual = $individuals->first();
+            $this->info("\t\tFound individual {$individual->ind_id} {$individual->ind_name}");
+        } else {
+            if ($individuals->count() > 1) {
+                $this->error("\t\tMore than 1 individual found for {$name}");
+                $this->error("\t\t" . $individuals->pluck('ind_id')->join(', '));
+                $this->error("\t\tCreating a new one...");
+            }
+
+            $individual = new Individual();
+            $individual->ind_name = $name;
+            $individual->save();
+            $this->info("\t\tCreated individual {$individual->ind_name}");
+
+            /*
+            if ($stonishMenu->nickname1) {
+                $nicks = Individual::whereRaw('LOWER(TRIM(ind_name)) = ?', strtolower(trim($stonishMenu->nickname1)));
+                $nick = null;
+                if ($nicks->count() === 1) {
+
+                } else if ($nicks->count() < 1) {
+                    $nick = Individual::create([
+                        'ind_name' => $stonishMenu->nickname1
+                    ]);
+
+                } else if ($nicks->count() > 1) {
+                    $this->error("\t\tMore than 1 nick found for {$stonishMenu->nickname1}");
+                    $this->error("\t\t".$nicks->pluck('ind_id')->join(', '));
+                }
+            }
+            */
+        }
+
+        return $individual;
     }
 
     private function getDump(MenuDisk $disk, object $stonishMenu): ?MenuDiskDump

@@ -35,7 +35,15 @@
                         @endif
                     </div>
                     <div class="col-9 p-2">
-                        <h3 class="text-muted fs-5 float-end me-3">{{ $disk->menu->label }}{{ $disk->label }}</h3>
+                        <h3 class="text-muted fs-5 float-end me-3">
+                            @if ($disk->scrolltext !== null)
+                                <a href="javascript:;" class="d-inline-block" data-bs-toggle="collapse"
+                                    data-bs-target="#scrolltext-{{ $disk->id }}" role="button" aria-expanded="false">
+                                    <i class="fas fa-file-alt fa-fw" title="Has scrolltext"></i>
+                                </a>
+                            @endif
+                            {{ $disk->menu->label }}{{ $disk->label }}
+                        </h3>
 
                         <ul class="list-unstyled">
                             @foreach ($disk->contents->sortBy('contentName') as $content)
@@ -61,13 +69,30 @@
                         </ul>
                     </div>
                 </div>
+                @if ($disk->scrolltext !== null)
+                    <div class="collapse p-2 my-2 bg-black border border-secondary" id="scrolltext-{{ $disk->id }}">
+                        <code class="text-white">{{ $disk->scrolltext }}</code>
+                        <button type="button" class="btn float-end text-primary"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#scrolltext-{{ $disk->id }}"><i class="fas fa-2x fa-times"></i></button>
+                    </div>
+                @endif
                 <div class="card-footer bg-darklight">
                     <div class="row">
                         <div class="col text-{{ $conditionClasses[$disk->menuDiskCondition->id] }}">
                             <span class="text-muted">Condition:</span> {{ Str::lower($disk->menuDiskCondition->name) }}
                         </div>
                         <div class="col text-center">
-                            <span class="text-muted">Donated by:</span> Todo
+                            <span class="text-muted">Donated by:</span>
+                            @if ($disk->donatedBy !== null)
+                                @if ($disk->donatedBy->games->isNotEmpty())
+                                    <a href="{{ route('games.search', ['individual_id' => $disk->donatedBy->ind_id]) }}">{{ $disk->donatedBy->ind_name}}</a>
+                                @else
+                                    {{ $disk->donatedBy->ind_name }}
+                                @endif
+                            @else
+                                <span class="text-muted">unknown</span>
+                            @endif
                         </div>
                         <div class="col text-end">
                             @if ($disk->menuDiskDump !== null)

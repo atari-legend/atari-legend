@@ -36,6 +36,11 @@ class MenuDisk extends Model
         return $this->belongsTo(MenuDiskCondition::class);
     }
 
+    public function donatedBy()
+    {
+        return $this->belongsTo(Individual::class, 'donated_by_individual_id', 'ind_id');
+    }
+
     public function getLabelAttribute()
     {
         return $this->part ?? '';
