@@ -21,6 +21,10 @@ h2 {
     background: $black;
 }
 
+.border-primary-dark {
+    border-color: $primary-dark !important;
+}
+
 .striped {
     > * {
         border-bottom: solid 1px $black;

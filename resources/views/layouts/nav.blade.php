@@ -13,6 +13,9 @@
                     <a class="text-dark nav-link py-3 px-2 px-lg-3 {{ Request::routeIs('games.*') ? 'active' : '' }}" href="{{ route('games.index') }}">Games</a>
                 </li>
                 <li class="nav-item flex-fill text-center p-0">
+                    <a class="text-dark nav-link py-3 px-2 px-lg-3 {{ Request::routeIs('menus.*') ? 'active' : '' }}" href="{{ route('menus.index') }}">Menus</a>
+                </li>
+                <li class="nav-item flex-fill text-center p-0">
                     <a class="text-dark nav-link py-3 px-2 px-lg-3 {{ Request::routeIs('reviews.*') ? 'active' : '' }}" href="{{ route('reviews.index') }}">Reviews</a>
                 </li>
                 <li class="nav-item flex-fill text-center p-0">

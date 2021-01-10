@@ -62,7 +62,6 @@
 
                             <div class="card-footer text-end">
                                 @if ($disk->menuDiskDump !== null)
-
                                         @auth
                                         <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
                                             <abbr class="text-muted d-inline-block me-2" title="{{ $disk->menuDiskDump->sha512 }}">

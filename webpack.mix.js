@@ -29,3 +29,8 @@ mix.js('resources/js/charts.js', 'public/js')
     .eslint()
     .version()
     .sourceMaps();
+
+mix.js('resources/js/menus.js', 'public/js')
+    .eslint()
+    .version()
+    .sourceMaps();

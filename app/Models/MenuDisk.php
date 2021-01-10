@@ -31,8 +31,13 @@ class MenuDisk extends Model
         return $this->belongsTo(MenuDiskDump::class);
     }
 
+    public function menuDiskCondition()
+    {
+        return $this->belongsTo(MenuDiskCondition::class);
+    }
+
     public function getLabelAttribute()
     {
-        return $this->part ?? '[no part]';
+        return $this->part ?? '';
     }
 }

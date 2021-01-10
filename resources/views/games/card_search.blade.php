@@ -13,7 +13,7 @@
         </p>
     </div>
     <div class="card-body p-2">
-        <div class="row-mb-4 text-center">
+        <div class="row mb-2 text-center">
             <ul class="list-inline">
                 <li class="list-inline-item mx-0 my-1">
                     <a href="{{ route('games.search', ['titleAZ' => '0-9']) }}" class="m-1">#</a>

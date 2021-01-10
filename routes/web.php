@@ -15,6 +15,7 @@ use App\Http\Controllers\GameSearchController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\MenuSetController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RobotsController;
@@ -60,6 +61,9 @@ Route::middleware('verified')->group(function () {
     Route::get('/games/search', [GameSearchController::class, 'search'])->name('games.search');
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
+
+    Route::get('/menusets', [MenuSetController::class, 'index'])->name('menus.index');
+    Route::get('/menusets/{set}', [MenuSetController::class, 'show'])->name('menus.show');
 
     Route::resource('/reviews', ReviewController::class)->only(['index', 'show']);
 
