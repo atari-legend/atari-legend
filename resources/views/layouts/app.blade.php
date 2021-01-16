@@ -40,6 +40,9 @@
         <script type="text/javascript">
         var _paq = window._paq = window._paq || [];
         /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        @auth
+            _paq.push(['setUserId', '{{ Auth::user()->userid }}']);
+        @endauth
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function() {
