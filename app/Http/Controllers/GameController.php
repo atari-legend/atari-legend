@@ -51,7 +51,9 @@ class GameController extends Controller
         $interviews = $game->individuals
             // Display only interviews where we have a picture of the individual
             ->filter(function ($gameIndividual) {
-                return $gameIndividual->individual->text !== null && $gameIndividual->individual->text->file !== null;
+                return $gameIndividual->individual !== null
+                    && $gameIndividual->individual->text !== null
+                    && $gameIndividual->individual->text->file !== null;
             })
             ->flatMap(function ($gameIndividual) {
                 return $gameIndividual->individual->interviews;
