@@ -93,13 +93,13 @@ class CreateNewMenuStructure extends Migration
         });
         DB::statement("ALTER TABLE `menu_disk_screenshots` comment 'Screenshots of a menu disk'");
 
-        Schema::create('menu_disk_content_types', function (Blueprint $table) {
+        Schema::create('menu_software_content_types', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name', 64);
         });
-        DB::statement("ALTER TABLE `menu_disk_content_types` comment 'Type of software part of a menu disk'");
-        DB::table('menu_disk_content_types')->insert([
+        DB::statement("ALTER TABLE `menu_software_content_types` comment 'Type of software part of a menu disk'");
+        DB::table('menu_software_content_types')->insert([
             ['name' => 'Game', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Demo', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Utility', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
@@ -109,17 +109,24 @@ class CreateNewMenuStructure extends Migration
             ['name' => 'E-zine / Documentation', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
+        Schema::create('menu_software', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('menu_software_content_type_id')->constrained();
+            $table->string('name', 255);
+            $table->integer('demozoo_id')->nullable()->comment('ID of the DemoZoo production');
+        });
+        DB::statement("ALTER TABLE `menu_software` comment 'Non-game software present on menus'");
+
         Schema::create('menu_disk_contents', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('menu_disk_id')->constrained();
-            $table->string('name', 255)->nullable();
             $table->tinyInteger('order');
             $table->integer('game_release_id')->nullable();
             $table->integer('game_id')->nullable();
-            $table->foreignId('menu_disk_content_type_id')->constrained();
+            $table->foreignId('menu_software_id')->nullable()->constrainted();
             $table->string('subtype', 64)->nullable();
-            $table->integer('demozoo_id')->nullable()->comment('ID of the DemoZoo production');
             $table->string('notes', 512)->nullable();
 
             $table->foreign('game_release_id')->references('id')->on('game_release');
@@ -135,8 +142,10 @@ class CreateNewMenuStructure extends Migration
      */
     public function down()
     {
+
         DB::table('menu_disk_contents')->delete();
-        DB::table('menu_disk_content_types')->delete();
+        DB::table('menu_software')->delete();
+        DB::table('menu_software_content_types')->delete();
         DB::table('menu_disk_screenshots')->delete();
         DB::table('menu_disks')->delete();
         DB::table('menu_disk_conditions')->delete();
@@ -145,7 +154,8 @@ class CreateNewMenuStructure extends Migration
         DB::table('crew_menu_set')->delete();
         DB::table('menu_sets')->delete();
         Schema::dropIfExists('menu_disk_contents');
-        Schema::dropIfExists('menu_disk_content_types');
+        Schema::dropIfExists('menu_software');
+        Schema::dropIfExists('menu_software_content_types');
         Schema::dropIfExists('menu_disk_screenshots');
         Schema::dropIfExists('menu_disks');
         Schema::dropIfExists('menu_disk_conditions');

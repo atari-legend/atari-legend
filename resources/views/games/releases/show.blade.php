@@ -16,7 +16,6 @@
             @include('games.releases.card_media')
         </div>
         <div class="col-12 col-sm-6 col-lg-3 order-3">
-
             @include('games.card_boxscan')
         </div>
     </div>

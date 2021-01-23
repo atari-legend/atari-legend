@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
+use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
+use App\Models\MenuSoftware;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class MenuSetController extends Controller
@@ -26,7 +30,22 @@ class MenuSetController extends Controller
     public function show(MenuSet $set)
     {
         return view('menus.show')->with([
-            'menuset' => $set,
+            'menuset'          => $set,
+            'conditionClasses' => MenuSetController::CONDITION_CLASSES,
+        ]);
+    }
+
+    public function software(MenuSoftware $software)
+    {
+        $menuDisks = $software->menuDiskContents
+            ->map(function ($menuDiskContent) {
+                return $menuDiskContent->menuDisk;
+            })
+            ->unique('id');
+
+        return view('menus.software')->with([
+            'software'  => $software,
+            'menuDisks' => $menuDisks,
             'conditionClasses' => MenuSetController::CONDITION_CLASSES,
         ]);
     }

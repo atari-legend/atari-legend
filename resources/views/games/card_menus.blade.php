@@ -3,7 +3,7 @@
         This game is also found in the following menus:
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3">
+    <div class="row row-cols-1 row-cols-md-3 lightbox-gallery">
         @foreach ($game->releases->filter(function($release) { return $release->menuDiskContents->isNotEmpty(); }) as $release)
             @php
                 $disk = $release->menuDiskContents->first()->menuDisk
@@ -12,7 +12,7 @@
                 <div class="card mb-4 bg-dark w-100">
                     <div class="card-header text-center">
                         <h3 class="text-audiowide fs-6">
-                            {{ $disk->menu->menuSet->name }}
+                            <a href="{{ route('menus.show', $disk->menu->menuSet) }}" class="text-primary">{{ $disk->menu->menuSet->name }}</a>
                             #{{ $disk->menu->label}}
                             {{ $disk->part}}
                         </h3>
@@ -20,12 +20,15 @@
 
 
                     <div class="card-body p-0 d-flex flex-column striped">
-                        <!-- div class="striped" -->
                             <figure>
                                 @if ($disk->screenshots->isNotEmpty())
-                                    <img class="card-img-top w-100"
-                                        src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
-                                        alt="Screenshot of disk">
+                                    <a class="lightbox-link"
+                                        href="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
+                                        title="{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->part }}">
+                                        <img class="card-img-top w-100"
+                                            src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
+                                            alt="Screenshot of disk">
+                                    </a>
                                 @else
                                     <img class="card-img-top w-100 bg-black"
                                         src="{{ asset('images/no-screenshot.png') }}"
@@ -35,15 +38,25 @@
 
                             <div class="px-2 flex-fill">
                                 <ul class="list-unstyled ps-2">
-                                    @foreach ($disk->contents->sortBy('contentName') as $content)
+                                    @foreach ($disk->contents->sortBy('order') as $content)
                                         <li>
                                             @if ($content->release)
-                                                <a href="{{ route('games.releases.show', $content->release) }}">{{ $content->contentName }}</a>
-                                            @elseif ($content->demozoo_id)
-                                                <img src="{{ asset('images/demozoo-16x16.png') }}">
-                                                <a href="https://demozoo.org/productions/{{ $content->demozoo_id }}/">{{ $content->contentName }}</a>
-                                            @else
-                                                {{ $content->contentName }}
+                                                <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }}</a>
+                                            @elseif ($content->game)
+                                                <a href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }}</a>
+                                            @elseif ($content->menuSoftware)
+                                                @if ($content->menuSoftware->demozoo_id)
+                                                    <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
+                                                        <img src="{{ asset('images/demozoo-16x16.png') }}" alt="Demozoo link for {{ $content->menuSoftware->name }}">
+                                                    </a>
+                                                @endif
+                                                @if (isset($software) && $software->id === $content->menuSoftware->id)
+                                                    <b>{{ $content->menuSoftware->name }}</b>
+                                                @else
+                                                    <a href="{{ route('menus.software', $content->menuSoftware) }}">
+                                                        {{ $content->menuSoftware->name }}
+                                                    </a>
+                                                @endif
                                             @endif
 
                                             @if ($content->notes)
@@ -81,7 +94,6 @@
                                     <small class="text-muted">No download available</small>
                                 @endif
                             </div>
-                        <!-- /div -->
                     </div>
                 </div>
             </div>

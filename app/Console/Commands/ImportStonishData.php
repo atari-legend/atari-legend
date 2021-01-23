@@ -17,6 +17,7 @@ use App\Models\MenuDiskContentType;
 use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
+use App\Models\MenuSoftware;
 use App\Models\Release;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,6 +78,7 @@ class ImportStonishData extends Command
         });
 
         DB::table('menu_disk_contents')->delete();
+        DB::table('menu_software')->delete();
         DB::table('menu_disk_screenshots')->delete();
         DB::table('menu_disks')->delete();
         DB::table('crew_menu_set')->delete();
@@ -125,7 +127,6 @@ class ImportStonishData extends Command
             foreach ($contents as $content) {
                 $this->info("\t\t\t{$content->titlesoft} Type:{$content->typeofsoftware} SubType:{$content->type} AL:{$content->idlegend} DZ:{$content->iddemozoo} Order:{$content->id_number}");
                 $menuDiskContent = new MenuDiskContent();
-                $menuDiskContent->name = $content->titlesoft;
                 $menuDiskContent->order = $content->id_number;
 
                 $notes = [];
@@ -138,20 +139,14 @@ class ImportStonishData extends Command
 
                 $menuDiskContent->notes = (count($notes) > 0) ? join("\n", $notes) : null;
 
-                if ($content->iddemozoo) {
-                    $menuDiskContent->demozoo_id = $content->iddemozoo;
-                }
-                $menuDiskContent->menu_disk_content_type_id = $content->typeofsoftware;
                 if ($content->type !== null && trim($content->type) !== '') {
                     $menuDiskContent->subtype = trim($content->type);
                 }
 
+                // AL Game
                 if ($content->idlegend) {
                     $game = Game::find($content->idlegend);
                     if ($game !== null) {
-                        // Remove the software name, since it should be read
-                        // from the release / game
-                        $menuDiskContent->name = null;
 
                         // Find if there is already a release of this game on the same
                         // disk
@@ -174,8 +169,12 @@ class ImportStonishData extends Command
                         // Associate release with content
                         $menuDiskContent->game_release_id = $release->id;
                     } else {
-                        $this->warn("Could not find AL game with ID {$content->idlegend} for title {$content->titlesoft}");
+                        $this->error("Could not find AL game with ID {$content->idlegend} for title {$content->titlesoft}");
                     }
+                } else {
+                    // Other software
+                    $software = $this->getSoftware($content);
+                    $menuDiskContent->menu_software_id = $software->id;
                 }
 
                 $disk->contents()->save($menuDiskContent);
@@ -434,6 +433,31 @@ class ImportStonishData extends Command
         }
 
         return null;
+    }
+
+    private function getSoftware(object $menuContent): MenuSoftware
+    {
+        $softwares = MenuSoftware::where('name', '=', trim($menuContent->titlesoft));
+        $software = null;
+        if ($softwares->count() === 1) {
+            $software = $softwares->first();
+            $this->info("\t\tFound software {$software->name}");
+        } else if ($softwares->count() < 1) {
+            $this->info("\t\tNo software for {$menuContent->titlesoft}. Creating a new one");
+            $software = new MenuSoftware();
+            $software ->name = $menuContent->titlesoft;
+            if ($menuContent->iddemozoo > 0) {
+                $software->demozoo_id = $menuContent->iddemozoo;
+            }
+            $software->menu_software_content_type_id = $menuContent->typeofsoftware;
+            $software->save();
+        } else {
+            $this->error("\t\tMore than 1 software found for {$menuContent->titlesoft}");
+            $this->error("\t\t" . $softwares->pluck('id')->join(', '));
+            exit(1);
+        }
+
+        return $software;
     }
 
     public function interrupt()

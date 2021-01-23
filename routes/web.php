@@ -63,6 +63,8 @@ Route::middleware('verified')->group(function () {
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
 
     Route::get('/menusets', [MenuSetController::class, 'index'])->name('menus.index');
+    Route::get('/menusets/software/{software}', [MenuSetController::class, 'software'])->name('menus.software');
+    Route::get('/menusets/game/{game}', [MenuSetController::class, 'game'])->name('menus.game');
     Route::get('/menusets/{set}', [MenuSetController::class, 'show'])->name('menus.show');
 
     Route::resource('/reviews', ReviewController::class)->only(['index', 'show']);

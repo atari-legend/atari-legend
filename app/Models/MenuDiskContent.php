@@ -14,22 +14,13 @@ class MenuDiskContent extends Model
         return $this->belongsTo(MenuDisk::class);
     }
 
-    public function menuDiskContentType()
-    {
-        return $this->belongsTo(MenuDiskContentType::class);
-    }
-
     public function release()
     {
         return $this->belongsTo(Release::class, 'game_release_id');
     }
 
-    public function getContentNameAttribute()
+    public function menuSoftware()
     {
-        if ($this->release) {
-            return $this->release->name ?? $this->release->game->game_name;
-        } else {
-            return $this->name;
-        }
+        return $this->belongsTo(MenuSoftware::class);
     }
 }
