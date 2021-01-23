@@ -16,4 +16,9 @@ class Crew extends Model
     {
         return $this->belongsToMany(MenuSet::class, null, 'crew_id');
     }
+
+    public function individuals()
+    {
+        return $this->belongsToMany(Individual::class, 'crew_individual', 'crew_id', 'ind_id');
+    }
 }

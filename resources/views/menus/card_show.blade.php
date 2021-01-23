@@ -18,6 +18,17 @@
     @foreach ($menuset->menus->pluck('disks')->flatten() as $disk)
         <div class="col-12">
             <div class="card bg-dark mb-4 border-top-0">
+                <div class="card-header">
+                    <h3 class="text-muted fs-5 mb-0">
+                        @if ($disk->scrolltext !== null)
+                            <a href="javascript:;" class="float-end d-inline-block" data-bs-toggle="collapse"
+                                data-bs-target="#scrolltext-{{ $disk->id }}" role="button" aria-expanded="false">
+                                <i class="fas fa-file-alt fa-fw" title="Has scrolltext"></i>
+                            </a>
+                        @endif
+                        {{ $disk->menu->label }}{{ $disk->label }}
+                    </h3>
+                </div>
                 <div class="card-body p-0 row">
                     <div class="col-3">
                         @if ($disk->screenshots->isNotEmpty())
@@ -35,16 +46,6 @@
                         @endif
                     </div>
                     <div class="col-9 p-2">
-                        <h3 class="text-muted fs-5 float-end me-3">
-                            @if ($disk->scrolltext !== null)
-                                <a href="javascript:;" class="d-inline-block" data-bs-toggle="collapse"
-                                    data-bs-target="#scrolltext-{{ $disk->id }}" role="button" aria-expanded="false">
-                                    <i class="fas fa-file-alt fa-fw" title="Has scrolltext"></i>
-                                </a>
-                            @endif
-                            {{ $disk->menu->label }}{{ $disk->label }}
-                        </h3>
-
                         <ol class="list-unstyled">
                             @forelse ($disk->contents->sortBy('order') as $content)
                                 <li class="w-45 d-inline-block">

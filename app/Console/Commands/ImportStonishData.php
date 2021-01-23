@@ -65,6 +65,10 @@ class ImportStonishData extends Command
 
         $this->info("Deleting existing release data...");
         $this->withProgressBar(Release::has('menuDiskContents')->get(), function ($release) {
+            if ($this->stop) {
+                exit(1);
+            }
+
             $release->menuDiskContents->each(function ($content) {
                 $content->release()->dissociate();
                 $content->save();
@@ -105,7 +109,7 @@ class ImportStonishData extends Command
 
             $this->info("{$stonishMenu->name_menus} #{$stonishMenu->issue} {$stonishMenu->letter} {$stonishMenu->version}");
 
-            $crew = $this->getCrew($stonishMenu);
+            $crew = $this->getCrew($stonishMenu->name_menus);
             $menuset = $this->getMenuSet($crew, $stonishMenu);
             $menu = $this->getMenu($menuset, $stonishMenu);
             $disk = $this->getMenuDisk($menu, $stonishMenu);
@@ -183,17 +187,17 @@ class ImportStonishData extends Command
         return 0;
     }
 
-    private function getCrew(object $menu): Crew
+    private function getCrew(string $name): Crew
     {
-        $crews = Crew::whereRaw('LOWER(TRIM(crew_name)) = ?', strtolower(trim($menu->name_menus)));
+        $crews = Crew::whereRaw('LOWER(TRIM(crew_name)) = ?', strtolower(trim($name)));
         $crew = null;
         if ($crews->count() === 1) {
             $crew = $crews->first();
             $this->info("\tFound crew {$crew->crew_id} {$crew->crew_name}");
         } else if ($crews->count() < 1) {
-            $this->warn("\tNo crew found with name {$menu->name_menus}. Creating a new one");
+            $this->warn("\tNo crew found with name {$name}. Creating a new one");
             $crew = Crew::create([
-                'crew_name' => $menu->name_menus
+                'crew_name' => $name
             ]);
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,
@@ -205,7 +209,7 @@ class ImportStonishData extends Command
                 'sub_section_name' => $crew->crew_name,
             ]);
         } else if ($crews->count() > 1) {
-            $this->error("\tMore than 1 crew found for {$menu->name_menus}");
+            $this->error("\tMore than 1 crew found for {$name}");
             $this->error("\t" . $crews->pluck('crew_id')->join(', '));
             exit(1);
         }
@@ -346,6 +350,14 @@ class ImportStonishData extends Command
             }
         });
 
+        if ($stonishMenu->team_people !== null && trim($stonishMenu->team_people) !== '') {
+            $crew = $this->getCrew(trim($stonishMenu->team_people));
+            if (!$mainIndividual->crews->pluck('crew_id')->contains($crew->crew_id)) {
+                $this->info("\t\tAssociate individual {$mainIndividual->ind_name} with crew {$crew->crew_name}");
+                $crew->individuals()->attach($mainIndividual);
+            }
+        }
+
         return $mainIndividual;
     }
 
@@ -370,7 +382,7 @@ class ImportStonishData extends Command
 
             if ($individualData['website'] !== null && trim($individualData['website']) !== '') {
                 $text = new IndividualText();
-                $text->ind_profile = '[url]'.$individualData['website'].'[/url]';
+                $text->ind_profile = '[url]'.trim($individualData['website']).'[/url]';
                 $individual->text()->save($text);
             }
 
