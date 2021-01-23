@@ -45,9 +45,10 @@
                             {{ $disk->menu->label }}{{ $disk->label }}
                         </h3>
 
-                        <ul class="list-unstyled">
-                            @foreach ($disk->contents->sortBy('contentName') as $content)
+                        <ol class="list-unstyled">
+                            @foreach ($disk->contents->sortBy('order') as $content)
                                 <li class="w-45 d-inline-block">
+                                    <span class="text-muted">{{ $content->order }}.</span>
                                     @if ($content->release)
                                         <a href="{{ route('games.releases.show', $content->release) }}">{{ $content->contentName }}</a>
                                     @elseif ($content->demozoo_id)
@@ -66,7 +67,7 @@
                                     @endif
                                 </li>
                             @endforeach
-                        </ul>
+                        </ol>
                     </div>
                 </div>
                 @if ($disk->scrolltext !== null)
@@ -83,15 +84,13 @@
                             <span class="text-muted">Condition:</span> {{ Str::lower($disk->menuDiskCondition->name) }}
                         </div>
                         <div class="col text-center">
-                            <span class="text-muted">Donated by:</span>
                             @if ($disk->donatedBy !== null)
+                                <span class="text-muted">Donated by:</span>
                                 @if ($disk->donatedBy->games->isNotEmpty())
                                     <a href="{{ route('games.search', ['individual_id' => $disk->donatedBy->ind_id]) }}">{{ $disk->donatedBy->ind_name}}</a>
                                 @else
                                     {{ $disk->donatedBy->ind_name }}
                                 @endif
-                            @else
-                                <span class="text-muted">unknown</span>
                             @endif
                         </div>
                         <div class="col text-end">

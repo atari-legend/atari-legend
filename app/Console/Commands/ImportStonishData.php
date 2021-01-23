@@ -7,6 +7,8 @@ use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\Individual;
+use App\Models\IndividualNick;
+use App\Models\IndividualText;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
@@ -116,9 +118,10 @@ class ImportStonishData extends Command
                 ->get();
 
             foreach ($contents as $content) {
-                $this->info("\t\t\t{$content->titlesoft} Type:{$content->typeofsoftware} SubType:{$content->type} AL:{$content->idlegend} DZ:{$content->iddemozoo}");
+                $this->info("\t\t\t{$content->titlesoft} Type:{$content->typeofsoftware} SubType:{$content->type} AL:{$content->idlegend} DZ:{$content->iddemozoo} Order:{$content->id_number}");
                 $menuDiskContent = new MenuDiskContent();
-                $menuDiskContent->name = $content->titlesoft;   // Remove if AL link?
+                $menuDiskContent->name = $content->titlesoft;
+                $menuDiskContent->order = $content->id_number;
 
                 $notes = [];
                 if ($content->version_software !== null && trim($content->version_software) !== '') {
@@ -285,7 +288,9 @@ class ImportStonishData extends Command
             $disk->part = trim($stonishMenu->letter);
         }
         $disk->menu_disk_condition_id = $stonishMenu->stateofdisk;
-        $disk->donated_by_individual_id = $this->getIndividual($stonishMenu)->ind_id;
+        if ($stonishMenu->realname_people !== 'unknown') {
+            $disk->donated_by_individual_id = $this->getMainIndividual($stonishMenu)->ind_id;
+        }
 
         // Read scrolltext from disk if it exists
         if ($stonishMenu->scrolltext !== null && trim($stonishMenu->scrolltext) !== '') {
@@ -317,19 +322,34 @@ class ImportStonishData extends Command
         return $disk;
     }
 
-    private function getIndividual(object $stonishMenu): Individual
+    private function getMainIndividual(object $stonishMenu): Individual
     {
-        $names = collect([
-            $stonishMenu->realname_people,
-            $stonishMenu->nickname1,
-            $stonishMenu->nickname2,
-            $stonishMenu->nickname3,
-        ])->filter(function ($name) {
-            return $name !== null && trim($name) !== '';
+        $individuals = collect([
+            ['name' => $stonishMenu->realname_people, 'team' => $stonishMenu->team_people, 'website' => $stonishMenu->website_people],
+            ['name' => $stonishMenu->nickname1, 'team' => $stonishMenu->team_people, 'website' => $stonishMenu->website_people],
+            ['name' => $stonishMenu->nickname2, 'team' => $stonishMenu->team_people, 'website' => $stonishMenu->website_people],
+            ['name' => $stonishMenu->nickname3, 'team' => $stonishMenu->team_people, 'website' => $stonishMenu->website_people],
+        ])->filter(function ($individualData) {
+            return $individualData['name'] !== null && trim($individualData['name']) !== '';
+        })->map(function ($individualData) {
+            return $this->getIndividual($individualData);
         });
 
-        $name = $names->first();
+        $mainIndividual = $individuals->shift();
+        $individuals->each(function ($individual) use ($mainIndividual) {
+            if (!$mainIndividual->nicknames->pluck('ind_id')->contains($individual->ind_id)) {
+                $nick = new IndividualNick();
+                $nick->ind_id = $mainIndividual->ind_id;
+                $nick->nick_id = $individual->ind_id;
+                $mainIndividual->nicknames()->save($nick);
+            }
+        });
 
+        return $mainIndividual;
+    }
+
+    private function getIndividual(array $individualData): Individual {
+        $name = $individualData['name'];
         $individuals = Individual::whereRaw('LOWER(TRIM(ind_name)) = ?', strtolower(trim($name)));
         $individual = null;
         if ($individuals->count() === 1) {
@@ -339,31 +359,22 @@ class ImportStonishData extends Command
             if ($individuals->count() > 1) {
                 $this->error("\t\tMore than 1 individual found for {$name}");
                 $this->error("\t\t" . $individuals->pluck('ind_id')->join(', '));
-                $this->error("\t\tCreating a new one...");
+                exit(1);
+                // $this->error("\t\tCreating a new one...");
             }
 
             $individual = new Individual();
             $individual->ind_name = $name;
             $individual->save();
-            $this->info("\t\tCreated individual {$individual->ind_name}");
 
-            /*
-            if ($stonishMenu->nickname1) {
-                $nicks = Individual::whereRaw('LOWER(TRIM(ind_name)) = ?', strtolower(trim($stonishMenu->nickname1)));
-                $nick = null;
-                if ($nicks->count() === 1) {
-
-                } else if ($nicks->count() < 1) {
-                    $nick = Individual::create([
-                        'ind_name' => $stonishMenu->nickname1
-                    ]);
-
-                } else if ($nicks->count() > 1) {
-                    $this->error("\t\tMore than 1 nick found for {$stonishMenu->nickname1}");
-                    $this->error("\t\t".$nicks->pluck('ind_id')->join(', '));
-                }
+            if ($individualData['website'] !== null && trim($individualData['website']) !== '') {
+                $text = new IndividualText();
+                $text->ind_profile = '[url]'.$individualData['website'].'[/url]';
+                $individual->text()->save($text);
             }
-            */
+
+
+            $this->info("\t\tCreated individual {$individual->ind_name}");
         }
 
         return $individual;

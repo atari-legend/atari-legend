@@ -114,13 +114,16 @@ class CreateNewMenuStructure extends Migration
             $table->timestamps();
             $table->foreignId('menu_disk_id')->constrained();
             $table->string('name', 255)->nullable();
+            $table->tinyInteger('order');
             $table->integer('game_release_id')->nullable();
+            $table->integer('game_id')->nullable();
             $table->foreignId('menu_disk_content_type_id')->constrained();
             $table->string('subtype', 64)->nullable();
             $table->integer('demozoo_id')->nullable()->comment('ID of the DemoZoo production');
             $table->string('notes', 512)->nullable();
 
             $table->foreign('game_release_id')->references('id')->on('game_release');
+            $table->foreign('game_id')->references('game_id')->on('game');
         });
         DB::statement("ALTER TABLE `menu_disk_contents` comment 'A software present on a menu disk'");
     }
