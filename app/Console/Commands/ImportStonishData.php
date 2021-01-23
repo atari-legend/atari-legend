@@ -342,7 +342,7 @@ class ImportStonishData extends Command
 
         $mainIndividual = $individuals->shift();
         $individuals->each(function ($individual) use ($mainIndividual) {
-            if (!$mainIndividual->nicknames->pluck('ind_id')->contains($individual->ind_id)) {
+            if (!$mainIndividual->nicknames->pluck('nick_id')->contains($individual->ind_id)) {
                 $nick = new IndividualNick();
                 $nick->ind_id = $mainIndividual->ind_id;
                 $nick->nick_id = $individual->ind_id;
