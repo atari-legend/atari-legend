@@ -46,7 +46,7 @@
                         </h3>
 
                         <ol class="list-unstyled">
-                            @foreach ($disk->contents->sortBy('order') as $content)
+                            @forelse ($disk->contents->sortBy('order') as $content)
                                 <li class="w-45 d-inline-block">
                                     <span class="text-muted">{{ $content->order }}.</span>
                                     @if ($content->release)
@@ -66,7 +66,9 @@
                                         <small class="text-muted">[{{ $content->subtype }}]</small>
                                     @endif
                                 </li>
-                            @endforeach
+                            @empty
+                                <span class="text-muted">Unknown content</span>
+                            @endforelse
                         </ol>
                     </div>
                 </div>

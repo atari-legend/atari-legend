@@ -115,6 +115,7 @@ class ImportStonishData extends Command
                 ->join('software', 'content', '=', 'software.id_software')
                 ->select('allcontent.*', 'software.*')
                 ->where('id_menus', '=', $stonishMenu->id_allmenus)
+                ->where('id_software', '!=', 0)
                 ->get();
 
             foreach ($contents as $content) {
