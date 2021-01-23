@@ -11,8 +11,8 @@
     </div>
     <div class="card-body p-2">
         <div class="row mb-2 text-center">
-            <ul class="list-inline">
-                <li class="list-inline-item mx-0 my-1">
+            <ul class="list-inline menu-index">
+                <li class="list-inline-item mx-0 my-1 active">
                     <a href="#" class="m-1" data-isotope-filter="*">All</a>
                 </li>
                 @foreach (range('A', 'Z') as $letter)

@@ -1,3 +1,10 @@
 .menuset-letter {
     width: 5rem;
 }
+
+.menu-index li.active {
+    background-color: $primary;
+    a {
+        color: $dark;
+    }
+}

@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('[data-isotope-filter]').forEach(el => {
         el.addEventListener('click', (e) => {
+            document.querySelectorAll('[data-isotope-filter]').forEach(e => {
+                e.parentElement.classList.remove('active');
+            });
+            el.parentElement.classList.add('active');
+
             isotope.arrange({filter: el.dataset.isotopeFilter});
             e.preventDefault();
         });
