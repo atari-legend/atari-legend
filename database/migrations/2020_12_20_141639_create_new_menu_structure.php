@@ -126,7 +126,8 @@ class CreateNewMenuStructure extends Migration
             $table->integer('game_id')->nullable();
             $table->foreignId('menu_software_id')->nullable()->constrainted();
             $table->string('subtype', 64)->nullable();
-            $table->string('notes', 512)->nullable();
+            $table->string('version', 64)->nullable();
+            $table->string('requirements', 64)->nullable();
 
             $table->foreign('game_release_id')->references('id')->on('game_release');
             $table->foreign('game_id')->references('game_id')->on('game');

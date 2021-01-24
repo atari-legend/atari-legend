@@ -51,18 +51,22 @@
                             @if (isset($software) && $software->id === $content->menuSoftware->id)
                                 <b>{{ $content->menuSoftware->name }}</b>
                             @else
-                                <a href="{{ route('menus.software', $content->menuSoftware) }}">
+                                <a href="{{ route('menus.software', $content->menuSoftware) }}" class="d-inline-block">
                                     {{ $content->menuSoftware->name }}
                                 </a>
                             @endif
                         @endif
 
-                        @if ($content->notes)
-                            <small class="text-muted"><em>{{ $content->notes }}</em></small>
+                        @if ($content->version)
+                            <small class="text-muted"><em>{{ $content->version }}</em></small>
                         @endif
 
                         @if ($content->subtype)
                             <small class="text-muted">[{{ $content->subtype }}]</small>
+                        @endif
+
+                        @if ($content->requirements)
+                            <small class="text-muted">({{ $content->requirements }})</small>
                         @endif
                     </li>
                 @empty

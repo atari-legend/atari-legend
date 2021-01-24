@@ -130,15 +130,13 @@ class ImportStonishData extends Command
                 $menuDiskContent = new MenuDiskContent();
                 $menuDiskContent->order = $content->id_number;
 
-                $notes = [];
                 if ($content->version_software !== null && trim($content->version_software) !== '') {
-                    $notes[] = trim($content->version_software);
-                }
-                if ($content->requirement !== null && trim($content->requirement) !== '') {
-                    $notes[] = trim($content->requirement);
+                    $menuDiskContent->version = trim($content->version_software);
                 }
 
-                $menuDiskContent->notes = (count($notes) > 0) ? join("\n", $notes) : null;
+                if ($content->requirement !== null && trim($content->requirement) !== '') {
+                    $menuDiskContent->requirements = trim($content->requirement);
+                }
 
                 if ($content->type !== null && trim($content->type) !== '') {
                     $menuDiskContent->subtype = trim($content->type);
