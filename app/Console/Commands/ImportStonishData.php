@@ -122,6 +122,7 @@ class ImportStonishData extends Command
                 ->select('allcontent.*', 'software.*')
                 ->where('id_menus', '=', $stonishMenu->id_allmenus)
                 ->where('id_software', '!=', 0)
+                ->orderBy('type')
                 ->get();
 
             foreach ($contents as $content) {
@@ -147,7 +148,6 @@ class ImportStonishData extends Command
                 if ($content->idlegend) {
                     $game = Game::find($content->idlegend);
                     if ($game !== null) {
-
                         // Find if there is already a release of this game on the same
                         // disk
                         $release = Release::whereHas('menuDiskContents', function (Builder $query) use ($disk) {
@@ -155,7 +155,12 @@ class ImportStonishData extends Command
                         })
                             ->where('game_id', '=', $game->game_id)
                             ->first();
-                        if (!$release) {
+
+
+                        // Only create a release if there is not type like "doc" or "trainer",
+                        // in which case either it refers to an existing release on this menu,
+                        // or a game that is not in the menu (for example Sewer Doc Disks)
+                        if (!$release && $content->type === null || trim($content->type) === '') {
                             // Create a new release
                             $release = new Release();
                             $release->type = 'Unofficial';
@@ -164,10 +169,19 @@ class ImportStonishData extends Command
                                 $release->date = $menu->date;
                             }
                             $release->save();
+                            $this->info("\t\t\t\tCreated new release {$release->id} for Game ID {$content->idlegend}, type {$content->type}");
                         }
 
-                        // Associate release with content
-                        $menuDiskContent->game_release_id = $release->id;
+                        if ($release) {
+                            // Associate release with content
+                            $menuDiskContent->game_release_id = $release->id;
+                            $this->info("\t\t\t\tAssociated release {$release->id} for Game ID {$content->idlegend}, type {$content->type}");
+                        } else {
+                            // No release on this menu, but be a doc or trainer for
+                            // another game. Associate with the game
+                            $menuDiskContent->game_id = $game->game_id;
+                            $this->info("\t\t\t\tAssociated Game {$game->game_name} for Game ID {$content->idlegend}, type {$content->type}");
+                        }
                     } else {
                         $this->error("Could not find AL game with ID {$content->idlegend} for title {$content->titlesoft}");
                     }
@@ -179,7 +193,6 @@ class ImportStonishData extends Command
 
                 $disk->contents()->save($menuDiskContent);
             }
-
 
             $this->info("\t\tImported menu!");
         }

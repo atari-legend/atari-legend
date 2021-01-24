@@ -35,7 +35,6 @@
             <ol class="list-unstyled">
                 @forelse ($disk->contents->sortBy('order') as $content)
                     <li class="w-45 d-inline-block">
-                        <span class="text-muted">{{ $content->order }}.</span>
                         @if ($content->release)
                             <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }}</a>
                             <a href="{{ route('games.releases.show', $content->release) }}" class="text-muted d-inline-block" title="Release information">
