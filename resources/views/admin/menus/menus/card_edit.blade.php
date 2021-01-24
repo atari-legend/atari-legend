@@ -1,12 +1,13 @@
+<h2 class="card-title fs-4">
+    @if (isset($menu))
+        Edit menu <em>{{ $menu->label }}</em> of set: {{ $set->name }}
+    @else
+        Add a new menu in set: {{ $set->name }}
+    @endif
+</h2>
+
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">
-            @if (isset($menu))
-                Edit menu <em>{{ $menu->label }}</em> of set: {{ $set->name }}
-            @else
-                Add a new menu in set: {{ $set->name }}
-            @endif
-        </h2>
         <form action="{{ isset($menu) ? route('admin.menus.menus.update', $menu) : route('admin.menus.menus.store') }}" method="post">
             @csrf
             <input type="hidden" name="set" value="{{ $set->id }}">
@@ -65,18 +66,6 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-            </div>
-
-            <div class="mb-3">
-                <label for="notes" class="form-label">Notes</label>
-                <textarea class="form-control @error('number') is-invalid @enderror"
-                    id="notes" name="notes" rows="5">{{ old('notes', $menu->notes ?? '') }}</textarea>
-
-                @error('notes')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

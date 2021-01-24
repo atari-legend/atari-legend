@@ -35,7 +35,6 @@ class MenusController extends Controller
             'issue'        => $request->issue,
             'version'      => $request->version,
             'date'         => $request->date,
-            'notes'        => $request->notes,
             'menu_set_id'  => $set->id,
         ]);
 
@@ -64,7 +63,6 @@ class MenusController extends Controller
             'issue'        => $request->issue,
             'version'      => $request->version,
             'date'         => $request->date,
-            'notes'        => $request->notes,
         ]);
 
         return redirect()->route('admin.menus.sets.edit', $menu->menuSet);

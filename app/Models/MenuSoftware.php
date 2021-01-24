@@ -9,6 +9,8 @@ class MenuSoftware extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'demozoo_id', 'menu_software_content_type_id'];
+
     public function menuSoftwareContentType()
     {
         return $this->belongsTo(MenuSoftwareContentType::class);

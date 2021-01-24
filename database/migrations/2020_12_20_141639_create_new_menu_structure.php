@@ -41,7 +41,6 @@ class CreateNewMenuStructure extends Migration
             $table->string('issue', 16)->nullable()->comment('Menu issue (number or letter, etc.)');
             $table->date('date')->nullable()->comment('Release date');
             $table->string('version', 8)->nullable();
-            $table->string('notes', 512)->nullable();
             $table->foreignId('menu_set_id')->constrained();
         });
         DB::statement("ALTER TABLE `menus` comment 'An individual menu'");

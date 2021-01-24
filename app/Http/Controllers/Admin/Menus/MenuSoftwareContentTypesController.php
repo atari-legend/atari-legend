@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin\Menus;
 
 use App\Http\Controllers\Controller;
-use App\Models\MenuDiskContentType;
+use App\Models\MenuSoftwareContentType;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
-class MenuContentTypesController extends Controller
+class MenuSoftwareContentTypesController extends Controller
 {
     public function index()
     {
-        $contentTypes = MenuDiskContentType::orderBy('name')
+        $contentTypes = MenuSoftwareContentType::orderBy('name')
             ->get();
 
         return view('admin.menus.content-types.index')
@@ -38,14 +38,14 @@ class MenuContentTypesController extends Controller
 
     public function store(Request $request)
     {
-        MenuDiskContentType::create([
+        MenuSoftwareContentType::create([
             'name' => $request->name,
         ]);
 
         return redirect()->route('admin.menus.content-types.index');
     }
 
-    public function edit(MenuDiskContentType $contentType)
+    public function edit(MenuSoftwareContentType $contentType)
     {
         return view('admin.menus.content-types.edit')
             ->with([
@@ -58,14 +58,14 @@ class MenuContentTypesController extends Controller
             ]);
     }
 
-    public function update(Request $request, MenuDiskContentType $contentType)
+    public function update(Request $request, MenuSoftwareContentType $contentType)
     {
         $contentType->update(['name' => $request->name]);
 
         return redirect()->route('admin.menus.content-types.index');
     }
 
-    public function destroy(MenuDiskContentType $contentType)
+    public function destroy(MenuSoftwareContentType $contentType)
     {
         $contentType->delete();
         return redirect()->route('admin.menus.content-types.index');

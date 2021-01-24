@@ -1,12 +1,13 @@
+<h2 class="card-title fs-4">
+    @if (isset($set))
+        Edit <em>{{ $set->name }}</em>
+    @else
+        Add a new menu set
+    @endif
+</h2>
+
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">
-            @if (isset($set))
-                Edit <em>{{ $set->name }}</em>
-            @else
-                Add a new menu set
-            @endif
-        </h2>
         <form action="{{ isset($set) ? route('admin.menus.sets.update', $set) : route('admin.menus.sets.store') }}" method="post">
             @csrf
             @if (isset($set))

@@ -69,6 +69,10 @@
                     <span class="text-muted">Unknown content</span>
                 @endforelse
             </ol>
+
+            @if ($disk->notes !== null)
+                <span class="text-muted">Notes: </span>{{ $disk->notes }}
+            @endif
         </div>
     </div>
     @if ($disk->scrolltext !== null)

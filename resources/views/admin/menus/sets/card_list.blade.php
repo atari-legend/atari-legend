@@ -1,6 +1,7 @@
+<h2 class="card-title fs-4">{{ $sets->count() }} Menu sets</h2>
+
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">{{ $sets->count() }} Menu sets</h2>
         <table class="table table-hover">
             <thead>
                 <tr>

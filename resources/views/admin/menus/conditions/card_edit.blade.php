@@ -1,12 +1,13 @@
+<h2 class="card-title fs-4">
+    @if (isset($condition))
+        Edit <em>{{ $condition->name }}</em>
+    @else
+        Add a new menu condition
+    @endif
+</h2>
+
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">
-            @if (isset($condition))
-                Edit <em>{{ $condition->name }}</em>
-            @else
-                Add a new menu condition
-            @endif
-        </h2>
         <form action="{{ isset($condition) ? route('admin.menus.conditions.update', $condition) : route('admin.menus.conditions.store') }}" method="post">
             @csrf
             @if (isset($condition))

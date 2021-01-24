@@ -1,11 +1,12 @@
+<h2 class="card-title fs-4">Software content types</h2>
+
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">Menu content types</h2>
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Menu disks count</th>
+                    <th>Software count</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th></th>
@@ -25,7 +26,14 @@
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf
                                 @method('DELETE')
-                                <button title="Delete content-type '{{ $contentType->name }}'" class="btn">
+                                <button
+                                    @if ($contentType->contents->isNotEmpty())
+                                        disabled
+                                        title="Content-type is in use and cannot be deleted"
+                                    @else
+                                        title="Delete content-type '{{ $contentType->name }}'"
+                                    @endif
+                                    class="btn">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
                             </form>

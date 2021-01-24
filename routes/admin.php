@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\Menus\MenuContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuDisksController;
 use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\Menus\MenuSetsController;
+use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
+use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('verified')->group(function () {
@@ -24,7 +26,8 @@ Route::middleware('verified')->group(function () {
                     Route::resource('menus', MenusController::class);
                     Route::resource('disks', MenuDisksController::class);
                     Route::resource('conditions', MenuConditionsController::class);
-                    Route::resource('content-types', MenuContentTypesController::class);
+                    Route::resource('content-types', MenuSoftwareContentTypesController::class);
+                    Route::resource('software', MenuSoftwareController::class);
                 });
 
             });

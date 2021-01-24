@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MenuDiskContentType extends Model
+class MenuSoftwareContentType extends Model
 {
     use HasFactory;
 
@@ -13,6 +13,6 @@ class MenuDiskContentType extends Model
 
     public function contents()
     {
-        return $this->hasMany(MenuDiskContent::class);
+        return $this->hasMany(MenuSoftware::class);
     }
 }

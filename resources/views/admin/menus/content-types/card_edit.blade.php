@@ -1,12 +1,13 @@
+<h2 class="card-title fs-4">
+    @if (isset($contentType))
+        Edit <em>{{ $contentType->name }}</em>
+    @else
+        Add a new menu content-type
+    @endif
+</h2>
+
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">
-            @if (isset($contentType))
-                Edit <em>{{ $contentType->name }}</em>
-            @else
-                Add a new menu content-type
-            @endif
-        </h2>
         <form action="{{ isset($contentType) ? route('admin.menus.content-types.update', $contentType) : route('admin.menus.content-types.store') }}" method="post">
             @csrf
             @if (isset($contentType))

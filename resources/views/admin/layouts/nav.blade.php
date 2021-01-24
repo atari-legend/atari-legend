@@ -123,6 +123,7 @@
                         <li><a class="@activeroute('admin.menus.sets.*')" href="{{ route('admin.menus.sets.index') }}">Sets</a></li>
                         <li><a class="@activeroute('admin.menus.conditions.*')" href="{{ route('admin.menus.conditions.index') }}">Conditions</a></li>
                         <li><a class="@activeroute('admin.menus.content-types.*')" href="{{ route('admin.menus.content-types.index') }}">Content Types</a></li>
+                        <li><a class="@activeroute('admin.menus.software.*')" href="{{ route('admin.menus.software.index') }}">Software</a></li>
                     </ul>
                 </div>
             </div>
