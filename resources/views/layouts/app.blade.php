@@ -23,18 +23,6 @@
         }
     </script>
 
-    @if (config('al.analytics.id'))
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="//www.googletagmanager.com/gtag/js?id={{ config('al.analytics.id') }}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', '{{ config('al.analytics.id') }}');
-        </script>
-    @endif
-
     @if (config('al.analytics.matomo.id'))
         <!-- Matomo -->
         <script type="text/javascript">

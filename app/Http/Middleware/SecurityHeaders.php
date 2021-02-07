@@ -25,7 +25,7 @@ class SecurityHeaders
         $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
         $response->headers->set(
             'Content-Security-Policy',
-            "default-src 'self' matomo.atarilegend.com www.googletagmanager.com www.google-analytics.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:"
+            "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:"
         );
 
         return $response;

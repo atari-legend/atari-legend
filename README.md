@@ -35,7 +35,7 @@ AL_LEGACY_BASE_URL=http://legacy.atarilegend.com
 CAPTCHA_SITEKEY=10000000-ffff-ffff-ffff-000000000001
 CAPTCHA_SECRET=0x0000000000000000000000000000000000000000
 
-# Google Analytics ID. Leave blank to not include the Google Analytics tag in
+# Matomo analytics ID. Leave blank to not include the Matomo analytics tag in
 # the pages
-GOOGLE_ANALYTICS_ID=UA-12345-67
+MATOMO_ID=12345
 ```
