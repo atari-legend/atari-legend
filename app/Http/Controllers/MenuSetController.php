@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\Menu;
+use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
@@ -11,6 +13,9 @@ use Illuminate\Http\Request;
 
 class MenuSetController extends Controller
 {
+
+    const PAGE_SIZE = 10;
+
     const CONDITION_CLASSES = [
         1 => 'danger',
         2 => 'warning',
@@ -29,8 +34,18 @@ class MenuSetController extends Controller
 
     public function show(MenuSet $set)
     {
+        $disks = MenuDisk::select('menu_disks.*')
+            ->join('menus', 'menu_id', '=', 'menus.id')
+            ->where('menus.menu_set_id', '=', $set->id)
+            ->orderBy('number', $set->menus_sort)
+            ->orderBy('issue', $set->menus_sort)
+            ->orderBy('version')
+            ->orderBy('part')
+            ->paginate(MenuSetController::PAGE_SIZE);
+
         return view('menus.show')->with([
             'menuset'          => $set,
+            'disks'            => $disks,
             'conditionClasses' => MenuSetController::CONDITION_CLASSES,
         ]);
     }

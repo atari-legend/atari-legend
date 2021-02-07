@@ -1,11 +1,14 @@
-<div class="card bg-dark mb-4 border-top-0">
+<div class="card bg-dark mb-4 border-top-0" id="menudisk-{{ $disk->id }}">
     <div class="card-header">
-        <h3 class="text-muted fs-5 mb-0">
+        <h3 class="fs-5 mb-0">
             @if ($disk->scrolltext !== null)
-                <a href="javascript:;" class="float-end d-inline-block text-primary" data-bs-toggle="collapse"
+                <a href="javascript:;" class="float-end d-inline-block text-primary ms-2" data-bs-toggle="collapse"
                     data-bs-target="#scrolltext-{{ $disk->id }}" role="button" aria-expanded="false">
                     <i class="fas fa-scroll fa-fw" title="Has scrolltext"></i>
                 </a>
+            @endif
+            @if ($disk->menu->date)
+                <small class="text-muted float-end">{{ $disk->menu->date->format('F j, Y') }}</small>
             @endif
             {{-- Only display the menuset name if we're not displaying the menu set
                 (e.g. when listing menus for a software) --}}

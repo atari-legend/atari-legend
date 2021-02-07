@@ -240,7 +240,7 @@ class ImportStonishData extends Command
             $menuset->name = $menu->name_menus;
             if ($crew->crew_name === 'Euroswap') {
                 // Special case: Euroswap menus are sorted from highest to lowest
-                $menuset->menus_sort = 'descending';
+                $menuset->menus_sort = 'desc';
             }
             $crew->menuSets()->save($menuset);
         } else if ($menusets->count() > 2) {

@@ -24,6 +24,8 @@ class StatisticsHelper
             'Relases with box scans'        => DB::table('game_release_scan')->distinct('game_release_id')->count(),
             'Games with genre assigned'     => DB::table('game_genre_cross')->distinct('game_id')->count(),
             'Games reviewed'                => DB::table('review_game')->distinct('game_id')->count(),
+            'Menu sets'                     => DB::table('menu_sets')->count(),
+            'Menu disks'                    => DB::table('menu_disks')->count(),
             'Registered users'              => DB::table('users')->count(),
             'Articles'                      => DB::table('article_main')->count(),
             'Links'                         => DB::table('website')->count(),

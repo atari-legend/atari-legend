@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\MenuSetController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class MenuDisk extends Model
 {
@@ -44,5 +46,37 @@ class MenuDisk extends Model
     public function getLabelAttribute()
     {
         return $this->part ?? '';
+    }
+
+    public function getMenusetPageNumberAttribute()
+    {
+        $id = $this->id;
+
+        $index = $this->menu
+            ->menuSet
+            ->menus
+            ->flatMap(function ($menu) {
+                return $menu->disks->map(function ($disk) use ($menu) {
+                    return [
+                        'id'     => $disk->id,
+                        'number' => $menu->number,
+                        'issue'  => $menu->issue,
+                        'version' => $menu->version,
+                        'part'   => $disk->part
+                    ];
+                })
+                    ->all();
+            })
+            ->sortBy([
+                ['number', $this->menu->menuSet->menus_sort],
+                ['issue', $this->menu->menuSet->menus_sort],
+                ['version', 'asc'],
+                ['part', 'asc'],
+            ])
+            ->pluck('id')
+            ->values()
+            ->search($this->id);
+
+        return ceil($index / MenuSetController::PAGE_SIZE);
     }
 }

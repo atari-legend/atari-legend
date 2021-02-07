@@ -15,10 +15,12 @@
 </div>
 
 <div class="row lightbox-gallery">
-    @foreach ($menuset->menus->pluck('disks')->flatten() as $disk)
+    @foreach ($disks as $disk)
         <div class="col-12">
             @include('menus.partial_menudisk')
         </div>
     @endforeach
+
+    {{ $disks->links() }}
 </div>
 
