@@ -24,10 +24,13 @@ class Menu extends Component
      */
     public function render()
     {
-        $disk = MenuDisk::has('screenshots')
+        $disk = null;
+        MenuDisk::has('screenshots')
             ->has('menuDiskDump')
             ->get()
-            ->random();
+            ->whenNotEmpty(function ($collection) use (&$disk) {
+                $disk = $collection->random();
+            });
 
         return view('components.cards.menu')
             ->with([
