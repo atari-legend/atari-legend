@@ -37,7 +37,7 @@ DEPLOY_HOST=$2
 DEPLOY_PATH=$3
 LEGACY_PATH=$4
 
-if [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_PATH" ] || [ -z "$LEGACY_PATH" ]; then
+if [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_PATH" ] ; then
     echo "Missing mandatory deployment arguments"
     exit
 fi
@@ -48,7 +48,9 @@ ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 rsync ${RSYNC_FLAGS[@]} . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 
 # Create link to production data folder, if it does not already exist
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../$LEGACY_PATH/data public"
+if [ ! -z "$LEGACY_PATH" ]; then
+    ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../$LEGACY_PATH/data public"
+fi
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.0-cli artisan storage:link"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.0-cli artisan migrate --force"

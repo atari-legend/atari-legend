@@ -74,6 +74,13 @@ jobs:
           ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
           ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "dev.atarilegend.com" "legacydev.atarilegend.com"
 
+      - name: Deploy menus
+        if: github.ref == 'refs/heads/menus'
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "menus.atarilegend.com"
+
       - name: Deploy production
         if: github.ref == 'refs/heads/master'
         run: |
