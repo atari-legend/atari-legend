@@ -23,7 +23,9 @@ class CreateNewMenuStructure extends Migration
                 ->default('asc')
                 ->comment('How to sort menus of this set');
         });
-        DB::statement("ALTER TABLE `menu_sets` comment 'Sets of menus'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_sets` comment 'Sets of menus'");
+        }
 
         Schema::create('crew_menu_set', function (Blueprint $table) {
             $table->integer('crew_id');
@@ -32,7 +34,9 @@ class CreateNewMenuStructure extends Migration
 
             $table->foreign('crew_id')->references('crew_id')->on('crew');
         });
-        DB::statement("ALTER TABLE `crew_menu_set` comment 'Pivot between menu sets and crews'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `crew_menu_set` comment 'Pivot between menu sets and crews'");
+        }
 
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
@@ -43,14 +47,18 @@ class CreateNewMenuStructure extends Migration
             $table->string('version', 8)->nullable();
             $table->foreignId('menu_set_id')->constrained();
         });
-        DB::statement("ALTER TABLE `menus` comment 'An individual menu'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menus` comment 'An individual menu'");
+        }
 
         Schema::create('menu_disk_conditions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name', 64);
         });
-        DB::statement("ALTER TABLE `menu_disk_conditions` comment 'Condition of a menu disk'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_disk_conditions` comment 'Condition of a menu disk'");
+        }
         DB::table('menu_disk_conditions')->insert([
             ['name' => 'Missing', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Intro only or partially damaged', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
@@ -67,7 +75,9 @@ class CreateNewMenuStructure extends Migration
             // No constraint on user as users can get deleted
             $table->integer('user_id')->nullable()->comment('User who uploaded the dump');
         });
-        DB::statement("ALTER TABLE `menu_disk_dumps` comment 'Dump of the physical menu disk'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_disk_dumps` comment 'Dump of the physical menu disk'");
+        }
 
         Schema::create('menu_disks', function (Blueprint $table) {
             $table->id();
@@ -82,7 +92,9 @@ class CreateNewMenuStructure extends Migration
 
             $table->foreign('donated_by_individual_id')->references('ind_id')->on('individuals');
         });
-        DB::statement("ALTER TABLE `menu_disks` comment 'A single disk part of a menu'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_disks` comment 'A single disk part of a menu'");
+        }
 
         Schema::create('menu_disk_screenshots', function (Blueprint $table) {
             $table->id();
@@ -90,14 +102,18 @@ class CreateNewMenuStructure extends Migration
             $table->foreignId('menu_disk_id')->constrained();
             $table->string('imgext', 4);
         });
-        DB::statement("ALTER TABLE `menu_disk_screenshots` comment 'Screenshots of a menu disk'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_disk_screenshots` comment 'Screenshots of a menu disk'");
+        }
 
         Schema::create('menu_software_content_types', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name', 64);
         });
-        DB::statement("ALTER TABLE `menu_software_content_types` comment 'Type of software part of a menu disk'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_software_content_types` comment 'Type of software part of a menu disk'");
+        }
         DB::table('menu_software_content_types')->insert([
             ['name' => 'Game', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Demo', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
@@ -115,7 +131,9 @@ class CreateNewMenuStructure extends Migration
             $table->string('name', 255);
             $table->integer('demozoo_id')->nullable()->comment('ID of the DemoZoo production');
         });
-        DB::statement("ALTER TABLE `menu_software` comment 'Non-game software present on menus'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_software` comment 'Non-game software present on menus'");
+        }
 
         Schema::create('menu_disk_contents', function (Blueprint $table) {
             $table->id();
@@ -132,7 +150,9 @@ class CreateNewMenuStructure extends Migration
             $table->foreign('game_release_id')->references('id')->on('game_release');
             $table->foreign('game_id')->references('game_id')->on('game');
         });
-        DB::statement("ALTER TABLE `menu_disk_contents` comment 'A software present on a menu disk'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `menu_disk_contents` comment 'A software present on a menu disk'");
+        }
     }
 
     /**
