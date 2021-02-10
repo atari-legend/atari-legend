@@ -11,4 +11,7 @@ return [
             'id' => env('MATOMO_ID'),
         ],
     ],
+    'stonish' => [
+        'root' => env('STONISH_ROOT'),
+    ],
 ];

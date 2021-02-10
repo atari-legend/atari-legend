@@ -310,7 +310,7 @@ class ImportStonishData extends Command
 
         // Read scrolltext from disk if it exists
         if ($stonishMenu->scrolltext !== null && trim($stonishMenu->scrolltext) !== '') {
-            $scrolltextFile = env('STONISH_ROOT') . 'scrolltext/' . $stonishMenu->scrolltext;
+            $scrolltextFile = config('al.stonish.root') . 'scrolltext/' . $stonishMenu->scrolltext;
             if (file_exists($scrolltextFile)) {
                 $scrolltext = file_get_contents($scrolltextFile);
                 // Strip off non-printable characters
@@ -324,7 +324,7 @@ class ImportStonishData extends Command
         $menu->disks()->save($disk);
 
         if ($stonishMenu->screenshot !== null && trim($stonishMenu->screenshot) !== '') {
-            $screenshotFile = env('STONISH_ROOT') . 'screenshot/' . $stonishMenu->screenshot;
+            $screenshotFile = config('al.stonish.root') . 'screenshot/' . $stonishMenu->screenshot;
             if (file_exists($screenshotFile)) {
                 $ext = strtolower(pathinfo($screenshotFile, PATHINFO_EXTENSION));
                 $screenshot = new MenuDiskScreenshot();
@@ -407,7 +407,7 @@ class ImportStonishData extends Command
     private function getDump(MenuDisk $disk, object $stonishMenu): ?MenuDiskDump
     {
         if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
-            $dumpFile = env('STONISH_ROOT')
+            $dumpFile = config('al.stonish.root')
                 . 'download/' . preg_replace('/\s/', '_', $stonishMenu->name_menus)
                 . '/' . $stonishMenu->download;
             if (file_exists($dumpFile)) {
