@@ -35,7 +35,7 @@ RSYNC_FLAGS=(
 DEPLOY_USER=$1
 DEPLOY_HOST=$2
 DEPLOY_PATH=$3
-LEGACY_PATH=$4
+LEGACY_PATH=${4:-""}
 
 if [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_PATH" ] ; then
     echo "Missing mandatory deployment arguments"
