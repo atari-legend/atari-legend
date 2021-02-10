@@ -61,8 +61,9 @@ class ImportStonishData extends Command
      */
     public function handle()
     {
-
-        pcntl_signal(SIGINT, [$this, 'interrupt']);
+        if (extension_loaded("pcntl")) {
+            pcntl_signal(SIGINT, [$this, 'interrupt']);
+        }
 
         $this->info("Deleting existing release data...");
         $this->withProgressBar(Release::has('menuDiskContents')->get(), function ($release) {
