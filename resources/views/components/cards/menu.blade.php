@@ -24,9 +24,11 @@
                             <li class="p-2">
                                 @if ($content->release)
                                     <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }} {{ $content->version }}</a>
-                                    <a href="{{ route('games.releases.show', $content->release) }}" class="text-muted d-inline-block" title="Release information">
-                                        <i class="fas fa-info-circle"></i>
-                                    </a>
+                                    @if (!$content->subtype)
+                                        <a href="{{ route('games.releases.show', $content->release) }}" class="text-muted d-inline-block" title="Release information">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                    @endif
                                 @elseif ($content->game)
                                     <a href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }} {{ $content->version }}</a>
                                 @elseif ($content->menuSoftware)
