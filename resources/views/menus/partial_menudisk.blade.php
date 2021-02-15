@@ -24,14 +24,14 @@
                 <a class="lightbox-link"
                     href="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
                     title="{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->part }}">
-                    <img class="card-img-top w-100"
+                    <img class="card-img-top w-100 m-2"
                         src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
                         alt="Screenshot of disk">
                 </a>
             @else
-                <img class="card-img-top w-100 bg-black"
+                <img class="card-img-top w-100 m-2 bg-black"
                     src="{{ asset('images/no-screenshot.png') }}"
-                    alt="Screenshot of disk">
+                    alt="No screenshot for this disk">
             @endif
         </div>
         <div class="col-9 p-2">
@@ -39,29 +39,25 @@
                 @forelse ($disk->contents->sortBy('order') as $content)
                     <li class="w-45 d-inline-block">
                         @if ($content->release)
-                            <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }}</a>
+                            <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }} {{ $content->version }}</a>
                             <a href="{{ route('games.releases.show', $content->release) }}" class="text-muted d-inline-block" title="Release information">
                                 <i class="fas fa-info-circle"></i>
                             </a>
                         @elseif ($content->game)
-                            <a href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }}</a>
+                            <a href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }} {{ $content->version }}</a>
                         @elseif ($content->menuSoftware)
-                            @if ($content->menuSoftware->demozoo_id)
-                                <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
-                                    <img src="{{ asset('images/demozoo-16x16.png') }}" alt="Demozoo link for {{ $content->menuSoftware->name }}">
-                                </a>
-                            @endif
                             @if (isset($software) && $software->id === $content->menuSoftware->id)
-                                <b>{{ $content->menuSoftware->name }}</b>
+                                <b>{{ $content->menuSoftware->name }} {{ $content->version }}</b>
                             @else
                                 <a href="{{ route('menus.software', $content->menuSoftware) }}" class="d-inline-block">
-                                    {{ $content->menuSoftware->name }}
+                                    {{ $content->menuSoftware->name }} {{ $content->version }}
                                 </a>
                             @endif
                         @endif
-
-                        @if ($content->version)
-                            <small class="text-muted"><em>{{ $content->version }}</em></small>
+                        @if ($content->menuSoftware && $content->menuSoftware->demozoo_id)
+                            <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
+                                <img src="{{ asset('images/demozoo-16x16.png') }}" class="border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}">
+                            </a>
                         @endif
 
                         @if ($content->subtype)

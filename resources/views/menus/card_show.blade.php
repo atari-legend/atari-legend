@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">{{ $menuset->name }}</h2>
     </div>
     <div class="card-body p-2">
-        <p class="card-text">
+        <p class="card-text text-center">
             <em>{{ $menuset->name }}</em> contains
             {{ $menuset->menus->count() }}
             {{ Str::plural('menu', $menuset->menus->count()) }}
