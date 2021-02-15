@@ -1,6 +1,9 @@
 @if ($game->releases->filter(function($release) { return $release->menuDiskContents->isNotEmpty(); })->isNotEmpty())
-    <div class="p-3 text-center">
-        This game is also found in the following menus:
+
+    <div class="card bg-dark mb-4">
+        <div class="card-body text-center">
+            <h3 class="fs-5 mb-0">This game is also found in the following menus</h3>
+        </div>
     </div>
 
     <div class="row row-cols-1 row-cols-md-3 lightbox-gallery">
