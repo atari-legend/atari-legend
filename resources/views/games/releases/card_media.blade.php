@@ -40,9 +40,11 @@
                                     <tr>
                                         <td>
                                             @auth
-                                                <a href="{{ asset('storage/zips/games/'.$dump->id.'.zip') }}">
+                                                <a href="{{ asset('storage/zips/games/'.$dump->id.'.zip') }}"
+                                                    download="{{ $dump->download_filename }}">
                                                     <i class="fas fa-download"></i>
                                                 </a>
+
                                             @endauth
                                             @guest
                                                 <i class="fas fa-download text-muted"></i>

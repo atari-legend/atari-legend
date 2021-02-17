@@ -23,4 +23,9 @@ class Media extends Model
     {
         return $this->hasMany(MediaScan::class);
     }
+
+    public function release()
+    {
+        return $this->belongsTo(Release::class);
+    }
 }
