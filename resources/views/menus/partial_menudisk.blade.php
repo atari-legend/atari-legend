@@ -10,10 +10,12 @@
             @if ($disk->menu->date)
                 <small class="text-muted float-end">{{ $disk->menu->date->format('F j, Y') }}</small>
             @endif
-            {{-- Only display the menuset name if we're not displaying the menu set
+            {{-- Only link to the menuset if we're not displaying the menu set
                 (e.g. when listing menus for a software) --}}
             @if (!isset($menuset))
                 <a href="{{ route('menus.show', $disk->menu->menuSet) }}" class="text-primary">{{ $disk->menu->menuSet->name }}</a>
+            @else
+                {{ $disk->menu->menuSet->name }}
             @endif
             #{{ $disk->menu->label }}{{ $disk->label }}
         </h3>

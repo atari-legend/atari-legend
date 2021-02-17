@@ -15,9 +15,11 @@
                 <div class="card mb-4 bg-dark w-100">
                     <div class="card-header text-center">
                         <h3 class="text-audiowide fs-6">
-                            <a href="{{ route('menus.show', $disk->menu->menuSet) }}" class="text-primary">{{ $disk->menu->menuSet->name }}</a>
-                            #{{ $disk->menu->label}}
-                            {{ $disk->part}}
+                            <a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">
+                                {{ $disk->menu->menuSet->name }}
+                                #{{ $disk->menu->label}}
+                                {{ $disk->part}}
+                            </a>
                         </h3>
                     </div>
 
