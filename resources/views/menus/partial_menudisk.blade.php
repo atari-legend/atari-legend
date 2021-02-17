@@ -99,9 +99,11 @@
                 @if ($disk->donatedBy !== null)
                     <span class="text-muted">Donated by:</span>
                     @if ($disk->donatedBy->games->isNotEmpty())
-                        <a href="{{ route('games.search', ['individual_id' => $disk->donatedBy->ind_id]) }}">{{ $disk->donatedBy->ind_name}}</a>
+                        <a href="{{ route('games.search', ['individual_id' => $disk->donatedBy->ind_id]) }}">
+                            {{ $disk->donatedBy->public_nick }}
+                        </a>
                     @else
-                        {{ $disk->donatedBy->ind_name }}
+                        {{ $disk->donatedBy->public_nick }}
                     @endif
                 @endif
             </div>

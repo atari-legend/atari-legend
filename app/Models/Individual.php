@@ -35,4 +35,17 @@ class Individual extends Model
     {
         return $this->belongsToMany(Crew::class, 'crew_individual', 'ind_id', 'crew_id');
     }
+
+    /**
+     * @return string The first nickname of the individual if they have nicknames,
+     *                otherwise the individual name
+     */
+    public function getPublicNickAttribute()
+    {
+        if ($this->nicknames->isNotEmpty()) {
+            return $this->nicknames->first()->nick->ind_name;
+        } else {
+            return $this->ind_name;
+        }
+    }
 }
