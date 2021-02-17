@@ -48,6 +48,23 @@ class MenuDisk extends Model
         return $this->part ?? '';
     }
 
+    /**
+     * @return string Filename to use when downloading this disk, based on the
+     *                menu set name and menu label
+     */
+    public function getDownloadFilenameAttribute()
+    {
+        return collect([
+            $this->menu->menuSet->name,
+            $this->menu->label.$this->label,
+        ])->join(' ')
+            . '.zip';
+    }
+
+    /**
+     * @return number The page number, within the menu set, that contains this
+     *                menu
+     */
     public function getMenusetPageNumberAttribute()
     {
         $id = $this->id;

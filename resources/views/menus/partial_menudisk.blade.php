@@ -115,7 +115,9 @@
                             <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
                         </abbr>
 
-                        <a class="d-inline-block ms-2 me-2" href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}">
+                        <a class="d-inline-block ms-2 me-2"
+                            href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
+                            download="{{ $disk->download_filename}}">
                             <i class="fas fa-download"></i>
                         </a>
 

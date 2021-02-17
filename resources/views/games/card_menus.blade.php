@@ -86,7 +86,8 @@
                                                 <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
                                             </abbr>
 
-                                            <a href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}">
+                                            <a href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
+                                                download="{{ $disk->download_filename}}">
                                                 <i class="fas fa-download"></i>
                                             </a>
                                         @endauth
