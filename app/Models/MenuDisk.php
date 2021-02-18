@@ -94,6 +94,6 @@ class MenuDisk extends Model
             ->values()
             ->search($this->id);
 
-        return ceil($index / MenuSetController::PAGE_SIZE);
+        return ceil(($index+1) / MenuSetController::PAGE_SIZE);
     }
 }
