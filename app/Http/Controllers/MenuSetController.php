@@ -10,6 +10,7 @@ use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MenuSetController extends Controller
 {
@@ -43,9 +44,16 @@ class MenuSetController extends Controller
             ->orderBy('part')
             ->paginate(MenuSetController::PAGE_SIZE);
 
+        $missingDiskCount = DB::table('menu_disks')
+            ->join('menus', 'menu_id', '=', 'menus.id')
+            ->where('menus.menu_set_id', '=', $set->id)
+            ->where('menu_disk_condition_id', '=', 1)
+            ->count();
+
         return view('menus.show')->with([
             'menuset'          => $set,
             'disks'            => $disks,
+            'missingCount'     => $missingDiskCount,
             'conditionClasses' => MenuSetController::CONDITION_CLASSES,
         ]);
     }

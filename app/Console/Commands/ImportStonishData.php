@@ -408,7 +408,7 @@ class ImportStonishData extends Command
     {
         if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
             $dumpFile = config('al.stonish.root')
-                . 'download/' . preg_replace('/\s/', '_', $stonishMenu->name_menus)
+                . 'download/' . preg_replace('/([^.a-z0-9]+)/i', '_', $stonishMenu->name_menus)
                 . '/' . $stonishMenu->download;
             if (file_exists($dumpFile)) {
                 $this->info("\t\tFound dump {$dumpFile}");
@@ -418,13 +418,36 @@ class ImportStonishData extends Command
 
                 $zip = new ZipArchive();
                 if ($zip->open($dumpFile) === true) {
+
                     if ($zip->count() !== 1) {
-                        $this->error("Unexpected number of files found in ZIP archive {$dumpFile}: {$zip->count()}");
-                        exit(1);
+                        $this->warn("Unexpected number of files found in ZIP archive {$dumpFile}: {$zip->count()}");
                     }
 
-                    $filename = $zip->getNameIndex(0);
-                    $ext = strtoupper(pathinfo($filename, PATHINFO_EXTENSION));
+                    $filename = null;
+                    $ext = null;
+
+                    // Read each entry in the ZIP and skip files we don't
+                    // care about (such as .txt ones)
+                    for ($i=0; $i<$zip->count(); $i++) {
+                        $f = $zip->getNameIndex($i);
+                        $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                        if ($e == 'txt') {
+                            continue;
+                        }
+                        if ($filename || $ext) {
+                            $this->error("Already found a candidate file in ZIP archive {$dumpFile}: {$filename}.{$ext} vs. {$f}.{$e}");
+                            exit(-1);
+                        }
+                        $filename = $f;
+                        $ext = $e;
+                    }
+                    if (!$filename || !$ext) {
+                        $this->error("Unable to find dump in ZIP archive {$dumpFile}");
+                        exit(-1);
+                    }
+
+                    // $filename = $zip->getNameIndex(0);
+                    // $ext = strtoupper(pathinfo($filename, PATHINFO_EXTENSION));
                     $dump->format = $ext;
 
                     $content = $zip->getFromIndex(0);
