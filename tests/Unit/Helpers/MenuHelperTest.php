@@ -18,5 +18,11 @@ class MenuHelperTest extends TestCase
             25,
             MenuHelper::percentComplete(100, 75)
         );
+
+        $this->assertEqualsWithDelta(
+            99.51,
+            MenuHelper::percentComplete(208, 1),
+            .01
+        );
     }
 }

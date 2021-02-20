@@ -15,7 +15,7 @@
                 @if ($missingCount > 0)
                     <i class="fas fa-exclamation-triangle text-warning"></i>
                     {{ $missingCount }} {{ Str::plural('disk', $missingCount) }} missing
-                    ({{ number_format((($disks->total() - $missingCount) / $disks->total() * 100), 0) }}% complete).
+                    ({{ number_format(MenuHelper::percentComplete($disks->total(), $missingCount), 1) }}% complete).
                 @else
                     <i class="fas fa-check text-success"></i>
                     All known disks are available, our set is 100% complete!
