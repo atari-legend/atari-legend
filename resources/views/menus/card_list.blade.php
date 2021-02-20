@@ -29,7 +29,7 @@
                         <div class="bg-black text-center py-3 fs-1 text-audiowide menuset-letter">{{ Str::upper(Str::substr($set->name, 0, 1)) }}</div>
                         <div class="w-100 px-1 py-2">
                             <div class="text-center">
-                                <a href="{{ route('menus.show', [$set->id]) }}">{{ $set->name }}</a><br>
+                                <a class="fs-5" href="{{ route('menus.show', [$set->id]) }}">{{ $set->name }}</a><br>
 
                                 <div class="progress mt-4 mx-2 bg-black">
                                     <div class="progress-bar bg-menu-percent" role="progressbar"
