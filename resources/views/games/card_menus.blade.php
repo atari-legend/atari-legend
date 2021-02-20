@@ -44,6 +44,12 @@
                             <div class="px-2 flex-fill">
                                 <ul class="list-unstyled ps-2">
                                     @foreach ($disk->contents->sortBy('order') as $content)
+
+                                        {{-- Only show the first 5 items and collapse the rest --}}
+                                        @if ($loop->index == 5)
+                                            <div class="collapse" id="more-content-{{ $disk->id }}">
+                                        @endif
+
                                         <li>
                                             @if ($content->release)
                                                 <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }}</a>
@@ -71,10 +77,21 @@
                                             @if ($content->subtype)
                                                 <small class="text-muted">[{{ $content->subtype }}]</small>
                                             @endif
-
-
                                         </li>
                                     @endforeach
+
+                                    {{-- Collapse controls, if there are more than 5 items --}}
+                                    @if ($disk->contents->count() >= 5)
+                                        </div>
+                                        <div class="mt-2 ps-2">
+                                            <a href="#more-content-{{ $disk->id }}" data-bs-toggle="collapse"
+                                                class="text-white" data-al-collapsed-text="Less"
+                                                aria-expanded="false" aria-controls="more-content-{{ $disk->id }}">
+                                                View {{ $disk->contents->count() - 5 }} more…
+                                            </a>
+                                        </div>
+                                    @endif
+
                                 </ul>
                             </div>
 

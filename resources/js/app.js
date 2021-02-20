@@ -11,3 +11,4 @@ require('./game/search');
 require('./game/media');
 require('./user');
 require('./about/history');
+require('./collapse');
