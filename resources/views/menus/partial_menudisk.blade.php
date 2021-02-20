@@ -17,7 +17,7 @@
             @else
                 {{ $disk->menu->menuSet->name }}
             @endif
-            #{{ $disk->menu->label }}{{ $disk->label }}
+            {{ $disk->menu->label }}{{ $disk->label }}
         </h3>
     </div>
     <div class="card-body p-0 row">

@@ -17,8 +17,7 @@
                         <h3 class="text-audiowide fs-6">
                             <a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">
                                 {{ $disk->menu->menuSet->name }}
-                                #{{ $disk->menu->label}}
-                                {{ $disk->part}}
+                                {{ $disk->menu->label}}{{ $disk->label}}
                             </a>
                         </h3>
                     </div>

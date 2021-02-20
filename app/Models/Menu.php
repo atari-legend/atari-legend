@@ -17,9 +17,21 @@ class Menu extends Model
 
     public function getLabelAttribute()
     {
-        return ($this->number ?? '[no number]')
-            .(($this->issue !== null) ? ' '.$this->issue : '')
-            .(($this->version !== null) ? ' v' . $this->version : '');
+        $parts = [];
+        if ($this->number !== null) {
+            $parts[] = '#'.$this->number;
+        } elseif ($this->issue !== null) {
+            $parts[] = $this->issue;
+        } else {
+            $parts[] = '#[no number]';
+        }
+
+        if ($this->version) {
+            $parts[] = ' v'.$this->version;
+        }
+
+        return collect($parts)
+            ->join(' ');
     }
 
     public function menuSet()
