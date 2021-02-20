@@ -228,6 +228,7 @@ return [
         'View'         => Illuminate\Support\Facades\View::class,
         'Helper'       => App\Helpers\Helper::class,
         'GameHelper'   => App\Helpers\GameHelper::class,
+        'MenuHelper'   => App\Helpers\MenuHelper::class,
 
     ],
 

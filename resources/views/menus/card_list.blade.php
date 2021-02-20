@@ -29,14 +29,15 @@
                         <div class="bg-black text-center py-3 fs-1 text-audiowide menuset-letter">{{ Str::upper(Str::substr($set->name, 0, 1)) }}</div>
                         <div class="w-100 px-1 py-2">
                             <div class="text-center">
-                                <a href="{{ route('menus.show', [$set]) }}">{{ $set->name }}</a><br>
-                                <div class="text-muted">{{ $set->menus->count() }} {{ Str::plural('menu', $set->menus->count()) }}</div>
+                                <a href="{{ route('menus.show', [$set->id]) }}">{{ $set->name }}</a><br>
 
-                                @if ($set->crews->count() > 1 || $set->crews->first()->crew_name !== $set->name)
-                                    <div class="mt-2">
-                                        <small><span class="text-muted">by</span> {{ $set->crews->pluck('crew_name')->join(', ')}}</small>
+                                <div class="progress mt-4 mx-2 bg-black">
+                                    <div class="progress-bar bg-menu-percent" role="progressbar"
+                                        style="width: {{ MenuHelper::percentComplete($set->disks, $set->missing) }}%"
+                                        aria-valuenow="{{ MenuHelper::percentComplete($set->disks, $set->missing) }}" aria-valuemin="0" aria-valuemax="100">
+                                        {{ ($set->disks - $set->missing) }} / {{ $set->disks }} disks
                                     </div>
-                                @endif
+                                </div>
                             </div>
                         </div>
                     </div>
