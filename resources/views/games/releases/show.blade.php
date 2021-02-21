@@ -12,11 +12,19 @@
         </div>
         <div class="col-12 col-lg-6 order-1 order-lg-2">
             @include('games.releases.card_release')
-            @include('games.releases.card_inthebox')
-            @include('games.releases.card_media')
+            @if ($release->menuDiskContents->isEmpty())
+                @include('games.releases.card_inthebox')
+                @include('games.releases.card_media')
+            @endif
         </div>
         <div class="col-12 col-sm-6 col-lg-3 order-3">
-            @include('games.card_boxscan')
+            @if ($release->menuDiskContents->isNotEmpty())
+                @foreach ($release->menuDiskContents->map(function ($content) { return $content->menuDisk; })->flatten()->unique() as $disk)
+                    <x-cards.menu-disk :id="$disk->id"/>
+                @endforeach
+            @else
+                @include('games.card_boxscan')
+            @endif
         </div>
     </div>
 @endsection

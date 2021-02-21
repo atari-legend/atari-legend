@@ -97,7 +97,7 @@
             <div class="col text-end">
                 @if ($disk->menuDiskDump !== null)
                     @auth
-                    <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
+                        <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
                         <abbr class="text-muted d-inline-block" title="{{ $disk->menuDiskDump->sha512 }}">
                             <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
                         </abbr>

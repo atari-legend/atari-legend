@@ -20,7 +20,10 @@ class ReleaseDescriptionHelper
     public static function descriptions(Release $release)
     {
         return collect([
-            ReleaseDescriptionHelper::getMainDescriptionText($release),
+            join(' ', [
+                ReleaseDescriptionHelper::getMainDescriptionText($release),
+                ReleaseDescriptionHelper::getMenuText($release),
+            ]),
             ReleaseDescriptionHelper::getLanguagesText($release),
             join(' ', [
                 ReleaseDescriptionHelper::getResolutionsText($release),
@@ -340,5 +343,31 @@ class ReleaseDescriptionHelper
         } else {
             return '';
         }
+    }
+
+    private static function getMenuText(Release $release)
+    {
+        $desc = '';
+
+        if ($release->menuDiskContents->isNotEmpty()) {
+            $desc = 'It is from the menu ';
+            $desc .= $release->menuDiskContents
+                ->map(function ($content) {
+                    return $content->menuDisk;
+                })
+                ->map(function ($disk) {
+                    return '[menuSet='.$disk->menu->menuSet->id.'#'.$disk->id.'#'.$disk->menuset_page_number.']'
+                        .$disk->menu->menuSet->name
+                        .' '
+                        .$disk->menu->label.$disk->label
+                        .'[/menuSet]';
+                })
+                ->unique()
+                ->join(', ');
+
+            $desc .= '.';
+        }
+
+        return $desc;
     }
 }
