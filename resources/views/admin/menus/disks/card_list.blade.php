@@ -25,7 +25,7 @@
 
                     </div>
                     <h3 class="card-title fs-5">
-                        <a href="{{ route('admin.menus.disks.edit', $disk) }}">#{{ $disk->menu->label}}{{ $disk->part}}</a>
+                        <a href="{{ route('admin.menus.disks.edit', $disk) }}">{{ $disk->menu->label}}{{ $disk->part}}</a>
                     </h3>
                 </div>
                 @if ($disk->screenshots->isNotEmpty())

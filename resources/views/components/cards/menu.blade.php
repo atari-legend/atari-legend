@@ -6,10 +6,10 @@
         <div class="card-body p-0">
             @isset ($disk)
                 <figure>
-                    <img class="w-100 pixelated" src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}" alt="Screenshot of {{ $disk->menu->menuSet->name }} #{{ $disk->menu->label }}{{ $disk->label }}">
+                    <img class="w-100 pixelated" src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}" alt="Screenshot of {{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->label }}">
                     <figcaption class="py-2 px-3">
                         <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
-                        <div class="figcaption-title"><a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">{{ $disk->menu->menuSet->name }} #{{ $disk->menu->label }}{{ $disk->label }}</a></div>
+                        <div class="figcaption-title"><a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->label }}</a></div>
                         @if ($disk->menu->date !== null)
                             <div class="figcaption-note">{{ $disk->menu->date->format('F j, Y') }}</div>
                         @endif
