@@ -2,9 +2,10 @@
     <div class="card-header">
         <h3 class="fs-5 mb-0">
             @if ($disk->scrolltext !== null)
-                <a href="javascript:;" class="float-end d-inline-block text-primary ms-2" data-bs-toggle="collapse"
+                <a href="javascript:;" class="float-end d-inline-block text-primary ms-3" data-bs-toggle="collapse"
                     data-bs-target="#scrolltext-{{ $disk->id }}" role="button" aria-expanded="false">
                     <i class="fas fa-scroll fa-fw" title="Has scrolltext"></i>
+                    <small class="text-smallcaps">txt</small>
                 </a>
             @endif
             @if ($disk->menu->date)
