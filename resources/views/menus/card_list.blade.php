@@ -32,7 +32,7 @@
                                 <a class="fs-5" href="{{ route('menus.show', [$set->id]) }}">{{ $set->name }}</a><br>
 
                                 <div class="progress mt-4 mx-2 bg-black">
-                                    <div class="progress-bar bg-menu-percent" role="progressbar"
+                                    <div class="progress-bar bg-menu-percent text-dark" role="progressbar"
                                         style="width: {{ MenuHelper::percentComplete($set->disks, $set->missing) }}%"
                                         aria-valuenow="{{ MenuHelper::percentComplete($set->disks, $set->missing) }}" aria-valuemin="0" aria-valuemax="100">
                                         {{ ($set->disks - $set->missing) }} / {{ $set->disks }} disks
