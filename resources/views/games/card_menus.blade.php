@@ -1,10 +1,6 @@
 @if ($game->releases->filter(function($release) { return $release->menuDiskContents->isNotEmpty(); })->isNotEmpty())
 
-    <div class="card bg-dark mb-4">
-        <div class="card-body text-center">
-            <h3 class="fs-5 mb-0">This game is also found in the following menus</h3>
-        </div>
-    </div>
+    <h3 class="fs-5 mb-4 text-center">This game is also found in the following menus:</h3>
 
     <div class="row row-cols-1 row-cols-md-3 lightbox-gallery">
         @foreach ($game->releases->filter(function($release) { return $release->menuDiskContents->isNotEmpty(); }) as $release)
@@ -21,7 +17,6 @@
                             </a>
                         </h3>
                     </div>
-
 
                     <div class="card-body p-0 d-flex flex-column striped">
                             <figure>
@@ -80,7 +75,7 @@
                                     @endforeach
 
                                     {{-- Collapse controls, if there are more than 5 items --}}
-                                    @if ($disk->contents->count() >= 5)
+                                    @if ($disk->contents->count() > 5)
                                         </div>
                                         <div class="mt-2 ps-2">
                                             <a href="#more-content-{{ $disk->id }}" data-bs-toggle="collapse"
