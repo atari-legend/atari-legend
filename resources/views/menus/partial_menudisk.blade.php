@@ -13,11 +13,15 @@
             {{-- Only link to the menuset if we're not displaying the menu set
                 (e.g. when listing menus for a software) --}}
             @if (!isset($menuset))
-                <a href="{{ route('menus.show', $disk->menu->menuSet) }}" class="text-primary">{{ $disk->menu->menuSet->name }}</a>
+                <a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}"
+                    class="text-primary">
+                    {{ $disk->menu->menuSet->name }}
+                    {{ $disk->menu->label }}{{ $disk->label }}
+                </a>
             @else
                 {{ $disk->menu->menuSet->name }}
+                {{ $disk->menu->label }}{{ $disk->label }}
             @endif
-            {{ $disk->menu->label }}{{ $disk->label }}
         </h3>
     </div>
     <div class="card-body p-0 row">
