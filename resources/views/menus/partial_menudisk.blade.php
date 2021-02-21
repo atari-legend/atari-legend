@@ -25,66 +25,48 @@
             @endif
         </h3>
     </div>
-    <div class="card-body p-0 row">
-        <div class="col-3">
+    <div class="card-body p-0 row g-0">
+        <div class="col-12 col-sm-3">
+            <div class="p-2">
             @if ($disk->screenshots->isNotEmpty())
                 <a class="lightbox-link"
                     href="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
                     title="{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->part }}">
-                    <img class="card-img-top w-100 m-2"
+                    <img class="card-img-top w-100"
                         src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
                         alt="Screenshot of disk">
                 </a>
             @else
-                <img class="card-img-top w-100 m-2 bg-black"
+                <img class="card-img-top w-100 bg-black"
                     src="{{ asset('images/no-screenshot.png') }}"
                     alt="No screenshot for this disk">
             @endif
+            </div>
         </div>
-        <div class="col-9 p-2">
-            <ol class="list-unstyled">
-                @forelse ($disk->contents->sortBy('order') as $content)
-                    <li class="w-45 d-inline-block">
-                        @if ($content->release)
-                            <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }} {{ $content->version }}</a>
-                            @if (!$content->subtype)
-                                <a href="{{ route('games.releases.show', $content->release) }}" class="text-muted d-inline-block" title="Release information">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-                            @endif
-                        @elseif ($content->game)
-                            <a href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }} {{ $content->version }}</a>
-                        @elseif ($content->menuSoftware)
-                            @if (isset($software) && $software->id === $content->menuSoftware->id)
-                                <b>{{ $content->menuSoftware->name }} {{ $content->version }}</b>
-                            @else
-                                <a href="{{ route('menus.software', $content->menuSoftware) }}" class="d-inline-block">
-                                    {{ $content->menuSoftware->name }} {{ $content->version }}
-                                </a>
-                            @endif
-                        @endif
-                        @if ($content->menuSoftware && $content->menuSoftware->demozoo_id)
-                            <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
-                                <img src="{{ asset('images/demozoo-16x16.png') }}" class="border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}">
-                            </a>
-                        @endif
-
-                        @if ($content->subtype)
-                            <small class="text-muted">[{{ $content->subtype }}]</small>
-                        @endif
-
-                        @if ($content->requirements)
-                            <small class="text-muted">({{ $content->requirements }})</small>
-                        @endif
-                    </li>
-                @empty
+        <div class="col-12 col-sm-9">
+            <div class="row p-2 mb-2">
+                @if ($disk->contents->isEmpty())
                     <span class="text-muted">Unknown content</span>
-                @endforelse
-            </ol>
+                @else
+                    <ul class="list-unstyled col-12 @if ($disk->contents->count() > 1) col-sm-6 @endif mb-0">
+                        @foreach ($disk->contents->sortBy('order')->split(2)->first() as $content)
+                            @include('menus.partial_menudisk_content')
+                        @endforeach
+                    </ul>
 
-            @if ($disk->notes !== null)
-                <span class="text-muted">Notes: </span>{{ $disk->notes }}
-            @endif
+                    @if ($disk->contents->count() > 1)
+                        <ul class="list-unstyled col-12 col-sm-6 mb-0">
+                            @foreach ($disk->contents->sortBy('order')->split(2)->last() as $content)
+                                @include('menus.partial_menudisk_content')
+                            @endforeach
+                        </ul>
+                    @endif
+                @endif
+
+                @if ($disk->notes !== null)
+                    <span class="text-muted">Notes: </span>{{ $disk->notes }}
+                @endif
+            </div>
         </div>
     </div>
     @if ($disk->scrolltext !== null)
