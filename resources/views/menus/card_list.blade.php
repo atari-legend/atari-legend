@@ -25,17 +25,20 @@
         <div class="isotope">
             @foreach ($menusets as $set)
                 <div class="col-12 col-sm-6 col-md-4 p-2 letter-{{ Str::lower(Str::substr($set->name, 0, 1)) }}">
-                    <div class="d-flex bg-darklight border border-primary-dark">
-                        <div class="bg-black text-center py-3 fs-1 text-audiowide menuset-letter">{{ Str::upper(Str::substr($set->name, 0, 1)) }}</div>
-                        <div class="w-100 px-1 py-2">
+                    <div class="d-flex bg-black border border-primary-dark">
+                        <div class="bg-black text-center fs-1 text-audiowide menuset-letter my-auto">{{ Str::upper(Str::substr($set->name, 0, 1)) }}</div>
+                        <div class="w-100 px-1 py-2 bg-darklight">
                             <div class="text-center">
-                                <a class="fs-5" href="{{ route('menus.show', [$set->id]) }}">{{ $set->name }}</a><br>
+                                <a class="fs-6" href="{{ route('menus.show', [$set->id]) }}">{{ $set->name }}</a><br>
+                                <small class="text-muted">{{ ($set->disks - $set->missing) }} / {{ $set->disks }} disks</small>
 
-                                <div class="progress mt-4 mx-2 bg-black">
-                                    <div class="progress-bar bg-menu-percent text-dark" role="progressbar"
+                                <div class="progress mt-3 mx-2 bg-black progress-menu">
+                                    <div class="progress-bar text-dark bg-menu-percent" role="progressbar"
                                         style="width: {{ MenuHelper::percentComplete($set->disks, $set->missing) }}%"
                                         aria-valuenow="{{ MenuHelper::percentComplete($set->disks, $set->missing) }}" aria-valuemin="0" aria-valuemax="100">
-                                        {{ ($set->disks - $set->missing) }} / {{ $set->disks }} disks
+                                        @if ($set->missing === 0)
+                                            <span>Complete set <i class="fas fa-check fa-fw text-success"></i></span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

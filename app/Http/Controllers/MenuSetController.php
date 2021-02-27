@@ -34,7 +34,7 @@ class MenuSetController extends Controller
         $sets = DB::table('menu_sets')
             ->select('name', 'menu_sets.id')
             ->selectRaw("count('menu_disks.id') as disks")
-            ->selectRaw("sum(case when menu_disks.menu_disk_condition_id = ? then 1 else 0 end) as missing", [
+            ->selectRaw("convert(sum(case when menu_disks.menu_disk_condition_id = ? then 1 else 0 end), unsigned integer) as missing", [
                 MenuSetController::MISSING_CONDITION_ID
             ])
             ->join('menus', 'menus.menu_set_id', 'menu_sets.id')
