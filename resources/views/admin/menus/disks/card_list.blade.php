@@ -46,19 +46,21 @@
                                 @elseif ($content->game)
                                     <a href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }}</a>
                                 @elseif ($content->menuSoftware)
-                                    @if ($content->menuSoftware->demozoo_id)
-                                        <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
-                                            <img src="{{ asset('images/demozoo-16x16.png') }}" alt="Demozoo link for {{ $content->menuSoftware->name }}">
-                                        </a>
-                                    @endif
                                     @if (isset($software) && $software->id === $content->menuSoftware->id)
                                         <b>{{ $content->menuSoftware->name }}</b>
                                     @else
-                                        <a href="{{ route('menus.software', $content->menuSoftware) }}">
+                                        <a href="{{ route('admin.menus.software.edit', $content->menuSoftware) }}">
                                             {{ $content->menuSoftware->name }}
                                         </a>
                                     @endif
                                 @endif
+
+                                @if ($content->menuSoftware && $content->menuSoftware->demozoo_id)
+                                    <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
+                                        <img src="{{ asset('images/demozoo-16x16.png') }}" alt="Demozoo link for {{ $content->menuSoftware->name }}">
+                                    </a>
+                                @endif
+
 
                                 @if ($content->notes)
                                     <small class="text-muted"><em>{{ $content->notes }}</em></small>

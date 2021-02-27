@@ -62,11 +62,10 @@
                 <div class="mb-3">
                     <label class="form-label">Present in</label>
                     <div>
-                    @foreach ($software->menuDiskContents->pluck('menuDisk') as $disk)
+                    @foreach ($software->menuDiskContents->pluck('menuDisk')->unique() as $disk)
                         <a href="{{ route('admin.menus.menus.edit', $disk->menu) }}">
                             {{ $disk->menu->menuSet->name }}
-                            #{{ $disk->menu->label}}
-                            {{ $disk->part}}
+                            {{ $disk->menu->label}}
                             {{ $disk->label }}
                         </a>
                         @if (!$loop->last) , @endif
