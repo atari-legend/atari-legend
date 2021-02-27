@@ -1,10 +1,14 @@
 @if ($game->releases->isNotEmpty())
     <div class="card bg-dark mb-4 card-game">
         <div class="card-header text-center">
-            <h2 class="text-uppercase">Releases</h2>
+            <h2 class="text-uppercase">
+                Releases
+                <i class="fas fa-info-circle text-muted fs-6" title="Official releases and unofficial single cracks. Menus are not included."></i>
+            </h2>
+
         </div>
         <div class="striped">
-            @foreach ($game->releases->filter(function($release) { return $release->menuDiskContents->isEmpty(); }) as $release)
+            @foreach ($game->releases->filter(function($release) { return $release->menuDiskContents->isEmpty(); })->sortBy('date') as $release)
                 <div class="card-body ps-2 py-2 ">
                     <div class="m-0">
                         @if (isset($currentRelease) && $currentRelease->id === $release->id)
@@ -21,6 +25,10 @@
                             <span class="ms-2">{{ $release->name }}</span>
                         @elseif ($release->publisher !== null)
                             <span class="ms-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
+                        @endif
+
+                        @if ($release->type === 'Unofficial' && $release->license !== 'Non-Commercial')
+                            <span class="text-muted"><i title="Unofficial release" class="fas fa-skull-crossbones"></i></span>
                         @endif
 
                         @foreach ($release->locations as $location)

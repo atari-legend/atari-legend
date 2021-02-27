@@ -29,7 +29,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-bs-toggle="popover"][data-bs-content-selector]').forEach(el => {
         new bootstrap.Popover(el, {
-            content: document.querySelector(el.dataset.bsContentSelector),
+            content: document.querySelector(el.dataset.bsContentSelector).innerHTML,
         });
     });
 });
