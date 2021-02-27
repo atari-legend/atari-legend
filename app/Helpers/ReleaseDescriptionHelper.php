@@ -41,6 +41,34 @@ class ReleaseDescriptionHelper
         })->all();
     }
 
+    /**
+     * Get a description of a release that is part of a menu. Focuses on
+     * release specific information (trainers, compatibility,…).
+     *
+     * @param \App\Models\Release Release to get the description for.
+     *
+     * @return array[] Textual description of the release split into separate strings.
+     */
+    public static function menuDescriptions(Release $release)
+    {
+        return collect([
+            ReleaseDescriptionHelper::getLanguagesText($release),
+            join(' ', [
+                ReleaseDescriptionHelper::getResolutionsText($release),
+                ReleaseDescriptionHelper::getEnhancementsText($release),
+                ReleaseDescriptionHelper::getHDText($release),
+            ]),
+            join(' ', [
+                ReleaseDescriptionHelper::getMemoryText($release),
+                ReleaseDescriptionHelper::getIncompatibleText($release),
+            ]),
+            ReleaseDescriptionHelper::getProtectionsText($release),
+            ReleaseDescriptionHelper::getTrainerText($release),
+        ])->reject(function ($s) {
+            return trim($s) === '';
+        })->all();
+    }
+
     private static function getMainDescriptionText(Release $release)
     {
         $desc = '';
@@ -286,7 +314,8 @@ class ReleaseDescriptionHelper
     {
         if ($release->languages->isNotEmpty()) {
             return 'The following languages are supported: '.
-                $release->languages->pluck('name')->join(', ');
+                $release->languages->pluck('name')->join(', ')
+                .'.';
         } else {
             return '';
         }
@@ -336,7 +365,7 @@ class ReleaseDescriptionHelper
             return Str::plural('The trainer', $release->trainers->count()).' '.$release->trainers
                 ->pluck('name')
                 ->map(function ($name) {
-                    return strtolower($name);
+                    return '"'.strtolower($name).'"';
                 })
                 ->join(', ').
                 ' can be used.';

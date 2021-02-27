@@ -2,9 +2,19 @@
     @if ($content->release)
         <a href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }} {{ $content->version }}</a>
         @if (!$content->subtype)
-            <a href="{{ route('games.releases.show', $content->release) }}" class="text-muted d-inline-block" title="Release information">
-                <i class="fas fa-info-circle"></i>
-            </a>
+            @php
+                $descriptions = ReleaseDescriptionHelper::menuDescriptions($content->release)
+            @endphp
+            @if (count($descriptions) > 0)
+                <a href="javascript:;" class="text-muted d-inline-block" data-bs-toggle="popover" data-bs-content-selector="#release-info-{{ $content->id }}">
+                    <i class="fas fa-info-circle"></i>
+                </a>
+                <div id="release-info-{{ $content->id }}" class="visually-hidden">
+                    @foreach ($descriptions as $description)
+                        <p>{!! Helper::bbCode($description) !!}</p>
+                    @endforeach
+                </div>
+            @endif
         @endif
     @elseif ($content->game)
         <a class="d-inline-block" href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }} {{ $content->version }}</a>

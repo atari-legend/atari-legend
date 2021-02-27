@@ -1,4 +1,4 @@
-require('bootstrap');
+const bootstrap = require('bootstrap');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -24,3 +24,12 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+// Enable popovers with data-bs-content-selector globally
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-bs-toggle="popover"][data-bs-content-selector]').forEach(el => {
+        new bootstrap.Popover(el, {
+            content: document.querySelector(el.dataset.bsContentSelector),
+        });
+    });
+});

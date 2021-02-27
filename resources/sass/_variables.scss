@@ -19,3 +19,6 @@ $border-radius-lg: 0;
 $line-height-base: 1.25 !default;
 $line-height-sm: 1 !default;
 $line-height-lg: 1.5 !default;
+
+$popover-bg: color.scale($dark-light, $lightness: 15%);
+$popover-border-color: $primary;

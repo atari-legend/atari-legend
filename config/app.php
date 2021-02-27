@@ -229,6 +229,7 @@ return [
         'Helper'       => App\Helpers\Helper::class,
         'GameHelper'   => App\Helpers\GameHelper::class,
         'MenuHelper'   => App\Helpers\MenuHelper::class,
+        'ReleaseDescriptionHelper' => App\Helpers\ReleaseDescriptionHelper::class,
 
     ],
 
