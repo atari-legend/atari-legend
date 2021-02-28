@@ -82,7 +82,7 @@ class ReleaseDescriptionHelper
         $desc .= ' is a ';
 
         if ($release->date !== null) {
-            $desc .= '[releaseYear]'.$release->date->year.'[/releaseYear] ';
+            $desc .= '[releaseYear]' . $release->date->year . '[/releaseYear] ';
         }
         $desc .= 'release ';
 
@@ -100,11 +100,16 @@ class ReleaseDescriptionHelper
             $desc .= ') ';
         }
 
-        $desc .= 'of [game='.$release->game->game_id.']'.$release->game->game_name.'[/game]. ';
+        $desc .= 'of [game=' . $release->game->game_id . ']' . $release->game->game_name . '[/game]. ';
 
         if ($release->locations->isNotEmpty()) {
             $desc .= 'It was released in ';
-            $desc .= $release->locations->pluck('name')->join(', ');
+            $desc .= $release->locations
+                ->pluck('name')
+                ->map(function ($s) {
+                    return ReleaseDescriptionHelper::boldicize($s);
+                })
+                ->join(', ');
         }
 
         if ($release->publisher !== null || $release->distributors->isNotEmpty()) {
@@ -115,9 +120,9 @@ class ReleaseDescriptionHelper
             }
 
             if ($release->publisher !== null) {
-                $desc .= 'published by '.
-                    '[publisher='.$release->publisher->pub_dev_id.']'.
-                    $release->publisher->pub_dev_name.
+                $desc .= 'published by ' .
+                    '[publisher=' . $release->publisher->pub_dev_id . ']' .
+                    $release->publisher->pub_dev_name .
                     '[/publisher]';
             }
             if ($release->distributors->isNotEmpty()) {
@@ -125,9 +130,12 @@ class ReleaseDescriptionHelper
                     $desc .= ', ';
                 }
 
-                $desc .= 'distributed by '.$release
+                $desc .= 'distributed by ' . $release
                     ->distributors
                     ->pluck('pub_dev_name')
+                    ->map(function ($s) {
+                        return ReleaseDescriptionHelper::boldicize($s);
+                    })
                     ->join(', ');
             }
         }
@@ -137,22 +145,22 @@ class ReleaseDescriptionHelper
         }
 
         if ($release->license !== null && $release->license !== '') {
-            $desc .= ' Its license is '.strtolower($release->license).'.';
+            $desc .= ' Its license is [b]' . strtolower($release->license) . '[/b].';
         }
 
         if ($release->akas->isNotEmpty()) {
-            $desc .= ' It is also known as '.$release
+            $desc .= ' It is also known as ' . $release
                 ->akas
                 ->map(function ($aka) {
                     $s = $aka->name;
                     if ($aka->language !== null) {
-                        $s .= ' ('.$aka->language->name.')';
+                        $s .= ' (' . $aka->language->name . ')';
                     }
 
-                    return $s;
+                    return ReleaseDescriptionHelper::boldicize($s);
                 })
                 ->join(', ')
-                .'.';
+                . '.';
         }
 
         return $desc;
@@ -163,11 +171,14 @@ class ReleaseDescriptionHelper
         $desc = '';
 
         if ($release->resolutions->isNotEmpty()) {
-            $desc .= 'It supports the following '.
-                Str::plural('resolution', $release->resolutions->count()).
-                ': '.$release
+            $desc .= 'It supports the following ' .
+                Str::plural('resolution', $release->resolutions->count()) .
+                ': ' . $release
                 ->resolutions
                 ->pluck('name')
+                ->map(function ($s) {
+                    return ReleaseDescriptionHelper::boldicize($s);
+                })
                 ->join(', ');
 
             $desc .= '.';
@@ -187,10 +198,10 @@ class ReleaseDescriptionHelper
                     ->map(function ($enhanced) {
                         $s = $enhanced->system->name;
                         if ($enhanced->enhancement !== null) {
-                            $s .= ' ('.$enhanced->enhancement->name.')';
+                            $s .= ' (' . $enhanced->enhancement->name . ')';
                         }
 
-                        return $s;
+                        return ReleaseDescriptionHelper::boldicize($s);
                     })
                     ->join(', ');
             }
@@ -203,10 +214,10 @@ class ReleaseDescriptionHelper
                     ->map(function ($enhanced) {
                         $s = $enhanced->memory->memory;
                         if ($enhanced->enhancement !== null) {
-                            $s .= ' ('.$enhanced->enhancement->name.')';
+                            $s .= ' (' . $enhanced->enhancement->name . ')';
                         }
 
-                        return $s;
+                        return ReleaseDescriptionHelper::boldicize($s);
                     })
                     ->join(', ');
             }
@@ -225,6 +236,9 @@ class ReleaseDescriptionHelper
             $desc .= 'It requires a minimum memory of ';
             $desc .= $release->memoryMinimums
                 ->pluck('memory')
+                ->map(function ($s) {
+                    return ReleaseDescriptionHelper::boldicize($s);
+                })
                 ->join(', ');
         }
 
@@ -238,6 +252,9 @@ class ReleaseDescriptionHelper
             $desc .= 'is incompatible with ';
             $desc .= $release->memoryIncompatibles
                 ->pluck('memory')
+                ->map(function ($s) {
+                    return ReleaseDescriptionHelper::boldicize($s);
+                })
                 ->join(', ');
         }
 
@@ -258,10 +275,10 @@ class ReleaseDescriptionHelper
                 ->map(function ($protection) {
                     $s = $protection->name;
                     if ($protection->pivot->notes !== null && $protection->pivot->notes !== '') {
-                        $s .= '('.$protection->pivot->notes.')';
+                        $s .= ' (' . $protection->pivot->notes . ')';
                     }
 
-                    return $s;
+                    return ReleaseDescriptionHelper::boldicize($s);
                 })
                 ->join(', ');
         }
@@ -285,11 +302,11 @@ class ReleaseDescriptionHelper
                     } else {
                         $s = $protection->name;
                         if ($protection->pivot->notes !== null && $protection->pivot->notes !== '') {
-                            $s .= ' ('.$protection->pivot->notes.')';
+                            $s .= ' (' . $protection->pivot->notes . ')';
                         }
                     }
 
-                    return $s;
+                    return ReleaseDescriptionHelper::boldicize($s);
                 })
                 ->join(', ');
         }
@@ -313,9 +330,14 @@ class ReleaseDescriptionHelper
     private static function getLanguagesText(Release $release)
     {
         if ($release->languages->isNotEmpty()) {
-            return 'The following languages are supported: '.
-                $release->languages->pluck('name')->join(', ')
-                .'.';
+            return 'The following languages are supported: ' .
+                $release->languages
+                ->pluck('name')
+                ->map(function ($s) {
+                    return ReleaseDescriptionHelper::boldicize($s);
+                })
+                ->join(', ')
+                . '.';
         } else {
             return '';
         }
@@ -328,14 +350,24 @@ class ReleaseDescriptionHelper
             $desc .= 'It is incompatible with ';
 
             if ($release->systemIncompatibles->isNotEmpty()) {
-                $desc .= $release->systemIncompatibles->pluck('name')->join(', ');
+                $desc .= $release->systemIncompatibles
+                    ->pluck('name')
+                    ->map(function ($s) {
+                        return ReleaseDescriptionHelper::boldicize($s);
+                    })
+                    ->join(', ');
             }
 
             if ($release->emulatorIncompatibles->isNotEmpty()) {
                 if ($release->systemIncompatibles->isNotEmpty()) {
                     $desc .= ', ';
                 }
-                $desc .= $release->emulatorIncompatibles->pluck('name')->join(', ');
+                $desc .= $release->emulatorIncompatibles
+                    ->pluck('name')
+                    ->map(function ($s) {
+                        return ReleaseDescriptionHelper::boldicize($s);
+                    })
+                    ->join(', ');
             }
 
             if ($release->tosIncompatibles->isNotEmpty()) {
@@ -346,10 +378,10 @@ class ReleaseDescriptionHelper
                 $desc .= $release->tosIncompatibles->map(function ($incompatible) {
                     $s = $incompatible->tos->name;
                     if ($incompatible->language !== null) {
-                        $s .= ' ('.$incompatible->language->name.')';
+                        $s .= ' (' . $incompatible->language->name . ')';
                     }
 
-                    return $s;
+                    return ReleaseDescriptionHelper::boldicize($s);
                 })->join(', ');
             }
 
@@ -362,12 +394,12 @@ class ReleaseDescriptionHelper
     private static function getTrainerText(Release $release)
     {
         if ($release->trainers->isNotEmpty()) {
-            return Str::plural('The trainer', $release->trainers->count()).' '.$release->trainers
+            return Str::plural('The trainer', $release->trainers->count()) . ' ' . $release->trainers
                 ->pluck('name')
-                ->map(function ($name) {
-                    return '"'.strtolower($name).'"';
+                ->map(function ($s) {
+                    return ReleaseDescriptionHelper::boldicize($s);
                 })
-                ->join(', ').
+                ->join(', ') .
                 ' can be used.';
         } else {
             return '';
@@ -385,11 +417,11 @@ class ReleaseDescriptionHelper
                     return $content->menuDisk;
                 })
                 ->map(function ($disk) {
-                    return '[menuSet='.$disk->menu->menuSet->id.'#'.$disk->id.'#'.$disk->menuset_page_number.']'
-                        .$disk->menu->menuSet->name
-                        .' '
-                        .$disk->menu->label.$disk->label
-                        .'[/menuSet]';
+                    return '[menuSet=' . $disk->menu->menuSet->id . '#' . $disk->id . '#' . $disk->menuset_page_number . ']'
+                        . $disk->menu->menuSet->name
+                        . ' '
+                        . $disk->menu->label . $disk->label
+                        . '[/menuSet]';
                 })
                 ->unique()
                 ->join(', ');
@@ -398,5 +430,17 @@ class ReleaseDescriptionHelper
         }
 
         return $desc;
+    }
+
+    /**
+     * Wrap a string in BBCode bold tags.
+     *
+     * @param string $str String to wrap
+     *
+     * @return string Wrapped string
+     */
+    private static function boldicize(string $str): string
+    {
+        return "[b]{$str}[/b]";
     }
 }
