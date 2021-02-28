@@ -12,10 +12,8 @@
         </div>
         <div class="col-12 col-lg-6 order-1 order-lg-2">
             @include('games.releases.card_release')
-            @if ($release->menuDiskContents->isEmpty())
-                @include('games.releases.card_inthebox')
-                @include('games.releases.card_media')
-            @endif
+            @include('games.releases.card_inthebox')
+            @include('games.releases.card_media')
         </div>
         <div class="col-12 col-sm-6 col-lg-3 order-3">
             @if ($release->menuDiskContents->isNotEmpty())

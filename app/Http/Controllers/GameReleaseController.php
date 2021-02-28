@@ -17,6 +17,11 @@ class GameReleaseController extends Controller
 
     public function show(Release $release)
     {
+        if ($release->menuDiskContents->isNotEmpty()) {
+            // Release on menus should be visible as standalone pages
+            abort(404);
+        }
+
         $boxscans = $release->boxscans
             ->filter(function ($boxscan) {
                 return Str::startsWith($boxscan->type, 'Box');
