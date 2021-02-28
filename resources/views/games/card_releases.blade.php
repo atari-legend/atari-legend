@@ -3,7 +3,11 @@
         <div class="card-header text-center">
             <h2 class="text-uppercase">
                 Releases
-                <i class="fas fa-info-circle text-muted fs-6" title="Official releases and unofficial single cracks. Menus are not included."></i>
+                <a href="javascript:;" data-bs-content="Official releases and unofficial single cracks. Menus are not included."
+                    data-bs-placement="top"
+                    data-bs-toggle="popover">
+                    <i class="fas fa-info-circle text-muted fs-6"></i>
+                </a>
             </h2>
 
         </div>

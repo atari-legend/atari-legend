@@ -25,11 +25,16 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: true
 // });
 
-// Enable popovers with data-bs-content-selector globally
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-bs-toggle="popover"][data-bs-content-selector]').forEach(el => {
-        new bootstrap.Popover(el, {
-            content: document.querySelector(el.dataset.bsContentSelector).innerHTML,
-        });
+
+    // Enable popovers globally
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => {
+        var options = {};
+        if (el.dataset.bsContentSelector) {
+            // If there's a data-bs-content-selector attribute, use the
+            // target element HTML as the popover content
+            options.content = document.querySelector(el.dataset.bsContentSelector).innerHTML;
+        }
+        new bootstrap.Popover(el, options);
     });
 });
