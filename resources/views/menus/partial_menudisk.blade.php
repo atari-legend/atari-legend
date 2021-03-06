@@ -26,10 +26,17 @@
                 {{ $disk->menu->label }}{{ $disk->label }}
             @endif
 
+            @contributor
+                <a href="{{ route('admin.menus.disks.edit', $disk) }}" class="ms-1">
+                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                </a>
+            @endcontributor
+
             <a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => Request::input('page')]) }}#menudisk-{{ $disk->id }}"
-                class="ms-2 menu-link">
+                class="ms-1 menu-link">
                 <i class="fas fa-link text-muted fs-6"></i>
             </a>
+
         </h3>
     </div>
     <div class="card-body p-0 row g-0">
