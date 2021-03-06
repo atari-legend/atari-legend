@@ -8,9 +8,11 @@
                     <small class="text-smallcaps">txt</small>
                 </a>
             @endif
+
             @if ($disk->menu->date)
                 <small class="text-muted float-end">{{ $disk->menu->date->format('F j, Y') }}</small>
             @endif
+
             {{-- Only link to the menuset if we're not displaying the menu set
                 (e.g. when listing menus for a software) --}}
             @if (!isset($menuset))
@@ -23,6 +25,11 @@
                 {{ $disk->menu->menuSet->name }}
                 {{ $disk->menu->label }}{{ $disk->label }}
             @endif
+
+            <a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => Request::input('page')]) }}#menudisk-{{ $disk->id }}"
+                class="ms-2 menu-link">
+                <i class="fas fa-link text-muted fs-6"></i>
+            </a>
         </h3>
     </div>
     <div class="card-body p-0 row g-0">

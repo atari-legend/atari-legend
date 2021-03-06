@@ -86,7 +86,8 @@
                     </span>
                 @endguest
             @endif
-            <a class="float-end" href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">
+            <a class="float-end"
+                href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">
                 More <i class="fas fa-chevron-right"></i>
             </a>
         </div>

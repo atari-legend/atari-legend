@@ -16,3 +16,11 @@
 .progress-menu {
     height: 1.25rem;
 }
+
+.menu-link {
+    display: none;
+}
+
+h3:hover .menu-link {
+    display: inline;
+}
