@@ -31,8 +31,8 @@
                     <label for="sort" class="form-label">Menus sort direction</label>
                     <select class="form-select @error('sort') is-invalid @enderror"
                         id="sort" name="sort">
-                        <option @if (old('sort', $set->menus_sort ?? 'ascending') == 'ascending') selected @endif>Ascending</option>
-                        <option @if (old('sort', $set->menus_sort ?? 'ascending') == 'descending') selected @endif>Descending</option>
+                        <option @if (old('sort', $set->menus_sort ?? 'ascending') == 'ascending') selected @endif value="asc">Ascending</option>
+                        <option @if (old('sort', $set->menus_sort ?? 'ascending') == 'descending') selected @endif value="desc">Descending</option>
                     </select>
 
                     @error('sort')

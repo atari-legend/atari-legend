@@ -2,3 +2,17 @@
 .w-45 {
     width: 45% !important;
 }
+
+.fade-out {
+    animation: fadeInOut ease 3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0.5; }
+    10% { opacity: 1; }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}

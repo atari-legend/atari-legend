@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin\Menus;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuDisk;
+use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MenuDisksController extends Controller
 {
@@ -32,14 +34,14 @@ class MenuDisksController extends Controller
     public function store(Request $request)
     {
         $menu = Menu::find($request->menu);
-        MenuDisk::create([
+        $disk = MenuDisk::create([
             'part'       => $request->part,
             'notes'      => $request->notes,
             'scrolltext' => $request->scrolltext,
             'menu_id'    => $menu->id,
         ]);
 
-        return redirect()->route('admin.menus.menus.edit', $menu);
+        return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
     public function edit(MenuDisk $disk)
@@ -66,7 +68,32 @@ class MenuDisksController extends Controller
             'scrolltext' => $request->scrolltext,
         ]);
 
-        return redirect()->route('admin.menus.menus.edit', $disk->menu);
+        $request->session()->flash('alert-success', 'Saved');
+        return redirect()->route('admin.menus.disks.edit', $disk);
+    }
+
+    public function addScreenshot(Request $request, MenuDisk $disk)
+    {
+        if ($request->hasFile('screenshot')) {
+            $screenshotFile = $request->file('screenshot');
+            $screenshot = MenuDiskScreenshot::create([
+                'menu_disk_id' => $disk->id,
+                'imgext'       => strtolower($screenshotFile->extension()),
+            ]);
+
+            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id.'.'.$screenshotFile->extension(), 'public');
+        }
+
+        return redirect()->route('admin.menus.disks.edit', $disk);
+    }
+
+    public function destroyScreenshot(Request $request, MenuDisk $disk, MenuDiskScreenshot $screenshot)
+    {
+        if ($screenshot->menuDisk->id === $disk->id) {
+            Storage::disk('public')->delete('images/menu_screenshots/'.$screenshot->id.'.'.$screenshot->imgext);
+            $screenshot->delete();
+        }
+        return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
     public function destroy(Menu $menu)

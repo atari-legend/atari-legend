@@ -95,8 +95,8 @@
     @endif
     <div class="card-footer bg-darklight">
         <div class="row">
-            <div class="col text-{{ $conditionClasses[$disk->menuDiskCondition->id] }}">
-                <span class="text-muted">Condition:</span> {{ Str::lower($disk->menuDiskCondition->name) }}
+            <div class="col text-{{ $conditionClasses[$disk->menuDiskCondition->id ?? 2] }}">
+                <span class="text-muted">Condition:</span> {{ Str::lower($disk->menuDiskCondition->name ?? 'unknown') }}
             </div>
             <div class="col text-center">
                 @if ($disk->donatedBy !== null)

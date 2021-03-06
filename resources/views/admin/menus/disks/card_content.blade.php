@@ -1,50 +1,38 @@
-<div class="card mb-4 w-100">
+<div class="card bg-light">
     <div class="card-body">
-        <a href="" title="Remove from disk" class="btn btn-link float-end p-0">
-            <i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
-        </a>
-        @if ($content->game)
-            <h5 class="card-title fs-6"><span class="text-muted">{{$content->order}}.</span> {{ $content->game->game_name }}</h5>
-        @elseif ($content->release)
-            <h5 class="card-title fs-6"><span class="text-muted">{{$content->order}}.</span> {{ $content->release->game->game_name }}</h5>
-        @elseif ($content->menuSoftware)
-            <h5 class="card-title fs-6"><span class="text-muted">{{$content->order}}.</span> {{ $content->menuSoftware->name }}</h5>
-        @else
-            <h5 class="card-title text-danger">Unknown or empty content!</h5>
-        @endif
+        <h2 class="card-title fs-4">Disk content</h2>
+        <div class="row mb-2">
+            <p>
+                <a href=""><i class="fas fa-plus fa-fw me-1"></i>Add game release or extra</a>
+                <span class="text-muted">
+                    Use this option for a game that is present on the menu, or to add
+                    an extra (doc, hint, trainer, …) for a game that is present on the menu.
+                </span>
+            </p>
+            <p>
+                <a href=""><i class="fas fa-plus fa-fw me-1"></i>Add standalone game doc or extra</a>
+                <span class="text-muted">
+                    Use this option to add a doc, hint, trainer or other extra for a game
+                    that is <strong>not</strong> present on the menu (e.g. a standalone doc or
+                    trainer for a game).
+                </span>
+            </p>
+            <p>
+                <a href=""><i class="fas fa-plus fa-fw me-1"></i>Add software</a>
+                <span class="text-muted">
+                    Use this option to add a non-game software (e.g. demo, utility, …).
+                </span>
+            </p>
+        </div>
 
-        <p class="card-text">
-            <ul class="list-unstyled">
-                @if ($content->subtype)
-                    <li><span class="text-muted">Subtype:</span> {{ $content->subtype }}</li>
-                @endif
-                @if ($content->version)
-                    <li><span class="text-muted">Version:</span> {{ $content->version }}</li>
-                @endif
-                @if ($content->requirements)
-                    <li><span class="text-muted">Requirements:</span> {{ $content->requirements }}</li>
-                @endif
-            </ul>
-        </p>
-    </div>
-    <div class="card-footer">
-        <button title="Remove from disk" class="btn float-end p-0">
-            <i class="fas fa-times fa-fw text-danger" aria-hidden="true"></i>
-        </button>
-        @if ($content->game)
-            <h6 class="text-muted mt-1 mb-0">
-                <small><i class="fas fa-gamepad fa-fw me-1"></i> Game doc & extra</small>
-            </h6>
-        @elseif ($content->release)
-            <h6 class="text-muted mt-1 mb-0">
-                <small><i class="fas fa-box-open fa-fw me-1"></i> Game release</small>
-            </h6>
-        @elseif ($content->menuSoftware)
-            <h6 class="text-muted mt-1 mb-0">
-                <small><i class="fas fa-tools fa-fw me-1"></i> Software</small>
-            </h6>
-        @else
-            <h6 class="text-danger">Unknown or empty content!</h5>
+        @isset ($disk)
+            <div class="row">
+                @foreach ($disk->contents->sortBy('order') as $content)
+                    <div class="col-12 col-sm-6 col-md-3 col-xl-2 d-flex">
+                        @include('admin.menus.disks.card_content_item')
+                    </div>
+                @endforeach
+            </div>
         @endif
     </div>
 </div>

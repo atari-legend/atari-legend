@@ -37,4 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         new bootstrap.Popover(el, options);
     });
+
+    // Enable toasts globally
+    document.querySelectorAll('.toast').forEach(el => {
+        new bootstrap.Toast(el).show();
+    });
 });

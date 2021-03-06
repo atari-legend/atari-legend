@@ -26,6 +26,9 @@
                 @include('admin.layouts.nav')
             </aside>
             <main class="pt-3">
+
+                    @include('admin.layouts.alert')
+
                 <x-admin.breadcrumbs :crumbs="$breadcrumbs ?? []" />
                 <hr>
                 @yield('content')

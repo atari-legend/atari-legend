@@ -78,7 +78,8 @@ class MenuSetsController extends Controller
             'menus_sort' => $request->sort,
         ]);
 
-        return redirect()->route('admin.menus.sets.index');
+        $request->session()->flash('alert-success', 'Saved');
+        return redirect()->route('admin.menus.sets.edit', $set);
     }
 
     public function destroy(MenuSet $set)

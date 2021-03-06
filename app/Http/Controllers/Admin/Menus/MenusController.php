@@ -30,7 +30,7 @@ class MenusController extends Controller
     public function store(Request $request)
     {
         $set = MenuSet::find($request->set);
-        Menu::create([
+        $menu = Menu::create([
             'number'       => $request->number,
             'issue'        => $request->issue,
             'version'      => $request->version,
@@ -38,7 +38,7 @@ class MenusController extends Controller
             'menu_set_id'  => $set->id,
         ]);
 
-        return redirect()->route('admin.menus.sets.edit', $set);
+        return redirect()->route('admin.menus.menus.edit', $menu);
     }
 
     public function edit(Menu $menu)
@@ -65,7 +65,8 @@ class MenusController extends Controller
             'date'         => $request->date,
         ]);
 
-        return redirect()->route('admin.menus.sets.edit', $menu->menuSet);
+        $request->session()->flash('alert-success', 'Saved');
+        return redirect()->route('admin.menus.menus.edit', $menu);
     }
 
     public function destroy(Menu $menu)

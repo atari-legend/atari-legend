@@ -10,6 +10,13 @@ class MenuDiskScreenshot extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['menu_disk_id', 'imgext'];
+
+    public function menuDisk()
+    {
+        return $this->belongsTo(MenuDisk::class);
+    }
+
     public function getFileAttribute()
     {
         return Helper::filename($this->id, $this->imgext);

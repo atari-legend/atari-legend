@@ -25,6 +25,8 @@ Route::middleware('verified')->group(function () {
                     Route::resource('sets', MenuSetsController::class);
                     Route::resource('menus', MenusController::class);
                     Route::resource('disks', MenuDisksController::class);
+                    Route::post('/disks/{disk}/screenshot', [MenuDisksController::class, 'addScreenshot'])->name('disks.addScreenshot');
+                    Route::delete('/disks/{disk}/screenshot/{screenshot}', [MenuDisksController::class, 'destroyScreenshot'])->name('disks.deleteScreenshot');
                     Route::resource('conditions', MenuConditionsController::class);
                     Route::resource('content-types', MenuSoftwareContentTypesController::class);
                     Route::resource('software', MenuSoftwareController::class);
