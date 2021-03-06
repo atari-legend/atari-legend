@@ -64,7 +64,9 @@
                 @endif
 
                 @if ($disk->notes !== null)
-                    <span class="text-muted">Notes: </span>{{ $disk->notes }}
+                    <p class="mt-2">
+                        <span class="text-muted">Notes: </span>{{ $disk->notes }}
+                    </p>
                 @endif
             </div>
         </div>
