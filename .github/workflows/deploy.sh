@@ -50,7 +50,7 @@ rsync ${RSYNC_FLAGS[@]} . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 # Create link to production data folder, if it does not already exist
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../$LEGACY_PATH/data public"
 
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan storage:link"
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan migrate --force"
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan optimize:clear"
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php7.4-cli artisan optimize"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.0-cli artisan storage:link"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.0-cli artisan migrate --force"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.0-cli artisan optimize:clear"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.0-cli artisan optimize"
