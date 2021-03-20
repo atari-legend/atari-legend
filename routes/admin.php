@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Menus\MenuConditionsController;
 use App\Http\Controllers\Admin\Menus\MenuContentTypesController;
+use App\Http\Controllers\Admin\Menus\MenuDisksContentController;
 use App\Http\Controllers\Admin\Menus\MenuDisksController;
 use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\Menus\MenuSetsController;
@@ -27,6 +28,9 @@ Route::middleware('verified')->group(function () {
                     Route::resource('disks', MenuDisksController::class);
                     Route::post('/disks/{disk}/screenshot', [MenuDisksController::class, 'addScreenshot'])->name('disks.addScreenshot');
                     Route::delete('/disks/{disk}/screenshot/{screenshot}', [MenuDisksController::class, 'destroyScreenshot'])->name('disks.deleteScreenshot');
+                    // Route::delete('/disks/{disk}/content/{content}', [MenuDisksController::class, 'removeContent'])->name('disks.removeContent');
+                    Route::resource('disks.content', MenuDisksContentController::class);
+
                     Route::resource('conditions', MenuConditionsController::class);
                     Route::resource('content-types', MenuSoftwareContentTypesController::class);
                     Route::resource('software', MenuSoftwareController::class);

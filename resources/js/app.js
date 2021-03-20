@@ -12,3 +12,5 @@ require('./game/media');
 require('./user');
 require('./about/history');
 require('./collapse');
+
+require('./admin/app');

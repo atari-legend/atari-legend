@@ -114,4 +114,9 @@ class Game extends Model
     {
         return $this->hasMany(GameSubmitInfo::class, 'game_id');
     }
+
+    public function menuDiskContents()
+    {
+        return $this->hasMany(MenuDiskContent::class, 'game_id');
+    }
 }

@@ -15,6 +15,8 @@ class Release extends Model
         'hd_installable' => 'boolean',
     ];
 
+    protected $fillable = ['type', 'game_id'];
+
     /**
      * @return string Year of a release, or '[no date] if the release has no date.
      */

@@ -9,6 +9,8 @@ class MenuDiskContent extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['order', 'subtype', 'version', 'requirements', 'menu_disk_id'];
+
     public function menuDisk()
     {
         return $this->belongsTo(MenuDisk::class);
@@ -27,5 +29,18 @@ class MenuDiskContent extends Model
     public function menuSoftware()
     {
         return $this->belongsTo(MenuSoftware::class);
+    }
+
+    public function getLabelAttribute()
+    {
+        if ($this->game) {
+            return $this->game->game_name;
+        } else if ($this->release) {
+            return $this->release->game->game_name;
+        } else if ($this->menuSoftware) {
+            return $this->menuSoftware->name;
+        } else {
+            return "Unkown or empty content";
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Menus;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuDisk;
+use App\Models\MenuDiskContent;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\View\Components\Admin\Crumb;
@@ -81,7 +82,7 @@ class MenuDisksController extends Controller
                 'imgext'       => strtolower($screenshotFile->extension()),
             ]);
 
-            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id.'.'.$screenshotFile->extension(), 'public');
+            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshotFile->extension(), 'public');
         }
 
         return redirect()->route('admin.menus.disks.edit', $disk);
@@ -90,13 +91,29 @@ class MenuDisksController extends Controller
     public function destroyScreenshot(Request $request, MenuDisk $disk, MenuDiskScreenshot $screenshot)
     {
         if ($screenshot->menuDisk->id === $disk->id) {
-            Storage::disk('public')->delete('images/menu_screenshots/'.$screenshot->id.'.'.$screenshot->imgext);
+            Storage::disk('public')->delete('images/menu_screenshots/' . $screenshot->id . '.' . $screenshot->imgext);
             $screenshot->delete();
         }
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
-    public function destroy(Menu $menu)
+    public function destroy(MenuDisk $disk)
     {
+        // Delete all content, but collect releases to delete them afterwards
+        $disk->contents
+            ->map(function ($content) {
+                $content->delete();
+                return $content->release;
+            })
+            ->filter(function ($release) {
+                return $release !== null;
+            })
+            ->each(function ($release) {
+                $release->delete();
+            });
+
+        $disk->delete();
+
+        return redirect()->route('admin.menus.menus.edit', $disk->menu);
     }
 }

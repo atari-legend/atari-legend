@@ -3,14 +3,14 @@
         <h2 class="card-title fs-4">Disk content</h2>
         <div class="row mb-2">
             <p>
-                <a href=""><i class="fas fa-plus fa-fw me-1"></i>Add game release or extra</a>
+                <a href="{{ route('admin.menus.disks.content.create', ['disk' => $disk, 'type' => 'release']) }}"><i class="fas fa-plus fa-fw me-1"></i>Add game release or extra</a>
                 <span class="text-muted">
                     Use this option for a game that is present on the menu, or to add
                     an extra (doc, hint, trainer, …) for a game that is present on the menu.
                 </span>
             </p>
             <p>
-                <a href=""><i class="fas fa-plus fa-fw me-1"></i>Add standalone game doc or extra</a>
+                <a href="{{ route('admin.menus.disks.content.create', ['disk' => $disk, 'type' => 'game']) }}"><i class="fas fa-plus fa-fw me-1"></i>Add standalone game doc or extra</a>
                 <span class="text-muted">
                     Use this option to add a doc, hint, trainer or other extra for a game
                     that is <strong>not</strong> present on the menu (e.g. a standalone doc or
@@ -18,7 +18,7 @@
                 </span>
             </p>
             <p>
-                <a href=""><i class="fas fa-plus fa-fw me-1"></i>Add software</a>
+                <a href="{{ route('admin.menus.disks.content.create', ['disk' => $disk, 'type' => 'software']) }}"><i class="fas fa-plus fa-fw me-1"></i>Add software</a>
                 <span class="text-muted">
                     Use this option to add a non-game software (e.g. demo, utility, …).
                 </span>

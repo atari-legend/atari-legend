@@ -2,16 +2,20 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 col-xl-8">
+        <div class="col-12 @isset($disk) col-xl-8 @endif">
             @include('admin.menus.disks.card_edit')
         </div>
-        <div class="col-12 col-xl-4">
-            @include('admin.menus.disks.card_screenshots')
-        </div>
+        @isset ($disk)
+            <div class="col-12 col-xl-4">
+                @include('admin.menus.disks.card_screenshots')
+            </div>
+        @endif
     </div>
-    <div class="row">
-        <div class="col">
-            @include('admin.menus.disks.card_content')
+    @isset ($disk)
+        <div class="row">
+            <div class="col">
+                @include('admin.menus.disks.card_content')
+            </div>
         </div>
-    </div>
+    @endif
 @endsection

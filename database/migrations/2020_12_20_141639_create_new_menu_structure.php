@@ -99,7 +99,7 @@ class CreateNewMenuStructure extends Migration
         Schema::create('menu_disk_screenshots', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('menu_disk_id')->constrained();
+            $table->foreignId('menu_disk_id')->constrained()->onDelete('cascade');
             $table->string('imgext', 4);
         });
         if (DB::connection()->getDriverName() === 'mysql') {
