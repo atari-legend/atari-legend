@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddCascadeRelease extends Migration
@@ -13,6 +14,11 @@ class AddCascadeRelease extends Migration
      */
     public function up()
     {
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            // SQLite does not support dropping foreign keys
+            return;
+        }
+
         Schema::table('game_release_emulator_incompatibility', function (Blueprint $table) {
             $table->dropForeign('game_release_emulator_incompatibility_ibfk_1');
             $table->foreign('release_id')->references('id')->on('game_release')->onDelete('cascade');
