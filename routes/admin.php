@@ -26,11 +26,11 @@ Route::middleware('verified')->group(function () {
                     Route::resource('sets', MenuSetsController::class);
                     Route::resource('menus', MenusController::class);
                     Route::resource('disks', MenuDisksController::class);
-                    Route::post('/disks/{disk}/screenshot', [MenuDisksController::class, 'addScreenshot'])->name('disks.addScreenshot');
-                    Route::delete('/disks/{disk}/screenshot/{screenshot}', [MenuDisksController::class, 'destroyScreenshot'])->name('disks.deleteScreenshot');
-                    // Route::delete('/disks/{disk}/content/{content}', [MenuDisksController::class, 'removeContent'])->name('disks.removeContent');
+                    Route::post('/disks/{disk}/screenshot', [MenuDisksController::class, 'storeScreenshot'])->name('disks.storeScreenshot');
+                    Route::delete('/disks/{disk}/screenshot/{screenshot}', [MenuDisksController::class, 'destroyScreenshot'])->name('disks.destroyScreenshot');
+                    Route::post('/disks/{disk}/dump', [MenuDisksController::class, 'storeDump'])->name('disks.storeDump');
+                    Route::delete('/disks/{disk}/dump/{dump}', [MenuDisksController::class, 'destroyDump'])->name('disks.destroyDump');
                     Route::resource('disks.content', MenuDisksContentController::class);
-
                     Route::resource('conditions', MenuConditionsController::class);
                     Route::resource('content-types', MenuSoftwareContentTypesController::class);
                     Route::resource('software', MenuSoftwareController::class);

@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
+use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class MenuDisksController extends Controller
 {
@@ -73,7 +76,7 @@ class MenuDisksController extends Controller
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
-    public function addScreenshot(Request $request, MenuDisk $disk)
+    public function storeScreenshot(Request $request, MenuDisk $disk)
     {
         if ($request->hasFile('screenshot')) {
             $screenshotFile = $request->file('screenshot');
@@ -88,11 +91,107 @@ class MenuDisksController extends Controller
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
-    public function destroyScreenshot(Request $request, MenuDisk $disk, MenuDiskScreenshot $screenshot)
+    public function destroyScreenshot(MenuDisk $disk, MenuDiskScreenshot $screenshot)
     {
         if ($screenshot->menuDisk->id === $disk->id) {
             Storage::disk('public')->delete('images/menu_screenshots/' . $screenshot->id . '.' . $screenshot->imgext);
             $screenshot->delete();
+        }
+        return redirect()->route('admin.menus.disks.edit', $disk);
+    }
+
+
+    public function storeDump(Request $request, MenuDisk $disk)
+    {
+        if ($request->hasFile('dump')) {
+            $dumpFile = $request->file('dump');
+            $clientExt = strtoupper($dumpFile->getClientOriginalExtension());
+
+            $dumpFormat = null;
+            $dumpSize = null;
+            $dumpChecksum = null;
+
+            $tmpFilePath = tempnam(sys_get_temp_dir(), 'dump');
+            $dumpZip = new ZipArchive();
+            $dumpZip->open($tmpFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+            if ($clientExt !== 'ZIP' && !collect(MenuDiskDump::EXTENSIONS)->contains($clientExt)) {
+                $request->session()->flash('alert-danger', 'Unsupported file extension: '.$clientExt);
+                return redirect()->route('admin.menus.disks.edit', $disk);
+            }
+
+            if ($clientExt === 'ZIP') {
+                $zip = new ZipArchive();
+                if ($zip->open($dumpFile->path()) !== true) {
+                    $request->session()->flash('alert-danger', 'Error opening ZIP file: '.$zip->getStatusString());
+                    return redirect()->route('admin.menus.disks.edit', $disk);
+                }
+                if ($zip->count() !== 1) {
+                    $request->session()->flash('alert-danger', 'More than one file in the ZIP archive. Please only include a single disk image.');
+                    $zip->close();
+                    return redirect()->route('admin.menus.disks.edit', $disk);
+                }
+
+                $zipEntryName = $zip->getNameIndex(0);
+                $zipEntryExt = strtoupper(pathinfo($zipEntryName, PATHINFO_EXTENSION));
+
+                if (!collect(MenuDiskDump::EXTENSIONS)->contains($zipEntryExt)) {
+                    $request->session()->flash('alert-danger', 'File insize ZIP as an unsupported file extension: '.$zipEntryExt);
+                    $zip->close();
+                    return redirect()->route('admin.menus.disks.edit', $disk);
+                }
+
+                $content = $zip->getFromIndex(0);
+                $dumpFormat = strtoupper($zipEntryExt);
+                $dumpSize = strlen($content);
+                $dumpChecksum = hash('sha512', $content);
+
+                $dumpZip->addFromString($disk->download_basename.'.'.strtolower($zipEntryExt), $content);
+            } else {
+                $dumpFormat = $clientExt;
+                $dumpSize = strlen($dumpFile->get());
+                $dumpChecksum = hash('sha512', $dumpFile->get());
+
+                $dumpZip->addFile($dumpFile->path(), $disk->download_basename.'.'.strtolower($clientExt));
+            }
+            $dumpZip->close();
+
+            $dump = null;
+            if ($disk->menuDiskDump !== null) {
+                $disk->menuDiskDump->update([
+                    'user_id' => Auth::user()->user_id,
+                    'format' => $dumpFormat,
+                    'sha512' => $dumpChecksum,
+                    'size' => $dumpSize,
+                ]);
+                $dump = $disk->menuDiskDump;
+            } else {
+                $dump = MenuDiskDump::create([
+                    'user_id' => Auth::user()->user_id,
+                    'format' => $dumpFormat,
+                    'sha512' => $dumpChecksum,
+                    'size' => $dumpSize,
+                ]);
+                $disk->menuDiskDump()->associate($dump);
+                $disk->save();
+            }
+
+            $handle = fopen($tmpFilePath, 'r');
+            Storage::disk('public')->put('zips/menus/'.$dump->id.'.zip', $handle);
+            fclose($handle);
+            unlink($tmpFilePath);
+        }
+        return redirect()->route('admin.menus.disks.edit', $disk);
+    }
+
+
+    public function destroyDump(MenuDisk $disk, MenuDiskDump $dump)
+    {
+        if ($dump->menuDisk->id === $disk->id) {
+            Storage::disk('public')->delete('zips/menus/'.$dump->id.'.zip');
+            $dump->menuDisk->menuDiskDump()->dissociate();
+            $dump->menuDisk->save();
+            $dump->delete();
         }
         return redirect()->route('admin.menus.disks.edit', $disk);
     }

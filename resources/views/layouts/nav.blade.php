@@ -60,7 +60,10 @@
                         <li><a class="dropdown-item" href="{{ route('auth.profile') }}">Profile</a></li>
                         @contributor
                             <li>
-                                <a class="dropdown-item text-contributor fw-bold" href="{{ config('al.legacy.base_url').'/admin/' }}">Control panel</a>
+                                <a class="dropdown-item text-contributor fw-bold" href="{{ config('al.legacy.base_url').'/admin/' }}">Legacy Control panel</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-contributor fw-bold" href="{{ route('admin.home.index') }}">New Control panel</a>
                             </li>
                         @endcontributor
                         <li class="mt-3">

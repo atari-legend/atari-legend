@@ -6,7 +6,7 @@
         <div class="row row-cols-2 m-2">
             @foreach ($disk->screenshots as $screenshot)
                 <div class="col position-relative mb-2">
-                    <form action="{{ route('admin.menus.disks.deleteScreenshot', ['disk' => $disk, 'screenshot' => $screenshot]) }}" method="POST"
+                    <form action="{{ route('admin.menus.disks.destroyScreenshot', ['disk' => $disk, 'screenshot' => $screenshot]) }}" method="POST"
                         onsubmit="javascript:return confirm('This screenshot will be removed')">
                         @csrf
                         @method('DELETE')
@@ -23,7 +23,7 @@
             @endforeach
         </div>
     @endif
-    <form action="{{ route('admin.menus.disks.addScreenshot', $disk) }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.menus.disks.storeScreenshot', $disk) }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row m-2">
             <div class="col-9">

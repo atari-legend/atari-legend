@@ -140,7 +140,7 @@ class MenuDisksContentController extends Controller
     public function update(Request $request, MenuDisk $disk, MenuDiskContent $content)
     {
         $request->validate([
-            'order' => 'required|number'
+            'order' => 'required|numeric'
         ]);
 
         if ($content->game !== null) {

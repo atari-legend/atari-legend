@@ -42,7 +42,7 @@
             <div class="mb-3">
                 <label for="scrolltext" class="form-label">Scrolltext</label>
                 <textarea class="form-control @error('scrolltext') is-invalid @enderror"
-                    id="scrolltext" name="scrolltext" rows="3">{{ old('scrolltext', $disk->scrolltext ?? '') }}</textarea>
+                    id="scrolltext" name="scrolltext" rows="5">{{ old('scrolltext', $disk->scrolltext ?? '') }}</textarea>
 
                 @error('scrolltext')
                     <span class="invalid-feedback" role="alert">

@@ -49,16 +49,24 @@ class MenuDisk extends Model
     }
 
     /**
+     * @return string Basename to use when downloading this disk, based on the
+     *                menu set name and menu label
+     */
+    public function getDownloadBasenameAttribute()
+    {
+        return collect([
+            $this->menu->menuSet->name,
+            $this->menu->label.$this->label,
+        ])->join(' ');
+    }
+
+    /**
      * @return string Filename to use when downloading this disk, based on the
      *                menu set name and menu label
      */
     public function getDownloadFilenameAttribute()
     {
-        return collect([
-            $this->menu->menuSet->name,
-            $this->menu->label.$this->label,
-        ])->join(' ')
-            . '.zip';
+        return $this->download_basename.'.zip';
     }
 
     /**

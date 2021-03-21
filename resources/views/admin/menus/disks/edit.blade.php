@@ -8,6 +8,7 @@
         @isset ($disk)
             <div class="col-12 col-xl-4">
                 @include('admin.menus.disks.card_screenshots')
+                @include('admin.menus.disks.card_dump')
             </div>
         @endif
     </div>
