@@ -15,6 +15,19 @@
             @endif
 
             <div class="mb-3">
+                <label for="part" class="form-label">Part</label>
+                <input type="text" class="form-control @error('part') is-invalid @enderror"
+                    id="part" name="part" placeholder="e.g.: A"
+                    value="{{ old('part', $disk->part ?? '') }}">
+
+                @error('part')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="mb-3">
                 <label for="condition" class="form-label">Condition</label>
                 <select class="form-select @error('condition') is-invalid @enderror"
                     id="condition" name="condition">
@@ -32,17 +45,25 @@
             </div>
 
             <div class="mb-3">
-                <label for="part" class="form-label">Part</label>
-                <input type="text" class="form-control @error('part') is-invalid @enderror"
-                    id="part" name="part" placeholder="e.g.: A"
-                    value="{{ old('part', $disk->part ?? '') }}">
+                <label for="donated" class="form-label">Donated by</label>
+                <select class="form-select @error('donated') is-invalid @enderror"
+                    id="donated" name="donated">
+                    <option value="">-- Select --</option>
+                    @foreach ($individuals as $individual)
+                        <option value="{{ $individual->ind_id }}" @if((int) old('individual', isset($disk) ? $disk->donatedBy?->ind_id : '') === $individual->ind_id) selected @endif>
+                            {{ $individual->ind_name }}
+                        </option>
+                    @endforeach
+                </select>
+                <span class="form-text">Add & edit individuals in the <a href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_main.php' }}">Legacy CPANEL</a>.</span>
 
-                @error('part')
+                @error('donated')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
             </div>
+
 
             <div class="mb-3">
                 <label for="notes" class="form-label">Notes</label>
@@ -59,7 +80,7 @@
             <div class="mb-3">
                 <label for="scrolltext" class="form-label">Scrolltext</label>
                 <textarea class="form-control @error('scrolltext') is-invalid @enderror"
-                    id="scrolltext" name="scrolltext" rows="5">{{ old('scrolltext', $disk->scrolltext ?? '') }}</textarea>
+                    id="scrolltext" name="scrolltext" rows="3">{{ old('scrolltext', $disk->scrolltext ?? '') }}</textarea>
 
                 @error('scrolltext')
                     <span class="invalid-feedback" role="alert">

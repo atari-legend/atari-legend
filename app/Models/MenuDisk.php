@@ -11,7 +11,7 @@ class MenuDisk extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['part', 'notes', 'scrolltext', 'menu_disk_condition_id', 'menu_id'];
+    protected $fillable = ['part', 'notes', 'scrolltext', 'menu_disk_condition_id', 'donated_by_individual_id', 'menu_id'];
 
     public function screenshots()
     {
