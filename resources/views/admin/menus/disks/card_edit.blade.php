@@ -15,6 +15,23 @@
             @endif
 
             <div class="mb-3">
+                <label for="condition" class="form-label">Condition</label>
+                <select class="form-select @error('condition') is-invalid @enderror"
+                    id="condition" name="condition">
+                    <option value="">-- Select --</option>
+                    @foreach ($conditions as $condition)
+                        <option value="{{ $condition->id }}" @if((int) old('condition', isset($disk) ? $disk->menuDiskCondition?->id : '') === $condition->id) selected @endif>{{ $condition->name }}</option>
+                    @endforeach
+                </select>
+
+                @error('condition')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="mb-3">
                 <label for="part" class="form-label">Part</label>
                 <input type="text" class="form-control @error('part') is-invalid @enderror"
                     id="part" name="part" placeholder="e.g.: A"

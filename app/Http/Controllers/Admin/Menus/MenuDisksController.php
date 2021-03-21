@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Menus;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuDisk;
+use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
 use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
@@ -31,7 +32,8 @@ class MenuDisksController extends Controller
                     new Crumb(route('admin.menus.menus.edit', $menu), $menu->label),
                     new Crumb('', 'Create disk'),
                 ],
-                'menu'         => $menu,
+                'conditions'  => MenuDiskCondition::orderBy('name')->get(),
+                'menu'        => $menu,
             ]);
     }
 
@@ -42,6 +44,7 @@ class MenuDisksController extends Controller
             'part'       => $request->part,
             'notes'      => $request->notes,
             'scrolltext' => $request->scrolltext,
+            'menu_disk_condition_id' => $request->condition,
             'menu_id'    => $menu->id,
         ]);
 
@@ -59,6 +62,7 @@ class MenuDisksController extends Controller
                     new Crumb(route('admin.menus.menus.edit', $disk->menu), $disk->menu->label),
                     new Crumb(route('admin.menus.disks.edit', $disk), $disk->label)
                 ],
+                'conditions'  => MenuDiskCondition::orderBy('name')->get(),
                 'menu'        => $disk->menu,
                 'disk'        => $disk,
             ]);
@@ -70,6 +74,7 @@ class MenuDisksController extends Controller
             'part'       => $request->part,
             'notes'      => $request->notes,
             'scrolltext' => $request->scrolltext,
+            'menu_disk_condition_id' => $request->condition,
         ]);
 
         $request->session()->flash('alert-success', 'Saved');

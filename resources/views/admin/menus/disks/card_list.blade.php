@@ -96,5 +96,5 @@
 </div>
 
 <a href="{{ route('admin.menus.disks.create', ['menu' => $menu]) }}" class="btn btn-success">
-    <i class="fas fa-plus-square fa-fw"></i> Add a new menu to this set
+    <i class="fas fa-plus-square fa-fw"></i> Add a new disk to this menu
 </a>
