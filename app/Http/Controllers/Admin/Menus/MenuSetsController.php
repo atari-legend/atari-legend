@@ -13,7 +13,7 @@ class MenuSetsController extends Controller
     public function index()
     {
         $sets = MenuSet::orderBy('name')
-            ->get();
+            ->paginate(20);
 
         return view('admin.menus.sets.index')
             ->with([

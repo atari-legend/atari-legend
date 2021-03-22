@@ -13,7 +13,7 @@ class MenuSoftwareController extends Controller
     public function index()
     {
         $softwares = MenuSoftware::orderBy('name')
-            ->get();
+            ->paginate(20);
 
         return view('admin.menus.software.index')
             ->with([

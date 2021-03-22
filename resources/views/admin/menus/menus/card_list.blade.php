@@ -1,4 +1,4 @@
-<h2 class="card-title fs-4">{{ count($menus) }} menus in this set</h2>
+<h2 class="card-title fs-4">{{ $menus->total() }} menus in this set</h2>
 
 <div class="card mb-3 bg-light">
     <div class="card-body">
@@ -42,6 +42,7 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $menus->links('admin.layouts.pagination.bootstrap-5') }}
         <a href="{{ route('admin.menus.menus.create', ['set' => $set]) }}" class="btn btn-success">
             <i class="fas fa-plus-square fa-fw"></i> Add a new menu to this set
         </a>

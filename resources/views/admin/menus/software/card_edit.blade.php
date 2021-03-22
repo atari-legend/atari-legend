@@ -48,7 +48,7 @@
             <div class="mb-3">
                 <label for="demozoo" class="form-label">Demozoo ID</label>
                 <input type="number" class="form-control @error('demozoo') is-invalid @enderror"
-                    id="demozoo" name="demozoo" placeholder="e.g.: 123456" required
+                    id="demozoo" name="demozoo" placeholder="e.g.: 123456"
                     value="{{ old('demozoo', $software->demozoo_id ?? '') }}">
 
                 @error('demozoo')
@@ -58,7 +58,7 @@
                 @enderror
             </div>
 
-            @if ($software->menuDiskContents->isNotEmpty())
+            @if (isset($software) && $software->menuDiskContents->isNotEmpty())
                 <div class="mb-3">
                     <label class="form-label">Present in</label>
                     <div>

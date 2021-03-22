@@ -1,4 +1,4 @@
-<h2 class="card-title fs-4">{{ $softwares->count() }} software</h2>
+<h2 class="card-title fs-4">{{ $softwares->total() }} software titles</h2>
 
 <div class="card mb-3 bg-light">
     <div class="card-body">
@@ -52,6 +52,8 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $softwares->links('admin.layouts.pagination.bootstrap-5') }}
+
         <a href="{{ route('admin.menus.software.create') }}" class="btn btn-success">
             <i class="fas fa-plus-square fa-fw"></i> Add a new menu software
         </a>
