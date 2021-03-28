@@ -6,7 +6,7 @@
         <div class="card-body p-0 striped">
             @foreach ($game->facts as $fact)
                 <div class="p-2">
-                    <p class="card-text">{!! Helper::bbCode($fact->game_fact) !!}</p>
+                    <p class="card-text">{!! Helper::bbCode(nl2br($fact->game_fact)) !!}</p>
                 </div>
             @endforeach
         </div>
