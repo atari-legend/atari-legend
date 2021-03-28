@@ -10,4 +10,9 @@ class MenuDiskCondition extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function menuDisks()
+    {
+        return $this->hasMany(MenuDisk::class);
+    }
 }

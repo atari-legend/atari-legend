@@ -40,7 +40,7 @@
                 <input type="file" class="form-control w-100" name="dump">
             </div>
             <div class="col-3">
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" class="btn btn-success w-100">
                     @if ($disk !== null && $disk->menuDiskDump !== null)
                         Replace
                     @else

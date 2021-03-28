@@ -24,21 +24,22 @@
                         <td>{{ $set->created_at ? $set->created_at->diffForHumans() : '-' }}</td>
                         <td>{{ $set->updated_at ? $set->updated_at->diffForHumans() : '-' }}</td>
                         <td>
-                            @if ($set->menus->isEmpty())
-                                <form action="{{ route('admin.menus.sets.destroy', $set) }}"
-                                    method="POST"
-                                    onsubmit="javascript:return confirm('This item will be permanently deleted')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button title="Delete set '{{ $set->name }}'" class="btn">
-                                        <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
-                                    </button>
-                                </form>
-                            @else
-                                <button title="Delete set '{{ $set->name }}'" class="btn" disabled>
-                                    <i class="fas fa-trash fa-fw text-muted" aria-hidden="true"></i>
+                            <form action="{{ route('admin.menus.sets.destroy', $set) }}"
+                                method="POST"
+                                onsubmit="javascript:return confirm('This item will be permanently deleted')">
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    @if ($set->menus->isNotEmpty())
+                                        disabled
+                                        title="Please delete all menus of this set first"
+                                    @else
+                                        title="Delete set '{{ $set->name }}'"
+                                    @endif
+                                    class="btn">
+                                    <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
-                            @endif
+                            </form>
                         </td>
                     </tr>
                 @endforeach

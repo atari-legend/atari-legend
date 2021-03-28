@@ -14,7 +14,6 @@
             </thead>
             <tbody>
                 @foreach ($contentTypes as $contentType)
-
                     <tr>
                         <td><a href="{{ route('admin.menus.content-types.edit', $contentType) }}">{{ $contentType->name }}</a></td>
                         <td>{{ $contentType->contents->count() }}</td>

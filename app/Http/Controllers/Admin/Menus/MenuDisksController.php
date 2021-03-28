@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Menus;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\Individual;
 use App\Models\Menu;
 use App\Models\MenuDisk;
@@ -51,6 +53,16 @@ class MenuDisksController extends Controller
             'menu_id'    => $menu->id,
         ]);
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Menu Disks',
+            'section_id'       => $disk->getKey(),
+            'section_name'     => $disk->label,
+            'sub_section'      => 'Disk',
+            'sub_section_id'   => $disk->getKey(),
+            'sub_section_name' => $disk->label,
+        ]);
+
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
@@ -74,12 +86,23 @@ class MenuDisksController extends Controller
 
     public function update(Request $request, MenuDisk $disk)
     {
+
         $disk->update([
             'part'       => $request->part,
             'notes'      => $request->notes,
             'scrolltext' => $request->scrolltext,
             'menu_disk_condition_id' => $request->condition,
             'donated_by_individual_id' => $request->donated,
+        ]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Menu Disks',
+            'section_id'       => $disk->getKey(),
+            'section_name'     => $disk->getOriginal('label'),
+            'sub_section'      => 'Disk',
+            'sub_section_id'   => $disk->getKey(),
+            'sub_section_name' => $disk->label,
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
@@ -96,6 +119,16 @@ class MenuDisksController extends Controller
             ]);
 
             $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshotFile->extension(), 'public');
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::INSERT,
+                'section'          => 'Menu Disks',
+                'section_id'       => $disk->getKey(),
+                'section_name'     => $disk->label,
+                'sub_section'      => 'Screenshot',
+                'sub_section_id'   => $screenshot->getKey(),
+                'sub_section_name' => $screenshot->imgext,
+            ]);
         }
 
         return redirect()->route('admin.menus.disks.edit', $disk);
@@ -106,6 +139,16 @@ class MenuDisksController extends Controller
         if ($screenshot->menuDisk->id === $disk->id) {
             Storage::disk('public')->delete('images/menu_screenshots/' . $screenshot->id . '.' . $screenshot->imgext);
             $screenshot->delete();
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::DELETE,
+                'section'          => 'Menu Disks',
+                'section_id'       => $disk->getKey(),
+                'section_name'     => $disk->label,
+                'sub_section'      => 'Screenshot',
+                'sub_section_id'   => $screenshot->getKey(),
+                'sub_section_name' => $screenshot->imgext,
+            ]);
         }
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
@@ -175,6 +218,16 @@ class MenuDisksController extends Controller
                     'size' => $dumpSize,
                 ]);
                 $dump = $disk->menuDiskDump;
+
+                ChangelogHelper::insert([
+                    'action'           => Changelog::UPDATE,
+                    'section'          => 'Menu Disks',
+                    'section_id'       => $disk->getKey(),
+                    'section_name'     => $disk->label,
+                    'sub_section'      => 'Dump',
+                    'sub_section_id'   => $dump->getKey(),
+                    'sub_section_name' => $dump->format,
+                ]);
             } else {
                 $dump = MenuDiskDump::create([
                     'user_id' => Auth::user()->user_id,
@@ -184,6 +237,16 @@ class MenuDisksController extends Controller
                 ]);
                 $disk->menuDiskDump()->associate($dump);
                 $disk->save();
+
+                ChangelogHelper::insert([
+                    'action'           => Changelog::INSERT,
+                    'section'          => 'Menu Disks',
+                    'section_id'       => $disk->getKey(),
+                    'section_name'     => $disk->label,
+                    'sub_section'      => 'Dump',
+                    'sub_section_id'   => $dump->getKey(),
+                    'sub_section_name' => $dump->format,
+                ]);
             }
 
             $handle = fopen($tmpFilePath, 'r');
@@ -202,7 +265,17 @@ class MenuDisksController extends Controller
             $dump->menuDisk->menuDiskDump()->dissociate();
             $dump->menuDisk->save();
             $dump->delete();
-        }
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::DELETE,
+                'section'          => 'Menu Disks',
+                'section_id'       => $disk->getKey(),
+                'section_name'     => $disk->label,
+                'sub_section'      => 'Dump',
+                'sub_section_id'   => $dump->getKey(),
+                'sub_section_name' => $dump->format,
+            ]);
+    }
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
@@ -222,6 +295,16 @@ class MenuDisksController extends Controller
             });
 
         $disk->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Menu Disks',
+            'section_id'       => $disk->getKey(),
+            'section_name'     => $disk->label,
+            'sub_section'      => 'Disk',
+            'sub_section_id'   => $disk->getKey(),
+            'sub_section_name' => $disk->label,
+        ]);
 
         return redirect()->route('admin.menus.menus.edit', $disk->menu);
     }

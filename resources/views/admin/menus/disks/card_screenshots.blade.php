@@ -30,7 +30,7 @@
                 <input type="file" class="form-control w-100" name="screenshot">
             </div>
             <div class="col-3">
-                <button type="submit" class="btn btn-primary w-100">Add</button>
+                <button type="submit" class="btn btn-success w-100">Add</button>
             </div>
         </div>
     </form>

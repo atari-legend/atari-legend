@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Menus;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\MenuSet;
 use App\View\Components\Admin\Crumb;
@@ -44,7 +46,26 @@ class MenuSetsController extends Controller
             'name'       => $request->name,
             'menus_sort' => $request->sort,
         ]);
-        return $this->update($request, $set);
+
+        collect($request->crews)
+            ->map(function ($crewId) {
+                return Crew::find($crewId);
+            })
+            ->each(function ($crew) use ($set) {
+                $set->crews()->attach($crew);
+            });
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Menus',
+            'section_id'       => $set->getKey(),
+            'section_name'     => $set->name,
+            'sub_section'      => 'Set',
+            'sub_section_id'   => $set->getKey(),
+            'sub_section_name' => $set->name,
+        ]);
+
+        return redirect()->route('admin.menus.sets.edit', $set);
     }
 
     public function edit(MenuSet $set)
@@ -78,6 +99,16 @@ class MenuSetsController extends Controller
             'menus_sort' => $request->sort,
         ]);
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Menus',
+            'section_id'       => $set->getKey(),
+            'section_name'     => $set->getOriginal('name'),
+            'sub_section'      => 'Set',
+            'sub_section_id'   => $set->getKey(),
+            'sub_section_name' => $set->name,
+        ]);
+
         $request->session()->flash('alert-success', 'Saved');
         return redirect()->route('admin.menus.sets.edit', $set);
     }
@@ -85,6 +116,17 @@ class MenuSetsController extends Controller
     public function destroy(MenuSet $set)
     {
         $set->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Menus',
+            'section_id'       => $set->getKey(),
+            'section_name'     => $set->name,
+            'sub_section'      => 'Set',
+            'sub_section_id'   => $set->getKey(),
+            'sub_section_name' => $set->name,
+        ]);
+
         return redirect()->route('admin.menus.sets.index');
     }
 }

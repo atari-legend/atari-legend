@@ -23,7 +23,14 @@
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf
                                 @method('DELETE')
-                                <button title="Delete condition '{{ $condition->name }}'" class="btn">
+                                <button
+                                    @if ($condition->menuDisks->isNotEmpty())
+                                        disabled
+                                        title="Condition is in used and cannot be deleted"
+                                    @else
+                                        title="Delete condition '{{ $condition->name }}'"
+                                    @endif
+                                    class="btn">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
                             </form>

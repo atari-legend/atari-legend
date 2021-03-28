@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Menus;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\MenuSoftwareContentType;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
@@ -38,8 +40,18 @@ class MenuSoftwareContentTypesController extends Controller
 
     public function store(Request $request)
     {
-        MenuSoftwareContentType::create([
+        $contentType = MenuSoftwareContentType::create([
             'name' => $request->name,
+        ]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Menu Content Types',
+            'section_id'       => $contentType->getKey(),
+            'section_name'     => $contentType->name,
+            'sub_section'      => 'Type',
+            'sub_section_id'   => $contentType->getKey(),
+            'sub_section_name' => $contentType->name,
         ]);
 
         return redirect()->route('admin.menus.content-types.index');
@@ -62,12 +74,33 @@ class MenuSoftwareContentTypesController extends Controller
     {
         $contentType->update(['name' => $request->name]);
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Menu Content Types',
+            'section_id'       => $contentType->getKey(),
+            'section_name'     => $contentType->getOriginal('name'),
+            'sub_section'      => 'Type',
+            'sub_section_id'   => $contentType->getKey(),
+            'sub_section_name' => $contentType->name,
+        ]);
+
         return redirect()->route('admin.menus.content-types.index');
     }
 
     public function destroy(MenuSoftwareContentType $contentType)
     {
         $contentType->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Menu Content Types',
+            'section_id'       => $contentType->getKey(),
+            'section_name'     => $contentType->name,
+            'sub_section'      => 'Type',
+            'sub_section_id'   => $contentType->getKey(),
+            'sub_section_name' => $contentType->name,
+        ]);
+
         return redirect()->route('admin.menus.content-types.index');
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Menus;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\MenuDiskCondition;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
@@ -38,8 +40,18 @@ class MenuConditionsController extends Controller
 
     public function store(Request $request)
     {
-        MenuDiskCondition::create([
+        $condition = MenuDiskCondition::create([
             'name' => $request->name,
+        ]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Menu Conditions',
+            'section_id'       => $condition->getKey(),
+            'section_name'     => $condition->name,
+            'sub_section'      => 'Condition',
+            'sub_section_id'   => $condition->getKey(),
+            'sub_section_name' => $condition->name,
         ]);
 
         return redirect()->route('admin.menus.conditions.index');
@@ -60,6 +72,16 @@ class MenuConditionsController extends Controller
 
     public function update(Request $request, MenuDiskCondition $condition)
     {
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Menu Conditions',
+            'section_id'       => $condition->getKey(),
+            'section_name'     => $condition->name,
+            'sub_section'      => 'Condition',
+            'sub_section_id'   => $condition->getKey(),
+            'sub_section_name' => $request->name,
+        ]);
+
         $condition->update(['name' => $request->name]);
 
         return redirect()->route('admin.menus.conditions.index');
@@ -68,6 +90,17 @@ class MenuConditionsController extends Controller
     public function destroy(MenuDiskCondition $condition)
     {
         $condition->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Menu Conditions',
+            'section_id'       => $condition->getKey(),
+            'section_name'     => $condition->name,
+            'sub_section'      => 'Condition',
+            'sub_section_id'   => $condition->getKey(),
+            'sub_section_name' => $condition->name,
+        ]);
+
         return redirect()->route('admin.menus.conditions.index');
     }
 }

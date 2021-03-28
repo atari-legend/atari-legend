@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Menus;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Menu;
 use App\Models\MenuDisk;
@@ -114,6 +116,16 @@ class MenuDisksContentController extends Controller
                 break;
         }
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Menu Disks',
+            'section_id'       => $disk->getKey(),
+            'section_name'     => $disk->label,
+            'sub_section'      => 'Content',
+            'sub_section_id'   => $content->getKey(),
+            'sub_section_name' => $content->label,
+        ]);
+
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
@@ -156,6 +168,16 @@ class MenuDisksContentController extends Controller
             'requirements' => $request->requirements,
         ]);
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Menu Disks',
+            'section_id'       => $disk->getKey(),
+            'section_name'     => $disk->label,
+            'sub_section'      => 'Content',
+            'sub_section_id'   => $content->getKey(),
+            'sub_section_name' => $content->label,
+        ]);
+
         $request->session()->flash('alert-success', 'Saved');
         return redirect()->route('admin.menus.disks.edit', $content->menuDisk);
     }
@@ -177,6 +199,16 @@ class MenuDisksContentController extends Controller
             // Delete the release
             $content->release->delete();
         }
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Menu Disks',
+            'section_id'       => $disk->getKey(),
+            'section_name'     => $disk->label,
+            'sub_section'      => 'Content',
+            'sub_section_id'   => $content->getKey(),
+            'sub_section_name' => $content->label,
+        ]);
 
         return redirect()->route('admin.menus.disks.edit', $content->menuDisk);
     }

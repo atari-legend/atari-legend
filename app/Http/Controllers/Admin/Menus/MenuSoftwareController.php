@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Menus;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\View\Components\Admin\Crumb;
@@ -40,10 +42,20 @@ class MenuSoftwareController extends Controller
 
     public function store(Request $request)
     {
-        MenuSoftware::create([
+        $software = MenuSoftware::create([
             'name' => $request->name,
             'menu_software_content_type_id' => $request->type,
             'demozoo_id' => $request->demozoo,
+        ]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Menu Softwre',
+            'section_id'       => $software->getKey(),
+            'section_name'     => $software->name,
+            'sub_section'      => 'Software',
+            'sub_section_id'   => $software->getKey(),
+            'sub_section_name' => $software->name,
         ]);
 
         return redirect()->route('admin.menus.software.index');
@@ -71,12 +83,33 @@ class MenuSoftwareController extends Controller
             'demozoo_id' => $request->demozoo,
         ]);
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Menu Softwre',
+            'section_id'       => $software->getKey(),
+            'section_name'     => $software->getOriginal('name'),
+            'sub_section'      => 'Software',
+            'sub_section_id'   => $software->getKey(),
+            'sub_section_name' => $software->name,
+        ]);
+
         return redirect()->route('admin.menus.software.index');
     }
 
     public function destroy(MenuSoftware $software)
     {
         $software->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Menu Softwre',
+            'section_id'       => $software->getKey(),
+            'section_name'     => $software->getOriginal('name'),
+            'sub_section'      => 'Software',
+            'sub_section_id'   => $software->getKey(),
+            'sub_section_name' => $software->name,
+        ]);
+
         return redirect()->route('admin.menus.software.index');
     }
 }
