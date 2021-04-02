@@ -1,12 +1,19 @@
-@if ($game->releases->filter(function($release) { return $release->menuDiskContents->isNotEmpty(); })->isNotEmpty())
+@if ($menuReleases->isNotEmpty())
+    @php
+        $menuColumns = 3
+    @endphp
+    <h2 class="mb-4 text-uppercase text-center">In {{ $menuReleases->count() }} {{ Str::plural('Menu', $menuReleases->count() )}}</h2>
 
-    <h3 class="fs-5 mb-4 text-center">This game is also found in the following menus:</h3>
-
-    <div class="row row-cols-1 row-cols-md-3 lightbox-gallery">
-        @foreach ($game->releases->filter(function($release) { return $release->menuDiskContents->isNotEmpty(); }) as $release)
+    <div class="row row-cols-1 row-cols-md-{{ $menuColumns }} lightbox-gallery">
+        @foreach ($menuReleases as $release)
             @php
                 $disk = $release->menuDiskContents->first()->menuDisk
             @endphp
+
+            @if ($loop->index == $menuColumns)
+                <div class="collapse w-100 row row-cols-1 row-cols-md-{{ $menuColumns }} ms-0 ps-0 pe-0" id="more-menus">
+            @endif
+
             <div class="col d-flex">
                 <div class="card mb-4 bg-dark w-100">
                     <div class="card-header text-center">
@@ -114,6 +121,17 @@
                     </div>
                 </div>
             </div>
+
         @endforeach
+        @if ($menuReleases->count() > $menuColumns)
+            </div>
+            <div class="mb-4 w-100 text-center text-audiowide">
+                <a href="#more-menus" data-bs-toggle="collapse"
+                    class="text-white" data-al-collapsed-text="Less"
+                    aria-expanded="false" aria-controls="more-menus">
+                    View {{ $menuReleases->count() - $menuColumns }} more menus…
+                </a>
+            </div>
+        @endif
     </div>
 @endif

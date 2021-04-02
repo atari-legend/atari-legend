@@ -75,6 +75,12 @@ class GameController extends Controller
                 $similar = $collection->random();
             });
 
+        // Collect all menu releases
+        $menuReleases = $game->releases
+            ->filter(function($release) {
+                return $release->menuDiskContents->isNotEmpty();
+            });
+
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
@@ -82,6 +88,7 @@ class GameController extends Controller
             'interviews'        => $interviews,
             'reviews'           => $reviews,
             'similar'           => $similar,
+            'menuReleases'      => $menuReleases,
         ]);
     }
 
