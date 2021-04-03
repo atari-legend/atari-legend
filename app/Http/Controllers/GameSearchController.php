@@ -39,10 +39,13 @@ class GameSearchController extends Controller
         }
 
         if ($request->filled('title')) {
-            $games->where('game_name', 'like', '%'.$request->input('title').'%')
-                ->orWhereHas('akas', function (Builder $query) use ($request) {
-                    $query->where('aka_name', 'like', '%'.$request->input('title').'%');
-                });
+            // Search main game name or an AKA
+            $games->where(function (Builder $query) use ($request) {
+                $query->where('game_name', 'like', '%'.$request->input('title').'%')
+                    ->orWhereHas('akas', function (Builder $subQuery) use ($request) {
+                        $subQuery->where('aka_name', 'like', '%'.$request->input('title').'%');
+                    });
+            });
         }
 
         if ($request->filled('developer')) {
