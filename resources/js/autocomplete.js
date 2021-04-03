@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'list-unstyled',
                         'text-audiowide');
                 },
-                destination: el,
+                destination: () => el,
             },
             onSelection: feedback => {
                 el.value = feedback.selection.value[el.dataset.autocompleteKey];
