@@ -8,7 +8,7 @@
                 <label for="title" class="col-4 col-sm-3 col-form-label text-nowrap">Title</label>
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
-                        data-autocomplete-endpoint="{{ URL::to('/ajax/games.json/') }}"
+                        data-autocomplete-endpoint="{{ route('ajax.games') }}"
                         data-autocomplete-key="game_name"
                         value="{{ old('title', $title) }}"
                         id="title" name="title" autocomplete="off">
@@ -21,7 +21,7 @@
                 </label>
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control @isset ($publisher_id) d-none @endif"
-                        data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
+                        data-autocomplete-endpoint="{{ route('ajax.companies') }}"
                         data-autocomplete-key="pub_dev_name"
                         value="{{ old('publisher', $publisher) }}"
                         id="publisher" name="publisher" autocomplete="off">
@@ -40,7 +40,7 @@
                 </label>
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control @isset ($developer_id) d-none @endif"
-                        data-autocomplete-endpoint="{{ URL::to('/ajax/companies.json') }}"
+                        data-autocomplete-endpoint="{{ route('ajax.companies') }}"
                         data-autocomplete-key="pub_dev_name"
                         value="{{ old('developer', $developer) }}"
                         id="developer" name="developer" autocomplete="off">
@@ -59,7 +59,7 @@
                 </label>
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control @isset ($year_id) d-none @endif"
-                        data-autocomplete-endpoint="{{ URL::to('/ajax/release-years.json') }}"
+                        data-autocomplete-endpoint="{{ route('ajax.release-years') }}"
                         data-autocomplete-key="year"
                         value="{{ old('year', $year) }}"
                         id="year" name="year" autocomplete="off">

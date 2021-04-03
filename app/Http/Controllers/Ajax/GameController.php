@@ -13,12 +13,12 @@ class GameController extends Controller
     public function games(Request $request)
     {
         $games = DB::table('game')
-            ->select('game_name')
+            ->select('game_name', 'game_id')
             ->orderBy('game_name')
             ->limit(GameController::MAX);
 
         $akas = DB::table('game_aka')
-            ->select('aka_name as game_name')
+            ->select('aka_name as game_name', 'game_id')
             ->orderBy('aka_name')
             ->limit(GameController::MAX);
 

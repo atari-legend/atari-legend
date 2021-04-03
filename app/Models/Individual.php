@@ -48,4 +48,12 @@ class Individual extends Model
             return $this->ind_name;
         }
     }
+
+    /**
+     * @return string[] List of nicks for this individual
+     */
+    public function getNickListAttribute()
+    {
+        return $this->nicknames->pluck("nick")->pluck('ind_name');
+    }
 }

@@ -45,16 +45,15 @@
             </div>
 
             <div class="mb-3">
-                <label for="donated" class="form-label">Donated by</label>
-                <select class="form-select @error('donated') is-invalid @enderror"
-                    id="donated" name="donated">
-                    <option value="">-- Select --</option>
-                    @foreach ($individuals as $individual)
-                        <option value="{{ $individual->ind_id }}" @if((int) old('individual', isset($disk) ? $disk->donatedBy?->ind_id : '') === $individual->ind_id) selected @endif>
-                            {{ $individual->ind_name }}
-                        </option>
-                    @endforeach
-                </select>
+
+                <label for="individual_name" class="form-label">Donated by</label>
+                <input class="autocomplete form-control @error('donated') is-invalid @enderror"
+                    name="individual_name" id="individual_name" type="search"
+                    data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
+                    data-autocomplete-key="ind_name" data-autocomplete-id="ind_id"
+                    data-autocomplete-companion="donated" value="{{ old('individual_name', isset($disk) ? $disk->donatedBy?->ind_name : '') }}"
+                    placeholder="Type an individual name..." autocomplete="off">
+                <input type="hidden" name="donated" value="{{ old('donated') }}">
                 <span class="form-text">Add & edit individuals in the <a href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_main.php' }}">Legacy CPANEL</a>.</span>
 
                 @error('donated')

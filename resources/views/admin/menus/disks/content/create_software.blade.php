@@ -1,13 +1,12 @@
 <div class="mb-3">
-    <label for="software" class="form-label">Software</label>
-    <select class="form-select @error('software') is-invalid @enderror"
-        id="software" name="software">
-        <option value="">-- Select --</option>
-        @foreach ($softwares as $software)
-            <option value="{{ $software->id }}" @if((int) old('software') === $software->id) selected @endif>{{ $software->name }}</option>
-        @endforeach
-
-    </select>
+    <label for="software_name" class="form-label">Software</label>
+    <input class="autocomplete form-control @error('software') is-invalid @enderror"
+        name="software_name" id="software_name" type="search"
+        data-autocomplete-endpoint="{{ route('ajax.software') }}"
+        data-autocomplete-key="name" data-autocomplete-id="id"
+        data-autocomplete-companion="software" value="{{ old('software_name') }}"
+        placeholder="Type a software name..." autocomplete="off">
+    <input type="hidden" name="software" value="{{ old('software') }}">
 
     @error('software')
         <span class="invalid-feedback" role="alert">

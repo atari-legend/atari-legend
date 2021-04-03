@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
             threshold: 1,
             debounce: 300,
             maxResults: 10,
+            highlight: {
+                render: true
+            },
             selector: () => el,
             resultsList: {
                 render: true,
@@ -37,6 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             onSelection: feedback => {
                 el.value = feedback.selection.value[el.dataset.autocompleteKey];
+
+                if (el.dataset.autocompleteCompanion && el.dataset.autocompleteId) {
+                    document.querySelectorAll(`input[name="${el.dataset.autocompleteCompanion}"]`)
+                        .forEach(companion => {
+                            companion.value = feedback.selection.value[el.dataset.autocompleteId];
+                        });
+                }
+
                 if (el.dataset.autocompleteSubmit && el.dataset.autocompleteSubmit === 'true') {
                     el.form.submit();
                 }

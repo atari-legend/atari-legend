@@ -4,7 +4,9 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Ajax\CompanyController;
 use App\Http\Controllers\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Ajax\GenreController;
+use App\Http\Controllers\Ajax\IndividualController;
 use App\Http\Controllers\Ajax\ReleaseYearController;
+use App\Http\Controllers\Ajax\SoftwareController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CommentController;
@@ -86,12 +88,17 @@ Route::middleware('verified')->group(function () {
 
     Route::get('/robots.txt', [RobotsController::class, 'index']);
 
-    Route::prefix('/ajax')->group(function () {
-        Route::get('companies.json', [CompanyController::class, 'companies']);
-        Route::get('release-years.json', [ReleaseYearController::class, 'releaseYears']);
-        Route::get('genres.json', [GenreController::class, 'genres']);
-        Route::get('games.json', [AjaxGameController::class, 'games']);
+    Route::name('ajax.')->group(function() {
+        Route::prefix('/ajax')->group(function () {
+            Route::get('companies.json', [CompanyController::class, 'companies'])->name('companies');
+            Route::get('release-years.json', [ReleaseYearController::class, 'releaseYears'])->name('release-years');
+            Route::get('genres.json', [GenreController::class, 'genres'])->name('genres');
+            Route::get('games.json', [AjaxGameController::class, 'games'])->name('games');
+            Route::get('software.json', [SoftwareController::class, 'software'])->name('software');
+            Route::get('individuals.json', [IndividualController::class, 'individuals'])->name('individuals');
+        });
     });
+
 });
 
 Auth::routes(['verify' => true]);
