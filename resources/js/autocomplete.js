@@ -37,8 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             onSelection: feedback => {
                 el.value = feedback.selection.value[el.dataset.autocompleteKey];
-                // Prevent default event otherwise it would submit the form
-                feedback.event.preventDefault();
+                if (el.dataset.autocompleteSubmit && el.dataset.autocompleteSubmit === 'true') {
+                    el.form.submit();
+                }
             }
         });
     });

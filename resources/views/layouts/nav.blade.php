@@ -35,7 +35,7 @@
                 <div class="position-relative">
                     <input class="autocomplete form-control bg-black" name="title" type="search"
                         data-autocomplete-endpoint="{{ URL::to('/ajax/games.json') }}"
-                        data-autocomplete-key="game_name"
+                        data-autocomplete-key="game_name" data-autocomplete-submit="true"
                         placeholder="Search" aria-label="Search" autocomplete="off" required>
                 </div>
                 <button class="btn" type="submit"><i class="fas fa-search"></i></button>
