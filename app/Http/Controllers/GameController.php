@@ -77,7 +77,7 @@ class GameController extends Controller
 
         // Collect all menu releases
         $menuReleases = $game->releases
-            ->filter(function($release) {
+            ->filter(function ($release) {
                 return $release->menuDiskContents->isNotEmpty();
             });
 

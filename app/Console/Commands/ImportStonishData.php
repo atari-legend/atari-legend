@@ -11,9 +11,7 @@ use App\Models\IndividualNick;
 use App\Models\IndividualText;
 use App\Models\Menu;
 use App\Models\MenuDisk;
-use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
-use App\Models\MenuDiskContentType;
 use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
@@ -27,7 +25,6 @@ use ZipArchive;
 
 class ImportStonishData extends Command
 {
-
     private $stop = false;
 
     /**
@@ -61,11 +58,11 @@ class ImportStonishData extends Command
      */
     public function handle()
     {
-        if (extension_loaded("pcntl")) {
+        if (extension_loaded('pcntl')) {
             pcntl_signal(SIGINT, [$this, 'interrupt']);
         }
 
-        $this->info("Deleting existing release data...");
+        $this->info('Deleting existing release data...');
         $this->withProgressBar(Release::has('menuDiskContents')->get(), function ($release) {
             if ($this->stop) {
                 exit(1);
@@ -155,7 +152,6 @@ class ImportStonishData extends Command
                             ->where('game_id', '=', $game->game_id)
                             ->first();
 
-
                         // Only create a release if there is not type like "doc" or "trainer",
                         // in which case either it refers to an existing release on this menu,
                         // or a game that is not in the menu (for example Sewer Doc Disks)
@@ -195,6 +191,7 @@ class ImportStonishData extends Command
 
             $this->info("\t\tImported menu!");
         }
+
         return 0;
     }
 
@@ -205,10 +202,10 @@ class ImportStonishData extends Command
         if ($crews->count() === 1) {
             $crew = $crews->first();
             $this->info("\tFound crew {$crew->crew_id} {$crew->crew_name}");
-        } else if ($crews->count() < 1) {
+        } elseif ($crews->count() < 1) {
             $this->warn("\tNo crew found with name {$name}. Creating a new one");
             $crew = Crew::create([
-                'crew_name' => $name
+                'crew_name' => $name,
             ]);
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,
@@ -219,9 +216,9 @@ class ImportStonishData extends Command
                 'sub_section_id'   => $crew->getKey(),
                 'sub_section_name' => $crew->crew_name,
             ]);
-        } else if ($crews->count() > 1) {
+        } elseif ($crews->count() > 1) {
             $this->error("\tMore than 1 crew found for {$name}");
-            $this->error("\t" . $crews->pluck('crew_id')->join(', '));
+            $this->error("\t".$crews->pluck('crew_id')->join(', '));
             exit(1);
         }
 
@@ -235,7 +232,7 @@ class ImportStonishData extends Command
         if ($menusets->count() === 1) {
             $menuset = $menusets->first();
             $this->info("\tFound menu set {$menuset->id} {$menuset->name}");
-        } else if ($menusets->count() < 1) {
+        } elseif ($menusets->count() < 1) {
             $this->warn("\tNo menu set found with name {$menu->name_menus}. Creating a new one");
             $menuset = new MenuSet();
             $menuset->name = $menu->name_menus;
@@ -244,9 +241,9 @@ class ImportStonishData extends Command
                 $menuset->menus_sort = 'desc';
             }
             $crew->menuSets()->save($menuset);
-        } else if ($menusets->count() > 2) {
+        } elseif ($menusets->count() > 2) {
             $this->error("\tMore than 1 menu set found for {$menu->name_menus}");
-            $this->error("\t" . $menusets->pluck('id')->join(', '));
+            $this->error("\t".$menusets->pluck('id')->join(', '));
             exit(1);
         }
 
@@ -259,7 +256,7 @@ class ImportStonishData extends Command
 
         if ($stonishMenu->issue !== null) {
             $menus = $menus->where('number', $stonishMenu->issue);
-        } else if ($stonishMenu->letter !== null && trim($stonishMenu->letter) !== '') {
+        } elseif ($stonishMenu->letter !== null && trim($stonishMenu->letter) !== '') {
             $menus = $menus->where('issue', trim($stonishMenu->letter));
         } else {
             // Special case: Menu has no issue, and no letter. This is a menu lacking
@@ -275,7 +272,7 @@ class ImportStonishData extends Command
         if ($menus->count() === 1) {
             $menu = $menus->first();
             $this->info("\t\tFound menu {$menu->id} {$menu->issue}");
-        } else if ($menus->count() < 1) {
+        } elseif ($menus->count() < 1) {
             $this->warn("\t\tNo menu found for {$stonishMenu->issue}. Creating a new one");
             $menu = new Menu();
             $menu->number = $stonishMenu->issue;
@@ -286,9 +283,9 @@ class ImportStonishData extends Command
             $menu->date = ($stonishMenu->date_release !== '0000-00-00') ? $stonishMenu->date_release : null;
             $menu->version = (trim($stonishMenu->version) !== '') ? trim($stonishMenu->version) : null;
             $menuset->menus()->save($menu);
-        } else if ($menus->count() > 1) {
+        } elseif ($menus->count() > 1) {
             $this->error("\t\tMore than 1 menu found for {$stonishMenu->id_allmenus}");
-            $this->error("\t\t" . $menus->pluck('id')->join(', '));
+            $this->error("\t\t".$menus->pluck('id')->join(', '));
             exit(1);
         }
 
@@ -310,7 +307,7 @@ class ImportStonishData extends Command
 
         // Read scrolltext from disk if it exists
         if ($stonishMenu->scrolltext !== null && trim($stonishMenu->scrolltext) !== '') {
-            $scrolltextFile = config('al.stonish.root') . 'scrolltext/' . $stonishMenu->scrolltext;
+            $scrolltextFile = config('al.stonish.root').'scrolltext/'.$stonishMenu->scrolltext;
             if (file_exists($scrolltextFile)) {
                 $scrolltext = file_get_contents($scrolltextFile);
                 // Strip off non-printable characters
@@ -324,14 +321,14 @@ class ImportStonishData extends Command
         $menu->disks()->save($disk);
 
         if ($stonishMenu->screenshot !== null && trim($stonishMenu->screenshot) !== '') {
-            $screenshotFile = config('al.stonish.root') . 'screenshot/' . $stonishMenu->screenshot;
+            $screenshotFile = config('al.stonish.root').'screenshot/'.$stonishMenu->screenshot;
             if (file_exists($screenshotFile)) {
                 $ext = strtolower(pathinfo($screenshotFile, PATHINFO_EXTENSION));
                 $screenshot = new MenuDiskScreenshot();
                 $screenshot->imgext = $ext;
                 $disk->screenshots()->save($screenshot);
 
-                Storage::disk('public')->put('images/menu_screenshots/' . $screenshot->id . '.' . $ext, file_get_contents($screenshotFile));
+                Storage::disk('public')->put('images/menu_screenshots/'.$screenshot->id.'.'.$ext, file_get_contents($screenshotFile));
             }
         }
 
@@ -372,7 +369,8 @@ class ImportStonishData extends Command
         return $mainIndividual;
     }
 
-    private function getIndividual(array $individualData): Individual {
+    private function getIndividual(array $individualData): Individual
+    {
         $name = $individualData['name'];
         $individuals = Individual::whereRaw('LOWER(TRIM(ind_name)) = ?', strtolower(trim($name)));
         $individual = null;
@@ -382,7 +380,7 @@ class ImportStonishData extends Command
         } else {
             if ($individuals->count() > 1) {
                 $this->error("\t\tMore than 1 individual found for {$name}");
-                $this->error("\t\t" . $individuals->pluck('ind_id')->join(', '));
+                $this->error("\t\t".$individuals->pluck('ind_id')->join(', '));
                 exit(1);
                 // $this->error("\t\tCreating a new one...");
             }
@@ -397,7 +395,6 @@ class ImportStonishData extends Command
                 $individual->text()->save($text);
             }
 
-
             $this->info("\t\tCreated individual {$individual->ind_name}");
         }
 
@@ -408,8 +405,8 @@ class ImportStonishData extends Command
     {
         if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
             $dumpFile = config('al.stonish.root')
-                . 'download/' . preg_replace('/([^.a-z0-9]+)/i', '_', $stonishMenu->name_menus)
-                . '/' . $stonishMenu->download;
+                .'download/'.preg_replace('/([^.a-z0-9]+)/i', '_', $stonishMenu->name_menus)
+                .'/'.$stonishMenu->download;
             if (file_exists($dumpFile)) {
                 $this->info("\t\tFound dump {$dumpFile}");
 
@@ -418,7 +415,6 @@ class ImportStonishData extends Command
 
                 $zip = new ZipArchive();
                 if ($zip->open($dumpFile) === true) {
-
                     if ($zip->count() !== 1) {
                         $this->warn("Unexpected number of files found in ZIP archive {$dumpFile}: {$zip->count()}");
                     }
@@ -428,7 +424,7 @@ class ImportStonishData extends Command
 
                     // Read each entry in the ZIP and skip files we don't
                     // care about (such as .txt ones)
-                    for ($i=0; $i<$zip->count(); $i++) {
+                    for ($i = 0; $i < $zip->count(); $i++) {
                         $f = $zip->getNameIndex($i);
                         $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
                         if ($e == 'txt') {
@@ -461,7 +457,7 @@ class ImportStonishData extends Command
                 $dump->save();
                 $disk->menuDiskDump()->associate($dump);
                 $disk->save();
-                Storage::disk('public')->put('zips/menus/' . $dump->id . '.zip', file_get_contents($dumpFile));
+                Storage::disk('public')->put('zips/menus/'.$dump->id.'.zip', file_get_contents($dumpFile));
 
                 return $dump;
             }
@@ -477,10 +473,10 @@ class ImportStonishData extends Command
         if ($softwares->count() === 1) {
             $software = $softwares->first();
             $this->info("\t\tFound software {$software->name}");
-        } else if ($softwares->count() < 1) {
+        } elseif ($softwares->count() < 1) {
             $this->info("\t\tNo software for {$menuContent->titlesoft}. Creating a new one");
             $software = new MenuSoftware();
-            $software ->name = $menuContent->titlesoft;
+            $software->name = $menuContent->titlesoft;
             if ($menuContent->iddemozoo > 0) {
                 $software->demozoo_id = $menuContent->iddemozoo;
             }
@@ -488,7 +484,7 @@ class ImportStonishData extends Command
             $software->save();
         } else {
             $this->error("\t\tMore than 1 software found for {$menuContent->titlesoft}");
-            $this->error("\t\t" . $softwares->pluck('id')->join(', '));
+            $this->error("\t\t".$softwares->pluck('id')->join(', '));
             exit(1);
         }
 
@@ -497,7 +493,7 @@ class ImportStonishData extends Command
 
     public function interrupt()
     {
-        $this->info("Interrupting...");
+        $this->info('Interrupting...');
         $this->stop = true;
     }
 }

@@ -7,7 +7,6 @@ use Illuminate\View\Component;
 
 class MenuDisk extends Component
 {
-
     public ?int $id = null;
 
     /**

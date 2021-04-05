@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Game;
-use App\Models\Menu;
 use App\Models\MenuDisk;
-use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MenuSetController extends Controller
 {
-
     const PAGE_SIZE = 10;
 
     const MISSING_CONDITION_ID = 1;
@@ -34,8 +28,8 @@ class MenuSetController extends Controller
         $sets = DB::table('menu_sets')
             ->select('name', 'menu_sets.id')
             ->selectRaw("count('menu_disks.id') as disks")
-            ->selectRaw("convert(sum(case when menu_disks.menu_disk_condition_id = ? then 1 else 0 end), unsigned integer) as missing", [
-                MenuSetController::MISSING_CONDITION_ID
+            ->selectRaw('convert(sum(case when menu_disks.menu_disk_condition_id = ? then 1 else 0 end), unsigned integer) as missing', [
+                MenuSetController::MISSING_CONDITION_ID,
             ])
             ->join('menus', 'menus.menu_set_id', 'menu_sets.id')
             ->join('menu_disks', 'menu_disks.menu_id', 'menus.id')
@@ -81,8 +75,8 @@ class MenuSetController extends Controller
             ->unique('id');
 
         return view('menus.software')->with([
-            'software'  => $software,
-            'menuDisks' => $menuDisks,
+            'software'         => $software,
+            'menuDisks'        => $menuDisks,
             'conditionClasses' => MenuSetController::CONDITION_CLASSES,
         ]);
     }

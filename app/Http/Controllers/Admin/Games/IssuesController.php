@@ -7,8 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Genre;
-use Illuminate\Http\Request;
 use App\View\Components\Admin\Crumb;
+use Illuminate\Http\Request;
 
 class IssuesController extends Controller
 {

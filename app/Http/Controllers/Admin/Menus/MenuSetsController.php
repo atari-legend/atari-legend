@@ -110,6 +110,7 @@ class MenuSetsController extends Controller
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
+
         return redirect()->route('admin.menus.sets.edit', $set);
     }
 

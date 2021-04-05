@@ -20,5 +20,4 @@ class MenuSoftware extends Model
     {
         return $this->hasMany(MenuDiskContent::class);
     }
-
 }

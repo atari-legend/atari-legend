@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class MenusController extends Controller
 {
-
     public function create(Request $request)
     {
         $set = MenuSet::find($request->set);
@@ -88,6 +87,7 @@ class MenusController extends Controller
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
+
         return redirect()->route('admin.menus.menus.edit', $menu);
     }
 
@@ -107,5 +107,4 @@ class MenusController extends Controller
 
         return redirect()->route('admin.menus.sets.edit', $menu->menuSet);
     }
-
 }

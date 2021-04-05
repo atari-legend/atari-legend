@@ -35,12 +35,12 @@ class MenuDiskContent extends Model
     {
         if ($this->game) {
             return $this->game->game_name;
-        } else if ($this->release) {
+        } elseif ($this->release) {
             return $this->release->game->game_name;
-        } else if ($this->menuSoftware) {
+        } elseif ($this->menuSoftware) {
             return $this->menuSoftware->name;
         } else {
-            return "Unkown or empty content";
+            return 'Unkown or empty content';
         }
     }
 }

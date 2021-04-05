@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Http\Controllers\MenuSetController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class MenuDisk extends Model
 {
@@ -83,11 +82,11 @@ class MenuDisk extends Model
             ->flatMap(function ($menu) {
                 return $menu->disks->map(function ($disk) use ($menu) {
                     return [
-                        'id'     => $disk->id,
-                        'number' => $menu->number,
-                        'issue'  => $menu->issue,
+                        'id'      => $disk->id,
+                        'number'  => $menu->number,
+                        'issue'   => $menu->issue,
                         'version' => $menu->version,
-                        'part'   => $disk->part
+                        'part'    => $disk->part,
                     ];
                 })
                     ->all();
@@ -102,6 +101,6 @@ class MenuDisk extends Model
             ->values()
             ->search($this->id);
 
-        return ceil(($index+1) / MenuSetController::PAGE_SIZE);
+        return ceil(($index + 1) / MenuSetController::PAGE_SIZE);
     }
 }

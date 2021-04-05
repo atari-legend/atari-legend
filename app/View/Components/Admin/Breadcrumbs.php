@@ -6,7 +6,6 @@ use Illuminate\View\Component;
 
 class Breadcrumbs extends Component
 {
-
     private array $crumbs;
 
     /**

@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Menus\MenuConditionsController;
-use App\Http\Controllers\Admin\Menus\MenuContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuDisksContentController;
 use App\Http\Controllers\Admin\Menus\MenuDisksController;
 use App\Http\Controllers\Admin\Menus\MenusController;
@@ -35,7 +34,6 @@ Route::middleware('verified')->group(function () {
                     Route::resource('content-types', MenuSoftwareContentTypesController::class);
                     Route::resource('software', MenuSoftwareController::class);
                 });
-
             });
         });
     });

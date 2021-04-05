@@ -88,7 +88,7 @@ Route::middleware('verified')->group(function () {
 
     Route::get('/robots.txt', [RobotsController::class, 'index']);
 
-    Route::name('ajax.')->group(function() {
+    Route::name('ajax.')->group(function () {
         Route::prefix('/ajax')->group(function () {
             Route::get('companies.json', [CompanyController::class, 'companies'])->name('companies');
             Route::get('release-years.json', [ReleaseYearController::class, 'releaseYears'])->name('release-years');
@@ -98,7 +98,6 @@ Route::middleware('verified')->group(function () {
             Route::get('individuals.json', [IndividualController::class, 'individuals'])->name('individuals');
         });
     });
-
 });
 
 Auth::routes(['verify' => true]);

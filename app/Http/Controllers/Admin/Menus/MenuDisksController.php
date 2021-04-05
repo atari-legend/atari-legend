@@ -9,10 +9,8 @@ use App\Models\Individual;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
-use App\Models\MenuDiskContent;
 use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
-use App\Models\MenuSet;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +19,6 @@ use ZipArchive;
 
 class MenuDisksController extends Controller
 {
-
     public function create(Request $request)
     {
         $menu = Menu::find($request->menu);
@@ -45,12 +42,12 @@ class MenuDisksController extends Controller
     {
         $menu = Menu::find($request->menu);
         $disk = MenuDisk::create([
-            'part'       => $request->part,
-            'notes'      => $request->notes,
-            'scrolltext' => $request->scrolltext,
-            'menu_disk_condition_id' => $request->condition,
+            'part'                     => $request->part,
+            'notes'                    => $request->notes,
+            'scrolltext'               => $request->scrolltext,
+            'menu_disk_condition_id'   => $request->condition,
             'donated_by_individual_id' => $request->donated,
-            'menu_id'    => $menu->id,
+            'menu_id'                  => $menu->id,
         ]);
 
         ChangelogHelper::insert([
@@ -75,7 +72,7 @@ class MenuDisksController extends Controller
                     new Crumb(route('admin.menus.sets.index'), 'Sets'),
                     new Crumb(route('admin.menus.sets.edit', $disk->menu->menuSet), $disk->menu->menuSet->name),
                     new Crumb(route('admin.menus.menus.edit', $disk->menu), $disk->menu->label),
-                    new Crumb(route('admin.menus.disks.edit', $disk), $disk->label)
+                    new Crumb(route('admin.menus.disks.edit', $disk), $disk->label),
                 ],
                 'conditions'  => MenuDiskCondition::orderBy('name')->get(),
                 'individuals' => Individual::orderBy('ind_name')->get(),
@@ -86,12 +83,11 @@ class MenuDisksController extends Controller
 
     public function update(Request $request, MenuDisk $disk)
     {
-
         $disk->update([
-            'part'       => $request->part,
-            'notes'      => $request->notes,
-            'scrolltext' => $request->scrolltext,
-            'menu_disk_condition_id' => $request->condition,
+            'part'                     => $request->part,
+            'notes'                    => $request->notes,
+            'scrolltext'               => $request->scrolltext,
+            'menu_disk_condition_id'   => $request->condition,
             'donated_by_individual_id' => $request->donated,
         ]);
 
@@ -106,6 +102,7 @@ class MenuDisksController extends Controller
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
+
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
@@ -118,7 +115,7 @@ class MenuDisksController extends Controller
                 'imgext'       => strtolower($screenshotFile->extension()),
             ]);
 
-            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshotFile->extension(), 'public');
+            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id.'.'.$screenshotFile->extension(), 'public');
 
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,
@@ -137,7 +134,7 @@ class MenuDisksController extends Controller
     public function destroyScreenshot(MenuDisk $disk, MenuDiskScreenshot $screenshot)
     {
         if ($screenshot->menuDisk->id === $disk->id) {
-            Storage::disk('public')->delete('images/menu_screenshots/' . $screenshot->id . '.' . $screenshot->imgext);
+            Storage::disk('public')->delete('images/menu_screenshots/'.$screenshot->id.'.'.$screenshot->imgext);
             $screenshot->delete();
 
             ChangelogHelper::insert([
@@ -150,9 +147,9 @@ class MenuDisksController extends Controller
                 'sub_section_name' => $screenshot->imgext,
             ]);
         }
+
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
-
 
     public function storeDump(Request $request, MenuDisk $disk)
     {
@@ -170,6 +167,7 @@ class MenuDisksController extends Controller
 
             if ($clientExt !== 'ZIP' && !collect(MenuDiskDump::EXTENSIONS)->contains($clientExt)) {
                 $request->session()->flash('alert-danger', 'Unsupported file extension: '.$clientExt);
+
                 return redirect()->route('admin.menus.disks.edit', $disk);
             }
 
@@ -177,11 +175,13 @@ class MenuDisksController extends Controller
                 $zip = new ZipArchive();
                 if ($zip->open($dumpFile->path()) !== true) {
                     $request->session()->flash('alert-danger', 'Error opening ZIP file: '.$zip->getStatusString());
+
                     return redirect()->route('admin.menus.disks.edit', $disk);
                 }
                 if ($zip->count() !== 1) {
                     $request->session()->flash('alert-danger', 'More than one file in the ZIP archive. Please only include a single disk image.');
                     $zip->close();
+
                     return redirect()->route('admin.menus.disks.edit', $disk);
                 }
 
@@ -191,6 +191,7 @@ class MenuDisksController extends Controller
                 if (!collect(MenuDiskDump::EXTENSIONS)->contains($zipEntryExt)) {
                     $request->session()->flash('alert-danger', 'File insize ZIP as an unsupported file extension: '.$zipEntryExt);
                     $zip->close();
+
                     return redirect()->route('admin.menus.disks.edit', $disk);
                 }
 
@@ -213,9 +214,9 @@ class MenuDisksController extends Controller
             if ($disk->menuDiskDump !== null) {
                 $disk->menuDiskDump->update([
                     'user_id' => Auth::user()->user_id,
-                    'format' => $dumpFormat,
-                    'sha512' => $dumpChecksum,
-                    'size' => $dumpSize,
+                    'format'  => $dumpFormat,
+                    'sha512'  => $dumpChecksum,
+                    'size'    => $dumpSize,
                 ]);
                 $dump = $disk->menuDiskDump;
 
@@ -231,9 +232,9 @@ class MenuDisksController extends Controller
             } else {
                 $dump = MenuDiskDump::create([
                     'user_id' => Auth::user()->user_id,
-                    'format' => $dumpFormat,
-                    'sha512' => $dumpChecksum,
-                    'size' => $dumpSize,
+                    'format'  => $dumpFormat,
+                    'sha512'  => $dumpChecksum,
+                    'size'    => $dumpSize,
                 ]);
                 $disk->menuDiskDump()->associate($dump);
                 $disk->save();
@@ -254,9 +255,9 @@ class MenuDisksController extends Controller
             fclose($handle);
             unlink($tmpFilePath);
         }
+
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
-
 
     public function destroyDump(MenuDisk $disk, MenuDiskDump $dump)
     {
@@ -275,7 +276,8 @@ class MenuDisksController extends Controller
                 'sub_section_id'   => $dump->getKey(),
                 'sub_section_name' => $dump->format,
             ]);
-    }
+        }
+
         return redirect()->route('admin.menus.disks.edit', $disk);
     }
 
@@ -285,6 +287,7 @@ class MenuDisksController extends Controller
         $disk->contents
             ->map(function ($content) {
                 $content->delete();
+
                 return $content->release;
             })
             ->filter(function ($release) {

@@ -8,7 +8,7 @@ namespace App\Helpers;
 class MenuHelper
 {
     /**
-     * @param int $disks Number of disks in the menu set
+     * @param int $disks   Number of disks in the menu set
      * @param int $missing Number of missing disks
      *
      * @return float Percentage of completion of a menu set
@@ -17,5 +17,4 @@ class MenuHelper
     {
         return ($disks - $missing) / $disks * 100;
     }
-
 }

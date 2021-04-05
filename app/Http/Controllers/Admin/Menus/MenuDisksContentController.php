@@ -6,21 +6,15 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
-use App\Models\MenuDiskScreenshot;
-use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\Release;
 use App\View\Components\Admin\Crumb;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class MenuDisksContentController extends Controller
 {
-
     public function create(Request $request, MenuDisk $disk)
     {
         $diskReleases = $disk->menu
@@ -57,24 +51,24 @@ class MenuDisksContentController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'order' => 'required|numeric'
+            'order' => 'required|numeric',
         ];
 
         switch ($request->type) {
-            case "software":
+            case 'software':
                 $rules['software'] = 'required';
                 break;
-            case "game":
+            case 'game':
                 $rules['game'] = 'required';
                 $rules['subtype'] = 'required';
                 break;
-            case "release":
+            case 'release':
                 if ($request->action === 'create-release') {
                     $rules['game'] = 'required';
-                } else if ($request->action === 'use-release') {
+                } elseif ($request->action === 'use-release') {
                     $rules['release'] = 'required';
                     $rules['subtype'] = 'required';
-                } else{
+                } else {
                     throw new \ErrorException("Unsupported action: {$request->action}");
                 }
                 break;
@@ -101,11 +95,11 @@ class MenuDisksContentController extends Controller
             case 'release':
                 if ($request->action === 'create-release') {
                     $release = Release::create([
-                        'type' => 'Unofficial',
+                        'type'    => 'Unofficial',
                         'game_id' => $request->game,
                     ]);
                     $release->menuDiskContents()->save($content);
-                } else if ($request->action === 'use-release') {
+                } elseif ($request->action === 'use-release') {
                     $release = Release::find($request->release);
                     $release->menuDiskContents()->save($content);
                 }
@@ -140,8 +134,8 @@ class MenuDisksContentController extends Controller
                     new Crumb(route('admin.menus.menus.edit', $content->menuDisk->menu), $content->menuDisk->menu->label),
                     new Crumb(route('admin.menus.disks.edit', $content->menuDisk), $content->menuDisk->label ?: 'Disk'),
                     new Crumb(route('admin.menus.disks.content.edit', [
-                        'disk' => $content->menuDisk,
-                        'content' => $content
+                        'disk'    => $content->menuDisk,
+                        'content' => $content,
                     ]), $content->label),
                 ],
                 'disk'         => $content->menuDisk,
@@ -152,12 +146,12 @@ class MenuDisksContentController extends Controller
     public function update(Request $request, MenuDisk $disk, MenuDiskContent $content)
     {
         $request->validate([
-            'order' => 'required|numeric'
+            'order' => 'required|numeric',
         ]);
 
         if ($content->game !== null) {
             $request->validate([
-                'subtype' => 'required'
+                'subtype' => 'required',
             ]);
         }
 
@@ -179,8 +173,10 @@ class MenuDisksContentController extends Controller
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
+
         return redirect()->route('admin.menus.disks.edit', $content->menuDisk);
     }
+
     public function destroy(MenuDisk $disk, MenuDiskContent $content)
     {
         $content->delete();

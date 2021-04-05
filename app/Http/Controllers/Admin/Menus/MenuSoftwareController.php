@@ -43,9 +43,9 @@ class MenuSoftwareController extends Controller
     public function store(Request $request)
     {
         $software = MenuSoftware::create([
-            'name' => $request->name,
+            'name'                          => $request->name,
             'menu_software_content_type_id' => $request->type,
-            'demozoo_id' => $request->demozoo,
+            'demozoo_id'                    => $request->demozoo,
         ]);
 
         ChangelogHelper::insert([
@@ -78,9 +78,9 @@ class MenuSoftwareController extends Controller
     public function update(Request $request, MenuSoftware $software)
     {
         $software->update([
-            'name' => $request->name,
+            'name'                          => $request->name,
             'menu_software_content_type_id' => $request->type,
-            'demozoo_id' => $request->demozoo,
+            'demozoo_id'                    => $request->demozoo,
         ]);
 
         ChangelogHelper::insert([

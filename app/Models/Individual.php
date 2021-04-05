@@ -54,6 +54,6 @@ class Individual extends Model
      */
     public function getNickListAttribute()
     {
-        return $this->nicknames->pluck("nick")->pluck('ind_name');
+        return $this->nicknames->pluck('nick')->pluck('ind_name');
     }
 }

@@ -17,7 +17,7 @@ class IndividualController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $individuals = $individuals->where('ind_name', 'like', '%' . $request->q . '%');
+            $individuals = $individuals->where('ind_name', 'like', '%'.$request->q.'%');
         }
 
         $results = $individuals->get()
@@ -26,11 +26,13 @@ class IndividualController extends Controller
                 if ($individual->nicknames->isNotEmpty()) {
                     $ind_name .= ' (aka: '.$individual->nick_list->join(', ').')';
                 }
+
                 return [
                     'ind_name' => $ind_name,
-                    'ind_id' => $individual->ind_id,
+                    'ind_id'   => $individual->ind_id,
                 ];
             });
+
         return response()->json($results);
     }
 }
