@@ -30,7 +30,7 @@ class CreateNewMenuStructure extends Migration
         Schema::create('crew_menu_set', function (Blueprint $table) {
             $table->integer('crew_id');
             $table->foreignId('menu_set_id')->constrained()->cascadeOnDelete();
-            $table->primary('crew_id', 'menu_set_id');
+            $table->primary(['crew_id', 'menu_set_id']);
 
             $table->foreign('crew_id')->references('crew_id')->on('crew');
         });

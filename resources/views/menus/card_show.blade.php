@@ -4,6 +4,7 @@
     </div>
     <div class="card-body p-2">
         <p class="card-text text-center mb-2">
+            <span class="text-muted">By: {{ $menuset->crews->pluck('crew_name')->join(', ') }}</span><br><br>
             <em>{{ $menuset->name }}</em> contains
             {{ $menuset->menus->count() }}
             {{ Str::plural('menu', $menuset->menus->count()) }}
