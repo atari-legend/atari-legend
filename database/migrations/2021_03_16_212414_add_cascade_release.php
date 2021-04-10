@@ -160,7 +160,6 @@ class AddCascadeRelease extends Migration
             $table->dropForeign('game_release_trainer_option_ibfk_2');
             $table->foreign('trainer_option_id')->references('id')->on('trainer_option')->onDelete('cascade');
         });
-
     }
 
     /**
@@ -312,6 +311,5 @@ class AddCascadeRelease extends Migration
             $table->dropForeign('game_release_trainer_option_trainer_option_id_foreign');
             $table->foreign('trainer_option_id', 'game_release_trainer_option_ibfk_2')->references('id')->on('trainer_option');
         });
-
     }
 }
