@@ -169,7 +169,6 @@ class AddCascadeRelease extends Migration
      */
     public function down()
     {
-
         Schema::table('game_release_aka', function (Blueprint $table) {
             $table->dropForeign('game_release_aka_game_release_id_foreign');
             $table->foreign('game_release_id', 'game_release_aka_ibfk_1')->references('id')->on('game_release');
