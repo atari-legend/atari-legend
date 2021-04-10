@@ -19,6 +19,10 @@ use ZipArchive;
 
 class MenuDisksController extends Controller
 {
+    const VALIDATION_RULES = [
+        'condition'  => 'required',
+    ];
+
     public function create(Request $request)
     {
         $menu = Menu::find($request->menu);
@@ -40,6 +44,8 @@ class MenuDisksController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(MenuDisksController::VALIDATION_RULES);
+
         $menu = Menu::find($request->menu);
         $disk = MenuDisk::create([
             'part'                     => $request->part,
@@ -83,6 +89,8 @@ class MenuDisksController extends Controller
 
     public function update(Request $request, MenuDisk $disk)
     {
+        $request->validate(MenuDisksController::VALIDATION_RULES);
+
         $disk->update([
             'part'                     => $request->part,
             'notes'                    => $request->notes,

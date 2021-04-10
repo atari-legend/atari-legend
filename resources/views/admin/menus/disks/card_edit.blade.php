@@ -30,7 +30,7 @@
             <div class="mb-3">
                 <label for="condition" class="form-label">Condition</label>
                 <select class="form-select @error('condition') is-invalid @enderror"
-                    id="condition" name="condition">
+                    id="condition" name="condition" required>
                     <option value="">-- Select --</option>
                     @foreach ($conditions as $condition)
                         <option value="{{ $condition->id }}" @if((int) old('condition', isset($disk) ? $disk->menuDiskCondition?->id : '') === $condition->id) selected @endif>{{ $condition->name }}</option>

@@ -13,8 +13,8 @@
                 <a href="{{ route('admin.menus.disks.content.create', ['disk' => $disk, 'type' => 'game']) }}"><i class="fas fa-plus fa-fw me-1"></i>Add standalone game doc or extra</a>
                 <span class="text-muted">
                     Use this option to add a doc, hint, trainer or other extra for a game
-                    that is <strong>not</strong> present on the menu (e.g. a standalone doc or
-                    trainer for a game).
+                    that is <strong>not present</strong> on the menu (e.g. a standalone doc or
+                    trainer for a game that is not part of the menu).
                 </span>
             </p>
             <p>

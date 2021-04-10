@@ -45,11 +45,19 @@
 
             <div class="mb-3">
                 <label for="crews" class="form-label">Crews</label>
-                <select class="form-select" multiple size="6" name="crews[]">
+                <select class="form-select @error('crews') is-invalid @enderror" multiple size="6" name="crews[]" required>
                     @foreach ($crews as $crew)
                         <option value="{{ $crew->crew_id }}" @if (isset($set) && $set->crews->contains($crew)) selected @endif>{{ $crew->crew_name }}</option>
                     @endforeach
                 </select>
+
+                @error('crews')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+
+                <span class="form-text">Add & edit crews in the <a href="{{ config('al.legacy.base_url').'/admin/crew/crew_main.php' }}">Legacy CPANEL</a>.</span>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

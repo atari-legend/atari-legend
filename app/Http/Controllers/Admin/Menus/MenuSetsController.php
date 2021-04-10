@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 
 class MenuSetsController extends Controller
 {
+    const VALIDATION_RULES = [
+        'name'  => 'required',
+        'sort'  => 'required',
+        'crews' => 'required',
+    ];
+
     public function index()
     {
         $sets = MenuSet::orderBy('name')
@@ -42,6 +48,8 @@ class MenuSetsController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(MenuSetsController::VALIDATION_RULES);
+
         $set = MenuSet::create([
             'name'       => $request->name,
             'menus_sort' => $request->sort,
@@ -84,6 +92,8 @@ class MenuSetsController extends Controller
 
     public function update(Request $request, MenuSet $set)
     {
+        $request->validate(MenuSetsController::VALIDATION_RULES);
+
         $set->crews()->detach();
 
         collect($request->crews)

@@ -1,7 +1,7 @@
 <div class="mb-3">
     <label for="software_name" class="form-label">Software</label>
     <input class="autocomplete form-control @error('software') is-invalid @enderror"
-        name="software_name" id="software_name" type="search"
+        name="software_name" id="software_name" type="search" required
         data-autocomplete-endpoint="{{ route('ajax.software') }}"
         data-autocomplete-key="name" data-autocomplete-id="id"
         data-autocomplete-companion="software" value="{{ old('software_name') }}"

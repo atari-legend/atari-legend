@@ -47,7 +47,7 @@
                 <div class="col-12 col-md-6">
                     <label for="order" class="form-label">Order</label>
                     <input type="number" class="form-control @error('order') is-invalid @enderror"
-                        id="order" name="order" placeholder="e.g.: 1"
+                        id="order" name="order" placeholder="e.g.: 1" required
                         value="{{ old('order', $content->order ?? '') }}">
 
                     @error('order')
