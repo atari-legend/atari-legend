@@ -11,7 +11,7 @@
             @endphp
 
             @if ($loop->index == $menuColumns)
-                <div class="collapse w-100 row row-cols-1 row-cols-md-{{ $menuColumns }} ms-0 ps-0 pe-0" id="more-menus">
+                <div class="collapse d-sm-flex w-100 row row-cols-1 row-cols-md-{{ $menuColumns }} ms-0 ps-0 pe-0" id="more-menus">
             @endif
 
             <div class="col d-flex">
@@ -125,7 +125,7 @@
         @endforeach
         @if ($menuReleases->count() > $menuColumns)
             </div>
-            <div class="mb-4 w-100 text-center text-audiowide">
+            <div class="d-sm-none mb-4 w-100 text-center text-audiowide">
                 <a href="#more-menus" data-bs-toggle="collapse"
                     class="text-white" data-al-collapsed-text="Less"
                     aria-expanded="false" aria-controls="more-menus">

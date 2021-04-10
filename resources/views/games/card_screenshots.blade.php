@@ -1,6 +1,6 @@
 <div class="card bg-dark mb-4 card-screenshots">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">
+        <h2 class="text-uppercase d-none d-lg-block">
             {{ $game->game_name }}
             @contributor
                 <a href="{{ config('al.legacy.base_url').'/admin/games/games_detail.php?game_id='.$game->game_id }}">
@@ -8,6 +8,7 @@
                 </a>
             @endcontributor
         </h2>
+        <h2 class="text-uppercase d-lg-none">Screenshots</h2>
     </div>
     <div class="card-body p-2">
         @if ($game->screenshots->isNotEmpty())

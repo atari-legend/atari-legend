@@ -1,6 +1,7 @@
 <div class="card bg-dark mb-4 card-game">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">Game info</h2>
+        <h2 class="text-uppercase d-none d-lg-block">Game info</h2>
+        <h2 class="text-uppercase d-lg-none">{{ $game->game_name }}</h2>
     </div>
     <div class="card-body p-0 striped">
         @if ($developersLogos->isNotEmpty())
