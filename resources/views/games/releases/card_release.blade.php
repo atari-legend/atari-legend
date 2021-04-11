@@ -1,6 +1,7 @@
 <div class="card bg-dark mb-4 card-game">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
+            <span class="d-lg-none">{{ $release->game->game_name}}: </span>
             {{ $release->year }}
             @if ($release->name !== null && $release->name !== '')
                 / {{ $release->name }}

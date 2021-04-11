@@ -1,10 +1,11 @@
 <div class="card bg-dark mb-4 card-game">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">
+        <h2 class="text-uppercase d-none d-lg-block">
             <a href="{{ route('games.show', ['game' => $release->game]) }}">
                 {{ $release->game->game_name }}
             </a>
         </h2>
+        <h2 class="text-uppercase d-lg-none">Game Screenshot</h2>
     </div>
     <div class="card-body p-0">
         @if ($release->game->screenshots->isNotEmpty())
