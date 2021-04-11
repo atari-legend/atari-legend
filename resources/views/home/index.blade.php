@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="visually-hidden">AtariLegend home page</h1>
     <div class="row">
-        <div class="col order-2 order-lg-1">
+        <div class="col-12 col-lg-3 order-2 order-lg-1">
             <x-cards.screenstar />
             <x-cards.a-l-t-v-feed />
             @include('home.card_open')
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col order-3">
+        <div class="col-12 col-lg-3 order-3">
             <x-cards.interview />
             <x-cards.link />
             <x-cards.social />
