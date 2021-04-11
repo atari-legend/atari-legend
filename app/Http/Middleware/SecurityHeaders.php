@@ -23,9 +23,15 @@ class SecurityHeaders
         $response = $next($request);
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
+
+        $csp = collect([
+            "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:",
+            "img-src 'self' data: *.ytimg.com",
+        ]);
+
         $response->headers->set(
             'Content-Security-Policy',
-            "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:"
+            $csp->join('; ')
         );
 
         return $response;

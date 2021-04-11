@@ -5,8 +5,7 @@
     <div class="row">
         <div class="col order-2 order-lg-1">
             <x-cards.screenstar />
-            @include('home.card_altv')
-            <x-cards.social />
+            <x-cards.a-l-t-v-feed />
             @include('home.card_open')
         </div>
         <div class="col-12 col-lg-6 order-1 order-lg-2">
@@ -30,6 +29,7 @@
         <div class="col order-3">
             <x-cards.interview />
             <x-cards.link />
+            <x-cards.social />
             <x-cards.trivia />
             @include('home.card_spotlight')
         </div>
