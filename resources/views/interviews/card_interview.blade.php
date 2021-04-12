@@ -1,7 +1,9 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
-            Interview
+            <span class="text-uppercase d-lg-none">{{ $interview->individual->ind_name }}</span>
+            <span class="text-uppercase d-none d-lg-block">Interview</span>
+
             @contributor
                 <a href="{{ config('al.legacy.base_url').'/admin/interviews/interviews_edit.php?interview_id='.$interview->interview_id }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
