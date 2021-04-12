@@ -75,11 +75,21 @@ class GameController extends Controller
                 $similar = $collection->random();
             });
 
-        // Collect all menu releases
-        $menuReleases = $game->releases
+        // Collect all menu disks that this game is part of
+
+        // First collect all releases that are part of a menu, and get the
+        // corresponding disk
+        $menuDisks = $game->releases
             ->filter(function ($release) {
                 return $release->menuDiskContents->isNotEmpty();
-            });
+            })
+            ->map(function ($release) {
+                return $release->menuDiskContents->first()->menuDisk;
+            })
+            // Then collect all standalone menus disks that don't have a release
+            // (i.e. docs, trainer, ...)
+            ->concat($game->menuDiskContents->pluck('menuDisk'))
+            ->sortBy('download_basename');
 
         return view('games.show')->with([
             'game'              => $game,
@@ -88,7 +98,7 @@ class GameController extends Controller
             'interviews'        => $interviews,
             'reviews'           => $reviews,
             'similar'           => $similar,
-            'menuReleases'      => $menuReleases,
+            'menuDisks'         => $menuDisks,
         ]);
     }
 

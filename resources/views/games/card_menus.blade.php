@@ -1,14 +1,11 @@
-@if ($menuReleases->isNotEmpty())
+@if ($menuDisks->isNotEmpty())
     @php
         $menuColumns = 3
     @endphp
-    <h2 class="mb-4 text-uppercase text-center">In {{ $menuReleases->count() }} {{ Str::plural('Menu', $menuReleases->count() )}}</h2>
+    <h2 class="mb-4 text-uppercase text-center">In {{ $menuDisks->count() }} {{ Str::plural('Menu', $menuDisks->count() )}}</h2>
 
     <div class="row row-cols-1 row-cols-md-{{ $menuColumns }} lightbox-gallery">
-        @foreach ($menuReleases as $release)
-            @php
-                $disk = $release->menuDiskContents->first()->menuDisk
-            @endphp
+        @foreach ($menuDisks as $disk)
 
             @if ($loop->index == $menuColumns)
                 <div class="collapse d-sm-flex w-100 row row-cols-1 row-cols-md-{{ $menuColumns }} ms-0 ps-0 pe-0" id="more-menus">
@@ -123,13 +120,13 @@
             </div>
 
         @endforeach
-        @if ($menuReleases->count() > $menuColumns)
+        @if ($menuDisks->count() > $menuColumns)
             </div>
             <div class="d-sm-none mb-4 w-100 text-center text-audiowide">
                 <a href="#more-menus" data-bs-toggle="collapse"
                     class="text-white" data-al-collapsed-text="Less"
                     aria-expanded="false" aria-controls="more-menus">
-                    View {{ $menuReleases->count() - $menuColumns }} more menus…
+                    View {{ $menuDisks->count() - $menuColumns }} more menus…
                 </a>
             </div>
         @endif
