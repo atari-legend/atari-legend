@@ -2,6 +2,27 @@
 
 <div class="card mb-3 bg-light">
     <div class="card-body">
+
+        <div class="row mb-2 text-center">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @if (!isset($letter)) active @endif">
+                    <a class="page-link"
+                        href="{{ route('admin.menus.sets.index') }}">All</a>
+                </li>
+                <li class="page-item @if (isset($letter) && $letter === '0-9') active @endif">
+                    <a class="page-link"
+                        href="{{ route('admin.menus.sets.index', ['letter' => '0-9']) }}">#</a>
+                </li>
+                @foreach (range('A', 'Z') as $l)
+                    <li class="page-item @if (isset($letter) && $letter === $l) active @endif">
+                        <a class="page-link"
+                            href="{{ route('admin.menus.sets.index', ['letter' => $l]) }}">{{ $l }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
+
         <table class="table table-hover">
             <thead>
                 <tr>

@@ -18,10 +18,24 @@ class MenuSetsController extends Controller
         'crews' => 'required',
     ];
 
-    public function index()
+    public function index(Request $request)
     {
-        $sets = MenuSet::orderBy('name')
-            ->paginate(20);
+        $sets = MenuSet::select()
+            ->orderBy('name');
+
+        if ($request->letter && $request->letter === '0-9') {
+            $sets = $sets
+                ->where('name', 'regexp', '^[0-9]+')
+                // Essentially disable pagination when filtering on a letter
+                ->paginate(PHP_INT_MAX);
+        } elseif ($request->letter) {
+            $sets = $sets
+                ->where('name', 'like', $request->letter.'%')
+                // Essentially disable pagination when filtering on a letter
+                ->paginate(PHP_INT_MAX);
+        } else {
+            $sets = $sets->paginate(20);
+        }
 
         return view('admin.menus.sets.index')
             ->with([
@@ -30,6 +44,7 @@ class MenuSetsController extends Controller
                     new Crumb(route('admin.menus.sets.index'), 'Sets'),
                 ],
                 'sets'        => $sets,
+                'letter'      => $request->letter,
             ]);
     }
 
