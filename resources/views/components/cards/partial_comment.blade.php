@@ -32,7 +32,7 @@
         @endif
     </div>
 
-    <div class="py-2 mb-1" id="comment-{{ $comment->comments_id }}">{!! Helper::bbCode(stripslashes($comment->comment)) !!}</div>
+    <div class="py-2 mb-1" id="comment-{{ $comment->comments_id }}">{!! Helper::bbCode(stripslashes(nl2br($comment->comment))) !!}</div>
 
     {{-- Comment edit form --}}
     @if (Auth::check() && Auth::user()->user_id === $comment->user->user_id)
