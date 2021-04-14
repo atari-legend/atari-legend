@@ -2,7 +2,7 @@
     <div class="card-header text-center">
         <h2 class="text-uppercase">
             <span class="text-uppercase d-lg-none">{{ $interview->individual->ind_name }}</span>
-            <span class="text-uppercase d-none d-lg-block">Interview</span>
+            <span class="text-uppercase d-none d-lg-inline">Interview</span>
 
             @contributor
                 <a href="{{ config('al.legacy.base_url').'/admin/interviews/interviews_edit.php?interview_id='.$interview->interview_id }}">
