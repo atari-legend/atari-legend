@@ -3,7 +3,7 @@
         <div class="card-header text-center">
             <h2 class="text-uppercase">Interviews</h2>
         </div>
-        <div class="card-body p-0 striped">
+        <div class="striped">
             @foreach ($interviews as $interview)
                 @include('interviews.partial_card', ['interview' => $interview])
             @endforeach
