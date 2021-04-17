@@ -7,19 +7,25 @@
             <div>
                 <div class="row g-0 p-2 pb-0">
                     <h3 class="fs-6 mb-0">
-                        <a href="{{ route('menus.show', ['set' => $dump->menuDisk->menu->menuSet, 'page' => $dump->menuDisk->menuset_page_number]) }}#menudisk-{{ $dump->menuDisk->id }}">
+                        <a
+                            href="{{ route('menus.show', ['set' => $dump->menuDisk->menu->menuSet, 'page' => $dump->menuDisk->menuset_page_number]) }}#menudisk-{{ $dump->menuDisk->id }}">
                             {{ $dump->menuDisk->menu->menuSet->name }}
                             {{ $dump->menuDisk->menu->label }}{{ $dump->menuDisk->label }}
                         </a>
                     </h3>
                 </div>
                 <div class="row p-2 pb-2 g-0">
-                    @if ($dump->menuDisk->screenshots->isNotEmpty())
-                        <div class="col-3">
+                    <div class="col-3">
+                        @if ($dump->menuDisk->screenshots->isNotEmpty())
                             <img class="w-100"
-                                src="{{ asset('storage/images/menu_screenshots/' . $dump->menuDisk->screenshots->first()->file) }}">
-                        </div>
-                    @endif
+                                src="{{ asset('storage/images/menu_screenshots/' . $dump->menuDisk->screenshots->first()->file) }}"
+                                alt="Screenshot for disk">
+                        @else
+                            <img class="w-100 bg-black" src="{{ asset('images/no-screenshot.png') }}"
+                                alt="No screenshot for this disk">
+                        @endif
+                    </div>
+
                     <div class="col p-2 pt-0">
                         <p class="card-text text-muted mb-0">
                             {{ $dump->created_at->format('F j, Y') }}
