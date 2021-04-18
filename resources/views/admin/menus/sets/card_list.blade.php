@@ -66,7 +66,9 @@
                 @endforeach
             </tbody>
         </table>
+
         {{ $sets->links('admin.layouts.pagination.bootstrap-5') }}
+
         <a href="{{ route('admin.menus.sets.create') }}" class="btn btn-success">
             <i class="fas fa-plus-square fa-fw"></i> Add a new menu set
         </a>

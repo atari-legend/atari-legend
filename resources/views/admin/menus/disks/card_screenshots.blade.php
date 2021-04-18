@@ -27,7 +27,7 @@
         @csrf
         <div class="row m-2">
             <div class="col-9">
-                <input type="file" class="form-control w-100" name="screenshot">
+                <input type="file" class="form-control w-100" name="screenshot" required>
             </div>
             <div class="col-3">
                 <button type="submit" class="btn btn-success w-100">Add</button>

@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="{{ mix('css/admin.css') }}">
 
+    @livewireStyles
+
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
 </head>
@@ -37,6 +39,7 @@
     </div>
 
     <script src="{{ mix('js/app.js') }}"></script>
+    @livewireScripts
 </body>
 
 </html>

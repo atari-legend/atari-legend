@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Ajax\CompanyController;
+use App\Http\Controllers\Ajax\CrewController;
 use App\Http\Controllers\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Ajax\GenreController;
 use App\Http\Controllers\Ajax\IndividualController;
@@ -96,6 +97,7 @@ Route::middleware('verified')->group(function () {
             Route::get('games.json', [AjaxGameController::class, 'games'])->name('games');
             Route::get('software.json', [SoftwareController::class, 'software'])->name('software');
             Route::get('individuals.json', [IndividualController::class, 'individuals'])->name('individuals');
+            Route::get('crews.json', [CrewController::class, 'crews'])->name('crews');
         });
     });
 });

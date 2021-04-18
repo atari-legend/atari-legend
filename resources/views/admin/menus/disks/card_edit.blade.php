@@ -66,7 +66,7 @@
 
             <div class="mb-3">
                 <label for="notes" class="form-label">Notes</label>
-                <textarea class="form-control @error('number') is-invalid @enderror"
+                <textarea class="form-control @error('notes') is-invalid @enderror"
                     id="notes" name="notes" rows="3">{{ old('notes', $disk->notes ?? '') }}</textarea>
 
                 @error('notes')
