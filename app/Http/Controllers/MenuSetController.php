@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class MenuSetController extends Controller
 {
-    const PAGE_SIZE = 10;
+    const PAGE_SIZE = 20;
 
     const INTACT_CONDITION_ID = 4;
 

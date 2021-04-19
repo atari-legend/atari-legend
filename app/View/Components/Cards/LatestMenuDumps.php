@@ -26,7 +26,7 @@ class LatestMenuDumps extends Component
     public function render()
     {
         $dumps = MenuDiskDump::orderBy('created_at')
-            ->limit(10)
+            ->limit(20)
             ->get();
 
         return view('components.cards.latest-menu-dumps')
