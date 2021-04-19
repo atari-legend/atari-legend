@@ -11,7 +11,7 @@ class MenuSetController extends Controller
 {
     const PAGE_SIZE = 10;
 
-    const MISSING_CONDITION_ID = 1;
+    const INTACT_CONDITION_ID = 4;
 
     const CONDITION_CLASSES = [
         1 => 'danger',
@@ -28,8 +28,8 @@ class MenuSetController extends Controller
         $sets = DB::table('menu_sets')
             ->select('name', 'menu_sets.id')
             ->selectRaw("count('menu_disks.id') as disks")
-            ->selectRaw('convert(sum(case when menu_disks.menu_disk_condition_id = ? then 1 else 0 end), unsigned integer) as missing', [
-                MenuSetController::MISSING_CONDITION_ID,
+            ->selectRaw('convert(sum(case when menu_disks.menu_disk_condition_id != ? then 1 else 0 end), unsigned integer) as missing', [
+                MenuSetController::INTACT_CONDITION_ID,
             ])
             ->join('menus', 'menus.menu_set_id', 'menu_sets.id')
             ->join('menu_disks', 'menu_disks.menu_id', 'menus.id')
@@ -55,7 +55,7 @@ class MenuSetController extends Controller
         $missingDiskCount = DB::table('menu_disks')
             ->join('menus', 'menu_id', '=', 'menus.id')
             ->where('menus.menu_set_id', '=', $set->id)
-            ->where('menu_disk_condition_id', '=', MenuSetController::MISSING_CONDITION_ID)
+            ->where('menu_disk_condition_id', '!=', MenuSetController::INTACT_CONDITION_ID)
             ->count();
 
         return view('menus.show')->with([
