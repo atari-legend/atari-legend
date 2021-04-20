@@ -25,7 +25,7 @@ class LatestMenuDumps extends Component
      */
     public function render()
     {
-        $dumps = MenuDiskDump::orderBy('created_at')
+        $dumps = MenuDiskDump::orderByDesc('created_at')
             ->limit(20)
             ->get();
 
