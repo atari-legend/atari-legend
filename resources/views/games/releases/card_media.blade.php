@@ -7,13 +7,6 @@
         <div class="striped">
             @foreach ($release->medias as $media)
                 <div class="card-body">
-                    @guest
-                        @if ($loop->first)
-                            <p class="float-end text-danger">
-                                Please <a href="{{ route('login') }}">log-in</a> to download files
-                            </p>
-                        @endif
-                    @endguest
                     <div class="mb-2 d-flex float-start">
                         @isset ($mediaTypeIcons[$media->type->id])
                             <i class="{{ $mediaTypeIcons[$media->type->id] }} me-1"></i>
@@ -39,16 +32,10 @@
                                 @foreach ($media->dumps as $dump)
                                     <tr>
                                         <td>
-                                            @auth
-                                                <a href="{{ asset('storage/zips/games/'.$dump->id.'.zip') }}"
-                                                    download="{{ $dump->download_filename }}">
-                                                    <i class="fas fa-download"></i>
-                                                </a>
-
-                                            @endauth
-                                            @guest
-                                                <i class="fas fa-download text-muted"></i>
-                                            @endguest
+                                            <a href="{{ asset('storage/zips/games/'.$dump->id.'.zip') }}"
+                                                download="{{ $dump->download_filename }}">
+                                                <i class="fas fa-download"></i>
+                                            </a>
                                         </td>
                                         <td>{{ $dump->format }}</td>
                                         <td class="d-none d-sm-table-cell">

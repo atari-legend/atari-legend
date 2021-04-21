@@ -112,25 +112,18 @@
             </div>
             <div class="col text-end">
                 @if ($disk->menuDiskDump !== null)
-                    @auth
-                        <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
-                        <abbr class="text-muted d-inline-block" title="{{ $disk->menuDiskDump->sha512 }}">
-                            <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
-                        </abbr>
+                    <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
+                    <abbr class="text-muted d-inline-block" title="{{ $disk->menuDiskDump->sha512 }}">
+                        <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
+                    </abbr>
 
-                        <a class="d-inline-block ms-2"
-                            href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
-                            download="{{ $disk->download_filename}}">
-                            <i class="fas fa-download"></i>
-                        </a>
+                    <a class="d-inline-block ms-2"
+                        href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
+                        download="{{ $disk->download_filename}}">
+                        <i class="fas fa-download"></i>
+                    </a>
 
-                        <small class="text-muted">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>
-                    @endauth
-                    @guest
-                        <span class="text-danger">
-                            Please <a href="{{ route('login') }}">log in</a> to download
-                        </span>
-                    @endguest
+                    <small class="text-muted">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>
                 @else
                     <small class="text-muted">No download available</small>
                 @endif

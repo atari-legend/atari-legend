@@ -47,14 +47,12 @@
                             </p>
 
                             Dump updated
-                            @auth
-                                <a class="d-inline-block ms-2"
-                                    href="{{ asset('storage/zips/menus/' . $disk->menuDiskDump->id . '.zip') }}"
-                                    download="{{ $disk->download_filename }}">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <small class="text-muted">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>
-                            @endauth
+                            <a class="d-inline-block ms-2"
+                                href="{{ asset('storage/zips/menus/' . $disk->menuDiskDump->id . '.zip') }}"
+                                download="{{ $disk->download_filename }}">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <small class="text-muted">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>
                         @elseif ($event === 'disk')
                             <p class="card-text text-muted mb-2">
                                 {{ $disk->updated_at->format('F j, Y') }}

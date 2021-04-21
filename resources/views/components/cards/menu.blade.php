@@ -66,25 +66,18 @@
         </div>
         <div class="card-footer pt-0 ps-2">
             @isset ($disk->menuDiskDump)
-                @auth
-                    <a class="d-inline-block me-2"
-                        href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
-                        download="{{ $disk->download_filename}}">
-                        <i class="fas fa-download"></i>
-                    </a>
+                <a class="d-inline-block"
+                    href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
+                    download="{{ $disk->download_filename}}">
+                    <i class="fas fa-download"></i>
+                </a>
 
-                    <small class="text-muted me-2">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>
+                <small class="text-muted me-2">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>
 
-                    <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
-                    <abbr class="text-muted d-inline-block" title="{{ $disk->menuDiskDump->sha512 }}">
-                        <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
-                    </abbr>
-                @endauth
-                @guest
-                    <span class="text-danger">
-                        Please <a href="{{ route('login') }}">log in</a> to download
-                    </span>
-                @endguest
+                <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
+                <abbr class="text-muted d-inline-block" title="{{ $disk->menuDiskDump->sha512 }}">
+                    <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
+                </abbr>
             @endif
             <a class="float-end"
                 href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">
