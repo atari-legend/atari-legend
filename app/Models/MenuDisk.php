@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\MenuSetController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class MenuDisk extends Model
 {
@@ -74,31 +75,25 @@ class MenuDisk extends Model
      */
     public function getMenusetPageNumberAttribute()
     {
-        $id = $this->id;
+        // Select all disks from the menu set, order them properly
+        // and find the index of the current menu
 
-        $index = $this->menu
-            ->menuSet
-            ->menus
-            ->flatMap(function ($menu) {
-                return $menu->disks->map(function ($disk) use ($menu) {
-                    return [
-                        'id'      => $disk->id,
-                        'number'  => $menu->number,
-                        'issue'   => $menu->issue,
-                        'version' => $menu->version,
-                        'part'    => $disk->part,
-                    ];
-                })
-                    ->all();
-            })
-            ->sortBy([
-                ['number', $this->menu->menuSet->menus_sort],
-                ['issue', $this->menu->menuSet->menus_sort],
-                ['version', 'asc'],
-                ['part', 'asc'],
-            ])
+        // Unfortunately MySQL does not support a way to compute row
+        // numbers automatically, otherwise we could also ask it to
+        // return the index. So we have to get the whole list, and
+        // search the index in PHP
+
+        $index = DB::table('menu_disks')
+            ->select('menu_disks.id')
+            ->join('menus', 'menus.id', '=', 'menu_disks.menu_id')
+            ->join('menu_sets', 'menu_sets.id', '=', 'menus.menu_set_id')
+            ->where('menu_set_id', '=', $this->menu->menuSet->id)
+            ->orderBy('number', $this->menu->menuSet->menus_sort)
+            ->orderBy('issue', $this->menu->menuSet->menus_sort)
+            ->orderBy('version', 'asc')
+            ->orderBy('part', 'asc')
+            ->get()
             ->pluck('id')
-            ->values()
             ->search($this->id);
 
         return ceil(($index + 1) / MenuSetController::PAGE_SIZE);
