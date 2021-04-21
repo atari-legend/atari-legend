@@ -2,11 +2,12 @@
 
 namespace App\View\Components\Cards;
 
+use App\Models\MenuDisk;
 use App\Models\MenuDiskDump;
 use App\Models\User;
 use Illuminate\View\Component;
 
-class LatestMenuDumps extends Component
+class LatestMenus extends Component
 {
     /**
      * Create a new component instance.
@@ -25,11 +26,19 @@ class LatestMenuDumps extends Component
      */
     public function render()
     {
-        $dumps = MenuDiskDump::orderByDesc('created_at')
+        $dumps = MenuDiskDump::orderByDesc('updated_at')
             ->limit(20)
             ->get();
 
-        return view('components.cards.latest-menu-dumps')
-            ->with(['dumps' => $dumps]);
+        $disks = MenuDisk::orderByDesc('updated_at')
+            ->limit(20)
+            ->get();
+
+        $dumpsOrDisks = $dumps->merge($disks)
+            ->sortByDesc('updated_at')
+            ->take(20);
+
+        return view('components.cards.latest-menus')
+            ->with(['dumpsOrDisks' => $dumpsOrDisks]);
     }
 }

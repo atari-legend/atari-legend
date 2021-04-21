@@ -12,7 +12,7 @@
             @include('menus.card_show')
         </div>
         <div class="col col-sm-6 col-lg-3 order-3">
-            <x-cards.latest-menu-dumps />
+            <x-cards.latest-menus />
         </div>
     </div>
 @endsection
