@@ -34,6 +34,7 @@ class MenuSetController extends Controller
             ->join('menus', 'menus.menu_set_id', 'menu_sets.id')
             ->join('menu_disks', 'menu_disks.menu_id', 'menus.id')
             ->groupBy('menu_sets.id')
+            ->orderBy('name')
             ->get();
 
         return view('menus.index')->with([
