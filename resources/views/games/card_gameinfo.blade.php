@@ -35,7 +35,7 @@
                             @if ($developer->texts->isNotEmpty() && $developer->texts->first()->pub_dev_profile !== null && trim($developer->texts->first()->pub_dev_profile) !== '')
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->pub_dev_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->pub_dev_id }}">
-                                    {!! Helper::bbCode($developer->texts->first()->pub_dev_profile) !!}
+                                    {!! Helper::bbCode(nl2br($developer->texts->first()->pub_dev_profile)) !!}
                                 </p>
                             @endif
                         </div>
@@ -88,7 +88,7 @@
                                 @endif
                                 @if ($gameIndividual->individual->text !== null && $gameIndividual->individual->text->ind_profile !== null && $gameIndividual->individual->text->ind_profile !== '')
                                     <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $gameIndividual->individual->ind_id }}">
-                                        {!! Helper::bbCode($gameIndividual->individual->text->ind_profile) !!}
+                                        {!! Helper::bbCode(nl2br($gameIndividual->individual->text->ind_profile)) !!}
                                     </p>
                                 @endif
                             </div>
