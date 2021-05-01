@@ -12,7 +12,7 @@
     <div class="card-body p-2">
         <form method="get" action="{{ route('menus.search') }}">
             <div class="row mb-4">
-                <div class="col-lg-6 offset-lg-3">
+                <div class="col-md-6 offset-md-3">
                     <div class="input-group">
                         <input type="text" class="form-control"
                             placeholder="Search for menu content (e.g. 'ripper')"
