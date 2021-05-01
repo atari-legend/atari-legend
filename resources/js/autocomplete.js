@@ -38,7 +38,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 destination: () => el,
             },
+            resultItem: {
+                content: (data, element) => {
+                    if (data.value.icon) {
+                        var icon = document.createElement('span');
+                        icon.classList.add(
+                            'fa',
+                            'fa-fw',
+                            data.value.icon,
+                            'text-muted',
+                            'me-2');
+
+                        element.insertBefore(icon, element.firstChild);
+                    }
+                },
+            },
             onSelection: feedback => {
+                if (feedback.selection.value.url) {
+                    location.href = feedback.selection.value.url;
+                    return;
+                }
+
                 el.value = feedback.selection.value[el.dataset.autocompleteKey];
 
                 if (el.dataset.autocompleteCompanion && el.dataset.autocompleteId) {

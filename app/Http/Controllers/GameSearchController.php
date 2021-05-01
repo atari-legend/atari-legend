@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Genre;
+use App\Models\MenuSoftware;
 use App\Models\PublisherDeveloper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 class GameSearchController extends Controller
 {
+    const PAGE_SIZE = 48;
+
     public function index()
     {
         $gamesCount = DB::table('game')->count();
@@ -29,6 +32,7 @@ class GameSearchController extends Controller
     public function search(Request $request)
     {
         $games = Game::select();
+        $software = MenuSoftware::select();
 
         if ($request->filled('titleAZ')) {
             if ($request->input('titleAZ') === '0-9') {
@@ -46,6 +50,8 @@ class GameSearchController extends Controller
                         $subQuery->where('aka_name', 'like', '%'.$request->input('title').'%');
                     });
             });
+
+            $software->where('name', 'like', '%'.$request->title.'%');
         }
 
         if ($request->filled('developer')) {
@@ -123,8 +129,12 @@ class GameSearchController extends Controller
         $games = $games
             ->orderBy('game_name');
 
+        $software = $software
+            ->orderBy('name')
+            ->paginate(MenuSetController::PAGE_SIZE);
+
         if (!$request->boolean('export')) {
-            $games = $games->paginate(48);
+            $games = $games->paginate(GameSearchController::PAGE_SIZE);
         } else {
             $games = $games->get();
         }
@@ -149,6 +159,7 @@ class GameSearchController extends Controller
                 'year'         => $request->year,
                 'year_id'      => $request->year_id,
                 'export'       => $request->boolean('export'),
+                'software'     => $software,
             ])
         );
     }

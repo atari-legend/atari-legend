@@ -77,7 +77,10 @@
         </form>
     </div>
     <div class="card-body p-2" id="results">
-        <h3 class="text-center fs-5">{{ $games->total() }} games found</h3>
+        @include('layouts.search_tabs', ['active' => 'games'])
+        @if ($games->total() < 1)
+            <p class="card-text text-muted text-center pt-3">No game found</p>
+        @endif
         <div class="row">
             @foreach ($games as $game)
                 <div class="col-4 text-center p-3 align-self-top">

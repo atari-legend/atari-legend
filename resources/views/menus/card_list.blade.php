@@ -10,6 +10,18 @@
         </p>
     </div>
     <div class="card-body p-2">
+        <form method="get" action="{{ route('menus.search') }}">
+            <div class="row mb-4">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control"
+                            placeholder="Search for menu content (e.g. 'ripper')"
+                            id="title" name="title" autocomplete="off">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
         <div class="row mb-2 text-center">
             <ul class="list-inline menu-index">
                 <li class="list-inline-item mx-0 my-1 active">

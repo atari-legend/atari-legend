@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Ajax\CompanyController;
 use App\Http\Controllers\Ajax\CrewController;
+use App\Http\Controllers\Ajax\GameAndSoftwareController;
 use App\Http\Controllers\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Ajax\GenreController;
 use App\Http\Controllers\Ajax\IndividualController;
@@ -68,6 +69,7 @@ Route::middleware('verified')->group(function () {
     Route::get('/menusets', [MenuSetController::class, 'index'])->name('menus.index');
     Route::get('/menusets/software/{software}', [MenuSetController::class, 'software'])->name('menus.software');
     Route::get('/menusets/game/{game}', [MenuSetController::class, 'game'])->name('menus.game');
+    Route::get('/menusets/search', [MenuSetController::class, 'search'])->name('menus.search');
     Route::get('/menusets/{set}', [MenuSetController::class, 'show'])->name('menus.show');
 
     Route::resource('/reviews', ReviewController::class)->only(['index', 'show']);
@@ -95,6 +97,7 @@ Route::middleware('verified')->group(function () {
             Route::get('release-years.json', [ReleaseYearController::class, 'releaseYears'])->name('release-years');
             Route::get('genres.json', [GenreController::class, 'genres'])->name('genres');
             Route::get('games.json', [AjaxGameController::class, 'games'])->name('games');
+            Route::get('games-and-software.json', [GameAndSoftwareController::class, 'gamesAndSoftware'])->name('games-and-software');
             Route::get('software.json', [SoftwareController::class, 'software'])->name('software');
             Route::get('individuals.json', [IndividualController::class, 'individuals'])->name('individuals');
             Route::get('crews.json', [CrewController::class, 'crews'])->name('crews');

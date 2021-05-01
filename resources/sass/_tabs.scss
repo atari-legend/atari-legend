@@ -1,0 +1,22 @@
+@use "sass:color";
+
+.nav-tabs {
+    border-color: $primary-dark;
+
+    .nav-link {
+
+        &.active {
+            border-color: $primary-dark;
+            border-bottom-color: $dark-light;
+
+            background-color: $dark-light;
+            color: white;
+        }
+
+        &:hover {
+            border-bottom-color: $dark-light;
+            border-color: color.adjust($primary, $alpha: -.75);
+
+        }
+    }
+}

@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
 use App\Models\MenuDisk;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MenuSetController extends Controller
 {
     const PAGE_SIZE = 20;
+
+    const SOFTWARE_PAGE_SIZE = 48;
 
     const INTACT_CONDITION_ID = 4;
 
@@ -79,6 +84,34 @@ class MenuSetController extends Controller
             'software'         => $software,
             'menuDisks'        => $menuDisks,
             'conditionClasses' => MenuSetController::CONDITION_CLASSES,
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $software = MenuSoftware::select();
+        $games = Game::select();
+
+        if ($request->title) {
+            $software->where('name', 'like', '%'.$request->title.'%');
+
+            $games->where(function (Builder $query) use ($request) {
+                $query->where('game_name', 'like', '%'.$request->input('title').'%')
+                    ->orWhereHas('akas', function (Builder $subQuery) use ($request) {
+                        $subQuery->where('aka_name', 'like', '%'.$request->input('title').'%');
+                    });
+            });
+        }
+
+        $games->orderBy('game_name')
+            ->paginate(GameSearchController::PAGE_SIZE);
+        $software->orderBy('name')
+            ->paginate(MenuSetController::PAGE_SIZE);
+
+        return view('menus.search')->with([
+            'software' => $software->paginate(48),
+            'games'    => $games->paginate(48),
+            'title'    => $request->title,
         ]);
     }
 }

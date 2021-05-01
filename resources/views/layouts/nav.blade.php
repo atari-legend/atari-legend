@@ -37,8 +37,8 @@
             <form class="search d-flex d-xl-none d-xxl-flex ps-2 py-1 justify-content-center" method="get" action="{{ route('games.search') }}">
                 <div class="position-relative">
                     <input class="autocomplete form-control bg-black" name="title" type="search"
-                        data-autocomplete-endpoint="{{ route('ajax.games') }}"
-                        data-autocomplete-key="game_name" data-autocomplete-submit="true"
+                        data-autocomplete-endpoint="{{ route('ajax.games-and-software') }}"
+                        data-autocomplete-key="name" data-autocomplete-submit="true"
                         placeholder="Search" aria-label="Search" autocomplete="off" required>
                 </div>
                 <button class="btn" type="submit"><i class="fas fa-search"></i></button>
