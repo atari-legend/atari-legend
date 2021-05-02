@@ -92,8 +92,25 @@ class MenuSetController extends Controller
         $software = MenuSoftware::select();
         $games = Game::select();
 
+        // Boolean to check if a search on software can be made
+        // Software search only works via title or titleAZ. If neither
+        // are used then there should be no software search results
+        $softwareSearchPossible = false;
+
+        if ($request->filled('titleAZ')) {
+            if ($request->input('titleAZ') === '0-9') {
+                $games->where('game_name', 'regexp', '^[0-9]+');
+                $software->where('name', 'regexp', '^[0-9]+');
+            } else {
+                $games->where('game_name', 'like', $request->input('titleAZ').'%');
+                $software->where('name', 'like', $request->input('titleAZ').'%');
+            }
+            $softwareSearchPossible = true;
+        }
+
         if ($request->title) {
             $software->where('name', 'like', '%'.$request->title.'%');
+            $softwareSearchPossible = true;
 
             $games->where(function (Builder $query) use ($request) {
                 $query->where('game_name', 'like', '%'.$request->input('title').'%')
@@ -105,6 +122,12 @@ class MenuSetController extends Controller
 
         $games->orderBy('game_name')
             ->paginate(GameSearchController::PAGE_SIZE);
+
+        if (!$softwareSearchPossible) {
+            // Force no software results when there were no titles selected
+            $software->where('id', '<', 0);
+        }
+
         $software->orderBy('name')
             ->paginate(MenuSetController::PAGE_SIZE);
 
@@ -112,6 +135,7 @@ class MenuSetController extends Controller
             'software' => $software->paginate(48),
             'games'    => $games->paginate(48),
             'title'    => $request->title,
+            'titleAZ'  => $request->titleAZ,
         ]);
     }
 }

@@ -8,7 +8,7 @@
                 <label for="title" class="col-4 col-sm-3 col-form-label text-nowrap">Software name</label>
                 <div class="col position-relative">
                     <input type="text" class="form-control"
-                        value="{{ old('title', $title) }}"
+                        value="{{ old('title', $title) }}" required
                         id="title" name="title" autocomplete="off">
                 </div>
             </div>

@@ -34,12 +34,20 @@ class GameSearchController extends Controller
         $games = Game::select();
         $software = MenuSoftware::select();
 
+        // Boolean to check if a search on software can be made
+        // Software search only works via title or titleAZ. If neither
+        // are used then there should be no software search results
+        $softwareSearchPossible = false;
+
         if ($request->filled('titleAZ')) {
             if ($request->input('titleAZ') === '0-9') {
                 $games->where('game_name', 'regexp', '^[0-9]+');
+                $software->where('name', 'regexp', '^[0-9]+');
             } else {
                 $games->where('game_name', 'like', $request->input('titleAZ').'%');
+                $software->where('name', 'like', $request->input('titleAZ').'%');
             }
+            $softwareSearchPossible = true;
         }
 
         if ($request->filled('title')) {
@@ -52,6 +60,7 @@ class GameSearchController extends Controller
             });
 
             $software->where('name', 'like', '%'.$request->title.'%');
+            $softwareSearchPossible = true;
         }
 
         if ($request->filled('developer')) {
@@ -129,6 +138,11 @@ class GameSearchController extends Controller
         $games = $games
             ->orderBy('game_name');
 
+        if (!$softwareSearchPossible) {
+            // Force no software results when there were no titles selected
+            $software->where('id', '<', 0);
+        }
+
         $software = $software
             ->orderBy('name')
             ->paginate(MenuSetController::PAGE_SIZE);
@@ -152,6 +166,7 @@ class GameSearchController extends Controller
             array_merge($referenceData, [
                 'games'        => $games,
                 'title'        => $request->title,
+                'titleAZ'      => $request->titleAZ,
                 'publisher'    => $request->publisher,
                 'publisher_id' => $request->publisher_id,
                 'developer'    => $request->developer,

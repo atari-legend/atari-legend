@@ -14,7 +14,7 @@
             <div class="row mb-4">
                 <div class="col-md-6 offset-md-3">
                     <div class="input-group">
-                        <input type="text" class="form-control"
+                        <input type="text" class="form-control" required
                             placeholder="Search for menu content (e.g. 'ripper')"
                             id="title" name="title" autocomplete="off">
                         <button type="submit" class="btn btn-primary">Search</button>
