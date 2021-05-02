@@ -1,7 +1,7 @@
 <h2 class="fs-4">{{ count($disks) }} disks in this menu</h2>
 
 <div class="row row-cols row-cols-md-3 row-cols-lg-4 gy-4 mb-3">
-    @foreach ($disks as $disk)
+    @foreach ($disks->sortBy('part') as $disk)
         <div class="col d-flex">
             <div class="card w-100">
                 <div class="card-header">

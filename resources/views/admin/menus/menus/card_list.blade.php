@@ -25,7 +25,7 @@
                         </td>
                         <td>{{ $menu->disks->count() }}</td>
                         <td>
-                            @foreach ($menu->disks as $disk)
+                            @foreach ($menu->disks->sortBy('part') as $disk)
                                 <i class="fas fa-scroll fa-fw text-muted @if (!$disk->scrolltext) fa-translucent @endif" title="Scrolltext"></i>
                                 <i class="fas fa-comment fa-fw text-muted @if (!$disk->notes) fa-translucent @endif" title="Comments"></i>
                                 <i class="far fa-save fa-fw text-muted @if ($disk->menuDiskDump === null) fa-translucent @endif" title="Dump"></i>
