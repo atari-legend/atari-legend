@@ -6,23 +6,10 @@
             <div class="card w-100">
                 <div class="card-header">
                     <div class="float-end">
-                        @isset ($disk->scrolltext)
-                            <i class="fas fa-file-alt fa-fw text-muted" title="Has scrolltext"></i>
-                        @endif
-
-                        @isset ($disk->notes)
-                            <i class="fas fa-comment fa-fw text-muted" title="Has comments"></i>
-                        @endif
-
-                        @if ($disk->menuDiskDump !== null)
-                            <i class="far fa-save fa-fw text-muted" title="Has dump"></i>
-                        @endif
-
-                        @if ($disk->screenshots->isNotEmpty())
-                            <i class="fas fa-camera fa-fw text-muted" title="Has screenshots"></i>
-                            <small class="text-muted">&times; {{ $disk->screenshots->count() }}</small>
-                        @endif
-
+                        <i class="fas fa-scroll fa-fw text-muted @if (!$disk->scrolltext) fa-translucent @endif" title="Scrolltext"></i>
+                        <i class="fas fa-comment fa-fw text-muted @if (!$disk->notes) fa-translucent @endif" title="Comments"></i>
+                        <i class="far fa-save fa-fw text-muted @if ($disk->menuDiskDump === null) fa-translucent @endif" title="Dump"></i>
+                        <i class="fas fa-camera fa-fw text-muted @if ($disk->screenshots->isEmpty()) fa-translucent @endif" title="Screenshots"></i>
                     </div>
                     <h3 class="card-title fs-5">
                         <a href="{{ route('admin.menus.disks.edit', $disk) }}">{{ $disk->menu->label}}{{ $disk->part}}</a>

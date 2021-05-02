@@ -8,7 +8,7 @@
                     <th>Label</th>
                     <th>Released</th>
                     <th>Disks</th>
-                    <th>Notes</th>
+                    <th>Disks details</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th></th>
@@ -24,7 +24,16 @@
                             @endif
                         </td>
                         <td>{{ $menu->disks->count() }}</td>
-                        <td>{{ Str::limit($menu->notes, 30) }}</td>
+                        <td>
+                            @foreach ($menu->disks as $disk)
+                                <i class="fas fa-scroll fa-fw text-muted @if (!$disk->scrolltext) fa-translucent @endif" title="Scrolltext"></i>
+                                <i class="fas fa-comment fa-fw text-muted @if (!$disk->notes) fa-translucent @endif" title="Comments"></i>
+                                <i class="far fa-save fa-fw text-muted @if ($disk->menuDiskDump === null) fa-translucent @endif" title="Dump"></i>
+                                <i class="fas fa-camera fa-fw text-muted @if ($disk->screenshots->isEmpty()) fa-translucent @endif" title="Screenshots"></i>
+                                <small class="text-muted">{{ $disk->label }}</small>
+                                <br>
+                            @endforeach
+                        </td>
                         <td>{{ $menu->created_at ? $menu->created_at->diffForHumans() : '-' }}</td>
                         <td>{{ $menu->updated_at ? $menu->updated_at->diffForHumans() : '-' }}</td>
                         <td>
