@@ -92,10 +92,11 @@ class MenuSetController extends Controller
         $software = MenuSoftware::select();
         $games = Game::select();
 
-        // Boolean to check if a search on software can be made
-        // Software search only works via title or titleAZ. If neither
-        // are used then there should be no software search results
-        $softwareSearchPossible = false;
+        // Boolean to check if a search can be made
+        // Search only works via title or titleAZ. If neither
+        // are used then there should be no search results in
+        // software or games
+        $searchPossible = false;
 
         if ($request->filled('titleAZ')) {
             if ($request->input('titleAZ') === '0-9') {
@@ -105,12 +106,12 @@ class MenuSetController extends Controller
                 $games->where('game_name', 'like', $request->input('titleAZ').'%');
                 $software->where('name', 'like', $request->input('titleAZ').'%');
             }
-            $softwareSearchPossible = true;
+            $searchPossible = true;
         }
 
         if ($request->title) {
             $software->where('name', 'like', '%'.$request->title.'%');
-            $softwareSearchPossible = true;
+            $searchPossible = true;
 
             $games->where(function (Builder $query) use ($request) {
                 $query->where('game_name', 'like', '%'.$request->input('title').'%')
@@ -120,13 +121,14 @@ class MenuSetController extends Controller
             });
         }
 
-        $games->orderBy('game_name')
-            ->paginate(GameSearchController::PAGE_SIZE);
-
-        if (!$softwareSearchPossible) {
+        if (!$searchPossible) {
             // Force no software results when there were no titles selected
             $software->where('id', '<', 0);
+            $games->where('game_id', '<', 0);
         }
+
+        $games->orderBy('game_name')
+            ->paginate(GameSearchController::PAGE_SIZE);
 
         $software->orderBy('name')
             ->paginate(MenuSetController::PAGE_SIZE);

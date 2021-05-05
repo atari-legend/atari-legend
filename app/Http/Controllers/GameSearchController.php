@@ -38,6 +38,9 @@ class GameSearchController extends Controller
         // Software search only works via title or titleAZ. If neither
         // are used then there should be no software search results
         $softwareSearchPossible = false;
+        // Similar for games, we need at least one search criteria
+        // to trigger a search
+        $searchPossible = false;
 
         if ($request->filled('titleAZ')) {
             if ($request->input('titleAZ') === '0-9') {
@@ -47,6 +50,7 @@ class GameSearchController extends Controller
                 $games->where('game_name', 'like', $request->input('titleAZ').'%');
                 $software->where('name', 'like', $request->input('titleAZ').'%');
             }
+            $searchPossible = true;
             $softwareSearchPossible = true;
         }
 
@@ -58,6 +62,7 @@ class GameSearchController extends Controller
                         $subQuery->where('aka_name', 'like', '%'.$request->input('title').'%');
                     });
             });
+            $searchPossible = true;
 
             $software->where('name', 'like', '%'.$request->title.'%');
             $softwareSearchPossible = true;
@@ -67,12 +72,16 @@ class GameSearchController extends Controller
             $games->whereHas('developers', function (Builder $query) use ($request) {
                 $query->where('pub_dev_name', 'like', '%'.$request->input('developer').'%');
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('developer_id')) {
             $games->whereHas('developers', function (Builder $query) use ($request) {
                 $query->where('pub_dev_id', $request->input('developer_id'));
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('publisher')) {
@@ -81,6 +90,8 @@ class GameSearchController extends Controller
                     $query2->where('pub_dev_name', 'like', '%'.$request->input('publisher').'%');
                 });
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('publisher_id')) {
@@ -89,50 +100,74 @@ class GameSearchController extends Controller
                     $query2->where('pub_dev_id', $request->input('publisher_id'));
                 });
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('genre')) {
             $games->whereHas('genres', function (Builder $query) use ($request) {
                 $query->where('name', 'like', '%'.$request->input('genre').'%');
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('genre_id')) {
             $games->whereHas('genres', function (Builder $query) use ($request) {
                 $query->where('id', $request->input('genre_id'));
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('year')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereYear('date', $request->input('year'));
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('year_id')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereYear('date', $request->input('year_id'));
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('individual_id')) {
             $games->whereHas('individuals', function (Builder $query) use ($request) {
                 $query->where('individual_id', $request->input('individual_id'));
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('review')) {
             $games->has('reviews');
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('screenshot')) {
             $games->has('screenshots');
+            $searchPossible = true;
+            $softwareSearchPossible = false;
         }
 
         if ($request->filled('boxscan')) {
             $games->whereHas('releases', function (Builder $query) {
                 $query->has('boxscans');
             });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
+        if (!$searchPossible) {
+            // Force no game results when there were no search
+            // constraints
+            $games->where('game_id', '<', 0);
         }
 
         $games = $games
