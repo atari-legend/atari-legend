@@ -15,7 +15,7 @@
         "@tarekraafat/autocomplete.js": "^8.3.2",
         "axios": "^0.21",
         "bbcode-parser": "^1.0.10",
-        "bootstrap": "^5.0.0-beta3",
+        "bootstrap": "~5.0.0",
         "chart.js": "^2.9.4",
         "cross-env": "^7.0.3",
         "eslint": "^7.20.0",
