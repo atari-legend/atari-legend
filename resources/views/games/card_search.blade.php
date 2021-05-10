@@ -43,7 +43,7 @@
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ route('ajax.games') }}"
-                        data-autocomplete-key="game_name"
+                        data-autocomplete-key="game_name" data-autocomplete-submit="true"
                         id="title" name="title" autocomplete="off">
                 </div>
             </div>

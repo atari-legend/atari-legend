@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
             },
             onSelection: feedback => {
-                if (feedback.selection.value.url) {
+                if (feedback.selection.value.url && el.dataset.autocompleteFollowUrl === 'true') {
                     location.href = feedback.selection.value.url;
                     return;
                 }

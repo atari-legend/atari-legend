@@ -38,7 +38,7 @@
                 <div class="position-relative">
                     <input class="autocomplete form-control bg-black" name="title" type="search"
                         data-autocomplete-endpoint="{{ route('ajax.games-and-software') }}"
-                        data-autocomplete-key="name" data-autocomplete-submit="true"
+                        data-autocomplete-key="name" data-autocomplete-follow-url="true"
                         placeholder="Search" aria-label="Search" autocomplete="off" required>
                 </div>
                 <button class="btn" type="submit"><i class="fas fa-search"></i></button>
