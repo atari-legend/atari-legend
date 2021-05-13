@@ -22,7 +22,7 @@ class CommentController extends Controller
             if (Auth::user()->user_id === $comment->user->user_id) {
                 $comment->delete();
 
-                $this->insertChangelog(Auth::user(), Changelog::DELETE, $request->context, $request->id, $comment);
+                $this->insertChangelog(Changelog::DELETE, $request->context, $request->id, $comment);
             }
         }
 
@@ -39,14 +39,14 @@ class CommentController extends Controller
                 $comment->timestamp = time();
                 $comment->save();
 
-                $this->insertChangelog(Auth::user(), Changelog::UPDATE, $request->context, $request->id, $comment);
+                $this->insertChangelog(Changelog::UPDATE, $request->context, $request->id, $comment);
             }
         }
 
         return back();
     }
 
-    public function insertChangelog(object $user, string $action, ?string $context, ?int $id, object $comment)
+    public function insertChangelog(string $action, ?string $context, ?int $id, object $comment)
     {
         if ($context === null || $id === null) {
             // Missing context to fill the changelog. May happen if the comment
