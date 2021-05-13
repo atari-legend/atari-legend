@@ -71,6 +71,7 @@ Route::middleware('verified')->group(function () {
     Route::get('/menusets/game/{game}', [MenuSetController::class, 'game'])->name('menus.game');
     Route::get('/menusets/search', [MenuSetController::class, 'search'])->name('menus.search');
     Route::get('/menusets/{set}', [MenuSetController::class, 'show'])->name('menus.show');
+    Route::get('/menusets/{set}/epub', [MenuSetController::class, 'epub'])->name('menus.epub');
 
     Route::resource('/reviews', ReviewController::class)->only(['index', 'show']);
 

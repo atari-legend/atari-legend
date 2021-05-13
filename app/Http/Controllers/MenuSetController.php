@@ -9,6 +9,9 @@ use App\Models\MenuSoftware;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use PHPePub\Core\EPub;
 
 class MenuSetController extends Controller
 {
@@ -24,6 +27,17 @@ class MenuSetController extends Controller
         3 => 'warning',
         4 => 'success',
     ];
+
+    private function getSortedDisksForSet(MenuSet $set)
+    {
+        return MenuDisk::select('menu_disks.*')
+            ->join('menus', 'menu_id', '=', 'menus.id')
+            ->where('menus.menu_set_id', '=', $set->id)
+            ->orderBy('number', $set->menus_sort)
+            ->orderBy('issue', $set->menus_sort)
+            ->orderBy('version')
+            ->orderBy('part');
+    }
 
     public function index()
     {
@@ -49,13 +63,7 @@ class MenuSetController extends Controller
 
     public function show(MenuSet $set)
     {
-        $disks = MenuDisk::select('menu_disks.*')
-            ->join('menus', 'menu_id', '=', 'menus.id')
-            ->where('menus.menu_set_id', '=', $set->id)
-            ->orderBy('number', $set->menus_sort)
-            ->orderBy('issue', $set->menus_sort)
-            ->orderBy('version')
-            ->orderBy('part')
+        $disks = $this->getSortedDisksForSet($set)
             ->paginate(MenuSetController::PAGE_SIZE);
 
         $missingDiskCount = DB::table('menu_disks')
@@ -64,10 +72,17 @@ class MenuSetController extends Controller
             ->where('menu_disk_condition_id', '!=', MenuSetController::INTACT_CONDITION_ID)
             ->count();
 
+        $scrollTextCount = DB::table('menu_disks')
+            ->join('menus', 'menu_id', '=', 'menus.id')
+            ->where('menus.menu_set_id', '=', $set->id)
+            ->whereNotNull('scrolltext')
+            ->count();
+
         return view('menus.show')->with([
             'menuset'          => $set,
             'disks'            => $disks,
             'missingCount'     => $missingDiskCount,
+            'scrollTextCount'  => $scrollTextCount,
             'conditionClasses' => MenuSetController::CONDITION_CLASSES,
         ]);
     }
@@ -139,5 +154,40 @@ class MenuSetController extends Controller
             'title'    => $request->title,
             'titleAZ'  => $request->titleAZ,
         ]);
+    }
+
+    public function epub(MenuSet $set)
+    {
+        $book = new EPub();
+        $book->setTitle('Scolltexts of '.$set->name);
+        $book->setAuthor($set->crews()->pluck('crew_name')->join(', '), '');
+        $book->setPublisher('AtariLegend', URL::to('/'));
+        $book->setSourceURL(route('menus.show', $set));
+        $book->addCSSFile('epub.css', 'css', view('menus.epub.css')->render());
+        $book->addLargeFile('demozoo.png', 'demozoo', base_path('public/images/demozoo-16x16.png'), 'image/png');
+
+        $book->addChapter('Cover', 'cover.html', view('menus.epub.cover', ['set' => $set])->render());
+
+        $this->getSortedDisksForSet($set)
+            ->each(function ($disk) use ($book) {
+                $content = view('menus.epub.disk', ['disk' => $disk])->render();
+                $book->addChapter($disk->menu->label.$disk->label, $disk->id.'.html', $content);
+                $disk->screenshots
+                    ->each(function ($screenshot) use ($book) {
+                        $path = 'public/images/menu_screenshots/'.$screenshot->file;
+                        $book->addLargeFile(
+                            $screenshot->file,
+                            'screenshot-'.$screenshot->id,
+                            Storage::path($path),
+                            Storage::mimeType($path)
+                        );
+                    });
+            });
+
+        $book->finalize();
+
+        return response($book->getBook())
+            ->header('Content-Type', 'application/epub+zip')
+            ->header('Content-Disposition', 'attachment; filename="Scrolltexts of '.$set->name.'.epub"');
     }
 }

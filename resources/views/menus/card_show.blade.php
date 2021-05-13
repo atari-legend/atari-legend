@@ -22,6 +22,14 @@
                     All known disks are available, our set is 100% complete!
                 @endif
             </span>
+
+            @if ($scrollTextCount > 0)
+                <br><br>
+                {{ $scrollTextCount }} {{ Str::plural('scrolltext', $scrollTextCount) }} <i class="fas fa-scroll"></i>,
+                <a href="{{ route('menus.epub', $menuset) }}">
+                    read them all in an eBook.
+                </a>
+            @endif
         </p>
     </div>
 </div>

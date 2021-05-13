@@ -7,12 +7,19 @@
         "laravel"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Vedmak/PHPePub"
+        }
+    ],
     "require": {
         "php": "^8.0",
         "buzz/laravel-h-captcha": "^1.0",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
+        "vedmak/phpepub": "master",
         "guzzlehttp/guzzle": "^7.0.1",
         "jbbcode/jbbcode": "^1.4",
         "laminas/laminas-feed": "^2.14",
