@@ -2,6 +2,10 @@
 @section('title', $game->game_name.' - Atari ST game')
 @section('description', GameHelper::description($game))
 
+@if ($game->screenshots->isNotEmpty())
+    @section('image', asset('storage/images/game_screenshots/'.$game->screenshots->random()->file))
+@endif
+
 @section('content')
     <h1 class="visually-hidden">{{ $game->game_name }}</h1>
     <div class="row">

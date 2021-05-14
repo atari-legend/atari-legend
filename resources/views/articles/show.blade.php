@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', $article->texts->first()->article_title)
 
+@if ($article->screenshots->isNotEmpty())
+    @section('image', asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file))
+@endif
+
 @section('content')
     <h1 class="visually-hidden">{{ $article->texts->first()->article_title }}</h1>
     <div class="row">

@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', $review->games->first()->game_name.' review (Atari ST)')
 
+@if ($review->screenshots->isNotEmpty())
+    @section('image', asset('storage/images/game_screenshots/'.$review->screenshots->first()->screenshot->file))
+@endif
+
 @section('content')
     <h1 class="visually-hidden">{{ $review->games->first()->game_name }}</h1>
     <div class="row">

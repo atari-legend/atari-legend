@@ -2,6 +2,10 @@
 @section('title', ($release->date ? $release->date->year : '').' release of '.$release->game->game_name.' - Atari ST game release')
 @section('robots', 'follow,noindex')
 
+@if ($release->game->screenshots->isNotEmpty())
+    @section('image', asset('storage/images/game_screenshots/'.$release->game->screenshots->random()->file))
+@endif
+
 @section('content')
     <h1 class="visually-hidden">{{ $release->game->game_name }}</h1>
     <div class="row">

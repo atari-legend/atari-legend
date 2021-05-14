@@ -61,10 +61,10 @@
     <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('images/icons/icon-144x144.png') }}">
 
     {{-- Social media metadata --}}
-    <meta property="og:title" content="Atari Legend: Legends Never Die">
-    <meta property="og:description" content="Nostalgia trippin' down the Atari ST memory lane">
-    <meta property="og:image" content="{{ asset('images/AL.jpg') }}">
-    <meta property="og:url" content="{{ URL::to('/') }}">
+    <meta property="og:title" content="@yield('title', 'Atari Legend: Legends Never Die')">
+    <meta property="og:description" content="@yield('description', 'Nostalgia trippin\' down the Atari ST memory lane')">
+    <meta property="og:image" content="@yield('image', asset('images/AL.jpg'))">
+    <meta property="og:url" content="{{ URL::current() }}">
     <meta property="og:site_name" content="Atari Legend">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image:alt" content="Atari Legend">

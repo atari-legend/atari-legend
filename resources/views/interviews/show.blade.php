@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Interview with '.$interview->individual->ind_name)
 
+@if ($interview->individual?->text?->file !== null)
+    @section('image', asset('storage/images/individual_screenshots/'.$interview->individual->text->file))
+@endif
+
 @section('content')
     <h1 class="visually-hidden">{{ $interview->individual->ind_name }}</h1>
     <div class="row">
