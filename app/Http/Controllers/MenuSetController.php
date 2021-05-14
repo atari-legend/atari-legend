@@ -161,7 +161,7 @@ class MenuSetController extends Controller
         $book = new EPub();
         $book->setTitle('Scolltexts of '.$set->name);
         $book->setAuthor($set->crews()->pluck('crew_name')->join(', '), '');
-        $book->setPublisher('AtariLegend', URL::to('/'));
+        $book->setPublisher('Atari Legend', URL::to('/'));
         $book->setSourceURL(route('menus.show', $set));
         $book->addCSSFile('epub.css', 'css', view('menus.epub.css')->render());
         $book->addLargeFile('demozoo.png', 'demozoo', base_path('public/images/demozoo-16x16.png'), 'image/png');

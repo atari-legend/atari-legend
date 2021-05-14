@@ -34,7 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * Determine if the user has verified their email address.
      *
      * We must consider both the Laravel 'email_verified_at' column and the
-     * legacy AtariLegend 'inactive' one.
+     * legacy Atari Legend 'inactive' one.
      *
      * @return bool
      */
@@ -47,7 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * Mark the given user's email as verified.
      *
      * We must update the Laravel 'email_verified_at'  column, and the legacy
-     * AtariLegend 'inactive' one
+     * Atari Legend 'inactive' one
      *
      * @return bool
      */

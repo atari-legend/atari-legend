@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="visually-hidden">AtariLegend home page</h1>
+    <h1 class="visually-hidden">Atari Legend home page</h1>
     <div class="row">
         <div class="col-12 col-lg-3 order-2 order-lg-1">
             <x-cards.screenstar />

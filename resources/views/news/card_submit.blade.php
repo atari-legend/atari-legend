@@ -7,7 +7,7 @@
         <p class="card-text text-center">
             Did something important happen in the Atari scene that has not been
             posted yet, make sure to let us know by simply filling in this form.
-            You will be credited on the front page of AtariLegend!
+            You will be credited on the front page of Atari Legend!
         </p>
     </div>
     <div class="card-body p-2">

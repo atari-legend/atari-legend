@@ -7,7 +7,7 @@
 
     <p>
         This eBook contains information and scrolltexts from the menu disks.
-        It has been generated from the AtariLegend database. Please consider
+        It has been generated from the Atari Legend database. Please consider
         visiting the site and contributing missing data.
     </p>
 

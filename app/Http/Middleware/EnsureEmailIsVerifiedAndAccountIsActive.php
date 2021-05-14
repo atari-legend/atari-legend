@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\URL;
 
 /**
  * Checks that an account has its emails verified (built-in Laravel
- * 'email_verified_at' column) and that a user is active (legacy AtariLegend
+ * 'email_verified_at' column) and that a user is active (legacy Atari Legend
  * 'inactive' column).
  */
 class EnsureEmailIsVerifiedAndAccountIsActive

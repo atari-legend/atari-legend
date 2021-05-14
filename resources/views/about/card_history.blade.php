@@ -41,7 +41,7 @@
                         After almost 3 years in the making, Atari Legend is finally re-released.<br>
                     </p>
                     <a class="lightbox-link" href="{{ asset('images/class_al/class.png') }}">
-                        <img class="w-75" src="{{ asset('images/class_al/class.png') }}" alt="AtariLegend logo">
+                        <img class="w-75" src="{{ asset('images/class_al/class.png') }}" alt="Atari Legend logo">
                     </a>
                     <p class="text-muted fw-bold">October 2017</p>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->

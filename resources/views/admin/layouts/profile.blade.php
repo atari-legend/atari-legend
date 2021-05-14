@@ -1,5 +1,5 @@
 <div class="text-center">
-    <h1 class="fs-4 mb-3">AtariLegend</h1>
+    <h1 class="fs-4 mb-3">Atari Legend</h1>
     @if (Auth::user()->avatar !== null)
         <img class="avatar rounded-circle border border-dark" src="{{ Auth::user()->avatar }}" alt="User avatar">
     @endif

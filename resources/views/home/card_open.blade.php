@@ -20,7 +20,7 @@
             </p>
 
             <p class="card-text">
-                In addition the source code for the AtariLegend website is available
+                In addition the source code for the Atari Legend website is available
                 <a href="https://github.com/atari-legend/">on GitHub</a>.
             </p>
 

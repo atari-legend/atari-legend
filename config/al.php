@@ -1,6 +1,6 @@
 <?php
 
-// Config specific to AtariLegend
+// Config specific to Atari Legend
 
 return [
     'legacy' => [
