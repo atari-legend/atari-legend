@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ChangelogHelper;
+use App\Helpers\Helper;
+use App\Helpers\JsonLd;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Interview;
@@ -29,10 +31,19 @@ class InterviewController extends Controller
             ->limit(5)
             ->get();
 
+        $jsonLd = (new JsonLd('Article', url()->current()))
+            ->add('headline', 'Interview of '.$interview->individual->ind_name)
+            ->add('author', Helper::user($interview->user))
+            ->add('datePublished', date('Y-m-d', $interview->texts->first()->interview_date));
+        if ($interview->individual?->text?->file !== null) {
+            $jsonLd->add('image', asset('storage/images/individual_screenshots/'.$interview->individual->text->file));
+        }
+
         return view('interviews.show')
             ->with([
                 'interview'       => $interview,
                 'interviews'      => $interviews,
+                'jsonLd'          => $jsonLd,
             ]);
     }
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ChangelogHelper;
+use App\Helpers\GameHelper;
+use App\Helpers\JsonLd;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
@@ -91,6 +93,19 @@ class GameController extends Controller
             ->concat($game->menuDiskContents->pluck('menuDisk'))
             ->sortBy('download_basename');
 
+        $jsonLd = (new JsonLd('VideoGame', url()->current()))
+            ->add('name', $game->game_name)
+            ->add('description', GameHelper::description($game))
+            ->add('applicationCategory', 'Game')
+            ->add('operatingSystem', 'TOS')
+            ->add('gamePlatform', 'Atari ST');
+        if ($game->screenshots->isNotEmpty()) {
+            $jsonLd->add('image', asset('storage/images/game_screenshots/'.$game->screenshots->random()->file));
+        }
+        if ($game->genres->isNotEmpty()) {
+            $jsonLd->add('genre', $game->genres->pluck('name'));
+        }
+
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
@@ -99,6 +114,7 @@ class GameController extends Controller
             'reviews'           => $reviews,
             'similar'           => $similar,
             'menuDisks'         => $menuDisks,
+            'jsonLd'            => $jsonLd,
         ]);
     }
 

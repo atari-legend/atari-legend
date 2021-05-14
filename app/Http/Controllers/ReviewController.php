@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ChangelogHelper;
+use App\Helpers\Helper;
+use App\Helpers\JsonLd;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
@@ -51,10 +53,19 @@ class ReviewController extends Controller
                 ->get();
         }
 
+        $jsonLd = (new JsonLd('Article', url()->current()))
+            ->add('headline', 'Review of '.$review->games->first()->game_name)
+            ->add('author', Helper::user($review->user))
+            ->add('datePublished', date('Y-m-d', $review->review_date));
+        if ($review->screenshots->isNotEmpty()) {
+            $jsonLd->add('image', asset('storage/images/game_screenshots/'.$review->screenshots->first()->screenshot->file));
+        }
+
         return view('reviews.show')
             ->with([
                 'review'       => $review,
                 'otherReviews' => $otherReviews,
+                'jsonLd'       => $jsonLd,
             ]);
     }
 

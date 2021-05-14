@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ChangelogHelper;
+use App\Helpers\Helper;
+use App\Helpers\JsonLd;
 use App\Models\Article;
 use App\Models\Changelog;
 use App\Models\Comment;
@@ -39,11 +41,20 @@ class ArticleController extends Controller
             ->limit(5)
             ->get();
 
+        $jsonLd = (new JsonLd('Article', url()->current()))
+            ->add('headline', $article->texts->first()->article_title)
+            ->add('author', Helper::user($article->user))
+            ->add('datePublished', date('Y-m-d', $article->texts->first()->article_date));
+        if ($article->screenshots->isNotEmpty()) {
+            $jsonLd->add('image', asset('storage/images/article_screenshots/'.$article->screenshots->first()->screenshot->file));
+        }
+
         return view('articles.show')
             ->with([
                 'article'       => $article,
                 'articles'      => $articles,
                 'otherArticles' => $otherArticles,
+                'jsonLd'        => $jsonLd,
             ]);
     }
 

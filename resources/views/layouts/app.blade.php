@@ -10,17 +10,21 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     <script type="application/ld+json">
-        {
-            "@context": "http://schema.org",
-            "@type": "Organization",
-            "url": "{{ URL::to('/') }}",
-            "name": "Atari Legend",
-            "logo": "{{ asset('images/card/class.png') }}",
-            "sameAs": [
-                "https://www.facebook.com/atarilegend",
-                "https://twitter.com/AtariLegend"
-            ]
-        }
+        @isset($jsonLd)
+            {!! $jsonLd->json() !!}
+        @else
+            {
+                "@context": "http://schema.org",
+                "@type": "Organization",
+                "url": "{{ URL::to('/') }}",
+                "name": "Atari Legend",
+                "logo": "{{ asset('images/card/class.png') }}",
+                "sameAs": [
+                    "https://www.facebook.com/atarilegend",
+                    "https://twitter.com/AtariLegend"
+                ]
+            }
+        @endif
     </script>
 
     @if (config('al.analytics.matomo.id'))
