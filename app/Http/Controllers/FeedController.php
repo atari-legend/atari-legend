@@ -17,7 +17,7 @@ class FeedController extends Controller
 
         $feed->setCache(60);
 
-        if (!$feed->isCached()) {
+        if (! $feed->isCached()) {
             $feed->title = 'Atari Legend - Latest News, Reviews and Interviews';
             $feed->description = 'Legends Never Die!';
             $feed->icon = asset('images/favicon.png');

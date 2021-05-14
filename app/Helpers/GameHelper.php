@@ -63,7 +63,7 @@ class GameHelper
                 }
             })
                 ->filter(function ($value) {
-                    return !is_null($value);
+                    return ! is_null($value);
                 })
                 ->unique();
 

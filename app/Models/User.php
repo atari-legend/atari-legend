@@ -40,7 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasVerifiedEmail()
     {
-        return !is_null($this->email_verified_at) && $this->inactive === User::ACTIVE;
+        return ! is_null($this->email_verified_at) && $this->inactive === User::ACTIVE;
     }
 
     /**

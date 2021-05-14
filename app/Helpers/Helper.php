@@ -95,13 +95,13 @@ class Helper
      */
     public static function fileSize(int $size, string $unit = '')
     {
-        if ((!$unit && $size >= 1 << 30) || $unit == 'GB') {
+        if ((! $unit && $size >= 1 << 30) || $unit == 'GB') {
             return number_format($size / (1 << 30), 2).' GB';
         }
-        if ((!$unit && $size >= 1 << 20) || $unit == 'MB') {
+        if ((! $unit && $size >= 1 << 20) || $unit == 'MB') {
             return number_format($size / (1 << 20), 2).' MB';
         }
-        if ((!$unit && $size >= 1 << 10) || $unit == 'kB') {
+        if ((! $unit && $size >= 1 << 10) || $unit == 'kB') {
             return number_format($size / (1 << 10), 0).' kB';
         }
 

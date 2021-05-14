@@ -29,7 +29,7 @@ class EnsureEmailIsVerifiedAndAccountIsActive
         if (
             $request->user() &&
             ($request->user() instanceof MustVerifyEmail &&
-                (!$request->user()->hasVerifiedEmail()) || $request->user()->inactive === User::INACTIVE)
+                (! $request->user()->hasVerifiedEmail()) || $request->user()->inactive === User::INACTIVE)
         ) {
             return $request->expectsJson()
                 ? abort(403, 'Your email address is not verified.')

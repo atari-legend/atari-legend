@@ -155,7 +155,7 @@ class ImportStonishData extends Command
                         // Only create a release if there is not type like "doc" or "trainer",
                         // in which case either it refers to an existing release on this menu,
                         // or a game that is not in the menu (for example Sewer Doc Disks)
-                        if (!$release && $content->type === null || trim($content->type) === '') {
+                        if (! $release && $content->type === null || trim($content->type) === '') {
                             // Create a new release
                             $release = new Release();
                             $release->type = 'Unofficial';
@@ -350,7 +350,7 @@ class ImportStonishData extends Command
 
         $mainIndividual = $individuals->shift();
         $individuals->each(function ($individual) use ($mainIndividual) {
-            if (!$mainIndividual->nicknames->pluck('nick_id')->contains($individual->ind_id)) {
+            if (! $mainIndividual->nicknames->pluck('nick_id')->contains($individual->ind_id)) {
                 $nick = new IndividualNick();
                 $nick->ind_id = $mainIndividual->ind_id;
                 $nick->nick_id = $individual->ind_id;
@@ -360,7 +360,7 @@ class ImportStonishData extends Command
 
         if ($stonishMenu->team_people !== null && trim($stonishMenu->team_people) !== '') {
             $crew = $this->getCrew(trim($stonishMenu->team_people));
-            if (!$mainIndividual->crews->pluck('crew_id')->contains($crew->crew_id)) {
+            if (! $mainIndividual->crews->pluck('crew_id')->contains($crew->crew_id)) {
                 $this->info("\t\tAssociate individual {$mainIndividual->ind_name} with crew {$crew->crew_name}");
                 $crew->individuals()->attach($mainIndividual);
             }
@@ -437,7 +437,7 @@ class ImportStonishData extends Command
                         $filename = $f;
                         $ext = $e;
                     }
-                    if (!$filename || !$ext) {
+                    if (! $filename || ! $ext) {
                         $this->error("Unable to find dump in ZIP archive {$dumpFile}");
                         exit(-1);
                     }

@@ -71,7 +71,7 @@ class ReviewController extends Controller
 
     public function edit(Request $request)
     {
-        if (!$request->filled('game')) {
+        if (! $request->filled('game')) {
             return response(400);
         }
 

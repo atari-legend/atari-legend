@@ -173,7 +173,7 @@ class MenuDisksController extends Controller
             $dumpZip = new ZipArchive();
             $dumpZip->open($tmpFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-            if ($clientExt !== 'ZIP' && !collect(MenuDiskDump::EXTENSIONS)->contains($clientExt)) {
+            if ($clientExt !== 'ZIP' && ! collect(MenuDiskDump::EXTENSIONS)->contains($clientExt)) {
                 $request->session()->flash('alert-danger', 'Unsupported file extension: '.$clientExt);
 
                 return redirect()->route('admin.menus.disks.edit', $disk);
@@ -196,7 +196,7 @@ class MenuDisksController extends Controller
                 $zipEntryName = $zip->getNameIndex(0);
                 $zipEntryExt = strtoupper(pathinfo($zipEntryName, PATHINFO_EXTENSION));
 
-                if (!collect(MenuDiskDump::EXTENSIONS)->contains($zipEntryExt)) {
+                if (! collect(MenuDiskDump::EXTENSIONS)->contains($zipEntryExt)) {
                     $request->session()->flash('alert-danger', 'File insize ZIP as an unsupported file extension: '.$zipEntryExt);
                     $zip->close();
 

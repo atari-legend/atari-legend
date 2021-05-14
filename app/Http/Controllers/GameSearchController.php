@@ -164,7 +164,7 @@ class GameSearchController extends Controller
             $softwareSearchPossible = false;
         }
 
-        if (!$searchPossible) {
+        if (! $searchPossible) {
             // Force no game results when there were no search
             // constraints
             $games->where('game_id', '<', 0);
@@ -173,7 +173,7 @@ class GameSearchController extends Controller
         $games = $games
             ->orderBy('game_name');
 
-        if (!$softwareSearchPossible) {
+        if (! $softwareSearchPossible) {
             // Force no software results when there were no titles selected
             $software->where('id', '<', 0);
         }
@@ -182,7 +182,7 @@ class GameSearchController extends Controller
             ->orderBy('name')
             ->paginate(MenuSetController::PAGE_SIZE);
 
-        if (!$request->boolean('export')) {
+        if (! $request->boolean('export')) {
             $games = $games->paginate(GameSearchController::PAGE_SIZE);
         } else {
             $games = $games->get();

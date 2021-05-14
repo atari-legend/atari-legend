@@ -22,7 +22,7 @@ class UserProvider extends EloquentUserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        if (!($user instanceof User)) {
+        if (! ($user instanceof User)) {
             throw new \Exception("Unsupported Authenticatable type: $user");
         }
 

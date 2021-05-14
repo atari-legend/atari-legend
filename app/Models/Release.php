@@ -47,7 +47,7 @@ class Release extends Model
     {
         return $this->boxscans
             ->contains(function ($boxscan) {
-                return !Str::startsWith($boxscan->type, 'Box');
+                return ! Str::startsWith($boxscan->type, 'Box');
             });
     }
 
