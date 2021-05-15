@@ -165,6 +165,7 @@ class MenuSetController extends Controller
         $book->setSourceURL(route('menus.show', $set));
         $book->addCSSFile('epub.css', 'css', view('menus.epub.css')->render());
         $book->addLargeFile('demozoo.png', 'demozoo', base_path('public/images/demozoo-16x16.png'), 'image/png');
+        $book->setCoverImage('cover.png', file_get_contents($this->getEpubCover($set)), 'image/png');
 
         $book->addChapter('Cover', 'cover.html', view('menus.epub.cover', ['set' => $set])->render());
 
@@ -189,5 +190,73 @@ class MenuSetController extends Controller
         return response($book->getBook())
             ->header('Content-Type', 'application/epub+zip')
             ->header('Content-Disposition', 'attachment; filename="Scrolltexts of '.$set->name.'.epub"');
+    }
+
+    /**
+     * Get a cover image for the eBook.
+     *
+     * @param MenuSet $set Menuset to get a cover for
+     *
+     * @return string Path to temporarily file containing the cover image
+     */
+    private function getEpubCover(MenuSet $set): string
+    {
+        // Read base cover image and prepare things
+        $img = imagecreatefrompng(base_path('public/images/epub-cover.png'));
+        $white = imagecolorallocate($img, 255, 255, 255);
+        $grey = imagecolorallocate($img, 204, 204, 204);
+        $font = base_path('vendor/webfontkit/roboto/fonts/roboto-regular.ttf');
+
+        // The title may be too long to fit in a single line. Split it
+        // by columns of 20 characters max, respecting the word boundaries
+        $lines = explode("\n", wordwrap($set->name, 20, "\n"));
+
+        // Height of a line of title text, in pixels
+        $lineHeight = 72;
+
+        // Print each title line
+        $i = 0;
+        for (; $i < count($lines); $i++) {
+            imagettftext(
+                $img,
+                48,
+                0,
+                60,
+                300 + $i * $lineHeight,
+                $white,
+                $font,
+                $lines[$i]
+            );
+        }
+
+        // Print subtitle: Crew names
+        imagettftext(
+            $img,
+            30,
+            0,
+            60,
+            320 + $i * $lineHeight,
+            $grey,
+            $font,
+            'by: '.$set->crews->pluck('crew_name')->join(', ')
+        );
+
+        // Print generic text at the bottom
+        imagettftext(
+            $img,
+            20,
+            0,
+            60,
+            680,
+            $grey,
+            $font,
+            $set->menus->pluck('disks')->flatten()->count()
+               .' menu disk screenshots, contents and scrolltexts'
+        );
+
+        $f = tempnam(sys_get_temp_dir(), 'epub-cover-');
+        imagepng($img, $f);
+
+        return $f;
     }
 }

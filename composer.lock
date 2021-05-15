@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc63dcd081e7f21c9b40997e795da6f3",
+    "content-hash": "1de445cef52ec65a5d23885ed99c7f4a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6657,6 +6657,34 @@
                 }
             ],
             "time": "2020-11-12T00:07:28+00:00"
+        },
+        {
+            "name": "webfontkit/roboto",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webfontkit/roboto.git",
+                "reference": "67d303e04ed9441b07b3e81468aed7b600e84606"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webfontkit/roboto/zipball/67d303e04ed9441b07b3e81468aed7b600e84606",
+                "reference": "67d303e04ed9441b07b3e81468aed7b600e84606",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Roboto has a dual nature. It has a mechanical skeleton and the forms are largely geometric. At the same time, the font features friendly and open curves. While some grotesks distort their letterforms to force a rigid rhythm, Roboto doesn’t compromise, allowing letters to be settled into their natural width. This makes for a more natural reading rhythm more commonly found in humanist and serif types.",
+            "homepage": "http://www.google.com/fonts/specimen/Roboto",
+            "support": {
+                "issues": "https://github.com/webfontkit/roboto/issues",
+                "source": "https://github.com/webfontkit/roboto",
+                "wiki": "https://github.com/webfontkit/roboto"
+            },
+            "time": "2014-08-20T20:07:31+00:00"
         },
         {
             "name": "webmozart/assert",
