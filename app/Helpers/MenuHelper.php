@@ -38,7 +38,7 @@ class MenuHelper
             'Atari ST menu set '.$set->name.':',
             $disks->count().' '.Str::plural('disk', $disks->count()).',',
             $missingCount.' missing,',
-            $scrolls.' '.Str::plural('scrolltext', $scrolls).',',
+            $scrolls.' '.Str::plural('scrolltext', $scrolls).'.',
         ]);
     }
 }
