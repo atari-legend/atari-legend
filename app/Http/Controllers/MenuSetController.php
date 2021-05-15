@@ -78,9 +78,14 @@ class MenuSetController extends Controller
             ->whereNotNull('scrolltext')
             ->count();
 
-        $randomScreenshot = $disks->pluck('screenshots')
+        $randomScreenshot = null;
+        $this->getSortedDisksForSet($set)
+            ->get()
+            ->pluck('screenshots')
             ->flatten()
-            ->random();
+            ->whenNotEmpty(function ($collection) use (&$randomScreenshot) {
+                $randomScreenshot = $collection->random();
+            });
 
         return view('menus.show')->with([
             'menuset'          => $set,
