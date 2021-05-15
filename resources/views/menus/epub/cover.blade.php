@@ -6,7 +6,8 @@
     <h2>by {{ $set->crews->pluck('crew_name')->join(', ') }}</h2>
 
     <p>
-        This eBook contains information and scrolltexts from the menu disks.
+        This eBook contains information and scrolltexts from the
+        <a href="{{ route('menus.show', $set) }}">menu disks</a>.
         It has been generated from the Atari Legend database. Please consider
         visiting the site and contributing missing data.
     </p>
