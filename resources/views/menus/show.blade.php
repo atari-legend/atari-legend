@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title', "Atari ST menu set {$menuset->name}")
+@section('description', MenuHelper::description($menuset, $missingCount))
+
+@if ($randomScreenshot !== null)
+    @section('image', asset('storage/images/menu_screenshots/'.$randomScreenshot->file))
+@endif
 
 @section('content')
     <h1 class="visually-hidden">Menu set {{ $menuset->name }}</h1>
