@@ -169,7 +169,7 @@ class MenuSetController extends Controller
     public function epub(MenuSet $set)
     {
         $book = new EPub(EPub::BOOK_VERSION_EPUB3);
-        $book->setTitle('Scolltexts of '.$set->name);
+        $book->setTitle('Scrolltexts of '.$set->name);
         $book->setAuthor($set->crews()->pluck('crew_name')->join(', '), '');
         $book->setPublisher('Atari Legend', URL::to('/'));
         $book->setSourceURL(route('menus.show', $set));
