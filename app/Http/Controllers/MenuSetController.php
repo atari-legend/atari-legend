@@ -168,26 +168,27 @@ class MenuSetController extends Controller
 
     public function epub(MenuSet $set)
     {
-        $book = new EPub();
+        $book = new EPub(EPub::BOOK_VERSION_EPUB3);
         $book->setTitle('Scolltexts of '.$set->name);
         $book->setAuthor($set->crews()->pluck('crew_name')->join(', '), '');
         $book->setPublisher('Atari Legend', URL::to('/'));
         $book->setSourceURL(route('menus.show', $set));
-        $book->addCSSFile('epub.css', 'css', view('menus.epub.css')->render());
-        $book->addLargeFile('demozoo.png', 'demozoo', base_path('public/images/demozoo-16x16.png'), 'image/png');
+        $book->addCSSFile('epub.css', 'epub.css', file_get_contents(base_path('resources/css/epub.css')));
+        $book->addLargeFile('images/demozoo.png', 'demozoo', base_path('public/images/demozoo-16x16.png'), 'image/png');
+        $book->addLargeFile('fonts/RobotoMono-Regular.otf', 'font.RobotoMono-Regular.regular', base_path('resources/fonts/RobotoMono-Regular.otf'), 'font/opentype');
         $book->setCoverImage('cover.png', file_get_contents($this->getEpubCover($set)), 'image/png');
 
-        $book->addChapter('Cover', 'cover.html', view('menus.epub.cover', ['set' => $set])->render());
+        $book->addChapter('Cover', 'cover.xhtml', view('menus.epub.cover', ['set' => $set])->render());
 
         $this->getSortedDisksForSet($set)
             ->each(function ($disk) use ($book) {
                 $content = view('menus.epub.disk', ['disk' => $disk])->render();
-                $book->addChapter($disk->menu->label.$disk->label, $disk->id.'.html', $content);
+                $book->addChapter($disk->menu->label.$disk->label, $disk->id.'.xhtml', $content);
                 $disk->screenshots
                     ->each(function ($screenshot) use ($book) {
                         $path = 'public/images/menu_screenshots/'.$screenshot->file;
                         $book->addLargeFile(
-                            $screenshot->file,
+                            'images/'.$screenshot->file,
                             'screenshot-'.$screenshot->id,
                             Storage::path($path),
                             Storage::mimeType($path)

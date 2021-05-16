@@ -8,7 +8,7 @@
 
 @if ($disk->screenshots->isNotEmpty())
     <div class="screenshot">
-        <img src="{{ $disk->screenshots->first()->file }}" alt="Screenshot of menu" />
+        <img src="images/{{ $disk->screenshots->first()->file }}" alt="Screenshot of menu" />
     </div>
 @endif
 
@@ -17,7 +17,7 @@
 
     <ul>
         @foreach ($disk->contents->sortBy('order') as $content)
-            @include('menus.partial_menudisk_content', ['demozoo_icon_url' => 'demozoo.png'])
+            @include('menus.partial_menudisk_content', ['demozoo_icon_url' => 'images/demozoo.png'])
         @endforeach
     </ul>
 @else
@@ -25,7 +25,7 @@
 @endif
 
 @if ($disk->scrolltext !== null)
-    <p><code>{!! nl2br(e($disk->scrolltext)) !!}</code></p>
+    <p><code class="monospace">{!! nl2br(e($disk->scrolltext)) !!}</code></p>
 @else
     <p class="no-scrolltext">No scrolltext for this disk</p>
 @endif

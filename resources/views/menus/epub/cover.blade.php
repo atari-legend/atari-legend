@@ -12,14 +12,9 @@
         visiting the site and contributing missing data.
     </p>
 
-    <p>
-        <a href="{{ URL::to('/') }}">www.atarilegend.com</a>
-    </p>
+    <p><a href="{{ URL::to('/') }}">www.atarilegend.com</a></p>
 
-    <p>
-        <small>Generated {{ Carbon\Carbon::now()->format('F j, Y H:i') }}</small>
-    </p>
-
+    <p><small>Generated {{ Carbon\Carbon::now()->format('F j, Y H:i') }}</small></p>
 </div>
 
 @include('menus.epub.footer')
