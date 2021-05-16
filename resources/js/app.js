@@ -9,6 +9,7 @@ require('./comments');
 require('./game/screenshots');
 require('./game/search');
 require('./game/media');
+require('./game/music');
 require('./user');
 require('./about/history');
 require('./collapse');

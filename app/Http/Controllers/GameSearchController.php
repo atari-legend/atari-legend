@@ -164,6 +164,12 @@ class GameSearchController extends Controller
             $softwareSearchPossible = false;
         }
 
+        if ($request->filled('music')) {
+            $games->has('sndhs');
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
         if (! $searchPossible) {
             // Force no game results when there were no search
             // constraints

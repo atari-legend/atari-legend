@@ -22,7 +22,7 @@
                         <a class="ms-2" id="delete-avatar" href="#"><i class="fas fa-trash-alt text-danger"></i></a>
                     @endif
 
-                    <input type="file" class="form-control mt-2 @error('avatar') is-invalid @enderror" name="avatar">
+                    <input type="file" class="form-control bg-dark mt-2 @error('avatar') is-invalid @enderror" name="avatar">
 
                     <input type="hidden" name="avatar-removed" id="avatar-removed">
 

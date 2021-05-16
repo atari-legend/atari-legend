@@ -28,7 +28,7 @@
                             Developer: @json(GameHelper::developers($game)),
                             Boxscan: @json(GameHelper::hasBoxscan($game)),
                             Screenshot: @json($game->screenshots->isNotEmpty()),
-                            Music: @json($game->musics->isNotEmpty()),
+                            Music: @json($game->sndhs->isNotEmpty()),
 
                         }@if (!$loop->last),@endif
                     @endforeach

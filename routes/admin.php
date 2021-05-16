@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\Ajax\SNDHController;
+use App\Http\Controllers\Admin\Games\GameController;
+use App\Http\Controllers\Admin\Games\GameMusicController;
 use App\Http\Controllers\Admin\Games\IssuesController;
+use App\Http\Controllers\Admin\Games\MusicController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Menus\MenuConditionsController;
 use App\Http\Controllers\Admin\Menus\MenuCrewController;
@@ -18,9 +22,21 @@ Route::middleware('verified')->group(function () {
             Route::prefix('/admin')->group(function () {
                 Route::get('/', [AdminHomeController::class, 'index'])->name('home.index');
 
-                Route::get('/games/issues', [IssuesController::class, 'index'])->name('games.issues');
+                Route::prefix('/games')->name('games.')->group(function () {
+                    Route::get('issues', [IssuesController::class, 'index'])->name('issues');
+                    Route::post('issues/genres/{game}', [IssuesController::class, 'setGenres'])->name('issues.genres');
 
-                Route::post('/games/issues/genres/{game}', [IssuesController::class, 'setGenres'])->name('games.issues.genres');
+                    Route::get('music', [MusicController::class, 'index'])->name('music');
+                    Route::post('music', [MusicController::class, 'associate'])->name('music.associate');
+
+                    Route::get('games/{game}/music', [GameMusicController::class, 'index'])->name('game-music.index');
+                    Route::post('games/{game}/music', [GameMusicController::class, 'store'])->name('game-music.store');
+                    Route::post('games/{game}/music/associate', [GameMusicController::class, 'associate'])->name('game-music.associate');
+                    Route::delete('games/{game}/music/{sndh}', [GameMusicController::class, 'destroy'])
+                        ->where(['sndh' => '[\w\-_\/]+'])
+                        ->name('game-music.destroy');
+                    Route::resource('games', GameController::class);
+                });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {
                     Route::resource('sets', MenuSetsController::class);
@@ -49,6 +65,12 @@ Route::middleware('verified')->group(function () {
                     Route::delete('/crews/{crew}/parentcrew/{parentCrew}', [MenuCrewController::class, 'removeParentCrew'])->name('crews.removeParentCrew');
                     Route::post('/crews/{crew}/logo', [MenuCrewController::class, 'storeLogo'])->name('crews.storeLogo');
                     Route::delete('/crews/{crew}/logo', [MenuCrewController::class, 'destroyLogo'])->name('crews.destroyLogo');
+                });
+
+                Route::name('ajax.')->group(function () {
+                    Route::prefix('/ajax')->group(function () {
+                        Route::get('sndh.json', [SNDHController::class, 'sndh'])->name('sndh');
+                    });
                 });
             });
         });

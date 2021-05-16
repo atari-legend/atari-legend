@@ -57,7 +57,8 @@ class UpdateLinksInContent extends Migration
                         $news->save();
                     });
 
-                Review::where('review_text', 'regexp', $replacement['sql'])
+                Review::withoutGlobalScopes()
+                    ->where('review_text', 'regexp', $replacement['sql'])
                     ->each(function ($review) use ($replacement) {
                         $text = preg_replace(
                             $replacement['regexp'],

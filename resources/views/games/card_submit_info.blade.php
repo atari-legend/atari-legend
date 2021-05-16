@@ -22,7 +22,7 @@
         <form method="post" action="{{ route('games.submitInfo', ['game' => $game]) }}" enctype="multipart/form-data" class="text-center">
             @csrf
             <textarea class="form-control mb-2" rows="5" name="info" placeholder="Your info here..." required></textarea>
-            <input type="file" class="form-control" id="files" name="files[]" multiple>
+            <input type="file" class="form-control bg-dark" id="files" name="files[]" multiple>
 
             <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>

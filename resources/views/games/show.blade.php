@@ -21,6 +21,7 @@
         </div>
         <div class="col col-sm-6 col-lg-3 order-sm-2 order-lg-3">
             @include('games.card_releases')
+            @include('games.card_music')
             @include('games.card_similar')
             @include('games.card_facts')
             @include('games.card_interviews')

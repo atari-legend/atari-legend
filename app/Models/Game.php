@@ -20,9 +20,9 @@ class Game extends Model
         return $this->belongsToMany(PublisherDeveloper::class, 'game_developer', 'game_id', 'dev_pub_id');
     }
 
-    public function musics()
+    public function sndhs()
     {
-        return $this->belongsToMany(Music::class, 'game_music', 'music_id', 'game_id');
+        return $this->belongsToMany(Sndh::class, 'game_sndh', 'game_id', 'sndh_id');
     }
 
     public function boxscans()
@@ -118,5 +118,14 @@ class Game extends Model
     public function menuDiskContents()
     {
         return $this->hasMany(MenuDiskContent::class, 'game_id');
+    }
+
+    public function getNonMenuReleasesAttribute()
+    {
+        return $this
+            ->releases
+            ->filter(function ($release) {
+                return $release->menuDiskContents->isEmpty();
+            });
     }
 }

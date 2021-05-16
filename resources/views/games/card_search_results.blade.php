@@ -111,8 +111,8 @@
                     @if (GameHelper::hasBoxscan($game))
                         <i class="fas fa-box fa-fw mt-1" title="Has boxscans"></i>
                     @endif
-                    @if ($game->musics->isNotEmpty())
-                        <i class="fas fa-music fa-fw mt-1" title="{{ $game->musics->count() }} {{ Str::plural('music', $game->musics->count()) }}"></i>
+                    @if ($game->sndhs->isNotEmpty())
+                        <i class="fas fa-music fa-fw mt-1" title="{{ $game->sndhs->count() }} {{ Str::plural('music', $game->sndhs->count()) }}"></i>
                     @endif
                     @if ($game->reviews->isNotEmpty())
                         <i class="fas fa-newspaper fa-fw mt-1" title="{{ $game->reviews->count() }} {{ Str::plural('review', $game->reviews->count()) }}"></i>

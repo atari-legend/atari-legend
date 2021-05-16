@@ -12,7 +12,7 @@
 
         </div>
         <div class="striped">
-            @foreach ($game->releases->filter(function($release) { return $release->menuDiskContents->isEmpty(); })->sortBy('date') as $release)
+            @foreach ($game->non_menu_releases->sortBy('date') as $release)
                 <div class="card-body ps-2 py-2 ">
                     <div class="m-0">
                         @if (isset($currentRelease) && $currentRelease->id === $release->id)

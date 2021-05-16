@@ -29,9 +29,8 @@ class StatisticsHelper
             'Registered users'              => DB::table('users')->count(),
             'Articles'                      => DB::table('article_main')->count(),
             'Links'                         => DB::table('website')->count(),
-            'Games with music assigned'     => DB::table('game_music')->distinct('game_id')->count(),
-            'Music files'                   => DB::table('game_music')->count(),
-
+            'Games with music assigned'     => DB::table('game_sndh')->distinct('game_id')->count(),
+            'Music files'                   => DB::table('sndhs')->count(),
         ];
     }
 }

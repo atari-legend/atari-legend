@@ -13,7 +13,7 @@
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a>Add</a></li>
-                        <li><a>Edit</a></li>
+                        <li><a class="@activeroute('admin.games.games.index')" href="{{ route('admin.games.games.index') }}">Edit</a></li>
                         <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
                         <li><a>Configuration</a></li>
                         <li><a>Series</a></li>
@@ -21,6 +21,7 @@
                         <li><a>Individuals</a></li>
                         <li><a>Companies</a></li>
                         <li><a>Company Logos</a></li>
+                        <li><a class="@activeroute('admin.games.music')" href="{{ route('admin.games.music') }}">Music</a></li>
                     </ul>
                 </div>
             </div>

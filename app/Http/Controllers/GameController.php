@@ -93,6 +93,36 @@ class GameController extends Controller
             ->concat($game->menuDiskContents->pluck('menuDisk'))
             ->sortBy('download_basename');
 
+        $cover = null;
+        if ($game->screenshots->isNotEmpty()) {
+            $cover = asset('storage/images/game_screenshots/'.$game->screenshots->first()->file);
+        }
+        // Collect all SNDH tracks
+        $sndhs = $game->sndhs
+            ->map(function ($sndh) use ($cover) {
+                $songs = [];
+                if ($sndh->subtunes > 1) {
+                    for ($i = 1; $i <= $sndh->subtunes; $i++) {
+                        $songs[] = [
+                            'name' => ($sndh->title ?? 'Unknown').' ('.$i.'/'.$sndh->subtunes.')',
+                            'artist' => $sndh->composer ?? 'Unknown',
+                            'url' => 'http://sndhrecord.atari.org/mp3/'.$sndh->id.'-'.sprintf("%'.03d", $i).'.mp3',
+                            'cover' => $cover,
+                        ];
+                    }
+                } else {
+                    $songs[] = [
+                        'name' => $sndh->title ?? 'Unknown',
+                        'artist' => $sndh->composer ?? 'Unknown',
+                        'url' => 'http://sndhrecord.atari.org/mp3/'.$sndh->id.'.mp3',
+                        'cover' => $cover,
+                    ];
+                }
+
+                return $songs;
+            })
+            ->flatten(1);
+
         $jsonLd = (new JsonLd('VideoGame', url()->current()))
             ->add('name', $game->game_name)
             ->add('description', GameHelper::description($game))
@@ -114,6 +144,7 @@ class GameController extends Controller
             'reviews'           => $reviews,
             'similar'           => $similar,
             'menuDisks'         => $menuDisks,
+            'sndhs'             => $sndhs,
             'jsonLd'            => $jsonLd,
         ]);
     }
