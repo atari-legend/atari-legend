@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\GameMusicController;
 use App\Http\Controllers\GameReleaseController;
 use App\Http\Controllers\GameSearchController;
 use App\Http\Controllers\HomeController;
@@ -65,6 +66,10 @@ Route::middleware('verified')->group(function () {
     Route::get('/games/search', [GameSearchController::class, 'search'])->name('games.search');
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
+
+    Route::get('/music/{sndh}', [GameMusicController::class, 'music'])
+        ->where(['sndh' => '[\w\-_\/]+'])
+        ->name('music');
 
     Route::get('/menusets', [MenuSetController::class, 'index'])->name('menus.index');
     Route::get('/menusets/software/{software}', [MenuSetController::class, 'software'])->name('menus.software');

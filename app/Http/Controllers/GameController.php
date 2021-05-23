@@ -106,7 +106,7 @@ class GameController extends Controller
                         $songs[] = [
                             'name' => ($sndh->title ?? 'Unknown').' ('.$i.'/'.$sndh->subtunes.')',
                             'artist' => $sndh->composer ?? 'Unknown',
-                            'url' => 'http://sndhrecord.atari.org/mp3/'.$sndh->id.'-'.sprintf("%'.03d", $i).'.mp3',
+                            'url' => route('music', ['sndh' => $sndh, 'subtune' => $i]),
                             'cover' => $cover,
                         ];
                     }
@@ -114,7 +114,7 @@ class GameController extends Controller
                     $songs[] = [
                         'name' => $sndh->title ?? 'Unknown',
                         'artist' => $sndh->composer ?? 'Unknown',
-                        'url' => 'http://sndhrecord.atari.org/mp3/'.$sndh->id.'.mp3',
+                        'url' => route('music', $sndh),
                         'cover' => $cover,
                     ];
                 }

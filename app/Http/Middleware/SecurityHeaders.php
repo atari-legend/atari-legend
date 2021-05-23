@@ -27,7 +27,6 @@ class SecurityHeaders
         $csp = collect([
             "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:",
             "img-src 'self' data: *.ytimg.com",
-            'media-src http://sndhrecord.atari.org',
         ]);
 
         $response->headers->set(
