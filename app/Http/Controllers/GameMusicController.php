@@ -30,6 +30,7 @@ class GameMusicController extends Controller
             $path = 'images/game_screenshots/'.$game->screenshots->first()->file;
             $image = ImageManagerStatic::make(Storage::disk('public')->get($path));
             $image->resizeCanvas($image->width(), $image->width(), 'center', false, '#000000');
+
             return $image->response();
         } else {
             return response('No screenshot for this game', 404)

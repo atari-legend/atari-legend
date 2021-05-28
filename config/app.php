@@ -231,7 +231,7 @@ return [
         'GameHelper'               => App\Helpers\GameHelper::class,
         'MenuHelper'               => App\Helpers\MenuHelper::class,
         'ReleaseDescriptionHelper' => App\Helpers\ReleaseDescriptionHelper::class,
-        'Image'                    => Intervention\Image\Facades\Image::class
+        'Image'                    => Intervention\Image\Facades\Image::class,
 
     ],
 

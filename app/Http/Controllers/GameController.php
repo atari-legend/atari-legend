@@ -93,7 +93,6 @@ class GameController extends Controller
             ->concat($game->menuDiskContents->pluck('menuDisk'))
             ->sortBy('download_basename');
 
-
         // Collect all SNDH tracks
         $sndhs = $game->sndhs
             ->map(function ($sndh) use ($game) {
