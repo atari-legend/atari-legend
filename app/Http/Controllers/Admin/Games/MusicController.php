@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Games;
 
+use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Sndh;
 use App\View\Components\Admin\Crumb;
@@ -46,6 +48,16 @@ class MusicController extends Controller
                 $game = Game::find($game_id);
                 $sndh = Sndh::find($sndh_id);
                 $game->sndhs()->attach($sndh);
+
+                ChangelogHelper::insert([
+                    'action'           => Changelog::INSERT,
+                    'section'          => 'Games',
+                    'section_id'       => $game->getKey(),
+                    'section_name'     => $game->game_name,
+                    'sub_section'      => 'Music',
+                    'sub_section_id'   => 0,
+                    'sub_section_name' => $sndh->id,
+                ]);
 
                 $associations[] = $game->game_name.' → '.$sndh->id;
             }
