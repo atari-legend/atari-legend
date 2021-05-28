@@ -20,6 +20,7 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.5",
         "jbbcode/jbbcode": "^1.4",
         "laminas/laminas-feed": "^2.14",
         "laminas/laminas-http": "^2.14",

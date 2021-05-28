@@ -17,7 +17,7 @@
             </script>
         </div>
         <div class="card-footer text-muted text-center">
-            Songs gracefully provided by <a href="http://sndhrecord.atari.org">sndhrecord.atari.org</a>
+            <small>Songs gracefully provided by <a href="http://sndhrecord.atari.org">sndhrecord.atari.org</a>.</small>
         </div>
     </div>
 @endif

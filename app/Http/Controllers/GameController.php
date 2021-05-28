@@ -93,13 +93,10 @@ class GameController extends Controller
             ->concat($game->menuDiskContents->pluck('menuDisk'))
             ->sortBy('download_basename');
 
-        $cover = null;
-        if ($game->screenshots->isNotEmpty()) {
-            $cover = asset('storage/images/game_screenshots/'.$game->screenshots->first()->file);
-        }
+
         // Collect all SNDH tracks
         $sndhs = $game->sndhs
-            ->map(function ($sndh) use ($cover) {
+            ->map(function ($sndh) use ($game) {
                 $songs = [];
                 if ($sndh->subtunes > 1) {
                     for ($i = 1; $i <= $sndh->subtunes; $i++) {
@@ -107,7 +104,7 @@ class GameController extends Controller
                             'name' => ($sndh->title ?? 'Unknown').' ('.$i.'/'.$sndh->subtunes.')',
                             'artist' => $sndh->composer ?? 'Unknown',
                             'url' => route('music', ['sndh' => $sndh, 'subtune' => $i]),
-                            'cover' => $cover,
+                            'cover' => route('music.cover', $game),
                         ];
                     }
                 } else {
@@ -115,7 +112,7 @@ class GameController extends Controller
                         'name' => $sndh->title ?? 'Unknown',
                         'artist' => $sndh->composer ?? 'Unknown',
                         'url' => route('music', $sndh),
-                        'cover' => $cover,
+                        'cover' => route('music.cover', $game),
                     ];
                 }
 

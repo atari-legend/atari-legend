@@ -67,6 +67,7 @@ Route::middleware('verified')->group(function () {
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
 
+    Route::get('/music/cover/{game}', [GameMusicController::class, 'cover'])->name('music.cover');
     Route::get('/music/{sndh}', [GameMusicController::class, 'music'])
         ->where(['sndh' => '[\w\-_\/]+'])
         ->name('music');
