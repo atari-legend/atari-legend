@@ -73,9 +73,9 @@
                                 </a>
                             @endif
                             <br>
-                            @if ($individual->nicknames->isNotEmpty())
+                            @if ($individual->aka_list->isNotEmpty())
                                 <small class="text-muted">
-                                    <abbr title="Also known as">aka.</abbr> {{ $individual->nick_list->join(', ')}}
+                                    <abbr title="Also known as">aka.</abbr> {{ $individual->aka_list->join(', ')}}
                                 </small>
                                 <br>
                             @endif

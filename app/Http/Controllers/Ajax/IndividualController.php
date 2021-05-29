@@ -23,8 +23,8 @@ class IndividualController extends Controller
         $results = $individuals->get()
             ->map(function ($individual) {
                 $ind_name = $individual->ind_name;
-                if ($individual->nicknames->isNotEmpty()) {
-                    $ind_name .= ' (aka: '.$individual->nick_list->join(', ').')';
+                if ($individual->aka_list->isNotEmpty()) {
+                    $ind_name .= ' (aka: '.$individual->aka_list->join(', ').')';
                 }
 
                 return [

@@ -69,4 +69,17 @@ class Individual extends Model
     {
         return $this->nicknames->pluck('ind_name');
     }
+
+    /**
+     * @return string[] List of individuals for this nick
+     */
+    public function getIndividualListAttribute()
+    {
+        return $this->individuals->pluck('ind_name');
+    }
+
+    public function getAkaListAttribute()
+    {
+        return $this->nick_list->concat($this->individual_list);
+    }
 }

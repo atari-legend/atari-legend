@@ -137,11 +137,11 @@ class GameSearchController extends Controller
             $softwareSearchPossible = false;
         }
 
-        if ($request->filled('individual_id')) {
+        if ($request->filled('individual_id') || $request->filled('individual_select')) {
             // When searching for individuals we should consider their nicks
             // and also the case where a nick was associated with the game
             // instead of the individual
-            $individual = Individual::find($request->individual_id);
+            $individual = Individual::find($request->individual_id ?? $request->individual_select);
             if ($individual) {
                 // Collect all IDs for this individual: That include the IDs
                 // of their nicks, or if they are a nick themselves the ID
@@ -281,10 +281,14 @@ class GameSearchController extends Controller
         $genres = Genre::all()
             ->sortBy('name');
 
+        $individuals = Individual::all()
+            ->sortBy('ind_name');
+
         return [
-            'companies' => $companies,
-            'years'     => $years,
-            'genres'    => $genres,
+            'companies'   => $companies,
+            'years'       => $years,
+            'genres'      => $genres,
+            'individuals' => $individuals,
         ];
     }
 }

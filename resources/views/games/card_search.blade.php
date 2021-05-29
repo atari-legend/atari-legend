@@ -84,6 +84,28 @@
                 </div>
             </div>
             <div class="row mb-3">
+                <label for="developer" class="col-4 col-sm-3 col-form-label text-nowrap">
+                    Involving
+                    <a href="#" data-dropdown-toggle="individual,individual_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
+                    <input type="text" class="autocomplete form-control"
+                        data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
+                        data-autocomplete-key="ind_name"
+                        data-autocomplete-id="ind_id" data-autocomplete-companion="individual_select"
+                        id="individual" name="individual" autocomplete="off">
+                    <input type="hidden" name="individual_select">
+                    <select class="form-select d-none" id="individual_id" name="individual_id">
+                        <option value="">-</option>
+                        @foreach ($individuals as $individual)
+                            <option value="{{ $individual->ind_id }}">
+                                {{ $individual->ind_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
                 <label for="year" class="col-4 col-sm-3 col-form-label text-nowrap">
                     Release year
                     <a href="#" data-dropdown-toggle="year,year_id"><i class="fas fa-chevron-circle-down"></i></a>

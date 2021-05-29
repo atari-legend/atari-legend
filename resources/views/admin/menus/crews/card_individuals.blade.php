@@ -42,8 +42,8 @@
                         <tr>
                             <td>
                                 <a href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_edit.php?ind_id='.$individual->ind_id }}">{{ $individual->ind_name }}</a>
-                                @if ($individual->nicknames->isNotEmpty())
-                                    <span class="text-muted ms-1">(aka. {{ $individual->nick_list->join(', ') }})</span>
+                                @if ($individual->aka_list->isNotEmpty())
+                                    <span class="text-muted ms-1">(aka. {{ $individual->aka_list->join(', ') }})</span>
                                 @endif
                             </td>
                             <td>
