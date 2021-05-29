@@ -47,7 +47,9 @@ class Game extends Model
 
     public function individuals()
     {
-        return $this->hasMany(GameIndividual::class, 'game_id', 'game_id');
+        return $this->belongsToMany(Individual::class, 'game_individual', 'game_id', 'individual_id')
+            ->withPivot('individual_role_id')
+            ->using(GameIndividual::class);
     }
 
     public function programmingLanguages()

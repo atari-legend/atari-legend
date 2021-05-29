@@ -52,17 +52,17 @@ class GameController extends Controller
         // have multiple role so make sure to get unique interviews
         $interviews = $game->individuals
             // Display only interviews where we have a picture of the individual
-            ->filter(function ($gameIndividual) {
-                return $gameIndividual->individual !== null
-                    && $gameIndividual->individual->text !== null
-                    && $gameIndividual->individual->text->file !== null;
+            ->filter(function ($individual) {
+                return $individual !== null
+                    && $individual->text !== null
+                    && $individual->text->file !== null;
             })
-            ->flatMap(function ($gameIndividual) {
-                return $gameIndividual->individual->interviews;
+            ->flatMap(function ($individual) {
+                return $individual->interviews;
             })
             ->unique('interview_id');
 
-        // Filter unpublishes reviews
+        // Filter unpublished reviews
         $reviews = $game->reviews->reject(function ($review) {
             return $review->review_edit !== Review::REVIEW_PUBLISHED;
         });

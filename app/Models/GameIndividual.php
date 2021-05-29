@@ -2,25 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class GameIndividual extends Model
+class GameIndividual extends Pivot
 {
     protected $table = 'game_individual';
-    public $timestamps = false;
+    public $incrementing = true;
 
     public function role()
     {
         return $this->belongsTo(IndividualRole::class, 'individual_role_id');
-    }
-
-    public function game()
-    {
-        return $this->belongsTo(Game::class, 'game_id');
-    }
-
-    public function individual()
-    {
-        return $this->belongsTo(Individual::class, 'individual_id');
     }
 }
