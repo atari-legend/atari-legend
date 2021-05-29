@@ -354,7 +354,7 @@ class ImportStonishData extends Command
                 // The Eloquent models for nicknames have changed as of May 2021
                 // so the code to handle it doesn't work anymore and has been removed
                 // since this command was a once off that will not be used in the future
-                throw new ErrorException("Handling of nicknames is not implemented");
+                throw new ErrorException('Handling of nicknames is not implemented');
             }
         });
 
