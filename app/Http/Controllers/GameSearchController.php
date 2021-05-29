@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Genre;
+use App\Models\Individual;
 use App\Models\MenuSoftware;
 use App\Models\PublisherDeveloper;
 use Carbon\Carbon;
@@ -137,9 +138,23 @@ class GameSearchController extends Controller
         }
 
         if ($request->filled('individual_id')) {
-            $games->whereHas('individuals', function (Builder $query) use ($request) {
-                $query->where('individual_id', $request->input('individual_id'));
-            });
+            // When searching for individuals we should consider their nicks
+            // and also the case where a nick was associated with the game
+            // instead of the individual
+            $individual = Individual::find($request->individual_id);
+            if ($individual) {
+                // Collect all IDs for this individual: That include the IDs
+                // of their nicks, or if they are a nick themselves the ID
+                // of the "parent" individual
+                $ids = $individual
+                    ->nicknames
+                    ->pluck('ind_id')
+                    ->concat($individual->individuals->pluck('ind_id'))
+                    ->concat(collect($individual->ind_id));
+                $games->whereHas('individuals', function (Builder $query) use ($ids) {
+                    $query->whereIn('individual_id', $ids);
+                });
+            }
             $searchPossible = true;
             $softwareSearchPossible = false;
         }

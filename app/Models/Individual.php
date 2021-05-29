@@ -26,9 +26,22 @@ class Individual extends Model
         return $this->hasMany(Interview::class, 'ind_id');
     }
 
+    /**
+     * @return \App\Models\Individual[] Nicknames of the individuals.
+     *                                  This is a self-reference.
+     */
     public function nicknames()
     {
         return $this->belongsToMany(Individual::class, 'individual_nicks', 'ind_id', 'nick_id');
+    }
+
+    /**
+     * @return \App\Models\Individual[] Individuals of the nickname.
+     *                                  This is a self-reference.
+     */
+    public function individuals()
+    {
+        return $this->belongstoMany(Individual::class, 'individual_nicks', 'nick_id', 'ind_id');
     }
 
     public function crews()
