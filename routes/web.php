@@ -69,7 +69,7 @@ Route::middleware('verified')->group(function () {
 
     Route::get('/music/cover/{game}', [GameMusicController::class, 'cover'])->name('music.cover');
     Route::get('/music/{sndh}', [GameMusicController::class, 'music'])
-        ->where(['sndh' => '[\w\-_\/]+'])
+        ->where(['sndh' => '[\w\-_\/()]+'])
         ->name('music');
 
     Route::get('/menusets', [MenuSetController::class, 'index'])->name('menus.index');
