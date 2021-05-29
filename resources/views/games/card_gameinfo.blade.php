@@ -76,10 +76,7 @@
                                 <br>
                                 @if ($gameIndividual->individual->nicknames->isNotEmpty())
                                     <small class="text-muted">
-                                        AKA
-                                        @foreach ($gameIndividual->individual->nicknames as $nickname)
-                                            {{ $nickname->nick->ind_name }}@if (!$loop->last), @endif
-                                        @endforeach
+                                        <abbr title="Also known as">aka.</abbr> {{ $gameIndividual->individual->nick_list->join(', ')}}
                                     </small>
                                     <br>
                                 @endif
@@ -116,7 +113,7 @@
         @if ($game->akas->isNotEmpty())
             <div class="row p-2 g-0">
                 <div class="col-4 text-muted">
-                    AKA
+                    <abbr title="Also known as">Aka.</abbr>
                 </div>
                 <div class="col-8">
                     @foreach ($game->akas as $aka)

@@ -7,7 +7,6 @@ use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\Individual;
-use App\Models\IndividualNick;
 use App\Models\IndividualText;
 use App\Models\Menu;
 use App\Models\MenuDisk;
@@ -17,6 +16,7 @@ use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\Release;
+use ErrorException;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -351,10 +351,10 @@ class ImportStonishData extends Command
         $mainIndividual = $individuals->shift();
         $individuals->each(function ($individual) use ($mainIndividual) {
             if (! $mainIndividual->nicknames->pluck('nick_id')->contains($individual->ind_id)) {
-                $nick = new IndividualNick();
-                $nick->ind_id = $mainIndividual->ind_id;
-                $nick->nick_id = $individual->ind_id;
-                $mainIndividual->nicknames()->save($nick);
+                // The Eloquent models for nicknames have changed as of May 2021
+                // so the code to handle it doesn't work anymore and has been removed
+                // since this command was a once off that will not be used in the future
+                throw new ErrorException("Handling of nicknames is not implemented");
             }
         });
 

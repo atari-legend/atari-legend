@@ -28,7 +28,7 @@ class Individual extends Model
 
     public function nicknames()
     {
-        return $this->hasMany(IndividualNick::class, 'ind_id');
+        return $this->belongsToMany(Individual::class, 'individual_nicks', 'ind_id', 'nick_id');
     }
 
     public function crews()
@@ -43,7 +43,7 @@ class Individual extends Model
     public function getPublicNickAttribute()
     {
         if ($this->nicknames->isNotEmpty()) {
-            return $this->nicknames->first()->nick->ind_name;
+            return $this->nicknames->first()->ind_name;
         } else {
             return $this->ind_name;
         }
@@ -54,6 +54,6 @@ class Individual extends Model
      */
     public function getNickListAttribute()
     {
-        return $this->nicknames->pluck('nick')->pluck('ind_name');
+        return $this->nicknames->pluck('ind_name');
     }
 }
