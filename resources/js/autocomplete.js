@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 src: async function () {
                     // The input must have a data-autocomplete-endpoint attribute containing the URL to call
-                    const source = await fetch(`${el.dataset.autocompleteEndpoint}?q=${el.value}`);
+                    const source = await fetch(`${el.dataset.autocompleteEndpoint}?q=${encodeURIComponent(el.value)}`);
                     const data = await source.json();
                     return data;
                 },
