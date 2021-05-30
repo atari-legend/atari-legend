@@ -1,6 +1,14 @@
 <div class="card mb-3 bg-light">
     <div class="card-body">
         <h2 class="card-title fs-4">Possible candidates</h2>
+        <p>
+            <small class="text-muted">
+                This section tries to find songs from the SNDH archive that
+                match the game, based on the game name and song title. If a
+                song looks like a correct candidate you can tick it and associat
+                it with the game.
+            </small>
+        </p>
 
         @if ($sndhs->isNotEmpty())
             <form action="{{ route('admin.games.game-music.associate', $game) }}" method="POST">

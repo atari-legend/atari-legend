@@ -1,6 +1,6 @@
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">Game music</h2>
+        <h2 class="card-title fs-4">Music associated with the game</h2>
 
         @if ($game->sndhs->isNotEmpty())
             <table class="table table-striped table-sm mb-5">
