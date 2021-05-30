@@ -34,7 +34,7 @@ class GameMusicController extends Controller
     public function store(Request $request, Game $game)
     {
         $sndh = Sndh::find($request->sndh);
-        if ($sndh) {
+        if ($sndh && !$game->sndhs->contains($sndh)) {
             $game->sndhs()->attach($sndh);
 
             ChangelogHelper::insert([
