@@ -1,5 +1,4 @@
 require('./bootstrap');
-require('./ellipsis');
 require('./carousel');
 require('./lightbox');
 require('./autocomplete');

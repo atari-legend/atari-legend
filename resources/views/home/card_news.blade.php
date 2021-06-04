@@ -7,7 +7,7 @@
             <div class="card-body p-2">
                 <h3 class="card-title fs-6 text-audiowide"><a class="text-nowrap overflow-hidden overflow-ellipsis d-block" href="{{ route('news.index') }}">{{ $new->news_headline }}</a></h3>
                 <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $new->news_date) }} by {{ Helper::user($new->user) }}</p>
-                <p class="card-text mb-0 ellipsis">
+                <p class="card-text mb-0 ">
                     {!! Helper::bbCode(Helper::extractTag($new->news_text, "frontpage")) !!}
                 </p>
                 <a class="d-block text-end" href="{{ route('news.index') }}">

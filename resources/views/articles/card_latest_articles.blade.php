@@ -10,7 +10,7 @@
                     <a href="{{ route('articles.show', ['article' => $article]) }}">{{ $article->texts->first()->article_title }}</a>
                 </h3>
                 <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $article->texts->first()->article_date) }} by {{ Helper::user($article->user) }}</p>
-                <p class="card-text ellipsis">
+                <p class="card-text">
                     {!! Helper::bbCode($article->texts->first()->article_intro) !!}
                 </p>
                 <a class="d-block text-end" href="{{ route('articles.show', ['article' => $article]) }}">
