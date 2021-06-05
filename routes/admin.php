@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
+use App\Http\Controllers\Admin\Games\GameScreenshotsController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
@@ -41,6 +42,9 @@ Route::middleware('verified')->group(function () {
                     Route::post('games/{game}/credits', [GameCreditsController::class, 'store'])->name('game-credits.store');
                     Route::delete('games/{game}/credits/{individual}', [GameCreditsController::class, 'destroy'])->name('game-credits.destroy');
 
+                    Route::get('games/{game}/screenshots', [GameScreenshotsController::class, 'index'])->name('game-screenshots.index');
+                    Route::post('games/{game}/screenshots', [GameScreenshotsController::class, 'store'])->name('game-screenshots.store');
+                    Route::delete('games/{game}/screenshots/{screenshot}', [GameScreenshotsController::class, 'destroy'])->name('game-screenshots.destroy');
                     Route::resource('games', GameController::class);
                 });
 

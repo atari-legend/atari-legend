@@ -10,7 +10,7 @@
                     data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
                     data-autocomplete-key="ind_name" data-autocomplete-id="ind_id"
                     data-autocomplete-companion="individual" value="{{ old('individual_name') }}"
-                    placeholder="Type an individual name..." autocomplete="off">
+                    placeholder="Type an individual name..." autocomplete="off" required>
                 <input type="hidden" name="individual" value="{{ old('individual') }}">
 
                 @error('individual')

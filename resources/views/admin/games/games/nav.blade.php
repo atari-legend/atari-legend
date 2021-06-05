@@ -19,7 +19,10 @@
         <a class="nav-link disabled" href="#">Facts <span class="badge rounded-pill bg-secondary">{{ $game->facts->count() }}</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link disabled" href="#">Screenshots <span class="badge rounded-pill bg-secondary">{{ $game->screenshots->count() }}</span></a>
+        <a class="nav-link @activeroute('admin.games.game-screenshots.index')"
+            href="{{ route('admin.games.game-screenshots.index', $game) }}">
+            Screenshots <span class="badge rounded-pill bg-secondary">{{ $game->screenshots->count() }}</span>
+        </a>
     </li>
     <li class="nav-item">
         <a class="nav-link @activeroute('admin.games.game-music.index')"
