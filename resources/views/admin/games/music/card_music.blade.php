@@ -17,6 +17,7 @@
             <thead>
                 <tr>
                     <th>Game</th>
+                    <th>Credits</th>
                     <th>Music matches</th>
                 </tr>
             </thead>
@@ -29,13 +30,28 @@
                     @if (count($sndhs) > 0)
                         <tr>
                             <td>
-                                <a href="{{ route('games.show', $game) }}">{{ $game->game_name }}</a>
+                                <a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->game_name }}</a>
                                 <small class="text-muted ms-2">{{ $game->genres->pluck('name')->join(', ')}}</small>
                                 @if ($game->screenshots->isNotEmpty())
                                     <img src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->random()->file) }}"
                                         class="d-block mt-2"
                                         style="width: 10rem;">
                                 @endif
+                            </td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    @foreach ($game->individuals->sortBy('pivot.role.name') as $individual)
+                                        <li>
+                                            {{ $individual->ind_name }}
+                                            @if ($individual->aka_list->isNotEmpty())
+                                                <small>aka. {{ $individual->aka_list->join(', ') }}</small>
+                                            @endif
+                                            @if ($individual->pivot->role !== null)
+                                                <span class="text-muted">[{{ $individual->pivot->role->name }}]</span>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </td>
                             <td>
                                 @foreach ($sndhs as $sndh)
