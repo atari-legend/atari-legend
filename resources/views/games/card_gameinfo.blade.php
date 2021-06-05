@@ -50,7 +50,7 @@
                     {{ Str::plural('Author', $game->individuals->count())}}
                 </div>
                 <div class="col-8">
-                    @foreach ($game->individuals as $individual)
+                    @foreach ($game->individuals->sortBy('pivot.role.name') as $individual)
                         <div class="mb-1">
                             <a href="{{ route('games.search', ['individual_id' => $individual->ind_id]) }}">{{ $individual->ind_name }}</a>
                             @contributor
