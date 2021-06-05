@@ -60,7 +60,6 @@ class GameCreditsController extends Controller
             ->where('individual_role_id', $request->role)
             ->delete();
 
-
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
