@@ -7,6 +7,7 @@
 
     <div class="">
         <a href="{{ route('home.index') }}">Main site</a><br>
+        <a href="{{ config('al.legacy.base_url').'/admin/' }}">Legacy CPANEL</a><br><br>
         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             Log out
         </a>

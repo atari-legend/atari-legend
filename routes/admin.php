@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Games\GameController;
+use App\Http\Controllers\Admin\Games\GameCreditsController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
@@ -33,8 +34,13 @@ Route::middleware('verified')->group(function () {
                     Route::post('games/{game}/music', [GameMusicController::class, 'store'])->name('game-music.store');
                     Route::post('games/{game}/music/associate', [GameMusicController::class, 'associate'])->name('game-music.associate');
                     Route::delete('games/{game}/music/{sndh}', [GameMusicController::class, 'destroy'])
-                        ->where(['sndh' => '[\w\-_\/]+'])
+                        ->where(['sndh' => '[\w\s\-_\/()]+'])
                         ->name('game-music.destroy');
+
+                    Route::get('games/{game}/credits', [GameCreditsController::class, 'index'])->name('game-credits.index');
+                    Route::post('games/{game}/credits', [GameCreditsController::class, 'store'])->name('game-credits.store');
+                    Route::delete('games/{game}/credits/{individual}', [GameCreditsController::class, 'destroy'])->name('game-credits.destroy');
+
                     Route::resource('games', GameController::class);
                 });
 

@@ -13,6 +13,11 @@
     </div>
     <div class="row">
         <div class="col">
+            @include('admin.games.games.music.card_credits')
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             @include('admin.games.games.music.card_add')
         </div>
         <div class="col">

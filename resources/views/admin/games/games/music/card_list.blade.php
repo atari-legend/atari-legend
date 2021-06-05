@@ -3,7 +3,7 @@
         <h2 class="card-title fs-4">Music associated with the game</h2>
 
         @if ($game->sndhs->isNotEmpty())
-            <table class="table table-striped table-sm mb-5">
+            <table class="table table-striped table-sm">
             <thead>
                 <tr>
                     <th>Path</th>

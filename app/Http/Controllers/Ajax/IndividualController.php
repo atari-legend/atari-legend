@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ajax;
 use App\Http\Controllers\Controller;
 use App\Models\Individual;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class IndividualController extends Controller
 {
@@ -25,6 +26,10 @@ class IndividualController extends Controller
                 $ind_name = $individual->ind_name;
                 if ($individual->aka_list->isNotEmpty()) {
                     $ind_name .= ' (aka: '.$individual->aka_list->join(', ').')';
+                }
+
+                if ($individual->games->isNotEmpty()) {
+                    $ind_name .= ' ['.Str::limit($individual->games->pluck('game_name')->unique()->join(', '), 45, '…').']';
                 }
 
                 return [

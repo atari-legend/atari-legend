@@ -10,6 +10,12 @@
         <a class="nav-link disabled" href="#">Releases <span class="badge rounded-pill bg-secondary">{{ $game->releases->count() }}</span></a>
     </li>
     <li class="nav-item">
+        <a class="nav-link @activeroute('admin.games.game-credits.index')"
+            href="{{ route('admin.games.game-credits.index', $game) }}">
+            Credits <span class="badge rounded-pill bg-secondary">{{ $game->individuals->count() }}</span>
+        </a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link disabled" href="#">Facts <span class="badge rounded-pill bg-secondary">{{ $game->facts->count() }}</span></a>
     </li>
     <li class="nav-item">
