@@ -5,7 +5,7 @@
     <div class="card-body p-0">
         @isset ($screenstar)
             <figure>
-                <img class="w-100 pixelated" src="{{ asset('storage/images/game_screenshots/'.$screenstar->games[0]->screenshots[0]->file) }}" alt="Screenshot of {{ $screenstar->games->first()->game_name }}">
+                <img class="w-100 pixelated" src="{{ $screenstar->games[0]->screenshots[0]->getUrl('game') }}" alt="Screenshot of {{ $screenstar->games->first()->game_name }}">
                 <figcaption class="py-2 px-3">
                     <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                     <div class="figcaption-title"><a href="{{ route('games.show', ['game' => $screenstar->games->first()]) }}">{{ $screenstar->games->first()->game_name }}</a></div>

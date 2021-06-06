@@ -3,7 +3,7 @@
         @if ($gameWithoutGenre->screenshots->isNotEmpty())
             <div class="clearfix">
                 @foreach ($gameWithoutGenre->screenshots->take(4) as $screenshot)
-                    <img class="w-50 pixelated float-start" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Screenshot of {{ $gameWithoutGenre->game_name }}">
+                    <img class="w-50 pixelated float-start" src="{{ $screenshot->getUrl('game') }}" alt="Screenshot of {{ $gameWithoutGenre->game_name }}">
                 @endforeach
             </div>
         @endif

@@ -9,7 +9,7 @@
     </div>
     <div class="card-body p-0">
         @if ($release->game->screenshots->isNotEmpty())
-            <img class="w-100 pixelated" src="{{ asset('storage/images/game_screenshots/'.$release->game->screenshots->random()->file) }}" alt="Screenshot of {{ $release->game->game_name }}">
+            <img class="w-100 pixelated" src="{{ $release->game->screenshots->random()->getUrl('game') }}" alt="Screenshot of {{ $release->game->game_name }}">
         @else
             <p class="card-text text-center m-2">
                 <i class="fas fa-images fa-4x text-muted"></i><br>

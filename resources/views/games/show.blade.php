@@ -3,7 +3,7 @@
 @section('description', GameHelper::description($game))
 
 @if ($game->screenshots->isNotEmpty())
-    @section('image', asset('storage/images/game_screenshots/'.$game->screenshots->random()->file))
+    @section('image', $game->screenshots->random()->getUrl('game'))
 @endif
 
 @section('content')

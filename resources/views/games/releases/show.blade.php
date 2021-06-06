@@ -3,7 +3,7 @@
 @section('robots', 'follow,noindex')
 
 @if ($release->game->screenshots->isNotEmpty())
-    @section('image', asset('storage/images/game_screenshots/'.$release->game->screenshots->random()->file))
+    @section('image', $release->game->screenshots->random()->getUrl('game'))
 @endif
 
 @section('content')

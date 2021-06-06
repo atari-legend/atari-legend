@@ -62,8 +62,8 @@
                                 @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
                                     <div class="row mb-3">
                                         <div class="col-2">
-                                            <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
-                                                <img class="w-100" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Game screenshot">
+                                            <a class="lightbox-link" href="{{ $screenshot->getUrl('game') }}">
+                                                <img class="w-100" src="{{ $screenshot->getUrl('game') }}" alt="Game screenshot">
                                             </a>
                                         </div>
                                         <div class="col-10 d-flex">
@@ -104,8 +104,8 @@
                             <div class="col-3 ps-2 text-center text-muted lightbox-gallery">
                                 @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
                                     <div class="bg-dark p-2">
-                                        <a class="lightbox-link" href="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
-                                            <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}">
+                                        <a class="lightbox-link" href="{{ $screenshot->getUrl('game') }}">
+                                            <img class="w-100 mb-2" src="{{ $screenshot->getUrl('game') }}">
                                         </a>
                                         <p class="pb-5 mb-0" id="preview-screenshot-comment-{{ $screenshot->screenshot_id }}"></p>
                                     </div>

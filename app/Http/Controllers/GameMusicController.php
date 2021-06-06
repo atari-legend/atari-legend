@@ -50,7 +50,7 @@ class GameMusicController extends Controller
     public function cover(Game $game)
     {
         if ($game->screenshots->isNotEmpty()) {
-            $path = 'images/game_screenshots/'.$game->screenshots->first()->file;
+            $path = $game->screenshots->first()->getPath('game');
             $image = ImageManagerStatic::make(Storage::disk('public')->get($path));
             $image->resizeCanvas($image->width(), $image->width(), 'center', false, '#000000');
 

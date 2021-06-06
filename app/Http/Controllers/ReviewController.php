@@ -57,8 +57,8 @@ class ReviewController extends Controller
             ->add('headline', 'Review of '.$review->games->first()->game_name)
             ->add('author', Helper::user($review->user))
             ->add('datePublished', date('Y-m-d', $review->review_date));
-        if ($review->screenshots->isNotEmpty()) {
-            $jsonLd->add('image', asset('storage/images/game_screenshots/'.$review->screenshots->first()->screenshot->file));
+        if ($review->screenshots->isNotEmpty() && $review->screenshots->first()->screenshot !== null) {
+            $jsonLd->add('image', $review->screenshots->first()->screenshot->getUrl('game'));
         }
 
         return view('reviews.show')

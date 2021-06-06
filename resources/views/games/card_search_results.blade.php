@@ -87,7 +87,7 @@
 
                     <a href="{{ route('games.show', ['game' => $game]) }}">
                         @if ($game->screenshots->isNotEmpty())
-                            <img class="w-100 mb-2 bg-dark" src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->random()->file) }}" alt="Screenshot of {{ $game->game_name }}">
+                            <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrl('game') }}" alt="Screenshot of {{ $game->game_name }}">
                         @else
                             <img class="w-100 mb-2 bg-black" src="{{ asset('images/no-screenshot.png') }}">
                         @endif

@@ -17,7 +17,7 @@
                     <div class="carousel-thumbnails overflow-hidden" data-bs-carousel="carousel-screenshots">
                         @foreach($game->screenshots as $screenshot)
                             <a href="#carousel-screenshots" data-bs-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
-                                <img class="w-100 mb-2" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
+                                <img class="w-100 mb-2" src="{{ $screenshot->getUrl('game') }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
                             </a>
                         @endforeach
                     </div>
@@ -32,7 +32,7 @@
                         <div class="carousel-inner">
                             @foreach($game->screenshots as $screenshot)
                                 <div class="carousel-item @if ($loop->first) active @endif">
-                                    <img class="w-100 d-block pixelated" src="{{ asset('storage/images/game_screenshots/'.$screenshot->file) }}" alt="Large screenshot of {{ $game->game_name }}">
+                                    <img class="w-100 d-block pixelated" src="{{ $screenshot->getUrl('game') }}" alt="Large screenshot of {{ $game->game_name }}">
                                 </div>
                             @endforeach
                         </div>

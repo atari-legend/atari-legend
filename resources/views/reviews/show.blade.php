@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('title', $review->games->first()->game_name.' review (Atari ST)')
 
-@if ($review->screenshots->isNotEmpty())
-    @section('image', asset('storage/images/game_screenshots/'.$review->screenshots->first()->screenshot->file))
+@if ($review->screenshots->isNotEmpty() && $review->screenshots->first()->screenshot !== null)
+    @section('image', $review->screenshots->first()->screenshot->getUrl('game'))
 @endif
 
 @section('content')

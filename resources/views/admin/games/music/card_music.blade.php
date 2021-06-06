@@ -33,7 +33,7 @@
                                 <a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->game_name }}</a>
                                 <small class="text-muted ms-2">{{ $game->genres->pluck('name')->join(', ')}}</small>
                                 @if ($game->screenshots->isNotEmpty())
-                                    <img src="{{ asset('storage/images/game_screenshots/'.$game->screenshots->random()->file) }}"
+                                    <img src="{{ $game->screenshots->random()->getUrl('game') }}"
                                         class="d-block mt-2"
                                         style="width: 10rem;">
                                 @endif

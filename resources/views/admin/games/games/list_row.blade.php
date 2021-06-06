@@ -8,7 +8,7 @@
 
 <x-livewire-tables::table.cell>
     @if ($row->screenshots->isNotEmpty())
-        <img style="max-height: 3rem; max-width: 6rem;" src="{{ asset('storage/images/game_screenshots/'.$row->screenshots->random()->file) }}">
+        <img style="max-height: 3rem; max-width: 6rem;" src="{{ $row->screenshots->random()->getUrl('game') }}">
     @else
         <span class="text-muted">-</span>
     @endif
