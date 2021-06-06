@@ -13,7 +13,9 @@ class Screenshot extends Model
     public $timestamps = false;
 
     const PATHS = [
-        'game' => 'game_screenshots',
+        'game'      => 'game_screenshots',
+        'article'   => 'article_screenshots',
+        'interview' => 'interview_screenshots',
     ];
 
     public function getFileAttribute()
