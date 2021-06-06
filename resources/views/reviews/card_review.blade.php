@@ -15,31 +15,30 @@
         <span class="text-muted">{{ date('F j, Y', $review->review_date) }}</span>
     </div>
     <div class="card-body p-2 bg-darklight">
-        <div class="row g-0">
-            <div class="col-7 col-sm-9">
-                {!! Helper::bbCode(nl2br($review->review_text)) !!}
 
-                <hr>
-                <h5>Score</h5>
-
-                <ul class="list-unstyled">
-                    <li>Graphics: {{ $review->score->review_graphics }}</li>
-                    <li>Sound: {{ $review->score->review_sound }}</li>
-                    <li>Gameplay: {{ $review->score->review_gameplay }}</li>
-                    <li>Overall: {{ $review->score->review_overall }}</li>
-                </ul>
-
-            </div>
-            <div class="col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
-                @foreach ($review->screenshots->whereNotNull('screenshot') as $screenshot)
-                    <div class="bg-dark p-2">
-                        <a class="lightbox-link" href="{{ $screenshot->screenshot->getUrl('game') }}" title="{{ $screenshot->comment->comment_text }}">
-                            <img class="w-100 mb-2" src="{{ $screenshot->screenshot->getUrl('game') }}" alt="{{ $screenshot->comment->comment_text }}">
-                        </a>
-                        <p class="pb-5 mb-0">{{ $screenshot->comment->comment_text }}</p>
-                    </div>
-                @endforeach
-            </div>
+        <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
+            @foreach ($review->screenshots->whereNotNull('screenshot') as $screenshot)
+                <div class="bg-dark p-2">
+                    <a class="lightbox-link" href="{{ $screenshot->screenshot->getUrl('game') }}" title="{{ $screenshot->comment->comment_text }}">
+                        <img class="w-100 mb-2" src="{{ $screenshot->screenshot->getUrl('game') }}" alt="{{ $screenshot->comment->comment_text }}">
+                    </a>
+                    <p class="pb-5 mb-0">{{ $screenshot->comment->comment_text }}</p>
+                </div>
+            @endforeach
         </div>
+
+        <p class="card-text">
+            {!! Helper::bbCode(nl2br($review->review_text)) !!}
+
+            <hr>
+            <h5>Score</h5>
+
+            <ul class="list-unstyled">
+                <li>Graphics: {{ $review->score->review_graphics }}</li>
+                <li>Sound: {{ $review->score->review_sound }}</li>
+                <li>Gameplay: {{ $review->score->review_gameplay }}</li>
+                <li>Overall: {{ $review->score->review_overall }}</li>
+            </ul>
+        </p>
     </div>
 </div>
