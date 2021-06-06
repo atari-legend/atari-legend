@@ -46,7 +46,7 @@ class ArticleController extends Controller
             ->add('author', Helper::user($article->user))
             ->add('datePublished', date('Y-m-d', $article->texts->first()->article_date));
         if ($article->screenshots->isNotEmpty()) {
-            $jsonLd->add('image', $article->screenshots->first()->screenshot->getUrl('article'));
+            $jsonLd->add('image', $article->screenshots->first()->getUrl('article'));
         }
 
         return view('articles.show')

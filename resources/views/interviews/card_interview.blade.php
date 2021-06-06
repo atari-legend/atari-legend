@@ -24,10 +24,10 @@
         <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
             @foreach ($interview->screenshots as $screenshot)
                 <div class="bg-dark p-2">
-                    <a class="lightbox-link" href="{{ $screenshot->screenshot->getUrl('interview') }}" title="{{ $screenshot->comment->comment_text }}">
-                        <img class="w-100 mb-2" src="{{ $screenshot->screenshot->getUrl('interview') }}" alt="{{ $screenshot->comment->comment_text }}">
+                    <a class="lightbox-link" href="{{ $screenshot->getUrl('interview') }}" title="{{ $screenshot->pivot->comment->comment_text }}">
+                        <img class="w-100 mb-2" src="{{ $screenshot->getUrl('interview') }}" alt="{{ $screenshot->pivot->comment->comment_text }}">
                     </a>
-                    <p class="pb-5 mb-0">{{ $screenshot->comment->comment_text }}</p>
+                    <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->comment_text }}</p>
                 </div>
             @endforeach
         </div>

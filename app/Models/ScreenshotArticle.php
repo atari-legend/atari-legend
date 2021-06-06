@@ -2,18 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ScreenshotArticle extends Model
+class ScreenshotArticle extends Pivot
 {
     protected $table = 'screenshot_article';
     protected $primaryKey = 'screenshot_article_id';
     public $timestamps = false;
-
-    public function screenshot()
-    {
-        return $this->belongsTo(Screenshot::class, 'screenshot_id');
-    }
 
     public function comment()
     {

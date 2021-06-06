@@ -2,7 +2,7 @@
 @section('title', $article->texts->first()->article_title)
 
 @if ($article->screenshots->isNotEmpty())
-    @section('image', $article->screenshots->first()->screenshot->getUrl('article'))
+    @section('image', $article->screenshots->first()->getUrl('article'))
 @endif
 
 @section('content')

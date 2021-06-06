@@ -31,7 +31,9 @@ class Review extends Model
 
     public function screenshots()
     {
-        return $this->hasMany(ScreenshotReview::class, 'review_id');
+        return $this->belongsToMany(Screenshot::class, 'screenshot_review', 'review_id', 'screenshot_id')
+            ->withPivot('screenshot_review_id')
+            ->using(ScreenshotReview::class);
     }
 
     public function score()

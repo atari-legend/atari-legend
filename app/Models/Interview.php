@@ -33,7 +33,9 @@ class Interview extends Model
 
     public function screenshots()
     {
-        return $this->hasMany(ScreenshotInterview::class, 'interview_id');
+        return $this->belongsToMany(Screenshot::class, 'screenshot_interview', 'interview_id', 'screenshot_id')
+            ->withPivot('screenshot_interview_id')
+            ->using(ScreenshotInterview::class);
     }
 
     public function comments()

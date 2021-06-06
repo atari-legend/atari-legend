@@ -28,7 +28,9 @@ class Article extends Model
 
     public function screenshots()
     {
-        return $this->hasMany(ScreenshotArticle::class, 'article_id');
+        return $this->belongsToMany(Screenshot::class, 'screenshot_article', 'article_id', 'screenshot_id')
+            ->withPivot('screenshot_article_id')
+            ->using(ScreenshotArticle::class);
     }
 
     public function type()

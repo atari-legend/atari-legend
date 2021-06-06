@@ -10,12 +10,12 @@ use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
 use App\Models\ReviewScore;
-use App\Models\ScreenshotReview;
 use App\Models\ScreenshotReviewComment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
@@ -57,8 +57,8 @@ class ReviewController extends Controller
             ->add('headline', 'Review of '.$review->games->first()->game_name)
             ->add('author', Helper::user($review->user))
             ->add('datePublished', date('Y-m-d', $review->review_date));
-        if ($review->screenshots->isNotEmpty() && $review->screenshots->first()->screenshot !== null) {
-            $jsonLd->add('image', $review->screenshots->first()->screenshot->getUrl('game'));
+        if ($review->screenshots->isNotEmpty()) {
+            $jsonLd->add('image', $review->screenshots->first()->getUrl('game'));
         }
 
         return view('reviews.show')
@@ -116,15 +116,17 @@ class ReviewController extends Controller
             foreach ($request->screenshot as $screenshotComment) {
                 $gameScreenshot = $gameScreenshots[$i++];
 
-                $screenshotReview = new ScreenshotReview();
-                $screenshotReview->review_id = $review->review_id;
-                $screenshotReview->screenshot_id = $gameScreenshot->screenshot_id;
-
-                $screenshotReview->save();
-
-                $comment = new ScreenshotReviewComment();
-                $comment->comment_text = $screenshotComment;
-                $screenshotReview->comment()->save($comment);
+                if ($screenshotComment !== null) {
+                    $id = DB::table('screenshot_review')
+                        ->insertGetId([
+                            'review_id'     => $review->review_id,
+                            'screenshot_id' => $gameScreenshot->screenshot_id,
+                        ]);
+                    $comment = new ScreenshotReviewComment();
+                    $comment->comment_text = $screenshotComment;
+                    $comment->screenshot_review_id = $id;
+                    $comment->save();
+                }
             }
         }
 
