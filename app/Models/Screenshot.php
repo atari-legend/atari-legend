@@ -14,6 +14,7 @@ class Screenshot extends Model
 
     const PATHS = [
         'game'      => 'game_screenshots',
+        'game_fact' => 'game_fact_screenshots',
         'article'   => 'article_screenshots',
         'interview' => 'interview_screenshots',
     ];
