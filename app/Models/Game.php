@@ -122,6 +122,11 @@ class Game extends Model
         return $this->hasMany(MenuDiskContent::class, 'game_id');
     }
 
+    public function videos()
+    {
+        return $this->hasMany(GameVideo::class, 'game_id');
+    }
+
     public function getNonMenuReleasesAttribute()
     {
         return $this

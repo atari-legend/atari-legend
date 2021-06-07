@@ -31,6 +31,7 @@
         "livewire/livewire": "^2.4",
         "rappasoft/laravel-livewire-tables": "^1.2",
         "vedmak/phpepub": "master",
+        "waynestate/parse-youtube-id": "^1.0",
         "webfontkit/roboto": "^1.0"
     },
     "require-dev": {

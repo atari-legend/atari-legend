@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64b7eb4512b917a72e157057c3463e9a",
+    "content-hash": "ddf52e371210942f0fbecd728f8599ed",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6731,6 +6731,64 @@
                 }
             ],
             "time": "2020-11-12T00:07:28+00:00"
+        },
+        {
+            "name": "waynestate/parse-youtube-id",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/waynestate/parse-youtube-id.git",
+                "reference": "0add868a38bce07c80e0781b6258162cf6e44bf6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/waynestate/parse-youtube-id/zipball/0add868a38bce07c80e0781b6258162cf6e44bf6",
+                "reference": "0add868a38bce07c80e0781b6258162cf6e44bf6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Waynestate\\Youtube\\ParseIdServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Waynestate\\Youtube\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nick DeNardis",
+                    "email": "ndenardis@wayne.edu",
+                    "homepage": "https://wayne.edu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Parse the Video ID from a YouTube URL",
+            "homepage": "https://github.com/waynestate/parse-youtube-id",
+            "keywords": [
+                "url",
+                "waynestate",
+                "youtube"
+            ],
+            "support": {
+                "issues": "https://github.com/waynestate/parse-youtube-id/issues",
+                "source": "https://github.com/waynestate/parse-youtube-id/tree/1.0.0"
+            },
+            "time": "2018-03-14T12:14:21+00:00"
         },
         {
             "name": "webfontkit/roboto",

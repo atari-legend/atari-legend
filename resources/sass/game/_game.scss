@@ -4,9 +4,30 @@
     }
 }
 
-.card-screenshots, .card-boxscans {
-    .carousel-thumbnails {
+.video-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    border: solid 1px $primary-dark;
 
+    &::after {
+        padding-top: 56.25%;
+        display: block;
+        content: "";
+    }
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.card-screenshots,
+.card-boxscans {
+    .carousel-thumbnails {
         &[data-bs-carousel="carousel-boxscans"] {
             img {
                 width: 5rem;
@@ -16,9 +37,9 @@
         img {
             opacity: 0.5;
 
-                &:hover {
-                    opacity: 1;
-                }
+            &:hover {
+                opacity: 1;
+            }
         }
 
         .active {
@@ -30,10 +51,11 @@
     }
 
     .carousel-inner {
-        text-shadow: -1px -1px 0 #005050, 1px -1px 0 #005050, -1px 1px 0 #005050, 1px 1px 0 #005050;
+        text-shadow: -1px -1px 0 #005050, 1px -1px 0 #005050, -1px 1px 0 #005050,
+            1px 1px 0 #005050;
 
         .carousel-caption .text-h5 {
-            background-color: rgba(0, 80, 80, .6);
+            background-color: rgba(0, 80, 80, 0.6);
             border: solid 1px #005050;
         }
     }

@@ -27,6 +27,7 @@ class SecurityHeaders
         $csp = collect([
             "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:",
             "img-src 'self' data: *.ytimg.com",
+            'frame-src www.youtube-nocookie.com',
         ]);
 
         $response->headers->set(
