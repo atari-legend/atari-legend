@@ -5,13 +5,19 @@
         </div>
         <div class="card-body p-0">
             @foreach ($game->videos as $video)
-                <div class="video-container mb-2">
-                    <iframe
-                        class="w-100"
-                        src="https://www.youtube-nocookie.com/embed/{{ $video->youtube_id }}"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+                <div>
+                    <div class="video-container mb-2">
+                        <iframe
+                            class="w-100"
+                            src="https://www.youtube-nocookie.com/embed/{{ $video->youtube_id }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    </div>
+                    <p class="p-2">
+                        <span class="text-muted">{{ $video->author }}: </span>
+                        <a href="https://www.youtube.com/watch?v={{ $video->youtube_id }}">{{ $video->title }}</a>
+                    </p>
                 </div>
             @endforeach
         </div>

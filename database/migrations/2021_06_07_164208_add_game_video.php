@@ -16,7 +16,9 @@ class AddGameVideo extends Migration
         Schema::create('game_videos', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('title', 1024);
             $table->string('youtube_id', 16);
+            $table->string('author', 255);
             $table->integer('game_id');
 
             $table->foreign('game_id')

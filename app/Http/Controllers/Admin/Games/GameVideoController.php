@@ -9,6 +9,7 @@ use App\Models\Game;
 use App\Models\GameVideo;
 use App\Rules\YoutubeUrl;
 use App\View\Components\Admin\Crumb;
+use Embed\Embed;
 use Illuminate\Http\Request;
 use Waynestate\Youtube\ParseId;
 
@@ -33,7 +34,12 @@ class GameVideoController extends Controller
             'video' => new YoutubeUrl,
         ]);
 
+        $embed = new Embed();
+        $info = $embed->get($request->video);
+
         $video = GameVideo::create([
+            'title'      => $info->title,
+            'author'     => $info->authorName,
             'youtube_id' => ParseId::fromUrl($request->video),
             'game_id'    => $game->game_id,
         ]);
@@ -45,7 +51,7 @@ class GameVideoController extends Controller
             'section_name'     => $game->game_name,
             'sub_section'      => 'Video',
             'sub_section_id'   => $video->id,
-            'sub_section_name' => $video->youtube_id,
+            'sub_section_name' => $video->title,
         ]);
 
         return redirect()->route('admin.games.game-videos.index', $game);

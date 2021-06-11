@@ -24,25 +24,32 @@
         </form>
 
         @forelse ($game->videos as $video)
-            <div class="d-inline-block m-2">
-                <iframe
-                    width="280"
-                    height="157"
-                    src="https://www.youtube-nocookie.com/embed/{{ $video->youtube_id }}"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                    ></iframe>
+            <div class="d-inline-block m-2 text-center">
+                <div class="mb-2">
+                    <span class="text-muted">{{$video->author }}</span><br>
+                    {{ $video->title }}
+                </div>
+                <div>
+                    <iframe
+                        class="border border-primary"
+                        width="280"
+                        height="157"
+                        src="https://www.youtube-nocookie.com/embed/{{ $video->youtube_id }}"
 
-                 <form class="text-center" action="{{ route('admin.games.game-videos.destroy', ['game' => $game, 'video' => $video]) }}" method="POST"
-                    onsubmit="javascript:return confirm('This video will be deleted')">
-                    @csrf
-                    @method('DELETE')
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        ></iframe><br>
 
-                    <button title="Remove video" class="btn">
-                        <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
-                    </button>
-                </form>
+                    <form class="text-center" action="{{ route('admin.games.game-videos.destroy', ['game' => $game, 'video' => $video]) }}" method="POST"
+                        onsubmit="javascript:return confirm('This video will be deleted')">
+                        @csrf
+                        @method('DELETE')
+
+                        <button title="Remove video" class="btn">
+                            <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         @empty
             <p class="card-text text-center text-muted">
