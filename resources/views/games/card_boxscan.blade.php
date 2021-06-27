@@ -1,10 +1,10 @@
-<div class="card bg-dark mb-4 card-boxscans">
-    <div class="card-header text-center">
-        <h2 class="text-uppercase">Boxscan</h2>
-    </div>
+@if ($boxscans->isNotEmpty())
+    <div class="card bg-dark mb-4 card-boxscans">
+        <div class="card-header text-center">
+            <h2 class="text-uppercase">Boxscan</h2>
+        </div>
 
-    <div class="card-body p-2 lightbox-gallery">
-        @if ($boxscans->isNotEmpty())
+        <div class="card-body p-2 lightbox-gallery">
             <div class="row mb-2">
                 <div class="col">
                     <div class="carousel slide carousel-fade carousel-thumbnails-horizontal" id="carousel-boxscans" data-bs-ride="carousel">
@@ -54,14 +54,8 @@
                     </div>
                 </div>
             </div>
-        @else
-            <p class="card-text text-center text-muted">
-                There is no boxscan in the database. You have one? Please use the
-                Submit Info card to sent it to us.
-            </p>
-        @endif
-    </div>
-    @if ($boxscans->isNotEmpty())
+        </div>
+
         <div class="card-footer text-muted text-center">
             <strong>{{ $boxscans->count() }}</strong> {{ Str::plural('boxscan', $boxscans->count() )}}
             @isset ($game)
@@ -69,5 +63,5 @@
             @endif
             loaded
         </div>
-    @endif
-</div>
+    </div>
+@endif
