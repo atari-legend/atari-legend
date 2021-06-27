@@ -7,12 +7,6 @@
         "laravel"
     ],
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Vedmak/PHPePub"
-        }
-    ],
     "require": {
         "php": "^8.0",
         "buzz/laravel-h-captcha": "^1.0",
@@ -31,8 +25,8 @@
         "laravel/ui": "^3.0",
         "laravelium/feed": "8.*",
         "livewire/livewire": "^2.4",
-        "rappasoft/laravel-livewire-tables": "^1.2",
-        "vedmak/phpepub": "master",
+        "rappasoft/laravel-livewire-tables": "~1.10.0",
+        "tizis/phpepub": "~5.1",
         "waynestate/parse-youtube-id": "^1.0",
         "webfontkit/roboto": "^1.0"
     },
