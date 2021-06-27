@@ -9,6 +9,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class GamesTable extends DataTableComponent
 {
+    public string $primaryKey = 'game_id';
+
     public function columns(): array
     {
         return [

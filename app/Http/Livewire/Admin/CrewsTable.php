@@ -9,6 +9,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class CrewsTable extends DataTableComponent
 {
+    public string $primaryKey = 'crew_id';
+
     public function columns(): array
     {
         return [
