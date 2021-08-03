@@ -33,6 +33,92 @@
 
             <div class="cd-timeline-block">
                 <div class="cd-timeline-img cd-picture">
+                    <i class="timeline-icon fas fa-wrench fa-2x bg-primary rounded-circle text-center" aria-hidden="true"></i>
+                </div> <!-- cd-timeline-img -->
+                <div class="timeline-content text-center p-2 mb-4 mt-4">
+                    <h3 class="text-primary fs-5">Merging with Stonish.net</h3>
+                    <p>
+                        Stonish.net, the website by fellow member Brume featuring
+                        the biggest collection of Atari menudisks, is merged with Atari Legend.
+                    </p>
+                    <p class="text-muted fw-bold">April 2020</p>
+                </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
+            </div> <!-- cd-timeline-block -->
+
+            <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
+                    <i class="timeline-icon fas fa-wrench fa-2x bg-primary rounded-circle text-center" aria-hidden="true"></i>
+                </div> <!-- cd-timeline-img -->
+                <div class="timeline-content text-center p-2 mb-4 mt-4">
+                    <h3 class="text-primary fs-5">Site overhaul</h3>
+                    <p>
+                         AL gets a complete redesign and code overhaul, based on <a href="https://laravel.com/">Laravel</a>
+                         & <a href="https://getbootstrap.com/">Bootstrap</a>, making everything more accessible for possible future developers.
+                    </p>
+                    <p class="text-muted fw-bold">December 2020</p>
+                </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
+            </div> <!-- cd-timeline-block -->
+
+            <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
+                    <i class="timeline-icon fas fa-wrench fa-2x bg-primary rounded-circle text-center" aria-hidden="true"></i>
+                </div> <!-- cd-timeline-img -->
+                <div class="timeline-content text-center p-2 mb-4 mt-4">
+                    <h3 class="text-primary fs-5">Open source</h3>
+                    <p>
+                         The code for the AtariLegend website is now open-source!
+                         We wanted to open the code as well for a long time, but it
+                         took some time to reach that point. We now have our <a href="https://github.com/atari-legend/">own GitHub</a>.
+                    </p>
+                    <p class="text-muted fw-bold">August 2020</p>
+                </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
+            </div> <!-- cd-timeline-block -->
+
+            <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
+                    <i class="timeline-icon fas fa-desktop fa-2x bg-primary rounded-circle text-center" aria-hidden="true"></i>
+                </div> <!-- cd-timeline-img -->
+                <div class="timeline-content text-center p-2 mb-4 mt-4">
+                    <h3 class="text-primary fs-5">AL TV</h3>
+                    <p>
+                         Atari Legend starts a <a href="https://www.youtube.com/atarilegend">Youtube channel</a>.
+                    </p>
+                    <p class="text-muted fw-bold">May 2019</p>
+                </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
+            </div> <!-- cd-timeline-block -->
+
+            <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
+                    <i class="timeline-icon fas fa-wrench fa-2x bg-primary rounded-circle text-center" aria-hidden="true"></i>
+                </div> <!-- cd-timeline-img -->
+                <div class="timeline-content text-center p-2 mb-4 mt-4">
+                    <h3 class="text-primary fs-5">Open data</h3>
+                    <p>
+                         The first part of the Atari Legend project has gone open source / open data.
+                         From now on, any developer who is interested can download the full database
+                         (except the sensitive user related data) and all the screenshots, boxscans and other
+                         graphics used for their own project.
+                    </p>
+                    <p class="text-muted fw-bold">January 2018</p>
+                </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
+            </div> <!-- cd-timeline-block -->
+
+            <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
+                    <i class="timeline-icon fas fa-users fa-2x bg-primary rounded-circle text-center" aria-hidden="true"></i>
+                </div> <!-- cd-timeline-img -->
+                <div class="timeline-content text-center p-2 mb-4 mt-4">
+                    <h3 class="text-primary fs-5">The team grows</h3>
+                    <p>
+                        A new developer, LynXX, joins the AL team. With his professional webdevelopment
+                        skills, the future of the project is looking bright!
+                    </p>
+                    <p class="text-muted fw-bold">November 2017</p>
+                </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
+            </div> <!-- cd-timeline-block -->
+
+            <div class="cd-timeline-block">
+                <div class="cd-timeline-img cd-picture">
                     <i class="timeline-icon fas fa-birthday-cake fa-2x bg-primary rounded-circle text-center" aria-hidden="true"></i>
                 </div> <!-- cd-timeline-img -->
                 <div class="timeline-content text-center p-2 mb-4 mt-4">
