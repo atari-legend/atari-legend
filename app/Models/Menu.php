@@ -34,6 +34,11 @@ class Menu extends Model
             ->join(' ');
     }
 
+    public function getFullLabelAttribute()
+    {
+        return $this->menuSet->name.' '.$this->label;
+    }
+
     public function menuSet()
     {
         return $this->belongsTo(MenuSet::class);

@@ -60,10 +60,10 @@ class MenuDisksController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Menu Disks',
             'section_id'       => $disk->getKey(),
-            'section_name'     => $disk->label,
+            'section_name'     => $disk->download_basename,
             'sub_section'      => 'Disk',
             'sub_section_id'   => $disk->getKey(),
-            'sub_section_name' => $disk->label,
+            'sub_section_name' => $disk->download_basename,
         ]);
 
         return redirect()->route('admin.menus.disks.edit', $disk);
@@ -103,10 +103,10 @@ class MenuDisksController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Menu Disks',
             'section_id'       => $disk->getKey(),
-            'section_name'     => $disk->getOriginal('label'),
+            'section_name'     => $disk->download_basename,
             'sub_section'      => 'Disk',
             'sub_section_id'   => $disk->getKey(),
-            'sub_section_name' => $disk->label,
+            'sub_section_name' => $disk->download_basename,
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
@@ -129,7 +129,7 @@ class MenuDisksController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Menu Disks',
                 'section_id'       => $disk->getKey(),
-                'section_name'     => $disk->label,
+                'section_name'     => $disk->download_basename,
                 'sub_section'      => 'Screenshot',
                 'sub_section_id'   => $screenshot->getKey(),
                 'sub_section_name' => $screenshot->imgext,
@@ -149,7 +149,7 @@ class MenuDisksController extends Controller
                 'action'           => Changelog::DELETE,
                 'section'          => 'Menu Disks',
                 'section_id'       => $disk->getKey(),
-                'section_name'     => $disk->label,
+                'section_name'     => $disk->download_basename,
                 'sub_section'      => 'Screenshot',
                 'sub_section_id'   => $screenshot->getKey(),
                 'sub_section_name' => $screenshot->imgext,
@@ -232,7 +232,7 @@ class MenuDisksController extends Controller
                     'action'           => Changelog::UPDATE,
                     'section'          => 'Menu Disks',
                     'section_id'       => $disk->getKey(),
-                    'section_name'     => $disk->label,
+                    'section_name'     => $disk->download_basename,
                     'sub_section'      => 'Dump',
                     'sub_section_id'   => $dump->getKey(),
                     'sub_section_name' => $dump->format,
@@ -250,7 +250,7 @@ class MenuDisksController extends Controller
                 ChangelogHelper::insert([
                     'action'           => Changelog::INSERT,
                     'section'          => 'Menu Disks',
-                    'section_id'       => $disk->getKey(),
+                    'section_id'       => $disk->download_basename,
                     'section_name'     => $disk->label,
                     'sub_section'      => 'Dump',
                     'sub_section_id'   => $dump->getKey(),
@@ -279,7 +279,7 @@ class MenuDisksController extends Controller
                 'action'           => Changelog::DELETE,
                 'section'          => 'Menu Disks',
                 'section_id'       => $disk->getKey(),
-                'section_name'     => $disk->label,
+                'section_name'     => $disk->download_basename,
                 'sub_section'      => 'Dump',
                 'sub_section_id'   => $dump->getKey(),
                 'sub_section_name' => $dump->format,
@@ -311,10 +311,10 @@ class MenuDisksController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Menu Disks',
             'section_id'       => $disk->getKey(),
-            'section_name'     => $disk->label,
+            'section_name'     => $disk->download_basename,
             'sub_section'      => 'Disk',
             'sub_section_id'   => $disk->getKey(),
-            'sub_section_name' => $disk->label,
+            'sub_section_name' => $disk->download_basename,
         ]);
 
         return redirect()->route('admin.menus.menus.edit', $disk->menu);

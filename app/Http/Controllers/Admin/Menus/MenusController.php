@@ -43,10 +43,10 @@ class MenusController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Menus',
             'section_id'       => $menu->getKey(),
-            'section_name'     => $menu->label,
+            'section_name'     => $menu->full_label,
             'sub_section'      => 'Menu',
             'sub_section_id'   => $menu->getKey(),
-            'sub_section_name' => $menu->label,
+            'sub_section_name' => $menu->full_label,
         ]);
 
         return redirect()->route('admin.menus.menus.edit', $menu);
@@ -80,10 +80,10 @@ class MenusController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Menus',
             'section_id'       => $menu->getKey(),
-            'section_name'     => $menu->getOriginal('label'),
+            'section_name'     => $menu->full_label,
             'sub_section'      => 'Menu',
             'sub_section_id'   => $menu->getKey(),
-            'sub_section_name' => $menu->label,
+            'sub_section_name' => $menu->full_label,
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
@@ -99,10 +99,10 @@ class MenusController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Menus',
             'section_id'       => $menu->getKey(),
-            'section_name'     => $menu->label,
+            'section_name'     => $menu->full_label,
             'sub_section'      => 'Menu',
             'sub_section_id'   => $menu->getKey(),
-            'sub_section_name' => $menu->label,
+            'sub_section_name' => $menu->full_label,
         ]);
 
         return redirect()->route('admin.menus.sets.edit', $menu->menuSet);
