@@ -4,10 +4,8 @@
     </div>
     <div class="card-body p-2">
         <p class="card-text">
-            This bar chart represents the nr of changes made to the database each
-            month over the past year. Hover over the chart for more info. For all
-            the details of the changes made, please visit the <!-- FIXME -->
-            <a href="#">change log</a> section of the control panel.
+            This bar chart represents the number of changes made to the database each
+            month over the past year. Hover over the chart for more info.
         </p>
         <canvas id="updates-chart"></canvas>
 
