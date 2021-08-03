@@ -243,8 +243,10 @@ class GameSearchController extends Controller
      */
     public function getUpdates()
     {
-        $to = Carbon::now();
+        $to = new Carbon('last day of this month');
+        $to->setTime(23, 59, 59);
         $from = new Carbon('first day of this month');
+        $from->setTime(0, 0, 0);
 
         $updates = [];
         for ($month = 1; $month <= 12; $month++) {
