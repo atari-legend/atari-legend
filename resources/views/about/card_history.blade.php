@@ -12,17 +12,8 @@
                 <div class="timeline-content text-center p-2 mb-4 mt-4">
                     <h3 class="text-primary fs-5">The future of Atari Legend</h3>
                     <p>
-                        We have a lot of ambition, and this project will be updated regularly. What new
-                        features can you expect in the future?
+                        We have a lot of ambition, and this project will be updated regularly.
                     </p>
-                    <ul>
-                        <li>API</li>
-                        <li>Multiple skins</li>
-                        <li>More social media features</li>
-                        <li>Menu section</li>
-                        <li>Downloads</li>
-                        <li>…</li>
-                    </ul>
                     <p>
                         If you have something in mind you like to see in the future on this website, please let
                         us know. We have an open mind and are interested in your opinion.
