@@ -16,7 +16,7 @@
         "aplayer": "^1.10.1",
         "axios": "^0.21",
         "bbcode-parser": "^1.0.10",
-        "bootstrap": "~5.0.0",
+        "bootstrap": "5.1.x",
         "chart.js": "^2.9.4",
         "cross-env": "^7.0.3",
         "eslint": "^7.20.0",
