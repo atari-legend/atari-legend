@@ -4,9 +4,10 @@
             <h2 class="text-uppercase">Interviews</h2>
         </div>
         <div class="striped">
-            @foreach ($interviews as $interview)
-                @include('interviews.partial_card', ['interview' => $interview])
-            @endforeach
+            @php
+                $interview = $interviews->random();
+            @endphp
+            @include('interviews.partial_card', ['interview' => $interview])
         </div>
     </div>
 @endif
