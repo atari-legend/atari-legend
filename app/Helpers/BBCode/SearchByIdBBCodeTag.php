@@ -14,8 +14,8 @@ class SearchByIdBBCodeTag extends CodeDefinition
     /**
      * Create a new search tag.
      *
-     * @param string $name Name of the tag, is also used as a search parameter
-     *                     (for example '[developer=123]' will search for 'developer_id=123')
+     * @param  string  $name  Name of the tag, is also used as a search parameter
+     *                        (for example '[developer=123]' will search for 'developer_id=123')
      */
     public function __construct(string $name)
     {

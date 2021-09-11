@@ -14,9 +14,9 @@ class UserHelper
     /**
      * Get the standard validation rules to create or modify a user profile.
      *
-     * @param \App\Models\User $currentUser User to get the validation rules for. Allows
-     *                                      ignoring that user in the uniqueness constraint
-     *                                      for the email field
+     * @param  \App\Models\User  $currentUser  User to get the validation rules for. Allows
+     *                                         ignoring that user in the uniqueness constraint
+     *                                         for the email field
      */
     public static function validationRules(User $currentUser = null)
     {
@@ -40,9 +40,8 @@ class UserHelper
     /**
      * Hash a password with the given salt.
      *
-     * @param string $password Plain-text password to hash
-     * @param string $salt     Salt to use in the hashing
-     *
+     * @param  string  $password  Plain-text password to hash
+     * @param  string  $salt  Salt to use in the hashing
      * @return string Hashed password
      */
     public static function hashPassword(string $password, string $salt)

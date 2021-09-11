@@ -11,9 +11,8 @@ use Illuminate\Support\Str;
 class MenuHelper
 {
     /**
-     * @param int $disks   Number of disks in the menu set
-     * @param int $missing Number of missing disks
-     *
+     * @param  int  $disks  Number of disks in the menu set
+     * @param  int  $missing  Number of missing disks
      * @return float Percentage of completion of a menu set
      */
     public static function percentComplete(int $disks, int $missing): float
@@ -22,9 +21,8 @@ class MenuHelper
     }
 
     /**
-     * @param object $set   Menuset
-     * @param int $missing  Number of missing disks
-     *
+     * @param  object  $set  Menuset
+     * @param  int  $missing  Number of missing disks
      * @return string Description of the menu set
      */
     public static function description(MenuSet $set, int $missingCount): string

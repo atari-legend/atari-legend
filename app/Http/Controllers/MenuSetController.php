@@ -206,8 +206,7 @@ class MenuSetController extends Controller
     /**
      * Get a cover image for the eBook.
      *
-     * @param MenuSet $set Menuset to get a cover for
-     *
+     * @param  MenuSet  $set  Menuset to get a cover for
      * @return string Path to temporarily file containing the cover image
      */
     private function getEpubCover(MenuSet $set): string

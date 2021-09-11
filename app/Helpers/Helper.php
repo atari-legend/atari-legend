@@ -17,8 +17,7 @@ class Helper
     /**
      * Extract the content of a BB code tag.
      *
-     * @param string $string String containing the tag to extract
-     *
+     * @param  string  $string  String containing the tag to extract
      * @return string Extracted content, or the input string if no content was extracted
      */
     public static function extractTag(?string $string, string $tag)
@@ -37,8 +36,7 @@ class Helper
     /**
      * Return the name of a user.
      *
-     * @param \App\Models\User $user Use to print the name of, or NULL
-     *
+     * @param  \App\Models\User  $user  Use to print the name of, or NULL
      * @return string User name, or "Former user" if the user is NULL
      */
     public static function user(?User $user)
@@ -53,8 +51,7 @@ class Helper
     /**
      * Convert BBCode into HTML.
      *
-     * @param string $bbcode BBCode string to convert
-     *
+     * @param  string  $bbcode  BBCode string to convert
      * @return string HTML conversion of the BBCode
      */
     public static function bbCode(?string $bbCode)
@@ -87,10 +84,9 @@ class Helper
     /**
      * Format a file size number into kB / MB / GB.
      *
-     * @param int    $size File size to format
-     * @param string $unit Desired unit, Pass an empty string to
-     *                     have the unit chosen automatically
-     *
+     * @param  int  $size  File size to format
+     * @param  string  $unit  Desired unit, Pass an empty string to
+     *                        have the unit chosen automatically
      * @return string Formatted number
      */
     public static function fileSize(int $size, string $unit = '')
@@ -111,8 +107,7 @@ class Helper
     /**
      * Get the year + name of a release.
      *
-     * @param \App\Models\Release $release Release to get the year + name of
-     *
+     * @param  \App\Models\Release  $release  Release to get the year + name of
      * @return string Year + name of the release
      */
     public static function releaseName(Release $release)
@@ -131,9 +126,8 @@ class Helper
      * to generate filenames out of the database information, where the image
      * extension is sometimes missing or set blank.
      *
-     * @param int    $id     Identifier, used as the file name
-     * @param string $imgext Extension, possibly null
-     *
+     * @param  int  $id  Identifier, used as the file name
+     * @param  string  $imgext  Extension, possibly null
      * @return string Filename, or NULL if there's no file extension
      */
     public static function filename(int $id, ?string $imgext)

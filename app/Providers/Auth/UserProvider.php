@@ -15,9 +15,8 @@ class UserProvider extends EloquentUserProvider
      * Unfortunately the DB is using a byzantine scheme for credentials that
      * we have to respect for now.
      *
-     * @param Authenticatable $user        User attempting authentication
-     * @param array           $credentials User credentials
-     *
+     * @param  Authenticatable  $user  User attempting authentication
+     * @param  array  $credentials  User credentials
      * @return bool true if the user is authenticated, false otherwise
      */
     public function validateCredentials(Authenticatable $user, array $credentials)

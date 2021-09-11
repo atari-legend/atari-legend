@@ -39,8 +39,7 @@ class ChangelogHelper
     /**
      * Find missing keys in the changelog data.
      *
-     * @param array $data Changelog data
-     *
+     * @param  array  $data  Changelog data
      * @return array Missing keys, or an empty array if no keys are missing
      */
     private static function getMissingKeys(array $data): array
