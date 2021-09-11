@@ -25,8 +25,7 @@ class Screenshot extends Model
     }
 
     /**
-     * @param string $type Type of screenshot (game, interview, ...).
-     *
+     * @param  string  $type  Type of screenshot (game, interview, ...).
      * @return string URL of the image, depending on the screenshot type.
      */
     public function getUrl(string $type): string

@@ -14,9 +14,9 @@ abstract class SectionBBCodeTag extends CodeDefinition
     private string $route;
 
     /**
-     * @param string $tag   Name of the tag (e.g. 'game')
-     * @param string $route Route to use when building the link to the item
-     *                      pointed by the tag (e.g. 'games.show')
+     * @param  string  $tag  Name of the tag (e.g. 'game')
+     * @param  string  $route  Route to use when building the link to the item
+     *                         pointed by the tag (e.g. 'games.show')
      */
     public function __construct(string $tag, string $route)
     {

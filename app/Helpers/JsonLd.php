@@ -10,8 +10,8 @@ class JsonLd
     private array $data = [];
 
     /**
-     * @param string $type Type of data (e.g. 'VideoGame')
-     * @param string $url  Entity URL
+     * @param  string  $type  Type of data (e.g. 'VideoGame')
+     * @param  string  $url  Entity URL
      */
     public function __construct(
         private string $type,
@@ -23,9 +23,8 @@ class JsonLd
     /**
      * Add metadata.
      *
-     * @param string $key   Metadata name
-     * @param string $value Metadata value
-     *
+     * @param  string  $key  Metadata name
+     * @param  string  $value  Metadata value
      * @return JsonLd JsonLd object
      */
     public function add(string $key, mixed $value): JsonLd

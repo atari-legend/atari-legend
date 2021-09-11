@@ -13,8 +13,7 @@ class GameHelper
     /**
      * Generate a description for a game, suitable to use as a HTML description meta tag.
      *
-     * @param \App\Models\Game $game Game to generate the description for.
-     *
+     * @param  \App\Models\Game  $game  Game to generate the description for.
      * @return string The game description.
      */
     public static function description(Game $game)
@@ -98,8 +97,7 @@ class GameHelper
      *
      * Currently looks both at the game-level boxscans, and release-level ones.
      *
-     * @param App\Models\Game $game Game to check for boxscans.
-     *
+     * @param  App\Models\Game  $game  Game to check for boxscans.
      * @return bool true if the game has boxscans, false otherwise.
      */
     public static function hasBoxscan(Game $game)
@@ -114,8 +112,7 @@ class GameHelper
     /**
      * List developers for a game.
      *
-     * @param App\Game $game Game to list the developers for
-     *
+     * @param  App\Game  $game  Game to list the developers for
      * @return string List of developers, comma-delimited
      */
     public static function developers(Game $game)

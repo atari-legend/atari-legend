@@ -18,8 +18,8 @@ class GameMusicController extends Controller
      * is over HTTPS, causing mix content warnings or even failure to
      * load with Chrome.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Sndh $sndh Song to proxy
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Sndh  $sndh  Song to proxy
      */
     public function music(Request $request, Sndh $sndh)
     {
@@ -42,8 +42,7 @@ class GameMusicController extends Controller
      * are in landscape mode, and takes the width dimension as the new square
      * canvas size.
      *
-     * @param  \App\Models\Game $game Game to generate the cover for
-     *
+     * @param  \App\Models\Game  $game  Game to generate the cover for
      * @return \Illuminate\Http\Response Image as an HTTP response, or 404 if
      *                                   there are no screenshots for the game
      */

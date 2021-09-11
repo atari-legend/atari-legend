@@ -14,7 +14,6 @@ class ReleaseDescriptionHelper
      * Get an editorial-style release description, from all the release attributes.
      *
      * @param \App\Models\Release Release to get the description for.
-     *
      * @return array[] Textual description of the release split into separate strings.
      */
     public static function descriptions(Release $release)
@@ -46,7 +45,6 @@ class ReleaseDescriptionHelper
      * release specific information (trainers, compatibility,…).
      *
      * @param \App\Models\Release Release to get the description for.
-     *
      * @return array[] Textual description of the release split into separate strings.
      */
     public static function menuDescriptions(Release $release)
@@ -435,8 +433,7 @@ class ReleaseDescriptionHelper
     /**
      * Wrap a string in BBCode bold tags.
      *
-     * @param string $str String to wrap
-     *
+     * @param  string  $str  String to wrap
      * @return string Wrapped string
      */
     private static function boldicize(string $str): string

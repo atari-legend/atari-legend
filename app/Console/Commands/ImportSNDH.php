@@ -210,8 +210,7 @@ class ImportSNDH extends Command
      *
      * Takes care of conversion from CP-437 to UTF-8.
      *
-     * @param resource $stream File to read
-     *
+     * @param  resource  $stream  File to read
      * @return string read data
      */
     private static function readUntilNull($stream): string
