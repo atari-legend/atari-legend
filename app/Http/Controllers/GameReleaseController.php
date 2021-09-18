@@ -20,7 +20,7 @@ class GameReleaseController extends Controller
     public function show(Release $release)
     {
         if ($release->menuDiskContents->isNotEmpty()) {
-            // Release on menus should be visible as standalone pages
+            // Release on menus should not be visible as standalone pages
             abort(404);
         }
 
