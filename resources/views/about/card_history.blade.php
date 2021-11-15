@@ -32,7 +32,7 @@
                         Stonish.net, the website by fellow member Brume featuring
                         the biggest collection of Atari menudisks, is merged with Atari Legend.
                     </p>
-                    <p class="text-muted fw-bold">April 2020</p>
+                    <p class="text-muted fw-bold">April 2021</p>
                 </div> <!-- timeline-content text-center p-2 mb-4 mt-4 -->
             </div> <!-- cd-timeline-block -->
 
