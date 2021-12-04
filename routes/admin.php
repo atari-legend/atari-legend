@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Games\GameScreenshotsController;
 use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
+use App\Http\Controllers\Admin\Games\UserController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Menus\MenuConditionsController;
 use App\Http\Controllers\Admin\Menus\MenuCrewController;
@@ -52,6 +53,10 @@ Route::middleware('verified')->group(function () {
                     Route::delete('games/{game}/videos/{video}', [GameVideoController::class, 'destroy'])->name('game-videos.destroy');
 
                     Route::resource('games', GameController::class);
+                });
+
+                Route::prefix('/users')->name('users.')->group(function () {
+                    Route::resource('users', UserController::class);
                 });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {
