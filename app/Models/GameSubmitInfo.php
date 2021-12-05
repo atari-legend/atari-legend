@@ -15,7 +15,7 @@ class GameSubmitInfo extends Model
 
     public function game()
     {
-        return $this->hasOne(Game::class, 'game_id');
+        return $this->belongsTo(Game::class, 'game_id');
     }
 
     public function screenshots()

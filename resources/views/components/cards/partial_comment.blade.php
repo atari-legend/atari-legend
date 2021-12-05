@@ -3,7 +3,7 @@
         {{ Helper::user($comment->user) }}
 
         {{-- Edition controls --}}
-        @if (Auth::check() && Auth::user()->user_id === $comment->user->user_id)
+        @if (Auth::check() && Auth::user()->user_id === $comment->user?->user_id)
             <div class="float-end ms-2">
                 {{-- Save button --}}
                 <small class="me-1 d-none" data-comment-save="{{ $comment->comments_id }}">
@@ -35,7 +35,7 @@
     <div class="py-2 mb-1" id="comment-{{ $comment->comments_id }}">{!! Helper::bbCode(stripslashes(nl2br($comment->comment))) !!}</div>
 
     {{-- Comment edit form --}}
-    @if (Auth::check() && Auth::user()->user_id === $comment->user->user_id)
+    @if (Auth::check() && Auth::user()->user_id === $comment->user?->user_id)
         <form id="comment-edit-{{ $comment->comments_id }}" method="post" action="{{ route('comments.update') }}" class="text-center d-none">
             @csrf
             <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
