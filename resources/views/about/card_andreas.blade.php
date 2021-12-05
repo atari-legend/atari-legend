@@ -62,7 +62,7 @@
 
         @foreach ($comments as $comment)
             <h6 class="text-muted">{{ $comment->user_name}} - {{ date('F j, Y', $comment->timestamp) }}</h6>
-            <p>{!! nl2br(stripslashes($comment->comment)) !!}</p>
+            <p>{!! nl2br(stripslashes(e($comment->comment))) !!}</p>
         @endforeach
     </div>
 </div>

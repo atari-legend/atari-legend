@@ -38,4 +38,35 @@ class Comment extends Model
         // FIXME: Should be N:1
         return $this->belongstoMany(Review::class, 'review_user_comments', 'comment_id', 'review_id');
     }
+
+    public function getTypeAttribute()
+    {
+        if ($this->games->isNotEmpty()) {
+            return 'game';
+        } elseif ($this->articles->isNotEmpty()) {
+            return 'article';
+        } elseif ($this->interviews->isNotEmpty()) {
+            return 'interview';
+        } elseif ($this->reviews->isNotEmpty()) {
+            return 'review';
+        } else {
+            return '?';
+        }
+    }
+
+    public function getTargetAttribute()
+    {
+        switch ($this->type) {
+            case 'game':
+                return $this->games->first()->game_name;
+            case 'article':
+                return $this->articles->first()->texts->first()->article_title;
+            case 'interview':
+                return $this->interviews->first()->individual->ind_name;
+            case 'review':
+                return $this->reviews->first()->games->first()->game_name;
+            default:
+                return '?';
+        }
+    }
 }

@@ -140,8 +140,8 @@
             <div id="users" class="accordion-collapse collapse @showroute('admin.users.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a class="@activeroute('admin.users.*')" href="{{ route('admin.users.users.index') }}">Edit</a></li>
-                        <li><a>Comments</a></li>
+                        <li><a class="@activeroute('admin.users.users.*')" href="{{ route('admin.users.users.index') }}">Edit</a></li>
+                        <li><a class="@activeroute('admin.users.comments.*')" href="{{ route('admin.users.comments.index') }}">Comments</a></li>
                     </ul>
                 </div>
             </div>

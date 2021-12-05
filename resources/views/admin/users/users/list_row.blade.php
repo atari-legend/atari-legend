@@ -14,17 +14,17 @@
     @endif
 </x-livewire-tables::table.cell>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.cell class="text-nowrap">
     @if ($row->join_date)
-        {{ Carbon\Carbon::createFromTimestamp($row->join_date) }}
+        {{ Carbon\Carbon::createFromTimestamp($row->join_date)->toDayDateTimeString() }}
     @else
         -
     @endif
 </x-livewire-tables::table.cell>
 
-<x-livewire-tables::table.cell>
+<x-livewire-tables::table.cell class="text-nowrap">
     @if ($row->last_visit)
-        {{ Carbon\Carbon::createFromTimestamp($row->last_visit) }}
+        {{ Carbon\Carbon::createFromTimestamp($row->last_visit)->toDayDateTimeString() }}
     @else
         -
     @endif

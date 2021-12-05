@@ -1,8 +1,8 @@
 <div class="card mb-3 bg-light">
     <div class="card-body">
 
-
         <h2 class="card-title fs-4">{{ $user->userid }}</h2>
+
         @if ($user->email_verified_at)
             <small class="text-success"><i class="fas fa-fw fa-check"></i> Email verified
                 {{ Carbon\Carbon::make($user->email_verified_at)->diffForHumans() }}</small>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Games;
+namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -52,7 +52,7 @@ class UserController extends Controller
             'inactive'     => $request->active ? '0' : '1',
         ]);
 
-        return redirect()->route('admin.users.users.edit', $user);
+        return redirect()->route('admin.users.users.index');
     }
 
     public function destroy(User $user)

@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\Games\GameScreenshotsController;
 use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
-use App\Http\Controllers\Admin\Games\UserController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Menus\MenuConditionsController;
 use App\Http\Controllers\Admin\Menus\MenuCrewController;
@@ -18,6 +17,8 @@ use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\Menus\MenuSetsController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
+use App\Http\Controllers\Admin\User\CommentController;
+use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('verified')->group(function () {
@@ -57,6 +58,7 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/users')->name('users.')->group(function () {
                     Route::resource('users', UserController::class);
+                    Route::resource('comments', CommentController::class);
                 });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {
