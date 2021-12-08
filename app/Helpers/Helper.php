@@ -9,6 +9,7 @@ use App\Helpers\BBCode\MenuSetBBCodeTag;
 use App\Helpers\BBCode\ReleaseYearBBCodeTag;
 use App\Helpers\BBCode\ReviewBBCodeTag;
 use App\Helpers\BBCode\SearchByIdBBCodeTag;
+use App\Helpers\BBCode\SmileyVisitor;
 use App\Models\Release;
 use App\Models\User;
 
@@ -77,6 +78,8 @@ class Helper
         $parser->addCodeDefinition(new MenuSetBBCodeTag());
 
         $parser->parse($bbCode);
+
+        $parser->accept(new SmileyVisitor());
 
         return $parser->getAsHtml();
     }

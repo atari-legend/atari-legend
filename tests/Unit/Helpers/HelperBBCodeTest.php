@@ -3,7 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use App\Helpers\Helper;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class HelperBBCodeTest extends TestCase
 {
