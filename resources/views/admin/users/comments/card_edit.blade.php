@@ -17,7 +17,7 @@
 
             <div class="mb-3">
                 <label for="content" class="form-label">Content</label>
-                <textarea class="form-control" required id="content" name="content" rows="5">{{ old('content', $comment->comment) }}</textarea>
+                <textarea class="form-control" required id="content" name="content" rows="5">{{ old('content', stripslashes($comment->comment)) }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>
