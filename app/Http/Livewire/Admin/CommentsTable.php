@@ -13,11 +13,6 @@ class CommentsTable extends DataTableComponent
 {
     public string $primaryKey = 'comment_id';
 
-    public array $filterNames = [
-        'type' => 'Type',
-        'author' => 'Author',
-    ];
-
     public function columns(): array
     {
         return [

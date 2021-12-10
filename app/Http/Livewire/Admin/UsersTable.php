@@ -12,10 +12,6 @@ class UsersTable extends DataTableComponent
 {
     public string $primaryKey = 'user_id';
 
-    public array $filterNames = [
-        'verified' => 'E-mail verified',
-    ];
-
     public function columns(): array
     {
         return [
@@ -52,6 +48,10 @@ class UsersTable extends DataTableComponent
             ->when(
                 $this->getFilter('verified'),
                 fn ($query, $term) => $term === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at')
+            )
+            ->when(
+                $this->getFilter('admin'),
+                fn ($query, $term) => $query->where('permission', '=', $term === 'yes' ? User::PERMISSION_ADMIN : User::PERMISSION_USER)
             );
     }
 
@@ -59,6 +59,12 @@ class UsersTable extends DataTableComponent
     {
         return [
             'verified' => Filter::make('E-mail verified')
+                ->select([
+                    ''    => 'Any',
+                    'yes' => 'Yes',
+                    'no'  => 'No',
+                ]),
+            'admin'    => Filter::make('Is Admin')
                 ->select([
                     ''    => 'Any',
                     'yes' => 'Yes',
