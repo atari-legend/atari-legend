@@ -7,7 +7,7 @@
         <div class="striped">
             @foreach ($release->medias as $media)
                 <div class="card-body">
-                    <div class="mb-2 d-flex float-start">
+                    <div class="mb-2 d-flex">
                         @isset ($mediaTypeIcons[$media->type->id])
                             <i class="{{ $mediaTypeIcons[$media->type->id] }} me-1"></i>
                         @endif
