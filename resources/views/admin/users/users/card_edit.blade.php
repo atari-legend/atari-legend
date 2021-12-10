@@ -35,24 +35,49 @@
             <div class="col-12 col-md-6 text-center">
                 <img class="p-1 border border-dark shadow-sm" style="max-height: 9rem"
                     src="{{ $user->avatar ?? asset('images/unknown.jpg') }}" alt="User avatar">
+                <form action="{{ route('admin.users.users.delete-avatar', $user) }}" method="post"
+                    onsubmit="javascript:return confirm('The avatar will be deleted')">
+                    @csrf
+                    @method('DELETE')
+
+                    <button class="btn btn-link" type="submit"><i class="fas fa-trash-alt text-danger"></i></button>
+                </form>
             </div>
         </div>
 
-        <form action="{{ route('admin.users.users.update', $user) }}" method="post">
+        <form action="{{ route('admin.users.users.update', $user) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" required class="form-control @error('email') is-invalid @enderror" name="email"
-                    id="email" value="{{ old('email', $user->email) }}">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" required class="form-control @error('email') is-invalid @enderror" name="email"
+                            id="email" value="{{ old('email', $user->email) }}">
 
-                @error('email')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Avatar</label>
+                        <input type="file" class="form-control @error('avatar') is-invalid @enderror" name="avatar">
+                        @if ($user->avatar)
+                            <div class="form-text">Select a file to replace the current avatar.</div>
+                        @endif
 
+                        @error('avatar')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">

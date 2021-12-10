@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin\User;
 
+use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -34,17 +35,19 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'email'    => ['required', 'email', Rule::unique('users')->ignore($user)],
-            'facebook' => 'nullable|url|starts_with:https://www.facebook.com/',
-            'twitter'  => 'nullable|url|starts_with:https://twitter.com/',
-            'forum'    => 'nullable|url|starts_with:https://www.atari-forum.com/',
-            'website'  => 'nullable|url',
-        ]);
+        $request->validate(UserHelper::validationRules($user));
+
+        $ext = null;
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $avatar->storeAs('images/user_avatars/', $user->user_id.'.'.$avatar->extension(), 'public');
+            $ext = $avatar->extension();
+        }
 
         $user->update([
             'email'        => $request->email,
             'permission'   => $request->permission,
+            'avatar_ext'   => $ext,
             'user_website' => $request->website,
             'user_fb'      => $request->facebook,
             'user_twitter' => $request->twitter,
@@ -60,5 +63,14 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.users.index');
+    }
+
+    public function destroyAvatar(User $user)
+    {
+        Storage::disk('public')->delete('images/user_avatars/'.$user->user_id.'.'.$user->avatar_ext);
+        $user->avatar_ext = null;
+        $user->save();
+
+        return redirect()->route('admin.users.users.edit', $user);
     }
 }

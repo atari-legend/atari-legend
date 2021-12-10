@@ -57,6 +57,7 @@ Route::middleware('verified')->group(function () {
                 });
 
                 Route::prefix('/users')->name('users.')->group(function () {
+                    Route::delete('users/{user}/delete-avatar', [UserController::class, 'destroyAvatar'])->name('users.delete-avatar');
                     Route::resource('users', UserController::class);
                     Route::resource('comments', CommentController::class);
                 });

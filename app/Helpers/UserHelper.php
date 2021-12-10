@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
@@ -29,7 +28,7 @@ class UserHelper
         ];
 
         if ($currentUser !== null) {
-            $rules['email'] = ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore(Auth::user()->user_id, 'user_id')];
+            $rules['email'] = ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($currentUser->user_id, 'user_id')];
         } else {
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
         }
