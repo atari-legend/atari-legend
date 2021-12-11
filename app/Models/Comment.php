@@ -96,9 +96,9 @@ class Comment extends Model
             case self::TYPE_ARTICLE:
                 return $this->articles->first()->getKey();
             case self::TYPE_INTERVIEW:
-                return $this->interviews->first()->individual->getKey();
+                return $this->interviews->first()->getKey();
             case self::TYPE_REVIEW:
-                return $this->reviews->first()->games->first()->getKey();
+                return $this->reviews->first()->getKey();
             default:
                 throw new Error('Unknown comment type');
         }
