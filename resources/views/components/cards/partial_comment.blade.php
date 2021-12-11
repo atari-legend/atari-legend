@@ -1,10 +1,5 @@
 <div class="card-body p-2">
     <div class="card-subtitle text-muted mb-2">
-        @contributor
-            <a class="d-inline-block me-1" href="{{ route('admin.users.comments.edit', $comment) }}">
-                <small><i class="fas fa-pencil-alt text-contributor"></i></small>
-            </a>
-        @endcontributor
         {{ Helper::user($comment->user) }}
 
         {{-- Edition controls --}}
@@ -37,7 +32,15 @@
         @endif
     </div>
 
-    <div class="py-2 mb-1" id="comment-{{ $comment->comments_id }}">{!! Helper::bbCode(stripslashes(nl2br(e($comment->comment)))) !!}</div>
+    <div class="py-2 mb-1" id="comment-{{ $comment->comments_id }}">
+        @contributor
+            <a class="d-inline-block me-1" href="{{ route('admin.users.comments.edit', $comment) }}">
+                <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+            </a>
+        @endcontributor
+
+        {!! Helper::bbCode(stripslashes(nl2br(e($comment->comment)))) !!}
+    </div>
 
     {{-- Comment edit form --}}
     @if (Auth::check() && Auth::user()->user_id === $comment->user?->user_id)
