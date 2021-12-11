@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use Error;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    const TYPE_GAME = 'game';
+    const TYPE_REVIEW = 'review';
+    const TYPE_INTERVIEW = 'interview';
+    const TYPE_ARTICLE = 'article';
+
     protected $table = 'comments';
     protected $primaryKey = 'comments_id';
     public $timestamps = false;
@@ -39,34 +45,62 @@ class Comment extends Model
         return $this->belongstoMany(Review::class, 'review_user_comments', 'comment_id', 'review_id');
     }
 
+    /**
+     * @return string Get the type of comment, as a comment can apply to different
+     *                things on the site.
+     */
     public function getTypeAttribute()
     {
         if ($this->games->isNotEmpty()) {
-            return 'game';
+            return self::TYPE_GAME;
         } elseif ($this->articles->isNotEmpty()) {
-            return 'article';
+            return self::TYPE_ARTICLE;
         } elseif ($this->interviews->isNotEmpty()) {
-            return 'interview';
+            return self::TYPE_INTERVIEW;
         } elseif ($this->reviews->isNotEmpty()) {
-            return 'review';
+            return self::TYPE_REVIEW;
         } else {
-            return '?';
+            throw new Error('Unknown comment type');
         }
     }
 
+    /**
+     * @return string Name of the target of the comment. For example for a
+     *                comment on a game it would be the game name.
+     */
     public function getTargetAttribute()
     {
         switch ($this->type) {
-            case 'game':
+            case self::TYPE_GAME:
                 return $this->games->first()->game_name;
-            case 'article':
+            case self::TYPE_ARTICLE:
                 return $this->articles->first()->texts->first()->article_title;
-            case 'interview':
+            case self::TYPE_INTERVIEW:
                 return $this->interviews->first()->individual->ind_name;
-            case 'review':
+            case self::TYPE_REVIEW:
                 return $this->reviews->first()->games->first()->game_name;
             default:
-                return '?';
+                throw new Error('Unknown comment type');
+        }
+    }
+
+    /**
+     * @return string ID of the target of the comment. For example for a comment
+     *                on a game it would be the game id.
+     */
+    public function getTargetIdAttribute()
+    {
+        switch ($this->type) {
+            case self::TYPE_GAME:
+                return $this->games->first()->getKey();
+            case self::TYPE_ARTICLE:
+                return $this->articles->first()->getKey();
+            case self::TYPE_INTERVIEW:
+                return $this->interviews->first()->individual->getKey();
+            case self::TYPE_REVIEW:
+                return $this->reviews->first()->games->first()->getKey();
+            default:
+                throw new Error('Unknown comment type');
         }
     }
 }

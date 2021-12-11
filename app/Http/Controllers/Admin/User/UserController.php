@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin\User;
 
+use App\Helpers\ChangelogHelper;
 use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Changelog;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
@@ -55,12 +57,32 @@ class UserController extends Controller
             'inactive'     => $request->active ? '0' : '1',
         ]);
 
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Users',
+            'section_id'       => $user->getKey(),
+            'section_name'     => $user->userid,
+            'sub_section'      => 'User',
+            'sub_section_id'   => $user->getKey(),
+            'sub_section_name' => $user->userid,
+        ]);
+
         return redirect()->route('admin.users.users.index');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Users',
+            'section_id'       => $user->getKey(),
+            'section_name'     => $user->userid,
+            'sub_section'      => 'User',
+            'sub_section_id'   => $user->getKey(),
+            'sub_section_name' => $user->userid,
+        ]);
 
         return redirect()->route('admin.users.users.index');
     }
@@ -70,6 +92,16 @@ class UserController extends Controller
         Storage::disk('public')->delete('images/user_avatars/'.$user->user_id.'.'.$user->avatar_ext);
         $user->avatar_ext = null;
         $user->save();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Users',
+            'section_id'       => $user->getKey(),
+            'section_name'     => $user->userid,
+            'sub_section'      => 'User',
+            'sub_section_id'   => $user->getKey(),
+            'sub_section_name' => $user->userid,
+        ]);
 
         return redirect()->route('admin.users.users.edit', $user);
     }
