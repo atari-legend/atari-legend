@@ -17,7 +17,7 @@
                         <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
                         <li><a>Configuration</a></li>
                         <li><a>Series</a></li>
-                        <li><a>Submissions</a></li>
+                        <li><a class="@activeroute('admin.games.submissions')" href="{{ route('admin.games.submissions.index') }}">Submissions</a></li>
                         <li><a>Individuals</a></li>
                         <li><a>Companies</a></li>
                         <li><a>Company Logos</a></li>

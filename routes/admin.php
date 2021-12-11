@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
 use App\Http\Controllers\Admin\Games\GameScreenshotsController;
+use App\Http\Controllers\Admin\Games\GameSubmissionController;
 use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
@@ -54,6 +55,8 @@ Route::middleware('verified')->group(function () {
                     Route::delete('games/{game}/videos/{video}', [GameVideoController::class, 'destroy'])->name('game-videos.destroy');
 
                     Route::resource('games', GameController::class);
+
+                    Route::resource('submissions', GameSubmissionController::class);
                 });
 
                 Route::prefix('/users')->name('users.')->group(function () {

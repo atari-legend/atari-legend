@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameSubmitInfo extends Model
 {
-    const SUBMISSION_NEW = 2;
-    const SUBMISSION_REVIEWED = 1;
+    const SUBMISSION_NEW = '2';
+    const SUBMISSION_REVIEWED = '1';
 
     protected $table = 'game_submitinfo';
     protected $primaryKey = 'game_submitinfo_id';
