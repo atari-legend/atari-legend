@@ -25,7 +25,7 @@
         "laravel/ui": "^3.0",
         "laravelium/feed": "8.*",
         "livewire/livewire": "^2.4",
-        "rappasoft/laravel-livewire-tables": "~1.10.0",
+        "rappasoft/laravel-livewire-tables": "~1.21.0",
         "tizis/phpepub": "~5.1",
         "waynestate/parse-youtube-id": "^1.0",
         "webfontkit/roboto": "^1.0"

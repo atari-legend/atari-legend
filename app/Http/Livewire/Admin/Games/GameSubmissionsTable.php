@@ -21,7 +21,7 @@ class GameSubmissionsTable extends DataTableComponent
         return [
             Column::make('Game')
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->join('games', 'game_submitinfo.game_id', '=', 'game.game_id')
+                    return $query->join('game', 'game_submitinfo.game_id', '=', 'game.game_id')
                         ->orderBy('game.game_name', $direction);
                 }),
             Column::make('User')
