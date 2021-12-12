@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Admin\Games;
 
 use App\Models\GameSubmitInfo;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -12,6 +11,13 @@ use Rappasoft\LaravelLivewireTables\Views\Filter;
 class GameSubmissionsTable extends DataTableComponent
 {
     public string $primaryKey = 'game_submitinfo_id';
+
+    public array $filters = [
+        'processed' => 'no',
+    ];
+
+    public string $defaultSortColumn = 'Date';
+    public string $defaultSortDirection = 'desc';
 
     public function columns(): array
     {
@@ -53,6 +59,10 @@ class GameSubmissionsTable extends DataTableComponent
             ->when(
                 $this->getFilter('processed'),
                 fn ($query, $term) => $query->where('game_done', $term === 'yes' ? '=' : '!=', GameSubmitInfo::SUBMISSION_REVIEWED)
+            )
+            ->when(
+                $this->getFilter('attachments'),
+                fn ($query, $term) => $term === 'yes' ? $query->has('screenshots') : $query->doesntHave('screenshots')
             );
     }
 
@@ -65,12 +75,18 @@ class GameSubmissionsTable extends DataTableComponent
                     'yes' => 'Yes',
                     'no'  => 'No',
                 ]),
+            'attachments' => Filter::make('Has attachments')
+                ->select([
+                    ''    => 'Any',
+                    'yes' => 'Yes',
+                    'no'  => 'No',
+                ]),
         ];
     }
 
     public function getTableRowUrl($row): string
     {
-        return route('admin.games.submissions.edit', $row);
+        return route('admin.games.submissions.show', $row);
     }
 
     public function rowView(): string

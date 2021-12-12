@@ -57,6 +57,7 @@ Route::middleware('verified')->group(function () {
                     Route::resource('games', GameController::class);
 
                     Route::resource('submissions', GameSubmissionController::class);
+                    Route::delete('submissions/{submission}/screenshots/{screenshot}', [GameSubmissionController::class, 'destroyScreenshot'])->name('submissions.screenshots.destroy');
                 });
 
                 Route::prefix('/users')->name('users.')->group(function () {

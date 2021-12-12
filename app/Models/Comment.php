@@ -16,6 +16,10 @@ class Comment extends Model
     protected $primaryKey = 'comments_id';
     public $timestamps = false;
 
+    protected $fillable = [
+        'comment', 'user_id', 'timestamp',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

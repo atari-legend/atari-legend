@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
+use GuzzleHttp\Psr7\MimeType;
 use Illuminate\Database\Eloquent\Model;
 
 class Screenshot extends Model
@@ -13,15 +14,21 @@ class Screenshot extends Model
     public $timestamps = false;
 
     const PATHS = [
-        'game'      => 'game_screenshots',
-        'game_fact' => 'game_fact_screenshots',
-        'article'   => 'article_screenshots',
-        'interview' => 'interview_screenshots',
+        'game'            => 'game_screenshots',
+        'game_fact'       => 'game_fact_screenshots',
+        'article'         => 'article_screenshots',
+        'interview'       => 'interview_screenshots',
+        'game_submission' => 'game_submit_screenshots',
     ];
 
     public function getFileAttribute()
     {
         return Helper::filename($this->screenshot_id, $this->imgext);
+    }
+
+    public function getMimeTypeAttribute()
+    {
+        return MimeType::fromExtension($this->imgext);
     }
 
     /**
