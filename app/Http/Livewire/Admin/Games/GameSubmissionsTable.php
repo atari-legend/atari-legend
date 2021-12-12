@@ -16,9 +16,6 @@ class GameSubmissionsTable extends DataTableComponent
         'processed' => 'no',
     ];
 
-    public string $defaultSortColumn = 'Date';
-    public string $defaultSortDirection = 'desc';
-
     public function columns(): array
     {
         return [
