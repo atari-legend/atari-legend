@@ -2,6 +2,6 @@
 
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <livewire:admin.games-table />
+        <livewire:admin.games.games-table />
     </div>
 </div>

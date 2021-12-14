@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin;
+namespace App\Http\Livewire\Admin\Games;
 
 use App\Models\Game;
 use Illuminate\Database\Eloquent\Builder;

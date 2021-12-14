@@ -18,7 +18,7 @@
                         <li><a>Configuration</a></li>
                         <li><a>Series</a></li>
                         <li><a class="@activeroute('admin.games.submissions')" href="{{ route('admin.games.submissions.index') }}">Submissions</a></li>
-                        <li><a>Individuals</a></li>
+                        <li><a class="@activeroute('admin.games.individuals')" href="{{ route('admin.games.individuals.index') }}">Individuals</a></li>
                         <li><a>Companies</a></li>
                         <li><a>Company Logos</a></li>
                         <li><a class="@activeroute('admin.games.music')" href="{{ route('admin.games.music') }}">Music</a></li>

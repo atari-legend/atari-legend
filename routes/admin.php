@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
+use App\Http\Controllers\Admin\Games\GameIndividualController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
 use App\Http\Controllers\Admin\Games\GameScreenshotsController;
 use App\Http\Controllers\Admin\Games\GameSubmissionController;
@@ -58,6 +59,8 @@ Route::middleware('verified')->group(function () {
 
                     Route::resource('submissions', GameSubmissionController::class);
                     Route::delete('submissions/{submission}/screenshots/{screenshot}', [GameSubmissionController::class, 'destroyScreenshot'])->name('submissions.screenshots.destroy');
+
+                    Route::resource('individuals', GameIndividualController::class);
                 });
 
                 Route::prefix('/users')->name('users.')->group(function () {

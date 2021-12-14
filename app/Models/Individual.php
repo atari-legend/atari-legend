@@ -51,6 +51,15 @@ class Individual extends Model
         return $this->belongsToMany(Crew::class, 'crew_individual', 'ind_id', 'crew_id');
     }
 
+    public function getAvatarAttribute()
+    {
+        if ($this->text?->file) {
+            return asset('storage/images/individual_screenshots/'.$this->text->file);
+        } else {
+            return null;
+        }
+    }
+
     /**
      * @return string The first nickname of the individual if they have nicknames,
      *                otherwise the individual name
