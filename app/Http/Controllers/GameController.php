@@ -91,6 +91,7 @@ class GameController extends Controller
             // Then collect all standalone menus disks that don't have a release
             // (i.e. docs, trainer, ...)
             ->concat($game->menuDiskContents->pluck('menuDisk'))
+            ->unique()
             ->sortBy('download_basename');
 
         // Collect all SNDH tracks

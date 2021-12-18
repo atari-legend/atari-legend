@@ -16,6 +16,7 @@
         </div>
         <div class="col col-sm-6 col-lg-3 order-3">
             <x-cards.screenstar />
+            <x-cards.tops />
         </div>
     </div>
 @endsection

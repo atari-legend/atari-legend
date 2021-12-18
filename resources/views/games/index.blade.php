@@ -12,7 +12,7 @@
         </div>
         <div class="col col-sm-6 col-lg-3 order-3">
             @include('games.card_updates')
-            <x-cards.statistics />
+            <x-cards.tops />
         </div>
     </div>
 @endsection
