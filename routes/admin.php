@@ -60,11 +60,13 @@ Route::middleware('verified')->group(function () {
                     Route::resource('submissions', GameSubmissionController::class);
                     Route::delete('submissions/{submission}/screenshots/{screenshot}', [GameSubmissionController::class, 'destroyScreenshot'])->name('submissions.screenshots.destroy');
 
+                    Route::delete('individuals/{individual}/avatar', [GameIndividualController::class, 'destroyAvatar'])->name('individuals.avatar');
+                    Route::delete('individuals/{individual}/nickname', [GameIndividualController::class, 'destroyNickname'])->name('individuals.nickname');
                     Route::resource('individuals', GameIndividualController::class);
                 });
 
                 Route::prefix('/users')->name('users.')->group(function () {
-                    Route::delete('users/{user}/delete-avatar', [UserController::class, 'destroyAvatar'])->name('users.delete-avatar');
+                    Route::delete('users/{user}/avatar', [UserController::class, 'destroyAvatar'])->name('users.avatar');
                     Route::resource('users', UserController::class);
                     Route::resource('comments', CommentController::class);
                 });

@@ -10,6 +10,8 @@ class Individual extends Model
     protected $primaryKey = 'ind_id';
     public $timestamps = false;
 
+    protected $fillable = ['ind_name'];
+
     public function text()
     {
         // FIXME: The DB structure actually allows many

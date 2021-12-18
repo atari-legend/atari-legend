@@ -35,7 +35,7 @@
             <div class="col-12 col-md-6 text-center">
                 <img class="p-1 border border-dark shadow-sm" style="max-height: 9rem"
                     src="{{ $user->avatar ?? asset('images/unknown.jpg') }}" alt="User avatar">
-                <form action="{{ route('admin.users.users.delete-avatar', $user) }}" method="post"
+                <form action="{{ route('admin.users.users.avatar', $user) }}" method="post"
                     onsubmit="javascript:return confirm('The avatar will be deleted')">
                     @csrf
                     @method('DELETE')

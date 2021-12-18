@@ -8,6 +8,7 @@
 
 <x-livewire-tables::table.cell>
     {{ $row->nick_list->join(', ') }}
+    {{ $row->individual_list->join(', ') }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

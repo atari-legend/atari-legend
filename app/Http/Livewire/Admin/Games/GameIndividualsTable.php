@@ -15,7 +15,7 @@ class GameIndividualsTable extends DataTableComponent
     {
         return [
             Column::make('Name', 'ind_name')->sortable(),
-            Column::make('Nicknames'),
+            Column::make('Nicks or main name'),
             Column::make('Avatar')
                 ->sortable(function (Builder $query, $direction) {
                     return $query->orderBy('individual_text.ind_imgext', $direction);
@@ -27,11 +27,15 @@ class GameIndividualsTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return Individual::query()
-            ->join('individual_text', 'individuals.ind_id', '=', 'individual_text.ind_id')
+        return Individual::select('individuals.*')
+            ->leftJoin('individual_text', 'individuals.ind_id', '=', 'individual_text.ind_id')
             ->when(
                 $this->getFilter('search'),
                 fn ($query, $term) => $query->where('ind_name', 'like', "%{$term}%")
+                    // Also search nicks
+                    ->orWhereHas('nicknames', function (Builder $query) use ($term) {
+                        return $query->where('ind_name', 'like', "%{$term}%");
+                    })
             );
     }
 
