@@ -2,8 +2,6 @@
 
 namespace App\View\Components\Cards;
 
-use App\Models\PublisherDeveloper;
-use App\Models\Trivia as ModelsTrivia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\Component;
 
