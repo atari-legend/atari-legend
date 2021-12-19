@@ -54,7 +54,6 @@
                     data-autocomplete-companion="donated" value="{{ old('individual_name', isset($disk) ? $disk->donatedBy?->ind_name : '') }}"
                     placeholder="Type an individual name..." autocomplete="off">
                 <input type="hidden" name="donated" value="{{ old('donated', isset($disk) ? $disk->donatedBy?->ind_id : '') }}">
-                <span class="form-text">Add & edit individuals in the <a href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_main.php' }}">Legacy CPANEL</a>.</span>
 
                 @error('donated')
                     <span class="invalid-feedback" role="alert">

@@ -54,7 +54,7 @@
                         <div class="mb-1">
                             <a href="{{ route('games.search', ['individual_id' => $individual->ind_id]) }}">{{ $individual->ind_name }}</a>
                             @contributor
-                                <a class="d-inline-block" href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_edit.php?ind_id='.$individual->ind_id }}">
+                                <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individual) }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                                 </a>
                             @endcontributor

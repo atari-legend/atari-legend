@@ -31,8 +31,8 @@ class Individual extends Model
     }
 
     /**
-     * @return \App\Models\Individual[] Nicknames of the individuals.
-     *                                  This is a self-reference.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany Nicknames of the individuals.
+     *                                                               This is a self-reference.
      */
     public function nicknames()
     {
@@ -40,8 +40,8 @@ class Individual extends Model
     }
 
     /**
-     * @return \App\Models\Individual[] Individuals of the nickname.
-     *                                  This is a self-reference.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany Individuals of the nickname.
+     *                                                               This is a self-reference.
      */
     public function individuals()
     {

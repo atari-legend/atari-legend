@@ -7,7 +7,7 @@
             @csrf
             <div class="row mb-3">
                 <label for="individual_name" class="form-label">Add member</label>
-                <div class="col-9">
+                <div class="input-group">
                     <input class="autocomplete form-control @error('individual') is-invalid @enderror"
                         name="individual_name" id="individual_name" type="search" required
                         data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
@@ -15,16 +15,14 @@
                         data-autocomplete-companion="individual" value="{{ old('individual_name') }}"
                         placeholder="Type an individual name..." autocomplete="off">
                     <input type="hidden" name="individual" value="{{ old('individual') }}">
-                    <span class="form-text">Add & edit individuals in the <a href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_main.php' }}">Legacy CPANEL</a>.</span>
+
+                    <button class="btn btn-success" type="submit">Add member</button>
 
                     @error('individual')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-success w-100" type="submit">Add member</button>
                 </div>
             </div>
         </form>
@@ -41,7 +39,7 @@
                     @foreach ($crew->individuals as $individual)
                         <tr>
                             <td>
-                                <a href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_edit.php?ind_id='.$individual->ind_id }}">{{ $individual->ind_name }}</a>
+                                <a href="{{ route('admin.games.individuals.edit', $individual) }}">{{ $individual->ind_name }}</a>
                                 @if ($individual->aka_list->isNotEmpty())
                                     <span class="text-muted ms-1">(aka. {{ $individual->aka_list->join(', ') }})</span>
                                 @endif

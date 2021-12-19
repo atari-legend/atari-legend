@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', "Individuals - {$individual->ind_name}")
+@section('title', "Individuals - ".(isset($individual) ? $individual->ind_name : 'Create new individual'))
 
 @section('content')
     <div class="row">
@@ -7,9 +7,14 @@
             @include('admin.games.individuals.card_edit')
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            @include('admin.games.individuals.card_nicknames')
+    @if (isset($individual))
+        <div class="row">
+            <div class="col-12 col-md-6">
+                @include('admin.games.individuals.card_nicknames')
+            </div>
+            <div class="col-12 col-md-6">
+                @include('admin.games.individuals.card_credits')
+            </div>
         </div>
-    </div>
+    @endif
 @endsection

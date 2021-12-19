@@ -21,7 +21,7 @@
             </div>
             <div class="col-12">
                 <select class="form-select" name="role">
-                        <option @if (old('role') === null) selected @endif value="">-</option>
+                    <option @if (old('role') === null) selected @endif value="">-</option>
                     @foreach ($roles as $role)
                         <option value="{{ $role->id }}" @if (old('role') !== null && old('role') === $role->id) selected @endif>{{ $role->name }}</option>
                     @endforeach
@@ -45,7 +45,7 @@
                 @foreach($game->individuals->sortBy('pivot.role.name') as $individual)
                     <tr>
                         <td>
-                            <a class="d-inline-block" href="{{ config('al.legacy.base_url').'/admin/individuals/individuals_edit.php?ind_id='.$individual->ind_id }}">
+                            <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individual) }}">
                                 {{ $individual->ind_name }}
                             </a>
                             @if ($individual->aka_list->isNotEmpty())

@@ -1,19 +1,27 @@
 <div class="card mb-3 bg-light">
     <div class="card-body">
 
-        <h2 class="card-title fs-4">{{ $individual->ind_name }}</h2>
+        <h2 class="card-title fs-4">
+            @if (isset($individual))
+                {{ $individual->ind_name }}
+            @else
+                Create new individual
+            @endif
+        </h2>
 
-        <form action="{{ route('admin.games.individuals.update', $individual) }}" method="post"
+        <form action="{{ isset($individual) ? route('admin.games.individuals.update', $individual) : route('admin.games.individuals.store') }}" method="post"
             enctype="multipart/form-data">
             @csrf
-            @method('PUT')
+            @isset($individual)
+                @method('PUT')
+            @endisset
 
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" required class="form-control @error('name') is-invalid @enderror" name="name"
-                            id="name" value="{{ old('name', $individual->ind_name) }}">
+                            id="name" value="{{ old('name', $individual->ind_name ?? '') }}">
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -25,7 +33,7 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                            id="email" value="{{ old('email', $individual->text->ind_email) }}">
+                            id="email" value="{{ old('email', $individual->text?->ind_email ?? '') }}">
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -37,7 +45,7 @@
                 <div class="col-12 col-md-6">
                     <div class="text-center">
                         <img class="p-1 border border-dark shadow-sm" style="max-height: 7rem"
-                            src="{{ $individual->avatar ?? asset('images/unknown.jpg') }}" alt="Individual avatar">
+                            src="{{ isset($individual) ? $individual->avatar ?? asset('images/unknown.jpg') : asset('images/unknown.jpg') }}" alt="Individual avatar">
 
                         <button class="btn btn-link" type="button"
                             onclick="document.getElementById('delete-avatar').submit();">
@@ -48,7 +56,7 @@
                     <div class="mb-3">
                         <label for="avatar" class="form-label">Avatar</label>
                         <input type="file" class="form-control @error('avatar') is-invalid @enderror" name="avatar">
-                        @if ($individual->avatar)
+                        @if (isset($individual) && $individual->avatar)
                             <div class="form-text">Select a file to replace the current avatar.</div>
                         @endif
 
@@ -65,7 +73,7 @@
             <div class="mb-3">
                 <label for="profile" class="form-label">Profile</label>
                 <textarea class="form-control" id="profile" name="profile"
-                    rows="5">{{ old('profile', $individual->text->ind_profile) }}</textarea>
+                    rows="5">{{ old('profile', $individual->text?->ind_profile ?? '') }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>
@@ -73,10 +81,12 @@
 
         </form>
 
-        <form action="{{ route('admin.games.individuals.avatar', $individual) }}" method="post" id="delete-avatar"
-            onsubmit="javascript:return confirm('The avatar will be deleted')">
-            @csrf
-            @method('DELETE')
-        </form>
+        @if (isset($individual))
+            <form action="{{ route('admin.games.individuals.avatar.destroy', $individual) }}" method="post" id="delete-avatar"
+                onsubmit="javascript:return confirm('The avatar will be deleted')">
+                @csrf
+                @method('DELETE')
+            </form>
+        @endif
     </div>
 </div>

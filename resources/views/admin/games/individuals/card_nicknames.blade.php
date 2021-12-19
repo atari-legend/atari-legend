@@ -5,7 +5,7 @@
 
         <div class="mb-3">
             @foreach ($individual->nicknames as $nick)
-                <form action="{{ route('admin.games.individuals.nickname', $individual) }}" method="post">
+                <form action="{{ route('admin.games.individuals.nickname.destroy', ['individual' => $individual, 'nickname' => $nick]) }}" method="post">
                     @csrf
                     @method('DELETE')
                     <a class="me-1" href="javascript:;"
@@ -17,14 +17,14 @@
                 </form>
             @endforeach
 
-            <form action="{{ route('admin.games.individuals.nickname', $individual) }}" method="post">
+            <form action="{{ route('admin.games.individuals.nickname.store', $individual) }}" method="post">
                 @csrf
 
                 <div class="form-text mt-2">Add a new nickname</div>
                 <div class="input-group">
                     <input type="text" required class="form-control @error('nickname') is-invalid @enderror"
                         name="nickname" id="nickname" value="{{ old('nickname') }}">
-                    <button class="btn btn-success" type="submit">Add</button>
+                    <button class="btn btn-success" type="submit">Add nickname</button>
 
                     @error('nickname')
                         <span class="invalid-feedback" role="alert">

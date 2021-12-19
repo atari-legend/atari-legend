@@ -57,7 +57,6 @@
                     </span>
                 @enderror
 
-                <span class="form-text">Add & edit crews in the <a href="{{ config('al.legacy.base_url').'/admin/crew/crew_main.php' }}">Legacy CPANEL</a>.</span>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

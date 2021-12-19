@@ -6,7 +6,7 @@
             @csrf
             <div class="row mb-3">
                 <label for="subcrew_name" class="form-label">Add sub-crew</label>
-                <div class="col-9">
+                <div class="input-group">
                     <input class="autocomplete form-control @error('subcrew') is-invalid @enderror"
                         name="subcrew_name" id="subcrew_name" type="search" required
                         data-autocomplete-endpoint="{{ route('ajax.crews') }}"
@@ -15,14 +15,13 @@
                         placeholder="Type a crew name..." autocomplete="off">
                     <input type="hidden" name="subcrew" value="{{ old('subcrew') }}">
 
+                    <button class="btn btn-success" type="submit">Add sub-crew</button>
+
                     @error('subcrew')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-success w-100" type="submit">Add sub-crew</button>
                 </div>
             </div>
         </form>
