@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Search and browse Atari ST games')
+@section('robots', 'follow,noindex')
 
 @section('content')
     <h1 class="visually-hidden">Games search</h1>
