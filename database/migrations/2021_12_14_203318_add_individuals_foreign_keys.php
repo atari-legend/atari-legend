@@ -15,9 +15,11 @@ class AddIndividualsForeignKeys extends Migration
     public function up()
     {
         Schema::table('game_individual', function (Blueprint $table) {
-            $table->dropForeign('game_individual_ibfk_1');
-            $table->dropForeign('game_individual_ibfk_2');
-            $table->dropForeign('game_individual_ibfk_3');
+            if (DB::connection()->getDriverName() !== 'sqlite') {
+                $table->dropForeign('game_individual_ibfk_1');
+                $table->dropForeign('game_individual_ibfk_2');
+                $table->dropForeign('game_individual_ibfk_3');
+            }
 
             $table->foreign('game_id')
                 ->references('game_id')
