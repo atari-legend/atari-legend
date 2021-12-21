@@ -65,6 +65,28 @@ header {
     }
 }
 
+@keyframes sprite-down {
+    0% {
+        top: -100px;
+        left: 2rem;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 50px;
+        left: 2rem;
+        opacity: 0;
+    }
+}
+
 #header-sprite {
     position: relative;
     animation-name: sprite;
@@ -75,6 +97,11 @@ header {
     &.vertical {
         animation-name: sprite-vertical;
         animation-duration: 10s;
+    }
+
+    &.down {
+        animation-name: sprite-down;
+        animation-duration: 7s;
     }
 }
 

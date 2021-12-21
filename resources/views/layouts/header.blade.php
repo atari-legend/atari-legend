@@ -12,6 +12,8 @@
         @php
             $animation = request()->attributes->get('animations')->random();
         @endphp
-        <img id="header-sprite" class="d-none d-lg-inline @if (strpos($animation, '_vert') !== false) vertical @endif" src="{{ asset('images/'.$animation) }}" alt="">
+        <img id="header-sprite"
+            class="d-none d-lg-inline @if (str_contains($animation, '_vert')) vertical @endif @if (str_contains($animation, '_down')) down @endif"
+            src="{{ asset('images/'.$animation) }}" alt="">
     </div>
 </header>
