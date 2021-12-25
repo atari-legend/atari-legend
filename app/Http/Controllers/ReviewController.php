@@ -174,6 +174,7 @@ class ReviewController extends Controller
     private function getReviewsForUser(User $user)
     {
         return Review::where('user_id', $user->user_id)
-            ->where('review_edit', Review::REVIEW_PUBLISHED);
+            ->where('review_edit', Review::REVIEW_PUBLISHED)
+            ->orderBy('review_date', 'desc');
     }
 }

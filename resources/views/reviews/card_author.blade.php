@@ -18,6 +18,7 @@
                 @foreach ($reviews as $r)
                     <li class="p-1 ps-4">
                         <a href="{{ route('reviews.show', ['review' => $r ]) }}">{{ $r->games->first()->game_name }}</a>
+                        <small class="ms-2 text-muted">{{ \Carbon\Carbon::createFromTimestamp($r->review_date)->toFormattedDateString() }}</small>
                     </li>
                 @endforeach
             </ul>
