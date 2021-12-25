@@ -7,10 +7,10 @@ use JBBCode\ElementNode;
 
 class ReleaseYearBBCodeTag extends CodeDefinition
 {
-    public function __construct()
+    public function __construct(string $name = 'releaseYear')
     {
         parent::__construct();
-        $this->setTagName('releaseYear');
+        $this->setTagName($name);
     }
 
     public function asHtml(ElementNode $el)
