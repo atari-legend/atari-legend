@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Ajax\SNDHController;
+use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
 use App\Http\Controllers\Admin\Games\GameIndividualController;
@@ -64,6 +65,8 @@ Route::middleware('verified')->group(function () {
                     Route::post('individuals/{individual}/nickname', [GameIndividualController::class, 'storeNickname'])->name('individuals.nickname.store');
                     Route::delete('individuals/{individual}/nickname/{nickname}', [GameIndividualController::class, 'destroyNickname'])->name('individuals.nickname.destroy');
                     Route::resource('individuals', GameIndividualController::class);
+
+                    Route::resource('companies', GameCompanyController::class);
                 });
 
                 Route::prefix('/users')->name('users.')->group(function () {

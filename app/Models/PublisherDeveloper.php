@@ -10,8 +10,18 @@ class PublisherDeveloper extends Model
     protected $primaryKey = 'pub_dev_id';
     public $timestamps = false;
 
-    public function texts()
+    public function text()
     {
-        return $this->hasMany(PublisherDeveloperText::class, 'pub_dev_id');
+        // FIXME: The DB structure actually allows many
+        return $this->hasOne(PublisherDeveloperText::class, 'pub_dev_id');
+    }
+
+    public function getLogoAttribute()
+    {
+        if ($this->text?->file) {
+            return asset("storage/images/company_logos/{$this->text->file}");
+        } else {
+            return null;
+        }
     }
 }

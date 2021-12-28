@@ -8,7 +8,7 @@
             <div class="row p-2 g-0">
                 <div class="col text-center">
                     @foreach ($developersLogos as $logo)
-                        <img class="company-logo bg-black" src="{{ asset('storage/images/company_logos/'.$logo) }}" alt="Logo of the developer company">
+                        <img class="company-logo bg-black me-2" src="{{ $logo }}" alt="Logo of the developer company">
                     @endforeach
                 </div>
             </div>
@@ -27,12 +27,12 @@
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                                 </a>
                             @endcontributor
-                            @if ($developer->texts->isNotEmpty() && $developer->texts->first()->file !== null)
-                                <a class="lightbox-link d-inline-block" href="{{ asset('storage/images/company_logos/'.$developer->texts->first()->file) }}">
+                            @if ($developer->logo)
+                                <a class="lightbox-link d-inline-block" href="{{ $developer->logo }}">
                                     <i class="far fa-image ms-1"></i>
                                 </a>
                             @endif
-                            @if ($developer->texts->isNotEmpty() && $developer->texts->first()->pub_dev_profile !== null && trim($developer->texts->first()->pub_dev_profile) !== '')
+                            @if ($developer->text?->pub_dev_profile !== null && trim($developer->text?->pub_dev_profile) !== '')
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->pub_dev_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->pub_dev_id }}">
                                     {!! Helper::bbCode(nl2br($developer->texts->first()->pub_dev_profile)) !!}

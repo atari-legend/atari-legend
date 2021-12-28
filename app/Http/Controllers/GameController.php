@@ -20,10 +20,10 @@ class GameController extends Controller
     {
         $developersLogos = $game->developers
             ->filter(function ($developer) {
-                return $developer->texts->isNotEmpty() && $developer->texts->first()->file !== null;
+                return $developer->logo;
             })
             ->map(function ($developer) {
-                return $developer->texts->first()->file;
+                return $developer->logo;
             });
 
         // Collect all release scans and game scans in a single list
