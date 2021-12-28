@@ -41,6 +41,9 @@
     @livewireScripts
     <script src="{{ mix('js/app.js') }}"></script>
 
+    {{-- SCEditor does not work as a NPM module --}}
+    <script src="{{ asset('js/sceditor-3.1.1/sceditor.min.js') }}"></script>
+    <script src="{{ asset('js/sceditor-3.1.1/formats/bbcode.js') }}"></script>
 </body>
 
 </html>

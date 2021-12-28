@@ -1,0 +1,48 @@
+@import "../../../public/js/sceditor-3.1.1/themes/square.min";
+
+.sceditor-container {
+
+    textarea {
+        font-family: $font-family-monospace;
+    }
+
+    .sceditor-button- {
+        &game div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/gamepad.svg");
+            color: red;
+        }
+
+        &review div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/check-double.svg");
+            color: $text-muted;
+        }
+
+        &article div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/file-alt.svg");
+        }
+
+        &interview div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/microphone.svg");
+        }
+
+        &menuset div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/skull-crossbones.svg");
+        }
+
+        &publisher div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/building.svg");
+        }
+
+        &developer div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/hammer.svg");
+        }
+
+        &individual div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/male.svg");
+        }
+
+        &releaseyear div {
+            background-image: url("../../../node_modules/@fortawesome/fontawesome-free/svgs/solid/calendar-alt.svg");
+        }
+    }
+}
