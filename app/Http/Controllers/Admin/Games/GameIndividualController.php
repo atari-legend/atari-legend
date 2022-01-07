@@ -175,19 +175,21 @@ class GameIndividualController extends Controller
 
     public function destroyAvatar(Individual $individual)
     {
-        Storage::disk('public')->delete('images/individual_screenshots/'.$individual->ind_id.'.'.$individual->text->ind_imgext);
-        $individual->text->ind_imgext = null;
-        $individual->text->save();
+        if ($individual->avatar) {
+            Storage::disk('public')->delete('images/individual_screenshots/'.$individual->ind_id.'.'.$individual->text->ind_imgext);
+            $individual->text->ind_imgext = null;
+            $individual->text->save();
 
-        ChangelogHelper::insert([
-            'action'           => Changelog::DELETE,
-            'section'          => 'Individuals',
-            'section_id'       => $individual->getKey(),
-            'section_name'     => $individual->ind_name,
-            'sub_section'      => 'Image',
-            'sub_section_id'   => $individual->getKey(),
-            'sub_section_name' => $individual->ind_name,
-        ]);
+            ChangelogHelper::insert([
+                'action'           => Changelog::DELETE,
+                'section'          => 'Individuals',
+                'section_id'       => $individual->getKey(),
+                'section_name'     => $individual->ind_name,
+                'sub_section'      => 'Image',
+                'sub_section_id'   => $individual->getKey(),
+                'sub_section_name' => $individual->ind_name,
+            ]);
+        }
 
         return redirect()->route('admin.games.individuals.edit', $individual);
     }

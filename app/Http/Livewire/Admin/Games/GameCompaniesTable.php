@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Admin\Games;
 
-use App\Models\Individual;
 use App\Models\PublisherDeveloper;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

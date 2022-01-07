@@ -66,6 +66,7 @@ Route::middleware('verified')->group(function () {
                     Route::delete('individuals/{individual}/nickname/{nickname}', [GameIndividualController::class, 'destroyNickname'])->name('individuals.nickname.destroy');
                     Route::resource('individuals', GameIndividualController::class);
 
+                    Route::delete('companies/{company}/logo', [GameCompanyController::class, 'destroyLogo'])->name('companies.logo.destroy');
                     Route::resource('companies', GameCompanyController::class);
                 });
 

@@ -79,7 +79,6 @@ class AddPubDevForeignKeys extends Migration
                 ->references('id')
                 ->on('developer_role')
                 ->onDelete('cascade');
-
         });
     }
 }

@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Admin\Games;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
-use App\Models\Individual;
-use App\Models\IndividualText;
 use App\Models\PublisherDeveloper;
+use App\Models\PublisherDeveloperText;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -50,34 +49,136 @@ class GameCompanyController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')],
+        ]);
 
-        // Don't forget the changelog!
+        $company = new PublisherDeveloper(['pub_dev_name' => $request->name]);
+        $company->save();
+
+        $ext = null;
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logo->storeAs('images/company_logos/', $company->pub_dev_id.'.'.$logo->extension(), 'public');
+            $ext = $logo->extension();
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::INSERT,
+                'section'          => 'Company',
+                'section_id'       => $company->getKey(),
+                'section_name'     => $company->pub_dev_name,
+                'sub_section'      => 'Logo',
+                'sub_section_id'   => $company->getKey(),
+                'sub_section_name' => $company->pub_dev_name,
+            ]);
+        }
+
+        $text = new PublisherDeveloperText([
+            'pub_dev_profile' => $request->profile,
+            'pub_dev_imgext'  => $ext,
+        ]);
+        $company->text()->save($text);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Company',
+            'section_id'       => $company->getKey(),
+            'section_name'     => $company->pub_dev_name,
+            'sub_section'      => 'Company',
+            'sub_section_id'   => $company->getKey(),
+            'sub_section_name' => $company->pub_dev_name,
+        ]);
 
         return redirect()->route('admin.games.companies.edit', $company);
     }
 
     public function update(Request $request, PublisherDeveloper $company)
     {
+        $request->validate([
+            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')->ignore($company->pub_dev_id, 'pub_dev_id')],
+        ]);
 
-        // Don't forget the changelog!
+        $ext = null;
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logo->storeAs('images/company_logos/', $company->pub_dev_id.'.'.$logo->extension(), 'public');
+            $ext = $logo->extension();
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::UPDATE,
+                'section'          => 'Company',
+                'section_id'       => $company->getKey(),
+                'section_name'     => $company->pub_dev_name,
+                'sub_section'      => 'Logo',
+                'sub_section_id'   => $company->getKey(),
+                'sub_section_name' => $company->pub_dev_name,
+            ]);
+        }
+
+        $company->update([
+            'pub_dev_name' => $request->name,
+        ]);
+
+        $attrs = [
+            'pub_dev_profile' => $request->profile,
+            'pub_dev_imgext'  => $ext,
+        ];
+
+        if ($company->text) {
+            $company->text->update($attrs);
+        } else {
+            $text = new PublisherDeveloperText($attrs);
+            $company->text()->save($text);
+        }
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Company',
+            'section_id'       => $company->getKey(),
+            'section_name'     => $company->pub_dev_name,
+            'sub_section'      => 'Company',
+            'sub_section_id'   => $company->getKey(),
+            'sub_section_name' => $company->pub_dev_name,
+        ]);
 
         return redirect()->route('admin.games.companies.index');
     }
 
     public function destroy(PublisherDeveloper $company)
     {
+        $this->destroyLogo($company);
+        $company->delete();
 
-        // Delete logo
-
-        // Don't forget the changelog!
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Company',
+            'section_id'       => $company->getKey(),
+            'section_name'     => $company->pub_dev_name,
+            'sub_section'      => 'Company',
+            'sub_section_id'   => $company->getKey(),
+            'sub_section_name' => $company->pub_dev_name,
+        ]);
 
         return redirect()->route('admin.games.companies.index');
     }
 
-    public function destroyAvatar(PublisherDeveloper $company)
+    public function destroyLogo(PublisherDeveloper $company)
     {
+        if ($company->logo) {
+            Storage::disk('public')->delete('images/company_logos/'.$company->pub_dev_id.'.'.$company->text->pub_dev_imgext);
+            $company->text->pub_dev_imgext = null;
+            $company->text->save();
 
-        // Changelog?
+            ChangelogHelper::insert([
+                'action'           => Changelog::DELETE,
+                'section'          => 'Company',
+                'section_id'       => $company->getKey(),
+                'section_name'     => $company->pub_dev_name,
+                'sub_section'      => 'Logo',
+                'sub_section_id'   => $company->getKey(),
+                'sub_section_name' => $company->pub_dev_name,
+            ]);
+        }
 
         return redirect()->route('admin.games.companies.edit', $company);
     }

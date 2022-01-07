@@ -47,10 +47,12 @@
                         <img class="p-1 border border-dark shadow-sm" style="max-height: 7rem"
                             src="{{ isset($individual) ? $individual->avatar ?? asset('images/unknown.jpg') : asset('images/unknown.jpg') }}" alt="Individual avatar">
 
-                        <button class="btn btn-link" type="button"
-                            onclick="document.getElementById('delete-avatar').submit();">
-                            <i class="fas fa-trash-alt text-danger"></i>
-                        </button>
+                        @if (isset($individual?->avatar))
+                            <button class="btn btn-link" type="button"
+                                onclick="if (confirm('The avatar will be deleted')) document.getElementById('delete-avatar').submit();">
+                                <i class="fas fa-trash-alt text-danger"></i>
+                            </button>
+                        @endif
                     </div>
 
                     <div class="mb-3">
@@ -82,8 +84,7 @@
         </form>
 
         @if (isset($individual))
-            <form action="{{ route('admin.games.individuals.avatar.destroy', $individual) }}" method="post" id="delete-avatar"
-                onsubmit="javascript:return confirm('The avatar will be deleted')">
+            <form action="{{ route('admin.games.individuals.avatar.destroy', $individual) }}" method="post" id="delete-avatar">
                 @csrf
                 @method('DELETE')
             </form>
