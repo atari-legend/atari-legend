@@ -9,8 +9,6 @@ use Illuminate\Support\Str;
 
 class IndividualController extends Controller
 {
-    const MAX = 10;
-
     public function individuals(Request $request)
     {
         $individuals = Individual::select('ind_name', 'ind_id')

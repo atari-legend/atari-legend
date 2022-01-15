@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 
 class CrewController extends Controller
 {
-    const MAX = 10;
-
     public function crews(Request $request)
     {
         $crews = Crew::select('crew_name', 'crew_id')

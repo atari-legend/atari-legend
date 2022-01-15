@@ -33,7 +33,7 @@
                 <div class="col-12 col-md-6">
                     <div class="text-center">
                         <img class="p-1 border border-dark shadow-sm" style="max-height: 7rem"
-                            src="{{ isset($company) ? $company->logo ?? asset('images/unknown.jpg') : asset('images/unknown.jpg') }}" alt="Company logo">
+                            src="{{ isset($company) ? $company->logo ?? asset('images/image-placeholder.png') : asset('images/image-placeholder.png') }}" alt="Company logo">
 
                         @if (isset($company?->logo))
                             <button class="btn btn-link" type="button"

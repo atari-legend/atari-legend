@@ -61,15 +61,15 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#news" aria-expanded="false" aria-controls="news">
+                <button class="accordion-button @collapsedroute('admin.news.*') collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#news" aria-expanded="false" aria-controls="news">
                     <i class="far fa-newspaper fa-fw me-1"></i> News
                 </button>
             </h2>
-            <div id="news" class="accordion-collapse collapse border-0">
+            <div id="news" class="accordion-collapse collapse @showroute('admin.news.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a>Add</a></li>
-                        <li><a>Edit</a></li>
+                        <li><a class="@activeroute('admin.news.news')" href="{{ route('admin.news.news.index') }}">Edit</a></li>
                         <li><a>Approve</a></li>
                         <li><a>Images</a></li>
                     </ul>

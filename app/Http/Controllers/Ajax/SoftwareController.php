@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 
 class SoftwareController extends Controller
 {
-    const MAX = 10;
-
     public function software(Request $request)
     {
         $software = MenuSoftware::select('name', 'id')

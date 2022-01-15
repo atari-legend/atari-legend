@@ -37,7 +37,7 @@ class FeedController extends Controller
                     // Use an ID so that articles in the feed have different IDs
                     // The ID is effectively ignored in the News page
                     'link'    => route('news.index', ['news' => $new->news_id]),
-                    'updated' => $new->news_date,
+                    'updated' => $new->news_date->timestamp,
                     'summary' => null,
                     'content' => Helper::bbCode(nl2br($new->news_text)),
                 ];

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Ajax\SNDHController;
+use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
 use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\Menus\MenuSetsController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
+use App\Http\Controllers\Admin\News\NewsController;
 use App\Http\Controllers\Admin\User\CommentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +78,11 @@ Route::middleware('verified')->group(function () {
                     Route::resource('comments', CommentController::class);
                 });
 
+                Route::prefix('/news')->name('news.')->group(function () {
+                    Route::delete('news/{news}/image', [NewsController::class, 'destroyImage'])->name('news.image');
+                    Route::resource('news', NewsController::class);
+                });
+
                 Route::prefix('/menus')->name('menus.')->group(function () {
                     Route::resource('sets', MenuSetsController::class);
 
@@ -108,6 +115,7 @@ Route::middleware('verified')->group(function () {
                 Route::name('ajax.')->group(function () {
                     Route::prefix('/ajax')->group(function () {
                         Route::get('sndh.json', [SNDHController::class, 'sndh'])->name('sndh');
+                        Route::get('users.json', [AjaxUserController::class, 'users'])->name('users');
                     });
                 });
             });
