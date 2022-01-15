@@ -6,10 +6,12 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\News;
+use App\Models\NewsImage;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
@@ -62,7 +64,29 @@ class NewsController extends Controller
             'news_text'     => $request->text,
         ]);
 
-        // FIXME: image
+        if ($request->hasFile('image')) {
+            $newsImage = $news->image;
+            if (!$newsImage) {
+                $newsImage = new NewsImage();
+                $newsImage->save();
+                $news->image()->associate($newsImage);
+                $news->save();
+            }
+            $image = $request->file('image');
+            $image->storeAs('images/news_images/', $newsImage->news_image_id.'.'.$image->extension(), 'public');
+
+            $newsImage->update(['news_image_ext' => $image->extension()]);
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::UPDATE,
+                'section'          => 'News',
+                'section_id'       => $news->getKey(),
+                'section_name'     => $news->news_headline,
+                'sub_section'      => 'Image',
+                'sub_section_id'   => $news->getKey(),
+                'sub_section_name' => $news->news_headline,
+            ]);
+        }
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
@@ -83,4 +107,24 @@ class NewsController extends Controller
 
         return redirect()->route('admin.news.news.index');
     }
+
+     public function destroyImage(News $news)
+     {
+        if ($news->news_image) {
+            Storage::disk('public')->delete('images/news_images/'.$news->image->file);
+            $news->image->delete();
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::DELETE,
+                'section'          => 'News',
+                'section_id'       => $news->getKey(),
+                'section_name'     => $news->news_headline,
+                'sub_section'      => 'Image',
+                'sub_section_id'   => $news->getKey(),
+                'sub_section_name' => $news->news_headline,
+            ]);
+        }
+
+        return redirect()->route('admin.news.news.edit', $news);
+     }
 }

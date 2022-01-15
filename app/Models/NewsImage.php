@@ -11,6 +11,8 @@ class NewsImage extends Model
     protected $primaryKey = 'news_image_id';
     public $timestamps = false;
 
+    protected $fillable = ['news_image_ext'];
+
     public function getFileAttribute()
     {
         return Helper::filename($this->news_image_id, $this->news_image_ext);
