@@ -52,7 +52,6 @@ class AddNewsForeignKeys extends Migration
     public function down()
     {
         Schema::table('news', function (Blueprint $table) {
-
             $table->integer('news_image_id')->nullable(false)->default(0)->change();
             $table->integer('user_id')->nullable(false)->default(0)->change();
 

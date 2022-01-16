@@ -91,7 +91,7 @@
                 <label for="text" class="form-label">Text</label>
                 <textarea class="form-control sceditor" id="text" name="text" required
                     {{-- Legacy CPANEL was inserting <br /> for new lines, so we replace them with actual newlines --}}
-                    rows="10">{{ old('text', Str::replace('<br />', "\n", $news->news_text) ?? '') }}</textarea>
+                    rows="10">{{ old('text', isset($news) ? Str::replace('<br />', "\n", $news->news_text) : '') }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

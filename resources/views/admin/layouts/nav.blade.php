@@ -12,8 +12,7 @@
             <div id="games" class="accordion-collapse collapse @showroute('admin.games.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Add</a></li>
-                        <li><a class="@activeroute('admin.games.games.index')" href="{{ route('admin.games.games.index') }}">Edit</a></li>
+                        <li><a class="@activeroute('admin.games.games.index')" href="{{ route('admin.games.games.index') }}">Games</a></li>
                         <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
                         <li><a>Configuration</a></li>
                         <li><a>Series</a></li>
@@ -35,8 +34,7 @@
             <div id="reviews" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Add</a></li>
-                        <li><a>Edit</a></li>
+                        <li><a>Reviews</a></li>
                         <li><a>Submissions</a></li>
                     </ul>
                 </div>
@@ -52,8 +50,7 @@
             <div id="interviews" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Add</a></li>
-                        <li><a>Edit</a></li>
+                        <li><a>Interviews</a></li>
                     </ul>
                 </div>
             </div>
@@ -68,10 +65,8 @@
             <div id="news" class="accordion-collapse collapse @showroute('admin.news.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Add</a></li>
-                        <li><a class="@activeroute('admin.news.news')" href="{{ route('admin.news.news.index') }}">Edit</a></li>
+                        <li><a class="@activeroute('admin.news.news')" href="{{ route('admin.news.news.index') }}">News</a></li>
                         <li><a>Approve</a></li>
-                        <li><a>Images</a></li>
                     </ul>
                 </div>
             </div>
@@ -86,8 +81,7 @@
             <div id="links" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Add</a></li>
-                        <li><a>Edit</a></li>
+                        <li><a>Links</a></li>
                         <li><a>Categories</a></li>
                     </ul>
                 </div>
@@ -103,8 +97,7 @@
             <div id="articles" class="accordion-collapse collapse border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Add</a></li>
-                        <li><a>Edit</a></li>
+                        <li><a>Articles</a></li>
                         <li><a>Types</a></li>
                     </ul>
                 </div>
@@ -139,7 +132,7 @@
             <div id="users" class="accordion-collapse collapse @showroute('admin.users.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a class="@activeroute('admin.users.users.*')" href="{{ route('admin.users.users.index') }}">Edit</a></li>
+                        <li><a class="@activeroute('admin.users.users.*')" href="{{ route('admin.users.users.index') }}">Users</a></li>
                         <li><a class="@activeroute('admin.users.comments.*')" href="{{ route('admin.users.comments.index') }}">Comments</a></li>
                     </ul>
                 </div>
@@ -157,7 +150,7 @@
                     <ul class="list-unstyled mb-2">
                         <li><a>Statistics</a></li>
                         <li><a>Changelog</a></li>
-                        <li><a>Did You Know</a></li>
+                        <li><a>Did You Know?</a></li>
                         <li><a>Trivia Quotes</a></li>
                         <li><a>Spotlight</a></li>
                     </ul>
