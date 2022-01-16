@@ -10,7 +10,7 @@
                 <h3 class="card-title fs-5 text-audiowide mb-0">
                     {{ $new->news_headline }}
                     @contributor
-                        <a href="{{ config('al.legacy.base_url').'/admin/news/news_edit.php' }}">
+                        <a href="{{ route('admin.news.news.edit', $new) }}">
                             <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                         </a>
                     @endcontributor

@@ -19,7 +19,7 @@
             <p>
                 @foreach ($user->news->sortByDesc('news_date') as $news)
                     <a
-                        href="{{ config('al.legacy.base_url') . "/admin/news/news_edit.php?news_id={$news->news_id}" }}">{{ $news->news_headline }}</a>
+                        href="{{ route('admin.news.news.edit', $news) }}">{{ $news->news_headline }}</a>
                     @if (!$loop->last), @endif
                 @endforeach
             </p>
@@ -32,7 +32,7 @@
             <p>
                 @foreach ($user->newsSubmissions->sortByDesc('news_date') as $news)
                     <a
-                        href="{{ config('al.legacy.base_url') . "/admin/news/news_approve.php?news_id={$news->news_id}" }}">{{ $news->news_headline }}</a>
+                        href="{{ route('admin.news.submissions.index') }}">{{ $news->news_headline }}</a>
                     @if (!$loop->last), @endif
                 @endforeach
             </p>
