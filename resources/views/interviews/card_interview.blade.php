@@ -18,7 +18,7 @@
     </div>
     <div class="card-body p-2 bg-darklight">
         @if (isset($interview->texts()->first()->interview_chapters))
-            <p class="card-text">{!! Helper::bbCode(nl2br($interview->texts()->first()->interview_chapters)) !!}</p>
+            <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->texts()->first()->interview_chapters))) !!}</p>
         @endif
 
         <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
@@ -32,6 +32,6 @@
             @endforeach
         </div>
 
-        <p class="card-text">{!! Helper::bbCode(nl2br($interview->texts()->first()->interview_text)) !!}</p>
+        <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->texts()->first()->interview_text))) !!}</p>
     </div>
 </div>

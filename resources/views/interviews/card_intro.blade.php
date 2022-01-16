@@ -11,7 +11,7 @@
            <img class="w-100" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}" alt="Picture of {{ $interview->individual->ind_name }}">
         @endif
         <p class="card-text p-2">
-            {!! Helper::bbCode($interview->texts->first()->interview_intro) !!}
+            {!! Helper::bbCode(e($interview->texts->first()->interview_intro)) !!}
         </p>
     </div>
 </div>

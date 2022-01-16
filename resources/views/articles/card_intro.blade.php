@@ -5,7 +5,7 @@
 
     <div class="card-body p-2">
         <p class="card-text">
-            {!! Helper::bbCode($article->texts->first()->article_intro) !!}
+            {!! Helper::bbCode(e($article->texts->first()->article_intro)) !!}
         </p>
     </div>
 </div>

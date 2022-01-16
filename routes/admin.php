@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Menus\MenuSetsController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
 use App\Http\Controllers\Admin\News\NewsController;
+use App\Http\Controllers\Admin\News\NewsSubmissionsController;
 use App\Http\Controllers\Admin\User\CommentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -81,6 +82,10 @@ Route::middleware('verified')->group(function () {
                 Route::prefix('/news')->name('news.')->group(function () {
                     Route::delete('news/{news}/image', [NewsController::class, 'destroyImage'])->name('news.image');
                     Route::resource('news', NewsController::class);
+
+                    Route::get('submissions', [NewsSubmissionsController::class, 'index'])->name('submissions.index');
+                    Route::delete('submissions/{submission}', [NewsSubmissionsController::class, 'destroy'])->name('submissions.destroy');
+                    Route::post('submissions/{submission}', [NewsSubmissionsController::class, 'approve'])->name('submissions.approve');
                 });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {

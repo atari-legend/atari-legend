@@ -39,7 +39,7 @@ class FeedController extends Controller
                     'link'    => route('news.index', ['news' => $new->news_id]),
                     'updated' => $new->news_date->timestamp,
                     'summary' => null,
-                    'content' => Helper::bbCode(nl2br($new->news_text)),
+                    'content' => Helper::bbCode(stripslashes(nl2br(e($new->news_text)))),
                 ];
             }
 

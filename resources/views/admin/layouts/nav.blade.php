@@ -66,7 +66,7 @@
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.news.news')" href="{{ route('admin.news.news.index') }}">News</a></li>
-                        <li><a>Approve</a></li>
+                        <li><a class="@activeroute('admin.news.submissions')" href="{{ route('admin.news.submissions.index') }}">Submissions</a></li>
                     </ul>
                 </div>
             </div>

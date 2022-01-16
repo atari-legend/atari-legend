@@ -28,7 +28,7 @@
         </div>
 
         <p class="card-text">
-            {!! Helper::bbCode(nl2br($review->review_text)) !!}
+            {!! Helper::bbCode(nl2br(e($review->review_text))) !!}
 
             <hr>
             <h5>Score</h5>
