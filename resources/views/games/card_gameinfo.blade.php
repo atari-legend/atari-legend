@@ -4,6 +4,7 @@
         <h2 class="text-uppercase d-lg-none">{{ $game->game_name }}</h2>
     </div>
     <div class="card-body p-0 striped">
+        @include('games.card_gameinfo_votes')
         @if ($developersLogos->isNotEmpty())
             <div class="row p-2 g-0">
                 <div class="col text-center">

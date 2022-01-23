@@ -9,9 +9,12 @@ use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\GameSubmitInfo;
+use App\Models\GameVote;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class GameController extends Controller
@@ -133,6 +136,25 @@ class GameController extends Controller
             $jsonLd->add('genre', $game->genres->pluck('name'));
         }
 
+        $vote = null;
+        if (Auth::check()) {
+            $vote = GameVoteController::findVote($game, Auth::user());
+        }
+
+        $votes = DB::table('game_votes')
+            ->selectRaw('avg(score) as score')
+            ->selectRaw('count(score) as votes')
+            ->where('game_id', '=', $game->game_id)
+            ->groupBy('game_id')
+            ->first();
+        $score = null;
+        $voteCount = 0;
+        if ($votes) {
+            $score = GameHelper::normalizeScore((Float) $votes->score);
+            $voteCount = $votes->votes;
+        }
+
+
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
@@ -143,6 +165,9 @@ class GameController extends Controller
             'menuDisks'         => $menuDisks,
             'sndhs'             => $sndhs,
             'jsonLd'            => $jsonLd,
+            'vote'              => $vote,
+            'score'             => $score,
+            'voteCount'         => $voteCount,
         ]);
     }
 

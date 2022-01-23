@@ -17,6 +17,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameMusicController;
 use App\Http\Controllers\GameReleaseController;
 use App\Http\Controllers\GameSearchController;
+use App\Http\Controllers\GameVoteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\LinkController;
@@ -46,6 +47,7 @@ Route::middleware('verified')->group(function () {
         Route::post('/news/submit', [NewsController::class, 'postNews'])->name('news.submit');
         Route::post('/games/{game}/comment', [GameController::class, 'postComment'])->name('games.comment');
         Route::post('/games/{game}/submitInfo', [GameController::class, 'submitInfo'])->name('games.submitInfo');
+        Route::post('/games/{game}/vote', [GameVoteController::class, 'vote'])->name('games.vote');
         Route::get('/reviews/submit', [ReviewController::class, 'edit'])->name('reviews.edit');
         Route::post('/reviews/submit', [ReviewController::class, 'submit'])->name('reviews.submit');
         Route::post('/reviews/{review}/comment', [ReviewController::class, 'postComment'])->name('review.comment');

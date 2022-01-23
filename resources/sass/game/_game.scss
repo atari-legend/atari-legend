@@ -1,8 +1,35 @@
+@use "sass:color";
+
 .card-game {
     img.company-logo {
         max-height: 4rem;
     }
+
+    svg.votes {
+        vertical-align: middle;
+
+        .outline {
+            stroke: $text-muted;
+        }
+        .score-0 {
+            fill: color.adjust(#ff0d0d, $lightness: -10%);
+        }
+        .score-1 {
+            fill: color.adjust(#ff8e15, $lightness: -10%);
+        }
+        .score-2 {
+            fill: color.adjust(#fab733, $lightness: -10%);
+        }
+        .score-3 {
+            fill: #acb334;
+        }
+        .score-4 {
+            fill: #5bc241;
+        }
+    }
 }
+
+
 
 .video-container {
     overflow: hidden;

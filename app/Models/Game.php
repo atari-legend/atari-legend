@@ -127,6 +127,11 @@ class Game extends Model
         return $this->hasMany(GameVideo::class, 'game_id');
     }
 
+    public function votes()
+    {
+        return $this->belongsToMany(GameVote::class, 'game_vote');
+    }
+
     public function getNonMenuReleasesAttribute()
     {
         return $this

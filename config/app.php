@@ -229,6 +229,7 @@ return [
         'View'                     => Illuminate\Support\Facades\View::class,
         'Helper'                   => App\Helpers\Helper::class,
         'GameHelper'               => App\Helpers\GameHelper::class,
+        'GameVoteHelper'           => App\Helpers\GameVoteHelper::class,
         'MenuHelper'               => App\Helpers\MenuHelper::class,
         'ReleaseDescriptionHelper' => App\Helpers\ReleaseDescriptionHelper::class,
         'Image'                    => Intervention\Image\Facades\Image::class,
