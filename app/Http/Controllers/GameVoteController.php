@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class GameVoteController extends Controller
 {
-
-
     public function vote(Request $request, Game $game)
     {
         $request->validate([
@@ -22,8 +20,8 @@ class GameVoteController extends Controller
 
         if ($request->remove === 'remove') {
             $vote->delete();
-        } else if ($request->has('score')) {
-            if (!$vote) {
+        } elseif ($request->has('score')) {
+            if (! $vote) {
                 $vote = new GameVote([
                     'game_id' => $game->game_id,
                     'user_id' => Auth::user()->user_id,

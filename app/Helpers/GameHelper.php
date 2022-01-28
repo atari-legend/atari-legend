@@ -127,10 +127,10 @@ class GameHelper
      * Normalize a score, given the votes are from 0 to 4 but
      * the scores are from 0 to 5.
      *
-     * @param Float $score Non-normalized score from 0 to 4.
-     * @return Float Normalized score from 0 to 5.
+     * @param  float  $score  Non-normalized score from 0 to 4.
+     * @return float Normalized score from 0 to 5.
      */
-    public static function normalizeScore(Float $score): Float
+    public static function normalizeScore(float $score): float
     {
         return $score / 4 * 5;
     }

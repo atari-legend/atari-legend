@@ -9,7 +9,6 @@ use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\GameSubmitInfo;
-use App\Models\GameVote;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Http\Request;
@@ -150,10 +149,9 @@ class GameController extends Controller
         $score = null;
         $voteCount = 0;
         if ($votes) {
-            $score = GameHelper::normalizeScore((Float) $votes->score);
+            $score = GameHelper::normalizeScore((float) $votes->score);
             $voteCount = $votes->votes;
         }
-
 
         return view('games.show')->with([
             'game'              => $game,

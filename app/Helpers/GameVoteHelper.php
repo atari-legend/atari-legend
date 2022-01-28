@@ -4,14 +4,12 @@ namespace App\Helpers;
 
 use App\Models\Game;
 use App\Models\GameVote;
-use Illuminate\Support\Str;
 
 /**
- * Helper for Game votes
+ * Helper for Game votes.
  */
 class GameVoteHelper
 {
-
     const SVG_HEIGHT = 15;
     const BAR_WIDTH = 15;
     const SPACING = 2;
@@ -41,9 +39,9 @@ class GameVoteHelper
         $svgWidth = 5 * GameVoteHelper::BAR_WIDTH + (5 * GameVoteHelper::SPACING);
 
         $content = '<svg class="votes ms-2"
-            width="' . $svgWidth . '"
-            height="' . GameVoteHelper::SVG_HEIGHT . '"
-            viewBox="0 0 ' . $svgWidth . ' ' . GameVoteHelper::SVG_HEIGHT . '"
+            width="'.$svgWidth.'"
+            height="'.GameVoteHelper::SVG_HEIGHT.'"
+            viewBox="0 0 '.$svgWidth.' '.GameVoteHelper::SVG_HEIGHT.'"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">';
 
@@ -51,7 +49,8 @@ class GameVoteHelper
             $x = ($score * GameVoteHelper::BAR_WIDTH) + $score * GameVoteHelper::SPACING;
             $height = ($votes[$score] ?? 0) / $maxVotes * $barHeight;
             $y = $barHeight - $height;
-            return "<rect width=\"" . GameVoteHelper::BAR_WIDTH . "\" height=\"{$height}\" class=\"score-{$score}\" x=\"{$x}\" y=\"{$y}\" />";
+
+            return '<rect width="'.GameVoteHelper::BAR_WIDTH."\" height=\"{$height}\" class=\"score-{$score}\" x=\"{$x}\" y=\"{$y}\" />";
         })
             ->join("\n");
 
@@ -59,6 +58,7 @@ class GameVoteHelper
             $x1 = ($score * GameVoteHelper::BAR_WIDTH) + $score * GameVoteHelper::SPACING;
             $x2 = $x1 + GameVoteHelper::BAR_WIDTH;
             $y = GameVoteHelper::SVG_HEIGHT - 1;
+
             return "<line x1=\"{$x1}\" y1=\"{$y}\" x2=\"{$x2}\" y2=\"{$y}\" class=\"outline\" shape-rendering=\"crispEdges\" />";
         })
             ->join("\n");
