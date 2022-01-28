@@ -5,6 +5,20 @@
     <div class="card-body p-0 striped">
 
         <div class="p-2">
+            <h3 class="fs-5 float-end">Top games</h3>
+            <ul class="list-unstyled">
+                @foreach ($games as $game)
+                    <li>
+                        <a class="d-inline-block" href="{{ route('games.show', $game->game_id) }}">
+                            {{ $game->game_name }}
+                        </a>: {{ number_format($game->avgScore, 2) }}
+                        <span class="text-muted ms-2">{{ $game->numVotes }} {{ Str::plural('vote', $game->numVotes) }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="p-2">
             <h3 class="fs-5 float-end">Top developers</h3>
             <ul class="list-unstyled">
                 @foreach ($developers as $developer)
