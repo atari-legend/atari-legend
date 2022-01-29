@@ -210,7 +210,7 @@ class ReleaseDescriptionHelper
                 }
                 $desc .= $release->memoryEnhanced
                     ->map(function ($enhanced) {
-                        $s = $enhanced->memory->memory;
+                        $s = $enhanced->memory->name;
                         if ($enhanced->enhancement !== null) {
                             $s .= ' ('.$enhanced->enhancement->name.')';
                         }
@@ -233,7 +233,7 @@ class ReleaseDescriptionHelper
         if ($release->memoryMinimums->isNotEmpty()) {
             $desc .= 'It requires a minimum memory of ';
             $desc .= $release->memoryMinimums
-                ->pluck('memory')
+                ->pluck('name')
                 ->map(function ($s) {
                     return ReleaseDescriptionHelper::boldicize($s);
                 })
@@ -249,7 +249,7 @@ class ReleaseDescriptionHelper
 
             $desc .= 'is incompatible with ';
             $desc .= $release->memoryIncompatibles
-                ->pluck('memory')
+                ->pluck('name')
                 ->map(function ($s) {
                     return ReleaseDescriptionHelper::boldicize($s);
                 })

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
 use App\Http\Controllers\Admin\Games\GameCompanyController;
+use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
 use App\Http\Controllers\Admin\Games\GameIndividualController;
@@ -71,6 +72,14 @@ Route::middleware('verified')->group(function () {
 
                     Route::delete('companies/{company}/logo', [GameCompanyController::class, 'destroyLogo'])->name('companies.logo.destroy');
                     Route::resource('companies', GameCompanyController::class);
+
+                    Route::get('config', function () {
+                        return redirect()->route('admin.games.configuration.show', 'engine');
+                    })->name('configuration.index');
+                    Route::get('config/{type}', [GameConfigurationController::class, 'index'])->name('configuration.show');
+                    Route::post('config/{type}', [GameConfigurationController::class, 'store'])->name('configuration.store');
+                    Route::put('config/{type}/{id}', [GameConfigurationController::class, 'update'])->name('configuration.update');
+                    Route::delete('config/{type}/{id}', [GameConfigurationController::class, 'destroy'])->name('configuration.destroy');
                 });
 
                 Route::prefix('/users')->name('users.')->group(function () {

@@ -39,6 +39,10 @@
                                     {!! Helper::bbCode(nl2br(e($developer->text->pub_dev_profile))) !!}
                                 </p>
                             @endif
+                            <br>
+                            @if ($developer->pivot->role !== null)
+                                <small class="text-muted">{{ $developer->pivot->role->name }}</small>
+                            @endif
                         </div>
                     @endforeach
                 </div>

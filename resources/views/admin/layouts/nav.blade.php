@@ -14,7 +14,7 @@
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.games.games.index')" href="{{ route('admin.games.games.index') }}">Games</a></li>
                         <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
-                        <li><a>Configuration</a></li>
+                        <li><a class="@activeroute('admin.games.configuration')" href="{{ route('admin.games.configuration.index') }}">Configuration</a></li>
                         <li><a>Series</a></li>
                         <li><a class="@activeroute('admin.games.submissions')" href="{{ route('admin.games.submissions.index') }}">Submissions</a></li>
                         <li><a class="@activeroute('admin.games.individuals')" href="{{ route('admin.games.individuals.index') }}">Individuals</a></li>
