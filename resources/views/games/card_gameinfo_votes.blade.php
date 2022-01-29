@@ -43,7 +43,7 @@
                     </div>
                 </form>
             @else
-                <a class="text-danger float-end" href="{{ route('login') }}">Please login to vote</a>
+                <a class="text-danger d-block float-xxl-end mt-2 mt-xxl-0" href="{{ route('login') }}">Please login to vote</a>
             @endauth
         </div>
         <div class="text-muted mt-1">
