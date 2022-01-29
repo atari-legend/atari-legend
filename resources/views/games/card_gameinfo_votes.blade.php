@@ -12,7 +12,7 @@
             @auth
                 <form action="{{ route('games.vote', $game) }}" class="d-inline" method="POST">
                     @csrf
-                    <div class="dropdown float-end ms-2">
+                    <div class="dropdown float-xxl-end mt-2 mt-xxl-0">
                         <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Your rating: @isset($vote) {{ $vote->label }} @else ? @endif
@@ -48,7 +48,7 @@
         </div>
         <div class="text-muted mt-1">
             @if ($voteCount > 0)
-                <small>{{ $voteCount }} {{ Str::plural('vote', $voteCount) }}</small>
+                <small class="text-nowrap">{{ $voteCount }} {{ Str::plural('vote', $voteCount) }}</small>
                 {!! GameVoteHelper::getVoteDistributionSvg($game) !!}
             @else
                 <small>No votes yet - be the first!</small>

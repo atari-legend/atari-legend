@@ -5,7 +5,7 @@
     <div class="card-body p-0 striped">
 
         <div class="p-2">
-            <h3 class="fs-5 float-end">Top games</h3>
+            <h3 class="fs-5 text-end">Games</h3>
             <ul class="list-unstyled">
                 @foreach ($games as $game)
                     <li>
@@ -19,7 +19,7 @@
         </div>
 
         <div class="p-2">
-            <h3 class="fs-5 float-end">Top developers</h3>
+            <h3 class="fs-5 text-end">Developers</h3>
             <ul class="list-unstyled">
                 @foreach ($developers as $developer)
                     <li>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="p-2">
-            <h3 class="fs-5 float-end">Top publishers</h3>
+            <h3 class="fs-5 text-end">Publishers</h3>
             <ul class="list-unstyled">
                 @foreach ($publishers as $publisher)
                     <li>
@@ -45,7 +45,7 @@
         </div>
 
         <div class="p-2">
-            <h3 class="fs-5 float-end">Top genres</h3>
+            <h3 class="fs-5 text-end">Genres</h3>
             <ul class="list-unstyled">
                 @foreach ($genres as $genre)
                     <li>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="p-2">
-            <h3 class="fs-5 float-end">Top individuals</h3>
+            <h3 class="fs-5 text-end">Individuals</h3>
             <ul class="list-unstyled">
                 @foreach ($individuals as $individual)
                     <li>

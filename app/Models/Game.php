@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\GameHelper;
 use Illuminate\Database\Eloquent\Model;
 
 class Game extends Model
@@ -129,7 +130,7 @@ class Game extends Model
 
     public function votes()
     {
-        return $this->belongsToMany(GameVote::class, 'game_vote');
+        return $this->hasMany(GameVote::class, 'game_id');
     }
 
     public function getNonMenuReleasesAttribute()
@@ -139,5 +140,15 @@ class Game extends Model
             ->filter(function ($release) {
                 return $release->menuDiskContents->isEmpty();
             });
+    }
+
+    public function getScoreAttribute()
+    {
+        $score = $this->votes->avg('score');
+        if ($score) {
+            return GameHelper::normalizeScore($score);
+        } else {
+            return null;
+        }
     }
 }
