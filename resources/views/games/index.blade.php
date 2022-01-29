@@ -10,10 +10,11 @@
         </div>
         <div class="col-12 col-lg-6 order-1 order-lg-2">
             @include('games.card_search')
+            <x-cards.tops />
         </div>
         <div class="col col-sm-6 col-lg-3 order-3">
             @include('games.card_updates')
-            <x-cards.tops />
+            <x-cards.top-games />
         </div>
     </div>
 @endsection

@@ -17,7 +17,7 @@
         </div>
         <div class="col col-sm-6 col-lg-3 order-3">
             <x-cards.screenstar />
-            <x-cards.tops />
+            <x-cards.top-games />
         </div>
     </div>
 @endsection

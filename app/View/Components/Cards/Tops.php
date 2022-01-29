@@ -58,21 +58,12 @@ class Tops extends Component
             ->limit(5)
             ->get();
 
-        $games = DB::table('game_votes')
-            ->selectRaw('game.*, avg(score) as avgScore, count(score) as numVotes')
-            ->join('game', 'game.game_id', '=', 'game_votes.game_id')
-            ->groupBy('game_id')
-            ->orderByDesc('avgScore')
-            ->limit(5)
-            ->get();
-
         return view('components.cards.tops')
             ->with([
                 'developers'  => $developers,
                 'publishers'  => $publishers,
                 'genres'      => $genres,
                 'individuals' => $individuals,
-                'games'       => $games,
             ]);
     }
 }
