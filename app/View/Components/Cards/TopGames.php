@@ -29,6 +29,8 @@ class TopGames extends Component
             ->join('game_votes', 'game.game_id', '=', 'game_votes.game_id')
             ->groupBy('game.game_id')
             ->orderByDesc('avgScore')
+            ->orderByDesc('numVotes')
+            ->orderBy('game_name')
             ->limit(10)
             ->get()
             ->flatten();

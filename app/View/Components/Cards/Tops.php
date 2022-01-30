@@ -30,6 +30,7 @@ class Tops extends Component
             ->where('pub_dev.pub_dev_name', '<>', 'Non-Commercial')
             ->groupBy('pub_dev_id')
             ->orderBy('game_count', 'desc')
+            ->orderBy('pub_dev_name')
             ->limit(5)
             ->get();
 
@@ -39,6 +40,7 @@ class Tops extends Component
             ->where('pub_dev.pub_dev_name', '<>', 'Non-Commercial')
             ->groupBy('pub_dev_id')
             ->orderBy('release_count', 'desc')
+            ->orderBy('pub_dev_name')
             ->limit(5)
             ->get();
 
@@ -47,6 +49,7 @@ class Tops extends Component
             ->selectRaw('count(game_id) as game_count, game_genre.name, game_genre.id')
             ->groupBy('game_genre.id')
             ->orderBy('game_count', 'desc')
+            ->orderBy('name')
             ->limit(5)
             ->get();
 
@@ -55,6 +58,7 @@ class Tops extends Component
             ->selectRaw('count(game_id) as game_count, individuals.ind_name, individuals.ind_id')
             ->groupBy('individuals.ind_id')
             ->orderBy('game_count', 'desc')
+            ->orderBy('ind_name')
             ->limit(5)
             ->get();
 
