@@ -36,3 +36,9 @@
         </div>
     </div>
 @endsection
+
+@section('scripts')
+    @if ($sndhs->isNotEmpty())
+        <script src="{{ mix('js/game-music.js') }}"></script>
+    @endif
+@endsection

@@ -20,6 +20,16 @@ mix.js('resources/js/app.js', 'public/js')
     .version()
     .sourceMaps();
 
+mix.js('resources/js/admin/app.js', 'public/js/admin.js')
+    .eslint()
+    .version()
+    .sourceMaps();
+
+mix.js('resources/js/game/music.js', 'public/js/game-music.js')
+    .eslint()
+    .version()
+    .sourceMaps();
+
 mix.js('resources/js/tabulator.js', 'public/js')
     .eslint()
     .version()

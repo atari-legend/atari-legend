@@ -40,6 +40,7 @@
 
     @livewireScripts
     <script src="{{ mix('js/app.js') }}"></script>
+    <script src="{{ mix('js/admin.js') }}"></script>
 
     {{-- SCEditor does not work as a NPM module --}}
     <script src="{{ asset('js/sceditor-3.1.1/sceditor.min.js') }}"></script>
