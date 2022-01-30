@@ -5,7 +5,7 @@
     <div class="card-body p-0 striped">
         <div class="p-0 striped">
                 @foreach ($games as $game)
-                    <div class="row g-0 py-1">
+                    <div class="row align-items-center g-0 py-1">
                         <div class="col-3 text-center text-nowrap">
                             <div class="fs-5 text-audiowide text-primary mb-1">{{ $loop->index+1 }}</div>
                             <div>{{ number_format(GameHelper::normalizeScore($game->avgScore), 2) }}</div>
