@@ -15,7 +15,7 @@
                     <div class="dropdown float-xxl-end mt-2 mt-xxl-0">
                         <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Your rating: @isset($vote) {{ $vote->label }} @else ? @endif
+                            @isset($vote) {{ $vote->label }} @else Your rating: ? @endif
                         </button>
                         <ul class="dropdown-menu">
                             @foreach (\App\Models\GameVote::LABELS as $score => $label)
