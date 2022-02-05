@@ -17,7 +17,7 @@ class RenameDeveloperRoleColumn extends Migration
         if (DB::connection()->getDriverName() === 'sqlite') {
             // SQLite does not support renaming columns
             Schema::table('developer_role', function (Blueprint $table) {
-                $table->string('name', 50);
+                $table->string('name', 50)->nullable();
             });
             DB::table('developer_role')
                 ->update(['name' => DB::raw('role')]);

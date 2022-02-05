@@ -17,7 +17,7 @@ class RenameMemoryColumn extends Migration
         if (DB::connection()->getDriverName() === 'sqlite') {
             // SQLite does not support renaming columns
             Schema::table('memory', function (Blueprint $table) {
-                $table->string('name', 45);
+                $table->string('name', 45)->nullable();
             });
             DB::table('memory')
                 ->update(['name' => DB::raw('memory')]);
