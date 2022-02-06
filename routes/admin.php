@@ -24,6 +24,8 @@ use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
 use App\Http\Controllers\Admin\News\NewsController;
 use App\Http\Controllers\Admin\News\NewsSubmissionsController;
+use App\Http\Controllers\Admin\Other\QuoteController;
+use App\Http\Controllers\Admin\Other\TriviaController;
 use App\Http\Controllers\Admin\User\CommentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -95,6 +97,11 @@ Route::middleware('verified')->group(function () {
                     Route::get('submissions', [NewsSubmissionsController::class, 'index'])->name('submissions.index');
                     Route::delete('submissions/{submission}', [NewsSubmissionsController::class, 'destroy'])->name('submissions.destroy');
                     Route::post('submissions/{submission}', [NewsSubmissionsController::class, 'approve'])->name('submissions.approve');
+                });
+
+                Route::prefix('/others')->name('others.')->group(function () {
+                    Route::resource('trivias', TriviaController::class);
+                    Route::resource('quotes', QuoteController::class);
                 });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {

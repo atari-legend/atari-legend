@@ -8,4 +8,6 @@ class Trivia extends Model
 {
     protected $primaryKey = 'trivia_id';
     public $timestamps = false;
+
+    protected $fillable = ['trivia_text'];
 }
