@@ -19,6 +19,7 @@ class Screenshot extends Model
         'article'         => 'article_screenshots',
         'interview'       => 'interview_screenshots',
         'game_submission' => 'game_submit_screenshots',
+        'spotlight'       => 'spotlight_screens',
     ];
 
     public function getFileAttribute()

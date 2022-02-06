@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
 use App\Http\Controllers\Admin\News\NewsController;
 use App\Http\Controllers\Admin\News\NewsSubmissionsController;
 use App\Http\Controllers\Admin\Other\QuoteController;
+use App\Http\Controllers\Admin\Other\SpotlightController;
 use App\Http\Controllers\Admin\Other\TriviaController;
 use App\Http\Controllers\Admin\User\CommentController;
 use App\Http\Controllers\Admin\User\UserController;
@@ -102,6 +103,9 @@ Route::middleware('verified')->group(function () {
                 Route::prefix('/others')->name('others.')->group(function () {
                     Route::resource('trivias', TriviaController::class);
                     Route::resource('quotes', QuoteController::class);
+
+                    Route::delete('spotlights/{spotlight}/image', [SpotlightController::class, 'destroyImage'])->name('spotlights.image.destroy');
+                    Route::resource('spotlights', SpotlightController::class);
                 });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {

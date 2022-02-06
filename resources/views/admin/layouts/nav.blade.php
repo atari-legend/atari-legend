@@ -152,7 +152,7 @@
                         <li><a>Changelog</a></li>
                         <li><a class="@activeroute('admin.others.trivias.*')" href="{{ route('admin.others.trivias.index') }}">Did You Know?</a></li>
                         <li><a class="@activeroute('admin.others.quotes.*')" href="{{ route('admin.others.quotes.index') }}">Quotes</a></li>
-                        <li><a>Spotlight</a></li>
+                        <li><a class="@activeroute('admin.others.spotlights.*')" href="{{ route('admin.others.spotlights.index') }}">Spotlights</a></li>
                     </ul>
                 </div>
             </div>

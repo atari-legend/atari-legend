@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Spotlight extends Model
 {
+    protected $primaryKey = 'spotlight_id';
     protected $table = 'spotlight';
     public $timestamps = false;
+
+    protected $fillable = ['spotlight', 'link'];
 
     public function screenshot()
     {

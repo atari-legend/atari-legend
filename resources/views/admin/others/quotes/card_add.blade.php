@@ -1,6 +1,6 @@
 <div class="card mb-3 bg-light">
     <div class="card-body">
-        <h2 class="card-title fs-4">Add a quote'</h2>
+        <h2 class="card-title fs-4">Add a quote</h2>
 
         <form action="{{ route('admin.others.quotes.store') }}" method="POST">
             @csrf
