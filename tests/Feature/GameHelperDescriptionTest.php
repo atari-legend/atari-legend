@@ -96,7 +96,7 @@ class GameHelperDescriptionTest extends TestCase
 
         $this->assertEquals(
             'Name of the game is a Genre 1, Genre 2 game for the Atari ST developed by Dev 1, Dev 2 released in 1988 (by Pub 1), 1989 (by Pub 2)'
-                .' (2 releases, 4 boxscans, 1 screenshot, 3 reviews). It is also known as: AKA 1, AKA 2.',
+                . ' (2 releases, 4 boxscans, 1 screenshot, 3 reviews). It is also known as: AKA 1, AKA 2.',
             GameHelper::description($game)
         );
     }
@@ -122,7 +122,7 @@ class GameHelperDescriptionTest extends TestCase
 
         $this->assertEquals(
             'Name of the game is a game for the Atari ST released in 1988'
-                .' (2 releases, 1 boxscan).',
+                . ' (2 releases, 1 boxscan).',
             GameHelper::description($game)
         );
     }

@@ -31,7 +31,7 @@ class GameReleaseController extends Controller
             ->map(function ($boxscan) use ($release) {
                 return [
                     'release' => $release,
-                    'boxscan' => asset('storage/images/game_release_scans/'.$boxscan->file),
+                    'boxscan' => asset('storage/images/game_release_scans/' . $boxscan->file),
                 ];
             });
 

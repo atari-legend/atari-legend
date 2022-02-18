@@ -50,7 +50,7 @@ class Article extends Model implements Feedable
     {
         return FeedItem::create([
             'id'         => $this->getKey(),
-            'title'      => 'Article: '.$this->article_title,
+            'title'      => 'Article: ' . $this->article_title,
             'summary'    => Helper::bbCode($this->texts->first()->article_intro),
             'updated'    => $this->texts->first()->article_date,
             'link'       => route('articles.show', $this),

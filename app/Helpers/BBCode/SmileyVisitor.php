@@ -13,7 +13,7 @@ use JBBCode\TextNode;
 class SmileyVisitor implements NodeVisitor
 {
     const SMILIES = [
-        ':-D'       =>  'icon_e_biggrin',
+        ':-D'       => 'icon_e_biggrin',
         ':)'        => 'icon_e_smile',
         ':('        => 'icon_e_sad',
         '8O'        => 'icon_eek',
@@ -59,7 +59,7 @@ class SmileyVisitor implements NodeVisitor
         foreach (SmileyVisitor::SMILIES as $text => $img) {
             $textNode->setValue(str_replace(
                 $text,
-                '<img class="border-0" style="height: 1rem;" src="'.$this->imageUrlBase.'/'.$img.'.'.SmileyVisitor::IMG_EXT.'">',
+                '<img class="border-0" style="height: 1rem;" src="' . $this->imageUrlBase . '/' . $img . '.' . SmileyVisitor::IMG_EXT . '">',
                 $textNode->getValue()
             ));
         }

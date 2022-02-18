@@ -27,7 +27,7 @@ class CrewsTable extends DataTableComponent
         return Crew::query()
             ->when(
                 $this->getFilter('search'),
-                fn ($query, $term) => $query->where('crew_name', 'like', '%'.$term.'%')
+                fn ($query, $term) => $query->where('crew_name', 'like', '%' . $term . '%')
             );
     }
 

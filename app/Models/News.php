@@ -33,7 +33,7 @@ class News extends Model implements Feedable
     public function getNewsImageAttribute()
     {
         if ($this->image?->file) {
-            return asset('storage/images/news_images/'.$this->image->file);
+            return asset('storage/images/news_images/' . $this->image->file);
         } else {
             return null;
         }

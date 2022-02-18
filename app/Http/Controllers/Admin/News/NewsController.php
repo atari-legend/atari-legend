@@ -128,7 +128,7 @@ class NewsController extends Controller
     public function destroyImage(News $news)
     {
         if ($news->news_image) {
-            Storage::disk('public')->delete('images/news_images/'.$news->image->file);
+            Storage::disk('public')->delete('images/news_images/' . $news->image->file);
             $news->image->delete();
 
             ChangelogHelper::insert([
@@ -161,7 +161,7 @@ class NewsController extends Controller
             }
 
             $image = $request->file('image');
-            $image->storeAs('images/news_images/', $newsImage->news_image_id.'.'.$image->extension(), 'public');
+            $image->storeAs('images/news_images/', $newsImage->news_image_id . '.' . $image->extension(), 'public');
 
             $newsImage->update(['news_image_ext' => $image->extension()]);
 

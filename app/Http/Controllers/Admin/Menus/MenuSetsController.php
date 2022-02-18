@@ -30,7 +30,7 @@ class MenuSetsController extends Controller
                 ->paginate(PHP_INT_MAX);
         } elseif ($request->letter) {
             $sets = $sets
-                ->where('name', 'like', $request->letter.'%')
+                ->where('name', 'like', $request->letter . '%')
                 // Essentially disable pagination when filtering on a letter
                 ->paginate(PHP_INT_MAX);
         } else {

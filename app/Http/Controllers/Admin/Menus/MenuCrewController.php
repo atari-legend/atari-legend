@@ -233,7 +233,7 @@ class MenuCrewController extends Controller
 
     public function destroyLogo(Crew $crew)
     {
-        Storage::disk('public')->delete('images/crew_logos/'.$crew->logo_file);
+        Storage::disk('public')->delete('images/crew_logos/' . $crew->logo_file);
 
         $crew->crew_logo = null;
         $crew->save();

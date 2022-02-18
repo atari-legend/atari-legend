@@ -20,16 +20,16 @@ return [
              */
             'url' => '',
 
-            'title' => 'Atari Legend - Latest News, Reviews, Interviews and Articles',
+            'title'       => 'Atari Legend - Latest News, Reviews, Interviews and Articles',
             'description' => 'Legends Never Die!',
-            'language' => 'en-US',
+            'language'    => 'en-US',
 
             /*
              * The image to display for the feed.  For Atom feeds, this is displayed as
              * a banner/logo; for RSS and JSON feeds, it's displayed as an icon.
              * An empty value omits the image attribute from the feed.
              */
-            'image' => env('APP_URL').'/images/favicon.png',
+            'image' => env('APP_URL') . '/images/favicon.png',
 
             /*
              * The format of the feed.  Acceptable values are 'rss', 'atom', or 'json'.

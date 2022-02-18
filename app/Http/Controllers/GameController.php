@@ -39,14 +39,14 @@ class GameController extends Controller
                     ->map(function ($boxscan) use ($release) {
                         return [
                             'release' => $release,
-                            'boxscan' => asset('storage/images/game_release_scans/'.$boxscan->file),
+                            'boxscan' => asset('storage/images/game_release_scans/' . $boxscan->file),
                         ];
                     });
             });
         $gameBoxscans = $game->boxscans->map(function ($boxscan) {
             return [
                 'release' => null,
-                'boxscan' => asset('storage/images/game_boxscans/'.$boxscan->file),
+                'boxscan' => asset('storage/images/game_boxscans/' . $boxscan->file),
             ];
         });
 
@@ -103,18 +103,18 @@ class GameController extends Controller
                 if ($sndh->subtunes > 1) {
                     for ($i = 1; $i <= $sndh->subtunes; $i++) {
                         $songs[] = [
-                            'name' => ($sndh->title ?? 'Unknown').' ('.$i.'/'.$sndh->subtunes.')',
+                            'name'   => ($sndh->title ?? 'Unknown') . ' (' . $i . '/' . $sndh->subtunes . ')',
                             'artist' => $sndh->composer ?? 'Unknown',
-                            'url' => route('music', ['sndh' => $sndh, 'subtune' => $i]),
-                            'cover' => route('music.cover', $game),
+                            'url'    => route('music', ['sndh' => $sndh, 'subtune' => $i]),
+                            'cover'  => route('music.cover', $game),
                         ];
                     }
                 } else {
                     $songs[] = [
-                        'name' => $sndh->title ?? 'Unknown',
+                        'name'   => $sndh->title ?? 'Unknown',
                         'artist' => $sndh->composer ?? 'Unknown',
-                        'url' => route('music', $sndh),
-                        'cover' => route('music.cover', $game),
+                        'url'    => route('music', $sndh),
+                        'cover'  => route('music.cover', $game),
                     ];
                 }
 
@@ -208,7 +208,7 @@ class GameController extends Controller
 
                 $info->screenshots()->save($screenshot);
 
-                $file->storeAs('images/game_submit_screenshots', $screenshot->screenshot_id.'.'.$screenshot->imgext, 'public');
+                $file->storeAs('images/game_submit_screenshots', $screenshot->screenshot_id . '.' . $screenshot->imgext, 'public');
             }
         }
 

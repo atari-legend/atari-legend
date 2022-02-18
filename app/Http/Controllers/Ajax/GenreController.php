@@ -15,7 +15,7 @@ class GenreController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $genres = $genres->where('name', 'like', '%'.$request->q.'%');
+            $genres = $genres->where('name', 'like', '%' . $request->q . '%');
         }
 
         return response()->json($genres->get());

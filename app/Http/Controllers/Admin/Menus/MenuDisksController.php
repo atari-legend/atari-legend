@@ -123,7 +123,7 @@ class MenuDisksController extends Controller
                 'imgext'       => strtolower($screenshotFile->extension()),
             ]);
 
-            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id.'.'.$screenshotFile->extension(), 'public');
+            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshotFile->extension(), 'public');
 
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,
@@ -142,7 +142,7 @@ class MenuDisksController extends Controller
     public function destroyScreenshot(MenuDisk $disk, MenuDiskScreenshot $screenshot)
     {
         if ($screenshot->menuDisk->id === $disk->id) {
-            Storage::disk('public')->delete('images/menu_screenshots/'.$screenshot->id.'.'.$screenshot->imgext);
+            Storage::disk('public')->delete('images/menu_screenshots/' . $screenshot->id . '.' . $screenshot->imgext);
             $screenshot->delete();
 
             ChangelogHelper::insert([
@@ -174,7 +174,7 @@ class MenuDisksController extends Controller
             $dumpZip->open($tmpFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
             if ($clientExt !== 'ZIP' && ! collect(MenuDiskDump::EXTENSIONS)->contains($clientExt)) {
-                $request->session()->flash('alert-danger', 'Unsupported file extension: '.$clientExt);
+                $request->session()->flash('alert-danger', 'Unsupported file extension: ' . $clientExt);
 
                 return redirect()->route('admin.menus.disks.edit', $disk);
             }
@@ -182,7 +182,7 @@ class MenuDisksController extends Controller
             if ($clientExt === 'ZIP') {
                 $zip = new ZipArchive();
                 if ($zip->open($dumpFile->path()) !== true) {
-                    $request->session()->flash('alert-danger', 'Error opening ZIP file: '.$zip->getStatusString());
+                    $request->session()->flash('alert-danger', 'Error opening ZIP file: ' . $zip->getStatusString());
 
                     return redirect()->route('admin.menus.disks.edit', $disk);
                 }
@@ -197,7 +197,7 @@ class MenuDisksController extends Controller
                 $zipEntryExt = strtoupper(pathinfo($zipEntryName, PATHINFO_EXTENSION));
 
                 if (! collect(MenuDiskDump::EXTENSIONS)->contains($zipEntryExt)) {
-                    $request->session()->flash('alert-danger', 'File insize ZIP as an unsupported file extension: '.$zipEntryExt);
+                    $request->session()->flash('alert-danger', 'File insize ZIP as an unsupported file extension: ' . $zipEntryExt);
                     $zip->close();
 
                     return redirect()->route('admin.menus.disks.edit', $disk);
@@ -208,13 +208,13 @@ class MenuDisksController extends Controller
                 $dumpSize = strlen($content);
                 $dumpChecksum = hash('sha512', $content);
 
-                $dumpZip->addFromString($disk->download_basename.'.'.strtolower($zipEntryExt), $content);
+                $dumpZip->addFromString($disk->download_basename . '.' . strtolower($zipEntryExt), $content);
             } else {
                 $dumpFormat = $clientExt;
                 $dumpSize = strlen($dumpFile->get());
                 $dumpChecksum = hash('sha512', $dumpFile->get());
 
-                $dumpZip->addFile($dumpFile->path(), $disk->download_basename.'.'.strtolower($clientExt));
+                $dumpZip->addFile($dumpFile->path(), $disk->download_basename . '.' . strtolower($clientExt));
             }
             $dumpZip->close();
 
@@ -259,7 +259,7 @@ class MenuDisksController extends Controller
             }
 
             $handle = fopen($tmpFilePath, 'r');
-            Storage::disk('public')->put('zips/menus/'.$dump->id.'.zip', $handle);
+            Storage::disk('public')->put('zips/menus/' . $dump->id . '.zip', $handle);
             fclose($handle);
             unlink($tmpFilePath);
         }
@@ -270,7 +270,7 @@ class MenuDisksController extends Controller
     public function destroyDump(MenuDisk $disk, MenuDiskDump $dump)
     {
         if ($dump->menuDisk->id === $disk->id) {
-            Storage::disk('public')->delete('zips/menus/'.$dump->id.'.zip');
+            Storage::disk('public')->delete('zips/menus/' . $dump->id . '.zip');
             $dump->menuDisk->menuDiskDump()->dissociate();
             $dump->menuDisk->save();
             $dump->delete();

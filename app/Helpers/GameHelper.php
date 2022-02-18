@@ -22,28 +22,28 @@ class GameHelper
 
         // Genres
         if ($game->genres->isNotEmpty()) {
-            $desc .= $game->genres->implode('name', ', ').' ';
+            $desc .= $game->genres->implode('name', ', ') . ' ';
         }
 
         $desc .= 'game for the Atari ST ';
 
         // Developers
         if ($game->developers->isNotEmpty()) {
-            $desc .= 'developed by '.$game->developers->implode('pub_dev_name', ', ').' ';
+            $desc .= 'developed by ' . $game->developers->implode('pub_dev_name', ', ') . ' ';
         }
 
         $extraInfo = [];
 
         // Release (with publishers)
         if ($game->releases->isNotEmpty()) {
-            $extraInfo[] = $game->releases->count().' '.Str::plural('release', $game->releases->count());
+            $extraInfo[] = $game->releases->count() . ' ' . Str::plural('release', $game->releases->count());
 
             $boxscans = $game->releases
                 ->flatMap(function ($release) {
                     return $release->boxscans;
                 })->count() + $game->boxscans()->count();
             if ($boxscans > 0) {
-                $extraInfo[] = $boxscans.' '.Str::plural('boxscan', $boxscans);
+                $extraInfo[] = $boxscans . ' ' . Str::plural('boxscan', $boxscans);
             }
 
             $releases = $game->releases->map(function ($release) {
@@ -52,7 +52,7 @@ class GameHelper
                     $year = $release->date->year;
                 }
                 if ($release->publisher !== null) {
-                    $year = $year.' (by '.$release->publisher->pub_dev_name.')';
+                    $year = $year . ' (by ' . $release->publisher->pub_dev_name . ')';
                 }
 
                 if ($year !== 'n/a') {
@@ -67,26 +67,26 @@ class GameHelper
                 ->unique();
 
             if ($releases->isNotEmpty()) {
-                $desc .= 'released in '.$releases->join(', ');
+                $desc .= 'released in ' . $releases->join(', ');
             }
         }
 
         if ($game->screenshots->isNotEmpty()) {
-            $extraInfo[] = $game->screenshots->count().' '.Str::plural('screenshot', $game->screenshots->count());
+            $extraInfo[] = $game->screenshots->count() . ' ' . Str::plural('screenshot', $game->screenshots->count());
         }
 
         if ($game->reviews->isNotEmpty()) {
-            $extraInfo[] = $game->reviews->count().' '.Str::plural('review', $game->reviews->count());
+            $extraInfo[] = $game->reviews->count() . ' ' . Str::plural('review', $game->reviews->count());
         }
 
         if (count($extraInfo) > 0) {
-            $desc .= ' ('.join(', ', $extraInfo).')';
+            $desc .= ' (' . join(', ', $extraInfo) . ')';
         }
 
         $desc .= '.';
 
         if ($game->akas->isNotEmpty()) {
-            $desc .= ' It is also known as: '.$game->akas->implode('aka_name', ', ').'.';
+            $desc .= ' It is also known as: ' . $game->akas->implode('aka_name', ', ') . '.';
         }
 
         return $desc;

@@ -39,7 +39,7 @@ class CommentsTable extends DataTableComponent
         return Comment::query()
             ->when(
                 $this->getFilter('search'),
-                fn ($query, $term) => $query->where('comment', 'like', '%'.$term.'%')
+                fn ($query, $term) => $query->where('comment', 'like', '%' . $term . '%')
             )
             ->when(
                 $this->getFilter('type'),
@@ -63,7 +63,7 @@ class CommentsTable extends DataTableComponent
         return [
             'type' => Filter::make('Type')
                 ->select([
-                    ''          => 'Any',
+                    ''           => 'Any',
                     'games'      => 'Game',
                     'reviews'    => 'Review',
                     'interviews' => 'Interview',

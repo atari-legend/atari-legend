@@ -14,10 +14,10 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     const COMMENT_CHANGELOG_SECTIONS = [
-        Comment::TYPE_GAME => 'Games',
-        Comment::TYPE_ARTICLE => 'Articles',
+        Comment::TYPE_GAME      => 'Games',
+        Comment::TYPE_ARTICLE   => 'Articles',
         Comment::TYPE_INTERVIEW => 'Interviews',
-        Comment::TYPE_REVIEW => 'Reviews',
+        Comment::TYPE_REVIEW    => 'Reviews',
     ];
 
     public function index()
@@ -33,7 +33,7 @@ class CommentController extends Controller
     public function edit(Comment $comment)
     {
         $label = Carbon::createFromTimestamp($comment->timestamp)->toDayDateTimeString()
-            .' by '.Helper::user($comment->user);
+            . ' by ' . Helper::user($comment->user);
 
         return view('admin.users.comments.edit')
             ->with([

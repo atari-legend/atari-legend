@@ -44,7 +44,7 @@
                 <div class="col-12 col-md-6">
                     <div class="text-center">
                         <img class="p-1 border border-dark shadow-sm" style="max-height: 7rem"
-                            src="{{ isset($spotlight->screenshot) ? $spotlight->screenshot->getUrl('spotlight') ?? asset('images/unknown.jpg') : asset('images/unknown.jpg') }}" alt="Spotlight image">
+                            src="{{ isset($spotlight->screenshot) ? $spotlight->screenshot->getUrl('spotlight') ?? asset('images/image-placeholder.png') : asset('images/image-placeholder.png') }}" alt="Spotlight image">
 
                         @if (isset($spotlight?->screenshot))
                             <button class="btn btn-link" type="button"

@@ -33,7 +33,7 @@ class SearchByIdBBCodeTag extends CodeDefinition
 
         return join([
             '<a href="',
-            route('games.search', [$this->getTagName().'_id' => $el->getAttribute()[$this->getTagName()]]),
+            route('games.search', [$this->getTagName() . '_id' => $el->getAttribute()[$this->getTagName()]]),
             '">',
             $content,
             '</a>',

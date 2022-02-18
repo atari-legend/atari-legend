@@ -38,17 +38,17 @@ class Screenshot extends Model
      */
     public function getUrl(string $type): string
     {
-        return asset('storage/images/'.Screenshot::PATHS[$type].'/'.$this->file);
+        return asset('storage/images/' . Screenshot::PATHS[$type] . '/' . $this->file);
     }
 
     public function getFolder(string $type): string
     {
-        return 'images/'.Screenshot::PATHS[$type];
+        return 'images/' . Screenshot::PATHS[$type];
     }
 
     public function getPath(string $type): string
     {
-        return $this->getFolder($type).'/'.$this->file;
+        return $this->getFolder($type) . '/' . $this->file;
     }
 
     public function reviewScreenshots()

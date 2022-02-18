@@ -128,20 +128,20 @@ class MenuSetController extends Controller
                 $games->where('game_name', 'regexp', '^[0-9]+');
                 $software->where('name', 'regexp', '^[0-9]+');
             } else {
-                $games->where('game_name', 'like', $request->input('titleAZ').'%');
-                $software->where('name', 'like', $request->input('titleAZ').'%');
+                $games->where('game_name', 'like', $request->input('titleAZ') . '%');
+                $software->where('name', 'like', $request->input('titleAZ') . '%');
             }
             $searchPossible = true;
         }
 
         if ($request->title) {
-            $software->where('name', 'like', '%'.$request->title.'%');
+            $software->where('name', 'like', '%' . $request->title . '%');
             $searchPossible = true;
 
             $games->where(function (Builder $query) use ($request) {
-                $query->where('game_name', 'like', '%'.$request->input('title').'%')
+                $query->where('game_name', 'like', '%' . $request->input('title') . '%')
                     ->orWhereHas('akas', function (Builder $subQuery) use ($request) {
-                        $subQuery->where('aka_name', 'like', '%'.$request->input('title').'%');
+                        $subQuery->where('aka_name', 'like', '%' . $request->input('title') . '%');
                     });
             });
         }
@@ -169,7 +169,7 @@ class MenuSetController extends Controller
     public function epub(MenuSet $set)
     {
         $book = new EPub(EPub::BOOK_VERSION_EPUB3);
-        $book->setTitle('Scrolltexts of '.$set->name);
+        $book->setTitle('Scrolltexts of ' . $set->name);
         $book->setAuthor($set->crews()->pluck('crew_name')->join(', '), '');
         $book->setPublisher('Atari Legend', URL::to('/'));
         $book->setSourceURL(route('menus.show', $set));
@@ -183,13 +183,13 @@ class MenuSetController extends Controller
         $this->getSortedDisksForSet($set)
             ->each(function ($disk) use ($book) {
                 $content = view('menus.epub.disk', ['disk' => $disk])->render();
-                $book->addChapter($disk->menu->label.$disk->label, $disk->id.'.xhtml', $content);
+                $book->addChapter($disk->menu->label . $disk->label, $disk->id . '.xhtml', $content);
                 $disk->screenshots
                     ->each(function ($screenshot) use ($book) {
-                        $path = 'public/images/menu_screenshots/'.$screenshot->file;
+                        $path = 'public/images/menu_screenshots/' . $screenshot->file;
                         $book->addLargeFile(
-                            'images/'.$screenshot->file,
-                            'screenshot-'.$screenshot->id,
+                            'images/' . $screenshot->file,
+                            'screenshot-' . $screenshot->id,
                             Storage::path($path),
                             Storage::mimeType($path)
                         );
@@ -200,7 +200,7 @@ class MenuSetController extends Controller
 
         return response($book->getBook())
             ->header('Content-Type', 'application/epub+zip')
-            ->header('Content-Disposition', 'attachment; filename="Scrolltexts of '.$set->name.'.epub"');
+            ->header('Content-Disposition', 'attachment; filename="Scrolltexts of ' . $set->name . '.epub"');
     }
 
     /**
@@ -248,7 +248,7 @@ class MenuSetController extends Controller
             320 + $i * $lineHeight,
             $grey,
             $font,
-            'by: '.$set->crews->pluck('crew_name')->join(', ')
+            'by: ' . $set->crews->pluck('crew_name')->join(', ')
         );
 
         // Print generic text at the bottom
@@ -261,7 +261,7 @@ class MenuSetController extends Controller
             $grey,
             $font,
             $set->menus->pluck('disks')->flatten()->count()
-               .' menu disk screenshots, contents and scrolltexts'
+               . ' menu disk screenshots, contents and scrolltexts'
         );
 
         $f = tempnam(sys_get_temp_dir(), 'epub-cover-');

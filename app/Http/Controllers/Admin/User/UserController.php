@@ -42,7 +42,7 @@ class UserController extends Controller
         $ext = null;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $avatar->storeAs('images/user_avatars/', $user->user_id.'.'.$avatar->extension(), 'public');
+            $avatar->storeAs('images/user_avatars/', $user->user_id . '.' . $avatar->extension(), 'public');
             $ext = $avatar->extension();
         }
 
@@ -89,7 +89,7 @@ class UserController extends Controller
 
     public function destroyAvatar(User $user)
     {
-        Storage::disk('public')->delete('images/user_avatars/'.$user->user_id.'.'.$user->avatar_ext);
+        Storage::disk('public')->delete('images/user_avatars/' . $user->user_id . '.' . $user->avatar_ext);
         $user->avatar_ext = null;
         $user->save();
 

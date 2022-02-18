@@ -27,7 +27,7 @@ class Dump extends Model
     {
         $name = [
             $this->media->release->game->game_name,
-            '('.$this->media->release->year.')',
+            '(' . $this->media->release->year . ')',
         ];
 
         if ($this->media->label) {
@@ -36,6 +36,6 @@ class Dump extends Model
 
         return collect($name)
             ->join(' ')
-            .'.zip';
+            . '.zip';
     }
 }

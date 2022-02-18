@@ -54,7 +54,7 @@ class ReviewController extends Controller
         }
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', 'Review of '.$review->games->first()->game_name)
+            ->add('headline', 'Review of ' . $review->games->first()->game_name)
             ->add('author', Helper::user($review->user))
             ->add('datePublished', $review->review_date->format('Y-m-d'));
         if ($review->screenshots->isNotEmpty()) {

@@ -15,7 +15,7 @@ class UserController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $users = $users->where('userid', 'like', '%'.$request->q.'%');
+            $users = $users->where('userid', 'like', '%' . $request->q . '%');
         }
 
         $results = $users->get();

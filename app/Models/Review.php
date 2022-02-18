@@ -57,7 +57,7 @@ class Review extends Model implements Feedable
     {
         return FeedItem::create([
             'id'         => $this->getKey(),
-            'title'      => 'Review: '.$this->games->first()->game_name,
+            'title'      => 'Review: ' . $this->games->first()->game_name,
             'summary'    => Helper::bbCode(Helper::extractTag(e($this->review_text), 'frontpage')),
             'updated'    => $this->review_date,
             'link'       => route('reviews.show', $this),

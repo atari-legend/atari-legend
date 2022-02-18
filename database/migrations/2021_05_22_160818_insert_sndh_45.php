@@ -17,13 +17,13 @@ class InsertSndh45 extends Migration
         $songs = json_decode(file_get_contents(base_path(ImportSNDH::SONGS_JSON_PATH)), true);
         foreach ($songs as $path => $song) {
             Sndh::create([
-                'id' => $path,
-                'title' => $song['title'] ?? null,
-                'composer' => $song['composer'] ?? null,
-                'ripper' => $song['ripper'] ?? null,
-                'subtunes' => $song['subtunes'] ?? null,
+                'id'              => $path,
+                'title'           => $song['title'] ?? null,
+                'composer'        => $song['composer'] ?? null,
+                'ripper'          => $song['ripper'] ?? null,
+                'subtunes'        => $song['subtunes'] ?? null,
                 'default_subtune' => $song['defaultSubtune'] ?? null,
-                'year' => $song['year'] ?? null,
+                'year'            => $song['year'] ?? null,
             ]);
         }
     }

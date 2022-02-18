@@ -153,7 +153,7 @@ class SpotlightController extends Controller
             }
 
             $image = $request->file('image');
-            $image->storeAs($screenshot->getFolder('spotlight'), $screenshot->getKey().'.'.$image->extension(), 'public');
+            $image->storeAs($screenshot->getFolder('spotlight'), $screenshot->getKey() . '.' . $image->extension(), 'public');
 
             $screenshot->update(['imgext' => $image->extension()]);
         }

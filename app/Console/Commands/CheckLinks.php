@@ -58,14 +58,14 @@ class CheckLinks extends Command
                         ->get($website->website_url);
 
                     if ($response->failed()) {
-                        $this->error("\tError: ".$response->status());
+                        $this->error("\tError: " . $response->status());
                         $website->inactive = 1;
                     } else {
                         $this->comment("\tOK");
                         $website->inactive = 0;
                     }
                 } catch (Exception $e) {
-                    $this->error("\tError: ".$e->getMessage());
+                    $this->error("\tError: " . $e->getMessage());
                     $website->inactive = 1;
                 }
 

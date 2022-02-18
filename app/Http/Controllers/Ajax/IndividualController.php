@@ -16,18 +16,18 @@ class IndividualController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $individuals = $individuals->where('ind_name', 'like', '%'.$request->q.'%');
+            $individuals = $individuals->where('ind_name', 'like', '%' . $request->q . '%');
         }
 
         $results = $individuals->get()
             ->map(function ($individual) {
                 $ind_name = $individual->ind_name;
                 if ($individual->aka_list->isNotEmpty()) {
-                    $ind_name .= ' (aka: '.$individual->aka_list->join(', ').')';
+                    $ind_name .= ' (aka: ' . $individual->aka_list->join(', ') . ')';
                 }
 
                 if ($individual->games->isNotEmpty()) {
-                    $ind_name .= ' ['.Str::limit($individual->games->pluck('game_name')->unique()->join(', '), 45, '…').']';
+                    $ind_name .= ' [' . Str::limit($individual->games->pluck('game_name')->unique()->join(', '), 45, '…') . ']';
                 }
 
                 return [

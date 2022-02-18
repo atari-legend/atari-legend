@@ -19,7 +19,7 @@ class Menu extends Model
     {
         $parts = [];
         if ($this->number !== null) {
-            $parts[] = '#'.$this->number;
+            $parts[] = '#' . $this->number;
         } elseif ($this->issue !== null) {
             $parts[] = $this->issue;
         } else {
@@ -27,7 +27,7 @@ class Menu extends Model
         }
 
         if ($this->version) {
-            $parts[] = ' v'.$this->version;
+            $parts[] = ' v' . $this->version;
         }
 
         return collect($parts)
@@ -36,7 +36,7 @@ class Menu extends Model
 
     public function getFullLabelAttribute()
     {
-        return $this->menuSet->name.' '.$this->label;
+        return $this->menuSet->name . ' ' . $this->label;
     }
 
     public function menuSet()

@@ -23,7 +23,7 @@ class ChangelogHelper
         // Check if all keys are present in the data
         $missingKeys = ChangelogHelper::getMissingKeys($data);
         if (count($missingKeys) > 0) {
-            throw new ErrorException('Missing changelog key(s) \''.join(', ', $missingKeys).'\'');
+            throw new ErrorException('Missing changelog key(s) \'' . join(', ', $missingKeys) . '\'');
         }
 
         $log = Changelog::create(

@@ -62,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvatarAttribute()
     {
         if ($this->avatar_ext !== null && $this->avatar_ext !== '') {
-            return asset('storage/images/user_avatars/'.$this->user_id.'.'.$this->avatar_ext);
+            return asset('storage/images/user_avatars/' . $this->user_id . '.' . $this->avatar_ext);
         } else {
             return null;
         }

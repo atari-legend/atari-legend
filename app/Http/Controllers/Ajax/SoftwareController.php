@@ -15,7 +15,7 @@ class SoftwareController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $software = $software->where('name', 'like', '%'.$request->q.'%');
+            $software = $software->where('name', 'like', '%' . $request->q . '%');
         }
 
         return response()->json($software->get());

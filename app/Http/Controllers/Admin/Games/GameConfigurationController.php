@@ -93,11 +93,11 @@ class GameConfigurationController extends Controller
                     new Crumb('', 'Game configuration'),
                     new Crumb(route('admin.games.configuration.show', $type), $label),
                 ],
-                'categories'  => GameConfigurationController::CONFIG_TYPES_CATEGORIES,
-                'types'       => GameConfigurationController::CONFIG_TYPES_CHANGELOG,
-                'items'       => $items,
-                'type'        => $type,
-                'label'       => $label,
+                'categories'     => GameConfigurationController::CONFIG_TYPES_CATEGORIES,
+                'types'          => GameConfigurationController::CONFIG_TYPES_CHANGELOG,
+                'items'          => $items,
+                'type'           => $type,
+                'label'          => $label,
                 'hasDescription' => in_array($type, GameConfigurationController::CONFIG_HAS_DESCRIPTION),
             ]);
     }

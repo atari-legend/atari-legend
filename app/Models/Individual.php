@@ -56,7 +56,7 @@ class Individual extends Model
     public function getAvatarAttribute()
     {
         if ($this->text?->file) {
-            return asset('storage/images/individual_screenshots/'.$this->text->file);
+            return asset('storage/images/individual_screenshots/' . $this->text->file);
         } else {
             return null;
         }

@@ -27,7 +27,7 @@ class GamesTable extends DataTableComponent
         return Game::query()
             ->when(
                 $this->getFilter('search'),
-                fn ($query, $term) => $query->where('game_name', 'like', '%'.$term.'%')
+                fn ($query, $term) => $query->where('game_name', 'like', '%' . $term . '%')
             );
     }
 

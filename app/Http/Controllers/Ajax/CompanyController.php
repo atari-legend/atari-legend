@@ -15,7 +15,7 @@ class CompanyController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $companies = $companies->where('pub_dev_name', 'like', '%'.$request->q.'%');
+            $companies = $companies->where('pub_dev_name', 'like', '%' . $request->q . '%');
         }
 
         return response()->json($companies->get());

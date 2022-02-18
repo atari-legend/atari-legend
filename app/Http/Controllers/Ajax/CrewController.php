@@ -15,7 +15,7 @@ class CrewController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $crews = $crews->where('crew_name', 'like', '%'.$request->q.'%');
+            $crews = $crews->where('crew_name', 'like', '%' . $request->q . '%');
         }
 
         return response()->json($crews->get());

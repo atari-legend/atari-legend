@@ -95,16 +95,16 @@ class Helper
     public static function fileSize(int $size, string $unit = '')
     {
         if ((! $unit && $size >= 1 << 30) || $unit == 'GB') {
-            return number_format($size / (1 << 30), 2).' GB';
+            return number_format($size / (1 << 30), 2) . ' GB';
         }
         if ((! $unit && $size >= 1 << 20) || $unit == 'MB') {
-            return number_format($size / (1 << 20), 2).' MB';
+            return number_format($size / (1 << 20), 2) . ' MB';
         }
         if ((! $unit && $size >= 1 << 10) || $unit == 'kB') {
-            return number_format($size / (1 << 10), 0).' kB';
+            return number_format($size / (1 << 10), 0) . ' kB';
         }
 
-        return number_format($size).' bytes';
+        return number_format($size) . ' bytes';
     }
 
     /**
@@ -136,7 +136,7 @@ class Helper
     public static function filename(int $id, ?string $imgext)
     {
         if ($imgext !== null && trim($imgext) !== '') {
-            return $id.'.'.$imgext;
+            return $id . '.' . $imgext;
         } else {
             return null;
         }

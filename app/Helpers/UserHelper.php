@@ -50,7 +50,7 @@ class UserHelper
         // not needed anymore
         $sha512Password = hash('sha512', $password);
         // Then hash it again, with the user salt
-        return hash('sha512', $sha512Password.$salt);
+        return hash('sha512', $sha512Password . $salt);
     }
 
     /**

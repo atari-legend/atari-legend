@@ -23,9 +23,9 @@ class GameMusicController extends Controller
      */
     public function music(Request $request, Sndh $sndh)
     {
-        $url = 'http://sndhrecord.atari.org/mp3/'.$sndh->id;
+        $url = 'http://sndhrecord.atari.org/mp3/' . $sndh->id;
         if ($request->subtune && $request->subtune > 0) {
-            $url .= '-'.sprintf("%'.03d", $request->subtune);
+            $url .= '-' . sprintf("%'.03d", $request->subtune);
         }
         $url .= '.mp3';
 

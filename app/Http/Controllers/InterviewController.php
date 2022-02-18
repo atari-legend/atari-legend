@@ -32,11 +32,11 @@ class InterviewController extends Controller
             ->get();
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', 'Interview of '.$interview->individual->ind_name)
+            ->add('headline', 'Interview of ' . $interview->individual->ind_name)
             ->add('author', Helper::user($interview->user))
             ->add('datePublished', $interview->texts->first()->interview_date->format('Y-m-d'));
         if ($interview->individual?->text?->file !== null) {
-            $jsonLd->add('image', asset('storage/images/individual_screenshots/'.$interview->individual->text->file));
+            $jsonLd->add('image', asset('storage/images/individual_screenshots/' . $interview->individual->text->file));
         }
 
         return view('interviews.show')

@@ -218,7 +218,7 @@ class ImportStonishData extends Command
             ]);
         } elseif ($crews->count() > 1) {
             $this->error("\tMore than 1 crew found for {$name}");
-            $this->error("\t".$crews->pluck('crew_id')->join(', '));
+            $this->error("\t" . $crews->pluck('crew_id')->join(', '));
             exit(1);
         }
 
@@ -243,7 +243,7 @@ class ImportStonishData extends Command
             $crew->menuSets()->save($menuset);
         } elseif ($menusets->count() > 2) {
             $this->error("\tMore than 1 menu set found for {$menu->name_menus}");
-            $this->error("\t".$menusets->pluck('id')->join(', '));
+            $this->error("\t" . $menusets->pluck('id')->join(', '));
             exit(1);
         }
 
@@ -285,7 +285,7 @@ class ImportStonishData extends Command
             $menuset->menus()->save($menu);
         } elseif ($menus->count() > 1) {
             $this->error("\t\tMore than 1 menu found for {$stonishMenu->id_allmenus}");
-            $this->error("\t\t".$menus->pluck('id')->join(', '));
+            $this->error("\t\t" . $menus->pluck('id')->join(', '));
             exit(1);
         }
 
@@ -307,7 +307,7 @@ class ImportStonishData extends Command
 
         // Read scrolltext from disk if it exists
         if ($stonishMenu->scrolltext !== null && trim($stonishMenu->scrolltext) !== '') {
-            $scrolltextFile = config('al.stonish.root').'scrolltext/'.$stonishMenu->scrolltext;
+            $scrolltextFile = config('al.stonish.root') . 'scrolltext/' . $stonishMenu->scrolltext;
             if (file_exists($scrolltextFile)) {
                 $scrolltext = file_get_contents($scrolltextFile);
                 // Strip off non-printable characters
@@ -321,14 +321,14 @@ class ImportStonishData extends Command
         $menu->disks()->save($disk);
 
         if ($stonishMenu->screenshot !== null && trim($stonishMenu->screenshot) !== '') {
-            $screenshotFile = config('al.stonish.root').'screenshot/'.$stonishMenu->screenshot;
+            $screenshotFile = config('al.stonish.root') . 'screenshot/' . $stonishMenu->screenshot;
             if (file_exists($screenshotFile)) {
                 $ext = strtolower(pathinfo($screenshotFile, PATHINFO_EXTENSION));
                 $screenshot = new MenuDiskScreenshot();
                 $screenshot->imgext = $ext;
                 $disk->screenshots()->save($screenshot);
 
-                Storage::disk('public')->put('images/menu_screenshots/'.$screenshot->id.'.'.$ext, file_get_contents($screenshotFile));
+                Storage::disk('public')->put('images/menu_screenshots/' . $screenshot->id . '.' . $ext, file_get_contents($screenshotFile));
             }
         }
 
@@ -380,7 +380,7 @@ class ImportStonishData extends Command
         } else {
             if ($individuals->count() > 1) {
                 $this->error("\t\tMore than 1 individual found for {$name}");
-                $this->error("\t\t".$individuals->pluck('ind_id')->join(', '));
+                $this->error("\t\t" . $individuals->pluck('ind_id')->join(', '));
                 exit(1);
                 // $this->error("\t\tCreating a new one...");
             }
@@ -391,7 +391,7 @@ class ImportStonishData extends Command
 
             if ($individualData['website'] !== null && trim($individualData['website']) !== '') {
                 $text = new IndividualText();
-                $text->ind_profile = '[url]'.trim($individualData['website']).'[/url]';
+                $text->ind_profile = '[url]' . trim($individualData['website']) . '[/url]';
                 $individual->text()->save($text);
             }
 
@@ -405,8 +405,8 @@ class ImportStonishData extends Command
     {
         if ($stonishMenu->download !== null && trim($stonishMenu->download) !== '') {
             $dumpFile = config('al.stonish.root')
-                .'download/'.preg_replace('/([^.a-z0-9]+)/i', '_', $stonishMenu->name_menus)
-                .'/'.$stonishMenu->download;
+                . 'download/' . preg_replace('/([^.a-z0-9]+)/i', '_', $stonishMenu->name_menus)
+                . '/' . $stonishMenu->download;
             if (file_exists($dumpFile)) {
                 $this->info("\t\tFound dump {$dumpFile}");
 
@@ -457,7 +457,7 @@ class ImportStonishData extends Command
                 $dump->save();
                 $disk->menuDiskDump()->associate($dump);
                 $disk->save();
-                Storage::disk('public')->put('zips/menus/'.$dump->id.'.zip', file_get_contents($dumpFile));
+                Storage::disk('public')->put('zips/menus/' . $dump->id . '.zip', file_get_contents($dumpFile));
 
                 return $dump;
             }
@@ -484,7 +484,7 @@ class ImportStonishData extends Command
             $software->save();
         } else {
             $this->error("\t\tMore than 1 software found for {$menuContent->titlesoft}");
-            $this->error("\t\t".$softwares->pluck('id')->join(', '));
+            $this->error("\t\t" . $softwares->pluck('id')->join(', '));
             exit(1);
         }
 

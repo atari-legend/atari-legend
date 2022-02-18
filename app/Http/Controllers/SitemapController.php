@@ -38,7 +38,7 @@ class SitemapController extends Controller
         if ($letter === '0-9') {
             $games->where('game_name', 'regexp', '^[0-9]+');
         } else {
-            $games->where('game_name', 'like', $letter.'%');
+            $games->where('game_name', 'like', $letter . '%');
         }
 
         return response()->view('sitemap.games', [

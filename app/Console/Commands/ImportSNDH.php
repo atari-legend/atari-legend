@@ -56,10 +56,10 @@ class ImportSNDH extends Command
      */
     public function handle()
     {
-        $this->info('Downloading SNDH collection from '.ImportSNDH::SNDH_ZIP_URL);
+        $this->info('Downloading SNDH collection from ' . ImportSNDH::SNDH_ZIP_URL);
         $response = Http::get(ImportSNDH::SNDH_ZIP_URL);
         if ($response->ok() !== true) {
-            $this->error('Error downloading ZIP file: '.$response->status().', '.$response->body());
+            $this->error('Error downloading ZIP file: ' . $response->status() . ', ' . $response->body());
 
             return 1;
         }
@@ -69,16 +69,16 @@ class ImportSNDH extends Command
 
         $zip = new ZipArchive();
         if ($zip->open($zipFile) !== true) {
-            $this->error('Error opening ZIP file: '.$zip->getStatusString());
+            $this->error('Error opening ZIP file: ' . $zip->getStatusString());
 
             return 1;
         }
 
-        $this->info('Extracting to '.sys_get_temp_dir());
+        $this->info('Extracting to ' . sys_get_temp_dir());
         $zip->extractTo(sys_get_temp_dir());
         $zip->close();
 
-        $sndhDir = sys_get_temp_dir().'/sndh_lf/';
+        $sndhDir = sys_get_temp_dir() . '/sndh_lf/';
 
         if (file_exists($sndhDir) !== true) {
             $this->error("Folder {$sndhDir} did not exist after ZIP extraction");
@@ -93,7 +93,7 @@ class ImportSNDH extends Command
 
         foreach ($iterator as $fileInfo) {
             if (strtolower($fileInfo->getExtension()) === 'sndh') {
-                $this->info('Processing '.$fileInfo->getFileinfo());
+                $this->info('Processing ' . $fileInfo->getFileinfo());
 
                 $tmpFile = tempnam(sys_get_temp_dir(), 'sndh-');
 
@@ -104,8 +104,8 @@ class ImportSNDH extends Command
                 if ($header === 'ICE!') {
                     // Call unice68 via a shell script. The unice68 binary
                     // must exist on the system
-                    if (exec(base_path('resources/bin/unice68.sh \''.$fileInfo->getPathname().'\' '.$tmpFile)) === false) {
-                        $this->warn('Error unpacking '.$fileInfo->getPathname());
+                    if (exec(base_path('resources/bin/unice68.sh \'' . $fileInfo->getPathname() . '\' ' . $tmpFile)) === false) {
+                        $this->warn('Error unpacking ' . $fileInfo->getPathname());
                     }
                 } else {
                     copy($file->getPathname(), $tmpFile);
@@ -115,7 +115,7 @@ class ImportSNDH extends Command
                 fseek($file, 12);
                 $magic = fread($file, 4);
                 if ($magic !== 'SNDH') {
-                    $this->warn('File '.$fileInfo->getPathname().' does not have the SNDH marker: '.$magic);
+                    $this->warn('File ' . $fileInfo->getPathname() . ' does not have the SNDH marker: ' . $magic);
                     continue;
                 }
 
@@ -169,7 +169,7 @@ class ImportSNDH extends Command
                         case $tag === 'TIME':
                             $data['times'] = [];
                             for ($i = 0; $i < $subTunes; $i++) {
-                                $time = fgetc($file).fgetc($file);
+                                $time = fgetc($file) . fgetc($file);
                                 $time = unpack('ntime', $time);
                                 array_push($data['times'], $time['time']);
                             }
@@ -190,9 +190,9 @@ class ImportSNDH extends Command
                 fclose($file);
 
                 if (count($data) > 0) {
-                    $songData[str_replace($sndhDir, '', $fileInfo->getPath()).'/'.$fileInfo->getBasename('.sndh')] = $data;
+                    $songData[str_replace($sndhDir, '', $fileInfo->getPath()) . '/' . $fileInfo->getBasename('.sndh')] = $data;
                 } else {
-                    $this->warn('No data found for '.$fileInfo->getPathname());
+                    $this->warn('No data found for ' . $fileInfo->getPathname());
                     exit(1);
                 }
             }

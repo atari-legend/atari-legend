@@ -69,9 +69,9 @@ class GameSubmissionController extends Controller
                 break;
             case  'comment':
                 $comment = new Comment([
-                    'comment' => $submission->submit_text,
+                    'comment'   => $submission->submit_text,
                     'timestamp' => $submission->timestamp,
-                    'user_id' => $submission->user_id,
+                    'user_id'   => $submission->user_id,
                 ]);
                 $comment->save();
                 $comment->games()->attach($submission->game);

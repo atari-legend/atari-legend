@@ -33,10 +33,10 @@ class MenuHelper
         })->count();
 
         return join(' ', [
-            'Atari ST menu set '.$set->name.':',
-            $disks->count().' '.Str::plural('disk', $disks->count()).',',
-            $missingCount.' missing,',
-            $scrolls.' '.Str::plural('scrolltext', $scrolls).'.',
+            'Atari ST menu set ' . $set->name . ':',
+            $disks->count() . ' ' . Str::plural('disk', $disks->count()) . ',',
+            $missingCount . ' missing,',
+            $scrolls . ' ' . Str::plural('scrolltext', $scrolls) . '.',
         ]);
     }
 }

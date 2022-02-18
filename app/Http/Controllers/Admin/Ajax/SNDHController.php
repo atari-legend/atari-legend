@@ -16,8 +16,8 @@ class SNDHController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $sndhs = $sndhs->where('title', 'like', '%'.$request->q.'%')
-                ->orWhere('composer', 'like', '%'.$request->q.'%');
+            $sndhs = $sndhs->where('title', 'like', '%' . $request->q . '%')
+                ->orWhere('composer', 'like', '%' . $request->q . '%');
         }
 
         return response()->json($sndhs->get());

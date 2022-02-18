@@ -48,8 +48,8 @@ class GameSearchController extends Controller
                 $games->where('game_name', 'regexp', '^[0-9]+');
                 $software->where('name', 'regexp', '^[0-9]+');
             } else {
-                $games->where('game_name', 'like', $request->input('titleAZ').'%');
-                $software->where('name', 'like', $request->input('titleAZ').'%');
+                $games->where('game_name', 'like', $request->input('titleAZ') . '%');
+                $software->where('name', 'like', $request->input('titleAZ') . '%');
             }
             $searchPossible = true;
             $softwareSearchPossible = true;
@@ -58,20 +58,20 @@ class GameSearchController extends Controller
         if ($request->filled('title')) {
             // Search main game name or an AKA
             $games->where(function (Builder $query) use ($request) {
-                $query->where('game_name', 'like', '%'.$request->input('title').'%')
+                $query->where('game_name', 'like', '%' . $request->input('title') . '%')
                     ->orWhereHas('akas', function (Builder $subQuery) use ($request) {
-                        $subQuery->where('aka_name', 'like', '%'.$request->input('title').'%');
+                        $subQuery->where('aka_name', 'like', '%' . $request->input('title') . '%');
                     });
             });
             $searchPossible = true;
 
-            $software->where('name', 'like', '%'.$request->title.'%');
+            $software->where('name', 'like', '%' . $request->title . '%');
             $softwareSearchPossible = true;
         }
 
         if ($request->filled('developer')) {
             $games->whereHas('developers', function (Builder $query) use ($request) {
-                $query->where('pub_dev_name', 'like', '%'.$request->input('developer').'%');
+                $query->where('pub_dev_name', 'like', '%' . $request->input('developer') . '%');
             });
             $searchPossible = true;
             $softwareSearchPossible = false;
@@ -88,7 +88,7 @@ class GameSearchController extends Controller
         if ($request->filled('publisher')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereHas('publisher', function (Builder $query2) use ($request) {
-                    $query2->where('pub_dev_name', 'like', '%'.$request->input('publisher').'%');
+                    $query2->where('pub_dev_name', 'like', '%' . $request->input('publisher') . '%');
                 });
             });
             $searchPossible = true;
@@ -107,7 +107,7 @@ class GameSearchController extends Controller
 
         if ($request->filled('genre')) {
             $games->whereHas('genres', function (Builder $query) use ($request) {
-                $query->where('name', 'like', '%'.$request->input('genre').'%');
+                $query->where('name', 'like', '%' . $request->input('genre') . '%');
             });
             $searchPossible = true;
             $softwareSearchPossible = false;

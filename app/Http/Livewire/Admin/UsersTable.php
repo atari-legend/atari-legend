@@ -43,7 +43,7 @@ class UsersTable extends DataTableComponent
         return User::query()
             ->when(
                 $this->getFilter('search'),
-                fn ($query, $term) => $query->where('userid', 'like', '%'.$term.'%')
+                fn ($query, $term) => $query->where('userid', 'like', '%' . $term . '%')
             )
             ->when(
                 $this->getFilter('verified'),

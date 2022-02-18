@@ -16,7 +16,7 @@ class GameController extends Controller
             ->select(
                 'game_name',
                 'game_id',
-                DB::raw('CONCAT("'.route('games.show', ['']).'/", game_id) as url')
+                DB::raw('CONCAT("' . route('games.show', ['']) . '/", game_id) as url')
             )
             ->orderBy('game_name')
             ->limit(GameController::MAX);
@@ -25,14 +25,14 @@ class GameController extends Controller
             ->select(
                 'aka_name as game_name',
                 'game_id',
-                DB::raw('CONCAT("'.route('games.show', ['']).'/", game_id) as url')
+                DB::raw('CONCAT("' . route('games.show', ['']) . '/", game_id) as url')
             )
             ->orderBy('aka_name')
             ->limit(GameController::MAX);
 
         if ($request->filled('q')) {
-            $games = $games->where('game_name', 'like', '%'.$request->q.'%');
-            $akas = $akas->where('aka_name', 'like', '%'.$request->q.'%');
+            $games = $games->where('game_name', 'like', '%' . $request->q . '%');
+            $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%');
         }
 
         $all = $games->get()

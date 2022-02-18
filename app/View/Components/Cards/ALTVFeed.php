@@ -35,7 +35,7 @@ class ALTVFeed extends Component
 
             foreach ($feed as $entry) {
                 $xpathPrefix = $entry->getXpathPrefix();
-                $thumbnail = $xpath->evaluate('string('.$xpathPrefix.'/media:group/media:thumbnail/@url)');
+                $thumbnail = $xpath->evaluate('string(' . $xpathPrefix . '/media:group/media:thumbnail/@url)');
                 $entries[] = [
                     'title'     => $entry->getTitle(),
                     'link'      => $entry->getLink(),

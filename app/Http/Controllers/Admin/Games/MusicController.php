@@ -24,7 +24,7 @@ class MusicController extends Controller
                     ->whereRaw('MATCH(title) AGAINST(?)', [$game->game_name])
                     ->get();
                 array_push($matches, [
-                    'game' => $game,
+                    'game'  => $game,
                     'sndhs' => $sndhs,
                 ]);
             });
@@ -59,11 +59,11 @@ class MusicController extends Controller
                     'sub_section_name' => $sndh->id,
                 ]);
 
-                $associations[] = $game->game_name.' → '.$sndh->id;
+                $associations[] = $game->game_name . ' → ' . $sndh->id;
             }
         }
 
-        $request->session()->flash('alert-success', 'Associated '.join("\n\n", $associations));
+        $request->session()->flash('alert-success', 'Associated ' . join("\n\n", $associations));
 
         return redirect()->route('admin.games.music');
     }

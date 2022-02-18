@@ -39,9 +39,9 @@ class GameVoteHelper
         $svgWidth = 5 * GameVoteHelper::BAR_WIDTH + (5 * GameVoteHelper::SPACING);
 
         $content = '<svg class="votes ms-2"
-            width="'.$svgWidth.'"
-            height="'.GameVoteHelper::SVG_HEIGHT.'"
-            viewBox="0 0 '.$svgWidth.' '.GameVoteHelper::SVG_HEIGHT.'"
+            width="' . $svgWidth . '"
+            height="' . GameVoteHelper::SVG_HEIGHT . '"
+            viewBox="0 0 ' . $svgWidth . ' ' . GameVoteHelper::SVG_HEIGHT . '"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">';
 
@@ -50,7 +50,7 @@ class GameVoteHelper
             $height = ($votes[$score] ?? 0) / $maxVotes * $barHeight;
             $y = $barHeight - $height;
 
-            return '<rect width="'.GameVoteHelper::BAR_WIDTH."\" height=\"{$height}\" class=\"score-{$score}\" x=\"{$x}\" y=\"{$y}\" />";
+            return '<rect width="' . GameVoteHelper::BAR_WIDTH . "\" height=\"{$height}\" class=\"score-{$score}\" x=\"{$x}\" y=\"{$y}\" />";
         })
             ->join("\n");
 

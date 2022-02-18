@@ -56,7 +56,7 @@ class MenuDisk extends Model
     {
         return collect([
             $this->menu->menuSet->name,
-            $this->menu->label.$this->label,
+            $this->menu->label . $this->label,
         ])->join(' ');
     }
 
@@ -66,7 +66,7 @@ class MenuDisk extends Model
      */
     public function getDownloadFilenameAttribute()
     {
-        return $this->download_basename.'.zip';
+        return $this->download_basename . '.zip';
     }
 
     /**

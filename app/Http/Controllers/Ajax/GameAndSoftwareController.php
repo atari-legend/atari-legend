@@ -17,7 +17,7 @@ class GameAndSoftwareController extends Controller
                 'game_name as name',
                 'game_id as id',
                 DB::raw("'fa-gamepad' as icon"),
-                DB::raw('CONCAT("'.route('games.show', ['']).'/", game_id) as url')
+                DB::raw('CONCAT("' . route('games.show', ['']) . '/", game_id) as url')
             )
             ->orderBy('game_name')
             ->limit(GameAndSoftwareController::MAX);
@@ -27,7 +27,7 @@ class GameAndSoftwareController extends Controller
                 'aka_name as name',
                 'game_id as id',
                 DB::raw("'fa-gamepad' as icon"),
-                DB::raw('CONCAT("'.route('games.show', ['']).'/", game_id) as url')
+                DB::raw('CONCAT("' . route('games.show', ['']) . '/", game_id) as url')
             )
             ->orderBy('aka_name')
             ->limit(GameAndSoftwareController::MAX);
@@ -37,15 +37,15 @@ class GameAndSoftwareController extends Controller
                 'name',
                 'id',
                 DB::raw("'fa-desktop' as icon"),
-                DB::raw('CONCAT("'.route('menus.software', ['']).'/", id) as url')
+                DB::raw('CONCAT("' . route('menus.software', ['']) . '/", id) as url')
             )
             ->orderBy('name')
             ->limit(GameAndSoftwareController::MAX);
 
         if ($request->filled('q')) {
-            $games = $games->where('game_name', 'like', '%'.$request->q.'%');
-            $akas = $akas->where('aka_name', 'like', '%'.$request->q.'%');
-            $software = $software->where('name', 'like', '%'.$request->q.'%');
+            $games = $games->where('game_name', 'like', '%' . $request->q . '%');
+            $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%');
+            $software = $software->where('name', 'like', '%' . $request->q . '%');
         }
 
         $all = $games->get()
