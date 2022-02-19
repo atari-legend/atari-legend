@@ -22,7 +22,7 @@
                                     </span>
                                     <input type="text" id="name" name="name" required  class="form-control" value="{{ $item->name }}">
                                     @if ($hasDescription)
-                                        <input type="text" id="description" name="description" required  class="form-control" value="{{ $item->description }}">
+                                        <input type="text" id="description" name="description" class="form-control" value="{{ $item->description }}">
                                     @endif
                                     <button class="btn btn-outline-success" type="submit">Update</button>
                                 </div>

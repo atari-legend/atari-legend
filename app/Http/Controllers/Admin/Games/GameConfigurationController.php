@@ -104,6 +104,8 @@ class GameConfigurationController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(['name' => 'required']);
+
         if ($request->type && GameConfigurationController::CONFIG_TYPES_TABLES[$request->type]) {
             $data = [
                 'name' => $request->name,

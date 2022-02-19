@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
+use App\Http\Controllers\Admin\Articles\ArticleTypeController;
 use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Http\Controllers\Admin\Games\GameController;
@@ -98,6 +99,10 @@ Route::middleware('verified')->group(function () {
                     Route::get('submissions', [NewsSubmissionsController::class, 'index'])->name('submissions.index');
                     Route::delete('submissions/{submission}', [NewsSubmissionsController::class, 'destroy'])->name('submissions.destroy');
                     Route::post('submissions/{submission}', [NewsSubmissionsController::class, 'approve'])->name('submissions.approve');
+                });
+
+                Route::prefix('/articles')->name('articles.')->group(function () {
+                    Route::resource('types', ArticleTypeController::class);
                 });
 
                 Route::prefix('/others')->name('others.')->group(function () {
