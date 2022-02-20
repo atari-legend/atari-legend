@@ -145,7 +145,7 @@
                 <div class="col-4 col-sm-3 col-form-label text-nowrap"></div>
                 <div class="col">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="download">
+                        <input class="form-check-input" type="checkbox" id="download" name="download">
                         <label class="form-check-label" for="download">
                             Download
                         </label>

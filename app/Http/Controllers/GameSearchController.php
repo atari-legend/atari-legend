@@ -165,6 +165,16 @@ class GameSearchController extends Controller
             $softwareSearchPossible = false;
         }
 
+        if ($request->filled('download')) {
+            $games->whereHas('releases', function (Builder $query) {
+                $query->whereHas('medias', function (Builder $query2) {
+                    $query2->has('dumps');
+                });
+            });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
         if ($request->filled('screenshot')) {
             $games->has('screenshots');
             $searchPossible = true;

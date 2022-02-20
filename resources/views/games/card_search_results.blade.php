@@ -117,6 +117,9 @@
                     @if ($game->reviews->isNotEmpty())
                         <i class="fas fa-newspaper fa-fw mt-1" title="{{ $game->reviews->count() }} {{ Str::plural('review', $game->reviews->count()) }}"></i>
                     @endif
+                    @if ($game->releases->pluck('medias')->flatten()->pluck('dumps')->isNotEmpty())
+                        <i class="far fa-save fa-fw mt-1" title="as downloads"></i>
+                    @endif
                 </div>
             @endforeach
         </div>
