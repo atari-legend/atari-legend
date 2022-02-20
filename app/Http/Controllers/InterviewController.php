@@ -34,7 +34,7 @@ class InterviewController extends Controller
         $jsonLd = (new JsonLd('Article', url()->current()))
             ->add('headline', 'Interview of '.$interview->individual->ind_name)
             ->add('author', Helper::user($interview->user))
-            ->add('datePublished', date('Y-m-d', $interview->texts->first()->interview_date));
+            ->add('datePublished', $interview->texts->first()->interview_date->format('Y-m-d'));
         if ($interview->individual?->text?->file !== null) {
             $jsonLd->add('image', asset('storage/images/individual_screenshots/'.$interview->individual->text->file));
         }

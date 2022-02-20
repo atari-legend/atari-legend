@@ -9,7 +9,7 @@
                 <h3 class="card-title fs-5 text-audiowide">
                     <a href="{{ route('articles.show', ['article' => $article]) }}">{{ $article->texts->first()->article_title }}</a>
                 </h3>
-                <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $article->texts->first()->article_date) }} by {{ Helper::user($article->user) }}</p>
+                <p class="card-subtitle text-muted mb-2">{{ $article->texts->first()->article_date->format('F j, Y') }} by {{ Helper::user($article->user) }}</p>
                 <p class="card-text">
                     {!! Helper::bbCode(e($article->texts->first()->article_intro)) !!}
                 </p>

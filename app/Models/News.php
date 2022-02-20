@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class News extends Model
+class News extends Model implements Feedable
 {
     protected $primaryKey = 'news_id';
     public $timestamps = false;
@@ -34,5 +37,19 @@ class News extends Model
         } else {
             return null;
         }
+    }
+
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id'         => $this->getKey(),
+            'title'      => $this->news_headline,
+            'summary'    => Helper::bbCode(Helper::extractTag(e($this->news_text), 'frontpage')),
+            'updated'    => $this->news_date,
+            // Use an ID so that articles in the feed have different IDs
+            // The ID is effectively ignored in the News page
+            'link'       => route('news.index', ['news' => $this->news_id]),
+            'authorName' => Helper::user($this->user),
+        ]);
     }
 }

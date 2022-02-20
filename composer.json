@@ -23,9 +23,9 @@
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
-        "laravelium/feed": "8.*",
         "livewire/livewire": "^2.4",
         "rappasoft/laravel-livewire-tables": "~1.21.0",
+        "spatie/laravel-feed": "^4.1",
         "tizis/phpepub": "~5.1",
         "waynestate/parse-youtube-id": "^1.0",
         "webfontkit/roboto": "^1.0"

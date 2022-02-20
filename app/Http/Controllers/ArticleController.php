@@ -44,7 +44,7 @@ class ArticleController extends Controller
         $jsonLd = (new JsonLd('Article', url()->current()))
             ->add('headline', $article->texts->first()->article_title)
             ->add('author', Helper::user($article->user))
-            ->add('datePublished', date('Y-m-d', $article->texts->first()->article_date));
+            ->add('datePublished', $article->texts->first()->article_date->format('Y-m-d'));
         if ($article->screenshots->isNotEmpty()) {
             $jsonLd->add('image', $article->screenshots->first()->getUrl('article'));
         }

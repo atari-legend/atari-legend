@@ -8,7 +8,7 @@ use App\Models\PublisherDeveloper;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class GameHelperHasDevelopersTest extends TestCase
+class GameHelperDevelopersTest extends TestCase
 {
     use RefreshDatabase;
 

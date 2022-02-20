@@ -7,7 +7,7 @@ use App\Models\Release;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class HelperReleaseName extends TestCase
+class HelperReleaseNameTest extends TestCase
 {
     use RefreshDatabase;
 

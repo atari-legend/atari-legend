@@ -1,6 +1,6 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <a class="float-end" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
+        <a class="float-end" href="{{ route('feeds.main') }}"><i class="fas fa-rss-square text-warning"></i></a>
         <h2 class="text-uppercase">Articles</h2>
     </div>
     <div class="card-body p-2 mb-3">
@@ -21,7 +21,7 @@
                         </a>
                     </h3>
                     <p class="card-subtitle text-muted">
-                        {{ date('F j, Y', $article->texts->first()->article_date) }} by {{ Helper::user($article->user) }}
+                        {{ $article->texts->first()->article_date->format('F j, Y') }} by {{ Helper::user($article->user) }}
                         <span class="badge bg-secondary ms-2">{{ $article->type->article_type ?? ''}}</span>
                     </p>
                 </div>

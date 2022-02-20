@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class Review extends Model
+class Review extends Model implements Feedable
 {
     const REVIEW_UNPUBLISHED = 1;
     const REVIEW_PUBLISHED = 0;
@@ -13,6 +16,10 @@ class Review extends Model
     protected $table = 'review_main';
     protected $primaryKey = 'review_id';
     public $timestamps = false;
+
+    protected $casts = [
+        'review_date' => 'datetime:timestamp',
+    ];
 
     protected static function booted()
     {
@@ -44,5 +51,17 @@ class Review extends Model
     public function comments()
     {
         return $this->belongsToMany(Comment::class, 'review_user_comments', 'review_id', 'comment_id');
+    }
+
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id'         => $this->getKey(),
+            'title'      => 'Review: '.$this->games->first()->game_name,
+            'summary'    => Helper::bbCode(Helper::extractTag(e($this->review_text), 'frontpage')),
+            'updated'    => $this->review_date,
+            'link'       => route('reviews.show', $this),
+            'authorName' => Helper::user($this->user),
+        ]);
     }
 }

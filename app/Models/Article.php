@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class Article extends Model
+class Article extends Model implements Feedable
 {
     protected $table = 'article_main';
     protected $primaryKey = 'article_id';
@@ -41,5 +44,17 @@ class Article extends Model
     public function comments()
     {
         return $this->belongsToMany(Comment::class, 'article_user_comments', 'article_id', 'comments_id');
+    }
+
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id'         => $this->getKey(),
+            'title'      => 'Article: '.$this->article_title,
+            'summary'    => Helper::bbCode($this->texts->first()->article_intro),
+            'updated'    => $this->texts->first()->article_date,
+            'link'       => route('articles.show', $this),
+            'authorName' => Helper::user($this->user),
+        ]);
     }
 }

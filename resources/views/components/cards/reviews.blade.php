@@ -6,7 +6,7 @@
         @foreach ($reviews as $review)
             <div class="card-body p-2">
                 <h3 class="card-title fs-6 text-audiowide"><a class="text-nowrap overflow-hidden overflow-ellipsis d-block" href="{{ route('games.show', ['game' => $review->games[0]->game_id]) }}">{{ $review->games[0]->game_name }}</a></h3>
-                <p class="card-subtitle text-muted mb-2">{{ date('F j, Y', $review->review_date) }} by {{ Helper::user($review->user) }}</p>
+                <p class="card-subtitle text-muted mb-2">{{ $review->review_date->format('F j, Y') }} by {{ Helper::user($review->user) }}</p>
                 <p class="card-text mb-0">
                     {!! Helper::bbCode(e(Helper::extractTag($review->review_text, "frontpage"))) !!}
                 </p>

@@ -21,7 +21,7 @@
                 <p class="card-text">
                     {!! Helper::bbCode(Helper::extractTag(e($screenstar->review_text), "screenstar")) !!}
                 </p>
-                <p class="card-subtitle text-muted">{{ date('F j, Y', $screenstar->review_date) }} by {{ Helper::user($screenstar->user) }}</p>
+                <p class="card-subtitle text-muted">{{ $screenstar->review_date->format('F j, Y') }} by {{ Helper::user($screenstar->user) }}</p>
                 <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $screenstar->review_id]) }}">
                     More <i class="fas fa-chevron-right"></i>
                 </a>

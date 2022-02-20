@@ -5,7 +5,7 @@
                 {{ $review->games->first()->game_name}}
             </a>
         </h3>
-        <p class="card-subtitle text-muted">{{ date('F j, Y', $review->review_date) }} by {{ Helper::user($review->user) }}</p>
+        <p class="card-subtitle text-muted">{{ $review->review_date->format('F j, Y') }} by {{ Helper::user($review->user) }}</p>
     </div>
 
     <div class="clearfix">

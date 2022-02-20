@@ -48,7 +48,7 @@
         <!-- End Matomo Code -->
     @endif
 
-    <link href="{{ route('feed') }}" type="application/atom+xml" rel="alternate" title="Latest News, Reviews and Interviews Atom Feed" />
+    @include('feed::links')
 
     {{-- Installation as mobile app --}}
     <meta name="mobile-web-app-capable" content="yes">

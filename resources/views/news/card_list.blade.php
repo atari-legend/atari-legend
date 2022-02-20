@@ -1,6 +1,6 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <a class="float-end" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
+        <a class="float-end" href="{{ route('feeds.main') }}"><i class="fas fa-rss-square text-warning"></i></a>
         <h2 class="text-uppercase">Latest News</h2>
     </div>
 

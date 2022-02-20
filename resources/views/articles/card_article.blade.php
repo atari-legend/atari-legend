@@ -12,7 +12,7 @@
 
     <div class="card-body p-2 bg-darklight">
         <h3 class="fs-5 text-audiowide">Written by {{ Helper::user($article->user) }}</h3>
-        <span class="text-muted">{{ date('F j, Y', $article->texts->first()->article_date) }}</span>
+        <span class="text-muted">{{ $article->texts->first()->article_date->format('F j, Y') }}</span>
     </div>
 
     <div class="card-body p-2 bg-darklight">

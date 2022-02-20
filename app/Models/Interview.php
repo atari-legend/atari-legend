@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class Interview extends Model
+class Interview extends Model implements Feedable
 {
     protected $table = 'interview_main';
     protected $primaryKey = 'interview_id';
@@ -41,5 +44,17 @@ class Interview extends Model
     public function comments()
     {
         return $this->belongsToMany(Comment::class, 'interview_user_comments', 'interview_id', 'comment_id');
+    }
+
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id'         => $this->getKey(),
+            'title'      => 'Interview: '.$this->individual->ind_name,
+            'summary'    => Helper::bbCode($this->texts->first()->interview_intro),
+            'updated'    => $this->texts->first()->interview_date,
+            'link'       => route('interviews.show', $this),
+            'authorName' => Helper::user($this->user),
+        ]);
     }
 }

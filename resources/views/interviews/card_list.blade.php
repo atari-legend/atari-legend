@@ -1,6 +1,6 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <a class="float-end" href="{{ route('feed') }}"><i class="fas fa-rss-square text-warning"></i></a>
+        <a class="float-end" href="{{ route('feeds.main') }}"><i class="fas fa-rss-square text-warning"></i></a>
         <h2 class="text-uppercase">Interviews</h2>
     </div>
     <div class="card-body p-2 mb-3">
@@ -25,7 +25,7 @@
                             {{ $interview->individual->ind_name }}
                         </a>
                     </h3>
-                    <p class="card-subtitle text-muted">{{ date('F j, Y', $interview->texts->first()->interview_date) }} by {{ Helper::user($interview->user) }}</p>
+                    <p class="card-subtitle text-muted">{{ $interview->texts->first()->interview_date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
                 </div>
 
                 <div class="clearfix">
