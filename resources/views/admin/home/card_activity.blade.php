@@ -39,8 +39,8 @@
                             <span class="text-muted">{{ $change->sub_section }}:</span>
                             {{ $change->sub_section_name }}</td>
                         <td>
-                            <abbr title="{{ date('F j, Y H:i', $change->timestamp) }}">
-                                {{ Carbon\Carbon::createFromTimestamp($change->timestamp)->diffForHumans()}}
+                            <abbr title="{{ $change->timestamp->format('F j, Y H:i') }}">
+                                {{ $change->timestamp->diffForHumans() }}
                             </abbr>
                         </td>
                     </tr>

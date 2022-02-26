@@ -11,6 +11,7 @@ use App\Http\Controllers\Ajax\ReleaseYearController;
 use App\Http\Controllers\Ajax\SoftwareController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameMusicController;
@@ -90,6 +91,8 @@ Route::middleware('verified')->group(function () {
 
     Route::resource('/about', AboutController::class)->only(['index']);
     Route::get('/about/andreas', [AboutController::class, 'andreas'])->name('about.andreas');
+
+    Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog.index');
 
     Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap.index');
     Route::get('/sitemap/general', [SitemapController::class, 'general'])->name('sitemap.general');

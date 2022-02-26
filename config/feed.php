@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\FeedHelper;
+use App\Http\Controllers\ChangelogController;
 
 return [
     'feeds' => [
@@ -51,6 +52,18 @@ return [
              * The content type for the feed response.  Set to an empty string to automatically
              * determine the correct value.
              */
+            'contentType' => '',
+        ],
+        'changelog' => [
+            'items'       => [ChangelogController::class, 'feed'],
+            'url'         => 'changelog',
+            'title'       => 'Atari Legend - Database Changes',
+            'description' => 'Changes made to the Atari Legend database by the contributors.',
+            'language'    => 'en-US',
+            'image'       => env('APP_URL') . '/images/favicon.png',
+            'format'      => 'atom',
+            'view'        => 'feed::atom',
+            'type'        => '',
             'contentType' => '',
         ],
     ],

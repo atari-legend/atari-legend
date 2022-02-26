@@ -65,5 +65,8 @@
                 </div>
             </div>
         @endforeach
+        <div class="text-center p-2">
+            <a href="{{ route('changelog.index') }}">View all database changes</a>
+        </div>
     </div>
 </div>
