@@ -1,6 +1,6 @@
 const mix = require('laravel-mix');
 
-require('laravel-mix-eslint-config');
+require('laravel-mix-eslint');
 
 /*
  |--------------------------------------------------------------------------
