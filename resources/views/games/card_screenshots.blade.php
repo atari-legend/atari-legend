@@ -13,8 +13,8 @@
     <div class="card-body p-2">
         @if ($game->screenshots->isNotEmpty())
             <div class="row">
-                <div class="col-2">
-                    <div class="carousel-thumbnails overflow-hidden" data-bs-carousel="carousel-screenshots">
+                <div class="col-2 d-flex flex-column">
+                    <div class="carousel-thumbnails flex-grow-1 overflow-hidden" style="flex-basis: 0;" data-bs-carousel="carousel-screenshots">
                         @foreach($game->screenshots as $screenshot)
                             <a href="#carousel-screenshots" data-bs-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
                                 <img class="w-100 mb-2" src="{{ $screenshot->getUrl('game') }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
@@ -22,7 +22,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="col-10">
+                <div class="col-10 d-flex flex-column">
                     <div class="carousel slide carousel-thumbnails-vertical" id="carousel-screenshots" data-bs-ride="carousel">
                         <ol class="carousel-indicators">
                             @foreach($game->screenshots as $screenshot)
