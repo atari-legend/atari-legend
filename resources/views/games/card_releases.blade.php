@@ -37,7 +37,7 @@
 
                         @foreach ($release->locations as $location)
                             @if ($location->country_iso2 !== null)
-                                <span title="{{ $location->name }}" class="flag-icon flag-icon-{{ strtolower($location->country_iso2) }} mx-1"></span>
+                                <span title="{{ $location->name }}" class="fi fi-{{ strtolower($location->country_iso2) }} mx-1"></span>
                             @endif
                         @endforeach
 
