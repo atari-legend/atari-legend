@@ -6,7 +6,7 @@
         <table class="table table-hover">
             <tbody>
                 @foreach ($trivias as $trivia)
-                    <tr>
+                    <tr id="trivia-{{ $trivia->getKey() }}">
                         <td>
                             <form action="{{ route('admin.others.trivias.update', $trivia) }}" method="POST">
                                 @csrf

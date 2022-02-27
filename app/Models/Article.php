@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
-use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
@@ -14,10 +13,7 @@ class Article extends Model implements Feedable
     protected $primaryKey = 'article_id';
     public $timestamps = false;
 
-    protected static function booted()
-    {
-        static::addGlobalScope(new NonDraftScope());
-    }
+    protected $fillable = ['user_id', 'article_type_id', 'draft'];
 
     public function user()
     {

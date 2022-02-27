@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
-use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
@@ -20,11 +19,6 @@ class Review extends Model implements Feedable
     protected $casts = [
         'review_date' => 'datetime:timestamp',
     ];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new NonDraftScope());
-    }
 
     public function user()
     {

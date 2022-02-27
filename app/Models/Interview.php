@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
-use App\Scopes\NonDraftScope;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
@@ -13,11 +12,6 @@ class Interview extends Model implements Feedable
     protected $table = 'interview_main';
     protected $primaryKey = 'interview_id';
     public $timestamps = false;
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new NonDraftScope());
-    }
 
     public function user()
     {

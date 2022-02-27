@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'throttle'         => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'         => \App\Http\Middleware\EnsureEmailIsVerifiedAndAccountIsActive::class,
         'admin'            => \App\Http\Middleware\Admin::class,
+        'nondraft'         => \App\Http\Middleware\AddNonDraftScope::class,
     ];
 }

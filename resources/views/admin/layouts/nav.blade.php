@@ -103,7 +103,7 @@
             <div id="articles" class="accordion-collapse collapse @showroute('admin.articles.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Articles</a></li>
+                        <li><a class="@activeroute('admin.articles.articles.*')" href="{{ route('admin.articles.articles.index') }}">Articles</a></li>
                         <li><a class="@activeroute('admin.articles.types.*')" href="{{ route('admin.articles.types.index') }}">Types</a></li>
                     </ul>
                 </div>

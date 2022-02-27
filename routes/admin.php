@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
+use App\Http\Controllers\Admin\Articles\ArticleController;
 use App\Http\Controllers\Admin\Articles\ArticleTypeController;
 use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
@@ -184,6 +185,11 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/articles')->name('articles.')->group(function () {
                     Route::resource('types', ArticleTypeController::class);
+                    Route::resource('articles', ArticleController::class);
+
+                    Route::post('articles/{article}/image', [ArticleController::class, 'storeImage'])->name('articles.image.store');
+                    Route::put('articles/{article}/image', [ArticleController::class, 'updateImage'])->name('articles.image.update');
+                    Route::delete('articles/{article}/image/{image}', [ArticleController::class, 'destroyImage'])->name('articles.image.destroy');
                 });
 
                 Route::prefix('/others')->name('others.')->group(function () {

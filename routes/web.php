@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('verified')->group(function () {
+Route::middleware(['verified', 'nondraft'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
     Route::middleware('auth:web')->group(function () {
@@ -133,7 +133,8 @@ Route::middleware('verified')->group(function () {
             Route::get('crews.json', [CrewController::class, 'crews'])->name('crews');
         });
     });
+
+    Route::feeds('feed');
 });
 
 Auth::routes(['verify' => true]);
-Route::feeds('feed');
