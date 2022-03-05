@@ -9,6 +9,8 @@ use Illuminate\View\Component;
 
 class LatestMenus extends Component
 {
+    const MAX_ITEMS = 7;
+
     /**
      * Create a new component instance.
      *
@@ -27,16 +29,16 @@ class LatestMenus extends Component
     public function render()
     {
         $dumps = MenuDiskDump::orderByDesc('updated_at')
-            ->limit(20)
+            ->limit(LatestMenus::MAX_ITEMS)
             ->get();
 
         $disks = MenuDisk::orderByDesc('updated_at')
-            ->limit(20)
+            ->limit(LatestMenus::MAX_ITEMS)
             ->get();
 
         $dumpsOrDisks = $dumps->merge($disks)
             ->sortByDesc('updated_at')
-            ->take(20);
+            ->take(LatestMenus::MAX_ITEMS);
 
         return view('components.cards.latest-menus')
             ->with(['dumpsOrDisks' => $dumpsOrDisks]);
