@@ -38,7 +38,7 @@ class Changelog extends Model implements Feedable
             'id'         => $this->getKey(),
             'title'      => $this->action . ' in ' . $this->section . ': ' . $this->section_name,
             'summary'    => $this->action . ' in ' . $this->section . ': ' . $this->section_name
-                . ', sub-section' . $this->sub_section . ': ' . $this->sub_section_name,
+                . ', sub-section ' . $this->sub_section . ': ' . $this->sub_section_name,
             'updated'    => $this->timestamp,
             // Use an ID so that items in the feed have different IDs
             // The ID is effectively ignored in the Changelog page
