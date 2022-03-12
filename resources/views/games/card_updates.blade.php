@@ -9,6 +9,10 @@
         </p>
         <canvas id="updates-chart"></canvas>
 
+        <div class="text-center p-2 mt-1">
+            <a href="{{ route('changelog.index') }}">View all database changes</a>
+        </div>
+
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 new Chart('updates-chart', {
