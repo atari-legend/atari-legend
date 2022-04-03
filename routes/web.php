@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Ajax\CompanyController;
 use App\Http\Controllers\Ajax\CrewController;
+use App\Http\Controllers\Ajax\EngineController;
 use App\Http\Controllers\Ajax\GameAndSoftwareController;
 use App\Http\Controllers\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Ajax\GenreController;
@@ -105,6 +106,7 @@ Route::middleware('verified')->group(function () {
             Route::get('companies.json', [CompanyController::class, 'companies'])->name('companies');
             Route::get('release-years.json', [ReleaseYearController::class, 'releaseYears'])->name('release-years');
             Route::get('genres.json', [GenreController::class, 'genres'])->name('genres');
+            Route::get('engines.json', [EngineController::class, 'engines'])->name('engines');
             Route::get('games.json', [AjaxGameController::class, 'games'])->name('games');
             Route::get('games-and-software.json', [GameAndSoftwareController::class, 'gamesAndSoftware'])->name('games-and-software');
             Route::get('software.json', [SoftwareController::class, 'software'])->name('software');

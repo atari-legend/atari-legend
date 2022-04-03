@@ -142,6 +142,24 @@
                 </div>
             </div>
             <div class="row mb-3">
+                <label for="engine" class="col-4 col-sm-3 col-form-label text-nowrap">
+                    Engine
+                    <a href="#" data-dropdown-toggle="engine,engine_id"><i class="fas fa-chevron-circle-down"></i></a>
+                </label>
+                <div class="col position-relative">
+                    <input type="text" class="autocomplete form-control"
+                        data-autocomplete-endpoint="{{ route('ajax.engines') }}"
+                        data-autocomplete-key="name"
+                        id="engine" name="engine" autocomplete="off">
+                    <select class="form-select d-none" id="engine_id" name="engine_id">
+                        <option value="">-</option>
+                        @foreach ($engines as $engine)
+                            <option value="{{ $engine->id }}">{{ $engine->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
                 <div class="col-4 col-sm-3 col-form-label text-nowrap"></div>
                 <div class="col">
                     <div class="form-check">

@@ -139,7 +139,7 @@
                 <div class="col-8">
                     @foreach ($game->engines as $engine)
                         <div>
-                            {{ $engine->name }}
+                            <a href="{{ route('games.search', ['engine_id' => $engine->id]) }}">{{ $engine->name }}</a>
                         </div>
                     @endforeach
                 </div>

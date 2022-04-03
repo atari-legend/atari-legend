@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Engine;
 use App\Models\Game;
 use App\Models\Genre;
 use App\Models\Individual;
@@ -116,6 +117,22 @@ class GameSearchController extends Controller
         if ($request->filled('genre_id')) {
             $games->whereHas('genres', function (Builder $query) use ($request) {
                 $query->where('id', $request->input('genre_id'));
+            });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
+        if ($request->filled('engine')) {
+            $games->whereHas('engines', function (Builder $query) use ($request) {
+                $query->where('name', 'like', '%' . $request->input('engine') . '%');
+            });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
+        if ($request->filled('engine_id')) {
+            $games->whereHas('engines', function (Builder $query) use ($request) {
+                $query->where('id', $request->input('engine_id'));
             });
             $searchPossible = true;
             $softwareSearchPossible = false;
@@ -296,11 +313,15 @@ class GameSearchController extends Controller
         $individuals = Individual::all()
             ->sortBy('ind_name');
 
+        $engines = Engine::all()
+            ->sortBy('name');
+
         return [
             'companies'   => $companies,
             'years'       => $years,
             'genres'      => $genres,
             'individuals' => $individuals,
+            'engines'     => $engines,
         ];
     }
 }
