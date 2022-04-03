@@ -27,7 +27,7 @@ class Helper
             return null;
         }
 
-        if (preg_match("@\\[$tag(=[^\\]]*)?\\](.*?)\\[/$tag\\]@s", $string, $matches, )) {
+        if (preg_match("@\\[$tag(=[^\\]]*)?\\](.*?)\\[/$tag\\]@s", $string, $matches)) {
             return $matches[2];
         } else {
             return $string;
