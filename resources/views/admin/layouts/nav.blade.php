@@ -12,13 +12,13 @@
             <div id="games" class="accordion-collapse collapse @showroute('admin.games.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a class="@activeroute('admin.games.games.index')" href="{{ route('admin.games.games.index') }}">Games</a></li>
+                        <li><a class="@activeroute('admin.games.games.*')" href="{{ route('admin.games.games.index') }}">Games</a></li>
                         <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
-                        <li><a class="@activeroute('admin.games.configuration')" href="{{ route('admin.games.configuration.index') }}">Configuration</a></li>
+                        <li><a class="@activeroute('admin.games.configuration.*')" href="{{ route('admin.games.configuration.index') }}">Configuration</a></li>
                         <li><a>Series</a></li>
-                        <li><a class="@activeroute('admin.games.submissions')" href="{{ route('admin.games.submissions.index') }}">Submissions</a></li>
-                        <li><a class="@activeroute('admin.games.individuals')" href="{{ route('admin.games.individuals.index') }}">Individuals</a></li>
-                        <li><a class="@activeroute('admin.games.companies')" href="{{ route('admin.games.companies.index') }}">Companies</a></li>
+                        <li><a class="@activeroute('admin.games.submissions.*')" href="{{ route('admin.games.submissions.index') }}">Submissions</a></li>
+                        <li><a class="@activeroute('admin.games.individuals.*')" href="{{ route('admin.games.individuals.index') }}">Individuals</a></li>
+                        <li><a class="@activeroute('admin.games.companies.*')" href="{{ route('admin.games.companies.index') }}">Companies</a></li>
                         <li><a class="@activeroute('admin.games.music')" href="{{ route('admin.games.music') }}">Music</a></li>
                     </ul>
                 </div>
@@ -65,8 +65,8 @@
             <div id="news" class="accordion-collapse collapse @showroute('admin.news.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a class="@activeroute('admin.news.news')" href="{{ route('admin.news.news.index') }}">News</a></li>
-                        <li><a class="@activeroute('admin.news.submissions')" href="{{ route('admin.news.submissions.index') }}">Submissions</a></li>
+                        <li><a class="@activeroute('admin.news.news.*')" href="{{ route('admin.news.news.index') }}">News</a></li>
+                        <li><a class="@activeroute('admin.news.submissions.*')" href="{{ route('admin.news.submissions.index') }}">Submissions</a></li>
                     </ul>
                 </div>
             </div>

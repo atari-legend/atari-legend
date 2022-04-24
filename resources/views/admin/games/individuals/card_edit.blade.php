@@ -28,6 +28,21 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+
+                        @if (isset($duplicates) && $duplicates->count())
+                            <div class="mt-2">
+                                <span class="text-warning">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    Possible {{ Str::plural('duplicate', $duplicates) }} with:
+                                </span>
+                                @foreach ($duplicates as $duplicate)
+                                    <a href="{{ route('admin.games.individuals.edit', $duplicate) }}">
+                                        {{ $duplicate->ind_name}}
+                                        @if ($duplicate->aka_list->count())({{ $duplicate->aka_list->join(', ') }})@endif
+                                    </a>@if (!$loop->last),@endif
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
 
                     <div class="mb-3">

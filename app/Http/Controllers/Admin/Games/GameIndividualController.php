@@ -10,7 +10,6 @@ use App\Models\IndividualText;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class GameIndividualController extends Controller
 {
@@ -44,20 +43,40 @@ class GameIndividualController extends Controller
             $ind = $ind->individuals->first();
         }
 
+        // Find possible duplicates for the main name
+        $duplicates = Individual::where('ind_name', '=', $ind->ind_name)
+            ->where('ind_id', '!=', $ind->ind_id)
+            ->get();
+
+        // Find possible duplicates for each nick
+        $nickDuplicates = $ind->nicknames()
+            ->get()
+            ->mapWithKeys(function ($item) use ($ind) {
+                $i = Individual::where('ind_name', '=', $item->ind_name)
+                    ->get()
+                    ->filter(function ($item2) use ($ind) {
+                        return ! $ind->nicknames->contains($item2);
+                    });
+
+                return [$item->ind_id => $i];
+            });
+
         return view('admin.games.individuals.edit')
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.individuals.index'), 'Individuals'),
                     new Crumb(route('admin.games.individuals.edit', $ind), $ind->ind_name),
                 ],
-                'individual'  => $ind,
+                'individual'      => $ind,
+                'duplicates'      => $duplicates,
+                'nickDuplicates'  => $nickDuplicates,
             ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name'  => ['required', Rule::unique('individuals', 'ind_name')],
+            'name'  => ['required'],
             'email' => 'nullable|email',
         ]);
 
@@ -104,7 +123,7 @@ class GameIndividualController extends Controller
     public function update(Request $request, Individual $individual)
     {
         $request->validate([
-            'name'  => ['required', Rule::unique('individuals', 'ind_name')->ignore($individual->ind_id, 'ind_id')],
+            'name'  => ['required'],
             'email' => 'nullable|email',
         ]);
 
@@ -196,8 +215,6 @@ class GameIndividualController extends Controller
 
     public function storeNickname(Request $request, Individual $individual)
     {
-        $request->validate(['nickname' => ['required', Rule::unique('individuals', 'ind_name')]]);
-
         $nickname = new Individual(['ind_name' => $request->nickname]);
         $individual->nicknames()->save($nickname);
 
