@@ -21,6 +21,7 @@ class ReleaseDescriptionHelper
         return collect([
             join(' ', [
                 ReleaseDescriptionHelper::getMainDescriptionText($release),
+                ReleaseDescriptionHelper::getCrewsText($release),
                 ReleaseDescriptionHelper::getMenuText($release),
             ]),
             ReleaseDescriptionHelper::getLanguagesText($release),
@@ -425,6 +426,22 @@ class ReleaseDescriptionHelper
                 ->join(', ');
 
             $desc .= '.';
+        }
+
+        return $desc;
+    }
+
+    private static function getCrewsText(Release $release)
+    {
+        $desc = '';
+
+        if ($release->crews->isNotEmpty()) {
+            $desc = 'It was cracked by ';
+            $desc .= $release->crews->pluck('crew_name')
+                ->map(function ($s) {
+                    return ReleaseDescriptionHelper::boldicize($s);
+                })
+                ->join(', ');
         }
 
         return $desc;

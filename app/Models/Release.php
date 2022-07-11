@@ -61,6 +61,11 @@ class Release extends Model
         return $this->belongsTo(PublisherDeveloper::class, 'pub_dev_id');
     }
 
+    public function crews()
+    {
+        return $this->belongsToMany(Crew::class, 'game_release_crew', 'game_release_id', 'crew_id');
+    }
+
     public function boxscans()
     {
         return $this->hasMany(ReleaseScan::class, 'game_release_id');
