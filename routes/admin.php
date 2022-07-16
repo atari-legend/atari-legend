@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\Magazines\MagazineIssuesController;
+use App\Http\Controllers\Admin\Magazines\MagazinesController;
 use App\Http\Controllers\Admin\Menus\MenuConditionsController;
 use App\Http\Controllers\Admin\Menus\MenuCrewController;
 use App\Http\Controllers\Admin\Menus\MenuDisksContentController;
@@ -140,6 +142,11 @@ Route::middleware('verified')->group(function () {
                     Route::delete('/crews/{crew}/parentcrew/{parentCrew}', [MenuCrewController::class, 'removeParentCrew'])->name('crews.removeParentCrew');
                     Route::post('/crews/{crew}/logo', [MenuCrewController::class, 'storeLogo'])->name('crews.storeLogo');
                     Route::delete('/crews/{crew}/logo', [MenuCrewController::class, 'destroyLogo'])->name('crews.destroyLogo');
+                });
+
+                Route::prefix('/magazines')->name('magazines.')->group(function () {
+                    Route::resource('magazines', MagazinesController::class);
+                    Route::resource('issues', MagazineIssuesController::class);
                 });
 
                 Route::name('ajax.')->group(function () {
