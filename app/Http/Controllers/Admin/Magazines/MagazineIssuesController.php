@@ -9,6 +9,8 @@ use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class MagazineIssuesController extends Controller
 {
@@ -60,6 +62,8 @@ class MagazineIssuesController extends Controller
             'barcode'        => $request->barcode,
         ]);
 
+        $this->addOrUpdateImage($request, $issue);
+
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Magazines',
@@ -85,6 +89,8 @@ class MagazineIssuesController extends Controller
         ]);
         $magazine->issues()->save($issue);
 
+        $this->addOrUpdateImage($request, $issue);
+
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Magazines',
@@ -96,5 +102,66 @@ class MagazineIssuesController extends Controller
         ]);
 
         return redirect()->route('admin.magazines.magazines.edit', $issue->magazine);
+    }
+
+    private function addOrUpdateImage(Request $request, MagazineIssue $issue)
+    {
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            $issue->update(['imgext' => $image->extension()]);
+            $image->storeAs($issue->image_path, $issue->image_file, 'public');
+        }
+    }
+
+    public function fetchImage(Request $request, Magazine $magazine, MagazineIssue $issue)
+    {
+        $id = $request->id;
+        $url = "https://archive.org/services/img/{$id}";
+
+        $response = Http::get($url);
+
+        $mimeType = explode(';', $response->header('Content-Type'))[0];
+        $ext = explode('/', $mimeType)[1];
+        $path = "images/magazine_scans/{$issue->id}.{$ext}";
+        Storage::disk('public')->put($path, $response->body());
+
+        $issue->update(['imgext' => $ext]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Magazines',
+            'section_id'       => $issue->magazine->getKey(),
+            'section_name'     => $issue->magazine->name,
+            'sub_section'      => 'Issue Image',
+            'sub_section_id'   => $issue->getKey(),
+            'sub_section_name' => $issue->issue,
+        ]);
+
+        return response(asset("storage/{$path}"), 200)
+            ->header('Content-Type', 'text/plain');
+    }
+
+    public function destroyImage(Request $request, Magazine $magazine, MagazineIssue $issue)
+    {
+        if ($issue->image) {
+            Storage::disk('public')->delete($issue->image_path . '/' . $issue->image_file);
+            $issue->update(['imgext' => null]);
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::UPDATE,
+                'section'          => 'Magazines',
+                'section_id'       => $issue->magazine->getKey(),
+                'section_name'     => $issue->magazine->name,
+                'sub_section'      => 'Issue Image',
+                'sub_section_id'   => $issue->getKey(),
+                'sub_section_name' => $issue->issue,
+            ]);
+        }
+
+        return redirect()->route('admin.magazines.issues.edit', [
+            'magazine' => $issue->magazine,
+            'issue'    => $issue,
+        ]);
     }
 }

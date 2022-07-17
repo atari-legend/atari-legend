@@ -27,6 +27,10 @@ return new class extends Migration
         });
         Schema::rename('magazine', 'magazines');
 
+        // Empty imgext column as we don't have any magazine images anymore
+        DB::table('magazine_issue')
+            ->update(['magazine_issue_imgext' => null]);
+
         Schema::table('magazine_issue', function (Blueprint $table) {
             $table->renameColumn('magazine_issue_id', 'id');
 
@@ -61,14 +65,10 @@ return new class extends Migration
             $table->foreignId('menu_software_id')->nullable()->constrained();
         });
         Schema::table('magazine_game', function (Blueprint $table) {
-            $table->renameColumn('magazine_issue_id', 'issue');
-        });
-
-        Schema::table('magazine_game', function (Blueprint $table) {
             $table->dropColumn('magazine_employe_id');
         });
 
-        Schema::rename('magazine_game', 'magazine_indexes');
+        Schema::rename('magazine_game', 'magazine_indices');
     }
 
     /**

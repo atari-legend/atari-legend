@@ -7,4 +7,11 @@
             @include('admin.magazines.issues.card_edit')
         </div>
     </div>
+    @isset($issue)
+        <div class="row">
+            <div class="col">
+                @include('admin.magazines.issues.card_index')
+            </div>
+        </div>
+    @endif
 @endsection

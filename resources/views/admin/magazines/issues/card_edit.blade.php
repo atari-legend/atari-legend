@@ -75,12 +75,12 @@
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="text-center">
-                        <img class="p-1 border border-dark shadow-sm" style="max-height: 7rem"
+                        <img class="p-1 border border-dark shadow-sm" style="max-height: 15rem"
                             src="{{ isset($issue) ? $issue->image ?? asset('images/image-placeholder.png') : asset('images/image-placeholder.png') }}"
-                            alt="Issue cover">
+                            alt="Issue cover" id="issue-cover">
 
                         @if (isset($issue?->image))
-                            <button class="btn btn-link" type="button"
+                            <button class="btn btn-link" type="button" id="delete-image-button"
                                 onclick="if (confirm('The image will be deleted')) document.getElementById('delete-image').submit();">
                                 <i class="fas fa-trash-alt text-danger"></i>
                             </button>
@@ -100,7 +100,7 @@
                             </span>
                         @enderror
 
-                        <button class="btn btn-info mt-3">Fetch from Archive.org</button>
+                        <button class="btn btn-info mt-3" id="fetch-thumbnail" type="button">Fetch from Archive.org</button>
                     </div>
                 </div>
             </div>
@@ -110,5 +110,11 @@
 
         </form>
 
+        @if (isset($issue))
+            <form action="{{ route('admin.magazines.issues.image.destroy', ['magazine' => $magazine, 'issue' => $issue]) }}" method="post" id="delete-image">
+                @csrf
+                @method('DELETE')
+            </form>
+        @endif
     </div>
 </div>

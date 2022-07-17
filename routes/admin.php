@@ -147,6 +147,8 @@ Route::middleware('verified')->group(function () {
                 Route::prefix('/magazines')->name('magazines.')->group(function () {
                     Route::resource('magazines', MagazinesController::class);
                     Route::resource('magazines/{magazine}/issues', MagazineIssuesController::class);
+                    Route::post('magazines/{magazine}/issues/{issue}/image', [MagazineIssuesController::class, 'fetchImage']);
+                    Route::delete('magazines/{magazine}/issues/{issue}/image', [MagazineIssuesController::class, 'destroyImage'])->name('issues.image.destroy');
                 });
 
                 Route::name('ajax.')->group(function () {
