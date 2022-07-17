@@ -4,7 +4,7 @@
     <div class="card-body">
         <livewire:admin.magazine-issues-table :magazine="$magazine->id" />
 
-        <a href="{{ route('admin.magazines.issues.create') }}" class="btn btn-success mt-3">
+        <a href="{{ route('admin.magazines.issues.create', ['magazine' => $magazine]) }}" class="btn btn-success mt-3">
             <i class="fas fa-plus-square fa-fw"></i> Add an issue
         </a>
     </div>

@@ -15,7 +15,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    <form action="{{ route('admin.magazines.issues.destroy', $row) }}" method="POST"
+    <form action="{{ route('admin.magazines.issues.destroy', ['magazine' => $row->magazine, 'issue' => $row]) }}" method="POST"
         onsubmit="javascript:return confirm('This item will be permanently deleted')">
         @csrf
         @method('DELETE')

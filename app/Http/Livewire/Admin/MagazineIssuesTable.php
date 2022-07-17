@@ -40,7 +40,10 @@ class MagazineIssuesTable extends DataTableComponent
 
     public function getTableRowUrl($row): string
     {
-        return route('admin.magazines.issues.edit', $row);
+        return route('admin.magazines.issues.edit', [
+            'magazine' => $row->magazine,
+            'issue'    => $row,
+        ]);
     }
 
     public function rowView(): string

@@ -146,7 +146,7 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/magazines')->name('magazines.')->group(function () {
                     Route::resource('magazines', MagazinesController::class);
-                    Route::resource('issues', MagazineIssuesController::class);
+                    Route::resource('magazines/{magazine}/issues', MagazineIssuesController::class);
                 });
 
                 Route::name('ajax.')->group(function () {

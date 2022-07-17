@@ -30,6 +30,9 @@ return new class extends Migration
         Schema::table('magazine_issue', function (Blueprint $table) {
             $table->renameColumn('magazine_issue_id', 'id');
 
+            $table->date('published')->nullable();
+            $table->text('archiveorg_url')->nullable();
+            $table->integer('barcode')->nullable();
             $table->timestamps();
 
             $table->foreign('magazine_id')->references('id')->on('magazines');
