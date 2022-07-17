@@ -44,4 +44,17 @@ class MagazineIssue extends Model
             return null;
         }
     }
+
+    public function getLabelAttribute()
+    {
+        $label = [
+            $this->magazine->name,
+            $this->issue,
+        ];
+        if ($this->published) {
+            $label[] = '(' . $this->published->format('F Y') . ')';
+        }
+
+        return collect($label)->filter()->join(' ');
+    }
 }

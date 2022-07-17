@@ -9,6 +9,11 @@ class MagazineIndex extends Model
 {
     use HasFactory;
 
+    public function magazineIssue()
+    {
+        return $this->belongsTo(MagazineIssue::class);
+    }
+
     public function game()
     {
         return $this->belongsTo(Game::class, 'game_id');
