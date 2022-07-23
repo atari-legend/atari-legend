@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Issue Number</label>
+                        <label for="issue" class="form-label">Issue Number</label>
                         <input type="number" required class="form-control @error('name') is-invalid @enderror"
                             name="issue" id="issue" value="{{ old('issue', $issue->issue ?? '') }}">
 
@@ -63,7 +63,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="barcode" class="form-label">Barcode</label>
-                        <input type="barcode" class="form-control @error('name') is-invalid @enderror" name="barcode"
+                        <input type="number" class="form-control @error('name') is-invalid @enderror" name="barcode"
                             id="barcode" value="{{ old('barcode', $issue->barcode ?? '') }}">
 
                         @error('issue')
@@ -89,7 +89,7 @@
 
                     <div class="mb-3">
                         <label for="image" class="form-label">Image</label>
-                        <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image">
                         @if (isset($issue) && $issue->image)
                             <div class="form-text">Select a file to replace the current image.</div>
                         @endif

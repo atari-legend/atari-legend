@@ -57,7 +57,9 @@ return new class extends Migration
         Schema::table('magazine_game', function (Blueprint $table) {
             $table->renameColumn('magazine_game_id', 'id');
 
+            $table->integer('game_id')->nullable()->change();
             $table->integer('page')->nullable();
+            $table->string('title', 1024)->nullable();
             $table->timestamps();
 
             $table->foreign('magazine_issue_id')->references('id')->on('magazine_issues');

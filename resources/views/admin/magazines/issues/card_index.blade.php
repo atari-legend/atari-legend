@@ -3,10 +3,6 @@
 
         <h2 class="card-title fs-4">Index</h2>
 
-        @foreach ($issue->indexes as $index)
-            <p>
-                {{ $index->game?->game_name ?? 'no game' }} {{ $index->score }}
-            </p>
-        @endforeach
+        <livewire:admin.magazine-index :issue="$issue" />
     </div>
 </div>
