@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\Magazines\MagazineIndexTypesController;
 use App\Http\Controllers\Admin\Magazines\MagazineIssuesController;
 use App\Http\Controllers\Admin\Magazines\MagazinesController;
 use App\Http\Controllers\Admin\Menus\MenuConditionsController;
@@ -149,6 +150,7 @@ Route::middleware('verified')->group(function () {
                     Route::resource('magazines/{magazine}/issues', MagazineIssuesController::class);
                     Route::post('magazines/{magazine}/issues/{issue}/image', [MagazineIssuesController::class, 'fetchImage']);
                     Route::delete('magazines/{magazine}/issues/{issue}/image', [MagazineIssuesController::class, 'destroyImage'])->name('issues.image.destroy');
+                    Route::resource('index-types', MagazineIndexTypesController::class);
                 });
 
                 Route::name('ajax.')->group(function () {

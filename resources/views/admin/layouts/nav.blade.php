@@ -133,6 +133,7 @@
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.magazines.magazines.*')" href="{{ route('admin.magazines.magazines.index') }}">Magazines</a></li>
+                        <li><a class="@activeroute('admin.magazines.index-types.*')" href="{{ route('admin.magazines.index-types.index') }}">Index types</a></li>
                     </ul>
                 </div>
             </div>

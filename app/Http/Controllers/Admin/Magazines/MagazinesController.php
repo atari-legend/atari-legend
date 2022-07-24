@@ -88,7 +88,7 @@ class MagazinesController extends Controller
             'sub_section_name' => $magazine->name,
         ]);
 
-        return redirect()->route('admin.magazines.magazines.index');
+        return redirect()->route('admin.magazines.magazines.edit', $magazine);
     }
 
     public function destroy(Magazine $magazine)

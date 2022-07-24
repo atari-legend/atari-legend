@@ -8,13 +8,21 @@
             <div class="p-2">
                 <span class="float-end">{{ $index->score }}</span>
                 <h3 class="fs-6 mb-0">
-                    @if ($index->magazineIssue->archiveorg_url)
-                        <a href="{{ $index->magazineIssue->archiveorg_url }}{{ $index->page ? 'page/n'.$index->page : '' }}">{{ $index->magazineIssue->label }}</a>
-                    @else
-                        {{ $index->magazineIssue->label }}
-                    @endif
+                    @contributor
+                        <a class="d-inline-block me-1"
+                            href="{{ route('admin.magazines.issues.edit', ['magazine' => $index->magazineIssue->magazine, 'issue' => $index->magazineIssue]) }}">
+                            <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                        </a>
+                    @endcontributor
+                    {{ $index->magazineIssue->label }}
                     @if ($index->page)
-                        <span class="text-muted ms-2">p{{$index->page}}</span>
+                        <span class="text-muted mx-2">p{{$index->page}}</span>
+                    @endif
+                    @if ($index->magazineIssue->archiveorg_url)
+                        <a class="d-inline-block"
+                            href="{{ $index->magazineIssue->archiveorg_url }}{{ $index->page ? 'page/n'.$index->page : '' }}">
+                            <i class="fa-solid fa-fw fa-book-open"></i>
+                        </a>
                     @endif
                 </h3>
             </div>

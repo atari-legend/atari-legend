@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Helpers\ChangelogHelper;
+use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\MagazineIndex as ModelsMagazineIndex;
 use App\Models\MagazineIndexType;
@@ -27,6 +29,7 @@ class MagazineIndex extends Component
 
     public function addRow()
     {
+        $this->save();
         $this->issue->indexes()->save(new ModelsMagazineIndex(['game_id' => null]));
         $this->issue->refresh();
     }
@@ -53,9 +56,21 @@ class MagazineIndex extends Component
 
     public function save()
     {
-        $this->issue->indexes->each(function ($index) {
-            $index->save();
-        });
+        if ($this->issue->indexes) {
+            $this->issue->indexes->each(function ($index) {
+                $index->save();
+            });
+        }
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Magazines',
+            'section_id'       => $this->issue->magazine->getKey(),
+            'section_name'     => $this->issue->magazine->name,
+            'sub_section'      => 'Index',
+            'sub_section_id'   => $this->issue->getKey(),
+            'sub_section_name' => $this->issue->issue,
+        ]);
     }
 
     /**

@@ -26,6 +26,8 @@ return new class extends Migration
                 ['name' => 'Interview'],
                 ['name' => 'Reader mail'],
                 ['name' => 'Column'],
+                ['name' => 'Online/BBS/Networking'],
+                ['name' => 'Miscellaneous'],
             ]);
 
         // The renameColumn calls as in separate blueprints to be compatible
@@ -53,7 +55,11 @@ return new class extends Migration
             $table->integer('barcode')->nullable();
             $table->timestamps();
 
-            $table->foreign('magazine_id')->references('id')->on('magazines');
+            $table->foreign('magazine_id')
+                ->references('id')
+                ->on('magazines')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
         Schema::table('magazine_issue', function (Blueprint $table) {
             $table->renameColumn('magazine_issue_nr', 'issue');
@@ -76,10 +82,28 @@ return new class extends Migration
             $table->string('title', 1024)->nullable();
             $table->timestamps();
 
-            $table->foreign('magazine_issue_id')->references('id')->on('magazine_issues');
-            $table->foreign('game_id')->references('game_id')->on('game');
-            $table->foreignId('menu_software_id')->nullable()->constrained();
-            $table->foreignId('magazine_index_type_id')->nullable()->constrained();
+            $table->foreign('magazine_issue_id')
+                ->references('id')
+                ->on('magazine_issues')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('game_id')
+                ->references('game_id')
+                ->on('game')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreignId('menu_software_id')
+                ->nullable()
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreignId('magazine_index_type_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
         });
         Schema::table('magazine_game', function (Blueprint $table) {
             $table->dropColumn('magazine_employe_id');
