@@ -14,6 +14,20 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::create('magazine_index_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 64);
+        });
+        DB::table('magazine_index_types')
+            ->insert([
+                ['name' => 'Review'],
+                ['name' => 'News'],
+                ['name' => 'Tutorial'],
+                ['name' => 'Interview'],
+                ['name' => 'Reader mail'],
+                ['name' => 'Column'],
+            ]);
+
         // The renameColumn calls as in separate blueprints to be compatible
         // with SQLite for unit tests
 
@@ -65,6 +79,7 @@ return new class extends Migration
             $table->foreign('magazine_issue_id')->references('id')->on('magazine_issues');
             $table->foreign('game_id')->references('game_id')->on('game');
             $table->foreignId('menu_software_id')->nullable()->constrained();
+            $table->foreignId('magazine_index_type_id')->nullable()->constrained();
         });
         Schema::table('magazine_game', function (Blueprint $table) {
             $table->dropColumn('magazine_employe_id');

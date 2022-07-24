@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\Game;
 use App\Models\MagazineIndex as ModelsMagazineIndex;
+use App\Models\MagazineIndexType;
 use App\Models\MagazineIssue;
 use App\Models\MenuSoftware;
 use Livewire\Component;
@@ -12,12 +13,16 @@ class MagazineIndex extends Component
 {
     public MagazineIssue $issue;
 
+    public $sort = false;
+
     protected $rules = [
-        'issue.indexes.*.page'             => 'numeric',
-        'issue.indexes.*.title'            => 'string',
-        'issue.indexes.*.score'            => 'string',
-        'issue.indexes.*.game_id'          => 'numeric',
-        'issue.indexes.*.menu_software_id' => 'numeric',
+        'sort'                                   => 'boolean',
+        'issue.indexes.*.page'                   => 'numeric',
+        'issue.indexes.*.title'                  => 'string',
+        'issue.indexes.*.score'                  => 'string',
+        'issue.indexes.*.game_id'                => 'numeric',
+        'issue.indexes.*.menu_software_id'       => 'numeric',
+        'issue.indexes.*.magazine_index_type_id' => 'numeric',
     ];
 
     public function addRow()
@@ -62,7 +67,8 @@ class MagazineIndex extends Component
     {
         return view('components.admin.magazine-index')
             ->with([
-                'indices' => $this->issue->indexes,
+                'indices'    => $this->sort ? $this->issue->indexes->sortBy('page') : $this->issue->indexes,
+                'indexTypes' => MagazineIndexType::all(),
             ]);
     }
 }
