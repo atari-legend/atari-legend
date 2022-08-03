@@ -82,7 +82,7 @@
 
     @include('layouts.nav')
 
-    <div class="container-fluid">
+    <div class="container-xxxl">
         @include('layouts.alert')
 
         @yield('content')
