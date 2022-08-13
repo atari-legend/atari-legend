@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class MagazineIndex extends Model
 {
@@ -29,5 +30,15 @@ class MagazineIndex extends Model
     public function type()
     {
         return $this->belongsTo(MagazineIndexType::class);
+    }
+
+    public function getReadUrlAttribute()
+    {
+        if ($this->magazineIssue->archiveorg_url) {
+            return Str::replace('/details/', '/stream/', $this->magazineIssue->archiveorg_url)
+                . ($this->page ? '#page/' . $this->page : '');
+        } else {
+            return null;
+        }
     }
 }

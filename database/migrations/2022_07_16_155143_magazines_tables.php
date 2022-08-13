@@ -28,6 +28,8 @@ return new class extends Migration
                 ['name' => 'Column'],
                 ['name' => 'Online/BBS/Networking'],
                 ['name' => 'Miscellaneous'],
+                ['name' => 'Other platforms'],
+                ['name' => 'Hardware'],
             ]);
 
         // The renameColumn calls as in separate blueprints to be compatible

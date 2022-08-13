@@ -117,7 +117,7 @@ class MagazineIssuesController extends Controller
     public function fetchImage(Request $request, Magazine $magazine, MagazineIssue $issue)
     {
         $id = $request->id;
-        $url = "https://archive.org/services/img/{$id}";
+        $url = "https://archive.org/download/{$id}/page/cover_w600.jpg";
 
         $response = Http::get($url);
 

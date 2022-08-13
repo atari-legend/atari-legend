@@ -16,11 +16,11 @@
                     @endcontributor
                     {{ $index->magazineIssue->label }}
                     @if ($index->page)
-                        <span class="text-muted mx-2">p{{$index->page}}</span>
+                        <span class="text-muted ms-2">p{{$index->page}}</span>
                     @endif
-                    @if ($index->magazineIssue->archiveorg_url)
-                        <a class="d-inline-block"
-                            href="{{ $index->magazineIssue->archiveorg_url }}{{ $index->page ? 'page/n'.$index->page : '' }}">
+                    @if ($index->read_url)
+                        <a class="d-inline-block ms-2"
+                            href="{{ $index->read_url }}">
                             <i class="fa-solid fa-fw fa-book-open"></i>
                         </a>
                     @endif

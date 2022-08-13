@@ -52,7 +52,7 @@ class MagazineIssue extends Model
             $this->issue,
         ];
         if ($this->published) {
-            $label[] = '(' . $this->published->format('F Y') . ')';
+            $label[] = '(' . $this->published->format('M Y') . ')';
         }
 
         return collect($label)->filter()->join(' ');
