@@ -35,23 +35,35 @@
                                 class="form-control">
                         </td>
                         <td>
-                            <input class="autocomplete form-control" name="game_name" type="search" required
-                                data-autocomplete-endpoint="{{ route('ajax.games') }}" data-autocomplete-key="game_name"
-                                data-autocomplete-id="game_id" data-autocomplete-companion="{{ $i->id }}_game_id"
-                                value="{{ $i->game?->game_name }}" placeholder="Type a game name..." autocomplete="off">
+                            <div class="input-group">
+                                <input class="autocomplete form-control" name="game_name" type="search" required
+                                    data-autocomplete-endpoint="{{ route('ajax.games') }}" data-autocomplete-key="game_name"
+                                    data-autocomplete-id="game_id" data-autocomplete-companion="{{ $i->id }}_game_id"
+                                    value="{{ $i->game?->game_name }}" placeholder="Type a game name..." autocomplete="off">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    wire:click="updateGame({{ $i->id }}, null)">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
                             <input type="hidden" name="{{ $i->id }}_game_id"
-                                wire:change="updateGame({{ $i }}, $event.target.value)"
+                                wire:change="updateGame({{ $i->id }}, $event.target.value)"
                                 value="{{ $i->game_id }}">
                         </td>
                         <td>
-                            <input class="autocomplete form-control" name="{{ $i->id }}_software_name"
-                                type="search" required data-autocomplete-endpoint="{{ route('ajax.software') }}"
-                                data-autocomplete-key="name" data-autocomplete-id="id"
-                                data-autocomplete-companion="{{ $i->id }}_menu_software_id"
-                                value="{{ $i->menuSoftware?->name }}" placeholder="Type a software name..."
-                                autocomplete="off">
+                            <div class="input-group">
+                                <input class="autocomplete form-control" name="{{ $i->id }}_software_name"
+                                    type="search" required data-autocomplete-endpoint="{{ route('ajax.software') }}"
+                                    data-autocomplete-key="name" data-autocomplete-id="id"
+                                    data-autocomplete-companion="{{ $i->id }}_menu_software_id"
+                                    value="{{ $i->menuSoftware?->name }}" placeholder="Type a software name..."
+                                    autocomplete="off">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    wire:click="updateSoftware({{ $i->id }}, null)">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
                             <input type="hidden" name="{{ $i->id }}_menu_software_id"
-                                wire:change="updateSoftware({{ $i }}, $event.target.value)"
+                                wire:change="updateSoftware({{ $i->id }}, $event.target.value)"
                                 value="{{ $i->menu_software_id }}">
                         </td>
                         <td>

@@ -40,16 +40,26 @@ class MagazineIndex extends Component
         $this->issue->refresh();
     }
 
-    public function updateSoftware(ModelsMagazineIndex $index, int $softwareId)
+    public function updateSoftware(int $indexId, ?int $softwareId)
     {
-        $index->menuSoftware()->associate(MenuSoftware::find($softwareId));
+        $index = $this->issue->indexes->firstWhere('id', $indexId);
+        if ($softwareId != null) {
+            $index->menuSoftware()->associate(MenuSoftware::find($softwareId));
+        } else {
+            $index->menuSoftware()->dissociate();
+        }
         $index->save();
         $this->issue->refresh();
     }
 
-    public function updateGame(ModelsMagazineIndex $index, int $gameId)
+    public function updateGame(int $indexId, ?int $gameId)
     {
-        $index->game()->associate(Game::find($gameId));
+        $index = $this->issue->indexes->firstWhere('id', $indexId);
+        if ($gameId != null) {
+            $index->game()->associate(Game::find($gameId));
+        } else {
+            $index->game()->dissociate();
+        }
         $index->save();
         $this->issue->refresh();
     }
