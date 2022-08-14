@@ -1,4 +1,4 @@
-@if ($game->magazineIndices !== null)
+@if ($game->magazineIndices->isNotEmpty())
     <div class="card bg-dark mb-4">
         <div class="card-header text-center">
             <h2 class="text-uppercase">Magazines</h2>
