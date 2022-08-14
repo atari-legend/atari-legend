@@ -17,7 +17,7 @@
                                 @if ($game->screenshots->isNotEmpty())
                                     <img class="img-fluid" src="{{ $game->screenshots->first()->getUrl('game') }}" alt="Screenshot of {{ e($game->game_name) }}">
                                 @else
-                                    <img class="img-fluid" src="{{ asset('images/no-screenshot.png') }}" alt="No screenshot">
+                                    <img class="img-fluid" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot">
                                 @endif
                             </a>
                         </div>

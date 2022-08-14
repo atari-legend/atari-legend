@@ -52,7 +52,7 @@
                 </a>
             @else
                 <img class="card-img-top w-100 bg-black"
-                    src="{{ asset('images/no-screenshot.png') }}"
+                    src="{{ asset('images/no-screenshot.svg') }}"
                     alt="No screenshot for this disk">
             @endif
             </div>
