@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Magazines;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
+use App\Models\Location;
 use App\Models\Magazine;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
@@ -30,6 +31,10 @@ class MagazinesController extends Controller
                     new Crumb('', $magazine->name),
                 ],
                 'magazine'   => $magazine,
+                'locations'  => Location::orderBy('continent_code', 'asc')
+                    ->orderBy('type', 'asc')
+                    ->orderBy('name', 'asc')
+                    ->get(),
             ]);
     }
 
@@ -41,19 +46,28 @@ class MagazinesController extends Controller
                     new Crumb(route('admin.magazines.magazines.index'), 'Magazines'),
                     new Crumb('', 'Create magazine'),
                 ],
+                'locations'  => Location::orderBy('continent_code', 'asc')
+                    ->orderBy('type', 'asc')
+                    ->orderBy('name', 'asc')
+                    ->get(),
             ]);
     }
 
     public function update(Request $request, Magazine $magazine)
     {
         $request->validate([
-            'name' => 'required',
+            'name'     => 'required',
+            'location' => 'numeric|nullable',
         ]);
 
         $oldName = $magazine->name;
-        $magazine->update([
-            'name' => $request->name,
-        ]);
+        $magazine->name = $request->name;
+        if ($request->location) {
+            $magazine->location()->associate(Location::find($request->location));
+        } else {
+            $magazine->location()->dissociate();
+        }
+        $magazine->save();
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
@@ -71,12 +85,17 @@ class MagazinesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name'     => 'required',
+            'location' => 'numeric|nullable',
         ]);
 
-        $magazine = Magazine::create([
+        $magazine = new Magazine([
             'name' => $request->name,
         ]);
+        if ($request->location) {
+            $magazine->location()->associate(Location::find($request->location));
+        }
+        $magazine->save();
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,

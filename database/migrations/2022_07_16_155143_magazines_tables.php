@@ -21,6 +21,7 @@ return new class extends Migration
         DB::table('magazine_index_types')
             ->insert([
                 ['name' => 'Review'],
+                ['name' => 'Preview'],
                 ['name' => 'News'],
                 ['name' => 'Tutorial'],
                 ['name' => 'Interview'],
@@ -42,6 +43,11 @@ return new class extends Migration
         });
         Schema::table('magazine', function (Blueprint $table) {
             $table->renameColumn('magazine_name', 'name');
+
+            $table->foreignId('location_id')
+                ->onUpdate('cascade')
+                ->onDelete('null')
+                ->nullable();
         });
         Schema::rename('magazine', 'magazines');
 
@@ -54,7 +60,6 @@ return new class extends Migration
 
             $table->date('published')->nullable();
             $table->text('archiveorg_url')->nullable();
-            $table->integer('barcode')->nullable();
             $table->timestamps();
 
             $table->foreign('magazine_id')

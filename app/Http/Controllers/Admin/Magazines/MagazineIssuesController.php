@@ -21,7 +21,6 @@ class MagazineIssuesController extends Controller
             'regex:@https://archive.org/details/[^/]+/@',
         ],
         'published' => 'nullable|date',
-        'barcode'   => 'nullable|numeric',
     ];
 
     public function edit(Magazine $magazine, MagazineIssue $issue)
@@ -59,7 +58,6 @@ class MagazineIssuesController extends Controller
             'issue'          => $request->issue,
             'archiveorg_url' => $request->archiveorg_url,
             'published'      => $request->published,
-            'barcode'        => $request->barcode,
         ]);
 
         $this->addOrUpdateImage($request, $issue);
@@ -85,7 +83,6 @@ class MagazineIssuesController extends Controller
             'issue'          => $request->issue,
             'archiveorg_url' => $request->archiveorg_url,
             'published'      => $request->published,
-            'barcode'        => $request->barcode,
         ]);
         $magazine->issues()->save($issue);
 

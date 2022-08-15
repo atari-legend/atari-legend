@@ -16,6 +16,11 @@ class Magazine extends Model
         return $this->hasMany(MagazineIssue::class);
     }
 
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
     public function getCoverUrlAttribute()
     {
         $firstIssue = $this->issues

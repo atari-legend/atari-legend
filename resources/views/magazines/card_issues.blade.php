@@ -4,9 +4,12 @@
     </div>
     <div class="card-body p-2">
         <p class="card-text">
-            There are {{ $magazine->issues->count() }}
+            @if ($magazine->location)
+                {{ $magazine->name }} originated from <strong>{{ $magazine->location->name }}</strong>.
+            @endif
+            {{ $magazine->issues->count() }}
             {{ Str::plural('issue', $magazine->issues->count()) }} of
-            {{ $magazine->name }}.
+            {{ $magazine->name }} in the database.
         </p>
     </div>
 </div>
@@ -22,8 +25,8 @@
                 @if ($issue->issue)
                     #{{ $issue->issue }}
                 @endif
-                @if ($issue->archiveorg_url)
-                    <a class="d-inline-block ms-2" href="{{ $issue->archiveorg_url }}">
+                @if ($issue->read_url)
+                    <a class="d-inline-block ms-2" href="{{ $issue->read_url }}">
                         <i class="fa-solid fa-fw fa-book-open"></i>
                     </a>
                 @endif
@@ -61,11 +64,6 @@
                                         <td class="text-muted">{{ $index->magazineIndexType?->name ?? '-' }}</td>
                                         <td class="text-end">
                                             {{ $index->page }}
-                                            @if ($index->page && $index->read_url)
-                                                <a class="d-inline-block ms-2" href="{{ $index->read_url }}">
-                                                    <i class="fa-solid fa-fw fa-book-open"></i>
-                                                </a>
-                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

@@ -8,19 +8,23 @@
             <div class="p-2">
                 <span class="float-end">{{ $index->score }}</span>
                 <h3 class="fs-6 mb-0">
+                    @if ($index->magazineIssue?->magazine?->location?->country_iso2 !== null)
+                        <span title="{{ $index->magazineIssue->magazine->location->name }}"
+                            class="fi fi-{{ strtolower($index->magazineIssue->magazine->location->country_iso2) }} me-1"></span>
+                    @endif
+                    {{ $index->magazineIssue->label }}
                     @contributor
-                        <a class="d-inline-block me-1"
+                        <a class="d-inline-block ms-1"
                             href="{{ route('admin.magazines.issues.edit', ['magazine' => $index->magazineIssue->magazine, 'issue' => $index->magazineIssue]) }}">
                             <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                         </a>
                     @endcontributor
-                    {{ $index->magazineIssue->label }}
                     @if ($index->page)
                         <span class="text-muted ms-2">p{{$index->page}}</span>
                     @endif
-                    @if ($index->read_url)
+                    @if ($index->magazineIssue->read_url)
                         <a class="d-inline-block ms-2"
-                            href="{{ $index->read_url }}">
+                            href="{{ $index->magazineIssue->read_url }}">
                             <i class="fa-solid fa-fw fa-book-open"></i>
                         </a>
                     @endif

@@ -54,19 +54,10 @@
                         <input type="date" class="form-control @error('published') is-invalid @enderror"
                             name="published" id="published"
                             value="{{ old('published', isset($issue) ? $issue->published?->toDateString() ?? '' : '') }}">
-
+                        <div class="form-text">
+                                Use 1st of month if the specific day is unknown.
+                        </div>
                         @error('published')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="barcode" class="form-label">Barcode</label>
-                        <input type="number" class="form-control @error('name') is-invalid @enderror" name="barcode"
-                            id="barcode" value="{{ old('barcode', $issue->barcode ?? '') }}">
-
-                        @error('issue')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

@@ -9,7 +9,8 @@
             @endif
         </h2>
 
-        <form action="{{ isset($magazine) ? route('admin.magazines.magazines.update', $magazine) : route('admin.magazines.magazines.store') }}"
+        <form
+            action="{{ isset($magazine) ? route('admin.magazines.magazines.update', $magazine) : route('admin.magazines.magazines.store') }}"
             method="post" enctype="multipart/form-data">
             @csrf
             @isset($magazine)
@@ -28,6 +29,20 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Country of origin</label>
+                        <select class="form-select" id="location" name="location">
+                            <option value="">-</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}"
+                                    @if (isset($magazine) && $magazine->location_id == $location->id) selected @endif>
+                                    @if ($location->type == 'Country')&nbsp;&nbsp;&nbsp;&nbsp;@endif
+                                    {{ $location->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
