@@ -1,5 +1,9 @@
 $font-audiowide: Audiowide, $font-family-sans-serif;
 
+body {
+    background-image: url('../images/main_bg.png');
+}
+
 h1,
 h2 {
     font-family: $font-audiowide;
