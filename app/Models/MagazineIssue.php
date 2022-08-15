@@ -21,7 +21,7 @@ class MagazineIssue extends Model
         return $this->belongsTo(Magazine::class);
     }
 
-    public function indexes()
+    public function indices()
     {
         return $this->hasMany(MagazineIndex::class);
     }
@@ -41,7 +41,7 @@ class MagazineIssue extends Model
         if ($this->image_file != null) {
             return asset('storage/' . $this->image_path . '/' . $this->image_file);
         } else {
-            return null;
+            return asset('images/no-cover.svg');
         }
     }
 

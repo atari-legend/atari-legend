@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 axios
                     .post(`./image?id=${id}`)
                     .then((resp) => {
-                        document.getElementById('issue-cover').src = resp.data;
+                        document.getElementById('issue-cover').src = resp.data + '?t=' + Date.now();
                     })
                     .catch((err) => {
                         alert(`Error fetching cover: ${err}`);

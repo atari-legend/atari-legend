@@ -15,4 +15,16 @@ class Magazine extends Model
     {
         return $this->hasMany(MagazineIssue::class);
     }
+
+    public function getCoverUrlAttribute()
+    {
+        $firstIssue = $this->issues
+            ->sortBy('issue')
+            ->filter(function ($issue) {
+                return $issue->imgext != null;
+            })
+            ->first();
+
+        return $firstIssue->image ?? asset('images/no-cover.svg');
+    }
 }

@@ -19,18 +19,18 @@ class MagazineIndex extends Component
 
     protected $rules = [
         'sort'                                   => 'boolean',
-        'issue.indexes.*.page'                   => 'numeric',
-        'issue.indexes.*.title'                  => 'string',
-        'issue.indexes.*.score'                  => 'string',
-        'issue.indexes.*.game_id'                => 'numeric',
-        'issue.indexes.*.menu_software_id'       => 'numeric',
-        'issue.indexes.*.magazine_index_type_id' => 'numeric',
+        'issue.indices.*.page'                   => 'numeric',
+        'issue.indices.*.title'                  => 'string',
+        'issue.indices.*.score'                  => 'string',
+        'issue.indices.*.game_id'                => 'numeric',
+        'issue.indices.*.menu_software_id'       => 'numeric',
+        'issue.indices.*.magazine_index_type_id' => 'numeric',
     ];
 
     public function addRow()
     {
         $this->save();
-        $this->issue->indexes()->save(new ModelsMagazineIndex(['game_id' => null]));
+        $this->issue->indices()->save(new ModelsMagazineIndex(['game_id' => null]));
         $this->issue->refresh();
     }
 
@@ -42,7 +42,7 @@ class MagazineIndex extends Component
 
     public function updateSoftware(int $indexId, ?int $softwareId)
     {
-        $index = $this->issue->indexes->firstWhere('id', $indexId);
+        $index = $this->issue->indices->firstWhere('id', $indexId);
         if ($softwareId != null) {
             $index->menuSoftware()->associate(MenuSoftware::find($softwareId));
         } else {
@@ -54,7 +54,7 @@ class MagazineIndex extends Component
 
     public function updateGame(int $indexId, ?int $gameId)
     {
-        $index = $this->issue->indexes->firstWhere('id', $indexId);
+        $index = $this->issue->indices->firstWhere('id', $indexId);
         if ($gameId != null) {
             $index->game()->associate(Game::find($gameId));
         } else {
@@ -66,8 +66,8 @@ class MagazineIndex extends Component
 
     public function save()
     {
-        if ($this->issue->indexes) {
-            $this->issue->indexes->each(function ($index) {
+        if ($this->issue->indices) {
+            $this->issue->indices->each(function ($index) {
                 $index->save();
             });
         }
@@ -92,7 +92,7 @@ class MagazineIndex extends Component
     {
         return view('components.admin.magazine-index')
             ->with([
-                'indices'    => $this->sort ? $this->issue->indexes->sortBy('page') : $this->issue->indexes,
+                'indices'    => $this->sort ? $this->issue->indices->sortBy('page') : $this->issue->indices,
                 'indexTypes' => MagazineIndexType::all(),
             ]);
     }

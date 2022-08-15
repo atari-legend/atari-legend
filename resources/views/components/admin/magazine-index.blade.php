@@ -19,11 +19,11 @@
                 @foreach ($indices as $index => $i)
                     <tr wire:key="index-field-{{ $i->id }}">
                         <td>
-                            <input type="number" wire:model.debounce.750ms="issue.indexes.{{ $index }}.page"
+                            <input type="number" wire:model.debounce.750ms="issue.indices.{{ $index }}.page"
                                 class="form-control" value="{{ $i->page }}" size="2">
                         </td>
                         <td>
-                            <select class="form-select" wire:model="issue.indexes.{{ $index }}.magazine_index_type_id">
+                            <select class="form-select" wire:model="issue.indices.{{ $index }}.magazine_index_type_id">
                                 <option value="null">-</option>
                                 @foreach ($indexTypes->sortBy('name') as $type)
                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -31,7 +31,7 @@
                             </select>
                         </td>
                         <td>
-                            <input type="text" wire:model="issue.indexes.{{ $index }}.title"
+                            <input type="text" wire:model="issue.indices.{{ $index }}.title"
                                 class="form-control">
                         </td>
                         <td>
@@ -67,7 +67,7 @@
                                 value="{{ $i->menu_software_id }}">
                         </td>
                         <td>
-                            <input type="text" wire:model="issue.indexes.{{ $index }}.score"
+                            <input type="text" wire:model="issue.indices.{{ $index }}.score"
                                 class="form-control" size="2">
                         </td>
                         <td>

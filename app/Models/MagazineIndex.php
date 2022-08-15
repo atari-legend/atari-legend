@@ -27,7 +27,7 @@ class MagazineIndex extends Model
         return $this->belongsTo(MenuSoftware::class);
     }
 
-    public function type()
+    public function magazineIndexTtype()
     {
         return $this->belongsTo(MagazineIndexType::class);
     }
