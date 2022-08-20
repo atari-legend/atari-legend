@@ -37,6 +37,12 @@
                         <i class="fa-solid fa-fw fa-book-open"></i>
                     </a>
                 @endif
+                @contributor
+                    <a class="d-inline-block ms-1"
+                        href="{{ route('admin.magazines.issues.edit', ['magazine' => $magazine, 'issue' => $issue]) }}">
+                        <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                    </a>
+                @endcontributor
             </h3>
         </div>
         <div class="card-body">
@@ -55,17 +61,19 @@
                                 @foreach ($issue->indices->sortBy('page') as $index)
                                     <tr class="border-bottom border-secondary">
                                         <td>
-                                            {{ $index->title }}
-                                            @if (!$index->title)
+                                            @if ($index->game || $index->menuSoftware)
                                                 @if ($index->game)
                                                     <a
                                                         href="{{ route('games.show', $index->game) }}">{{ $index->game->game_name }}</a>
                                                 @elseif ($index->menuSoftware)
                                                     <a
                                                         href="{{ route('menus.software', $index->menuSoftware) }}">{{ $index->menuSoftware->name }}</a>
-                                                @else
-                                                    ?
                                                 @endif
+                                                @if ($index->title)
+                                                    : {{ $index->title }}
+                                                @endif
+                                            @else
+                                                {{ $index->title ?? '-' }}
                                             @endif
                                         </td>
                                         <td class="text-muted">{{ $index->magazineIndexType?->name ?? '-' }}</td>

@@ -66,8 +66,8 @@
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="text-center">
-                        <img class="p-1 border border-dark shadow-sm" style="max-height: 15rem"
-                            src="{{ isset($issue) ? $issue->image ?? asset('images/image-placeholder.png') : asset('images/image-placeholder.png') }}"
+                        <img class="p-1 border border-dark shadow-sm bg-black" style="max-height: 15rem"
+                            src="{{ isset($issue) ? $issue->image : asset('images/no-cover.svg') }}"
                             alt="Issue cover" id="issue-cover">
 
                         @if (isset($issue?->image))

@@ -4,7 +4,6 @@ namespace App\View\Components\Cards;
 
 use App\Models\MenuDisk;
 use App\Models\MenuDiskDump;
-use App\Models\User;
 use Illuminate\View\Component;
 
 class LatestMenus extends Component
@@ -16,7 +15,7 @@ class LatestMenus extends Component
      *
      * @return void
      */
-    public function __construct(?User $user)
+    public function __construct()
     {
         //
     }
