@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $magazine->name.' - Atari ST magazine')
+@section('title', $magazine->name . ' - Atari ST magazine')
 
 @section('content')
     <h1 class="visually-hidden">{{ $magazine->name }}</h1>

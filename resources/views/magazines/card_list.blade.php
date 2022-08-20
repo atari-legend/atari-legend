@@ -5,7 +5,7 @@
     <div class="card-body p-2">
         <p class="card-text mb-3">
             Please find in this section all the magazines that had a connection
-            with the Atari world. There are currently {{ count ($magazines) }}
+            with the Atari world. There are currently {{ count($magazines) }}
             magazines in the database.
         </p>
     </div>
@@ -17,7 +17,12 @@
                 </a>
                 <h3 class="fs-4 mt-2"><a href="{{ route('magazines.show', $magazine) }}">{{ $magazine->name }}</a></h3>
                 <div class="text-muted">
-                    {{ $magazine->issues->count() }} {{ Str::plural('issue', $magazine->issues->count() ) }}
+                    {{ $magazine->issues->count() }} {{ Str::plural('issue', $magazine->issues->count()) }}
+
+                    @if ($magazine->location?->country_iso2 !== null)
+                        <span title="{{ $magazine->location->name }}"
+                            class="fi fi-{{ strtolower($magazine->location->country_iso2) }} ms-1"></span>
+                    @endif
                 </div>
             </div>
         @endforeach

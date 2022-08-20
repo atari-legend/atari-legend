@@ -1,6 +1,13 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
-        <h2 class="text-uppercase">{{ $magazine->name }}</h2>
+        <h2 class="text-uppercase">
+            {{ $magazine->name }}
+            @contributor
+                <a class="d-inline-block ms-1" href="{{ route('admin.magazines.magazines.edit', $magazine) }}">
+                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                </a>
+            @endcontributor
+        </h2>
     </div>
     <div class="card-body p-2">
         <p class="card-text">
