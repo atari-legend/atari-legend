@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
+use App\Http\Controllers\MagazineController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class MagazineIssue extends Model
@@ -66,5 +68,27 @@ class MagazineIssue extends Model
         } else {
             return null;
         }
+    }
+
+    public function getMagazinePageNumberAttribute()
+    {
+        // Select all issues from the magazine, order them properly
+        // and find the index of the current magazine
+
+        // Unfortunately MySQL does not support a way to compute row
+        // numbers automatically, otherwise we could also ask it to
+        // return the index. So we have to get the whole list, and
+        // search the index in PHP
+
+        $index = DB::table('magazine_issues')
+            ->select('magazine_issues.id')
+            ->join('magazines', 'magazines.id', '=', 'magazine_issues.magazine_id')
+            ->where('magazine_id', '=', $this->magazine->id)
+            ->orderBy('issue', 'asc')
+            ->get()
+            ->pluck('id')
+            ->search($this->id);
+
+        return ceil(($index + 1) / MagazineController::PAGE_SIZE);
     }
 }

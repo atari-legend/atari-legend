@@ -14,6 +14,7 @@
             @if ($magazine->location)
                 {{ $magazine->name }} originated from <strong>{{ $magazine->location->name }}</strong>.
             @endif
+            There are
             {{ $magazine->issues->count() }}
             {{ Str::plural('issue', $magazine->issues->count()) }} of
             {{ $magazine->name }} in the database.
@@ -21,8 +22,8 @@
     </div>
 </div>
 
-@foreach ($magazine->issues->sortBy('issue') as $issue)
-    <div class="card bg-dark mb-4 border-top-0">
+@foreach ($issues as $issue)
+    <div class="card bg-dark mb-4 border-top-0" id="magazine-issue-{{ $issue->id }}">
         <div class="card-header">
             @if ($issue->published)
                 <span class="text-muted float-end">{{ $issue->published?->format('M Y') }}</span>
@@ -72,6 +73,9 @@
                                                 @if ($index->title)
                                                     : {{ $index->title }}
                                                 @endif
+                                                @if ($index->score)
+                                                    <small class="text-muted ms-2">{{ $index->score }}</small>
+                                                @endif
                                             @else
                                                 {{ $index->title ?? '-' }}
                                             @endif
@@ -96,3 +100,5 @@
         </div>
     </div>
 @endforeach
+
+{{ $issues->links() }}
