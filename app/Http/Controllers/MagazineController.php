@@ -13,7 +13,7 @@ class MagazineController extends Controller
     {
         return view('magazines.index')
             ->with([
-                'magazines' =>  Magazine::orderBy('name')->get(),
+                'magazines' => Magazine::orderBy('name')->get(),
             ]);
     }
 

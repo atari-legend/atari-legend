@@ -21,6 +21,10 @@ class Magazine extends Model
         return $this->belongsTo(Location::class);
     }
 
+    /**
+     * @return string URL to the cover of the first issue of this magazine
+     *                having a cover.
+     */
     public function getCoverUrlAttribute()
     {
         $firstIssue = $this->issues

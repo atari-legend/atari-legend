@@ -39,6 +39,10 @@ class MagazineIssue extends Model
         return 'images/magazine_scans';
     }
 
+    /**
+     * @return string URL to the cover of this issue, or a placeholder
+     *                image if it has no cover.
+     */
     public function getImageAttribute()
     {
         if ($this->image_file != null) {
@@ -48,6 +52,9 @@ class MagazineIssue extends Model
         }
     }
 
+    /**
+     * @return string Label for this issue (magazine name + issue + date).
+     */
     public function getLabelAttribute()
     {
         $label = [
@@ -61,6 +68,9 @@ class MagazineIssue extends Model
         return collect($label)->filter()->join(' ');
     }
 
+    /**
+     * @return string URL to archive.org to read the magazine in full screen.
+     */
     public function getReadUrlAttribute()
     {
         if ($this->archiveorg_url) {
@@ -70,6 +80,10 @@ class MagazineIssue extends Model
         }
     }
 
+    /**
+     * @return number Number of the page containing this magazine, when viewing
+     *                all the issues of the magazine.
+     */
     public function getMagazinePageNumberAttribute()
     {
         // Select all issues from the magazine, order them properly
