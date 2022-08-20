@@ -1,4 +1,4 @@
-@if ($game->releases->isNotEmpty())
+@if ($game->non_menu_releases->isNotEmpty())
     <div class="card bg-dark mb-4 card-game">
         <div class="card-header text-center">
             <h2 class="text-uppercase">

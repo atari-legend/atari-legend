@@ -35,10 +35,10 @@ class GameHelper
         $extraInfo = [];
 
         // Release (with publishers)
-        if ($game->releases->isNotEmpty()) {
-            $extraInfo[] = $game->releases->count() . ' ' . Str::plural('release', $game->releases->count());
+        if ($game->non_menu_releases->isNotEmpty()) {
+            $extraInfo[] = $game->non_menu_releases->count() . ' ' . Str::plural('release', $game->non_menu_releases->count());
 
-            $boxscans = $game->releases
+            $boxscans = $game->non_menu_releases
                 ->flatMap(function ($release) {
                     return $release->boxscans;
                 })->count() + $game->boxscans()->count();
@@ -46,7 +46,7 @@ class GameHelper
                 $extraInfo[] = $boxscans . ' ' . Str::plural('boxscan', $boxscans);
             }
 
-            $releases = $game->releases->map(function ($release) {
+            $releases = $game->non_menu_releases->map(function ($release) {
                 $year = 'n/a';
                 if ($release->date !== null) {
                     $year = $release->date->year;
