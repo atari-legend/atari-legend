@@ -1,12 +1,16 @@
 const axios = require('axios');
-const REGEX_ARCHIVE_ORG = new RegExp('https://archive.org/details/[^/]+/');
+const REGEX_ARCHIVE_ORG = new RegExp('https://archive.org/details/[^/]+/$');
 
 document.addEventListener('DOMContentLoaded', () => {
     var btn = document.getElementById('fetch-thumbnail');
     if (btn) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (evt) => {
             var url = document.getElementById('archiveorg_url').value;
             if (REGEX_ARCHIVE_ORG.test(url)) {
+                evt.target.disabled = true;
+                const oldButtonHTML = evt.target.innerHTML;
+                evt.target.innerHTML = 'Fetching… <i class="fa-solid fa-spinner fa-spin"></i>';
+
                 var id = url.split('/')[4];
                 axios
                     .post(`./image?id=${id}`)
@@ -15,6 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     .catch((err) => {
                         alert(`Error fetching cover: ${err}`);
+                    })
+                    .then(() => {
+                        evt.target.innerHTML = oldButtonHTML;
+                        evt.target.disabled = false;
                     });
             } else {
                 alert('Missing or invalid archive.org URL');
