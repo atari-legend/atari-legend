@@ -70,14 +70,13 @@
                             src="{{ isset($issue) ? $issue->image : asset('images/no-cover.svg') }}"
                             alt="Issue cover" id="issue-cover">
 
-                        @if (isset($issue?->image))
-                            <button class="btn btn-link" type="button" id="delete-image-button"
-                                onclick="if (confirm('The image will be deleted')) document.getElementById('delete-image').submit();">
+                            <button class="btn btn-link" type="button" id="destroy-image-button">
                                 <i class="fas fa-trash-alt text-danger"></i>
                             </button>
-                        @endif
                     </div>
 
+                    <input type="hidden" id="useArchiveOrgCover" name="useArchiveOrgCover" value="">
+                    <input type="hidden" id="destroyImage" name="destroyImage" value="">
                     <div class="mb-3">
                         <label for="image" class="form-label">Image</label>
                         <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image">
@@ -101,11 +100,5 @@
 
         </form>
 
-        @if (isset($issue))
-            <form action="{{ route('admin.magazines.issues.image.destroy', ['magazine' => $magazine, 'issue' => $issue]) }}" method="post" id="delete-image">
-                @csrf
-                @method('DELETE')
-            </form>
-        @endif
     </div>
 </div>

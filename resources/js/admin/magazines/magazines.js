@@ -1,41 +1,93 @@
-const axios = require('axios');
-const REGEX_ARCHIVE_ORG = new RegExp('https://archive.org/details/[^/]+/$');
+const REGEX_ARCHIVE_ORG = new RegExp('https://archive.org/details/([^/]+)/$');
 
+/**
+ * Handle of magazine issue cover, either via stanard file upload or
+ * by fetching it from archive.org
+ */
 document.addEventListener('DOMContentLoaded', () => {
-    var btn = document.getElementById('fetch-thumbnail');
-    if (btn) {
-        btn.addEventListener('click', (evt) => {
-            var url = document.getElementById('archiveorg_url').value;
-            if (REGEX_ARCHIVE_ORG.test(url)) {
+    const coverElement = document.getElementById('issue-cover');
+    const fileUpload = document.getElementById('image');
+    const fetchButton = document.getElementById('fetch-thumbnail');
+    const useArchiveOrgCoverInput = document.getElementById('useArchiveOrgCover');
+    const destroyImageInput = document.getElementById('destroyImage');
+
+    if (fetchButton) {
+        const oldButtonHTML = fetchButton.innerHTML;
+
+        // Event listener used when the cover image is loaded
+        // from archive.org.
+        // Restore the button that was put in a loading state,
+        // set the file input value to null and also the flag
+        // to destroy the cover
+        const imgLoadEventListener = () => {
+            fetchButton.innerHTML = oldButtonHTML;
+            fetchButton.disabled = false;
+
+            fileUpload.value = null;
+            destroyImageInput.value = '';
+            useArchiveOrgCoverInput.value = 'true';
+        };
+
+        // When clicking on the fecth button, display a spinner while
+        // the cover image SRC is replaced with the Archive URL.
+        fetchButton.addEventListener('click', (evt) => {
+            const url = document.getElementById('archiveorg_url').value;
+            const match = url.match(REGEX_ARCHIVE_ORG);
+            if (match[1]) {
                 evt.target.disabled = true;
-                const oldButtonHTML = evt.target.innerHTML;
                 evt.target.innerHTML = 'Fetching… <i class="fa-solid fa-spinner fa-spin"></i>';
 
-                var id = url.split('/')[4];
-                axios
-                    .post(`./image?id=${id}`)
-                    .then((resp) => {
-                        document.getElementById('issue-cover').src = resp.data + '?t=' + Date.now();
-                    })
-                    .catch((err) => {
-                        alert(`Error fetching cover: ${err}`);
-                    })
-                    .then(() => {
-                        evt.target.innerHTML = oldButtonHTML;
-                        evt.target.disabled = false;
-                    });
+                coverElement.addEventListener('load', imgLoadEventListener);
+
+                const id = match[1];
+                const coverUrl = `https://archive.org/download/${id}/page/cover_w600.jpg`;
+                coverElement.src = coverUrl;
             } else {
                 alert('Missing or invalid archive.org URL');
             }
         });
+
+        // when the file upload is used, display the selected
+        // file as a thumbnail
+        fileUpload.addEventListener('change', () => {
+            const file = fileUpload.files[0];
+            const reader = new FileReader();
+            reader.addEventListener('loadend', () => {
+                coverElement.src = reader.result;
+            });
+
+            if (file) {
+                coverElement.removeEventListener('load', imgLoadEventListener);
+                reader.readAsDataURL(file);
+                useArchiveOrgCoverInput.value = '';
+                destroyImageInput.value = '';
+            }
+        });
+
+        // When clicking on the image desroy button, set the relevant flags
+        // and clear the file input
+        document.getElementById('destroy-image-button')
+            .addEventListener('click', () => {
+                coverElement.src = '/images/no-cover.svg';
+                useArchiveOrgCoverInput.value = '';
+                fileUpload.value = null;
+                destroyImageInput.value = 'true';
+            });
     }
 
+    // This event is to re-attach the autocomplete control
+    // to the MagazineIndex liveweire component for the game and
+    // software input. Since livewire will dynaically add rows to the DOM
+    // without this the input will not get the autocomplete as it's
+    // attached only once on page load
     window.Livewire.hook('message.processed', () => {
         setTimeout(() => {
-            window.document.dispatchEvent(new CustomEvent('atarilegend:autocomplete', {
-                bubbles: true,
-                cancelable: true,
-            }));
+            window.document.dispatchEvent(
+                new CustomEvent('atarilegend:autocomplete', {
+                    bubbles: true,
+                    cancelable: true,
+                })
+            );
         }, 50);
     });
 });

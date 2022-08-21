@@ -25,7 +25,7 @@ class SecurityHeaders
 
         $csp = collect([
             "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:",
-            "img-src 'self' data: *.ytimg.com",
+            "img-src 'self' data: *.ytimg.com archive.org *.archive.org",
             'frame-src *.hcaptcha.com www.youtube-nocookie.com',
         ]);
 

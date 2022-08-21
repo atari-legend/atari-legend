@@ -11,6 +11,7 @@ use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MagazineIssuesController extends Controller
 {
@@ -103,7 +104,14 @@ class MagazineIssuesController extends Controller
 
     private function addOrUpdateImage(Request $request, MagazineIssue $issue)
     {
-        if ($request->hasFile('image')) {
+        if ($request->destroyImage) {
+            Storage::disk('public')->delete($issue->image_path . '/' . $issue->image_file);
+            $issue->update(['imgext' => null]);
+        }
+        if ($request->useArchiveOrgCover) {
+            $id = Str::of($request->archiveorg_url)->match('@https://archive.org/details/([^/]+)/$@');
+            $this->fetchImage($id, $issue);
+        } elseif ($request->hasFile('image')) {
             $image = $request->file('image');
 
             $issue->update(['imgext' => $image->extension()]);
@@ -111,9 +119,8 @@ class MagazineIssuesController extends Controller
         }
     }
 
-    public function fetchImage(Request $request, Magazine $magazine, MagazineIssue $issue)
+    public function fetchImage(string $id, MagazineIssue $issue)
     {
-        $id = $request->id;
         $url = "https://archive.org/download/{$id}/page/cover_w600.jpg";
 
         $response = Http::get($url);
@@ -124,41 +131,5 @@ class MagazineIssuesController extends Controller
         Storage::disk('public')->put($path, $response->body());
 
         $issue->update(['imgext' => $ext]);
-
-        ChangelogHelper::insert([
-            'action'           => Changelog::UPDATE,
-            'section'          => 'Magazines',
-            'section_id'       => $issue->magazine->getKey(),
-            'section_name'     => $issue->magazine->name,
-            'sub_section'      => 'Issue Image',
-            'sub_section_id'   => $issue->getKey(),
-            'sub_section_name' => $issue->issue,
-        ]);
-
-        return response(asset("storage/{$path}"), 200)
-            ->header('Content-Type', 'text/plain');
-    }
-
-    public function destroyImage(Request $request, Magazine $magazine, MagazineIssue $issue)
-    {
-        if ($issue->image) {
-            Storage::disk('public')->delete($issue->image_path . '/' . $issue->image_file);
-            $issue->update(['imgext' => null]);
-
-            ChangelogHelper::insert([
-                'action'           => Changelog::UPDATE,
-                'section'          => 'Magazines',
-                'section_id'       => $issue->magazine->getKey(),
-                'section_name'     => $issue->magazine->name,
-                'sub_section'      => 'Issue Image',
-                'sub_section_id'   => $issue->getKey(),
-                'sub_section_name' => $issue->issue,
-            ]);
-        }
-
-        return redirect()->route('admin.magazines.issues.edit', [
-            'magazine' => $issue->magazine,
-            'issue'    => $issue,
-        ]);
     }
 }

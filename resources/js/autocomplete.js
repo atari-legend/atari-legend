@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         * display to work properly
         */
         document.querySelectorAll('.autocomplete').forEach(el => {
-            console.log('apply to', el);
             new autoComplete({
                 data: {
                     src: async function () {

@@ -7,7 +7,10 @@
                     <th>Type</th>
                     <th>
                         Title
-                        <small class="d-block text-muted fw-normal">Leave blank if there's no special article title</small>
+                        <small class="d-block text-muted fw-normal">
+                            Leave blank for game & software reviews if there's no special article title.
+                            The name of the game / software will be used automatically.
+                        </small>
                     </th>
                     <th>Game</th>
                     <th>Software</th>
@@ -68,7 +71,7 @@
                         </td>
                         <td>
                             <input type="text" wire:model="issue.indices.{{ $index }}.score"
-                                class="form-control" size="2">
+                                class="form-control" size="3">
                         </td>
                         <td>
                             <button title="Delete" class="btn" type="button"
