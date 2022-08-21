@@ -35,10 +35,6 @@ nav.navbar {
     }
 
     form {
-        input[type=text] {
-            padding: 0.25rem 0.75rem;
-            margin-top: 0.125rem;
-        }
 
         button.btn {
             color: $dark;
@@ -56,6 +52,6 @@ nav.navbar {
 }
 
 #avatar {
-    height: 1rem;
-    vertical-align: sub;
+    height: 1.25rem;
+    vertical-align: bottom;
 }
