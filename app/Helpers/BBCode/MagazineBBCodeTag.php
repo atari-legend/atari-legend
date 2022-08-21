@@ -5,9 +5,9 @@ namespace App\Helpers\BBCode;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
-class MenuSetBBCodeTag extends CodeDefinition
+class MagazineBBCodeTag extends CodeDefinition
 {
-    public function __construct(string $name = 'menuSet')
+    public function __construct(string $name = 'magazine')
     {
         parent::__construct();
         $this->setTagName($name);
@@ -21,16 +21,16 @@ class MenuSetBBCodeTag extends CodeDefinition
             $content .= $child->getAsBBCode();
         }
 
-        $attr = $el->getAttribute()['menuSet'] ?? $el->getAttribute()['menuset'];
+        $attr = $el->getAttribute()['magazine'] ?? $el->getAttribute()['magazine'];
 
-        $menuSetId = explode('#', $attr)[0];
-        $diskId = explode('#', $attr)[1] ?? '';
+        $magazineId = explode('#', $attr)[0];
+        $issueId = explode('#', $attr)[1] ?? '';
         $page = explode('#', $attr)[2] ?? 1;
 
         return join([
             '<a href="',
-            route('menus.show', ['set' => $menuSetId, 'page' => $page]),
-            "#menudisk-{$diskId}\">",
+            route('magazines.show', ['magazine' => $magazineId, 'page' => $page]),
+            "#magazine-issue-{$issueId}\">",
             $content,
             '</a>',
         ]);

@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Helpers\BBCode\ArticleBBCodeTag;
 use App\Helpers\BBCode\GameBBCodeTag;
 use App\Helpers\BBCode\InterviewBBCodeTag;
+use App\Helpers\BBCode\MagazineBBCodeTag;
 use App\Helpers\BBCode\MenuSetBBCodeTag;
 use App\Helpers\BBCode\ReleaseYearBBCodeTag;
 use App\Helpers\BBCode\ReviewBBCodeTag;
@@ -76,6 +77,7 @@ class Helper
         $parser->addCodeDefinition(new SearchByIdBBCodeTag('individual'));
         $parser->addCodeDefinition(new ReleaseYearBBCodeTag());
         $parser->addCodeDefinition(new MenuSetBBCodeTag());
+        $parser->addCodeDefinition(new MagazineBBCodeTag());
 
         $parser->parse($bbCode);
 
