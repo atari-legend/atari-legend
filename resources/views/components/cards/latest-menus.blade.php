@@ -35,7 +35,7 @@
                                 src="{{ asset('storage/images/menu_screenshots/' . $disk->screenshots->first()->file) }}"
                                 alt="Screenshot for disk">
                         @else
-                            <img class="w-100 bg-black" src="{{ asset('images/no-screenshot.png') }}"
+                            <img class="w-100 bg-black" src="{{ asset('images/no-screenshot.svg') }}"
                                 alt="No screenshot for this disk">
                         @endif
                     </div>

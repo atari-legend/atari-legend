@@ -21,7 +21,7 @@
                         alt="Screenshot of disk">
                 @else
                     <img class="card-img-top w-100 bg-dark"
-                        src="{{ asset('images/no-screenshot.png') }}"
+                        src="{{ asset('images/no-screenshot.svg') }}"
                         alt="Screenshot of disk">
                 @endif
                 <div class="card-body">

@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.sceditor.command.set('article', customCommand('article', 'Article ID', 'Insert link to an article'));
     window.sceditor.command.set('interview', customCommand('interview', 'Interview ID', 'Insert link to an interview'));
     window.sceditor.command.set('menuset', customCommand('menuset', 'Menuset ID', 'Insert link to a menu set'));
+    window.sceditor.command.set('magazine', customCommand('magazine', 'Magazine ID', 'Insert link to a magazine'));
     window.sceditor
         .command.set('releaseyear', releaseYearCommand());
     window.sceditor
@@ -148,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add "simple" custom BBCodes
     var codes = [
-        'game', 'review', 'article', 'interview', 'menuset'
+        'game', 'review', 'article', 'interview', 'menuset', 'magazine'
     ];
     codes.forEach(it => window.sceditor.formats.bbcode.set(it, customCode(it)));
 

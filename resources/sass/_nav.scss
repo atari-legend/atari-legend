@@ -7,11 +7,15 @@ nav.navbar {
         white-space: nowrap;
     }
 
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
     .navbar-main {
 
         li {
             font-family: $font-audiowide;
-            font-size: 1.25rem;
+            font-size: 1rem;
             text-transform: uppercase;
 
             @include media-breakpoint-up(xl) {
@@ -31,6 +35,11 @@ nav.navbar {
     }
 
     form {
+        input[type=text] {
+            padding: 0.25rem 0.75rem;
+            margin-top: 0.125rem;
+        }
+
         button.btn {
             color: $dark;
             &:hover {
@@ -47,5 +56,6 @@ nav.navbar {
 }
 
 #avatar {
-    height: 1.5rem;
+    height: 1rem;
+    vertical-align: sub;
 }

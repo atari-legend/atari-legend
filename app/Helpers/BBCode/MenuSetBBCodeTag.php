@@ -25,7 +25,7 @@ class MenuSetBBCodeTag extends CodeDefinition
 
         $menuSetId = explode('#', $attr)[0];
         $diskId = explode('#', $attr)[1] ?? '';
-        $page = explode('#', $attr)[2] ?? 0;
+        $page = explode('#', $attr)[2] ?? 1;
 
         return join([
             '<a href="',

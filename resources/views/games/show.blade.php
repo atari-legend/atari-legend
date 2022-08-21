@@ -16,6 +16,7 @@
                 @include('games.card_videos')
             @endif
             @include('games.card_boxscan')
+            @include('games.card_magazines')
         </div>
         <div class="col-12 col-lg-6 order-sm-3 order-lg-2">
             @include('games.card_screenshots')

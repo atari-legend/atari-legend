@@ -135,6 +135,11 @@ class Game extends Model
         return $this->hasMany(GameVote::class, 'game_id');
     }
 
+    public function magazineIndices()
+    {
+        return $this->hasMany(MagazineIndex::class, 'game_id');
+    }
+
     public function getNonMenuReleasesAttribute()
     {
         return $this

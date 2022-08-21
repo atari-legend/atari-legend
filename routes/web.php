@@ -22,6 +22,7 @@ use App\Http\Controllers\GameVoteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\MenuSetController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ReviewController;
@@ -91,6 +92,9 @@ Route::middleware('verified')->group(function () {
     Route::resource('/links', LinkController::class)->only(['index']);
 
     Route::resource('/about', AboutController::class)->only(['index']);
+
+    Route::resource('/magazines', MagazineController::class);
+
     Route::get('/about/andreas', [AboutController::class, 'andreas'])->name('about.andreas');
 
     Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog.index');
