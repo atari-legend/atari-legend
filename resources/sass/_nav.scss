@@ -35,6 +35,11 @@ nav.navbar {
     }
 
     form {
+        input[type=text] {
+            padding: 0.25rem 0.75rem;
+            margin-top: 0.125rem;
+        }
+
         button.btn {
             color: $dark;
             &:hover {
