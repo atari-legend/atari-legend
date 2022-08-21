@@ -23,7 +23,7 @@
                     <tr wire:key="index-field-{{ $i->id }}">
                         <td>
                             <input type="number" wire:model.debounce.750ms="issue.indices.{{ $index }}.page"
-                                class="form-control" value="{{ $i->page }}" size="2">
+                                class="form-control" value="{{ $i->page }}" size="4">
                         </td>
                         <td>
                             <select class="form-select" wire:model="issue.indices.{{ $index }}.magazine_index_type_id">
