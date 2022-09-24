@@ -5,7 +5,7 @@
                 <tr>
                     <th>Page</th>
                     <th>Type</th>
-                    <th>
+                    <th class="col-2">
                         Title
                         <small class="d-block text-muted fw-normal">
                             Leave blank for game & software reviews if there's no special article title.
@@ -14,6 +14,7 @@
                     </th>
                     <th>Game</th>
                     <th>Software</th>
+                    <th>Individual</th>
                     <th>Score</th>
                     <th></th>
                 </tr>
@@ -68,6 +69,23 @@
                             <input type="hidden" name="{{ $i->id }}_menu_software_id"
                                 wire:change="updateSoftware({{ $i->id }}, $event.target.value)"
                                 value="{{ $i->menu_software_id }}">
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <input class="autocomplete form-control" name="{{ $i->id }}_individual_name"
+                                    type="search" required data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
+                                    data-autocomplete-key="ind_name" data-autocomplete-id="ind_id"
+                                    data-autocomplete-companion="{{ $i->id }}_individual_id"
+                                    value="{{ $i->individual?->ind_name }}" placeholder="Type an individual name..."
+                                    autocomplete="off">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    wire:click="updateIndividual({{ $i->id }}, null)">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" name="{{ $i->id }}_individual_id"
+                                wire:change="updateIndividual({{ $i->id }}, $event.target.value)"
+                                value="{{ $i->individual_id }}">
                         </td>
                         <td>
                             <input type="text" wire:model="issue.indices.{{ $index }}.score"

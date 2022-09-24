@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin;
 use App\Helpers\ChangelogHelper;
 use App\Models\Changelog;
 use App\Models\Game;
+use App\Models\Individual;
 use App\Models\MagazineIndex as ModelsMagazineIndex;
 use App\Models\MagazineIndexType;
 use App\Models\MagazineIssue;
@@ -59,6 +60,18 @@ class MagazineIndex extends Component
             $index->game()->associate(Game::find($gameId));
         } else {
             $index->game()->dissociate();
+        }
+        $index->save();
+        $this->issue->refresh();
+    }
+
+    public function updateIndividual(int $indexId, ?int $individualId)
+    {
+        $index = $this->issue->indices->firstWhere('id', $indexId);
+        if ($individualId != null) {
+            $index->individual()->associate(Individual::find($individualId));
+        } else {
+            $index->individual()->dissociate();
         }
         $index->save();
         $this->issue->refresh();
