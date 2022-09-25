@@ -132,4 +132,21 @@ class MagazineIssuesController extends Controller
 
         $issue->update(['imgext' => $ext]);
     }
+
+    public function destroy(Magazine $magazine, MagazineIssue $issue)
+    {
+        $issue->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Magazines',
+            'section_id'       => $issue->magazine->getKey(),
+            'section_name'     => $issue->magazine->name,
+            'sub_section'      => 'Issue',
+            'sub_section_id'   => $issue->getKey(),
+            'sub_section_name' => $issue->issue,
+        ]);
+
+        return redirect()->route('admin.magazines.magazines.edit', $issue->magazine);
+    }
 }
