@@ -29,7 +29,7 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
-    {{ $row->created_at?->toDayDateTimeString() ?? '-' }}
+    {{ $row->updated_at?->toDayDateTimeString() ?? '-' }}
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
