@@ -22,6 +22,9 @@ class MagazineIssuesTable extends DataTableComponent
     {
         return [
             Column::make('Issue', 'issue')->sortable(),
+            Column::make('Date', 'published')->sortable(),
+            Column::make('Cover'),
+            Column::make('Index'),
             Column::make('Created', 'created_at')->sortable(),
             Column::make('Updated', 'updated_at')->sortable(),
             Column::blank(),

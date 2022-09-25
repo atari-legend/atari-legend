@@ -7,6 +7,24 @@
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>
+    {{ $row->published?->format("F Y") ?? '-' }}
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    @if ($row->image_file)
+        <img src="{{ $row->image }}" width="32" alt="Cover for {{ $row->label }}">
+    @endif
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
+    @if ($row->indices->isNotEmpty())
+        <i class="fa-solid fa-check text-success"></i>
+    @else
+        <i class="fa-solid fa-times text-muted"></i>
+    @endif
+</x-livewire-tables::table.cell>
+
+<x-livewire-tables::table.cell>
     {{ $row->created_at?->toDayDateTimeString() ?? '-' }}
 </x-livewire-tables::table.cell>
 
