@@ -20,12 +20,12 @@ class MagazineIndex extends Component
 
     protected $rules = [
         'sort'                                   => 'boolean',
-        'issue.indices.*.page'                   => 'numeric',
-        'issue.indices.*.title'                  => 'string',
-        'issue.indices.*.score'                  => 'string',
-        'issue.indices.*.game_id'                => 'numeric',
-        'issue.indices.*.menu_software_id'       => 'numeric',
-        'issue.indices.*.magazine_index_type_id' => 'numeric',
+        'issue.indices.*.page'                   => 'nullable|numeric',
+        'issue.indices.*.title'                  => 'nullable|string',
+        'issue.indices.*.score'                  => 'nullable|string',
+        'issue.indices.*.game_id'                => 'nullable|numeric',
+        'issue.indices.*.menu_software_id'       => 'nullable|numeric',
+        'issue.indices.*.magazine_index_type_id' => 'nullable|numeric',
     ];
 
     public function addRow()
@@ -43,44 +43,56 @@ class MagazineIndex extends Component
 
     public function updateSoftware(int $indexId, ?int $softwareId)
     {
+        $this->validate();
+
         $index = $this->issue->indices->firstWhere('id', $indexId);
         if ($softwareId != null) {
             $index->menuSoftware()->associate(MenuSoftware::find($softwareId));
         } else {
             $index->menuSoftware()->dissociate();
         }
+        MagazineIndex::fixPage($index);
         $index->save();
         $this->issue->refresh();
     }
 
     public function updateGame(int $indexId, ?int $gameId)
     {
+        $this->validate();
+
         $index = $this->issue->indices->firstWhere('id', $indexId);
         if ($gameId != null) {
             $index->game()->associate(Game::find($gameId));
         } else {
             $index->game()->dissociate();
         }
+        MagazineIndex::fixPage($index);
         $index->save();
         $this->issue->refresh();
     }
 
     public function updateIndividual(int $indexId, ?int $individualId)
     {
+        $this->validate();
+
         $index = $this->issue->indices->firstWhere('id', $indexId);
         if ($individualId != null) {
             $index->individual()->associate(Individual::find($individualId));
         } else {
             $index->individual()->dissociate();
         }
+        MagazineIndex::fixPage($index);
         $index->save();
         $this->issue->refresh();
     }
 
     public function save()
     {
+        $this->validate();
+
         if ($this->issue->indices) {
             $this->issue->indices->each(function ($index) {
+                MagazineIndex::fixPage($index);
                 $index->save();
             });
         }
@@ -108,5 +120,18 @@ class MagazineIndex extends Component
                 'indices'    => $this->sort ? $this->issue->indices->sortBy('page') : $this->issue->indices,
                 'indexTypes' => MagazineIndexType::all(),
             ]);
+    }
+
+    /**
+     * Fix the page attribute of an index, as the UI allows entering
+     * non-numeric values.
+     *
+     * @param  MagazineIndex  $index  Index to fix the page for.
+     */
+    private static function fixPage(ModelsMagazineIndex &$index)
+    {
+        if ($index->page !== null && ! is_numeric($index->page)) {
+            $index->page = null;
+        }
     }
 }
