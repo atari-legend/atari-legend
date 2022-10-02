@@ -75,7 +75,14 @@ class MagazineIssuesController extends Controller
             'sub_section_name' => $issue->issue,
         ]);
 
-        return redirect()->route('admin.magazines.magazines.edit', $issue->magazine);
+        if ($request->stay) {
+            return redirect()->route('admin.magazines.issues.edit', [
+                'magazine' => $issue->magazine,
+                'issue'    => $issue,
+            ]);
+        } else {
+            return redirect()->route('admin.magazines.magazines.edit', $issue->magazine);
+        }
     }
 
     public function store(Request $request, Magazine $magazine)
@@ -102,7 +109,14 @@ class MagazineIssuesController extends Controller
             'sub_section_name' => $issue->issue,
         ]);
 
-        return redirect()->route('admin.magazines.magazines.edit', $issue->magazine);
+        if ($request->stay) {
+            return redirect()->route('admin.magazines.issues.edit', [
+                'magazine' => $issue->magazine,
+                'issue'    => $issue,
+            ]);
+        } else {
+            return redirect()->route('admin.magazines.magazines.edit', $issue->magazine);
+        }
     }
 
     private function addOrUpdateImage(Request $request, MagazineIssue $issue)

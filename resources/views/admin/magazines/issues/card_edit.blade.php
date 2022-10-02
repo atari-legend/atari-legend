@@ -110,7 +110,9 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success">Save</button>
+
+            <button type="submit" class="btn btn-success" name="stay" value="true">Save</button>
+            <button type="submit" class="btn btn-primary">Save & Close</button>
             <a href="{{ route('admin.magazines.magazines.edit', $magazine) }}" class="btn btn-link">Cancel</a>
 
         </form>
