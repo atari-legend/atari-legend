@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ajax;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class GameAndSoftwareController extends Controller
 {
@@ -19,7 +20,6 @@ class GameAndSoftwareController extends Controller
                 DB::raw("'fa-gamepad' as icon"),
                 DB::raw('CONCAT("' . route('games.show', ['']) . '/", game_id) as url')
             )
-            ->orderBy('game_name')
             ->limit(GameAndSoftwareController::MAX);
 
         $akas = DB::table('game_aka')
@@ -29,7 +29,6 @@ class GameAndSoftwareController extends Controller
                 DB::raw("'fa-gamepad' as icon"),
                 DB::raw('CONCAT("' . route('games.show', ['']) . '/", game_id) as url')
             )
-            ->orderBy('aka_name')
             ->limit(GameAndSoftwareController::MAX);
 
         $software = DB::table('menu_software')
@@ -39,19 +38,28 @@ class GameAndSoftwareController extends Controller
                 DB::raw("'fa-desktop' as icon"),
                 DB::raw('CONCAT("' . route('menus.software', ['']) . '/", id) as url')
             )
-            ->orderBy('name')
             ->limit(GameAndSoftwareController::MAX);
 
-        if ($request->filled('q')) {
-            $games = $games->where('game_name', 'like', '%' . $request->q . '%');
-            $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%');
-            $software = $software->where('name', 'like', '%' . $request->q . '%');
+        $q = $request->q;
+        if ($q !== null) {
+            $games = $games->where('game_name', 'like', '%' . $request->q . '%')
+                ->orderByRaw("LOCATE('" . $request->q . "', game_name)");
+            $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%')
+                ->orderByRaw("LOCATE('" . $request->q . "', aka_name)");
+            $software = $software->where('name', 'like', '%' . $request->q . '%')
+                ->orderByRaw("LOCATE('" . $request->q . "', name)");
+        } else {
+            $games = $games->orderBy('game_name');
+            $akas = $akas->orderBy('aka_name');
+            $software = $software->orderBy('name');
         }
 
         $all = $games->get()
             ->merge($akas->get())
             ->merge($software->get())
-            ->sortBy('name')
+            ->sortBy(function ($data) use ($q) {
+                return strpos(Str::lower($data->name), Str::lower($q));
+            })
             ->values()
             ->take(GameAndSoftwareController::MAX);
 
