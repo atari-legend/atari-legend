@@ -13,7 +13,7 @@ class MagazineIssue extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['issue', 'archiveorg_url', 'published', 'imgext'];
+    protected $fillable = ['issue', 'archiveorg_url', 'alternate_url', 'published', 'imgext'];
 
     protected $casts = [
         'published' => 'date',
@@ -75,6 +75,8 @@ class MagazineIssue extends Model
     {
         if ($this->archiveorg_url) {
             return Str::replace('/details/', '/stream/', $this->archiveorg_url);
+        } elseif ($this->alternate_url) {
+            return $this->alternate_url;
         } else {
             return null;
         }

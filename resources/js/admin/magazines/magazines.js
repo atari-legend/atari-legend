@@ -19,13 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Restore the button that was put in a loading state,
         // set the file input value to null and also the flag
         // to destroy the cover
-        const imgLoadEventListener = () => {
+        const imgLoadEventListener = (evt) => {
             fetchButton.innerHTML = oldButtonHTML;
             fetchButton.disabled = false;
 
             fileUpload.value = null;
             destroyImageInput.value = '';
             useArchiveOrgCoverInput.value = 'true';
+
+            if (evt.type === 'error') {
+                alert('Error fetching cover from archive.org');
+            }
         };
 
         // When clicking on the fecth button, display a spinner while
@@ -33,11 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchButton.addEventListener('click', (evt) => {
             const url = document.getElementById('archiveorg_url').value;
             const match = url.match(REGEX_ARCHIVE_ORG);
-            if (match[1]) {
+            if (match && match[1]) {
                 evt.target.disabled = true;
                 evt.target.innerHTML = 'Fetching… <i class="fa-solid fa-spinner fa-spin"></i>';
 
                 coverElement.addEventListener('load', imgLoadEventListener);
+                coverElement.addEventListener('error', imgLoadEventListener);
 
                 const id = match[1];
                 const coverUrl = `https://archive.org/download/${id}/page/cover_w600.jpg`;
@@ -64,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // When clicking on the image desroy button, set the relevant flags
+        // When clicking on the image destroy button, set the relevant flags
         // and clear the file input
         document.getElementById('destroy-image-button')
             .addEventListener('click', () => {

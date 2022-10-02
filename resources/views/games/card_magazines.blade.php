@@ -34,8 +34,5 @@
                 </div>
             @endforeach
         </div>
-        <div class="card-footer text-muted text-center">
-            <small>Magazines hosted by <a href="https://archive.org">Internet Archive</a>.</small>
-        </div>
     </div>
 @endif

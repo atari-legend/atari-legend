@@ -21,7 +21,8 @@ class MagazineIssuesController extends Controller
             'nullable',
             'regex:@https://archive.org/details/[^/]+/@',
         ],
-        'published' => 'nullable|date',
+        'alternate_url'  => 'nullable|url',
+        'published'      => 'nullable|date',
     ];
 
     public function edit(Magazine $magazine, MagazineIssue $issue)
@@ -58,6 +59,7 @@ class MagazineIssuesController extends Controller
         $issue->update([
             'issue'          => $request->issue,
             'archiveorg_url' => $request->archiveorg_url,
+            'alternate_url'  => $request->alternate_url,
             'published'      => $request->published,
         ]);
 
@@ -83,6 +85,7 @@ class MagazineIssuesController extends Controller
         $issue = new MagazineIssue([
             'issue'          => $request->issue,
             'archiveorg_url' => $request->archiveorg_url,
+            'alternate_url'  => $request->alternate_url,
             'published'      => $request->published,
         ]);
         $magazine->issues()->save($issue);

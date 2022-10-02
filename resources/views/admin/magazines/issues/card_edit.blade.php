@@ -33,7 +33,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="archiveorg_url" class="form-label">Archive.org URL</label>
-                        <input type="text" class="form-control @error('archiveorg_url') is-invalid @enderror"
+                        <input type="url" class="form-control @error('archiveorg_url') is-invalid @enderror"
                             pattern="https://archive.org/details/[^/]+/"
                             placeholder="e.g. 'https://archive.org/details/.../'" name="archiveorg_url"
                             id="archiveorg_url" value="{{ old('archiveorg_url', $issue->archiveorg_url ?? '') }}">
@@ -44,6 +44,21 @@
                             <strong>trailing slash</strong>.
                         </div>
                         @error('archiveorg_url')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="alternate_url" class="form-label">Alternate URL</label>
+                        <input type="url" class="form-control @error('alternate_url') is-invalid @enderror"
+                            placeholder="e.g. 'https://www.example.org/mags/st-format-01.pdf'" name="alternate_url"
+                            id="alternate_url" value="{{ old('alternate_url', $issue->alternate_url ?? '') }}">
+                        <div class="form-text">
+                            If the issue is not available on archive.org and you cannot upload it there, indicate
+                            another URL to read the magazine. Preferably a direct link to a PDF.
+                        </div>
+                        @error('alternate_url')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
