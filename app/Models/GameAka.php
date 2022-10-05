@@ -14,4 +14,9 @@ class GameAka extends Model
     {
         return $this->belongsTo(Language::class);
     }
+
+    public function game()
+    {
+        return $this->hasOne(Game::class, 'game_id', 'game_id');
+    }
 }

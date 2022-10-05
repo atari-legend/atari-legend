@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 threshold: 1,
                 debounce: 300,
-                maxResults: 10,
+                maxResults: el.dataset.autocompleteMax || 10,
                 highlight: {
                     render: true
                 },

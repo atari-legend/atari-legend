@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
 use App\Http\Controllers\Admin\Articles\ArticleTypeController;
@@ -155,6 +156,7 @@ Route::middleware('verified')->group(function () {
                     Route::prefix('/ajax')->group(function () {
                         Route::get('sndh.json', [SNDHController::class, 'sndh'])->name('sndh');
                         Route::get('users.json', [AjaxUserController::class, 'users'])->name('users');
+                        Route::get('games.json', [AjaxGameController::class, 'games'])->name('games');
                     });
                 });
             });

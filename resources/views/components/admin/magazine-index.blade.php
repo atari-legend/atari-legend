@@ -41,8 +41,9 @@
                         <td>
                             <div class="input-group">
                                 <input class="autocomplete form-control" name="game_name" type="search" required
-                                    data-autocomplete-endpoint="{{ route('ajax.games') }}" data-autocomplete-key="game_name"
+                                    data-autocomplete-endpoint="{{ route('admin.ajax.games') }}" data-autocomplete-key="game_name"
                                     data-autocomplete-id="game_id" data-autocomplete-companion="{{ $i->id }}_game_id"
+                                    data-autocomplete-max="20"
                                     value="{{ $i->game?->game_name }}" placeholder="Type a game name..." autocomplete="off">
                                 <button type="button" class="btn btn-outline-secondary"
                                     wire:click="updateGame({{ $i->id }}, null)">
