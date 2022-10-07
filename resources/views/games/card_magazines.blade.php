@@ -16,6 +16,9 @@
                             href="{{ route('magazines.show', ['magazine' => $index->magazineIssue->magazine, 'page' => $index->magazineIssue->magazine_page_number]) }}#magazine-issue-{{ $index->magazineIssue->id }}">
                             {{ $index->magazineIssue->label }}
                         </a>
+                        @if ($index->magazineIndexType)
+                            <span class="text-muted ms-2">[{{ $index->magazineIndexType->name }}]</span>
+                        @endif
                         @contributor
                             <a class="d-inline-block ms-1"
                                 href="{{ route('admin.magazines.issues.edit', ['magazine' => $index->magazineIssue->magazine, 'issue' => $index->magazineIssue]) }}">
