@@ -59,7 +59,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($issue->indices->sortBy('page') as $index)
+                                @foreach ($issue->indices->sortBy(['page', 'game.game_name']) as $index)
                                     <tr class="border-bottom border-secondary">
                                         <td>
                                             @if ($index->game || $index->menuSoftware || $index->individual)

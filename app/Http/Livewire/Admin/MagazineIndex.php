@@ -117,7 +117,7 @@ class MagazineIndex extends Component
     {
         return view('components.admin.magazine-index')
             ->with([
-                'indices'    => $this->sort ? $this->issue->indices->sortBy('page') : $this->issue->indices,
+                'indices'    => $this->sort ? $this->issue->indices->sortBy(['page', 'game.game_name']) : $this->issue->indices,
                 'indexTypes' => MagazineIndexType::all(),
             ]);
     }
