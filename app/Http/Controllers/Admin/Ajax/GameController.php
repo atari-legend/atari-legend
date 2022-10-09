@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Game;
 use App\Models\GameAka;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
@@ -20,9 +21,13 @@ class GameController extends Controller
 
         if ($request->filled('q')) {
             $games = $games->where('game_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw("LOCATE('" . $request->q . "', game_name)");
+                ->orderByRaw("LOCATE('" . $request->q . "', game_name)")
+                ->orderbyRaw("CHAR_LENGTH('game_name')")
+                ->orderBy('game_name');
             $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw("LOCATE('" . $request->q . "', aka_name)");
+                ->orderByRaw("LOCATE('" . $request->q . "', aka_name)")
+                ->orderbyRaw("CHAR_LENGTH('aka_name')")
+                ->orderBy('aka_name');
         } else {
             $games = $games->orderBy('game_name');
             $akas = $akas->orderBy('aka_name');
@@ -30,14 +35,15 @@ class GameController extends Controller
 
         $akaData = $akas->get()
             ->map(function ($aka) {
-                $game_name = $aka->aka_name;
+                $developers = '';
                 if ($aka->game?->developers?->isNotEmpty()) {
-                    $game_name .= ' [' . $aka->game->developers->pluck('pub_dev_name')->join(', ') . ']';
+                    $developers = ' [' . $aka->game->developers->pluck('pub_dev_name')->join(', ') . ']';
                 }
 
                 return [
-                    'game_name' => $game_name,
-                    'game_id'   => $aka->game->getKey(),
+                    'game_name'  => $aka->aka_name,
+                    'developers' => $developers,
+                    'game_id'    => $aka->game->getKey(),
                 ];
             })
             ->take(GameController::MAX)
@@ -45,14 +51,15 @@ class GameController extends Controller
 
         $gameData = $games->get()
             ->map(function ($game) {
-                $game_name = $game->game_name;
+                $developers = '';
                 if ($game->developers->isNotEmpty()) {
-                    $game_name .= ' [' . $game->developers->pluck('pub_dev_name')->join(', ') . ']';
+                    $developers = ' [' . $game->developers->pluck('pub_dev_name')->join(', ') . ']';
                 }
 
                 return [
-                    'game_name' => $game_name,
-                    'game_id'   => $game->getKey(),
+                    'game_name'  => $game->game_name,
+                    'developers' => $developers,
+                    'game_id'    => $game->getKey(),
                 ];
             })
             ->take(GameController::MAX)
@@ -66,6 +73,17 @@ class GameController extends Controller
         // See: https://stackoverflow.com/a/67237117/582594
 
         $data = collect($gameData)->merge(collect($akaData))
+            ->sortBy([
+                fn ($a, $b) => strpos(Str::lower($a['game_name']), Str::lower($request->q)) <=> strpos(Str::lower($b['game_name']), Str::lower($request->q)),
+                fn ($a, $b) => strlen($a['game_name']) <=> strlen($b['game_name']),
+                fn ($a, $b) => $a['game_name'] <=> $b['game_name'],
+            ])
+            ->map(function ($data) {
+                return [
+                    'game_name' => $data['game_name'] . $data['developers'],
+                    'game_id'   => $data['game_id'],
+                ];
+            })
             ->take(GameController::MAX);
 
         return response()->json($data);

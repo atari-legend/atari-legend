@@ -43,11 +43,17 @@ class GameAndSoftwareController extends Controller
         $q = $request->q;
         if ($q !== null) {
             $games = $games->where('game_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw("LOCATE('" . $request->q . "', game_name)");
+                ->orderByRaw("LOCATE('" . $request->q . "', game_name)")
+                ->orderbyRaw("CHAR_LENGTH('game_name')")
+                ->orderBy('game_name');
             $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw("LOCATE('" . $request->q . "', aka_name)");
+                ->orderByRaw("LOCATE('" . $request->q . "', aka_name)")
+                ->orderbyRaw("CHAR_LENGTH('aka_name')")
+                ->orderBy('aka_name');
             $software = $software->where('name', 'like', '%' . $request->q . '%')
-                ->orderByRaw("LOCATE('" . $request->q . "', name)");
+                ->orderByRaw("LOCATE('" . $request->q . "', name)")
+                ->orderbyRaw("CHAR_LENGTH('name')")
+                ->orderBy('name');
         } else {
             $games = $games->orderBy('game_name');
             $akas = $akas->orderBy('aka_name');
@@ -57,9 +63,11 @@ class GameAndSoftwareController extends Controller
         $all = $games->get()
             ->merge($akas->get())
             ->merge($software->get())
-            ->sortBy(function ($data) use ($q) {
-                return strpos(Str::lower($data->name), Str::lower($q));
-            })
+            ->sortBy([
+                fn ($a, $b) => strpos(Str::lower($a->name), Str::lower($q)) <=> strpos(Str::lower($b->name), Str::lower($q)),
+                fn ($a, $b) => strlen($a->name) <=> strlen($b->name),
+                fn ($a, $b) => $a->name <=> $b->name,
+            ])
             ->values()
             ->take(GameAndSoftwareController::MAX);
 
