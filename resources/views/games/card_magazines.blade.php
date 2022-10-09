@@ -14,7 +14,7 @@
                         @endif
                         <a class="d-inline-block"
                             href="{{ route('magazines.show', ['magazine' => $index->magazineIssue->magazine, 'page' => $index->magazineIssue->magazine_page_number]) }}#magazine-issue-{{ $index->magazineIssue->id }}">
-                            {{ $index->magazineIssue->label }}
+                            {{ $index->magazineIssue->display_label_with_date }}
                         </a>
                         @if ($index->magazineIndexType)
                             <span class="text-muted ms-2">[{{ $index->magazineIndexType->name }}]</span>

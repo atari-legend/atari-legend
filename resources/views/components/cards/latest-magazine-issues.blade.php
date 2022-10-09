@@ -17,7 +17,7 @@
                     @endif
                 </h3>
                 <div class="col-3">
-                    <img src="{{ $issue->image }}" class="img-fluid bg-black" alt="Cover for {{ $issue->label }}">
+                    <img src="{{ $issue->image }}" class="img-fluid bg-black" alt="Cover for {{ $issue->display_label_with_date }}">
                 </div>
                 <div class="col ps-2">
                     @if ($issue->published)

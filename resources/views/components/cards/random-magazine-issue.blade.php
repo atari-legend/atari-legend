@@ -5,12 +5,12 @@
         </div>
         <div class="card-body p-0 striped">
             <figure>
-                <img src="{{ $issue->image }}" class="img-fluid bg-black" alt="Cover for {{ $issue->label }}">
+                <img src="{{ $issue->image }}" class="img-fluid bg-black" alt="Cover for {{ $issue->display_label_with_date }}">
                 <figcaption class="py-2 px-3">
                     <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                     <div class="figcaption-title">
                         <a href="{{ route('magazines.show', ['magazine' => $issue->magazine, 'page' => $issue->magazine_page_number]) }}#magazine-issue-{{ $issue->id }}">
-                            {{ $issue->magazine->name }} {{ $issue->issue }}
+                            {{ $issue->display_label }}
                         </a>
                     </div>
                     <div class="figcaption-subtitle">{{ $issue->published?->format('F Y') ?? '' }}</div>
