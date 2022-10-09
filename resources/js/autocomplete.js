@@ -1,6 +1,11 @@
 const autoComplete = require('@tarekraafat/autocomplete.js/dist/js/autoComplete');
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Keep track of all the auto-complete instances
+    // This is needed for the magazine index editor as we
+    // re-trigger the installation of auto-complete and must
+    // first uninitialize all the existing ones
+    var autoCompletes = [];
 
     // Register a custom event listener which allows us to
     // re-trigger the registering of auto-complete. This is needed for
@@ -8,6 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // have the auto-complete applied to them
     // There's probably a better way to do this...
     document.addEventListener('atarilegend:autocomplete', () => {
+        // Uninitialize all existing instances
+        autoCompletes.forEach(ac => {
+            ac.unInit();
+        });
+
         /*
         * Setup autocomplete for inputs of class .autocomplete.
         *
@@ -15,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         * display to work properly
         */
         document.querySelectorAll('.autocomplete').forEach(el => {
-            new autoComplete({
+            var ac = new autoComplete({
                 data: {
                     src: async function () {
                         // The input must have a data-autocomplete-endpoint attribute containing the URL to call
@@ -88,6 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                 }
             });
+
+            autoCompletes.push(ac);
         });
     });
 
