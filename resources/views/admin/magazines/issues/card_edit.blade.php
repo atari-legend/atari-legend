@@ -20,16 +20,32 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <div class="mb-3">
-                        <label for="issue" class="form-label">Issue Number</label>
-                        <input type="number" required class="form-control @error('name') is-invalid @enderror"
-                            name="issue" id="issue" value="{{ old('issue', $issue->issue ?? '') }}">
+                    <div class="mb-3 row row-cols-2">
+                        <div class="col">
+                            <label for="issue" class="form-label">Issue Number</label>
+                            <input type="number" class="form-control @error('issue') is-invalid @enderror"
+                                name="issue" id="issue" value="{{ old('issue', $issue->issue ?? '') }}">
 
-                        @error('issue')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                            @error('issue')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="col">
+                            <label for="label" class="form-label">Label</label>
+                            <input type="text" class="form-control @error('label') is-invalid @enderror"
+                                placeholder="e.g. 'Volume 1 Issue 1'"
+                                name="label" id="label" value="{{ old('label', $issue->label ?? '') }}">
+                            <div class="form-text">
+                                Leave blank for regular issues with a number.
+                            </div>
+                            @error('label')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="archiveorg_url" class="form-label">Archive.org URL</label>
@@ -77,6 +93,30 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+                    </div>
+                    <div class="mb-3 row row-cols-2">
+                        <div class="col">
+                            <label for="page_count" class="form-label">Page count</label>
+                            <input type="number" class="form-control @error('page_count') is-invalid @enderror"
+                                name="page_count" id="page_count"
+                                value="{{ old('page_count', isset($issue) ? $issue->page_count ?? '' : '') }}">
+                            @error('page_count')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="col">
+                            <label for="circulation" class="form-label">Copies sold</label>
+                            <input type="number" class="form-control @error('circulation') is-invalid @enderror"
+                                name="circulation" id="circulation"
+                                value="{{ old('circulation', isset($issue) ? $issue->circulation ?? '' : '') }}">
+                            @error('circulation')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">

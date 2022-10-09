@@ -22,7 +22,7 @@
     </div>
 </div>
 
-@foreach ($issues as $issue)
+@foreach ($issues->sortBy(['published', 'issue', 'label']) as $issue)
     <div class="card bg-dark mb-4 border-top-0" id="magazine-issue-{{ $issue->id }}">
         <div class="card-header">
             @if ($issue->published)
@@ -32,6 +32,9 @@
                 {{ $magazine->name }}
                 @if ($issue->issue)
                     #{{ $issue->issue }}
+                @endif
+                @if ($issue->label)
+                    {{ $issue->label }}
                 @endif
                 @if ($issue->read_url)
                     <a class="d-inline-block ms-2" href="{{ $issue->read_url }}">
@@ -44,6 +47,11 @@
                         <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                     </a>
                 @endcontributor
+
+                <a href="{{ route('magazines.show', ['magazine' => $issue->magazine, 'page' => Request::input('page')]) }}#magazine-issue-{{ $issue->id }}"
+                    class="ms-1 issue-link">
+                    <i class="fas fa-link text-muted fs-6"></i>
+                </a>
             </h3>
         </div>
         <div class="card-body">
@@ -97,7 +105,7 @@
                 </div>
                 <div class="col-sm-3">
                     <img src="{{ $issue->image }}" class="img-fluid bg-black"
-                        alt="Cover for issue {{ $issue->issue }} of {{ $issue->label }}">
+                        alt="Cover for {{ $issue->display_label_with_date }}">
                 </div>
             </div>
         </div>

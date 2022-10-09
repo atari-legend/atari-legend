@@ -16,13 +16,15 @@ use Illuminate\Support\Str;
 class MagazineIssuesController extends Controller
 {
     const VALIDATION_RULES = [
-        'issue'          => 'numeric',
+        'issue'          => 'nullable|numeric',
         'archiveorg_url' => [
             'nullable',
             'regex:@https://archive.org/details/[^/]+/@',
         ],
         'alternate_url'  => 'nullable|url',
         'published'      => 'nullable|date',
+        'page_count'     => 'nullable|numeric',
+        'circulation'    => 'nullable|numeric',
     ];
 
     public function edit(Magazine $magazine, MagazineIssue $issue)
@@ -32,7 +34,7 @@ class MagazineIssuesController extends Controller
                 'breadcrumbs' => [
                     new Crumb(route('admin.magazines.magazines.index'), 'Magazines'),
                     new Crumb(route('admin.magazines.magazines.edit', $issue->magazine), $issue->magazine->name),
-                    new Crumb('', $issue->issue),
+                    new Crumb('', $issue->display_label),
                 ],
                 'magazine' => $issue->magazine,
                 'issue'    => $issue,
@@ -58,9 +60,12 @@ class MagazineIssuesController extends Controller
 
         $issue->update([
             'issue'          => $request->issue,
+            'label'          => $request->label,
             'archiveorg_url' => $request->archiveorg_url,
             'alternate_url'  => $request->alternate_url,
             'published'      => $request->published,
+            'page_count'     => $request->page_count,
+            'circulation'    => $request->circulation,
         ]);
 
         $this->addOrUpdateImage($request, $issue);
@@ -72,7 +77,7 @@ class MagazineIssuesController extends Controller
             'section_name'     => $issue->magazine->name,
             'sub_section'      => 'Issue',
             'sub_section_id'   => $issue->getKey(),
-            'sub_section_name' => $issue->issue,
+            'sub_section_name' => $issue->display_label,
         ]);
 
         if ($request->stay) {
@@ -91,9 +96,12 @@ class MagazineIssuesController extends Controller
 
         $issue = new MagazineIssue([
             'issue'          => $request->issue,
+            'label'          => $request->label,
             'archiveorg_url' => $request->archiveorg_url,
             'alternate_url'  => $request->alternate_url,
             'published'      => $request->published,
+            'page_count'     => $request->page_count,
+            'circulation'    => $request->circulation,
         ]);
         $magazine->issues()->save($issue);
 
@@ -106,7 +114,7 @@ class MagazineIssuesController extends Controller
             'section_name'     => $magazine->name,
             'sub_section'      => 'Issue',
             'sub_section_id'   => $issue->getKey(),
-            'sub_section_name' => $issue->issue,
+            'sub_section_name' => $issue->display_label,
         ]);
 
         if ($request->stay) {
@@ -161,7 +169,7 @@ class MagazineIssuesController extends Controller
             'section_name'     => $issue->magazine->name,
             'sub_section'      => 'Issue',
             'sub_section_id'   => $issue->getKey(),
-            'sub_section_name' => $issue->issue,
+            'sub_section_name' => $issue->display_label,
         ]);
 
         return redirect()->route('admin.magazines.magazines.edit', $issue->magazine);

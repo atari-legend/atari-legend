@@ -13,7 +13,10 @@ class MagazineIssue extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['issue', 'archiveorg_url', 'alternate_url', 'published', 'imgext'];
+    protected $fillable = [
+        'issue', 'label', 'archiveorg_url', 'alternate_url',
+        'published', 'imgext', 'page_count', 'circulation',
+    ];
 
     protected $casts = [
         'published' => 'date',
@@ -55,17 +58,28 @@ class MagazineIssue extends Model
     /**
      * @return string Label for this issue (magazine name + issue + date).
      */
-    public function getLabelAttribute()
+    public function getDisplayLabelAttribute()
     {
         $label = [
             $this->magazine->name,
             $this->issue,
+            $this->label,
         ];
-        if ($this->published) {
-            $label[] = '(' . $this->published->format('M Y') . ')';
-        }
 
         return collect($label)->filter()->join(' ');
+    }
+
+    /**
+     * @return string Label for this issue with the publication date
+     */
+    public function getDisplayLabelWithDateAttribute()
+    {
+        $label = $this->display_label;
+        if ($this->published) {
+            $label .= ' (' . $this->published->format('M Y') . ')';
+        }
+
+        return $label;
     }
 
     /**

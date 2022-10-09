@@ -8,7 +8,7 @@
                 <h3 class="fs-6">
                     <a class="d-inline-block"
                         href="{{ route('magazines.show', ['magazine' => $issue->magazine, 'page' => $issue->magazine_page_number]) }}#magazine-issue-{{ $issue->id }}">
-                        {{ $issue->magazine->name }} {{ $issue->issue }}
+                        {{ $issue->display_label }}
                     </a>
                     @if ($issue->read_url)
                         <a class="d-inline-block ms-2" href="{{ $issue->read_url }}">

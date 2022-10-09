@@ -1,8 +1,8 @@
 <x-livewire-tables::table.cell>
     @if (method_exists($this, 'getTableRowUrl'))
-        <a href="{{ $this->getTableRowUrl($row) }}">{{ $row->issue }}</a>
+        <a href="{{ $this->getTableRowUrl($row) }}">{{ $row->display_label }}</a>
     @else
-        {{ $row->name }}
+        {{ $row->display_label }}
     @endif
 </x-livewire-tables::table.cell>
 
@@ -12,7 +12,7 @@
 
 <x-livewire-tables::table.cell>
     @if ($row->image_file)
-        <img src="{{ $row->image }}" width="32" alt="Cover for {{ $row->label }}">
+        <img src="{{ $row->image }}" width="32" alt="Cover for {{ $row->display_label_with_date }}">
     @endif
 </x-livewire-tables::table.cell>
 
