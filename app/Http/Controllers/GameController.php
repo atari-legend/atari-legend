@@ -36,6 +36,7 @@ class GameController extends Controller
                     ->filter(function ($boxscan) {
                         return Str::startsWith($boxscan->type, 'Box');
                     })
+                    ->sortByDesc('type')    // Arrange for "Box front" to be sorted before "Box back"
                     ->map(function ($boxscan) use ($release) {
                         return [
                             'release' => $release,
@@ -43,12 +44,6 @@ class GameController extends Controller
                         ];
                     });
             });
-        $gameBoxscans = $game->boxscans->map(function ($boxscan) {
-            return [
-                'release' => null,
-                'boxscan' => asset('storage/images/game_boxscans/' . $boxscan->file),
-            ];
-        });
 
         // Collect interviews for individuals of the game. An individual may
         // have multiple role so make sure to get unique interviews
@@ -156,7 +151,7 @@ class GameController extends Controller
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
-            'boxscans'          => $releaseBoxscans->merge($gameBoxscans),
+            'boxscans'          => $releaseBoxscans,
             'interviews'        => $interviews,
             'reviews'           => $reviews,
             'similar'           => $similar,

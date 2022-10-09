@@ -41,7 +41,7 @@ class GameHelper
             $boxscans = $game->non_menu_releases
                 ->flatMap(function ($release) {
                     return $release->boxscans;
-                })->count() + $game->boxscans()->count();
+                })->count();
             if ($boxscans > 0) {
                 $extraInfo[] = $boxscans . ' ' . Str::plural('boxscan', $boxscans);
             }
@@ -93,16 +93,14 @@ class GameHelper
     }
 
     /**
-     * Check if a game has boxscans.
-     *
-     * Currently looks both at the game-level boxscans, and release-level ones.
+     * Check if a game has a release with boxscans.
      *
      * @param  App\Models\Game  $game  Game to check for boxscans.
      * @return bool true if the game has boxscans, false otherwise.
      */
     public static function hasBoxscan(Game $game)
     {
-        return $game->boxscans->isNotEmpty() || $game->releases
+        return $game->releases
             ->filter(function ($release) {
                 return $release->boxscans->isNotEmpty();
             })

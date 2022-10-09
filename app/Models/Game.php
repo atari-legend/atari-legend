@@ -28,11 +28,6 @@ class Game extends Model
         return $this->belongsToMany(Sndh::class, 'game_sndh', 'game_id', 'sndh_id');
     }
 
-    public function boxscans()
-    {
-        return $this->hasMany(BoxScan::class, 'game_id');
-    }
-
     public function reviews()
     {
         return $this->belongsToMany(Review::class, 'review_game', 'game_id', 'review_id');

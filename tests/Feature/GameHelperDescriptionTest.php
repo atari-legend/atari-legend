@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Helpers\GameHelper;
-use App\Models\BoxScan;
 use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\Genre;
@@ -25,10 +24,6 @@ class GameHelperDescriptionTest extends TestCase
         $game->game_name = 'Name of the game';
 
         $game->save();
-
-        // Game-level boxscans, deprecated but still in use
-        $boxscan = new BoxScan();
-        $game->boxscans()->save($boxscan);
 
         $genre1 = new Genre();
         $genre1->name = 'Genre 1';
@@ -96,7 +91,7 @@ class GameHelperDescriptionTest extends TestCase
 
         $this->assertEquals(
             'Name of the game is a Genre 1, Genre 2 game for the Atari ST developed by Dev 1, Dev 2 released in 1988 (by Pub 1), 1989 (by Pub 2)'
-                . ' (2 releases, 4 boxscans, 1 screenshot, 3 reviews). It is also known as: AKA 1, AKA 2.',
+                . ' (2 releases, 3 boxscans, 1 screenshot, 3 reviews). It is also known as: AKA 1, AKA 2.',
             GameHelper::description($game)
         );
     }
