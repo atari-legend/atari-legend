@@ -12,7 +12,12 @@
             @include('magazines.card_issues')
         </div>
         <div class="col col-sm-6 col-lg-3 order-3">
+            @include('magazines.card_page_count')
             <x-cards.latest-magazine-issues />
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="{{ mix('js/charts.js') }}"></script>
 @endsection
