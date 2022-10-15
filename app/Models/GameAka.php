@@ -10,6 +10,8 @@ class GameAka extends Model
     protected $primaryKey = 'game_aka_id';
     public $timestamps = false;
 
+    protected $fillable = ['game_id', 'aka_name', 'language_id'];
+
     public function language()
     {
         return $this->belongsTo(Language::class);

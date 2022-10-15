@@ -70,6 +70,8 @@ Route::middleware('verified')->group(function () {
 
                     Route::post('games/{game}/update/base-info', [GameController::class, 'updateBaseInfo'])->name('games.update.base-info');
                     Route::post('games/{game}/update/multiplayer', [GameController::class, 'updateMultiplayer'])->name('games.update.multiplayer');
+                    Route::post('games/{game}/aka', [GameController::class, 'storeAka'])->name('games.aka.store');
+                    Route::delete('games/{game}/aka/{aka}/destroy', [GameController::class, 'destroyAka'])->name('games.destroy.aka');
 
                     Route::resource('games', GameController::class);
 

@@ -53,7 +53,7 @@
                 <div class="col">
                     <label for="languages" class="form-label">Programming languages</label>
                     <select class="form-select @error('languages') is-invalid @enderror" multiple size="6" name="languages[]">
-                        @foreach ($languages as $language)
+                        @foreach ($programmingLanguages as $language)
                             <option value="{{ $language->id }}" @if (isset($game) && $game->programmingLanguages->contains($language)) selected @endif>{{ $language->name }}</option>
                         @endforeach
                     </select>

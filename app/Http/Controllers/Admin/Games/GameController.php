@@ -8,8 +8,10 @@ use App\Models\Changelog;
 use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
+use App\Models\GameAka;
 use App\Models\GameSeries;
 use App\Models\Genre;
+use App\Models\Language;
 use App\Models\Port;
 use App\Models\ProgrammingLanguage;
 use App\Models\ProgressSystem;
@@ -33,11 +35,12 @@ class GameController extends Controller
     {
         $genres = Genre::all()->sortBy('name');
         $ports = Port::all()->sortBy('name');
-        $languages = ProgrammingLanguage::all()->sortBy('name');
+        $programmingLanguages = ProgrammingLanguage::all()->sortBy('name');
         $engines = Engine::all()->sortBy('name');
         $controls = Control::all()->sortBy('name');
         $progressSystems = ProgressSystem::all()->sortBy('name');
         $series = GameSeries::all()->sortBy('name');
+        $languages = Language::all()->sortBy('name');
 
         return view('admin.games.games.edit')
             ->with([
@@ -45,14 +48,15 @@ class GameController extends Controller
                     new Crumb(route('admin.games.games.index'), 'Games'),
                     new Crumb(route('admin.games.games.edit', $game), $game->game_name),
                 ],
-                'game'            => $game,
-                'genres'          => $genres,
-                'ports'           => $ports,
-                'languages'       => $languages,
-                'engines'         => $engines,
-                'controls'        => $controls,
-                'progressSystems' => $progressSystems,
-                'series'          => $series,
+                'game'                       => $game,
+                'genres'                     => $genres,
+                'ports'                      => $ports,
+                'programmingLanguages'       => $programmingLanguages,
+                'engines'                    => $engines,
+                'controls'                   => $controls,
+                'progressSystems'            => $progressSystems,
+                'series'                     => $series,
+                'languages'                  => $languages,
             ]);
     }
 
@@ -150,5 +154,43 @@ class GameController extends Controller
         ]);
 
         return redirect()->route('admin.games.games.edit', $game);
+    }
+
+    public function storeAka(Request $request, Game $game)
+    {
+        $aka = GameAka::create([
+            'game_id'     => $game->getKey(),
+            'aka_name'    => $request->aka,
+            'language_id' => $request->language,
+        ]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Games',
+            'section_id'       => $game->getKey(),
+            'section_name'     => $game->game_name,
+            'sub_section'      => 'AKA',
+            'sub_section_id'   => $aka->getKey(),
+            'sub_section_name' => $aka->aka_name,
+        ]);
+
+        return redirect()->route('admin.games.games.edit', $game);
+    }
+
+    public function destroyAka(Game $game, GameAka $aka)
+    {
+        $aka->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Games',
+            'section_id'       => $aka->game->getKey(),
+            'section_name'     => $aka->game->game_name,
+            'sub_section'      => 'AKA',
+            'sub_section_id'   => $aka->getKey(),
+            'sub_section_name' => $aka->aka_name,
+        ]);
+
+        return redirect()->route('admin.games.games.edit', $aka->game);
     }
 }
