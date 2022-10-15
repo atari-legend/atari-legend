@@ -1,6 +1,10 @@
 <ul class="nav nav-pills bg-light mb-2 p-2">
     <li class="nav-item">
-        <a class="nav-link disabled" href="#" }}">Details</a>
+        <a class="nav-link disabled text-black fw-bold">{{ $game->game_name }}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @activeroute('admin.games.games.edit')"
+            href="{{ route('admin.games.games.edit', $game) }}" }}">Details</a>
     </li>
     <li class="nav-item">
         <a class="nav-link disabled" href="#">Releases <span class="badge rounded-pill bg-secondary">{{ $game->releases->count() }}</span></a>
@@ -32,9 +36,6 @@
     <li class="nav-item">
         <a class="nav-link disabled" href="#">Reviews <span class="badge rounded-pill bg-secondary">{{ $game->reviews->count() }}</span></a>
 
-    </li>
-    <li class="nav-item">
-        <a class="nav-link disabled" href="#">Series <span class="badge rounded-pill bg-secondary">{{ $game->series !== null ? '1' : '0' }}</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link @activeroute('admin.games.game-videos.index')"

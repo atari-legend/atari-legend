@@ -11,6 +11,15 @@ class Game extends Model
     protected $primaryKey = 'game_id';
     public $timestamps = false;
 
+    const MULTIPLAYER_TYPES = ['Simultaneous', 'Turn by turn'];
+    const MULTIPLAYER_HARDWARE = ['Cartridge', 'Midi-Link'];
+
+    protected $fillable = [
+        'game_name', 'port_id', 'progress_system_id', 'game_series_id',
+        'number_players_on_same_machine', 'number_players_multiple_machines',
+        'multiplayer_type', 'multiplayer_hardware',
+    ];
+
     public function screenshots()
     {
         return $this->belongsToMany(Screenshot::class, 'screenshot_game', 'game_id', 'screenshot_id');
