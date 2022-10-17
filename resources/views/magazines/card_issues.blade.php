@@ -56,7 +56,11 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col">
+                <div class="col-sm-3 order-sm-last">
+                    <img src="{{ $issue->image }}" class="img-fluid bg-black"
+                        alt="Cover for {{ $issue->display_label_with_date }}">
+                </div>
+                <div class="col pt-3 pt-sm-0">
                     @if ($issue->indices->isNotEmpty())
                         <table class="table table-borderless table-sm">
                             <thead>
@@ -102,10 +106,6 @@
                     @else
                         <span class="text-muted">No index for this magazine</span>
                     @endif
-                </div>
-                <div class="col-sm-3">
-                    <img src="{{ $issue->image }}" class="img-fluid bg-black"
-                        alt="Cover for {{ $issue->display_label_with_date }}">
                 </div>
             </div>
         </div>
