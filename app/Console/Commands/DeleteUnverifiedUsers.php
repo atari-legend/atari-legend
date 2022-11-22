@@ -11,14 +11,14 @@ use Illuminate\Console\Command;
  * after they registered. This is intended to delete bot accounts that register
  * but never verify their email.
  */
-class DeleteNonVerifiedUsers extends Command
+class DeleteUnverifiedUsers extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'user:delete-verified {--delete : Actually delete the account}';
+    protected $signature = 'user:delete-unverified {--delete : Actually delete the account}';
 
     /**
      * The console command description.
