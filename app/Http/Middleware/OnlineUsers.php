@@ -22,11 +22,15 @@ class OnlineUsers
     public function handle($request, Closure $next)
     {
         $oneMinuteAgo = Carbon::now()->subMinute()->timestamp;
-        $onlineUsers = User::where('last_visit', '>=', $oneMinuteAgo)->get();
+        $onlineUsers = User::where('last_visit', '>=', $oneMinuteAgo)
+            ->where('inactive', '=', 0)
+            ->get();
         $request->attributes->set('onlineUsers', $onlineUsers);
 
         $oneDayAgo = Carbon::now()->subDay()->timestamp;
-        $pastDayUsers = User::where('last_visit', '>=', $oneDayAgo)->get();
+        $pastDayUsers = User::where('last_visit', '>=', $oneDayAgo)
+            ->where('inactive', '=', 0)
+            ->get();
         $request->attributes->set('pastDayUsers', $pastDayUsers);
 
         $response = $next($request);

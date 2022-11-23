@@ -46,19 +46,24 @@ class DeleteUnverifiedUsers extends Command
     {
         $minDate = Carbon::now()->subDay();
 
-        $this->comment('Deleting unverified accounts older than ' . $minDate->toDateTimeString());
-
-        User::whereNull('email_verified_at')
+        $users = User::whereNull('email_verified_at')
             ->where('join_date', '<', $minDate->timestamp)
             ->orderBy('join_date')
-            ->each(function ($user) {
+            ->get();
+
+        if ($users->isNotEmpty()) {
+            $this->comment('Deleting ' . $users->count() . ' unverified accounts older than '
+                . $minDate->toDateTimeString());
+
+            $users->each(function ($user) {
                 $this->comment("Deleting '" . $user->userid . "' " . $user->email . ' (Join date: '
-                   . Carbon::createFromTimestamp($user->join_date)->toDateTimeString() . ')');
+                    . Carbon::createFromTimestamp($user->join_date)->toDateTimeString() . ')');
 
                 if ($this->option('delete')) {
                     $user->delete();
                 }
             });
+        }
 
         return 0;
     }
