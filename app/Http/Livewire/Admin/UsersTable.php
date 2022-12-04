@@ -12,6 +12,8 @@ class UsersTable extends DataTableComponent
 {
     public string $primaryKey = 'user_id';
 
+    public string $defaultSortColumn = 'userid';
+
     public function columns(): array
     {
         return [

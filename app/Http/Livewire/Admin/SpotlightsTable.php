@@ -11,6 +11,8 @@ class SpotlightsTable extends DataTableComponent
 {
     public string $primaryKey = 'spotlight_id';
 
+    public string $defaultSortColumn = 'spotlight';
+
     public function columns(): array
     {
         return [

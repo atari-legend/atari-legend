@@ -11,6 +11,8 @@ class CrewsTable extends DataTableComponent
 {
     public string $primaryKey = 'crew_id';
 
+    public string $defaultSortColumn = 'crew_name';
+
     public function columns(): array
     {
         return [

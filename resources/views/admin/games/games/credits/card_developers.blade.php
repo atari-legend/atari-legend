@@ -2,9 +2,9 @@
     <div class="card-body">
         <h2 class="card-title fs-4">Developers</h2>
 
-        <form class="mt-2 mb-4 row row-cols-lg-auto g-3 align-items-center g-3 align-items-center" action="{{ route('admin.games.game-developers.store', $game) }}" method="POST">
+        <form class="mt-2 mb-4 row row-cols-lg-auto g-3" action="{{ route('admin.games.game-developers.store', $game) }}" method="POST">
             @csrf
-            <div class="col-12">
+            <div class="col">
                 <input class="autocomplete form-control @error('developer_name') is-invalid @enderror"
                     name="developer_name" id="developer_name" type="search"
                     data-autocomplete-endpoint="{{ route('ajax.companies') }}"
@@ -19,7 +19,7 @@
                     </span>
                 @enderror
             </div>
-            <div class="col-12">
+            <div class="col">
                 <select class="form-select" name="role">
                     <option @if (old('role') === null) selected @endif value="">-</option>
                     @foreach ($developerRoles as $role)

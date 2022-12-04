@@ -11,6 +11,8 @@ class GamesTable extends DataTableComponent
 {
     public string $primaryKey = 'game_id';
 
+    public string $defaultSortColumn = 'game_name';
+
     public function columns(): array
     {
         return [

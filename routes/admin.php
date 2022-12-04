@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Games\GameCreditsController;
 use App\Http\Controllers\Admin\Games\GameIndividualController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
 use App\Http\Controllers\Admin\Games\GameScreenshotsController;
+use App\Http\Controllers\Admin\Games\GameSeriesController;
 use App\Http\Controllers\Admin\Games\GameSubmissionController;
 use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
@@ -87,6 +88,10 @@ Route::middleware('verified')->group(function () {
 
                     Route::delete('companies/{company}/logo', [GameCompanyController::class, 'destroyLogo'])->name('companies.logo.destroy');
                     Route::resource('companies', GameCompanyController::class);
+
+                    Route::delete('series/{series}/game/{game}', [GameSeriesController::class, 'removeGame'])->name('series.game.destroy');
+                    Route::post('series/{series}/game', [GameSeriesController::class, 'addGame'])->name('series.game.store');
+                    Route::resource('series', GameSeriesController::class);
 
                     Route::get('config', function () {
                         return redirect()->route('admin.games.configuration.show', 'engine');

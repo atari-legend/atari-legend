@@ -11,6 +11,8 @@ class GameIndividualsTable extends DataTableComponent
 {
     public string $primaryKey = 'ind_id';
 
+    public string $defaultSortColumn = 'ind_name';
+
     public function columns(): array
     {
         return [

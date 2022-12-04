@@ -11,6 +11,8 @@ class GameCompaniesTable extends DataTableComponent
 {
     public string $primaryKey = 'pub_dev_id';
 
+    public string $defaultSortColumn = 'pub_dev_name';
+
     public function columns(): array
     {
         return [

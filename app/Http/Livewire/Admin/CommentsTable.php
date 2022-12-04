@@ -13,6 +13,8 @@ class CommentsTable extends DataTableComponent
 {
     public string $primaryKey = 'comment_id';
 
+    public string $defaultSortColumn = 'timestamp';
+
     public function columns(): array
     {
         return [

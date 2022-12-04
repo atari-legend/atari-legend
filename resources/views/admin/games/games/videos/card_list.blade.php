@@ -3,11 +3,11 @@
         <h2 class="card-title fs-4">Videos</h2>
 
 
-        <form class="mt-2 mb-4 row row-cols-lg-auto g-3 align-items-center g-3 align-items-center"
+        <form class="mt-2 mb-4 row row-cols-lg-auto g-3"
             action="{{ route('admin.games.game-videos.store', $game) }}" method="POST"
             enctype="multipart/form-data">
             @csrf
-            <div class="col-12">
+            <div class="col">
                 <input type="text" class="form-control @error('video') is-invalid @enderror"
                     name="video" value="{{ old('video') }}"
                     placeholder="YouTube URL" required>
@@ -18,7 +18,7 @@
                     </span>
                 @enderror
             </div>
-            <div class="col-12">
+            <div class="col">
                 <button type="submit" class="btn btn-success w-100">Add video</button>
             </div>
         </form>

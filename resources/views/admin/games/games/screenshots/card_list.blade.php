@@ -2,11 +2,11 @@
     <div class="card-body">
         <h2 class="card-title fs-4">Screenshots</h2>
 
-        <form class="mt-2 mb-4 row row-cols-lg-auto g-3 align-items-center g-3 align-items-center"
+        <form class="mt-2 mb-4 row row-cols-lg-auto g-3"
             action="{{ route('admin.games.game-screenshots.store', $game) }}" method="POST"
             enctype="multipart/form-data">
             @csrf
-            <div class="col-12">
+            <div class="col">
                 <input type="file" class="form-control @error('screenshot') is-invalid @enderror"
                     name="screenshot[]" multiple required>
 
@@ -16,7 +16,7 @@
                     </span>
                 @enderror
             </div>
-            <div class="col-12">
+            <div class="col">
                 <button type="submit" class="btn btn-success w-100">Add screenshot</button>
             </div>
         </form>
