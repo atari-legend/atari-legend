@@ -13,6 +13,7 @@
         <a class="nav-link @activeroute('admin.games.game-credits.index')"
             href="{{ route('admin.games.game-credits.index', $game) }}">
             Credits <span class="badge rounded-pill bg-secondary">{{ $game->individuals->count() }}</span>
+            & Developers <span class="badge rounded-pill bg-secondary">{{ $game->developers->count() }}</span>
         </a>
     </li>
     <li class="nav-item">

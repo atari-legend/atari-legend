@@ -59,6 +59,8 @@ Route::middleware('verified')->group(function () {
                     Route::get('games/{game}/credits', [GameCreditsController::class, 'index'])->name('game-credits.index');
                     Route::post('games/{game}/credits', [GameCreditsController::class, 'store'])->name('game-credits.store');
                     Route::delete('games/{game}/credits/{individual}', [GameCreditsController::class, 'destroy'])->name('game-credits.destroy');
+                    Route::post('games/{game}/developers', [GameCreditsController::class, 'storeDeveloper'])->name('game-developers.store');
+                    Route::delete('games/{game}/developers/{developer}', [GameCreditsController::class, 'destroyDeveloper'])->name('game-developers.destroy');
 
                     Route::get('games/{game}/screenshots', [GameScreenshotsController::class, 'index'])->name('game-screenshots.index');
                     Route::post('games/{game}/screenshots', [GameScreenshotsController::class, 'store'])->name('game-screenshots.store');

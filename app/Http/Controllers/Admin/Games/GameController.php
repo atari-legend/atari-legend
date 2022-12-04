@@ -15,6 +15,7 @@ use App\Models\Language;
 use App\Models\Port;
 use App\Models\ProgrammingLanguage;
 use App\Models\ProgressSystem;
+use App\Models\SoundHardware;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -41,6 +42,7 @@ class GameController extends Controller
         $progressSystems = ProgressSystem::all()->sortBy('name');
         $series = GameSeries::all()->sortBy('name');
         $languages = Language::all()->sortBy('name');
+        $soundHardwares = SoundHardware::all()->sortBy('name');
 
         return view('admin.games.games.edit')
             ->with([
@@ -48,15 +50,16 @@ class GameController extends Controller
                     new Crumb(route('admin.games.games.index'), 'Games'),
                     new Crumb(route('admin.games.games.edit', $game), $game->game_name),
                 ],
-                'game'                       => $game,
-                'genres'                     => $genres,
-                'ports'                      => $ports,
-                'programmingLanguages'       => $programmingLanguages,
-                'engines'                    => $engines,
-                'controls'                   => $controls,
-                'progressSystems'            => $progressSystems,
-                'series'                     => $series,
-                'languages'                  => $languages,
+                'game'                 => $game,
+                'genres'               => $genres,
+                'ports'                => $ports,
+                'programmingLanguages' => $programmingLanguages,
+                'engines'              => $engines,
+                'controls'             => $controls,
+                'progressSystems'      => $progressSystems,
+                'series'               => $series,
+                'languages'            => $languages,
+                'soundHardwares'       => $soundHardwares,
             ]);
     }
 
@@ -112,6 +115,15 @@ class GameController extends Controller
             })
             ->each(function ($control) use ($game) {
                 $game->controls()->attach($control);
+            });
+
+        $game->soundHardwares()->detach();
+        collect($request->sound)
+            ->map(function ($id) {
+                return SoundHardware::find($id);
+            })
+            ->each(function ($hardware) use ($game) {
+                $game->soundHardwares()->attach($hardware);
             });
 
         ChangelogHelper::insert([
