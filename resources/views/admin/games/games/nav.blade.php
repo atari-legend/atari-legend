@@ -32,7 +32,10 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link disabled" href="#">Similar <span class="badge rounded-pill bg-secondary">{{ $game->similarGames->count() }}</span></a>
+        <a class="nav-link @activeroute('admin.games.game-similar.index')"
+            href="{{ route('admin.games.game-similar.index', $game) }}">
+            Similar <span class="badge rounded-pill bg-secondary">{{ $game->similarGames->count() }}</span>
+        </a>
     </li>
     <li class="nav-item">
         <a class="nav-link disabled" href="#">Reviews <span class="badge rounded-pill bg-secondary">{{ $game->reviews->count() }}</span></a>

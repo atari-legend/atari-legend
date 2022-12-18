@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Games\GameIndividualController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
 use App\Http\Controllers\Admin\Games\GameScreenshotsController;
 use App\Http\Controllers\Admin\Games\GameSeriesController;
+use App\Http\Controllers\Admin\Games\GameSimilarController;
 use App\Http\Controllers\Admin\Games\GameSubmissionController;
 use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
@@ -70,6 +71,10 @@ Route::middleware('verified')->group(function () {
                     Route::get('games/{game}/videos', [GameVideoController::class, 'index'])->name('game-videos.index');
                     Route::post('games/{game}/videos', [GameVideoController::class, 'store'])->name('game-videos.store');
                     Route::delete('games/{game}/videos/{video}', [GameVideoController::class, 'destroy'])->name('game-videos.destroy');
+
+                    Route::get('games/{game}/similar', [GameSimilarController::class, 'index'])->name('game-similar.index');
+                    Route::post('games/{game}/similar', [GameSimilarController::class, 'store'])->name('game-similar.store');
+                    Route::delete('games/{game}/similar/{similar}', [GameSimilarController::class, 'destroy'])->name('game-similar.destroy');
 
                     Route::post('games/{game}/update/base-info', [GameController::class, 'updateBaseInfo'])->name('games.update.base-info');
                     Route::post('games/{game}/update/multiplayer', [GameController::class, 'updateMultiplayer'])->name('games.update.multiplayer');
