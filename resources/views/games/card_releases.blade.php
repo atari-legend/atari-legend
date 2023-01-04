@@ -43,7 +43,7 @@
 
                         @if ($release->dumps->isNotEmpty())
                             <span class="ms-2">
-                                <i title="Donwloads" class="far fa-save"></i> &times; {{ $release->dumps->count() }}
+                                <i title="Downloads" class="far fa-save"></i> &times; {{ $release->dumps->count() }}
                             </span>
                         @endif
                     </div>
