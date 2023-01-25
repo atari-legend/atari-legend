@@ -260,10 +260,10 @@
                     @foreach ($game->vs as $vs)
                         <div class="mb-1">
                             @if ($vs->amiga_id !== null && $vs->amiga_id > 0)
-                                <a href="http://www.lemonamiga.com/games/details.php?id={{ $vs->amiga_id }}"><img class="w-25" src="{{ asset('images/game/Amiga.png') }}" alt="Amiga logo"></a>
+                                <a href="https://www.lemonamiga.com/games/details.php?id={{ $vs->amiga_id }}"><img class="w-25" src="{{ asset('images/game/Amiga.png') }}" alt="Amiga logo"></a>
                             @endif
-                            @if ($vs->C64_id !== null && $vs->C64_id > 0)
-                                <a href="http://www.lemon64.com/?game_id={{ $vs->C64_id }}"><img class="w-25" src="{{ asset('images/game/c64.jpg') }}" alt="Commodore 64 logo"></a>
+                            @if ($vs->lemon64_slug !== null)
+                                <a href="https://www.lemon64.com/game/{{ $vs->lemon64_slug }}"><img class="w-25" src="{{ asset('images/game/c64.jpg') }}" alt="Commodore 64 logo"></a>
                             @endif
                         </div>
                     @endforeach
