@@ -75,8 +75,6 @@ class GameController extends Controller
         $data = collect($gameData)->merge(collect($akaData))
             ->sortBy([
                 fn ($a, $b) => strpos(Str::lower($a['game_name']), Str::lower($request->q)) <=> strpos(Str::lower($b['game_name']), Str::lower($request->q)),
-                fn ($a, $b) => strlen($a['game_name']) <=> strlen($b['game_name']),
-                fn ($a, $b) => $a['game_name'] <=> $b['game_name'],
             ])
             ->map(function ($data) {
                 return [
