@@ -22,6 +22,7 @@ class GameHelperDescriptionTest extends TestCase
     {
         $game = new Game();
         $game->game_name = 'Name of the game';
+        $game->slug = 'slug';
 
         $game->save();
 
@@ -100,6 +101,7 @@ class GameHelperDescriptionTest extends TestCase
     {
         $game = new Game();
         $game->game_name = 'Name of the game';
+        $game->slug = 'slug';
 
         $game->save();
 

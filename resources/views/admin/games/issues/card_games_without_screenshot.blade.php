@@ -3,7 +3,7 @@
         <h2 class="card-title">{{ $gamesWithoutScreenshot->count() }} {{ Str::plural('game', $gamesWithoutScreenshot->count()) }} without screenshots</h2>
         <p class="card-text">
             @if ($gamesWithoutScreenshot->count() > 30)
-                <span class="text-muted">A random selection of 30 games:</span><br>
+                <p class="text-muted">A random selection of 30 games:</p>
             @endif
 
             @foreach ($gamesWithoutScreenshot->random(30) as $game)

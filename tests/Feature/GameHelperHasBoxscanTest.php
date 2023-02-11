@@ -23,6 +23,7 @@ class GameHelperHasBoxscanTest extends TestCase
     {
         $game = new Game();
         $game->game_name = 'Test';
+        $game->slug = 'test';
         $game->save();
 
         $release = new Release();

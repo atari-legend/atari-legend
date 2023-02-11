@@ -28,6 +28,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
+use App\Models\Game;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -69,6 +70,7 @@ Route::middleware('verified')->group(function () {
     Route::get('/games', [GameSearchController::class, 'index'])->name('games.index');
     Route::get('/games/search', [GameSearchController::class, 'search'])->name('games.search');
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
+    Route::get('/games/{id}', fn ($id) => redirect('/games/' . Game::findOrFail($id)->slug, 301));
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
 
     Route::get('/music/cover/{game}', [GameMusicController::class, 'cover'])->name('music.cover');

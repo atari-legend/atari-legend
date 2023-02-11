@@ -76,7 +76,7 @@ Route::middleware('verified')->group(function () {
                     Route::post('games/{game}/similar', [GameSimilarController::class, 'store'])->name('game-similar.store');
                     Route::delete('games/{game}/similar/{similar}', [GameSimilarController::class, 'destroy'])->name('game-similar.destroy');
 
-                    Route::post('games/{game}/update/base-info', [GameController::class, 'updateBaseInfo'])->name('games.update.base-info');
+                    Route::post('games/{game}/update/base-info', [GameController::class, 'update'])->name('games.update.base-info');
                     Route::post('games/{game}/update/multiplayer', [GameController::class, 'updateMultiplayer'])->name('games.update.multiplayer');
                     Route::post('games/{game}/aka', [GameController::class, 'storeAka'])->name('games.aka.store');
                     Route::delete('games/{game}/aka/{aka}/destroy', [GameController::class, 'destroyAka'])->name('games.destroy.aka');

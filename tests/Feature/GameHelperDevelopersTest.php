@@ -23,6 +23,7 @@ class GameHelperDevelopersTest extends TestCase
     {
         $game = new Game();
         $game->game_name = 'Test';
+        $game->slug = 'test';
         $game->save();
 
         $dev1 = new PublisherDeveloper();

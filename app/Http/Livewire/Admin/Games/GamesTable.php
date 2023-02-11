@@ -20,6 +20,9 @@ class GamesTable extends DataTableComponent
             Column::make('Screenshot'),
             Column::make('Releases'),
             Column::make('Developers'),
+            Column::make('Created', 'created_at')->sortable(),
+            Column::make('Updated', 'updated_at')->sortable(),
+            Column::blank(),
             Column::blank(),
         ];
     }

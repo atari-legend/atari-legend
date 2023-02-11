@@ -2,8 +2,11 @@
     <div class="card-body">
         <h2 class="card-title fs-4">Base info</h2>
 
-        <form action="{{ route('admin.games.games.update.base-info', $game) }}" method="POST">
+        <form action="{{ isset($game) ? route('admin.games.games.update.base-info', $game) : route('admin.games.games.store')}}" method="POST">
             @csrf
+            @isset($games)
+                @method('PUT')
+            @endisset
 
             <div class="mb-3 row row-cols-2">
                 <div class="col">
@@ -18,19 +21,20 @@
                     @enderror
                 </div>
                 <div class="col">
-                    <label for="series" class="form-label">Series</label>
-                    <select class="form-select @error('series') is-invalid @enderror" name="series">
-                        <option value="">-</option>
-                        @foreach ($series as $serie)
-                            <option value="{{ $serie->id }}" @if ($game->series?->id === $serie->id) selected @endif>{{ $serie->name }}</option>
-                        @endforeach
-                    </select>
+                    <label for="name" class="form-label">URL Slug</label>
+                    <div class="input-group">
+                        <button class="btn btn-outline-primary" type="button" id="generate-slug">Generate from name</button>
+                        <input type="text" class="form-control @error('slug') is-invalid @enderror" required
+                            pattern="[0-9a-z\-]+" title="Lower case letters, numbers and dash"
+                            placeholder="e.g. 'dungeon-master'"
+                            name="slug" id="slug" value="{{ old('slug', $game->slug ?? '') }}">
 
-                    @error('series')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                        @error('slug')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -111,7 +115,7 @@
                         <select class="form-select @error('port') is-invalid @enderror" name="port">
                             <option value="">-</option>
                             @foreach ($ports as $port)
-                                <option value="{{ $port->id }}" @if ($game->port?->id === $port->id) selected @endif>{{ $port->name }}</option>
+                                <option value="{{ $port->id }}" @if (isset($game) && $game->port?->id === $port->id) selected @endif>{{ $port->name }}</option>
                             @endforeach
                         </select>
 
@@ -126,7 +130,7 @@
                         <select class="form-select @error('progress') is-invalid @enderror" name="progress">
                             <option value="">-</option>
                             @foreach ($progressSystems as $system)
-                                <option value="{{ $system->id }}" @if ($game->progressSystem?->id === $system->id) selected @endif>{{ $system->name }}</option>
+                                <option value="{{ $system->id }}" @if (isset($game) && $game->progressSystem?->id === $system->id) selected @endif>{{ $system->name }}</option>
                             @endforeach
                         </select>
 
@@ -149,6 +153,25 @@
                     <div class="form-text">CTRL+click to select multiple</div>
 
                     @error('sound')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="mb-3 row row-cols-2">
+                <div class="mb-3">
+                    <label for="series" class="form-label">Series</label>
+                    <select class="form-select @error('series') is-invalid @enderror" name="series">
+                        <option value="">-</option>
+                        @foreach ($series as $serie)
+                            <option value="{{ $serie->id }}" @if (isset($game) && $game->series?->id === $serie->id) selected @endif>{{ $serie->name }}</option>
+                        @endforeach
+                    </select>
+                    <div class="form-text"><a href="{{ route('admin.games.series.index') }}">Edit series</a></div>
+
+                    @error('series')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

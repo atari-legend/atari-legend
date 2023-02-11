@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('game_vs', function (Blueprint $table) {
-            $table->dropColumn('C64_id');
+        Schema::table('game', function (Blueprint $table) {
+            $table->timestamps();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('game_vs', function (Blueprint $table) {
-            $table->integer('C64_id')->nullable();
+        Schema::table('game', function (Blueprint $table) {
+            $table->dropTimestamps();
         });
     }
 };

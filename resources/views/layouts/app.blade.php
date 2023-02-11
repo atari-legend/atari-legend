@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
+    <link rel="canonical" href="{{ url()->current() }}">
+
     <script type="application/ld+json">
         @isset($jsonLd)
             {!! $jsonLd->json() !!}

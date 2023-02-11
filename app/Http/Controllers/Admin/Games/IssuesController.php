@@ -24,6 +24,9 @@ class IssuesController extends Controller
         $gamesWithoutScreenshot = Game::doesntHave('screenshots')
             ->orderBy('game_name')
             ->get();
+        $gamesWithBadSlug = Game::where('slug', 'like', '%-id-%')
+            ->orderBy('game_name')
+            ->get();
 
         $genres = Genre::orderBy('name')->get();
 
@@ -36,6 +39,7 @@ class IssuesController extends Controller
                 'gamesWithoutRelease'    => $gamesWithoutRelease,
                 'gameWithoutGenre'       => $gameWithoutGenre,
                 'gamesWithoutScreenshot' => $gamesWithoutScreenshot,
+                'gamesWithBadSlug'       => $gamesWithBadSlug,
                 'genres'                 => $genres,
             ]);
     }
