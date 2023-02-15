@@ -1,55 +1,69 @@
-<ul class="nav nav-pills bg-light mb-2 p-2">
-    <li class="nav-item">
-        <a class="nav-link disabled text-black fw-bold">{{ $game->game_name }}</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link @activeroute('admin.games.games.edit')"
+<ul class="list-unstyled ps-3">
+    <li class="text-info"><strong>
+        {{ $game->game_name }}</strong></li>
+    <li>
+        <i class="fa-regular fa-rectangle-list fa-fw text-muted"></i>
+        <a class="@activeroute('admin.games.games.edit')"
             href="{{ route('admin.games.games.edit', $game) }}" }}">Details</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link disabled" href="#">Releases <span class="badge rounded-pill bg-secondary">{{ $game->releases->count() }}</span></a>
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->releases->count() }}</span>
+        <a class="disabled text-decoration-none text-muted" href="#">Releases</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @activeroute('admin.games.game-credits.index')"
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->individuals->count() }}</span>
+        <a class="@activeroute('admin.games.game-credits.index')"
             href="{{ route('admin.games.game-credits.index', $game) }}">
-            Credits <span class="badge rounded-pill bg-secondary">{{ $game->individuals->count() }}</span>
-            & Developers <span class="badge rounded-pill bg-secondary">{{ $game->developers->count() }}</span>
+            Credits
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link disabled" href="#">Facts <span class="badge rounded-pill bg-secondary">{{ $game->facts->count() }}</span></a>
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->developers->count() }}</span>
+        <a class="@activeroute('admin.games.game-credits.index')"
+            href="{{ route('admin.games.game-credits.index', $game) }}">
+            Developers
+        </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @activeroute('admin.games.game-screenshots.index')"
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->facts->count() }}</span>
+        <a class="disabled text-decoration-none text-muted" href="#">Facts</a>
+    </li>
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->screenshots->count() }}</span>
+        <a class="@activeroute('admin.games.game-screenshots.index')"
             href="{{ route('admin.games.game-screenshots.index', $game) }}">
-            Screenshots <span class="badge rounded-pill bg-secondary">{{ $game->screenshots->count() }}</span>
+            Screenshots
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @activeroute('admin.games.game-music.index')"
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->sndhs->count() }}</span>
+        <a class="@activeroute('admin.games.game-music.index')"
             href="{{ route('admin.games.game-music.index', $game) }}">
-            Music <span class="badge rounded-pill bg-secondary">{{ $game->sndhs->count() }}</span>
+            Music
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @activeroute('admin.games.game-similar.index')"
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->similarGames->count() }}</span>
+        <a class="@activeroute('admin.games.game-similar.index')"
             href="{{ route('admin.games.game-similar.index', $game) }}">
-            Similar <span class="badge rounded-pill bg-secondary">{{ $game->similarGames->count() }}</span>
+            Similar
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link disabled" href="#">Reviews <span class="badge rounded-pill bg-secondary">{{ $game->reviews->count() }}</span></a>
-
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->reviews->count() }}</span>
+        <a class="disabled text-decoration-none text-muted" href="#">Reviews</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @activeroute('admin.games.game-videos.index')"
+    <li>
+        <span class="badge bg-light text-secondary">{{ $game->videos->count() }}</span>
+        <a class="@activeroute('admin.games.game-videos.index')"
             href="{{ route('admin.games.game-videos.index', $game) }}">
-            Videos <span class="badge rounded-pill bg-secondary">{{ $game->videos->count() }}</span>
+            Videos
         </a>
     </li>
-    <li class="nav-item ms-auto">
-        <a class="nav-link text-info" href="{{ route('games.show', $game) }}">
-            <i class="fas fa-eye"></i> View on main site
+    <li>
+        <i class="fas fa-eye fa-fw text-muted"></i>
+        <a class="text-dark" href="{{ route('games.show', $game) }}">
+            View on main site
         </a>
     </li>
 </ul>

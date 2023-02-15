@@ -12,7 +12,12 @@
             <div id="games" class="accordion-collapse collapse @showroute('admin.games.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a class="@activeroute('admin.games.games.*')" href="{{ route('admin.games.games.index') }}">Games</a></li>
+                        <li>
+                            <a class="@activeroute('admin.games.games.*')" href="{{ route('admin.games.games.index') }}">Games</a>
+                            @isset ($game)
+                                @include('admin.games.games.nav')
+                            @endif
+                        </li>
                         <li><a class="@activeroute('admin.games.issues')" href="{{ route('admin.games.issues') }}">Issues</a></li>
                         <li><a class="@activeroute('admin.games.configuration.*')" href="{{ route('admin.games.configuration.index') }}">Configuration</a></li>
                         <li><a class="@activeroute('admin.games.series.*')" href="{{ route('admin.games.series.index') }}">Series</a></li>
