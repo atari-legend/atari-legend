@@ -43,16 +43,17 @@ class Screenshot extends Model
 
     /**
      * Get the URL of a screenshot using a slug route for an entity.
-     * @param string $type Type of entity (e.g. 'game').
-     * @param object $model Entity to get the screenshot URL for
+     *
+     * @param  string  $type  Type of entity (e.g. 'game').
+     * @param  object  $model  Entity to get the screenshot URL for
      * @return string URL of the image.
      */
-    public function getUrlRoute(String $type, object $model)
+    public function getUrlRoute(string $type, object $model)
     {
         return route("{$type}s.screenshot", [
             $type => $model,
-            "id"  => $this->getKey(),
-            "ext" => $this->imgext,
+            'id'  => $this->getKey(),
+            'ext' => $this->imgext,
         ]);
     }
 
