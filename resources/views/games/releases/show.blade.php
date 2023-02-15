@@ -3,7 +3,7 @@
 @section('robots', 'follow,noindex')
 
 @if ($release->game->screenshots->isNotEmpty())
-    @section('image', $release->game->screenshots->random()->getUrl('game'))
+    @section('image', $release->game->screenshots->random()->getUrlRoute('game', $release->game))
 @endif
 
 @section('content')

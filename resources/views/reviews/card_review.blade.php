@@ -19,8 +19,8 @@
         <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
             @foreach ($review->screenshots as $screenshot)
                 <div class="bg-dark p-2">
-                    <a class="lightbox-link" href="{{ $screenshot->getUrl('game') }}" title="{{ $screenshot->pivot->comment->comment_text ?? '' }}">
-                        <img class="w-100 mb-2" src="{{ $screenshot->getUrl('game') }}" alt="{{ $screenshot->pivot->comment->comment_text ?? '' }}">
+                    <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" title="{{ $screenshot->pivot->comment->comment_text ?? '' }}">
+                        <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" alt="{{ $screenshot->pivot->comment->comment_text ?? '' }}">
                     </a>
                     <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->comment_text }}</p>
                 </div>

@@ -17,6 +17,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameMusicController;
 use App\Http\Controllers\GameReleaseController;
+use App\Http\Controllers\GameResourcesController;
 use App\Http\Controllers\GameSearchController;
 use App\Http\Controllers\GameVoteController;
 use App\Http\Controllers\HomeController;
@@ -70,8 +71,11 @@ Route::middleware('verified')->group(function () {
     Route::get('/games', [GameSearchController::class, 'index'])->name('games.index');
     Route::get('/games/search', [GameSearchController::class, 'search'])->name('games.search');
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
+
     Route::get('/games/{id}', fn ($id) => redirect('/games/' . Game::findOrFail($id)->slug, 301));
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
+
+    Route::get('/games/{game}/screenshot-{id}.{ext}', [GameResourcesController::class, 'screenshot'])->name('games.screenshot');
 
     Route::get('/music/cover/{game}', [GameMusicController::class, 'cover'])->name('music.cover');
     Route::get('/music/{sndh}', [GameMusicController::class, 'music'])

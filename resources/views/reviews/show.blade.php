@@ -2,7 +2,7 @@
 @section('title', $review->games->first()->game_name.' review (Atari ST)')
 
 @if ($review->screenshots->isNotEmpty())
-    @section('image', $review->screenshots->first()->getUrl('game'))
+    @section('image', $review->screenshots->first()->getUrlRoute('game', $review->games->first()))
 @endif
 
 @section('content')

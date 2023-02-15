@@ -58,7 +58,7 @@ class ReviewController extends Controller
             ->add('author', Helper::user($review->user))
             ->add('datePublished', $review->review_date->format('Y-m-d'));
         if ($review->screenshots->isNotEmpty()) {
-            $jsonLd->add('image', $review->screenshots->first()->getUrl('game'));
+            $jsonLd->add('image', $review->screenshots->first()->getUrlRoute('game', $review->games->first()));
         }
 
         return view('reviews.show')

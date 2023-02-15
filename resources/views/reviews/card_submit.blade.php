@@ -4,7 +4,7 @@
     </div>
     <div class="card-body p-2 bg-darklight">
         @auth
-            <form method="post" action="{{ route('reviews.submit', ['game' => $game]) }}">
+            <form method="post" action="{{ route('reviews.submit', ['game' => $game->getKey()]) }}">
                 @csrf
                 <input type="hidden" name="game" value="{{ $game->game_id }}">
 
@@ -62,8 +62,8 @@
                                 @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
                                     <div class="row mb-3">
                                         <div class="col-2">
-                                            <a class="lightbox-link" href="{{ $screenshot->getUrl('game') }}">
-                                                <img class="w-100" src="{{ $screenshot->getUrl('game') }}" alt="Game screenshot">
+                                            <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
+                                                <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $game) }}" alt="Game screenshot">
                                             </a>
                                         </div>
                                         <div class="col-10 d-flex">
@@ -104,8 +104,8 @@
                             <div class="col-3 ps-2 text-center text-muted lightbox-gallery">
                                 @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
                                     <div class="bg-dark p-2">
-                                        <a class="lightbox-link" href="{{ $screenshot->getUrl('game') }}">
-                                            <img class="w-100 mb-2" src="{{ $screenshot->getUrl('game') }}">
+                                        <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
+                                            <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $game) }}">
                                         </a>
                                         <p class="pb-5 mb-0" id="preview-screenshot-comment-{{ $screenshot->screenshot_id }}"></p>
                                     </div>

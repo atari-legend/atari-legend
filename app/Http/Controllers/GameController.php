@@ -124,7 +124,7 @@ class GameController extends Controller
             ->add('operatingSystem', 'TOS')
             ->add('gamePlatform', 'Atari ST');
         if ($game->screenshots->isNotEmpty()) {
-            $jsonLd->add('image', $game->screenshots->random()->getUrl('game'));
+            $jsonLd->add('image', $game->screenshots->random()->getUrlRoute('game', $game));
         }
         if ($game->genres->isNotEmpty()) {
             $jsonLd->add('genre', $game->genres->pluck('name'));

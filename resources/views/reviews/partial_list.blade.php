@@ -13,8 +13,8 @@
             @php
                 $screenshot = $review->screenshots->random()
             @endphp
-            <a class="lightbox-link" href="{{ $screenshot->getUrl('game') }}">
-                <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ $screenshot->getUrl('game') }}" alt="Screenshot of {{ $review->games->first()->game_name }}">
+            <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}">
+                <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" alt="Screenshot of {{ $review->games->first()->game_name }}">
             </a>
         @endif
 

@@ -42,7 +42,7 @@ class GameReleaseController extends Controller
             ->add('operatingSystem', 'TOS')
             ->add('gamePlatform', 'Atari ST');
         if ($release->game->screenshots->isNotEmpty()) {
-            $jsonLd->add('image', $release->game->screenshots->random()->getUrl('game'));
+            $jsonLd->add('image', $release->game->screenshots->random()->getUrlRoute('game', $release->game));
         }
         if ($release->game->genres->isNotEmpty()) {
             $jsonLd->add('genre', $release->game->genres->pluck('name'));
