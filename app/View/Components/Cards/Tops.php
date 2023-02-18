@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Cards;
 
+use App\Models\Release;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\Component;
 
@@ -27,7 +28,7 @@ class Tops extends Component
         $developers = DB::table('pub_dev')
             ->join('game_developer', 'game_developer.dev_pub_id', '=', 'pub_dev.pub_dev_id')
             ->selectRaw('count(game_id) as game_count, pub_dev_name, pub_dev_id')
-            ->where('pub_dev.pub_dev_name', '<>', 'Non-Commercial')
+            ->where('pub_dev.pub_dev_name', '<>', Release::LICENSE_NON_COMMERCIAL)
             ->groupBy('pub_dev_id')
             ->orderBy('game_count', 'desc')
             ->orderBy('pub_dev_name')
@@ -37,7 +38,7 @@ class Tops extends Component
         $publishers = DB::table('pub_dev')
             ->join('game_release', 'game_release.pub_dev_id', '=', 'pub_dev.pub_dev_id')
             ->selectRaw('count(id) as release_count, pub_dev_name, pub_dev.pub_dev_id')
-            ->where('pub_dev.pub_dev_name', '<>', 'Non-Commercial')
+            ->where('pub_dev.pub_dev_name', '<>', Release::LICENSE_NON_COMMERCIAL)
             ->groupBy('pub_dev_id')
             ->orderBy('release_count', 'desc')
             ->orderBy('pub_dev_name')

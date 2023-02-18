@@ -7,6 +7,22 @@ use Illuminate\Support\Str;
 
 class Release extends Model
 {
+    const LICENCE_COMMERCIAL = 'Commercial';
+    const LICENSE_NON_COMMERCIAL = 'Non-Commercial';
+    const LICENSES = [
+        Release::LICENCE_COMMERCIAL,
+        Release::LICENSE_NON_COMMERCIAL,
+    ];
+
+    const TYPE_UNOFFICIAL = 'Unofficial';
+    const TYPES = [
+        'Re-release', 'Budget', 'Budget re-release',
+        'Playable demo', 'Non-playable demo', 'Slideshow',
+        Release::TYPE_UNOFFICIAL, 'Data disk', 'Review copy',
+    ];
+
+    const STATUSES = ['Unfinished', 'Development', 'Unreleased'];
+
     protected $table = 'game_release';
     public $timestamps = false;
 
@@ -15,7 +31,7 @@ class Release extends Model
         'hd_installable' => 'boolean',
     ];
 
-    protected $fillable = ['type', 'game_id'];
+    protected $fillable = ['type', 'game_id', 'date', 'license', 'status', 'name', 'notes'];
 
     /**
      * @return string Year of a release, or '[no date] if the release has no date.
@@ -158,5 +174,36 @@ class Release extends Model
     public function menuDiskContents()
     {
         return $this->hasMany(MenuDiskContent::class, 'game_release_id');
+    }
+
+    public function getMenuAttribute(): ?string
+    {
+        if ($this->menuDiskContents->isNotEmpty()) {
+            return collect([
+                $this->menuDiskContents->first()->menuDisk->menu->full_label,
+                $this->menuDiskContents->first()->menuDisk->label,
+            ])->join(' ');
+        } else {
+            return null;
+        }
+    }
+
+    public function getFullLabelAttribute(): string
+    {
+        $label = $this->year;
+        if ($this->name) {
+            $label .= ' as ' . $this->name;
+        }
+        if ($this->publisher) {
+            $label .= ' by ' . $this->publisher->pub_dev_name;
+        }
+        if ($this->menu) {
+            $label .= ' on ' . $this->menu;
+        }
+        if ($this->locations->isNotEmpty()) {
+            $label .= ' in ' . $this->locations->pluck('name')->join(', ');
+        }
+
+        return $label;
     }
 }

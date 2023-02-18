@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
 use App\Http\Controllers\Admin\Games\GameIndividualController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
+use App\Http\Controllers\Admin\Games\GameReleaseController;
 use App\Http\Controllers\Admin\Games\GameScreenshotsController;
 use App\Http\Controllers\Admin\Games\GameSeriesController;
 use App\Http\Controllers\Admin\Games\GameSimilarController;
@@ -51,35 +52,39 @@ Route::middleware('verified')->group(function () {
                     Route::get('music', [MusicController::class, 'index'])->name('music');
                     Route::post('music', [MusicController::class, 'associate'])->name('music.associate');
 
-                    Route::get('games/{game}/music', [GameMusicController::class, 'index'])->name('game-music.index');
-                    Route::post('games/{game}/music', [GameMusicController::class, 'store'])->name('game-music.store');
-                    Route::post('games/{game}/music/associate', [GameMusicController::class, 'associate'])->name('game-music.associate');
-                    Route::delete('games/{game}/music/{sndh}', [GameMusicController::class, 'destroy'])
-                        ->where(['sndh' => '[\w\s\-_\/()]+'])
-                        ->name('game-music.destroy');
+                    Route::prefix('/{game}')->group(function () {
+                        Route::get('music', [GameMusicController::class, 'index'])->name('game-music.index');
+                        Route::post('music', [GameMusicController::class, 'store'])->name('game-music.store');
+                        Route::post('music/associate', [GameMusicController::class, 'associate'])->name('game-music.associate');
+                        Route::delete('music/{sndh}', [GameMusicController::class, 'destroy'])
+                            ->where(['sndh' => '[\w\s\-_\/()]+'])
+                            ->name('game-music.destroy');
 
-                    Route::get('games/{game}/credits', [GameCreditsController::class, 'index'])->name('game-credits.index');
-                    Route::post('games/{game}/credits', [GameCreditsController::class, 'store'])->name('game-credits.store');
-                    Route::delete('games/{game}/credits/{individual}', [GameCreditsController::class, 'destroy'])->name('game-credits.destroy');
-                    Route::post('games/{game}/developers', [GameCreditsController::class, 'storeDeveloper'])->name('game-developers.store');
-                    Route::delete('games/{game}/developers/{developer}', [GameCreditsController::class, 'destroyDeveloper'])->name('game-developers.destroy');
+                        Route::get('credits', [GameCreditsController::class, 'index'])->name('game-credits.index');
+                        Route::post('credits', [GameCreditsController::class, 'store'])->name('game-credits.store');
+                        Route::delete('credits/{individual}', [GameCreditsController::class, 'destroy'])->name('game-credits.destroy');
+                        Route::post('developers', [GameCreditsController::class, 'storeDeveloper'])->name('game-developers.store');
+                        Route::delete('developers/{developer}', [GameCreditsController::class, 'destroyDeveloper'])->name('game-developers.destroy');
 
-                    Route::get('games/{game}/screenshots', [GameScreenshotsController::class, 'index'])->name('game-screenshots.index');
-                    Route::post('games/{game}/screenshots', [GameScreenshotsController::class, 'store'])->name('game-screenshots.store');
-                    Route::delete('games/{game}/screenshots/{screenshot}', [GameScreenshotsController::class, 'destroy'])->name('game-screenshots.destroy');
+                        Route::get('screenshots', [GameScreenshotsController::class, 'index'])->name('game-screenshots.index');
+                        Route::post('screenshots', [GameScreenshotsController::class, 'store'])->name('game-screenshots.store');
+                        Route::delete('screenshots/{screenshot}', [GameScreenshotsController::class, 'destroy'])->name('game-screenshots.destroy');
 
-                    Route::get('games/{game}/videos', [GameVideoController::class, 'index'])->name('game-videos.index');
-                    Route::post('games/{game}/videos', [GameVideoController::class, 'store'])->name('game-videos.store');
-                    Route::delete('games/{game}/videos/{video}', [GameVideoController::class, 'destroy'])->name('game-videos.destroy');
+                        Route::get('videos', [GameVideoController::class, 'index'])->name('game-videos.index');
+                        Route::post('videos', [GameVideoController::class, 'store'])->name('game-videos.store');
+                        Route::delete('videos/{video}', [GameVideoController::class, 'destroy'])->name('game-videos.destroy');
 
-                    Route::get('games/{game}/similar', [GameSimilarController::class, 'index'])->name('game-similar.index');
-                    Route::post('games/{game}/similar', [GameSimilarController::class, 'store'])->name('game-similar.store');
-                    Route::delete('games/{game}/similar/{similar}', [GameSimilarController::class, 'destroy'])->name('game-similar.destroy');
+                        Route::get('similar', [GameSimilarController::class, 'index'])->name('game-similar.index');
+                        Route::post('similar', [GameSimilarController::class, 'store'])->name('game-similar.store');
+                        Route::delete('similar/{similar}', [GameSimilarController::class, 'destroy'])->name('game-similar.destroy');
 
-                    Route::post('games/{game}/update/base-info', [GameController::class, 'update'])->name('games.update.base-info');
-                    Route::post('games/{game}/update/multiplayer', [GameController::class, 'updateMultiplayer'])->name('games.update.multiplayer');
-                    Route::post('games/{game}/aka', [GameController::class, 'storeAka'])->name('games.aka.store');
-                    Route::delete('games/{game}/aka/{aka}/destroy', [GameController::class, 'destroyAka'])->name('games.destroy.aka');
+                        Route::post('update/base-info', [GameController::class, 'update'])->name('games.update.base-info');
+                        Route::post('update/multiplayer', [GameController::class, 'updateMultiplayer'])->name('games.update.multiplayer');
+                        Route::post('aka', [GameController::class, 'storeAka'])->name('games.aka.store');
+                        Route::delete('aka/{aka}/destroy', [GameController::class, 'destroyAka'])->name('games.destroy.aka');
+
+                        Route::resource('releases', GameReleaseController::class);
+                    });
 
                     Route::resource('games', GameController::class);
 

@@ -147,9 +147,14 @@ class Game extends Model
     {
         return $this
             ->releases
-            ->filter(function ($release) {
-                return $release->menuDiskContents->isEmpty();
-            });
+            ->filter(fn ($release) => $release->menuDiskContents->isEmpty());
+    }
+
+    public function getMenuReleasesAttribute()
+    {
+        return $this
+            ->releases
+            ->filter(fn ($release) => $release->menuDiskContents->isNotEmpty());
     }
 
     public function getScoreAttribute()

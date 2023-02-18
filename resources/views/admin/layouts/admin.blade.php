@@ -39,7 +39,7 @@
     </div>
 
     @livewireScripts
-    <script src="{{ mix('js/app.js') }}"></script>
+    <!-- script src="{{ mix('js/app.js') }}"></script -->
     <script src="{{ mix('js/admin.js') }}"></script>
 
     {{-- SCEditor does not work as a NPM module --}}

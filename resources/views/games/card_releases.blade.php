@@ -31,7 +31,7 @@
                             <span class="ms-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
                         @endif
 
-                        @if ($release->type === 'Unofficial' && $release->license !== 'Non-Commercial')
+                        @if ($release->type === \App\Models\Release::TYPE_UNOFFICIAL && $release->license !== \App\Models\Release::LICENSE_NON_COMMERCIAL)
                             <span class="text-muted"><i title="Unofficial release" class="fas fa-skull-crossbones"></i></span>
                         @endif
 

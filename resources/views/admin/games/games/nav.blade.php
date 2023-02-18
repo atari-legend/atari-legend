@@ -8,7 +8,8 @@
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $game->releases->count() }}</span>
-        <a class="disabled text-decoration-none text-muted" href="#">Releases</a>
+        <a class="@activeroute('admin.games.releases.*')"
+            href="{{ route('admin.games.releases.index', $game) }}">Releases</a>
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $game->individuals->count() }}</span>

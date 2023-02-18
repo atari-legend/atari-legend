@@ -95,7 +95,7 @@ class MenuDisksContentController extends Controller
             case 'release':
                 if ($request->action === 'create-release') {
                     $release = Release::create([
-                        'type'    => 'Unofficial',
+                        'type'    => Release::TYPE_UNOFFICIAL,
                         'game_id' => $request->game,
                     ]);
                     $release->menuDiskContents()->save($content);
