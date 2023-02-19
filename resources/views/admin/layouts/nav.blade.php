@@ -15,6 +15,7 @@
                         <li>
                             <a class="@activeroute('admin.games.games.*')" href="{{ route('admin.games.games.index') }}">Games</a>
                             @isset ($game)
+                                : <strong>{{ $game->game_name }}</strong>
                                 @include('admin.games.games.nav')
                             @endif
                         </li>

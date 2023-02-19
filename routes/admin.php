@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\Games\GameSubmissionController;
 use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseDumpsController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Magazines\MagazineIndexTypesController;
 use App\Http\Controllers\Admin\Magazines\MagazineIssuesController;
@@ -84,6 +85,10 @@ Route::middleware('verified')->group(function () {
                         Route::delete('aka/{aka}/destroy', [GameController::class, 'destroyAka'])->name('games.destroy.aka');
 
                         Route::resource('releases', GameReleaseController::class);
+
+                        Route::prefix('/{release}')->name('releases.')->group(function () {
+                            Route::resource('dumps', ReleaseDumpsController::class);
+                        });
                     });
 
                     Route::resource('games', GameController::class);

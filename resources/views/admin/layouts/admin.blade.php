@@ -29,7 +29,7 @@
             </aside>
             <main class="pt-3">
 
-                    @include('admin.layouts.alert')
+                @include('admin.layouts.alert')
 
                 <x-admin.breadcrumbs :crumbs="$breadcrumbs ?? []" />
                 <hr>

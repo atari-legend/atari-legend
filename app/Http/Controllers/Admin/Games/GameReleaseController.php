@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Games;
 
 use App\Helpers\ChangelogHelper;
+use App\Helpers\ReleaseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
@@ -31,15 +32,6 @@ class GameReleaseController extends Controller
 
     public function show(Game $game, Release $release)
     {
-        $otherReleasesCrumbs = $release->game->releases
-            ->sortBy('year')
-            ->except($release->getKey())
-            ->map(fn ($r) => new Crumb(
-                route('admin.games.releases.show', ['game' => $release->game, 'release' => $r]),
-                $r->full_label
-            ))
-            ->toArray();
-
         $publishers = PublisherDeveloper::orderBy('pub_dev_name')->get();
         $licenses = Release::LICENSES;
         $types = Release::TYPES;
@@ -58,7 +50,7 @@ class GameReleaseController extends Controller
                     new Crumb(
                         route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]),
                         $release->full_label,
-                        $otherReleasesCrumbs
+                        ReleaseHelper::siblingReleasesCrumbs($release)
                     ),
                 ],
                 'game'       => $release->game,
