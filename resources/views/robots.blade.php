@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /index.php
 Disallow: /admin/
 Disallow: /games/search
 Disallow: /music
