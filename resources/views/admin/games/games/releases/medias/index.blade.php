@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col">
-            @include('admin.games.games.releases.dumps.card_list')
+            @include('admin.games.games.releases.medias.card_list')
         </div>
     </div>
 @endsection

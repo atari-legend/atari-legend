@@ -12,8 +12,8 @@
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $release->medias->pluck('dumps')->count() }}</span>
-        <a href="{{ route('admin.games.releases.dumps.index', ['game' => $release->game, 'release' => $release]) }}">
-            Dumps
+        <a href="{{ route('admin.games.releases.medias.index', ['game' => $release->game, 'release' => $release]) }}">
+            Media & Dumps
         </a>
     </li>
     <li>

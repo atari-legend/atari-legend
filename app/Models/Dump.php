@@ -9,6 +9,10 @@ class Dump extends Model
     protected $table = 'dump';
     public $timestamps = false;
 
+    protected $casts = [
+        'date' => 'datetime:timestamp',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

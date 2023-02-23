@@ -45,8 +45,8 @@
                                             </abbr>
                                         </td>
                                         <td>{{ Helper::fileSize($dump->size) }}</td>
-                                        <td class="d-none d-sm-table-cell">{{ date('F j, Y', $dump->date) }}
-                                        <td class="d-none d-sm-table-cell">{{ Helper::user($dump->user )}}</td>
+                                        <td class="d-none d-sm-table-cell">{{ $dump->date->format('F j, Y') }}
+                                        <td class="d-none d-sm-table-cell">{{ Helper::user($dump->user) }}</td>
                                         <td>{{ $dump->info }}</td>
                                     </tr>
                                 @endforeach
