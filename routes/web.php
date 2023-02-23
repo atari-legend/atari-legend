@@ -86,7 +86,7 @@ Route::middleware('verified')->group(function () {
     Route::get('/menusets/software/{software}', [MenuSetController::class, 'software'])->name('menus.software');
     Route::get('/menusets/search', [MenuSetController::class, 'search'])->name('menus.search');
     Route::get('/menusets/{set}', [MenuSetController::class, 'show'])->name('menus.show');
-    Route::get('/menusets/{set}/epub', [MenuSetController::class, 'epub'])->name('menus.epub');
+    Route::get('/menusets/{set}/scrolltexts.epub', [MenuSetController::class, 'epub'])->name('menus.epub');
 
     Route::resource('/reviews', ReviewController::class)->only(['index', 'show']);
 
