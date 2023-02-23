@@ -49,9 +49,9 @@ Route::middleware('verified')->group(function () {
 
     Route::middleware('auth:web')->group(function () {
         Route::post('/news/submit', [NewsController::class, 'postNews'])->name('news.submit');
-        Route::post('/games/{game}/comment', [GameController::class, 'postComment'])->name('games.comment');
-        Route::post('/games/{game}/submitInfo', [GameController::class, 'submitInfo'])->name('games.submitInfo');
-        Route::post('/games/{game}/vote', [GameVoteController::class, 'vote'])->name('games.vote');
+        Route::post('/games/{game:slug}/comment', [GameController::class, 'postComment'])->name('games.comment');
+        Route::post('/games/{game:slug}/submitInfo', [GameController::class, 'submitInfo'])->name('games.submitInfo');
+        Route::post('/games/{game:slug}/vote', [GameVoteController::class, 'vote'])->name('games.vote');
         Route::get('/reviews/submit', [ReviewController::class, 'edit'])->name('reviews.edit');
         Route::post('/reviews/submit', [ReviewController::class, 'submit'])->name('reviews.submit');
         Route::post('/reviews/{review}/comment', [ReviewController::class, 'postComment'])->name('review.comment');
@@ -73,18 +73,17 @@ Route::middleware('verified')->group(function () {
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
 
     Route::get('/games/{id}', fn ($id) => redirect('/games/' . Game::findOrFail($id)->slug, 301));
-    Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
+    Route::get('/games/{game:slug}', [GameController::class, 'show'])->name('games.show');
 
-    Route::get('/games/{game}/screenshot-{id}.{ext}', [GameResourcesController::class, 'screenshot'])->name('games.screenshot');
+    Route::get('/games/{game:slug}/screenshot-{id}.{ext}', [GameResourcesController::class, 'screenshot'])->name('games.screenshot');
 
-    Route::get('/music/cover/{game}', [GameMusicController::class, 'cover'])->name('music.cover');
+    Route::get('/music/cover/{game:slug}', [GameMusicController::class, 'cover'])->name('music.cover');
     Route::get('/music/{sndh}', [GameMusicController::class, 'music'])
         ->where(['sndh' => '[\w\s\-_\/()]+'])
         ->name('music');
 
     Route::get('/menusets', [MenuSetController::class, 'index'])->name('menus.index');
     Route::get('/menusets/software/{software}', [MenuSetController::class, 'software'])->name('menus.software');
-    Route::get('/menusets/game/{game}', [MenuSetController::class, 'game'])->name('menus.game');
     Route::get('/menusets/search', [MenuSetController::class, 'search'])->name('menus.search');
     Route::get('/menusets/{set}', [MenuSetController::class, 'show'])->name('menus.show');
     Route::get('/menusets/{set}/epub', [MenuSetController::class, 'epub'])->name('menus.epub');
