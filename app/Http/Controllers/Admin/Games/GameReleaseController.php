@@ -32,38 +32,94 @@ class GameReleaseController extends Controller
 
     public function show(Game $game, Release $release)
     {
-        $publishers = PublisherDeveloper::orderBy('pub_dev_name')->get();
-        $licenses = Release::LICENSES;
-        $types = Release::TYPES;
-        $statuses = Release::STATUSES;
-        $locations = Location::orderBy('continent_code', 'asc')
-            ->orderBy('type', 'asc')
-            ->orderBy('name', 'asc')
-            ->get();
+        $referenceData = $this->getReferenceData();
 
         return view('admin.games.games.releases.edit')
-            ->with([
-                'breadcrumbs' => [
-                    new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $release->game), $release->game->game_name),
-                    new Crumb(route('admin.games.releases.index', $release->game), 'Releases'),
-                    new Crumb(
-                        route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]),
-                        $release->full_label,
-                        ReleaseHelper::siblingReleasesCrumbs($release)
-                    ),
-                ],
-                'game'       => $release->game,
-                'release'    => $release,
-                'publishers' => $publishers,
-                'licenses'   => $licenses,
-                'types'      => $types,
-                'statuses'   => $statuses,
-                'locations'  => $locations,
-            ]);
+            ->with(
+                array_merge(
+                    $referenceData,
+                    [
+                        'breadcrumbs' => [
+                            new Crumb(route('admin.games.games.index'), 'Games'),
+                            new Crumb(route('admin.games.games.edit', $release->game), $release->game->game_name),
+                            new Crumb(route('admin.games.releases.index', $release->game), 'Releases'),
+                            new Crumb(
+                                route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]),
+                                $release->full_label,
+                                ReleaseHelper::siblingReleasesCrumbs($release)
+                            ),
+                        ],
+                        'game'       => $release->game,
+                        'release'    => $release,
+                    ]
+                )
+            );
+    }
+
+    public function create(Game $game)
+    {
+        $referenceData = $this->getReferenceData();
+
+        return view('admin.games.games.releases.edit')
+            ->with(
+                array_merge(
+                    $referenceData,
+                    [
+                        'breadcrumbs' => [
+                            new Crumb(route('admin.games.games.index'), 'Games'),
+                            new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                            new Crumb(route('admin.games.releases.index', $game), 'Releases'),
+                            new Crumb(route('admin.games.releases.create', $game), 'Add new release'),
+                        ],
+                        'game'       => $game,
+                    ]
+                )
+            );
+    }
+
+    public function store(Game $game, Request $request)
+    {
+        $this->validateRelease($request);
+        $release = Release::create([
+            'game_id' => $game->getKey(),
+        ]);
+        $this->updateRelease($release, $request);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Game Release',
+            'section_id'       => $release->getKey(),
+            'section_name'     => $release->game->game_name,
+            'sub_section'      => 'Release Info',
+            'sub_section_id'   => $release->getKey(),
+            'sub_section_name' => $release->full_label ?? $release->game->game_name,
+        ]);
+
+        return redirect()->route('admin.games.releases.show', [
+            'game'    => $release->game,
+            'release' => $release,
+        ]);
     }
 
     public function update(Game $game, Release $release, Request $request)
+    {
+        $this->validateRelease($request);
+        $this->updateRelease($release, $request);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Game Release',
+            'section_id'       => $release->getKey(),
+            'section_name'     => $release->game->game_name,
+            'sub_section'      => 'Release Info',
+            'sub_section_id'   => $release->getKey(),
+            'sub_section_name' => $release->full_label ?? $release->game->game_name,
+        ]);
+
+        return redirect()->route('admin.games.releases.index', $release->game);
+    }
+
+    private function validateRelease(Request $request)
     {
         $request->validate([
             'year'       => 'nullable|numeric|between:1984,' . date('Y'),
@@ -73,7 +129,10 @@ class GameReleaseController extends Controller
             'status'     => ['nullable', Rule::in(Release::STATUSES)],
             'locations'  => 'nullable|array',
         ]);
+    }
 
+    private function updateRelease(Release $release, Request $request)
+    {
         $release->update([
             'name'    => $request->name,
             'date'    => $request->year ? Carbon::createFromDate($request->year, 1, 1) : null,
@@ -99,20 +158,25 @@ class GameReleaseController extends Controller
                 $release->save();
             }
         }
+    }
 
-        ChangelogHelper::insert([
-            'action'           => Changelog::UPDATE,
-            'section'          => 'Game Release',
-            'section_id'       => $release->getKey(),
-            'section_name'     => $release->game->game_name,
-            'sub_section'      => 'Release Info',
-            'sub_section_id'   => $release->getKey(),
-            'sub_section_name' => $release->full_label ?? $release->game->game_name,
-        ]);
+    private function getReferenceData(): array
+    {
+        $publishers = PublisherDeveloper::orderBy('pub_dev_name')->get();
+        $licenses = Release::LICENSES;
+        $types = Release::TYPES;
+        $statuses = Release::STATUSES;
+        $locations = Location::orderBy('continent_code', 'asc')
+            ->orderBy('type', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
 
-        return redirect()->route('admin.games.releases.show', [
-            'game'    => $release->game,
-            'release' => $release,
-        ]);
+        return [
+            'publishers' => $publishers,
+            'licenses'   => $licenses,
+            'types'      => $types,
+            'statuses'   => $statuses,
+            'locations'  => $locations,
+        ];
     }
 }

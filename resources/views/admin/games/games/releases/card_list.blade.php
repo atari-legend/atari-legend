@@ -86,5 +86,9 @@
             </tbody>
         </table>
 
+        <a href="{{ route('admin.games.releases.create', $game) }}" class="btn btn-success">
+            <i class="fas fa-plus-square fa-fw"></i> Add a new release
+        </a>
+
     </div>
 </div>
