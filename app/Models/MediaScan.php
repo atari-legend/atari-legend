@@ -19,4 +19,14 @@ class MediaScan extends Model
     {
         return $this->belongsTo(MediaScanType::class, 'media_scan_type_id');
     }
+
+    public function getUrlAttribute()
+    {
+        return asset('storage/' . $this->path);
+    }
+
+    public function getPathAttribute()
+    {
+        return 'images/media_scans/' . $this->file;
+    }
 }

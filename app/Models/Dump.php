@@ -42,4 +42,14 @@ class Dump extends Model
             ->join(' ')
             . '.zip';
     }
+
+    public function getDownloadUrlAttribute()
+    {
+        return asset('storage/' . $this->path);
+    }
+
+    public function getPathAttribute()
+    {
+        return 'zips/games/' . $this->getKey() . '.zip';
+    }
 }

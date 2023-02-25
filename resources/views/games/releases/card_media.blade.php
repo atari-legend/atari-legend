@@ -32,7 +32,7 @@
                                 @foreach ($media->dumps as $dump)
                                     <tr>
                                         <td>
-                                            <a href="{{ asset('storage/zips/games/'.$dump->id.'.zip') }}"
+                                            <a href="{{ $dump->download_url }}"
                                                 download="{{ $dump->download_filename }}">
                                                 <i class="fas fa-download"></i>
                                             </a>
@@ -62,8 +62,8 @@
                         <div class="lightbox-gallery d-flex mt-4">
                             @foreach ($media->scans as $scan)
                                 <div class="col-3 col-sm-2 me-4 text-center text-muted">
-                                    <a class="lightbox-link" href="{{ asset('storage/images/media_scans/'.$scan->file) }}">
-                                        <img class="w-100 mb-1" src="{{ asset('storage/images/media_scans/'.$scan->file) }}">
+                                    <a class="lightbox-link" href="{{ $scan->url }}">
+                                        <img class="w-100 mb-1" src="{{ $scan->url }}">
                                     </a>
                                     {{ $scan->type->name ?? '' }}
                                 </div>
