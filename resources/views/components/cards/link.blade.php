@@ -6,7 +6,7 @@
         @isset ($website)
             @if ($website->file !== null)
                 <figure>
-                    <img class="w-100 cropped" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of the website {{ $website->website_name }}">
+                    <img class="w-100 cropped" src="{{ route('websites.screenshot', $website) }}" alt="Screenshot of the website {{ $website->website_name }}">
                     <figcaption class="py-2 px-3">
                         <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                         <div class="figcaption-title"><a href="{{ $website->website_url }}">{{ $website->website_name }}</a></div>

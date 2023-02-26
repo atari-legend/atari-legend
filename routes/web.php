@@ -31,6 +31,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SpotlightResourcesController;
+use App\Http\Controllers\WebsiteResourcesController;
 use App\Models\Game;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -108,6 +109,7 @@ Route::middleware('verified')->group(function () {
 
     Route::get('/individuals/{individual}/avatar.webp', [IndividualResourcesController::class, 'avatar'])->name('individuals.avatar');
     Route::get('/spotlights/{spotlight}/spotlight.webp', [SpotlightResourcesController::class, 'screenshot'])->name('spotlights.screenshot');
+    Route::get('/websites/{website}/screenshot.webp', [WebsiteResourcesController::class, 'screenshot'])->name('websites.screenshot');
 
     Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap.index');
     Route::get('/sitemap/general', [SitemapController::class, 'general'])->name('sitemap.general');

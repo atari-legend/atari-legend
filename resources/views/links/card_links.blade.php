@@ -27,8 +27,8 @@
             <div class="row g-0 p-2 pb-4 pt-4 pt-md-3 pb-md-3">
                 <div class="col-md-4">
                     @if ($website->file)
-                        <a class="lightbox-link" href="{{ asset('storage/images/website_images/'.$website->file) }}">
-                            <img class="w-100 cropped mb-2 mb-md-0" src="{{ asset('storage/images/website_images/'.$website->file) }}" alt="Screenshot of website {{ $website->website_name }}">
+                        <a class="lightbox-link" href="{{ asset('storage/'. $website->path) }}">
+                            <img class="w-100 cropped mb-2 mb-md-0" src="{{ route('websites.screenshot', $website) }}" alt="Screenshot of website {{ $website->website_name }}">
                         </a>
                     @endif
                 </div>

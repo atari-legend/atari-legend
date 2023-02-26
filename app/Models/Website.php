@@ -20,4 +20,9 @@ class Website extends Model
     {
         return Helper::filename($this->website_id, $this->website_imgext);
     }
+
+    public function getPathAttribute()
+    {
+        return 'images/website_images/' . $this->file;
+    }
 }
