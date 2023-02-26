@@ -11,7 +11,7 @@
                     {!! Helper::bbCode(e(Helper::extractTag($review->review_text, "frontpage"))) !!}
                 </p>
                 <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $review->review_id]) }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i title="Read the review of {{ $review->games[0]->game_name }}" class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endforeach
