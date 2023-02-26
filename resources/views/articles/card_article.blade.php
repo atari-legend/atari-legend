@@ -28,6 +28,6 @@
                 </div>
             @endforeach
         </div>
-        <p class="card-text">{!! Helper::bbCode(nl2br(e($article->texts->first()->article_text))) !!}</p>
+        <p class="card-text">{!! Helper::bbCode(nl2br(e($article->texts->first()->article_text), false)) !!}</p>
     </div>
 </div>

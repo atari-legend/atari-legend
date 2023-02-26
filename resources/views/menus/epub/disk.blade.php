@@ -25,7 +25,7 @@
 @endif
 
 @if ($disk->scrolltext !== null)
-    <p><code class="monospace">{!! nl2br(e($disk->scrolltext)) !!}</code></p>
+    <p><code class="monospace">{!! nl2br(e($disk->scrolltext), false) !!}</code></p>
 @else
     <p class="no-scrolltext">No scrolltext for this disk</p>
 @endif

@@ -28,17 +28,17 @@
         </div>
 
         <p class="card-text">
-            {!! Helper::bbCode(nl2br(e($review->review_text))) !!}
-
-            <hr>
-            <h5>Score</h5>
-
-            <ul class="list-unstyled">
-                <li>Graphics: {{ $review->score->review_graphics }}</li>
-                <li>Sound: {{ $review->score->review_sound }}</li>
-                <li>Gameplay: {{ $review->score->review_gameplay }}</li>
-                <li>Overall: {{ $review->score->review_overall }}</li>
-            </ul>
+            {!! Helper::bbCode(nl2br(e($review->review_text), false)) !!}
         </p>
+        <hr>
+        <h5>Score</h5>
+
+        <ul class="list-unstyled">
+            <li>Graphics: {{ $review->score->review_graphics }}</li>
+            <li>Sound: {{ $review->score->review_sound }}</li>
+            <li>Gameplay: {{ $review->score->review_gameplay }}</li>
+            <li>Overall: {{ $review->score->review_overall }}</li>
+        </ul>
+
     </div>
 </div>

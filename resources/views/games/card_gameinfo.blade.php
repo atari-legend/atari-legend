@@ -36,7 +36,7 @@
                             @if ($developer->text?->pub_dev_profile !== null && trim($developer->text?->pub_dev_profile) !== '')
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->pub_dev_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->pub_dev_id }}">
-                                    {!! Helper::bbCode(nl2br(e($developer->text->pub_dev_profile))) !!}
+                                    {!! Helper::bbCode(nl2br(e($developer->text->pub_dev_profile), false)) !!}
                                 </p>
                             @endif
                             <br>
@@ -89,7 +89,7 @@
                             @endif
                             @if ($individual->text !== null && $individual->text->ind_profile !== null && $individual->text->ind_profile !== '')
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individual->ind_id }}">
-                                    {!! Helper::bbCode(nl2br(e($individual->text->ind_profile))) !!}
+                                    {!! Helper::bbCode(nl2br(e($individual->text->ind_profile), false)) !!}
                                 </p>
                             @endif
                         </div>

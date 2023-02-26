@@ -32,6 +32,6 @@
             @endforeach
         </div>
 
-        <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->texts()->first()->interview_text))) !!}</p>
+        <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->texts()->first()->interview_text), false)) !!}</p>
     </div>
 </div>

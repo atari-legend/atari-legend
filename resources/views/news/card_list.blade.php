@@ -22,7 +22,7 @@
                     @if (isset($new->image))
                         <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('storage/images/news_images/'.$new->image->news_image_id.'.'.$new->image->news_image_ext) }}" alt="News illustration image">
                     @endif
-                    {!! Helper::bbCode(stripslashes(nl2br(e($new->news_text)))) !!}
+                    {!! Helper::bbCode(stripslashes(nl2br(e($new->news_text), false))) !!}
                 </p>
             </div>
         @endforeach

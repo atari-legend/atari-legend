@@ -29,7 +29,7 @@
     @endif
     @if ($content->menuSoftware && $content->menuSoftware->demozoo_id)
         <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
-            <img src="{{ $demozoo_icon_url ?? asset('images/demozoo-16x16.png') }}" class="demozoo border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}" />
+            <img src="{{ $demozoo_icon_url ?? asset('images/demozoo-16x16.png') }}" class="demozoo border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}">
         </a>
     @endif
 

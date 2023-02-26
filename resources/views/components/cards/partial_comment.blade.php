@@ -16,11 +16,12 @@
                 </small>
 
                 {{-- Delete button. Uses a form to POST the deletion --}}
+
+                <form id="comment-delete-{{ $comment->comments_id }}" action="{{ route('comments.delete') }}" method="POST" class="d-none">
+                    @csrf
+                    <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
+                </form>
                 <small>
-                    <form id="comment-delete-{{ $comment->comments_id }}" action="{{ route('comments.delete') }}" method="POST" class="d-none">
-                        @csrf
-                        <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
-                    </form>
                     <a href="{{ route('comments.delete') }}"
                         onclick="event.preventDefault(); document.getElementById('comment-delete-{{ $comment->comments_id }}').submit()"><i class="far fa-trash-alt text-danger" title="Delete comment"></i></a>
                 </small>
@@ -39,7 +40,7 @@
             </a>
         @endcontributor
 
-        {!! Helper::bbCode(stripslashes(nl2br(e($comment->comment)))) !!}
+        {!! Helper::bbCode(stripslashes(nl2br(e($comment->comment), false))) !!}
     </div>
 
     {{-- Comment edit form --}}

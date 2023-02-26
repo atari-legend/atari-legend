@@ -87,7 +87,7 @@
     </div>
     @if ($disk->scrolltext !== null)
         <div class="collapse p-2 my-2 bg-black border border-secondary" id="scrolltext-{{ $disk->id }}">
-            <code class="text-white">{!! nl2br(e($disk->scrolltext)) !!}</code>
+            <code class="text-white">{!! nl2br(e($disk->scrolltext), false) !!}</code>
             <button type="button" class="btn float-end text-primary"
                 data-bs-toggle="collapse"
                 data-bs-target="#scrolltext-{{ $disk->id }}"><i class="fas fa-2x fa-times"></i></button>

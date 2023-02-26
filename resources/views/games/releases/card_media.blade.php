@@ -63,7 +63,7 @@
                             @foreach ($media->scans as $scan)
                                 <div class="col-3 col-sm-2 me-4 text-center text-muted">
                                     <a class="lightbox-link" href="{{ asset('storage/images/media_scans/'.$scan->file) }}">
-                                        <img class="w-100 mb-1" src="{{ asset('storage/images/media_scans/'.$scan->file) }}">
+                                        <img class="w-100 mb-1" src="{{ asset('storage/images/media_scans/'.$scan->file) }}" alt="Scan of media {{ $scan->type->name ?? ''}}">
                                     </a>
                                     {{ $scan->type->name ?? '' }}
                                 </div>

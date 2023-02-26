@@ -59,7 +59,10 @@ class SmileyVisitor implements NodeVisitor
         foreach (SmileyVisitor::SMILIES as $text => $img) {
             $textNode->setValue(str_replace(
                 $text,
-                '<img class="border-0" style="height: 1rem;" src="' . $this->imageUrlBase . '/' . $img . '.' . SmileyVisitor::IMG_EXT . '">',
+                '<img class="border-0" style="height: 1rem;" src="'
+                    . $this->imageUrlBase
+                    . '/' . $img . '.' . SmileyVisitor::IMG_EXT
+                    . '" alt="Smiley '.$text.'">',
                 $textNode->getValue()
             ));
         }

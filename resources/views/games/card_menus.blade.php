@@ -45,7 +45,8 @@
 
                                         {{-- Only show the first 5 items and collapse the rest --}}
                                         @if ($loop->index == 5)
-                                            <div class="collapse" id="more-content-{{ $disk->id }}">
+                                            <li class="collapse" id="more-content-{{ $disk->id }}">
+                                                <ul class="list-unstyled">
                                         @endif
 
                                         <li>
@@ -80,14 +81,15 @@
 
                                     {{-- Collapse controls, if there are more than 5 items --}}
                                     @if ($disk->contents->count() > 5)
-                                        </div>
-                                        <div class="mt-2 ps-2">
+                                            </ul>
+                                        </li>
+                                        <li class="mt-2 ps-2">
                                             <a href="#more-content-{{ $disk->id }}" data-bs-toggle="collapse"
                                                 class="text-white" data-al-collapsed-text="Less"
                                                 aria-expanded="false" aria-controls="more-content-{{ $disk->id }}">
                                                 View {{ $disk->contents->count() - 5 }} more…
                                             </a>
-                                        </div>
+                                        </li>
                                     @endif
 
                                 </ul>
