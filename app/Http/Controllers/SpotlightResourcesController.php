@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Individual;
+use App\Models\Spotlight;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic;
 
-class IndividualResourcesController extends Controller
+class SpotlightResourcesController extends Controller
 {
-    public function avatar(Individual $individual)
+    public function screenshot(Spotlight $spotlight)
     {
-        if ($individual->text->file) {
-            $image = ImageManagerStatic::make(Storage::disk('public')->get($individual->text->path));
+        if ($spotlight->screenshot) {
+            $image = ImageManagerStatic::make(Storage::disk('public')->get($spotlight->screenshot->getPath('spotlight')));
 
             return response()->stream(function () use ($image) {
                 echo $image->resize(500, null, function ($constraint) {
