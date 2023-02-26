@@ -12,7 +12,7 @@
         </p>
         <div>
             <form id="filter" action="{{ route('changelog.index') }}" class="mb-4">
-                <label for="filter" class="visually-hidden form-label">Section</label>
+                <label for="section" class="visually-hidden form-label">Section</label>
                 <div class="input-group mb-2">
                     <select class="form-select" id="section" name="filter">
                         <option value="">All sections</option>

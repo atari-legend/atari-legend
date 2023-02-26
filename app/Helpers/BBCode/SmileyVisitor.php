@@ -62,7 +62,7 @@ class SmileyVisitor implements NodeVisitor
                 '<img class="border-0" style="height: 1rem;" src="'
                     . $this->imageUrlBase
                     . '/' . $img . '.' . SmileyVisitor::IMG_EXT
-                    . '" alt="Smiley '.$text.'">',
+                    . '" alt="Smiley">',
                 $textNode->getValue()
             ));
         }

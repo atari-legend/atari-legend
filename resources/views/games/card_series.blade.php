@@ -6,18 +6,18 @@
         <div class="card-body p-2">
             <p class="card-text">
                 The <em>{{ $game->series->name }}</em> series contains:
-                <ul class="list-unstyled ms-2">
-                    @foreach ($game->series->games->sortBy('game_name') as $g)
-                        <li>
-                            @if ($g->game_id === $game->game_id)
-                                <i class="fas fa-caret-right text-muted"></i> <strong class="text-muted">{{ $g->game_name }}</strong>
-                            @else
-                                <a href="{{ route('games.show', ['game' => $g ]) }}">{{ $g->game_name }}</a>
-                            @endif
-                        </li>
-                    @endforeach
-                </ul>
             </p>
+            <ul class="list-unstyled ms-2">
+                @foreach ($game->series->games->sortBy('game_name') as $g)
+                    <li>
+                        @if ($g->game_id === $game->game_id)
+                            <i class="fas fa-caret-right text-muted"></i> <strong class="text-muted">{{ $g->game_name }}</strong>
+                        @else
+                            <a href="{{ route('games.show', ['game' => $g ]) }}">{{ $g->game_name }}</a>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
         </div>
     </div>
 @endif

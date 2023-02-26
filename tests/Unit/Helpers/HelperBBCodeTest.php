@@ -30,4 +30,12 @@ class HelperBBCodeTest extends TestCase
             Helper::bbCode('')
         );
     }
+
+    public function testSmiley()
+    {
+        $this->assertEquals(
+            'Some text <img class="border-0" style="height: 1rem;" src="http://localhost/images/smilies/icon_redface.gif" alt="Smiley"> and more',
+            Helper::bbCode('Some text :oops: and more')
+        );
+    }
 }
