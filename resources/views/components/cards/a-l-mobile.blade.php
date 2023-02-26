@@ -9,9 +9,9 @@
            You want this site to behave like an app on your phone or tablet?
            Simply open the site in your favorite browser and look for the
            'Add to homescreen' button. In Safari on IOS, first press the
-           <a href="{{ asset('images/cards/ios1.jpg') }}">'share'</a>
-           icon, than <a href="{{ asset('images/cards/ios2.jpg') }}">this</a> pop
-           up appears. In Chrome on Android, you press the
+           <a href="{{ asset('images/cards/ios1.jpg') }}">'share' icon</a>,
+           then <a href="{{ asset('images/cards/ios2.jpg') }}">the "Add to home screen"</a>
+           pop-up appears. In Chrome on Android, you press the
            <a href="{{ asset('images/cards/android1.png') }}">button</a> at the top
            right, and select <a href="{{ asset('images/cards/android2.png') }}">
            'add to homescreen'</a>. Once you have done this, the famous Atari bee
