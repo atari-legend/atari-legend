@@ -7,9 +7,9 @@ header {
         box-shadow: none;
 
         height: 217px;
-        background-image: url('../images/css_top_bg_left.jpg'),
-            url('../images/css_top_bg_right.jpg'),
-            url('../images/css_top_bg_sides.jpg');
+        background-image: url('../images/css_top_bg_left.webp'),
+            url('../images/css_top_bg_right.webp'),
+            url('../images/css_top_bg_sides.webp');
         background-position: left 2px,
             right 2px,
             320px 0px;
@@ -20,7 +20,7 @@ header {
         .header-inner {
             max-width: 1280px;
             height: 217px;
-            background-image: url('../images/css_top_bg.jpg');
+            background-image: url('../images/css_top_bg.webp');
         }
     }
 }
@@ -106,7 +106,7 @@ header {
 }
 
 footer {
-    background-image: url('../images/css_footer_bg.jpg');
+    background-image: url('../images/css_footer_bg.webp');
     height: 120px;
 
     font-family: Audiowide, $font-family-sans-serif;

@@ -65,7 +65,7 @@
     {{-- Social media metadata --}}
     <meta property="og:title" content="@yield('title', 'Atari Legend: Legends Never Die')">
     <meta property="og:description" content="@yield('description', 'Nostalgia trippin\' down the Atari ST memory lane')">
-    <meta property="og:image" content="@yield('image', asset('images/AL.jpg'))">
+    <meta property="og:image" content="@yield('image', asset('images/AL.webp'))">
     <meta property="og:url" content="{{ URL::current() }}">
     <meta property="og:site_name" content="Atari Legend">
     <meta name="twitter:card" content="summary_large_image">
