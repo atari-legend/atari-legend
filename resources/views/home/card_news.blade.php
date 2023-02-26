@@ -11,7 +11,7 @@
                     {!! Helper::bbCode(Helper::extractTag(e($new->news_text), "frontpage")) !!}
                 </p>
                 <a class="d-block text-end" href="{{ route('news.index') }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i title="More news" class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endforeach

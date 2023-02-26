@@ -16,7 +16,7 @@
             </p>
             <p class="card-subtitle text-muted">{{ $interview->texts()->first()->interview_date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
             <a class="d-block text-end" href="{{ route('interviews.show', ['interview' => $interview->interview_id]) }}">
-                More <i class="fas fa-chevron-right"></i>
+                Read interview of {{ $interview->individual->ind_name }} <i class="fas fa-chevron-right"></i>
             </a>
         </div>
     @endisset

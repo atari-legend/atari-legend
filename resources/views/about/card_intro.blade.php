@@ -9,7 +9,7 @@
            to promote the upcomming new website. Click and enjoy!
         </p>
         <a class="d-block p-2 text-end" href="{{ asset('demo/intro.html') }}">
-            More <i class="fas fa-chevron-right"></i>
+            View the intro <i class="fas fa-chevron-right"></i>
         </a>
     </div>
 </div>

@@ -35,7 +35,7 @@
 
                     {!! Helper::bbCode(e($article->texts->first()->article_intro)) !!}<br>
                     <a class="d-block text-end mt-2" href="{{ route('articles.show', ['article' => $article]) }}">
-                        More <i class="fas fa-chevron-right"></i>
+                        Read {{ $article->article_title }} <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
             </div>

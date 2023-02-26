@@ -20,7 +20,7 @@
 
         {!! Helper::bbCode(Helper::extractTag(e($review->review_text), "frontpage")) !!}<br>
         <a class="d-block text-end mt-2" href="{{ route('reviews.show', ['review' => $review]) }}">
-            More <i class="fas fa-chevron-right"></i>
+            Read the review of {{ $review->games->first()->game_name }} <i class="fas fa-chevron-right"></i>
         </a>
     </div>
 </div>

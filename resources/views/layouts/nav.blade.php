@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-xl navbar-light bg-primary mt-2 mb-3 p-0">
     <div class="container-fluid">
-        <a class="navbar-brand px-2" href="{{ route('home.index') }}"><i class="fas fa-home"></i></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+        <a class="navbar-brand px-2" href="{{ route('home.index') }}"><i title="Home" class="fas fa-home"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" role="button" aria-label="Main menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar">

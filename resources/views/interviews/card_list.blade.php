@@ -39,7 +39,7 @@
 
                     {!! Helper::bbCode(e($interview->texts->first()->interview_intro)) !!}<br>
                     <a class="d-block text-end mt-2" href="{{ route('interviews.show', ['interview' => $interview]) }}">
-                        More <i class="fas fa-chevron-right"></i>
+                        Read the interview of {{ $interview->individual->ind_name }} <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
             </div>

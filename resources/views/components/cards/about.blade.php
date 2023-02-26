@@ -10,7 +10,7 @@
             Who are the people behind this project? Or maybe you feel like helping out?
             Check out this section.
             <a class="d-block text-end" href="{{ route('about.index') }}">
-                More <i class="fas fa-chevron-right"></i>
+                Learn more about Atari Legend <i class="fas fa-chevron-right"></i>
             </a>
         </p>
     </div>

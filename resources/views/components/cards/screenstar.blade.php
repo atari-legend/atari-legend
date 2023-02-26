@@ -23,7 +23,7 @@
                 </p>
                 <p class="card-subtitle text-muted">{{ $screenstar->review_date->format('F j, Y') }} by {{ Helper::user($screenstar->user) }}</p>
                 <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $screenstar->review_id]) }}">
-                    More <i class="fas fa-chevron-right"></i>
+                    Read the review of {{ $screenstar->games[0]->game_name }} <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endisset

@@ -15,7 +15,7 @@
             Gone but not forgotten…
         </p>
         <a class="d-block p-2 text-end" href="{{ route('about.andreas') }}">
-            More <i class="fas fa-chevron-right"></i>
+            Learn more about Andreas <i class="fas fa-chevron-right"></i>
         </a>
     </div>
 </div>

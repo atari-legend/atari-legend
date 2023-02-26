@@ -18,7 +18,7 @@
                 <p class="card-text">{{ $website->description }}</p>
                 <p class="card-subtitle text-muted">{{ date('F j, Y', $website->website_date) }} by {{ Helper::user($website->user) }}</p>
                 <a class="d-block text-end" href="{{ $website->website_url }}">
-                    More <i class="fas fa-chevron-right"></i>
+                    Visit {{ parse_url($website->website_url, PHP_URL_HOST) }} <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endisset

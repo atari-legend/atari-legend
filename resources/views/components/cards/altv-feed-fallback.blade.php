@@ -7,7 +7,7 @@
         <p class="card-text p-2">
             Check out the ATARI LEGEND YouTube show featuring all the goodies you have come to love from team AL, but now on tele!
             <a class="d-block text-end" href="https://www.youtube.com/atarilegend">
-                More <i class="fas fa-chevron-right"></i>
+                Visit ALTV <i class="fas fa-chevron-right"></i>
             </a>
         </p>
     </div>
