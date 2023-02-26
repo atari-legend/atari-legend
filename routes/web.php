@@ -21,6 +21,7 @@ use App\Http\Controllers\GameResourcesController;
 use App\Http\Controllers\GameSearchController;
 use App\Http\Controllers\GameVoteController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IndividualResourcesController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MagazineController;
@@ -103,6 +104,8 @@ Route::middleware('verified')->group(function () {
     Route::get('/about/andreas', [AboutController::class, 'andreas'])->name('about.andreas');
 
     Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog.index');
+
+    Route::get('/individuals/{individual}/avatar.jpg', [IndividualResourcesController::class, 'avatar'])->name('individuals.avatar');
 
     Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap.index');
     Route::get('/sitemap/general', [SitemapController::class, 'general'])->name('sitemap.general');

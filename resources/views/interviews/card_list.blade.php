@@ -30,8 +30,8 @@
 
                 <div class="clearfix">
                     @if ($interview->individual->text !== null && $interview->individual->text->file !== null)
-                        <a class="lightbox-link" href="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}">
-                            <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('storage/images/individual_screenshots/'.$interview->individual->text->file) }}" alt="Picture of {{ $interview->individual->ind_name }}">
+                        <a class="lightbox-link" href="{{ $interview->individual->text->image_url }}">
+                            <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->ind_name }}">
                         </a>
                     @else
                         <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">

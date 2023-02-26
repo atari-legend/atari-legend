@@ -68,7 +68,7 @@
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $individual->ind_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
                             @if ($individual->text !== null && $individual->text->file !== null)
-                                <a class="lightbox-link d-inline-block" href="{{ asset('storage/images/individual_screenshots/'.$individual->text->file) }}">
+                                <a class="lightbox-link d-inline-block" href="{{ $individual->text->image_url }}">
                                     <i class="far fa-image"></i>
                                 </a>
                             @endif

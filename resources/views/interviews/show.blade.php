@@ -2,7 +2,7 @@
 @section('title', 'Interview with '.$interview->individual->ind_name)
 
 @if ($interview->individual?->text?->file !== null)
-    @section('image', asset('storage/images/individual_screenshots/'.$interview->individual->text->file))
+    @section('image', route('individuals.avatar', $interview->individual))
 @endif
 
 @section('content')

@@ -17,4 +17,14 @@ class IndividualText extends Model
     {
         return Helper::filename($this->ind_id, $this->ind_imgext);
     }
+
+    public function getImageUrlAttribute()
+    {
+        return asset('storage/'.$this->path);
+    }
+
+    public function getPathAttribute()
+    {
+        return 'images/individual_screenshots/'.$this->file;
+    }
 }
