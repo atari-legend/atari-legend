@@ -4,7 +4,7 @@
         &copy; 2004 - {{ date('Y') }}
         <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img src="{{ asset('images/cc-by-nc-sa.png') }}" alt="Creative Commons License"></a>
         <a href="https://github.com/atari-legend/atari-legend/">
-            <i class="fab fa-github"></i>
+            <i title="Visit the Atari Legend GitHub repository" class="fab fa-github"></i>
         </a>
     </p>
 </footer>
