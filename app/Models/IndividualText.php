@@ -20,11 +20,11 @@ class IndividualText extends Model
 
     public function getImageUrlAttribute()
     {
-        return asset('storage/'.$this->path);
+        return asset('storage/' . $this->path);
     }
 
     public function getPathAttribute()
     {
-        return 'images/individual_screenshots/'.$this->file;
+        return 'images/individual_screenshots/' . $this->file;
     }
 }
