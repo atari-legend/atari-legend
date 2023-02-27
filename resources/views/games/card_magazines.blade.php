@@ -30,7 +30,7 @@
                         @endif
                         @if ($index->magazineIssue->read_url)
                             <a class="d-inline-block ms-2" href="{{ $index->magazineIssue->read_url }}">
-                                <i class="fa-solid fa-fw fa-book-open"></i>
+                                <i title="Read review in {{ $index->magazineIssue->display_label }}" class="fa-solid fa-fw fa-book-open"></i>
                             </a>
                         @endif
                     </h3>

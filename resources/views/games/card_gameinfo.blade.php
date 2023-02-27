@@ -30,7 +30,7 @@
                             @endcontributor
                             @if ($developer->logo)
                                 <a class="lightbox-link d-inline-block" href="{{ $developer->logo }}">
-                                    <i class="far fa-image ms-1"></i>
+                                    <i title="View developer logo" class="far fa-image ms-1"></i>
                                 </a>
                             @endif
                             @if ($developer->text?->pub_dev_profile !== null && trim($developer->text?->pub_dev_profile) !== '')

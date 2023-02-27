@@ -6,7 +6,7 @@
                 <a href="javascript:;" data-bs-content="Official releases and unofficial single cracks. Menus are not included."
                     data-bs-placement="top"
                     data-bs-toggle="popover">
-                    <i class="fas fa-info-circle text-muted fs-6"></i>
+                    <i title="Releases info" class="fas fa-info-circle text-muted fs-6"></i>
                 </a>
             </h2>
 
