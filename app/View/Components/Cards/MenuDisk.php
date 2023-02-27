@@ -30,12 +30,10 @@ class MenuDisk extends Component
         if ($this->id !== null) {
             $disk = ModelMenuDisk::find($this->id);
         } else {
-            ModelMenuDisk::has('screenshots')
+            $disk = ModelMenuDisk::has('screenshots')
                 ->has('menuDiskDump')
-                ->get()
-                ->whenNotEmpty(function ($collection) use (&$disk) {
-                    $disk = $collection->random();
-                });
+                ->inRandomOrder()
+                ->first();
         }
 
         return view('components.cards.menu')

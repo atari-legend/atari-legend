@@ -24,11 +24,7 @@ class Trivia extends Component
      */
     public function render()
     {
-        $trivia = null;
-        ModelsTrivia::all()
-            ->whenNotEmpty(function ($collection) use (&$trivia) {
-                $trivia = $collection->random();
-            });
+        $trivia = ModelsTrivia::inRandomOrder()->first();
 
         return view('components.cards.trivia')
             ->with(['trivia' => $trivia]);

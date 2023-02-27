@@ -25,20 +25,16 @@ class Interview extends Component
      */
     public function render()
     {
-        $interview = null;
-
         // Only select interviews for which we have a picture
         // of the individual
-        ModelsInterview::whereHas('individual', function (Builder $queryIndividual) {
+        $interview = ModelsInterview::whereHas('individual', function (Builder $queryIndividual) {
             return $queryIndividual->whereHas('text', function (Builder $queryText) {
                 return $queryText->whereNotNull('ind_imgext')
                     ->where('ind_imgext', '!=', '');
             });
         })
-            ->get()
-            ->whenNotEmpty(function ($collection) use (&$interview) {
-                $interview = $collection->random();
-            });
+            ->inRandomOrder()
+            ->first();
 
         return view('components.cards.interview')
             ->with(['interview' => $interview]);

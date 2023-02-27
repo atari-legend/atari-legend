@@ -24,12 +24,7 @@ class Link extends Component
      */
     public function render()
     {
-        $website = null;
-
-        Website::all()
-            ->whenNotEmpty(function ($collection) use (&$website) {
-                $website = $collection->random();
-            });
+        $website = Website::inRandomOrder()->first();
 
         return view('components.cards.link')
             ->with(['website' => $website]);

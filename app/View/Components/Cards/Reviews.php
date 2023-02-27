@@ -26,8 +26,8 @@ class Reviews extends Component
     {
         $reviews = Review::where('review_edit', Review::REVIEW_PUBLISHED)
             ->orderByDesc('review_date')
-            ->get()
-            ->take(3);
+            ->limit(3)
+            ->get();
 
         return view('components.cards.reviews')
             ->with(['reviews' => $reviews]);
