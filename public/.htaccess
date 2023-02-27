@@ -9,8 +9,12 @@
 
     # Send all traffic to HTTPS, except when serving on localhost for development
     RewriteCond "%{HTTPS}" "off"
-    RewriteCond "%{SERVER_NAME}" atarilegend\.com
+    RewriteCond "%{SERVER_NAME}" atarilegend\.com [NC]
     RewriteRule (.*) https://%{SERVER_NAME}/$1 [R=301,L]
+
+    # Redirect root-domain traffic to www sub-domain
+    RewriteCond "%{HTTP_HOST}" ^atarilegend\.com$ [NC]
+    RewriteRule ^(.*)$ https://www.atarilegend.com/$1 [R=301,L]
 
     # Legacy site rewrite rules
     # Games
