@@ -28,9 +28,7 @@ class GameController extends Controller
                 return $developer->logo;
             });
 
-        // Collect all release scans and game scans in a single list
-        // This is temporary until all game scans are moved to releases
-        $releaseBoxscans = $game->releases
+        $boxscans = $game->releases
             ->flatMap(function ($release) {
                 return $release->boxscans
                     ->filter(function ($boxscan) {
@@ -41,6 +39,10 @@ class GameController extends Controller
                         return [
                             'release' => $release,
                             'boxscan' => asset('storage/images/game_release_scans/' . $boxscan->file),
+                            'preview' => route('games.releases.boxscan', [
+                                'release' => $release,
+                                'id'      => $boxscan->getKey(),
+                            ]),
                         ];
                     });
             });
@@ -151,7 +153,7 @@ class GameController extends Controller
         return view('games.show')->with([
             'game'              => $game,
             'developersLogos'   => $developersLogos,
-            'boxscans'          => $releaseBoxscans,
+            'boxscans'          => $boxscans,
             'interviews'        => $interviews,
             'reviews'           => $reviews,
             'similar'           => $similar,

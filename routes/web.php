@@ -17,6 +17,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameMusicController;
 use App\Http\Controllers\GameReleaseController;
+use App\Http\Controllers\GameReleaseResourcesController;
 use App\Http\Controllers\GameResourcesController;
 use App\Http\Controllers\GameSearchController;
 use App\Http\Controllers\GameVoteController;
@@ -74,6 +75,8 @@ Route::middleware('verified')->group(function () {
     Route::get('/games', [GameSearchController::class, 'index'])->name('games.index');
     Route::get('/games/search', [GameSearchController::class, 'search'])->name('games.search');
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
+    Route::get('/games/release/{release}/boxscan-{id}.webp', [GameReleaseResourcesController::class, 'boxscan'])
+        ->name('games.releases.boxscan');
 
     Route::get('/games/{id}', fn ($id) => redirect('/games/' . Game::findOrFail($id)->slug, 301));
     Route::get('/games/{game:slug}', [GameController::class, 'show'])->name('games.show');

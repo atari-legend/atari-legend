@@ -17,7 +17,7 @@
                             @foreach ($boxscans as $boxscan)
                                 <div class="carousel-item @if ($loop->first) active @endif">
                                     <a class="lightbox-link" href="{{ $boxscan['boxscan'] }}">
-                                        <img class="w-100 d-block" src="{{ $boxscan['boxscan'] }}" alt="Large scan of the game box">
+                                        <img class="w-100 d-block" src="{{ $boxscan['preview'] }}" alt="Large scan of the game box">
                                     </a>
                                     @if (isset($game) && $boxscan['release'] !== null)
                                         {{-- When displaing boxscans in the game page, display the specific

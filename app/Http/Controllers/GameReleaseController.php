@@ -32,6 +32,10 @@ class GameReleaseController extends Controller
                 return [
                     'release' => $release,
                     'boxscan' => asset('storage/images/game_release_scans/' . $boxscan->file),
+                    'preview' => route('games.releases.boxscan', [
+                        'release' => $release,
+                        'id'      => $boxscan->getKey(),
+                    ]),
                 ];
             });
 

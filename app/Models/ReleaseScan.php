@@ -14,4 +14,9 @@ class ReleaseScan extends Model
     {
         return Helper::filename($this->id, $this->imgext);
     }
+
+    public function getPathAttribute()
+    {
+        return 'images/game_release_scans/' . $this->file;
+    }
 }
