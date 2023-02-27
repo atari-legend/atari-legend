@@ -24,7 +24,7 @@ class GameReleaseResourcesController extends Controller
                 })->stream('webp');
             }, 200, [
                 'Cache-Control' => 'max-age=31536000',
-                'Content-Type' => 'image/webp'
+                'Content-Type'  => 'image/webp',
             ]);
         } else {
             abort('404');
