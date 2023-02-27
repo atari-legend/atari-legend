@@ -76,6 +76,8 @@
 
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
+    @yield('head')
+
 </head>
 
 <body>

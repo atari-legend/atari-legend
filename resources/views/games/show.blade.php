@@ -43,3 +43,7 @@
         <script src="{{ mix('js/game-music.js') }}"></script>
     @endif
 @endsection
+
+@section('head')
+    <meta name="atarilegend:id" content="{{ $game->getKey() }}">
+@endsection
