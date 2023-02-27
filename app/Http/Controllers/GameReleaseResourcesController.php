@@ -22,7 +22,10 @@ class GameReleaseResourcesController extends Controller
                     $constraint->aspectRatio();
                     $constraint->upSize();
                 })->stream('webp');
-            }, 200, ['Content-Type' => 'image/webp']);
+            }, 200, [
+                'Cache-Control' => 'max-age=31536000',
+                'Content-Type' => 'image/webp'
+            ]);
         } else {
             abort('404');
         }

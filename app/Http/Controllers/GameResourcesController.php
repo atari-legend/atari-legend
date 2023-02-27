@@ -13,7 +13,10 @@ class GameResourcesController extends Controller
             return $s->getKey() === $id && $s->imgext === $ext;
         });
         if ($screenshot) {
-            return response()->file(Storage::path('public/' . $screenshot->getPath('game')));
+            return response()
+                ->file(Storage::path('public/' . $screenshot->getPath('game')), [
+                    'Cache-Control' => 'max-age=31536000',
+                ]);
         } else {
             abort('404');
         }
