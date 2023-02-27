@@ -38,7 +38,7 @@ class GameController extends Controller
                     ->map(function ($boxscan) use ($release) {
                         return [
                             'release' => $release,
-                            'boxscan' => asset('storage/images/game_release_scans/' . $boxscan->file),
+                            'boxscan' => asset('storage/' . $boxscan->path),
                             'preview' => route('games.releases.boxscan', [
                                 'release' => $release,
                                 'id'      => $boxscan->getKey(),
