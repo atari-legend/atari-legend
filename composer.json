@@ -30,12 +30,13 @@
         "webfontkit/roboto": "1.0.x"
     },
     "require-dev": {
-        "spatie/laravel-ignition": "1.x.x",
+        "barryvdh/laravel-debugbar": "^3.8",
         "fakerphp/faker": "1.21.x",
         "mockery/mockery": "1.5.x",
         "nunomaduro/collision": "6.4.x",
         "overtrue/phplint": "6.1.x",
-        "phpunit/phpunit": "9.5.x"
+        "phpunit/phpunit": "9.5.x",
+        "spatie/laravel-ignition": "1.x.x"
     },
     "autoload": {
         "psr-4": {

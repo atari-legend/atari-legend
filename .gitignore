@@ -6,6 +6,7 @@
 /public/mix-manifest.json
 /public/*/vendor
 /storage/*.key
+/storage/debugbar
 /vendor
 .env
 .env.backup
