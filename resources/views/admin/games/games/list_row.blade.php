@@ -16,6 +16,7 @@
 
 <x-livewire-tables::table.cell>
     {{ $row->non_menu_releases->count() }}
+    (Menus: {{ $row->menu_releases->count() }})
 </x-livewire-tables::table.cell>
 
 <x-livewire-tables::table.cell>

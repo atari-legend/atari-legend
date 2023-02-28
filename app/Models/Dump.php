@@ -9,6 +9,10 @@ class Dump extends Model
     protected $table = 'dump';
     public $timestamps = false;
 
+    protected $casts = [
+        'date' => 'datetime:timestamp',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -37,5 +41,15 @@ class Dump extends Model
         return collect($name)
             ->join(' ')
             . '.zip';
+    }
+
+    public function getDownloadUrlAttribute()
+    {
+        return asset('storage/' . $this->path);
+    }
+
+    public function getPathAttribute()
+    {
+        return 'zips/games/' . $this->getKey() . '.zip';
     }
 }

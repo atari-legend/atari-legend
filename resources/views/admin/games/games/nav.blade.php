@@ -1,14 +1,14 @@
-<ul class="list-unstyled ps-3">
-    <li class="text-info"><strong>
-        {{ $game->game_name }}</strong></li>
+<ul class="list-unstyled ps-3 border-start">
+    <li>
+        <i class="fas fa-eye fa-fw text-muted"></i>
+        <a class="text-dark" href="{{ route('games.show', $game) }}">
+                View on main site
+        </a>
+    </li>
     <li>
         <i class="fa-regular fa-rectangle-list fa-fw text-muted"></i>
         <a class="@activeroute('admin.games.games.edit')"
             href="{{ route('admin.games.games.edit', $game) }}" }}">Details</a>
-    </li>
-    <li>
-        <span class="badge bg-light text-secondary">{{ $game->releases->count() }}</span>
-        <a class="disabled text-decoration-none text-muted" href="#">Releases</a>
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $game->individuals->count() }}</span>
@@ -61,9 +61,13 @@
         </a>
     </li>
     <li>
-        <i class="fas fa-eye fa-fw text-muted"></i>
-        <a class="text-dark" href="{{ route('games.show', $game) }}">
-            View on main site
-        </a>
+        <span class="badge bg-light text-secondary">{{ $game->releases->count() }}</span>
+        <a class="@activeroute('admin.games.releases.*')"
+            href="{{ route('admin.games.releases.index', $game) }}">Releases</a>
+
+        @isset ($release)
+            : <strong class="text-info">{{ $release->full_label }}</strong>
+            @include('admin.games.games.releases.nav')
+        @endif
     </li>
 </ul>

@@ -29,7 +29,7 @@
             </aside>
             <main class="pt-3">
 
-                    @include('admin.layouts.alert')
+                @include('admin.layouts.alert')
 
                 <x-admin.breadcrumbs :crumbs="$breadcrumbs ?? []" />
                 <hr>
@@ -39,7 +39,7 @@
     </div>
 
     @livewireScripts
-    <script src="{{ mix('js/app.js') }}"></script>
+    <!-- script src="{{ mix('js/app.js') }}"></script -->
     <script src="{{ mix('js/admin.js') }}"></script>
 
     {{-- SCEditor does not work as a NPM module --}}
