@@ -45,6 +45,21 @@
                 @enderror
             </div>
 
+            @if ($games->count())
+                <div class="alert alert-warning">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    There {{ Str::plural('is', $games->count())}} {{ $games->count() }}
+                    {{ Str::plural('game', $games->count()) }} with the same name:
+                    @foreach ($games as $game)
+                        <a href="{{ route('admin.games.games.edit', $game)}}">{{ $game->game_name}}</a>
+                        @if (!$loop->last),@endif
+                    @endforeach
+                    .
+                    Consider re-linking the menus to point to the game, rather than this
+                    software entry.
+                </div>
+            @endif
+
             <div class="mb-3">
                 <label for="demozoo" class="form-label">Demozoo ID</label>
                 <input type="number" class="form-control @error('demozoo') is-invalid @enderror"

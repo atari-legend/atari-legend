@@ -41,7 +41,6 @@ class MenuSetController extends Controller
 
     public function index()
     {
-
         // Get all sets with their total count of disks, and count of
         // missing disks
         $sets = DB::table('menu_sets')

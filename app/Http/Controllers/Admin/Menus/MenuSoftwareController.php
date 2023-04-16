@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Menus;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
+use App\Models\Game;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\View\Components\Admin\Crumb;
@@ -63,6 +64,11 @@ class MenuSoftwareController extends Controller
 
     public function edit(MenuSoftware $software)
     {
+        $games = [];
+        if ('game' === strtolower($software->menuSoftwareContentType->name)) {
+            $games = Game::where('game_name', '=', $software->name)->get();
+        }
+
         return view('admin.menus.software.edit')
             ->with([
                 'breadcrumbs' => [
@@ -71,6 +77,7 @@ class MenuSoftwareController extends Controller
                     new Crumb(route('admin.menus.software.edit', $software), $software->name),
                 ],
                 'software'    => $software,
+                'games'       => $games,
                 'types'       => MenuSoftwareContentType::all(),
             ]);
     }
