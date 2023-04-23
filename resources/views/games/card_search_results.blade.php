@@ -89,7 +89,7 @@
                         @if ($game->screenshots->isNotEmpty())
                             <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->game_name }}">
                         @else
-                            <img class="w-100 mb-2 bg-black" src="{{ asset('images/no-screenshot.svg') }}">
+                            <img class="w-100 mb-2 bg-black" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->game_name }}">
                         @endif
                     </a>
 
