@@ -64,7 +64,7 @@ class MenuSoftwareController extends Controller
 
     public function edit(MenuSoftware $software)
     {
-        $games = [];
+        $games = collect([]);
         if ('game' === strtolower($software->menuSoftwareContentType->name)) {
             $games = Game::where('game_name', '=', $software->name)->get();
         }
