@@ -12,6 +12,7 @@ use App\Models\Language;
 use App\Models\Location;
 use App\Models\PublisherDeveloper;
 use App\Models\Release;
+use App\Models\ReleaseAka;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -119,6 +120,44 @@ class GameReleaseController extends Controller
         ]);
 
         return redirect()->route('admin.games.releases.index', $release->game);
+    }
+
+    public function storeAka(Request $request, Game $game, Release $release)
+    {
+        $aka = ReleaseAka::create([
+            'game_release_id' => $release->getKey(),
+            'name'            => $request->aka,
+            'language_id'     => $request->language,
+        ]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Game Release',
+            'section_id'       => $release->getKey(),
+            'section_name'     => $release->game->game_name,
+            'sub_section'      => 'Release AKA',
+            'sub_section_id'   => $aka->getKey(),
+            'sub_section_name' => $aka->name,
+        ]);
+
+        return redirect()->route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]);
+    }
+
+    public function destroyAka(Game $game, Release $release, ReleaseAka $aka)
+    {
+        $aka->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Game Release',
+            'section_id'       => $aka->release->getKey(),
+            'section_name'     => $aka->release->game->game_name,
+            'sub_section'      => 'Release AKA',
+            'sub_section_id'   => $aka->getKey(),
+            'sub_section_name' => $aka->name,
+        ]);
+
+        return redirect()->route('admin.games.releases.show', ['game' => $aka->release->game, 'release' => $aka->release]);
     }
 
     private function validateRelease(Request $request)

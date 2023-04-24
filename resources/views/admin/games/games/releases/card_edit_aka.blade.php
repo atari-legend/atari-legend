@@ -3,7 +3,7 @@
         <h2 class="card-title fs-4">AKAs</h2>
 
         <form class="mb-4 row row-cols-lg-auto"
-            action="{{ route('admin.games.games.aka.store', $game) }}"
+            action="{{ route('admin.games.releases.aka.store', ['game' => $game, 'release' => $release]) }}"
             method="POST">
             @csrf
 
@@ -30,7 +30,7 @@
             </div>
         </form>
 
-        @if ($game->akas->isNotEmpty())
+        @if ($release->akas->isNotEmpty())
             <table class="table table-striped table-sm">
             <thead>
                 <tr>
@@ -40,12 +40,12 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($game->akas->sortBy('aka_name') as $aka)
+                @foreach($release->akas->sortBy('aka_name') as $aka)
                     <tr>
-                        <td>{{ $aka->aka_name }}</td>
+                        <td>{{ $aka->name }}</td>
                         <td>{{ $aka->language?->name ?? '-' }}</td>
                         <td>
-                            <form action="{{ route('admin.games.games.destroy.aka', ['game' => $game, 'aka' => $aka]) }}"
+                            <form action="{{ route('admin.games.releases.aka.destroy', ['game' => $game, 'release' => $release, 'aka' => $aka]) }}"
                                 method="POST"
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf
@@ -61,7 +61,7 @@
             </table>
         @else
             <p class="card-text text-center text-muted">
-                No AKA for this game yet.
+                No AKA for this release yet.
             </p>
         @endif
 

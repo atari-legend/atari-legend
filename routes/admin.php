@@ -88,6 +88,8 @@ Route::middleware('verified')->group(function () {
 
                         Route::prefix('/{release}')->name('releases.')->group(function () {
                             Route::resource('medias', ReleaseMediasController::class);
+                            Route::post('aka', [GameReleaseController::class, 'storeAka'])->name('aka.store');
+                            Route::delete('aka/{aka}', [GameReleaseController::class, 'destroyAka'])->name('aka.destroy');
                         });
                     });
 
