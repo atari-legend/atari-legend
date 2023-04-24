@@ -6,7 +6,9 @@ use App\Helpers\ChangelogHelper;
 use App\Helpers\ReleaseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
+use App\Models\Crew;
 use App\Models\Game;
+use App\Models\Language;
 use App\Models\Location;
 use App\Models\PublisherDeveloper;
 use App\Models\Release;
@@ -122,12 +124,15 @@ class GameReleaseController extends Controller
     private function validateRelease(Request $request)
     {
         $request->validate([
-            'year'       => 'nullable|numeric|between:1984,' . date('Y'),
-            'publisher'  => 'numeric',
-            'type'       => ['nullable', Rule::in(Release::TYPES)],
-            'license'    => ['nullable', Rule::in(Release::LICENSES)],
-            'status'     => ['nullable', Rule::in(Release::STATUSES)],
-            'locations'  => 'nullable|array',
+            'year'         => 'nullable|numeric|between:1984,' . date('Y'),
+            'publisher'    => 'numeric',
+            'type'         => ['nullable', Rule::in(Release::TYPES)],
+            'license'      => ['nullable', Rule::in(Release::LICENSES)],
+            'status'       => ['nullable', Rule::in(Release::STATUSES)],
+            'locations'    => 'nullable|array',
+            'crews'        => 'nullable|array',
+            'languages'    => 'nullable|array',
+            'distributors' => 'nullable|array',
         ]);
     }
 
@@ -158,11 +163,47 @@ class GameReleaseController extends Controller
                 $release->save();
             }
         }
+
+        if ($release->crews->pluck('id') !== $request->crews) {
+            $release->crews()->detach();
+            if ($request->crews) {
+                $release->crews()->saveMany(
+                    collect($request->crews)
+                        ->map(fn ($id) => Crew::findOrFail($id))
+                        ->all()
+                );
+                $release->save();
+            }
+        }
+
+        if ($release->languages->pluck('id') !== $request->languages) {
+            $release->languages()->detach();
+            if ($request->languages) {
+                $release->languages()->saveMany(
+                    collect($request->languages)
+                        ->map(fn ($id) => Language::findOrFail($id))
+                        ->all()
+                );
+                $release->save();
+            }
+        }
+
+        if ($release->distributors->pluck('id') !== $request->distributors) {
+            $release->distributors()->detach();
+            if ($request->distributors) {
+                $release->distributors()->saveMany(
+                    collect($request->distributors)
+                        ->map(fn ($id) => PublisherDeveloper::findOrFail($id))
+                        ->all()
+                );
+                $release->save();
+            }
+        }
     }
 
     private function getReferenceData(): array
     {
-        $publishers = PublisherDeveloper::orderBy('pub_dev_name')->get();
+        $companies = PublisherDeveloper::orderBy('pub_dev_name')->get();
         $licenses = Release::LICENSES;
         $types = Release::TYPES;
         $statuses = Release::STATUSES;
@@ -170,13 +211,19 @@ class GameReleaseController extends Controller
             ->orderBy('type', 'asc')
             ->orderBy('name', 'asc')
             ->get();
+        $crews = Crew::orderBy('crew_name')
+            ->get();
+        $languages = Language::orderBy('name')
+            ->get();
 
         return [
-            'publishers' => $publishers,
+            'companies'  => $companies,
             'licenses'   => $licenses,
             'types'      => $types,
             'statuses'   => $statuses,
             'locations'  => $locations,
+            'crews'      => $crews,
+            'languages'  => $languages,
         ];
     }
 }

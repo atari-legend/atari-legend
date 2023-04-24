@@ -48,7 +48,7 @@
                     <label for="publisher" class="form-label">Publisher</label>
                     <select class="form-select" @error('publisher') is-invalid @enderror name="publisher">
                         <option @if (old('publisher', $release?->publisher ?? null) === null) selected @endif value="">-</option>
-                        @foreach ($publishers as $publisher)
+                        @foreach ($companies as $publisher)
                             <option value="{{ $publisher->getKey() }}"
                                 @if (old('publisher', isset($release) ? $release->publisher?->getKey() : null) === $publisher->getKey()) selected @endif>
                                 {{ $publisher->pub_dev_name }}
@@ -142,8 +142,68 @@
 
                 </div>
                 <div class="col">
+                    <label for="languages" class="form-label">Languages</label>
+                    <select multiple class="form-select @error('languages') is-invalid @enderror"
+                        style="height: 10rem;" id="locations" name="languages[]">
+                        @foreach ($languages as $language)
+                            <option value="{{ $language->getKey() }}" @if (isset($release) && $release->languages?->contains($language)) selected @endif>
+                                {{ $language->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all languages.</div>
+
+                    @error('languages')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="mb-3 row row-cols-2">
+                <div class="col">
+                    <label for="crews" class="form-label">Crews</label>
+                    <select multiple class="form-select @error('crews') is-invalid @enderror"
+                        style="height: 10rem;" id="locations" name="crews[]">
+                        @foreach ($crews as $crew)
+                            <option value="{{ $crew->getKey() }}" @if (isset($release) && $release->crews?->contains($crew)) selected @endif>
+                                {{ $crew->crew_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all crews.</div>
+
+                    @error('crews')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>                
+                <div class="col">
+                    <label for="distributors" class="form-label">Distributors</label>
+                    <select multiple class="form-select @error('distributors') is-invalid @enderror"
+                        style="height: 10rem;" id="locations" name="distributors[]">
+                        @foreach ($companies as $distributor)
+                            <option value="{{ $distributor->getKey() }}" @if (isset($release) && $release->distributors?->contains($distributor)) selected @endif>
+                                {{ $distributor->pub_dev_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all crews.</div>
+
+                    @error('distributors')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>                
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col">
                     <label for="notes" class="form-label">Notes</label>
-                    <textarea class="form-control @error('notes') is-invalid @enderror" style="height: 10rem;"
+                    <textarea class="form-control @error('notes') is-invalid @enderror"
                         placeholder="Internal note for CPANEL, will not be shown on the site"
                         name="notes" id="notes">{{ old('notes', $release?->notes ?? '') }}</textarea>
 
@@ -152,7 +212,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>
+                </div>                
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>
