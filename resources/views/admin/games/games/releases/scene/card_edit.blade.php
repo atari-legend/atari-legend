@@ -7,7 +7,7 @@
                 <form action="{{ route('admin.games.releases.scene.update', ['game' => $release->game, 'release' => $release]) }}" method="POST">
                     @csrf
 
-                    <div class="mb-3 row row-cols-3">
+                    <div class="mb-3 row">
                         <label for="trainers" class="form-label">Trainer</label>
                         <select multiple class="form-select @error('trainers') is-invalid @enderror" style="height: 12rem;" id="trainers" name="trainers[]">
                             @foreach ($trainers as $trainer)

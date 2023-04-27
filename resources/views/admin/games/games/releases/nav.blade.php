@@ -6,7 +6,10 @@
         </a>
     </li>
     <li>
-        <a class="text-muted text-decoration-none">System info</a>
+        <a href="{{ route('admin.games.releases.system.index', ['game' => $release->game, 'release' => $release]) }}"
+            class="@activeroute('admin.games.releases.system.index')">
+            System Info
+        </a>
     </li>
     <li>
         <a href="{{ route('admin.games.releases.scene.index', ['game' => $release->game, 'release' => $release]) }}"
