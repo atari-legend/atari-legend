@@ -1,6 +1,7 @@
 <ul class="list-unstyled ps-4 border-start border-info">
     <li>
-        <a href="{{ route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]) }}">
+        <a href="{{ route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]) }}"
+            class="@activeroute('admin.games.releases.show')">
             Details
         </a>
     </li>
@@ -8,11 +9,15 @@
         <a class="text-muted text-decoration-none">System info</a>
     </li>
     <li>
-        <a class="text-muted text-decoration-none">Scene</a>
+        <a href="{{ route('admin.games.releases.scene.index', ['game' => $release->game, 'release' => $release]) }}"
+            class="@activeroute('admin.games.releases.scene.index')">
+            Scene
+        </a>
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $release->medias->pluck('dumps')->count() }}</span>
-        <a href="{{ route('admin.games.releases.medias.index', ['game' => $release->game, 'release' => $release]) }}">
+        <a href="{{ route('admin.games.releases.medias.index', ['game' => $release->game, 'release' => $release]) }}"
+            class="@activeroute('admin.games.releases.medias.index')">
             Media & Dumps
         </a>
     </li>

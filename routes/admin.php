@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseSceneController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Magazines\MagazineIndexTypesController;
 use App\Http\Controllers\Admin\Magazines\MagazineIssuesController;
@@ -87,6 +88,8 @@ Route::middleware('verified')->group(function () {
                         Route::resource('releases', GameReleaseController::class);
 
                         Route::prefix('/{release}')->name('releases.')->group(function () {
+                            Route::get('scene', [ReleaseSceneController::class, 'index'])->name('scene.index');
+                            Route::post('scene', [ReleaseSceneController::class, 'update'])->name('scene.update');
                             Route::resource('medias', ReleaseMediasController::class);
                             Route::post('aka', [GameReleaseController::class, 'storeAka'])->name('aka.store');
                             Route::delete('aka/{aka}', [GameReleaseController::class, 'destroyAka'])->name('aka.destroy');
