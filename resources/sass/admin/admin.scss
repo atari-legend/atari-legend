@@ -10,6 +10,9 @@
 // Country flags
 @import '~flag-icons/sass/flag-icons';
 
+@import '~filepond/dist/filepond';
+@import '~filepond-plugin-image-preview/dist/filepond-plugin-image-preview';
+
 @import 'layout';
 @import 'aside';
 

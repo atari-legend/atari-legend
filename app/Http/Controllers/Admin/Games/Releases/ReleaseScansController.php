@@ -11,6 +11,8 @@ use App\Models\Release;
 use App\Models\ReleaseScan;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ReleaseScansController extends Controller
 {
@@ -39,20 +41,19 @@ class ReleaseScansController extends Controller
 
     public function update(Game $game, Release $release, ReleaseScan $scan, Request $request)
     {
-        if ($scan->type !== $request->type) {
-            $scan->type = $request->type;
-            $scan->save();
+        $scan->type = $request->type;
+        $scan->notes = $request->notes;
+        $scan->save();
 
-            ChangelogHelper::insert([
-                'action'           => Changelog::UPDATE,
-                'section'          => 'Game Release',
-                'section_id'       => $release->getKey(),
-                'section_name'     => $release->game->game_name,
-                'sub_section'      => 'Scan',
-                'sub_section_id'   => $scan->getKey(),
-                'sub_section_name' => $scan->type,
-            ]);
-        }
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Game Release',
+            'section_id'       => $release->getKey(),
+            'section_name'     => $release->game->game_name,
+            'sub_section'      => 'Scan',
+            'sub_section_id'   => $scan->getKey(),
+            'sub_section_name' => $scan->type,
+        ]);
 
         return redirect()->route('admin.games.releases.scans.index', [
             'game'    => $release->game,
@@ -63,6 +64,7 @@ class ReleaseScansController extends Controller
     public function destroy(Game $game, Release $release, ReleaseScan $scan, Request $request)
     {
         $scan->delete();
+        Storage::disk('public')->delete($scan->path);
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
@@ -73,6 +75,43 @@ class ReleaseScansController extends Controller
             'sub_section_id'   => $scan->getKey(),
             'sub_section_name' => $scan->type,
         ]);
+
+        return redirect()->route('admin.games.releases.scans.index', [
+            'game'    => $release->game,
+            'release' => $release,
+        ]);
+    }
+
+    public function store(Game $game, Release $release, Request $request)
+    {
+        foreach ($request->file as $file) {
+            if ($file === null) {
+                continue;
+            }
+
+            $filepond = app(\Sopamo\LaravelFilepond\Filepond::class);
+            $path = $filepond->getPathFromServerId($file);
+            $fullpath = Storage::path($path);
+            $ext = File::extension($fullpath);
+
+            $scan = ReleaseScan::create([
+                'game_release_id' => $release->getKey(),
+                'imgext'          => $ext,
+                'type'            => ReleaseScan::TYPE_OTHER,
+            ]);
+
+            Storage::disk('public')->put($scan->path, Storage::get($path));
+
+            ChangelogHelper::insert([
+                'action'           => Changelog::INSERT,
+                'section'          => 'Game Release',
+                'section_id'       => $release->getKey(),
+                'section_name'     => $release->game->game_name,
+                'sub_section'      => 'Scan',
+                'sub_section_id'   => $scan->getKey(),
+                'sub_section_name' => $scan->type,
+            ]);
+        }
 
         return redirect()->route('admin.games.releases.scans.index', [
             'game'    => $release->game,

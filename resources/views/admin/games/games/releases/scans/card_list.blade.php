@@ -4,8 +4,8 @@
 
         <div class="row row-cols-4 align-items-end">
             @forelse ($release->boxscans as $scan)
-                <div class="col">
-                    <form class="text-center mb-3"
+                <div class="col mb-5">
+                    <form class="text-center mb-1"
                         action="{{ route('admin.games.releases.scans.destroy', ['game' => $release->game, 'release' => $release, 'scan' => $scan]) }}"
                         method="POST" onsubmit="javascript:return confirm('This scan will be deleted')">
                         @csrf
@@ -18,7 +18,7 @@
                         @csrf
                         @method('PUT')
 
-                        <img class="w-50 border border-dark mb-3" src="{{ $scan->url }}">
+                        <img class="w-50 border border-dark mb-1" src="{{ $scan->url }}">
 
                         <select class="form-select mb-1" name="type">
                             @foreach (\App\Models\ReleaseScan::TYPES as $type)
@@ -27,7 +27,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        <input class="form-control mb-1" placeholder="Notes (e.g. 'Publisher catalog')" value="{{ $scan->notes }}">
+                        <input class="form-control mb-1" placeholder="Notes (e.g. 'Publisher catalog')" name="notes" value="{{ $scan->notes }}">
                         <button class="btn btn-success">Update</button>
                     </form>
 

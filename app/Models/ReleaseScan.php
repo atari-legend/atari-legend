@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReleaseScan extends Model
 {
-    const TYPES = ['Box front', 'Box back', 'Goodie', 'Other'];
+    const TYPE_OTHER = 'Other';
+    const TYPES = ['Box front', 'Box back', 'Goodie', ReleaseScan::TYPE_OTHER];
 
     protected $table = 'game_release_scan';
     public $timestamps = false;
+    protected $fillable = ['game_release_id', 'imgext', 'type'];
 
     public function getFileAttribute()
     {

@@ -24,8 +24,8 @@ class SecurityHeaders
         $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
 
         $csp = collect([
-            "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data:",
-            "img-src 'self' data: *.ytimg.com archive.org *.archive.org",
+            "default-src 'self' matomo.atarilegend.com hcaptcha.com *.hcaptcha.com 'unsafe-inline' 'unsafe-eval' data: blob:",
+            "img-src 'self' data: blob: *.ytimg.com archive.org *.archive.org",
             'frame-src *.hcaptcha.com www.youtube-nocookie.com',
         ]);
 
