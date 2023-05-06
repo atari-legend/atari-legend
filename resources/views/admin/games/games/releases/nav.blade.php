@@ -26,7 +26,8 @@
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $release->boxscans->count() }}</span>
-        <a class="text-muted text-decoration-none">
+        <a href="{{ route('admin.games.releases.scans.index', ['game' => $release->game, 'release' => $release]) }}"
+            class="@activeroute('admin.games.releases.scans.index')">
             Scans
         </a>
     </li>

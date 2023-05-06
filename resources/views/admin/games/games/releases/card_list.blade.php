@@ -11,6 +11,7 @@
                     <th>Locations</th>
                     <th>Menu</th>
                     <th>Dumps</th>
+                    <th>Scans</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -50,7 +51,11 @@
                             @endif
                         </td>
                         <td class="{{ $release->dumps->count() ? '' : 'text-muted' }}">
-                            <i title="Dumps" class="far fa-save"></i> &times; {{ $release->dumps->count() }}</td>
+                            <i title="Dumps" class="far fa-save"></i> &times; {{ $release->dumps->count() }}
+                        </td>
+                        <td class="">
+                            {{ $release->boxscans->count() }}
+                        </td>
                         <td>
                             @if ($release->menuDiskContents->isNotEmpty())
                                 <a class="btn btn-link"
