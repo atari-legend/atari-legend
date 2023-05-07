@@ -1,0 +1,26 @@
+.filepond--root {
+    border: none;
+
+    .filepond--drop-label {
+        border: dashed 1px black;
+        background-color: $gray-200;
+    }
+
+    .filepond--list-scroller {
+        margin-top: 5rem;
+    }
+
+    .filepond--item {
+        margin-top: 1rem;
+        width: calc(23% - 0.5em);
+    }
+
+    [data-filepond-item-state*='error'] .filepond--item-panel,
+    [data-filepond-item-state*='invalid'] .filepond--item-panel {
+        background-color: $danger;
+    }
+
+    [data-filepond-item-state='processing-complete'] .filepond--item-panel {
+        background-color: $success;
+    }
+}
