@@ -55,41 +55,42 @@
                     {{ Str::plural('Author', $game->individuals->count())}}
                 </div>
                 <div class="col-8">
-                    @foreach ($game->individuals->sortBy('pivot.role.name') as $individual)
+                    {{-- Group by role to avoid repeating individuals with multiple roles --}}
+                    @foreach ($game->individuals->groupBy('ind_name') as $individuals)
                         <div class="mb-1">
-                            <a href="{{ route('games.search', ['individual_id' => $individual->ind_id]) }}">{{ $individual->ind_name }}</a>
+                            <a href="{{ route('games.search', ['individual_id' => $individuals->first()->ind_id]) }}">{{ $individuals->first()->ind_name }}</a>
                             @contributor
-                                <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individual) }}">
+                                <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individuals->first()) }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                                 </a>
                             @endcontributor
                             {{-- We have to use trim() here because the profile column in the database contains 'empty' profiles full of spaces --}}
-                            @if ($individual->text !== null && $individual->text->ind_profile !== null && trim($individual->text->ind_profile) !== '')
-                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $individual->ind_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $individual->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
+                            @if ($individuals->first()->text !== null && $individuals->first()->text->ind_profile !== null && trim($individuals->first()->text->ind_profile) !== '')
+                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $individuals->first()->ind_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $individuals->first()->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
-                            @if ($individual->text !== null && $individual->text->file !== null)
-                                <a class="lightbox-link d-inline-block" href="{{ $individual->text->image_url }}">
+                            @if ($individuals->first()->text !== null && $individuals->first()->text->file !== null)
+                                <a class="lightbox-link d-inline-block" href="{{ $individuals->first()->text->image_url }}">
                                     <i class="far fa-image"></i>
                                 </a>
                             @endif
-                            @if ($individual->interviews->isNotEmpty())
-                                <a class="d-inline-block" href="{{ route('interviews.show', ['interview' => $individual->interviews->first()]) }}">
+                            @if ($individuals->first()->interviews->isNotEmpty())
+                                <a class="d-inline-block" href="{{ route('interviews.show', ['interview' => $individuals->first()->interviews->first()]) }}">
                                     <i class="far fa-newspaper"></i>
                                 </a>
                             @endif
                             <br>
-                            @if ($individual->aka_list->isNotEmpty())
+                            @if ($individuals->first()->aka_list->isNotEmpty())
                                 <small class="text-muted">
-                                    <abbr title="Also known as">aka.</abbr> {{ $individual->aka_list->join(', ')}}
+                                    <abbr title="Also known as">aka.</abbr> {{ $individuals->first()->aka_list->join(', ')}}
                                 </small>
                                 <br>
                             @endif
-                            @if ($individual->pivot->role !== null)
-                                <small class="text-muted">{{ $individual->pivot->role->name }}</small>
-                            @endif
-                            @if ($individual->text !== null && $individual->text->ind_profile !== null && $individual->text->ind_profile !== '')
-                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individual->ind_id }}">
-                                    {!! Helper::bbCode(nl2br(e($individual->text->ind_profile), false)) !!}
+                            @foreach ($individuals->whereNotNull('pivot.role.name')->sortBy('pivot.role.name') as $individual)
+                                <small class="text-muted">{{ $individual->pivot->role->name }}@if (!$loop->last),@endif</small>
+                            @endforeach
+                            @if ($individuals->first()->text !== null && $individuals->first()->text->ind_profile !== null && $individuals->first()->text->ind_profile !== '')
+                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individuals->first()->ind_id }}">
+                                    {!! Helper::bbCode(nl2br(e($individuals->first()->text->ind_profile), false)) !!}
                                 </p>
                             @endif
                         </div>
