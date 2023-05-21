@@ -28,7 +28,7 @@
                             @endforeach
                         </select>
                         <input class="form-control mb-1" placeholder="Notes (e.g. 'Publisher catalog')" name="notes" value="{{ $scan->notes }}">
-                        <button class="btn btn-success">Update</button>
+                        <button class="btn btn-outline-success">Update</button>
                     </form>
 
                 </div>

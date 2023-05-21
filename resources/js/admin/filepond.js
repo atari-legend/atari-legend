@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     filepond.registerPlugin(filePondPluginFileValidateType);
 
     document.querySelectorAll('input.filepond').forEach(el => {
-        var filetypes = el.dataset.filepondFiletypes || '';
+        var filetypes = el.dataset.filepondFiletypes || '*/*';
         var pond = filepond.create(el, {
             'acceptedFileTypes': filetypes.split(','),
             'chunkUploads': true,

@@ -77,6 +77,30 @@ class ReleaseMediasController extends Controller
         ]);
     }
 
+    public function store(Game $game, Release $release)
+    {
+        $floppyType = MediaType::where('name', 'like', '%floppy%')->first();
+        $media = new Media();
+        $media->type()->associate($floppyType);
+        $media->release()->associate($release);
+        $media->save();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Game Release',
+            'section_id'       => $media->release->getKey(),
+            'section_name'     => $media->release->game->game_name,
+            'sub_section'      => 'Media',
+            'sub_section_id'   => $media->getKey(),
+            'sub_section_name' => $media->release->game->game_name,
+        ]);
+
+        return redirect()->route('admin.games.releases.medias.index', [
+            'game'    => $release->game,
+            'release' => $release,
+        ]);
+    }
+
     public function destroy(Media $media)
     {
         foreach ($media->dumps as $dump) {

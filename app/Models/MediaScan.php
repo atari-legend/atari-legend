@@ -10,6 +10,8 @@ class MediaScan extends Model
     protected $table = 'media_scan';
     public $timestamps = false;
 
+    protected $fillable = ['imgext'];
+
     public function getFileAttribute()
     {
         return Helper::filename($this->id, $this->imgext);
@@ -18,6 +20,11 @@ class MediaScan extends Model
     public function type()
     {
         return $this->belongsTo(MediaScanType::class, 'media_scan_type_id');
+    }
+
+    public function media()
+    {
+        return $this->belongsTo(Media::class);
     }
 
     public function getUrlAttribute()

@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasScansController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseScansController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSceneController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemInfoController;
@@ -98,6 +99,10 @@ Route::middleware('verified')->group(function () {
                             Route::delete('aka/{aka}', [GameReleaseController::class, 'destroyAka'])->name('aka.destroy');
                             Route::resource('medias', ReleaseMediasController::class);
                             Route::resource('scans', ReleaseScansController::class);
+
+                            Route::prefix('/{media}')->name('medias.')->group(function () {
+                                Route::resource('scans', ReleaseMediasScansController::class);
+                            });
                         });
                     });
 

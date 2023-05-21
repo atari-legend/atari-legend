@@ -84,12 +84,13 @@ class ReleaseScansController extends Controller
 
     public function store(Game $game, Release $release, Request $request)
     {
+        $filepond = app(\Sopamo\LaravelFilepond\Filepond::class);
+
         foreach ($request->file as $file) {
             if ($file === null) {
                 continue;
             }
 
-            $filepond = app(\Sopamo\LaravelFilepond\Filepond::class);
             $path = $filepond->getPathFromServerId($file);
             $fullpath = Storage::path($path);
             $ext = File::extension($fullpath);
