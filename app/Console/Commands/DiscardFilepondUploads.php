@@ -39,7 +39,7 @@ class DiscardFilepondUploads extends Command
 
         $expiry = $this->option('expiry') ?: 1;
         $maxDate = Carbon::now()->subDays($expiry);
-        $this->info("Discarding Filepond uploads older than {$expiry} days (before {$maxDate})");
+        $this->info("Discarding Filepond uploads older than {$expiry} days (before {$maxDate})", 'v');
 
         collect(Storage::disk(config('filepond.temporary_files_disk'))
             ->directories(config('filepond.temporary_files_path')))
@@ -50,12 +50,12 @@ class DiscardFilepondUploads extends Command
                     $msg = "Folder {$dir}' last modified {$lm} is before {$maxDate},";
                     if ($this->option('delete')) {
                         Storage::disk(config('filepond.temporary_files_disk'))->deleteDirectory($dir);
-                        $this->info("{$msg} deleted");
+                        $this->info("{$msg} deleted", 'v');
                     } else {
-                        $this->info("{$msg} would have been deleted");
+                        $this->info("{$msg} would have been deleted", 'v');
                     }
                 } else {
-                    $this->info("Folder '{$dir}' last modified {$lm} is after {$maxDate}, skipping");
+                    $this->info("Folder '{$dir}' last modified {$lm} is after {$maxDate}, skipping", 'v');
                 }
             });
 
