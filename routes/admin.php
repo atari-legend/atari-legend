@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\Games\GameVideoController;
 use App\Http\Controllers\Admin\Games\IssuesController;
 use App\Http\Controllers\Admin\Games\MusicController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasDumpsController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasScansController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseScansController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSceneController;
@@ -102,6 +103,7 @@ Route::middleware('verified')->group(function () {
 
                             Route::prefix('/{media}')->name('medias.')->group(function () {
                                 Route::resource('scans', ReleaseMediasScansController::class);
+                                Route::resource('dumps', ReleaseMediasDumpsController::class);
                             });
                         });
                     });

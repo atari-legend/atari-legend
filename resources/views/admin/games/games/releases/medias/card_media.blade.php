@@ -44,8 +44,8 @@
                     <div class="col">
                             <button class="btn btn-success">Save</button>
                             <button class="btn btn-danger ms-2" name="delete"
-                            onclick="javascript:return confirm('This media will be deleted')"
-                            value="delete">Delete media</button>
+                                onclick="javascript:return confirm('This media will be deleted')" value="delete">Delete
+                                media</button>
                     </div>
                 </form>
             </div>
@@ -77,8 +77,7 @@
                                         'media' => $media,
                                         'scan' => $scan,
                                     ]) }}"
-                                    onsubmit="javascript:return confirm('This scan will be deleted')"
-                                    method="POST">
+                                    onsubmit="javascript:return confirm('This scan will be deleted')" method="POST">
                                     @csrf
                                     @method('DELETE')
 
@@ -133,8 +132,8 @@
                                 <th>Format</th>
                                 <th>Date added</th>
                                 <th>By</th>
-                                <th>Notes</th>
                                 <th>Size</th>
+                                <th>Notes</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -144,17 +143,40 @@
                                     <td>{{ $dump->format }}</td>
                                     <td>{{ $dump->date->toDayDateTimeString() }}</td>
                                     <td>{{ Helper::user($dump->user) }}</td>
-                                    <td>{{ $dump->info }}</td>
                                     <td>{{ Helper::fileSize($dump->size) }}</td>
                                     <td>
+                                        <form method="POST"
+                                            action="{{ route('admin.games.releases.medias.dumps.update', [
+                                                'game' => $release->game,
+                                                'release' => $release,
+                                                'media' => $media,
+                                                'dump' => $dump,
+                                            ]) }}">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <div class="input-group">
+                                                <textarea class="form-control" name="info">{{ $dump->info }}</textarea>
+                                                <button class="btn btn-outline-success">Update</button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td class="ps-3">
                                         <a href="{{ $dump->download_url }}" download="{{ $dump->download_filename }}"
                                             class="d-inline-block">
                                             <i class="fas fa-download"></i>
                                         </a>
                                         <form method="POST" class="d-inline"
+                                            action="{{ route('admin.games.releases.medias.dumps.destroy', [
+                                                'game' => $release->game,
+                                                'release' => $release,
+                                                'media' => $media,
+                                                'dump' => $dump,
+                                            ]) }}"
                                             onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                             @csrf
                                             @method('DELETE')
+
                                             <button title="Delete dump" class="btn">
                                                 <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                             </button>
