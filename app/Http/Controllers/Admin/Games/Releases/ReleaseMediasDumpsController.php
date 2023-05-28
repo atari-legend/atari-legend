@@ -29,7 +29,6 @@ class ReleaseMediasDumpsController extends Controller
 
             $path = $filepond->getPathFromServerId($file);
             $fullpath = Storage::path($path);
-            $ext = File::extension($fullpath);
 
             $format = DumpHelper::detectFormat($fullpath);
 
@@ -45,6 +44,7 @@ class ReleaseMediasDumpsController extends Controller
             $dump->save();
 
             DumpHelper::storeDump($dump, Storage::path($path));
+            Storage::delete($path);
 
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,

@@ -102,6 +102,7 @@ class ReleaseScansController extends Controller
             ]);
 
             Storage::disk('public')->put($scan->path, Storage::get($path));
+            Storage::delete($path);
 
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,
