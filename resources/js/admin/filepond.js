@@ -10,9 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     filepond.registerPlugin(filePondPluginFileValidateType);
 
     document.querySelectorAll('input.filepond').forEach(el => {
-        var filetypes = el.dataset.filepondFiletypes || '*/*';
-        var pond = filepond.create(el, {
-            'acceptedFileTypes': filetypes.split(','),
+
+        var opts = {
             'chunkUploads': true,
             'server': {
                 url: '/admin/filepond/api',
@@ -20,7 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 revert: '/process',
                 patch: '?patch=',
             }
-        });
+        };
+
+        var filetypes = el.dataset.filepondFiletypes;
+        if (filetypes) {
+            opts.acceptedFileTypes = filetypes.split(',');
+        }
+
+        var pond = filepond.create(el, opts);
 
         // If a submit button selector was set in data attributes,
         // enable it when all files have been processed (the first time)

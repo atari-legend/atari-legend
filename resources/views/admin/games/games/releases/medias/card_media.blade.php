@@ -124,6 +124,23 @@
 
         <div class="row">
             <h3>Dumps</h3>
+            <div class="row mb-3">
+                <form
+                    action="{{ route('admin.games.releases.medias.dumps.store', [
+                        'game' => $release->game,
+                        'release' => $release,
+                        'media' => $media,
+                    ]) }}"
+                    onsubmit="javascript:alert('Processing large dumps may take time, please be patient.')"
+                    method="POST">
+                    @csrf
+                    <input type="file" name="file[]" multiple class="filepond"
+                        data-filepond-button="[data-upload-dump='{{ $media->getKey() }}']">
+                    <button class="btn btn-success" data-upload-dump="{{ $media->getKey() }}" disabled>
+                        Upload all files
+                    </button>
+                </form>
+            </div>
             @if ($media->dumps->isNotEmpty())
                 <div class="col">
                     <table class="table table-sm table-striped table-hover">

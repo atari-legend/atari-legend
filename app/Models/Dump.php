@@ -15,6 +15,8 @@ class Dump extends Model
         'date' => 'datetime:timestamp',
     ];
 
+    protected $fillable = ['format', 'sha512', 'date', 'size'];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
