@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dump extends Model
 {
-    const FORMATS = ['STX', 'MSA', 'RAW', 'SCP', 'ST'];
+    const FORMATS = ['MSA', 'SCP', 'ST', 'STX'];
 
     protected $table = 'dump';
     public $timestamps = false;

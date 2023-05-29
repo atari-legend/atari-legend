@@ -60,7 +60,10 @@ class DumpHelper
         $zip = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE);
 
-        $zip->addFile($path, $dump->getKey() . '.' . strtolower($dump->format));
+        $filenameInZip = $dump->getKey() . '.' . strtolower($dump->format);
+        $zip->addFile($path, $filenameInZip);
+        // Use compression level of 5 to reduce zipping time
+        $zip->setCompressionName($filenameInZip, ZipArchive::CM_DEFLATE, 5);
         $zip->close();
     }
 }

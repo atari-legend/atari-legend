@@ -124,7 +124,7 @@
 
         <div class="row">
             <h3>Dumps</h3>
-            <div class="row mb-3">
+            <div class="row mb-4">
                 <form
                     action="{{ route('admin.games.releases.medias.dumps.store', [
                         'game' => $release->game,
@@ -139,6 +139,10 @@
                     <button class="btn btn-success" data-upload-dump="{{ $media->getKey() }}" disabled>
                         Upload all files
                     </button>
+                    <span class="ms-2 text-muted">
+                        The following dump formats are accepted: <strong>{{ join(', ', \App\Models\Dump::FORMATS) }}</strong>.
+                        You can also upload a ZIP containing one or more dumps.
+                    </span>
                 </form>
             </div>
             @if ($media->dumps->isNotEmpty())
