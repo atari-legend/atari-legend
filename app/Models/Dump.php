@@ -63,8 +63,8 @@ class Dump extends Model
 
     public function getTrackPictureUrlAttribute()
     {
-        if (Storage::disk('public')->exists(Dump::TRACKPICTURES_DIRECTORY.'/' . $this->getKey() . '.png')) {
-            return asset('storage/'.Dump::TRACKPICTURES_DIRECTORY.'/' . $this->getKey() . '.png');
+        if (Storage::disk('public')->exists(Dump::TRACKPICTURES_DIRECTORY . '/' . $this->getKey() . '.png')) {
+            return asset('storage/' . Dump::TRACKPICTURES_DIRECTORY . '/' . $this->getKey() . '.png');
         } else {
             return null;
         }

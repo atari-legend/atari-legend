@@ -123,7 +123,7 @@ class DumpHelper
                 if ($rc === 0) {
                     // Convert BMP to PNG and store it
                     ImageManagerStatic::make($tmpBmp)
-                        ->save(Storage::disk('public')->path(Dump::TRACKPICTURES_DIRECTORY.'/' . $dump->getKey() . '.png'));
+                        ->save(Storage::disk('public')->path(Dump::TRACKPICTURES_DIRECTORY . '/' . $dump->getKey() . '.png'));
 
                     $success = true;
                 } else {
