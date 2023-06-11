@@ -14,4 +14,5 @@ return [
     'stonish' => [
         'root' => env('STONISH_ROOT'),
     ],
+    'hxcfe' => env('AL_HXCFE', '/hxcfe'),
 ];

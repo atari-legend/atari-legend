@@ -161,7 +161,14 @@
                         <tbody>
                             @foreach ($media->dumps as $dump)
                                 <tr>
-                                    <td>{{ $dump->format }}</td>
+                                    <td>
+                                        {{ $dump->format }}
+                                        @if ($dump->track_picture_url)
+                                            <a class="lightbox-link ms-2" href="{{ $dump->track_picture_url }}" target="_blank">
+                                                <img src="{{ $dump->track_picture_url }}" style="height: 2rem;" class="border border-secondary" alt="Track analysis picture">
+                                            </a>
+                                        @endif
+                                    </td>
                                     <td>{{ $dump->date->toDayDateTimeString() }}</td>
                                     <td>{{ Helper::user($dump->user) }}</td>
                                     <td>{{ Helper::fileSize($dump->size) }}</td>

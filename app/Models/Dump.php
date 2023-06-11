@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Dump extends Model
 {
@@ -12,10 +13,11 @@ class Dump extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'date' => 'datetime:timestamp',
+        'date'          => 'datetime:timestamp',
+        'track_picture' => 'boolean',
     ];
 
-    protected $fillable = ['format', 'sha512', 'date', 'size'];
+    protected $fillable = ['format', 'sha512', 'date', 'size', 'track_picture'];
 
     public function user()
     {
@@ -55,5 +57,14 @@ class Dump extends Model
     public function getPathAttribute()
     {
         return 'zips/games/' . $this->getKey() . '.zip';
+    }
+
+    public function getTrackPictureUrlAttribute()
+    {
+        if (Storage::disk('public')->exists('images/dump_trackpictures/' . $this->getKey() . '.png')) {
+            return asset('storage/images/dump_trackpictures/' . $this->getKey() . '.png');
+        } else {
+            return null;
+        }
     }
 }

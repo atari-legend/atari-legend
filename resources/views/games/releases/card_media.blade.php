@@ -4,14 +4,14 @@
     </div>
 
     @if ($release->medias->isNotEmpty())
-        <div class="striped">
+        <div class="striped lightbox-gallery">
             @foreach ($release->medias as $media)
                 <div class="card-body">
                     <div class="mb-2 d-flex">
-                        @isset ($mediaTypeIcons[$media->type->id])
+                        @isset ($mediaTypeIcons[$media->type?->id])
                             <i class="{{ $mediaTypeIcons[$media->type->id] }} me-1"></i>
                         @endif
-                        <span class="badge bg-secondary">{{ $media->type->name }}</span>
+                        <span class="badge bg-secondary">{{ $media->type?->name }}</span>
                         @isset ($media->label) <span class="ms-1">{{ $media->label }}</span> @endif
                     </div>
 
@@ -19,33 +19,40 @@
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>Format</th>
-                                    <th class="d-none d-sm-table-cell">SHA-512</th>
-                                    <th>Size</th>
-                                    <th class="d-none d-sm-table-cell">Added</th>
-                                    <th class="d-none d-sm-table-cell">By</th>
-                                    <th>Info</th>
+                                    <th style="width: 5%;"></th>
+                                    <th style="width: 10%;" class="ps-2">Format</th>
+                                    <th style="width: 10%;" class="ps-2 d-none d-sm-table-cell">SHA-512</th>
+                                    <th style="width: 10%;" class="ps-2">Size</th>
+                                    <th style="width: 15%;" class="ps-2 d-none d-sm-table-cell">Added</th>
+                                    <th style="width: 10%;" class="d-none d-sm-table-cell">By</th>
+                                    <th style="width: 40%;">Info</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($media->dumps as $dump)
-                                    <tr>
-                                        <td>
+                                    <tr class="align-middle">
+                                        <td class="ps-2 text-nowrap">
                                             <a href="{{ $dump->download_url }}"
                                                 download="{{ $dump->download_filename }}">
                                                 <i class="fas fa-download"></i>
                                             </a>
                                         </td>
-                                        <td>{{ $dump->format }}</td>
-                                        <td class="d-none d-sm-table-cell">
+                                        <td class="ps-2 text-nowrap">
+                                            <span class="align-middle">{{ $dump->format }}</span>
+                                            @if ($dump->track_picture_url)
+                                                <a class="lightbox-link ms-2" href="{{ $dump->track_picture_url }}">
+                                                    <img src="{{ $dump->track_picture_url }}" style="height: 2rem;" alt="Track analysis picture">
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td class="ps-2 text-nowrap d-none d-sm-table-cell">
                                             <abbr title="{{ $dump->sha512 }}">
                                                 {{ Str::limit($dump->sha512, 7, '') }}
                                                 <a class="ms-1" data-copy-text="{{ $dump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
                                             </abbr>
                                         </td>
-                                        <td>{{ Helper::fileSize($dump->size) }}</td>
-                                        <td class="d-none d-sm-table-cell">{{ $dump->date->format('F j, Y') }}
+                                        <td class="ps-2 text-nowrap">{{ Helper::fileSize($dump->size) }}</td>
+                                        <td class="ps-2 text-nowrap d-none d-sm-table-cell">{{ $dump->date->format('F j, Y') }}
                                         <td class="d-none d-sm-table-cell">{{ Helper::user($dump->user) }}</td>
                                         <td>{{ $dump->info }}</td>
                                     </tr>
