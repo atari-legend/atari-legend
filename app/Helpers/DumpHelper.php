@@ -94,6 +94,8 @@ class DumpHelper
     {
         $success = false;
 
+        Storage::disk('public')->makeDirectory(Dump::TRACKPICTURES_DIRECTORY);
+
         if (file_exists(config('al.hxcfe'))) {
             $tmpDump = sys_get_temp_dir() . '/' . $dump->getKey() . '.' . $dump->format;
             DumpHelper::getDump($dump, $tmpDump);
@@ -121,7 +123,7 @@ class DumpHelper
                 if ($rc === 0) {
                     // Convert BMP to PNG and store it
                     ImageManagerStatic::make($tmpBmp)
-                        ->save(Storage::disk('public')->path('images/dump_trackpictures/' . $dump->getKey() . '.png'));
+                        ->save(Storage::disk('public')->path(Dump::TRACKPICTURES_DIRECTORY.'/' . $dump->getKey() . '.png'));
 
                     $success = true;
                 } else {

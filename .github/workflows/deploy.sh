@@ -54,5 +54,6 @@ fi
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.2-cli artisan storage:link"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.2-cli artisan migrate --force"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.2-cli artisan config:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.2-cli artisan optimize:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.2-cli artisan optimize"

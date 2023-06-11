@@ -9,6 +9,8 @@ class Dump extends Model
 {
     const FORMATS = ['MSA', 'SCP', 'ST', 'STX'];
 
+    const TRACKPICTURES_DIRECTORY = 'images/dump_trackpictures';
+
     protected $table = 'dump';
     public $timestamps = false;
 
@@ -61,8 +63,8 @@ class Dump extends Model
 
     public function getTrackPictureUrlAttribute()
     {
-        if (Storage::disk('public')->exists('images/dump_trackpictures/' . $this->getKey() . '.png')) {
-            return asset('storage/images/dump_trackpictures/' . $this->getKey() . '.png');
+        if (Storage::disk('public')->exists(Dump::TRACKPICTURES_DIRECTORY.'/' . $this->getKey() . '.png')) {
+            return asset('storage/'.Dump::TRACKPICTURES_DIRECTORY.'/' . $this->getKey() . '.png');
         } else {
             return null;
         }
