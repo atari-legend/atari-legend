@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input.filepond').forEach(el => {
 
         var opts = {
-            'chunkUploads': true,
+            'chunkUploads': false,  // Not working properly for some reason
             'server': {
                 url: '/admin/filepond/api',
                 process: '/process',
