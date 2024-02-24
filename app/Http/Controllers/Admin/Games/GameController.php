@@ -10,6 +10,7 @@ use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\GameSeries;
+use App\Models\GameVs;
 use App\Models\Genre;
 use App\Models\Language;
 use App\Models\Port;
@@ -242,6 +243,44 @@ class GameController extends Controller
         ]);
 
         return redirect()->route('admin.games.games.edit', $aka->game);
+    }
+
+    public function storeVs(Request $request, Game $game)
+    {
+        $vs = GameVs::create([
+            'atari_id'      => $game->getKey(),
+            'amiga_id'      => $request->amiga_id,
+            'lemon64_slug'  => $request->lemon64_slug,
+        ]);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Games',
+            'section_id'       => $game->getKey(),
+            'section_name'     => $game->game_name,
+            'sub_section'      => 'Vs',
+            'sub_section_id'   => $vs->getKey(),
+            'sub_section_name' => $game->game_name,
+        ]);
+
+        return redirect()->route('admin.games.games.edit', $game);
+    }
+
+    public function destroyVs(Game $game, GameVs $vs)
+    {
+        $vs->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Games',
+            'section_id'       => $vs->game->getKey(),
+            'section_name'     => $vs->game->game_name,
+            'sub_section'      => 'Vs',
+            'sub_section_id'   => $vs->getKey(),
+            'sub_section_name' => $vs->game->game_name,
+        ]);
+
+        return redirect()->route('admin.games.games.edit', $vs->game);
     }
 
     private function validateGame(Request $request, ?int $gameId)

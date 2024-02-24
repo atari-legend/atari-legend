@@ -49,6 +49,7 @@ class UserHelper
         // so that only the hashed password would get sent. With HTTPS is this
         // not needed anymore
         $sha512Password = hash('sha512', $password);
+
         // Then hash it again, with the user salt
         return hash('sha512', $sha512Password . $salt);
     }

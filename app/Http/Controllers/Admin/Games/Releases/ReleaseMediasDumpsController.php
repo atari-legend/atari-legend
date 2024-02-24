@@ -61,8 +61,8 @@ class ReleaseMediasDumpsController extends Controller
     /**
      * Store a single dump in the database + filesystem.
      *
-     * @param $media    \App\Models\Media Media to attach the dump to.
-     * @param $fullpath string            Path of the dump.
+     * @param  $media  \App\Models\Media Media to attach the dump to.
+     * @param  $fullpath  string            Path of the dump.
      */
     private function storeDump(Media $media, string $fullpath)
     {

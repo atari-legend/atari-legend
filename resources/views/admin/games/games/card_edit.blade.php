@@ -16,5 +16,6 @@
 @isset($game)
     @include('admin.games.games.card_edit_multiplayer')
     @include('admin.games.games.card_edit_aka')
+    @include('admin.games.games.card_edit_vs')
 @endif
 

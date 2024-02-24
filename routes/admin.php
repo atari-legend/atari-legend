@@ -88,6 +88,8 @@ Route::middleware('verified')->group(function () {
                         Route::post('update/multiplayer', [GameController::class, 'updateMultiplayer'])->name('games.update.multiplayer');
                         Route::post('aka', [GameController::class, 'storeAka'])->name('games.aka.store');
                         Route::delete('aka/{aka}/destroy', [GameController::class, 'destroyAka'])->name('games.destroy.aka');
+                        Route::post('vs', [GameController::class, 'storeVs'])->name('games.vs.store');
+                        Route::delete('vs/{vs}/destroy', [GameController::class, 'destroyVs'])->name('games.destroy.vs');
 
                         Route::resource('releases', GameReleaseController::class);
 

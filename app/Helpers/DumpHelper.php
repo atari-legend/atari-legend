@@ -52,8 +52,8 @@ class DumpHelper
     /**
      * Store the dump of a game in a ZIP file.
      *
-     * @param $dump \App\Models\Dump Dump to store the ZIP file for.
-     * @param $path string Path to the dump.
+     * @param  $dump  \App\Models\Dump Dump to store the ZIP file for.
+     * @param  $path  string Path to the dump.
      */
     public static function storeDump(Dump $dump, string $path): void
     {
@@ -72,8 +72,8 @@ class DumpHelper
     /**
      * Get the actual dump from the containing ZIP.
      *
-     * @param $dump \App\Models\Dump Dump to get.
-     * @param $path string Where to store the dump.
+     * @param  $dump  \App\Models\Dump Dump to get.
+     * @param  $path  string Where to store the dump.
      */
     public static function getDump(Dump $dump, string $path): void
     {
