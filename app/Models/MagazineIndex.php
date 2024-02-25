@@ -9,7 +9,7 @@ class MagazineIndex extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['game_id'];
+    protected $fillable = ['game_id', 'magazine_index_type_id', 'score'];
 
     public function magazineIssue()
     {

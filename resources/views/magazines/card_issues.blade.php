@@ -96,8 +96,8 @@
                                             @endif
                                         </td>
                                         <td class="text-muted">{{ $index->magazineIndexType?->name ?? '-' }}</td>
-                                        <td class="text-end">
-                                            {{ $index->page }}
+                                        <td class="text-end @if (!$index->page) text-muted @endif">
+                                            {{ $index->page ?? '-'}}
                                         </td>
                                     </tr>
                                 @endforeach

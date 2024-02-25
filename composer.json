@@ -22,6 +22,7 @@
         "laravel/sanctum": "3.2.x",
         "laravel/tinker": "2.8.x",
         "laravel/ui": "4.2.x",
+        "league/csv": "^9.0",
         "livewire/livewire": "2.11.x",
         "rappasoft/laravel-livewire-tables": "1.25.x",
         "sopamo/laravel-filepond": "^1.2",
