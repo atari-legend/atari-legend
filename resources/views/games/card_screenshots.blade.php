@@ -3,7 +3,7 @@
         <h2 class="text-uppercase d-none d-lg-block">
             {{ $game->game_name }}
             @contributor
-                <a href="{{ config('al.legacy.base_url').'/admin/games/games_detail.php?game_id='.$game->game_id }}">
+                <a href="{{ route('admin.games.games.edit', $game) }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                 </a>
             @endcontributor

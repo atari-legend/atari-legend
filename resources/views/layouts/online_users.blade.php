@@ -6,7 +6,7 @@
                 <li class="list-inline-item">
                     <i class="far fa-user"></i> {{ $user->userid }}
                     @contributor
-                        <a href="{{ config('al.legacy.base_url').'/admin/user/user_detail.php?user_id_selected='.$user->user_id }}">
+                        <a href="{{ route('admin.users.users.edit', $user)  }}">
                             <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                         </a>
                     @endcontributor
@@ -24,7 +24,7 @@
                 <li class="list-inline-item">
                     <i class="far fa-user"></i> {{ $user->userid }}
                     @contributor
-                        <a href="{{ config('al.legacy.base_url').'/admin/user/user_detail.php?user_id_selected='.$user->user_id }}">
+                        <a href="{{ route('admin.users.users.edit', $user) }}">
                             <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                         </a>
                     @endcontributor
