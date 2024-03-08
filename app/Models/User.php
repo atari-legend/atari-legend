@@ -55,7 +55,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->forceFill([
             'email_verified_at' => $this->freshTimestamp(),
-            'inactive'          => User::ACTIVE,
         ])->save();
     }
 
