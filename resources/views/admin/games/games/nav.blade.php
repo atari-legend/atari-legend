@@ -26,7 +26,10 @@
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $game->facts->count() }}</span>
-        <a class="disabled text-decoration-none text-muted" href="#">Facts</a>
+        <a class="@activeroute('admin.games.game-facts.*')"
+            href="{{ route('admin.games.game-facts.index', $game) }}">
+            Facts
+        </a>
     </li>
     <li>
         <span class="badge bg-light text-secondary">{{ $game->screenshots->count() }}</span>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Http\Controllers\Admin\Games\GameController;
 use App\Http\Controllers\Admin\Games\GameCreditsController;
+use App\Http\Controllers\Admin\Games\GameFactsController;
 use App\Http\Controllers\Admin\Games\GameIndividualController;
 use App\Http\Controllers\Admin\Games\GameMusicController;
 use App\Http\Controllers\Admin\Games\GameReleaseController;
@@ -71,6 +72,13 @@ Route::middleware('verified')->group(function () {
                         Route::delete('credits/{individual}', [GameCreditsController::class, 'destroy'])->name('game-credits.destroy');
                         Route::post('developers', [GameCreditsController::class, 'storeDeveloper'])->name('game-developers.store');
                         Route::delete('developers/{developer}', [GameCreditsController::class, 'destroyDeveloper'])->name('game-developers.destroy');
+
+                        Route::get('facts', [GameFactsController::class, 'index'])->name('game-facts.index');
+                        Route::delete('facts/{fact}', [GameFactsController::class, 'destroy'])->name('game-facts.destroy');
+                        Route::post('facts', [GameFactsController::class, 'store'])->name('game-facts.store');
+                        Route::get('facts/create', [GameFactsController::class, 'create'])->name('game-facts.create');
+                        Route::put('facts/{fact}', [GameFactsController::class, 'update'])->name('game-facts.update');
+                        Route::get('facts/{fact}', [GameFactsController::class, 'edit'])->name('game-facts.edit');
 
                         Route::get('screenshots', [GameScreenshotsController::class, 'index'])->name('game-screenshots.index');
                         Route::post('screenshots', [GameScreenshotsController::class, 'store'])->name('game-screenshots.store');
