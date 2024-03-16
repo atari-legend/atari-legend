@@ -8,6 +8,7 @@ class ReleaseSystemEnhanced extends Model
 {
     protected $table = 'game_release_system_enhanced';
     public $timestamps = false;
+    protected $fillable = ['enhancement_id', 'system_id', 'game_release_id'];
 
     public function system()
     {

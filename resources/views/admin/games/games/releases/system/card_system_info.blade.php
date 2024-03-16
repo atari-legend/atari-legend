@@ -17,7 +17,7 @@
                                 </option>
                                 @endforeach
                             </select>
-                            <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all trainers.</div>
+                            <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all resolutions.</div>
 
                             @error('resolutions')
                             <span class="invalid-feedback" role="alert">
@@ -34,7 +34,7 @@
                                 </option>
                                 @endforeach
                             </select>
-                            <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all trainers.</div>
+                            <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all systems.</div>
 
                             @error('systems')
                             <span class="invalid-feedback" role="alert">
@@ -52,7 +52,7 @@
                                 </option>
                                 @endforeach
                             </select>
-                            <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all trainers.</div>
+                            <div class="form-text">CTRL+click to select multiple. Unselect all values to remove all emulators.</div>
 
                             @error('emulators')
                             <span class="invalid-feedback" role="alert">

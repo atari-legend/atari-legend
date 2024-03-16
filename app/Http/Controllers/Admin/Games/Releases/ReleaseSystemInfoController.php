@@ -6,11 +6,17 @@ use App\Helpers\ChangelogHelper;
 use App\Helpers\ReleaseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
+use App\Models\CopyProtection;
+use App\Models\DiskProtection;
 use App\Models\Emulator;
+use App\Models\Enhancement;
 use App\Models\Game;
+use App\Models\Language;
+use App\Models\Memory;
 use App\Models\Release;
 use App\Models\Resolution;
 use App\Models\System;
+use App\Models\TOS;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
@@ -21,6 +27,12 @@ class ReleaseSystemInfoController extends Controller
         $resolutions = Resolution::orderBy('name')->get();
         $systems = System::orderBy('name')->get();
         $emulators = Emulator::orderBy('name')->get();
+        $systemEnhancements = Enhancement::orderBy('name')->get();
+        $tosses = TOS::orderBy('name')->get();
+        $languages = Language::orderBy('name')->get();
+        $memories = Memory::orderBy('name')->get();
+        $copyProtections = CopyProtection::orderBy('name')->get();
+        $diskProtections = DiskProtection::orderBy('name')->get();
 
         return view('admin.games.games.releases.system.index')
             ->with([
@@ -38,11 +50,18 @@ class ReleaseSystemInfoController extends Controller
                         'System info'
                     ),
                 ],
-                'game'        => $game,
-                'release'     => $release,
-                'resolutions' => $resolutions,
-                'systems'     => $systems,
-                'emulators'   => $emulators,
+                'game'               => $game,
+                'release'            => $release,
+                'resolutions'        => $resolutions,
+                'systems'            => $systems,
+                'emulators'          => $emulators,
+                'systemEnhancements' => $systemEnhancements,
+                'languages'          => $languages,
+                'tosses'             => $tosses,
+                'memories'           => $memories,
+                'copyProtections'    => $copyProtections,
+                'diskProtections'    => $diskProtections,
+
             ]);
     }
 

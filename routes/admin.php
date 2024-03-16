@@ -24,7 +24,13 @@ use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasDumpsController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseMediasScansController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseScansController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSceneController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemCopyProtectionController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemDiskProtectionController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemEnhancementController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemInfoController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemMemoryController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemMemoryEnhancementController;
+use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemTosController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Magazines\MagazineIndexTypesController;
 use App\Http\Controllers\Admin\Magazines\MagazineIssuesController;
@@ -108,6 +114,23 @@ Route::middleware('verified')->group(function () {
                             Route::post('system', [ReleaseSystemInfoController::class, 'update'])->name('system.update');
                             Route::post('aka', [GameReleaseController::class, 'storeAka'])->name('aka.store');
                             Route::delete('aka/{aka}', [GameReleaseController::class, 'destroyAka'])->name('aka.destroy');
+
+                            Route::post('system-enhancement', [ReleaseSystemEnhancementController::class, 'store'])->name('system-enhancement.store');
+                            Route::delete('system-enhancement/{enhancement}', [ReleaseSystemEnhancementController::class, 'destroy'])->name('system-enhancement.destroy');
+
+                            Route::post('system-tos-incompatibility', [ReleaseSystemTosController::class, 'store'])->name('system-tos-incompatibility.store');
+                            Route::delete('system-tos-incompatibility/{incompatibility}', [ReleaseSystemTosController::class, 'destroy'])->name('system-tos-incompatibility.destroy');
+
+                            Route::put('system-memory', [ReleaseSystemMemoryController::class, 'update'])->name('system-memory.update');
+                            Route::post('system-memory-enhancement', [ReleaseSystemMemoryEnhancementController::class, 'store'])->name('system-memory-enhancement.store');
+                            Route::delete('system-memory-enhancement/{enhancement}', [ReleaseSystemMemoryEnhancementController::class, 'destroy'])->name('system-memory-enhancement.destroy');
+
+                            Route::post('system-copy-protection', [ReleaseSystemCopyProtectionController::class, 'store'])->name('system-copy-protection.store');
+                            Route::delete('system-copy-protection/{protection}', [ReleaseSystemCopyProtectionController::class, 'destroy'])->name('system-copy-protection.destroy');
+
+                            Route::post('system-disk-protection', [ReleaseSystemDiskProtectionController::class, 'store'])->name('system-disk-protection.store');
+                            Route::delete('system-disk-protection/{protection}', [ReleaseSystemDiskProtectionController::class, 'destroy'])->name('system-disk-protection.destroy');
+
                             Route::resource('medias', ReleaseMediasController::class);
                             Route::resource('scans', ReleaseScansController::class);
 

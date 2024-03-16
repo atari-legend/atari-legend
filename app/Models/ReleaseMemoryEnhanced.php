@@ -8,6 +8,7 @@ class ReleaseMemoryEnhanced extends Model
 {
     protected $table = 'game_release_memory_enhanced';
     public $timestamps = false;
+    protected $fillable = ['release_id', 'memory_id', 'enhancement_id'];
 
     public function memory()
     {
