@@ -49,6 +49,7 @@ use App\Http\Controllers\Admin\News\NewsSubmissionsController;
 use App\Http\Controllers\Admin\Other\QuoteController;
 use App\Http\Controllers\Admin\Other\SpotlightController;
 use App\Http\Controllers\Admin\Other\TriviaController;
+use App\Http\Controllers\Admin\Reviews\ReviewsController;
 use App\Http\Controllers\Admin\User\CommentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -181,6 +182,10 @@ Route::middleware('verified')->group(function () {
                     Route::get('submissions', [NewsSubmissionsController::class, 'index'])->name('submissions.index');
                     Route::delete('submissions/{submission}', [NewsSubmissionsController::class, 'destroy'])->name('submissions.destroy');
                     Route::post('submissions/{submission}', [NewsSubmissionsController::class, 'approve'])->name('submissions.approve');
+                });
+
+                Route::prefix('/reviews')->name('reviews.')->group(function () {
+                    Route::resource('reviews', ReviewsController::class);
                 });
 
                 Route::prefix('/articles')->name('articles.')->group(function () {
