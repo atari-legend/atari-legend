@@ -186,6 +186,10 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/reviews')->name('reviews.')->group(function () {
                     Route::resource('reviews', ReviewsController::class);
+
+                    Route::post('reviews/{review}/image', [ReviewsController::class, 'storeImage'])->name('reviews.image.store');
+                    Route::put('reviews/{review}/image', [ReviewsController::class, 'updateImage'])->name('reviews.image.update');
+                    Route::delete('reviews/{review}/image/{image}', [ReviewsController::class, 'destroyImage'])->name('reviews.image.destroy');
                 });
 
                 Route::prefix('/articles')->name('articles.')->group(function () {

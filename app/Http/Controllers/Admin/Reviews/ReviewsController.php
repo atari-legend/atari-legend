@@ -20,6 +20,29 @@ class ReviewsController extends Controller
             ]);
     }
 
+    public function edit(Review $review)
+    {
+        return view('admin.reviews.reviews.edit')
+            ->with([
+                'breadcrumbs' => [
+                    new Crumb(route('admin.reviews.reviews.index'), 'Reviews'),
+                    new Crumb(route('admin.reviews.reviews.edit', $review), $review->games->first()->game_name),
+                ],
+                'review'      => $review,
+            ]);
+    }
+
+    public function create()
+    {
+        return view('admin.reviews.reviews.edit')
+            ->with([
+                'breadcrumbs' => [
+                    new Crumb(route('admin.reviews.reviews.index'), 'Reviews'),
+                    new Crumb('', 'Create'),
+                ],
+            ]);
+    }
+
     public function destroy(Review $review)
     {
         $gameName = $review->games->first()->game_name;
