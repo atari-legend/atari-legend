@@ -13,6 +13,7 @@ use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ReleaseScansController extends Controller
 {
@@ -94,11 +95,20 @@ class ReleaseScansController extends Controller
             $path = $filepond->getPathFromServerId($file);
             $fullpath = Storage::path($path);
             $ext = File::extension($fullpath);
+            $name = Str::lower(File::name($fullpath));
+
+            // Infer the type from the filename
+            $type = ReleaseScan::TYPE_OTHER;
+            if (Str::contains($name, 'front')) {
+                $type = ReleaseScan::TYPE_BOX_FRONT;
+            } elseif (Str::contains($name, 'back')) {
+                $type = ReleaseScan::TYPE_BOX_BACK;
+            }
 
             $scan = ReleaseScan::create([
                 'game_release_id' => $release->getKey(),
                 'imgext'          => $ext,
-                'type'            => ReleaseScan::TYPE_OTHER,
+                'type'            => $type,
             ]);
 
             Storage::disk('public')->put($scan->path, Storage::get($path));

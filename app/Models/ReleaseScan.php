@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ReleaseScan extends Model
 {
     const TYPE_OTHER = 'Other';
-    const TYPES = ['Box front', 'Box back', 'Goodie', ReleaseScan::TYPE_OTHER];
+    const TYPE_BOX_FRONT = 'Box front';
+    const TYPE_BOX_BACK = 'Box back';
+    const TYPES = [ReleaseScan::TYPE_BOX_FRONT, ReleaseScan::TYPE_BOX_BACK, 'Goodie', ReleaseScan::TYPE_OTHER];
 
     protected $table = 'game_release_scan';
     public $timestamps = false;
