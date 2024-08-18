@@ -74,6 +74,8 @@ img.pixelated {
 }
 
 .container-xxxl {
+    @extend .container-fluid;
+
     max-width: 1920px;
     margin-left: auto;
     margin-right: auto;
