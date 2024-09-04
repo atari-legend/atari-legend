@@ -11,7 +11,6 @@
         "buzz/laravel-h-captcha": "1.0.x",
         "doctrine/dbal": "3.5.x",
         "embed/embed": "4.4.x",
-        "fruitcake/laravel-cors": "3.0.x",
         "guzzlehttp/guzzle": "7.5.x",
         "intervention/image": "2.7.x",
         "jbbcode/jbbcode": "1.4.x",
