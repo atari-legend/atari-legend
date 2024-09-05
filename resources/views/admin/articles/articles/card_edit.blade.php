@@ -93,7 +93,7 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@
                             {{-- Legacy CPANEL was inserting <br /> for new lines, so we replace them with actual newlines --}}
                             rows="30">{{ old('text', isset($article) ? Str::replace('<br />', "\n", $article->texts->first()->article_text) : '') }}</textarea>
 
-                        @error('intro')
+                        @error('text')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
