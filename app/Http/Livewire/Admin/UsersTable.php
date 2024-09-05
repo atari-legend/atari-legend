@@ -3,85 +3,88 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class UsersTable extends DataTableComponent
 {
-    public string $primaryKey = 'user_id';
-
-    public string $defaultSortColumn = 'userid';
+    public function configure(): void
+    {
+        $this->setPrimaryKey('user_id');
+        $this->setDefaultSort('userid');
+    }
 
     public function columns(): array
     {
         return [
-            Column::make('Name', 'userid')->sortable(),
+            LinkColumn::make('Name', 'userid')
+                ->title(fn ($row) => $row->userid)
+                ->location(fn ($row) => route('admin.users.users.edit', $row))
+                ->searchable(
+                    fn (Builder $query, $term) => $query->where('userid', 'like', '%' . $term . '%')
+                )
+                ->sortable(
+                    fn (Builder $query, string $direction) => $query->orderBy('userid', $direction)
+                ),
             Column::make('Avatar')
+                ->label(
+                    function ($row) {
+                        if ($row->avatar) {
+                            return '<img class="shadow-sm" style="max-height: 2rem" alt="User avatar" src="' . $row->avatar . '">';
+                        }
+                    }
+                )
+                ->html()
                 ->sortable(function (Builder $query, $direction) {
                     return $query->orderBy('avatar_ext', $direction);
                 }),
-            Column::make('Join date')
-                ->sortable(function (Builder $query, $direction) {
-                    // Validate direction to avoid SQL injections
-                    $d = $direction === 'asc' ? 'asc' : 'desc';
-
-                    return $query->orderByRaw("convert(join_date, unsigned) $d");
-                }),
-            Column::make('Last visit')
-                ->sortable(function (Builder $query, $direction) {
-                    // Validate direction to avoid SQL injections
-                    $d = $direction === 'asc' ? 'asc' : 'desc';
-
-                    return $query->orderByRaw("convert(last_visit, unsigned) $d");
-                }),
-            Column::blank(),
+            Column::make('Join date', 'join_date')
+                ->format(
+                    fn ($value) => $value
+                        ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
+                        : '-'
+                )
+                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw("convert(join_date, unsigned) $direction")),
+            Column::make('Last visit', 'last_visit')
+                ->format(
+                    fn ($value) => $value
+                        ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
+                        : '-'
+                )
+                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw("convert(last_visit, unsigned) $direction")),
+            Column::make('Actions')
+                ->label(
+                    fn ($row, Column $column) => view('admin.users.users.datatable_actions')->with(['row' => $row])
+                ),
         ];
     }
 
-    public function query(): Builder
+    public function builder(): Builder
     {
-        return User::query()
-            ->when(
-                $this->getFilter('search'),
-                fn ($query, $term) => $query->where('userid', 'like', '%' . $term . '%')
-            )
-            ->when(
-                $this->getFilter('verified'),
-                fn ($query, $term) => $term === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at')
-            )
-            ->when(
-                $this->getFilter('admin'),
-                fn ($query, $term) => $query->where('permission', '=', $term === 'yes' ? User::PERMISSION_ADMIN : User::PERMISSION_USER)
-            );
+        return User::query()->select();
     }
 
     public function filters(): array
     {
         return [
-            'verified' => Filter::make('E-mail verified')
-                ->select([
+            'verified' => SelectFilter::make('E-mail verified')
+                ->options([
                     ''    => 'Any',
                     'yes' => 'Yes',
                     'no'  => 'No',
-                ]),
-            'admin'    => Filter::make('Is Admin')
-                ->select([
+                ])
+                ->filter(fn ($query, $term) => $term === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at')),
+            'admin'    => SelectFilter::make('Is Admin')
+                ->options([
                     ''    => 'Any',
                     'yes' => 'Yes',
                     'no'  => 'No',
-                ]),
+                ])
+                ->filter(fn ($query, $term) => $query->where('permission', '=', $term === 'yes' ? User::PERMISSION_ADMIN : User::PERMISSION_USER)),
         ];
-    }
-
-    public function getTableRowUrl($row): string
-    {
-        return route('admin.users.users.edit', $row);
-    }
-
-    public function rowView(): string
-    {
-        return 'admin.users.users.list_row';
     }
 }

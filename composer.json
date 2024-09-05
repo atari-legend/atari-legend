@@ -22,7 +22,7 @@
         "laravel/tinker": "2.8.x",
         "laravel/ui": "4.2.x",
         "livewire/livewire": "2.11.x",
-        "rappasoft/laravel-livewire-tables": "1.25.x",
+        "rappasoft/laravel-livewire-tables": "2.x",
         "sopamo/laravel-filepond": "^1.2",
         "spatie/laravel-feed": "4.2.x",
         "tizis/phpepub": "6.0.x",
