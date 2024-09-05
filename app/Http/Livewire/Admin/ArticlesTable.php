@@ -52,7 +52,7 @@ class ArticlesTable extends DataTableComponent
                 ->sortable(),
             Column::make('Actions')
                 ->label(
-                    fn($row, Column $column) => view('admin.articles.articles.datatable_actions')->with(['row' => $row])
+                    fn($row) => view('admin.articles.articles.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }

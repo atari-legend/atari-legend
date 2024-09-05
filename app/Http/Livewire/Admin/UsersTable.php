@@ -58,7 +58,7 @@ class UsersTable extends DataTableComponent
                 ->sortable(fn (Builder $query, $direction) => $query->orderByRaw("convert(last_visit, unsigned) $direction")),
             Column::make('Actions')
                 ->label(
-                    fn ($row, Column $column) => view('admin.users.users.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.users.users.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }
