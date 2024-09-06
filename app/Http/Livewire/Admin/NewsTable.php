@@ -2,49 +2,61 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Helpers\Helper;
 use App\Models\News;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class NewsTable extends DataTableComponent
 {
-    public string $primaryKey = 'news_id';
-
-    public string $defaultSortColumn = 'news_date';
-    public string $defaultSortDirection = 'desc';
+    public function configure(): void
+    {
+        $this->setPrimaryKey('news_id');
+        $this->setDefaultSort('news_date', 'desc');
+    }
 
     public function columns(): array
     {
         return [
-            Column::make('Headline', 'news_headline')->sortable(),
-            Column::make('Date')
-                ->sortable(function (Builder $query, $direction) {
-                    return $query->orderBy('news_date', $direction);
-                }),
+            LinkColumn::make('Headline', 'news_headline')
+                ->title(fn($row) => $row->news_headline)
+                ->location(fn($row) => route('admin.news.news.edit', $row))
+                ->searchable(
+                    fn(Builder $query, string $term) => $query->where('news_headline', 'like', "%{$term}%")
+                        ->orWhere('news_text', 'like', "%{$term}%")
+                )
+                ->sortable(),
+            Column::make('Date', 'news_date')
+                ->format(fn($value) => $value?->toDayDateTimeString() ?? '-')
+                ->sortable(),
             Column::make('Image')
                 ->sortable(function (Builder $query, $direction) {
                     return $query->orderBy('news_image_ext', $direction);
-                }),
-            Column::make('Author'),
-            Column::blank(),
+                })
+                ->label(
+                    fn($row) => $row->news_image
+                        ? '<img class="shadow-sm" style="max-height: 2rem" src="' . $row->news_image . '" alt="News image">'
+                        : ''
+                )
+                ->html(),
+            Column::make('Author')
+                ->label(fn($row) => Helper::user($row->user)),
+            Column::make('Actions')
+                ->label(
+                    fn($row) => view('admin.news.news.datatable_actions')->with(['row' => $row])
+                ),
         ];
     }
 
-    public function query(): Builder
+    public function builder(): Builder
     {
-        return News::select('news.*')
+        return News::query()
             ->leftJoin('news_image', 'news.news_image_id', '=', 'news_image.news_image_id')
-            ->when(
-                $this->getFilter('search'),
-                fn ($query, $term) => $query->where('news_headline', 'like', "%{$term}%")
-                    ->orWhere('news_text', 'like', "%{$term}%")
-            )->when(
-                $this->getFilter('author'),
-                fn ($query, $term) => $query->where('news.user_id', '=', $term)
-            );
+            ->select();
     }
 
     public function filters(): array
@@ -58,19 +70,10 @@ class NewsTable extends DataTableComponent
         $authors = ['' => 'Any'] + $authors;
 
         return [
-            'author' => Filter::make('Author')
-                ->select($authors),
+            'author' => SelectFilter::make('Author')
+                ->options($authors)
+                ->filter(fn(Builder $query, string $term) => $query->where('news.user_id', '=', $term)),
 
         ];
-    }
-
-    public function getTableRowUrl($row): string
-    {
-        return route('admin.news.news.edit', $row);
-    }
-
-    public function rowView(): string
-    {
-        return 'admin.news.news.list_row';
     }
 }
