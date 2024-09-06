@@ -6,47 +6,62 @@ use App\Models\PublisherDeveloper;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class GameCompaniesTable extends DataTableComponent
 {
-    public string $primaryKey = 'pub_dev_id';
-
-    public string $defaultSortColumn = 'pub_dev_name';
+    public function configure(): void
+    {
+        $this->setPrimaryKey('pub_dev_id');
+        $this->setDefaultSort('pub_dev_name');
+    }
 
     public function columns(): array
     {
         return [
-            Column::make('Name', 'ind_name')->sortable(),
+            LinkColumn::make('Name')
+                ->title(fn($row) => $row->pub_dev_name)
+                ->location(fn($row) => route('admin.games.companies.edit', $row))
+                ->searchable(
+                    fn(Builder $query, string $term) => $query->where('pub_dev_name', 'like', "%{$term}%")
+                )
+                ->sortable(
+                    fn(Builder $query, string $direction) => $query->orderBy('pub_dev_name', $direction)
+                ),
             Column::make('Logo')
-                ->sortable(function (Builder $query, $direction) {
-                    return $query->orderBy('pub_dev_text.pub_dev_imgext', $direction);
-                }),
-            Column::blank(),
+                ->label(
+                    fn($row) => $row->logo
+                        ? '<img class="shadow-sm" style="max-height: 2rem" src="' . $row->logo . '" alt="Company logo">'
+                        : ''
+                )
+                ->html(),
+            Column::make('Actions')
+                ->label(
+                    fn($row) => view('admin.games.companies.datatable_actions')->with(['row' => $row])
+                ),
         ];
     }
 
-    public function query(): Builder
+    public function builder(): Builder
     {
-        return PublisherDeveloper::select('pub_dev.*')
-            ->leftJoin('pub_dev_text', 'pub_dev_text.pub_dev_id', '=', 'pub_dev.pub_dev_id')
-            ->when(
-                $this->getFilter('search'),
-                fn ($query, $term) => $query->where('pub_dev_name', 'like', "%{$term}%")
-            );
+        return PublisherDeveloper::select();
     }
 
     public function filters(): array
     {
-        return [];
-    }
-
-    public function getTableRowUrl($row): string
-    {
-        return route('admin.games.companies.edit', $row);
-    }
-
-    public function rowView(): string
-    {
-        return 'admin.games.companies.list_row';
+        return [
+            'logo' => SelectFilter::make('Logo')
+                ->options([
+                    '' => '-',
+                    'true' => 'Yes',
+                    'false' => 'No'
+                ])
+                ->filter(
+                    fn(Builder $query, string $term) => $term === 'true'
+                        ? $query->whereHas('text', fn(Builder $subQuery) => $subQuery->whereNotNull('pub_dev_imgext'))
+                        : $query->whereHas('text', fn(Builder $subQuery) => $subQuery->whereNull('pub_dev_imgext'))
+                )
+        ];
     }
 }

@@ -30,7 +30,7 @@ class SpotlightsTable extends DataTableComponent
                 ->sortable(fn(Builder $query, string $direction) => $query->orderBy('spotlight', $direction)),
             Column::make('Link', 'link')
                 ->sortable(),
-                Column::make('Actions')
+            Column::make('Actions')
                 ->label(
                     fn($row) => view('admin.others.spotlights.datatable_actions')->with(['row' => $row])
                 ),
