@@ -20,36 +20,36 @@ class GamesTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Name')
-                ->title(fn($row) => $row->game_name)
-                ->location(fn($row) => route('admin.games.games.edit', $row))
+                ->title(fn ($row) => $row->game_name)
+                ->location(fn ($row) => route('admin.games.games.edit', $row))
                 ->searchable(
-                    fn(Builder $query, string $term) => $query->where('game_name', 'like', '%' . $term . '%')
+                    fn (Builder $query, string $term) => $query->where('game_name', 'like', '%' . $term . '%')
                 )
                 ->sortable(
-                    fn(Builder $query, string $direction) => $query->orderBy('game_name', $direction)
+                    fn (Builder $query, string $direction) => $query->orderBy('game_name', $direction)
                 ),
             Column::make('Screenshot')
                 ->label(
-                    fn($row) => $row->screenshots->isNotEmpty()
+                    fn ($row) => $row->screenshots->isNotEmpty()
                         ? '<img style="max-height: 3rem; max-width: 6rem;" src="' . $row->screenshots->random()->getUrl('game') . '">'
                         : '-'
                 )
                 ->html(),
             Column::make('Releases')
                 ->label(
-                    fn($row) => $row->non_menu_releases->count() . ' (Menus: ' . $row->menu_releases->count() . ')'
+                    fn ($row) => $row->non_menu_releases->count() . ' (Menus: ' . $row->menu_releases->count() . ')'
                 ),
             Column::make('Developers')
-                ->label(fn($row) => $row->developers->pluck('pub_dev_name')->join(', ')),
+                ->label(fn ($row) => $row->developers->pluck('pub_dev_name')->join(', ')),
             Column::make('Created', 'created_at')
-                ->format(fn($value) => $value?->toDayDateTimeString() ?? '-')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Updated', 'updated_at')
-                ->format(fn($value) => $value?->toDayDateTimeString() ?? '-')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.games.games.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.games.games.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }

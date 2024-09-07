@@ -20,20 +20,20 @@ class NewsSubmissionsTable extends DataTableComponent
     {
         return [
             Column::make('Headline', 'news_headline')
-                ->searchable(fn($row) => fn($query, $term) => $query->where('news_headline', 'like', "%{$term}%")
+                ->searchable(fn ($row) => fn ($query, $term) => $query->where('news_headline', 'like', "%{$term}%")
                     ->orWhere('news_text', 'like', "%{$term}%"))
                 ->sortable(),
             Column::make('Date', 'news_date')
-                ->format(fn($value) => $value?->toDayDateTimeString() ?? '-'),
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-'),
             Column::make('Text', 'news_text')
                 ->sortable()
-                ->format(fn($value) => Helper::bbCode(stripslashes(nl2br(e($value)))))
+                ->format(fn ($value) => Helper::bbCode(stripslashes(nl2br(e($value)))))
                 ->html(),
             Column::make('Author')
-                ->label(fn($row) => Helper::user($row->user)),
+                ->label(fn ($row) => Helper::user($row->user)),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.news.submissions.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.news.submissions.datatable_actions')->with(['row' => $row])
                 ),
 
         ];

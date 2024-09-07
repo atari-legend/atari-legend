@@ -25,14 +25,14 @@ class CommentsTable extends DataTableComponent
     {
         return [
             Column::make('User')
-                ->label(fn($row) => Helper::user($row->user))
+                ->label(fn ($row) => Helper::user($row->user))
                 ->sortable(function (Builder $query, $direction) {
                     return $query->join('users', 'comments.user_id', '=', 'users.user_id')
                         ->orderBy('users.userid', $direction);
                 }),
             Column::make('Date', 'timestamp')
                 ->format(
-                    fn($value) => $value
+                    fn ($value) => $value
                         ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
                         : '-'
                 )
@@ -44,19 +44,19 @@ class CommentsTable extends DataTableComponent
                 }),
             Column::make('Type')
                 ->label(
-                    fn($row) => '<div class="text-muted">' . Str::ucfirst($row->type) . '</div>'
+                    fn ($row) => '<div class="text-muted">' . Str::ucfirst($row->type) . '</div>'
                         . $row->target
                 )
                 ->html(),
             LinkColumn::make('Content')
-                ->title(fn($row) => Str::words($row->comment, 20))
-                ->location(fn($row) => route('admin.users.comments.edit', $row))
+                ->title(fn ($row) => Str::words($row->comment, 20))
+                ->location(fn ($row) => route('admin.users.comments.edit', $row))
                 ->searchable(
-                    fn($query, $term) => $query->where('comment', 'like', '%' . $term . '%')
+                    fn ($query, $term) => $query->where('comment', 'like', '%' . $term . '%')
                 ),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.users.comments.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.users.comments.datatable_actions')->with(['row' => $row])
                 ),
 
         ];
@@ -86,10 +86,10 @@ class CommentsTable extends DataTableComponent
                     'interviews' => 'Interview',
                     'articles'   => 'Article',
                 ])
-                ->filter(fn($query, $term) => $query->has($term)),
+                ->filter(fn ($query, $term) => $query->has($term)),
             'author' => SelectFilter::make('Author')
                 ->options($authors)
-                ->filter(fn($query, $term) => $query->where('comments.user_id', '=', $term)),
+                ->filter(fn ($query, $term) => $query->where('comments.user_id', '=', $term)),
 
         ];
     }

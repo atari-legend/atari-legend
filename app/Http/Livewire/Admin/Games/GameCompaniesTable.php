@@ -21,24 +21,24 @@ class GameCompaniesTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Name')
-                ->title(fn($row) => $row->pub_dev_name)
-                ->location(fn($row) => route('admin.games.companies.edit', $row))
+                ->title(fn ($row) => $row->pub_dev_name)
+                ->location(fn ($row) => route('admin.games.companies.edit', $row))
                 ->searchable(
-                    fn(Builder $query, string $term) => $query->where('pub_dev_name', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('pub_dev_name', 'like', "%{$term}%")
                 )
                 ->sortable(
-                    fn(Builder $query, string $direction) => $query->orderBy('pub_dev_name', $direction)
+                    fn (Builder $query, string $direction) => $query->orderBy('pub_dev_name', $direction)
                 ),
             Column::make('Logo')
                 ->label(
-                    fn($row) => $row->logo
+                    fn ($row) => $row->logo
                         ? '<img class="shadow-sm" style="max-height: 2rem" src="' . $row->logo . '" alt="Company logo">'
                         : ''
                 )
                 ->html(),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.games.companies.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.games.companies.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }
@@ -53,15 +53,15 @@ class GameCompaniesTable extends DataTableComponent
         return [
             'logo' => SelectFilter::make('Logo')
                 ->options([
-                    '' => '-',
-                    'true' => 'Yes',
-                    'false' => 'No'
+                    ''      => '-',
+                    'true'  => 'Yes',
+                    'false' => 'No',
                 ])
                 ->filter(
-                    fn(Builder $query, string $term) => $term === 'true'
-                        ? $query->whereHas('text', fn(Builder $subQuery) => $subQuery->whereNotNull('pub_dev_imgext'))
-                        : $query->whereHas('text', fn(Builder $subQuery) => $subQuery->whereNull('pub_dev_imgext'))
-                )
+                    fn (Builder $query, string $term) => $term === 'true'
+                        ? $query->whereHas('text', fn (Builder $subQuery) => $subQuery->whereNotNull('pub_dev_imgext'))
+                        : $query->whereHas('text', fn (Builder $subQuery) => $subQuery->whereNull('pub_dev_imgext'))
+                ),
         ];
     }
 }

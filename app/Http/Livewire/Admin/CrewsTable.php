@@ -20,41 +20,42 @@ class CrewsTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Name', 'crew_name')
-                ->title(fn($row) => $row->crew_name)
-                ->location(fn($row) => route('admin.menus.crews.edit', $row))
+                ->title(fn ($row) => $row->crew_name)
+                ->location(fn ($row) => route('admin.menus.crews.edit', $row))
                 ->searchable(
-                    fn($query, $term) => $query->where('crew_name', 'like', '%' . $term . '%')
+                    fn ($query, $term) => $query->where('crew_name', 'like', '%' . $term . '%')
                 )
-                ->sortable(fn(Builder $query, string $direction) => $query->orderBy('crew_name')),
+                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('crew_name')),
             Column::make('Logo')
                 ->label(
-                    fn($row) => $row->crew_logo !== null && trim($row->crew_logo) !== ''
+                    fn ($row) => $row->crew_logo !== null && trim($row->crew_logo) !== ''
                         ? '<img style="max-height: 2rem; max-width: 5rem;" src="' . asset('storage/images/crew_logos/' . $row->crew_id . '.' . trim($row->crew_logo)) . '">'
                         : ''
                 )
                 ->html()
-                ->sortable(fn(Builder $query, string $direction) => $query->orderBy('crew_logo', $direction)),
+                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('crew_logo', $direction)),
             Column::make('Genealogy')
                 ->label(function ($row) {
                     $output = [];
                     if ($row->subCrews->isNotEmpty()) {
-                        $output[] = $row->subCrews->count() . "sub-crews";
+                        $output[] = $row->subCrews->count() . 'sub-crews';
                     }
-                    if (($row->parentCrews->isNotEmpty())) {
+                    if ($row->parentCrews->isNotEmpty()) {
                         $output[] = '<span class="text-muted">Part of:</span> ' . $row->parentCrews->pluck('crew_name')->join(', ');
                     }
+
                     return collect($output)->join('<br>');
                 })
                 ->html(),
             Column::make('Individuals')
                 ->label(
-                    fn($row) => $row->individuals->isNotEmpty()
+                    fn ($row) => $row->individuals->isNotEmpty()
                         ? $row->individuals->count()
                         : '-'
                 ),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.menus.crews.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.menus.crews.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }

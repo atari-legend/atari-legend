@@ -20,19 +20,19 @@ class GameSeriesTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Name')
-                ->title(fn($row) => $row->name)
-                ->location(fn($row) => route('admin.games.series.edit', $row))
+                ->title(fn ($row) => $row->name)
+                ->location(fn ($row) => route('admin.games.series.edit', $row))
                 ->searchable(
-                    fn(Builder $query, string $term) => $query->where('name', 'like', '%' . $term . '%')
+                    fn (Builder $query, string $term) => $query->where('name', 'like', '%' . $term . '%')
                 )
                 ->sortable(
-                    fn(Builder $query, string $direction) => $query->orderBy('name', $direction)
+                    fn (Builder $query, string $direction) => $query->orderBy('name', $direction)
                 ),
             Column::make('Games')
-                ->label(fn($row) => $row->games->count()),
+                ->label(fn ($row) => $row->games->count()),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.games.series.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.games.series.datatable_actions')->with(['row' => $row])
                 ),
 
         ];

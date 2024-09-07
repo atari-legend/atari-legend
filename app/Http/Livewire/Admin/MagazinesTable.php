@@ -21,32 +21,32 @@ class MagazinesTable extends DataTableComponent
         return [
             LinkColumn::make('Name', 'name')
                 ->title(
-                    fn($row) => $row->name
+                    fn ($row) => $row->name
                 )
                 ->location(
-                    fn($row) => route('admin.magazines.magazines.edit', $row)
+                    fn ($row) => route('admin.magazines.magazines.edit', $row)
                 )
                 ->searchable(
-                    fn(Builder $query, string $term) => fn($query, $term) => $query->where('name', 'like', '%' . $term . '%')
+                    fn (Builder $query, string $term) => fn ($query, $term) => $query->where('name', 'like', '%' . $term . '%')
                 )
                 ->sortable(
-                    fn(Builder $query, string $direction) => $query->orderBy('name', $direction)
+                    fn (Builder $query, string $direction) => $query->orderBy('name', $direction)
                 ),
             Column::make('Created', 'created_at')
                 ->format(
-                    fn($value) => $value?->toDayDateTimeString() ?? '-'
+                    fn ($value) => $value?->toDayDateTimeString() ?? '-'
                 )
                 ->sortable(),
             Column::make('Updated', 'updated_at')
                 ->format(
-                    fn($value) => $value?->toDayDateTimeString() ?? '-'
+                    fn ($value) => $value?->toDayDateTimeString() ?? '-'
                 )
                 ->sortable(),
             Column::make('Issues')
-                ->label(fn($row) => $row->issues->count()),
+                ->label(fn ($row) => $row->issues->count()),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.magazines.magazines.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.magazines.magazines.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }

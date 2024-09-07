@@ -24,39 +24,39 @@ class MagazineIssuesTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Issue', 'issue')
-                ->title(fn($row) => $row->display_label)
+                ->title(fn ($row) => $row->display_label)
                 ->location(
-                    fn($row) => route('admin.magazines.issues.edit', [
+                    fn ($row) => route('admin.magazines.issues.edit', [
                         'magazine' => $row->magazine,
                         'issue'    => $row,
                     ])
                 ),
             Column::make('Date', 'published')
-                ->format(fn($value) => $value?->format("F Y") ?? '-')
+                ->format(fn ($value) => $value?->format('F Y') ?? '-')
                 ->sortable(),
             Column::make('Cover')
                 ->label(
-                    fn($row) => $row->image_file
+                    fn ($row) => $row->image_file
                         ? '<img src="' . $row->image . '" width="32" alt="Cover for ' . $row->display_label_with_date . '">'
                         : ''
                 )
                 ->html(),
             Column::make('Index')
                 ->label(
-                    fn($row) => $row->indices->isNotEmpty()
+                    fn ($row) => $row->indices->isNotEmpty()
                         ? '<i class="fa-solid fa-check text-success"></i>'
                         : '<i class="fa-solid fa-times text-muted"></i>'
                 )
                 ->html(),
             Column::make('Created', 'created_at')
-                ->format(fn($value) => $value?->toDayDateTimeString() ?? '-')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Updated', 'updated_at')
-                ->format(fn($value) => $value?->toDayDateTimeString() ?? '-')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.magazines.issues.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.magazines.issues.datatable_actions')->with(['row' => $row])
                 ),
 
         ];

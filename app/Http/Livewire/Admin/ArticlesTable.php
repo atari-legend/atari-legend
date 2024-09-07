@@ -26,33 +26,33 @@ class ArticlesTable extends DataTableComponent
         return [
             LinkColumn::make('Title')
                 ->title(
-                    fn($row) => $row->article_title
+                    fn ($row) => $row->article_title
                 )
                 ->location(
-                    fn($row) => route('admin.articles.articles.edit', $row)
+                    fn ($row) => route('admin.articles.articles.edit', $row)
                 )
                 ->searchable(
-                    fn($query, $term) => $query->where('article_title', 'like', "%{$term}%")
+                    fn ($query, $term) => $query->where('article_title', 'like', "%{$term}%")
                         ->orWhere('article_text', 'like', "%{$term}%")
                         ->orWhere('article_intro', 'like', "%{$term}%")
                 )
                 ->sortable(),
             Column::make('Date')
                 ->label(
-                    fn($row) => $row->article_date
+                    fn ($row) => $row->article_date
                         ? Carbon::createFromTimestamp($row->article_date)->toFormattedDateString()
                         : '-'
                 )
                 ->sortable(
-                    fn(Builder $query, $direction) => $query->orderBy('article_date', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('article_date', $direction)
                 ),
             Column::make('Author')
-                ->label(fn($row) => Helper::user($row->user)),
+                ->label(fn ($row) => Helper::user($row->user)),
             BooleanColumn::make('Draft', 'draft')
                 ->sortable(),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.articles.articles.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.articles.articles.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }
@@ -76,7 +76,7 @@ class ArticlesTable extends DataTableComponent
         return [
             'author' => SelectFilter::make('Author')
                 ->options($authors)
-                ->filter(fn($query, $term) => $query->where('user_id', '=', $term)),
+                ->filter(fn ($query, $term) => $query->where('user_id', '=', $term)),
 
         ];
     }

@@ -23,31 +23,31 @@ class NewsTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Headline', 'news_headline')
-                ->title(fn($row) => $row->news_headline)
-                ->location(fn($row) => route('admin.news.news.edit', $row))
+                ->title(fn ($row) => $row->news_headline)
+                ->location(fn ($row) => route('admin.news.news.edit', $row))
                 ->searchable(
-                    fn(Builder $query, string $term) => $query->where('news_headline', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('news_headline', 'like', "%{$term}%")
                         ->orWhere('news_text', 'like', "%{$term}%")
                 )
                 ->sortable(),
             Column::make('Date', 'news_date')
-                ->format(fn($value) => $value?->toDayDateTimeString() ?? '-')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Image')
                 ->sortable(function (Builder $query, $direction) {
                     return $query->orderBy('news_image_ext', $direction);
                 })
                 ->label(
-                    fn($row) => $row->news_image
+                    fn ($row) => $row->news_image
                         ? '<img class="shadow-sm" style="max-height: 2rem" src="' . $row->news_image . '" alt="News image">'
                         : ''
                 )
                 ->html(),
             Column::make('Author')
-                ->label(fn($row) => Helper::user($row->user)),
+                ->label(fn ($row) => Helper::user($row->user)),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.news.news.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.news.news.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }
@@ -72,7 +72,7 @@ class NewsTable extends DataTableComponent
         return [
             'author' => SelectFilter::make('Author')
                 ->options($authors)
-                ->filter(fn(Builder $query, string $term) => $query->where('news.user_id', '=', $term)),
+                ->filter(fn (Builder $query, string $term) => $query->where('news.user_id', '=', $term)),
 
         ];
     }
