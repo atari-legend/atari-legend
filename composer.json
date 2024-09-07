@@ -17,10 +17,10 @@
         "laminas/laminas-diactoros": "2.24.x",
         "laminas/laminas-feed": "2.20.x",
         "laminas/laminas-http": "2.18.x",
-        "laravel/framework": "9.48.x",
+        "laravel/framework": "10.x",
         "laravel/sanctum": "3.2.x",
         "laravel/tinker": "2.8.x",
-        "laravel/ui": "4.2.x",
+        "laravel/ui": "4.x",
         "livewire/livewire": "2.11.x",
         "rappasoft/laravel-livewire-tables": "2.x",
         "sopamo/laravel-filepond": "^1.2",
@@ -33,10 +33,10 @@
         "barryvdh/laravel-debugbar": "^3.8",
         "fakerphp/faker": "1.21.x",
         "mockery/mockery": "1.5.x",
-        "nunomaduro/collision": "6.4.x",
+        "nunomaduro/collision": "7.x",
         "overtrue/phplint": "6.1.x",
-        "phpunit/phpunit": "9.5.x",
-        "spatie/laravel-ignition": "1.x.x"
+        "phpunit/phpunit": "10.x",
+        "spatie/laravel-ignition": "2.x"
     },
     "autoload": {
         "psr-4": {
@@ -75,6 +75,6 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
