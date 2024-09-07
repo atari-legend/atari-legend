@@ -6,41 +6,40 @@ use App\Models\GameSeries;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 
 class GameSeriesTable extends DataTableComponent
 {
-    public string $defaultSortColumn = 'name';
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+        $this->setDefaultSort('name');
+    }
 
     public function columns(): array
     {
         return [
-            Column::make('Name', 'name')->sortable(),
-            Column::make('Games'),
-            Column::blank(),
+            LinkColumn::make('Name')
+                ->title(fn($row) => $row->name)
+                ->location(fn($row) => route('admin.games.series.edit', $row))
+                ->searchable(
+                    fn(Builder $query, string $term) => $query->where('name', 'like', '%' . $term . '%')
+                )
+                ->sortable(
+                    fn(Builder $query, string $direction) => $query->orderBy('name', $direction)
+                ),
+            Column::make('Games')
+                ->label(fn($row) => $row->games->count()),
+            Column::make('Actions')
+                ->label(
+                    fn($row) => view('admin.games.series.datatable_actions')->with(['row' => $row])
+                ),
+
         ];
     }
 
-    public function query(): Builder
+    public function builder(): Builder
     {
-        return GameSeries::query()
-            ->when(
-                $this->getFilter('search'),
-                fn ($query, $term) => $query->where('name', 'like', '%' . $term . '%')
-            );
-    }
-
-    public function filters(): array
-    {
-        return [];
-    }
-
-    public function getTableRowUrl($row): string
-    {
-        return route('admin.games.series.edit', $row);
-    }
-
-    public function rowView(): string
-    {
-        return 'admin.games.series.list_row';
+        return GameSeries::select();
     }
 }
