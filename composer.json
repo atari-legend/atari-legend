@@ -18,7 +18,7 @@
         "laminas/laminas-feed": "2.20.x",
         "laminas/laminas-http": "2.18.x",
         "laravel/framework": "10.x",
-        "laravel/sanctum": "3.2.x",
+        "laravel/sanctum": "3.3.x",
         "laravel/tinker": "2.8.x",
         "laravel/ui": "4.x",
         "livewire/livewire": "2.11.x",
@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",
-        "fakerphp/faker": "1.21.x",
+        "fakerphp/faker": "1.23.x",
         "mockery/mockery": "1.5.x",
         "nunomaduro/collision": "7.x",
         "overtrue/phplint": "6.1.x",
@@ -73,7 +73,11 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true
