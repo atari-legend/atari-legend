@@ -1,7 +1,7 @@
 @use "sass:color";
 
 $rowHoverBackground: $light;
-@import '~tabulator-tables/src/scss/tabulator';
+@import 'tabulator-tables/src/scss/tabulator';
 
 .tabulator {
     .tabulator-header {

@@ -7,7 +7,9 @@
 
     <title>@yield('title', 'Administration') | Atari Legend</title>
 
-    <link rel="stylesheet" href="{{ mix('css/admin.css') }}">
+    @vite(['resources/sass/admin/admin.scss'])
+    {{-- Attempting to import the SCEditor CSS in SASS doesn't work well (images missing) --}}
+    <link rel="stylesheet" href="{{ asset('js/sceditor-3.1.1/themes/square.min.css') }}" />
 
     @livewireStyles
 
@@ -39,8 +41,8 @@
     </div>
 
     @livewireScripts
-    <!-- script src="{{ mix('js/app.js') }}"></script -->
-    <script src="{{ mix('js/admin.js') }}"></script>
+
+    @vite(['resources/js/admin/app.js'])
 
     {{-- SCEditor does not work as a NPM module --}}
     <script src="{{ asset('js/sceditor-3.1.1/sceditor.min.js') }}"></script>

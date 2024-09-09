@@ -1,4 +1,4 @@
-const bootstrap = require('bootstrap');
+import * as bootstrap from 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', () => {
 

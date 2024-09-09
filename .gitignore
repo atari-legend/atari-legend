@@ -4,6 +4,7 @@
 /public/css
 /public/js
 /public/mix-manifest.json
+/public/build
 /public/*/vendor
 /storage/*.key
 /storage/debugbar

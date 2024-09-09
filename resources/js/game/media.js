@@ -1,10 +1,10 @@
+import * as bootstrap from 'bootstrap';
+
 /**
  * Handles copying data into the clipboard. Is used for example to copy the
  * SHA512 sum of a dump
  */
 document.addEventListener('DOMContentLoaded', () => {
-    var bootstrap = require('bootstrap');
-
     document.querySelectorAll('[data-copy-text]').forEach(el => {
         el.addEventListener('click', async(e) => {
             try {

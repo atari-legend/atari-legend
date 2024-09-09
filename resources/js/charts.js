@@ -1,1 +1,2 @@
-window.Chart = require('chart.js');
+import Chart from 'chart.js';
+window.Chart = Chart;

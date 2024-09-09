@@ -24,6 +24,6 @@
 
 @section('scripts')
     @if ($export)
-        <script src="{{ mix('js/tabulator.js') }}"></script>
+        @vite(['resources/js/tabulator.js'])
     @endif
 @endsection

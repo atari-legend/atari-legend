@@ -1,6 +1,6 @@
-const filepond = require('filepond');
-const filePondPluginImagePreview = require('filepond-plugin-image-preview');
-const filePondPluginFileValidateType = require('filepond-plugin-file-validate-type');
+import * as filepond from 'filepond';
+import filePondPluginImagePreview from 'filepond-plugin-image-preview';
+import filePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
 /**
  * Setup Filepond drag'n drop file upload

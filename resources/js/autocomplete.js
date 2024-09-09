@@ -1,4 +1,4 @@
-const autoComplete = require('@tarekraafat/autocomplete.js/dist/js/autoComplete');
+import autoComplete from '@tarekraafat/autocomplete.js/dist/js/autoComplete';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Keep track of all the auto-complete instances

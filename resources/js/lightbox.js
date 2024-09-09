@@ -1,4 +1,4 @@
-const SimpleLightbox = require('simple-lightbox');
+import SimpleLightbox from 'simple-lightbox';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Find all elements with class .lightbox-gallery and build

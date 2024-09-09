@@ -1,4 +1,4 @@
-const Isotope = require('isotope-layout');
+import  Isotope from 'isotope-layout';
 
 document.addEventListener('DOMContentLoaded', () => {
     var isotope = new Isotope('.isotope', {});

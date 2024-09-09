@@ -1,1 +1,2 @@
-window.APlayer = require('aplayer');
+import APlayer from 'aplayer';
+window.APlayer = APlayer;

@@ -18,5 +18,5 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ mix('js/menus.js') }}"></script>
+    @vite(['resources/js/menus.js'])    
 @endsection

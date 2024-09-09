@@ -1,4 +1,4 @@
-var BBCodeParser = require('bbcode-parser');
+import BBCodeParser from 'bbcode-parser';
 
 document.addEventListener('DOMContentLoaded', () => {
 

@@ -1,13 +1,5 @@
-{
-    "parserOptions": {
-        "ecmaVersion": 2017
-    },
-    "env": {
-        "browser": true,
-        "node": true
-    },
-    "extends": "eslint:recommended",
-    "rules": {
+export default [{
+    rules: {
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
         "brace-style": ["error", "1tbs"],
@@ -18,7 +10,9 @@
         "indent": ["error", 4],
         "key-spacing": ["error", {}],
         "keyword-spacing": ["error"],
-        "max-len": ["error", {"code": 120}],
+        "max-len": ["error", {
+            "code": 120,
+        }],
         "no-lonely-if": ["error"],
         "no-trailing-spaces": ["error"],
         "object-curly-spacing": ["error"],
@@ -26,7 +20,6 @@
         "space-in-parens": ["error"],
         "space-infix-ops": ["error"],
         "space-unary-ops": ["error"],
-        "spaced-comment": ["error"]
-
-    }
-}
+        "spaced-comment": ["error"],
+    },
+}];

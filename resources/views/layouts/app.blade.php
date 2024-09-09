@@ -7,7 +7,7 @@
 
     <title>@yield('title', 'Atari ST games, reviews, interviews, news and more') | Atari Legend</title>
 
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @vite(['resources/sass/app.scss'])
 
     <link rel="canonical" href="{{ url()->current() }}">
 
@@ -98,7 +98,7 @@
 
     @yield('scripts')
 
-    <script src="{{ mix('js/app.js') }}"></script>
+    @vite(['resources/js/app.js'])
 </body>
 
 </html>

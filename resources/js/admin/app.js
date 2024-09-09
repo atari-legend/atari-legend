@@ -1,9 +1,9 @@
-require('alpinejs');
+import 'alpinejs';
 
-require('../bootstrap');
-require('../autocomplete');
-require('./games/games');
-require('./menus/menus');
-require('./magazines/magazines');
-require('./sceditor');
-require('./filepond');
+import '../bootstrap';
+import '../autocomplete';
+import './games/games';
+import './menus/menus';
+import './magazines/magazines';
+import './sceditor';
+import './filepond';

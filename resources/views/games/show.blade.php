@@ -40,7 +40,7 @@
 
 @section('scripts')
     @if ($sndhs->isNotEmpty())
-        <script src="{{ mix('js/game-music.js') }}"></script>
+        @vite(['resources/js/game/music.js'])
     @endif
 @endsection
 
