@@ -8,7 +8,8 @@ export default defineConfig({
     plugins: [
         checker({
             eslint: {
-                lintCommand: 'eslint -c resources/js/eslint.config.mjs "resources/js/**/*.js"'
+                lintCommand: 'eslint "resources/js/**/*.js"',
+                useFlatConfig: true,
             }
         }),
         laravel({
