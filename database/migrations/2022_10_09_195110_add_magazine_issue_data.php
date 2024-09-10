@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('label', 256)->nullable();
             $table->integer('issue')
                 ->nullable(true)
-                ->default('null')
                 ->change();
         });
     }

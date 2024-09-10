@@ -1,5 +1,3 @@
-import 'alpinejs';
-
 import '../bootstrap';
 import '../autocomplete';
 import './games/games';

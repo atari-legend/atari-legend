@@ -43,11 +43,13 @@ return new class extends Migration
         });
         Schema::table('magazine', function (Blueprint $table) {
             $table->renameColumn('magazine_name', 'name');
+            $table->integer('location_id')->nullable();
 
-            $table->foreignId('location_id')
+            $table->foreign('location_id')
+                ->references('id')
+                ->on('location')
                 ->onUpdate('cascade')
-                ->onDelete('null')
-                ->nullable();
+                ->onDelete('set null');
         });
         Schema::rename('magazine', 'magazines');
 

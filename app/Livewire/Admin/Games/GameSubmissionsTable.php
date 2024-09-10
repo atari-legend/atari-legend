@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Games;
+namespace App\Livewire\Admin\Games;
 
 use App\Helpers\Helper;
 use App\Models\GameSubmitInfo;

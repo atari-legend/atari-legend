@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::table('magazine_indices', function (Blueprint $table) {
             $table->integer('individual_id')
-                ->nullable()
+                ->nullable();
+
+            $table->foreign('individual_id')
                 ->references('ind_id')
                 ->on('individuals')
                 ->onUpdate('cascade')

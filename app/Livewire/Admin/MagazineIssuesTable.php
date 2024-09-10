@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin;
+namespace App\Livewire\Admin;
 
 use App\Models\MagazineIssue;
 use Illuminate\Database\Eloquent\Builder;

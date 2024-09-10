@@ -51,4 +51,11 @@ return [
         'verify'  => true,
     ],
 
+    /*
+    | Disable rehashing (since Laravel 11.x) as we are using a customer
+    | password scheme with SHA512. The rehashing will break the password
+    | as it's using a different algorithm
+    */
+    'rehash_on_login' => false,
+
 ];

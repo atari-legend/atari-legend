@@ -23,11 +23,11 @@
                 @foreach ($indices as $index => $i)
                     <tr wire:key="index-field-{{ $i->id }}">
                         <td>
-                            <input type="number" wire:model.debounce.750ms="issue.indices.{{ $index }}.page"
+                            <input type="number" wire:model.live.debounce.750ms="issue.indices.{{ $index }}.page"
                                 class="form-control" value="{{ $i->page }}" size="4">
                         </td>
                         <td>
-                            <select class="form-select" wire:model="issue.indices.{{ $index }}.magazine_index_type_id">
+                            <select class="form-select" wire:model.live="issue.indices.{{ $index }}.magazine_index_type_id">
                                 <option value="null">-</option>
                                 @foreach ($indexTypes->sortBy('name') as $type)
                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -35,7 +35,7 @@
                             </select>
                         </td>
                         <td>
-                            <input type="text" wire:model="issue.indices.{{ $index }}.title"
+                            <input type="text" wire:model.live="issue.indices.{{ $index }}.title"
                                 class="form-control">
                         </td>
                         <td>
@@ -89,7 +89,7 @@
                                 value="{{ $i->individual_id }}">
                         </td>
                         <td>
-                            <input type="text" wire:model="issue.indices.{{ $index }}.score"
+                            <input type="text" wire:model.live="issue.indices.{{ $index }}.score"
                                 class="form-control" size="3">
                         </td>
                         <td>
@@ -105,7 +105,7 @@
         <button class="btn btn-primary" type="button" wire:click="addRow">Add row</button>
         <button class="btn btn-success" type="button" wire:click="save">Save</button>
         <div class="form-check d-inline-block ms-3">
-            <input class="form-check-input" type="checkbox" wire:model="sort" id="autosort">
+            <input class="form-check-input" type="checkbox" wire:model.live="sort" id="autosort">
             <label class="form-check-label" for="autosort">Auto-sort</label>
         </div>
     </form>

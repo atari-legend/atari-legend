@@ -7,11 +7,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, CanResetPassword;
+    use HasFactory, Notifiable, CanResetPassword;
 
     const PERMISSION_ADMIN = 1;
     const PERMISSION_USER = 2;
@@ -59,6 +58,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->forceFill([
             'email_verified_at' => $this->freshTimestamp(),
         ])->save();
+    }
+
+    public function getAuthPasswordName()
+    {
+        return 'sha512_password';
     }
 
     public function getAvatarAttribute()
