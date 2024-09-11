@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +25,6 @@ class Admin
             }
         }
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect('/');
     }
 }

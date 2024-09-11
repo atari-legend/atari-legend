@@ -10,7 +10,7 @@
         "@popperjs/core": "2.11.x",
         "@tarekraafat/autocomplete.js": "^8.3.2",
         "aplayer": "1.10.x",
-        "axios": "1.6.x",
+        "axios": "^1.7",
         "bbcode-parser": "1.0.x",
         "bootstrap": "5.2.x",
         "chart.js": "2.9.x",
@@ -23,7 +23,7 @@
         "sass": "1.57.x",
         "simple-lightbox": "2.1.x",
         "tabulator-tables": "4.9.x",
-        "vite": "5.x",
+        "vite": "^5.x",
         "vite-plugin-checker": "^0.8.0",
         "xlsx": "0.18.x"
     },
