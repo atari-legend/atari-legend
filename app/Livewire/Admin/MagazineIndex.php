@@ -33,12 +33,14 @@ class MagazineIndex extends Component
         $this->save();
         $this->issue->indices()->save(new ModelsMagazineIndex(['game_id' => null]));
         $this->issue->refresh();
+        $this->dispatch('magazine-index-rows-updated');
     }
 
     public function deleteRow(ModelsMagazineIndex $index)
     {
         $index->delete();
         $this->issue->refresh();
+        $this->dispatch('magazine-index-rows-updated');
     }
 
     public function updateSoftware(int $indexId, ?int $softwareId)

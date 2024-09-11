@@ -80,12 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // This event is to re-attach the autocomplete control
-    // to the MagazineIndex liveweire component for the game and
-    // software input. Since livewire will dynaically add rows to the DOM
-    // without this the input will not get the autocomplete as it's
-    // attached only once on page load
-    window.Livewire.hook('message.processed', () => {
+});
+
+// This event is to re-attach the autocomplete control
+// to the MagazineIndex liveweire component for the game and
+// software input. Since livewire will dynaically add rows to the DOM
+// without this the input will not get the autocomplete as it's
+// attached only once on page load
+document.addEventListener('livewire:initialized', () => {
+    Livewire.on('magazine-index-rows-updated', () => {
         setTimeout(() => {
             window.document.dispatchEvent(
                 new CustomEvent('atarilegend:autocomplete', {
