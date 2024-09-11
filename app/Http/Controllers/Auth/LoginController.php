@@ -32,7 +32,7 @@ class LoginController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('guest', except: ['logout'])
+            new Middleware('guest', except: ['logout']),
         ];
     }
 

@@ -22,17 +22,17 @@ class UsersTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Name', 'userid')
-                ->title(fn($row) => $row->userid)
-                ->location(fn($row) => route('admin.users.users.edit', $row))
+                ->title(fn ($row) => $row->userid)
+                ->location(fn ($row) => route('admin.users.users.edit', $row))
                 ->searchable(
-                    fn(Builder $query, $term) => $query->where('userid', 'like', '%' . $term . '%')
+                    fn (Builder $query, $term) => $query->where('userid', 'like', '%' . $term . '%')
                 )
                 ->sortable(
-                    fn(Builder $query, string $direction) => $query->orderBy('userid', $direction)
+                    fn (Builder $query, string $direction) => $query->orderBy('userid', $direction)
                 ),
             Column::make('Avatar')
                 ->label(
-                    fn($row) => $row->avatar
+                    fn ($row) => $row->avatar
                         ? '<img class="shadow-sm" style="max-height: 2rem" alt="User avatar" src="' . $row->avatar . '">'
                         : ''
                 )
@@ -42,21 +42,21 @@ class UsersTable extends DataTableComponent
                 }),
             Column::make('Join date', 'join_date')
                 ->format(
-                    fn($value) => $value
+                    fn ($value) => $value
                         ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
                         : '-'
                 )
-                ->sortable(fn(Builder $query, $direction) => $query->orderByRaw("convert(join_date, unsigned) $direction")),
+                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw("convert(join_date, unsigned) $direction")),
             Column::make('Last visit', 'last_visit')
                 ->format(
-                    fn($value) => $value
+                    fn ($value) => $value
                         ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
                         : '-'
                 )
-                ->sortable(fn(Builder $query, $direction) => $query->orderByRaw("convert(last_visit, unsigned) $direction")),
+                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw("convert(last_visit, unsigned) $direction")),
             Column::make('Actions')
                 ->label(
-                    fn($row) => view('admin.users.users.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.users.users.datatable_actions')->with(['row' => $row])
                 ),
         ];
     }
@@ -75,14 +75,14 @@ class UsersTable extends DataTableComponent
                     'yes' => 'Yes',
                     'no'  => 'No',
                 ])
-                ->filter(fn($query, $term) => $term === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at')),
+                ->filter(fn ($query, $term) => $term === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at')),
             'admin'    => SelectFilter::make('Is Admin')
                 ->options([
                     ''    => 'Any',
                     'yes' => 'Yes',
                     'no'  => 'No',
                 ])
-                ->filter(fn($query, $term) => $query->where('permission', '=', $term === 'yes' ? User::PERMISSION_ADMIN : User::PERMISSION_USER)),
+                ->filter(fn ($query, $term) => $query->where('permission', '=', $term === 'yes' ? User::PERMISSION_ADMIN : User::PERMISSION_USER)),
         ];
     }
 }

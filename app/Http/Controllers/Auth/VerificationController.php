@@ -37,5 +37,4 @@ class VerificationController extends Controller implements HasMiddleware
             new Middleware('throttle:6,1', only: ['verify', 'resend']),
         ];
     }
-
 }
