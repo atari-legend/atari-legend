@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "postbuild": "cp public/.htaccess-build public/build/.htaccess"
     },
     "devDependencies": {
         "@fontsource/audiowide": "4.5.x",

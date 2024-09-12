@@ -1,0 +1,8 @@
+# This file configures caching of the Vite assets 
+# It is copied into the Vite build directory by a
+# NPM post-build script
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 year"
+</IfModule>
