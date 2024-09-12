@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="{{ asset('js/sceditor-3.1.1/themes/square.min.css') }}" />
 
     @livewireStyles
+    @rappasoftTableStyles
+    @rappasoftTableThirdPartyStyles
 
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
@@ -41,6 +43,8 @@
     </div>
 
     @livewireScripts
+    @rappasoftTableScripts
+    @rappasoftTableThirdPartyScripts
 
     @vite(['resources/js/admin/app.js'])
 
