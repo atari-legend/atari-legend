@@ -14,6 +14,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\EmulatorController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameMusicController;
 use App\Http\Controllers\GameReleaseController;
@@ -133,6 +134,8 @@ Route::middleware(['verified', 'nondraft'])->group(function () {
             Route::get('crews.json', [CrewController::class, 'crews'])->name('crews');
         });
     });
+
+    Route::get('/emulator', [EmulatorController::class, 'index'])->name('emulator');
 
     Route::feeds('feed');
 });
