@@ -250,8 +250,8 @@ class MenuDisksController extends Controller
                 ChangelogHelper::insert([
                     'action'           => Changelog::INSERT,
                     'section'          => 'Menu Disks',
-                    'section_id'       => $disk->download_basename,
-                    'section_name'     => $disk->label,
+                    'section_id'       => $disk->getKey(),
+                    'section_name'     => $disk->download_basename,
                     'sub_section'      => 'Dump',
                     'sub_section_id'   => $dump->getKey(),
                     'sub_section_name' => $dump->format,

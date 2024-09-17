@@ -9,7 +9,7 @@
     @isset ($set)
         <div class="row">
             <div class="col">
-                @include('admin.menus.menus.card_list', ['menus' => $set->menus()->paginate(20) ?? []])
+                @include('admin.menus.menus.card_list', ['menus' => $set->menus()->orderBy('number')->orderBy('issue')->paginate(20) ?? []])
             </div>
         </div>
     @endif
