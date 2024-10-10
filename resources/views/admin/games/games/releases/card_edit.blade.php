@@ -46,7 +46,7 @@
                 </div>
                 <div class="col">
                     <label for="publisher" class="form-label">Publisher</label>
-                    <select class="form-select" @error('publisher') is-invalid @enderror name="publisher">
+                    <select class="form-select @error('publisher') is-invalid @enderror" name="publisher">
                         <option @if (old('publisher', $release?->publisher ?? null) === null) selected @endif value="">-</option>
                         @foreach ($companies as $publisher)
                             <option value="{{ $publisher->getKey() }}"
@@ -179,7 +179,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>                
+                </div>
                 <div class="col">
                     <label for="distributors" class="form-label">Distributors</label>
                     <select multiple class="form-select @error('distributors') is-invalid @enderror"
@@ -197,7 +197,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>                
+                </div>
             </div>
 
             <div class="mb-3 row">
@@ -212,7 +212,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>                
+                </div>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

@@ -164,7 +164,7 @@ class GameReleaseController extends Controller
     {
         $request->validate([
             'year'         => 'nullable|numeric|between:1984,' . date('Y'),
-            'publisher'    => 'numeric',
+            'publisher'    => 'nullable|numeric',
             'type'         => ['nullable', Rule::in(Release::TYPES)],
             'license'      => ['nullable', Rule::in(Release::LICENSES)],
             'status'       => ['nullable', Rule::in(Release::STATUSES)],
