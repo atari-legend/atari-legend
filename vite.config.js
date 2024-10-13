@@ -19,6 +19,7 @@ export default defineConfig({
                 'resources/sass/admin/admin.scss',
                 'resources/js/admin/app.js',
                 'resources/js/game/music.js',
+                'resources/js/game/emulator.js',
                 'resources/js/tabulator.js',
                 'resources/js/charts.js',
                 'resources/js/menus.js',
