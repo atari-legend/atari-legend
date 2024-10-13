@@ -26,6 +26,7 @@
                                     <th style="width: 15%;" class="ps-2 d-none d-sm-table-cell">Added</th>
                                     <th style="width: 10%;" class="d-none d-sm-table-cell">By</th>
                                     <th style="width: 40%;">Info</th>
+                                    <th>Play</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,6 +56,9 @@
                                         <td class="ps-2 text-nowrap d-none d-sm-table-cell">{{ $dump->date->format('F j, Y') }}
                                         <td class="d-none d-sm-table-cell">{{ Helper::user($dump->user) }}</td>
                                         <td>{{ $dump->info }}</td>
+                                        <td>
+                                            <a href="{{ route('emulator', ['release' => $release, 'dump' => $dump])}}"><i class="fas fa-fw fa-play"></i></a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

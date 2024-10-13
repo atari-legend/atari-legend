@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use App\Models\Release;
 use App\View\Components\Admin\Crumb;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * Helper for Releases.
@@ -28,5 +30,23 @@ class ReleaseHelper
                 $r->full_label
             ))
             ->toArray();
+    }
+
+    public static function boxScans(Release $release): Collection
+    {
+        return $release->boxscans
+            ->filter(function ($boxscan) {
+                return Str::startsWith($boxscan->type, 'Box');
+            })
+            ->map(function ($boxscan) use ($release) {
+                return [
+                    'release' => $release,
+                    'boxscan' => asset('storage/' . $boxscan->path),
+                    'preview' => route('games.releases.boxscan', [
+                        'release' => $release,
+                        'id'      => $boxscan->getKey(),
+                    ]),
+                ];
+            });
     }
 }
