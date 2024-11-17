@@ -122,6 +122,23 @@ class GameReleaseController extends Controller
         return redirect()->route('admin.games.releases.index', $release->game);
     }
 
+    public function destroy(Game $game, Release $release)
+    {
+        $release->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Game Release',
+            'section_id'       => $release->getKey(),
+            'section_name'     => $release->game->game_name,
+            'sub_section'      => 'Release Info',
+            'sub_section_id'   => $release->getKey(),
+            'sub_section_name' => $release->full_label ?? $release->game->game_name,
+        ]);
+
+        return redirect()->route('admin.games.releases.index', $release->game);
+    }
+
     public function storeAka(Request $request, Game $game, Release $release)
     {
         $aka = ReleaseAka::create([
