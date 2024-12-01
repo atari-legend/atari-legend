@@ -141,14 +141,14 @@ class GameFactsController extends Controller
     private function storeImage(Request $request, GameFact $fact)
     {
         if ($request->hasFile('file')) {
-            $file = $request->file('file');
+            foreach ($request->file('file') as $file) {
+                $screenshot = Screenshot::create([
+                    'imgext' => strtolower($file->extension()),
+                ]);
+                $file->storeAs($screenshot->getFolder('game_fact'), $screenshot->screenshot_id . '.' . $screenshot->imgext, 'public');
 
-            $screenshot = Screenshot::create([
-                'imgext' => strtolower($file->extension()),
-            ]);
-            $file->storeAs($screenshot->getFolder('game_fact'), $screenshot->screenshot_id . '.' . $screenshot->imgext, 'public');
-
-            $fact->screenshots()->attach($screenshot);
+                $fact->screenshots()->attach($screenshot);
+            }
         }
     }
 }

@@ -21,7 +21,7 @@
                             <td class="w-50">{!! Helper::bbCode(nl2br(e(Str::limit($fact->game_fact, 50)))) !!}</td>
                             <td>
                                 @forelse ($fact->screenshots as $screenshot)
-                                    <img class="w-100" src="{{ $screenshot->getUrl('game_fact') }}">
+                                    <img class="w-100 mb-1" src="{{ $screenshot->getUrl('game_fact') }}">
                                 @empty
                                     <span class="text-muted">-</span>
                                 @endforelse

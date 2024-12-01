@@ -38,7 +38,7 @@
 
             <div class="mb-3">
                 <label for="file" class="form-label">@if (isset($fact) && $fact->screenshots->isNotEmpty()) Replace @else Add @endif file</label>
-                <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" id="file">
+                <input type="file" class="form-control @error('file') is-invalid @enderror" name="file[]" id="file" multiple>
 
                 @error('file')
                     <span class="invalid-feedback" role="alert">
