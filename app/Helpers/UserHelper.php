@@ -17,7 +17,7 @@ class UserHelper
      *                                         ignoring that user in the uniqueness constraint
      *                                         for the email field
      */
-    public static function validationRules(User $currentUser = null)
+    public static function validationRules(?User $currentUser = null)
     {
         $rules = [
             'avatar'   => ['nullable', 'image'],

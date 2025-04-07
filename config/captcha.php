@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Secret key and Site key get on https://dashboard.hcaptcha.com/sites
  * */
