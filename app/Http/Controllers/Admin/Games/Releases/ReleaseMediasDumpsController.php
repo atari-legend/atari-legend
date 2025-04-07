@@ -36,12 +36,15 @@ class ReleaseMediasDumpsController extends Controller
             if ($zip->open(Storage::path($path)) === true) {
                 for ($i = 0; $i < $zip->count(); $i++) {
                     $filename = $zip->getNameIndex($i);
-                    $tmp = sys_get_temp_dir() . "/{$filename}";
-                    $data = $zip->getFromIndex($i);
-                    file_put_contents($tmp, $data);
+                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                    if (in_array(strtoupper($ext), Dump::FORMATS)) {
+                        $tmp = sys_get_temp_dir() . "/{$filename}";
+                        $data = $zip->getFromIndex($i);
+                        file_put_contents($tmp, $data);
 
-                    $this->storeDump($media, $tmp);
-                    unlink($tmp);
+                        $this->storeDump($media, $tmp);
+                        unlink($tmp);
+                    }
                 }
                 $zip->close();
             } else {

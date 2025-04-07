@@ -142,6 +142,7 @@
                     <span class="ms-2 text-muted">
                         The following dump formats are accepted: <strong>{{ join(', ', \App\Models\Dump::FORMATS) }}</strong>.
                         You can also upload a ZIP containing one or more dumps.
+                        <i class="fas fa-exclamation-triangle"></i> Only dumps are supported, not ZIPs with individual files.
                     </span>
                 </form>
             </div>
