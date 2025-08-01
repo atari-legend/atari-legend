@@ -38,6 +38,7 @@ class MenuSoftwareController extends Controller
                     new Crumb('', 'Create'),
                 ],
                 'types'       => MenuSoftwareContentType::all(),
+                'games'       => collect([]),
             ]);
     }
 
