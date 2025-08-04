@@ -52,7 +52,7 @@
                         <td>@if ($vs->amiga_id) <a href="{{ $vs->lemon_amiga_url }}">{{ $vs->amiga_id }}</a>  @else - @endif</td>
                         <td>@if ($vs->lemon64_slug) <a href="{{ $vs->lemon_64_url }}">{{ $vs->lemon64_slug }}</a>  @else - @endif</td>
                         <td>
-                            <form action="{{ route('admin.games.games.destroy.vs', ['game' => $game, 'vs' => $vs]) }}"
+                            <form action="{{ route('admin.games.games.destroy.vs', ['game' => $game, 'vs' => $vs->amiga_id]) }}"
                                 method="POST"
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf

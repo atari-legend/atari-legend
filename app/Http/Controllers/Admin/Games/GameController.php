@@ -266,9 +266,14 @@ class GameController extends Controller
         return redirect()->route('admin.games.games.edit', $game);
     }
 
-    public function destroyVs(Game $game, GameVs $vs)
+    public function destroyVs(Game $game, int $amigaId)
     {
-        $vs->delete();
+        $query = GameVs::where('atari_id', $game->getKey())
+            ->where('amiga_id', $amigaId);
+
+        $vs = $query->firstOrFail();
+
+        $query->delete();
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
@@ -276,7 +281,7 @@ class GameController extends Controller
             'section_id'       => $vs->game->getKey(),
             'section_name'     => $vs->game->game_name,
             'sub_section'      => 'Vs',
-            'sub_section_id'   => $vs->getKey(),
+            'sub_section_id'   => $vs->amiga_id,
             'sub_section_name' => $vs->game->game_name,
         ]);
 
