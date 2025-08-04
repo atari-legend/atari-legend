@@ -46,7 +46,7 @@
         </a>
     </li>
     <li>
-        <span class="badge bg-light text-secondary">{{ $game->similarGames->count() }}</span>
+        <span class="badge bg-light text-secondary">{{ $game->allSimilarGames->count() }}</span>
         <a class="@activeroute('admin.games.game-similar.index')"
             href="{{ route('admin.games.game-similar.index', $game) }}">
             Similar

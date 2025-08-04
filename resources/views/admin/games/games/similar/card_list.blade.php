@@ -25,7 +25,7 @@
             </div>
         </form>
 
-        @if ($game->similarGames->isNotEmpty())
+        @if ($game->allSimilarGames->isNotEmpty())
             <table class="table table-striped table-sm">
                 <thead>
                     <tr>
@@ -34,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($game->similarGames as $similar)
+                    @foreach ($game->allSimilarGames as $similar)
                         <tr>
                             <td><a href="{{ route('admin.games.games.edit', $similar) }}">{{ $similar->game_name }}</a>
                             </td>

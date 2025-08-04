@@ -27,7 +27,7 @@ class GameSimilarController extends Controller
     public function store(Request $request, Game $game)
     {
         $similar = Game::find($request->similar);
-        if ($similar && ! $game->similarGames->contains($similar)) {
+        if ($similar && ! $game->allSimilarGames->contains($similar)) {
             $game->similarGames()->attach($similar);
 
             ChangelogHelper::insert([
@@ -46,7 +46,18 @@ class GameSimilarController extends Controller
 
     public function destroy(Game $game, Game $similar)
     {
-        $game->similarGames()->detach($similar);
+        // Check if the relationship exists in the forward direction (game -> similar)
+        $forwardExists = $game->similarGames->contains($similar);
+
+        // Check if the relationship exists in the reverse direction (similar -> game)
+        $reverseExists = $similar->similarGames->contains($game);
+
+        // Remove the relationship that exists
+        if ($forwardExists) {
+            $game->similarGames()->detach($similar);
+        } elseif ($reverseExists) {
+            $similar->similarGames()->detach($game);
+        }
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,

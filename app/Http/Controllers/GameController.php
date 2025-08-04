@@ -68,7 +68,7 @@ class GameController extends Controller
 
         // Similar games, only the ones with screenshots
         $similar = null;
-        $game->similarGames
+        $game->allSimilarGames
             ->filter(function ($similar) {
                 return $similar->screenshots->isNotEmpty();
             })
