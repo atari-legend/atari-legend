@@ -16,6 +16,8 @@ class Review extends Model implements Feedable
     protected $primaryKey = 'review_id';
     public $timestamps = false;
 
+    protected $fillable = ['user_id', 'draft', 'review_text', 'review_date', 'review_edit'];
+
     protected $casts = [
         'review_date' => 'datetime:timestamp',
     ];

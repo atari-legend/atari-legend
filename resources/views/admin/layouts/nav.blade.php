@@ -33,15 +33,15 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#reviews" aria-expanded="false" aria-controls="reviews">
-                    <i class="fas fa-check-double fa-fw me-1"></i> Reviews
+                <button class="accordion-button @collapsedroute('admin.reviews.*') p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#reviews" aria-expanded="false" aria-controls="reviews">
+                    <i class="far fa-file-alt fa-fw me-1"></i> Reviews
                 </button>
             </h2>
-            <div id="reviews" class="accordion-collapse collapse border-0">
+            <div id="reviews" class="accordion-collapse collapse @showroute('admin.reviews.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Reviews</a></li>
-                        <li><a>Submissions</a></li>
+                        <li><a class="@activeroute('admin.reviews.reviews.*')" href="{{ route('admin.reviews.reviews.index') }}">Reviews</a></li>
+                        <li><a class="@activeroute('admin.reviews.submissions.*')" href="{{ route('admin.reviews.submissions.index') }}">Submissions</a></li>
                     </ul>
                 </div>
             </div>

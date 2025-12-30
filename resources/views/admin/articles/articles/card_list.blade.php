@@ -1,4 +1,4 @@
-<h2 class="card-title fs-4">News</h2>
+<h2 class="card-title fs-4">Articles</h2>
 
 <div class="card mb-3 bg-light">
     <div class="card-body">
