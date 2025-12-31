@@ -3,7 +3,7 @@
         <h2 class="text-uppercase">
             <a href="{{ route('games.show', ['game' => $review->games->first()]) }}">{{ $review->games->first()->game_name }}</a>
             @contributor
-                <a href="{{ config('al.legacy.base_url').'/admin/games/games_review_edit.php?game_id='.$review->games->first()->game_id.'&reviewid='.$review->review_id }}">
+                <a href="{{ route('admin.reviews.reviews.edit', $review) }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                 </a>
             @endcontributor
