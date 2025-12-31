@@ -39,6 +39,17 @@ class Review extends Model implements Feedable
             ->using(ScreenshotReview::class);
     }
 
+    /**
+     * Get the comment for a specific screenshot in this review.
+     *
+     * @param  int  $screenshotId  ID of the screenshot to get the comment for
+     * @return ScreenshotReview|null The ScreenshotReview pivot model with the comment, or null if not found
+     */
+    public function getScreenshotComment(int $screenshotId)
+    {
+        return $this->screenshots->firstWhere('screenshot_id', '=', $screenshotId);
+    }
+
     public function score()
     {
         return $this->hasOne(ReviewScore::class, 'review_id');
