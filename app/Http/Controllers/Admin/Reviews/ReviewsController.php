@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin\Reviews;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
+use App\Models\Game;
 use App\Models\Review;
 use App\Models\ReviewScore;
 use App\Models\ScreenshotReviewComment;
+use App\Models\User;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,6 +38,57 @@ class ReviewsController extends Controller
                 ],
                 'review' => $review,
             ]);
+    }
+
+    public function create()
+    {
+        return view('admin.reviews.reviews.edit')
+            ->with([
+                'breadcrumbs' => [
+                    new Crumb(route('admin.reviews.reviews.index'), 'Reviews'),
+                    new Crumb('', 'Create'),
+                ],
+            ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate(array_merge(
+            $this->getValidationRules(),
+            ['game' => 'required|exists:game,game_id']));
+
+        $review = new Review([
+            'user_id'     => $request->author,
+            'draft'       => $request->draft ? true : false,
+            'review_edit' => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'review_text' => $request->text,
+            'review_date' => Carbon::parse($request->date)->timestamp,
+        ]);
+
+        $game = Game::findOrFail($request->game);
+        $game->reviews()->save($review);
+
+        $user = User::findOrFail($request->author);
+        $user->reviews()->save($review);
+
+        $score = new ReviewScore();
+        $score->review_graphics = $request->graphics ?? 0;
+        $score->review_sound = $request->sound ?? 0;
+        $score->review_gameplay = $request->gameplay ?? 0;
+        $score->review_overall = $request->overall ?? 0;
+        $review->score()->save($score);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Reviews',
+            'section_id'       => $review->getKey(),
+            'section_name'     => $review->games[0]->game_name,
+            'sub_section'      => 'Review',
+            'sub_section_id'   => $review->getKey(),
+            'sub_section_name' => $review->games[0]->game_name,
+        ]);
+
+        return redirect()->route('admin.reviews.reviews.edit', $review);
     }
 
     public function update(Request $request, Review $review)

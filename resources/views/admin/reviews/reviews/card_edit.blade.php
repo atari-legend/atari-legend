@@ -17,6 +17,28 @@
                 @method('PUT')
             @endisset
 
+            @if(!isset($review))
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label for="game" class="form-label">Game</label>
+                        <input class="autocomplete form-control @error('game') is-invalid @enderror"
+                            name="game_name" id="game_name" type="search" required
+                            data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
+                            data-autocomplete-key="game_name" data-autocomplete-id="game_id"
+                            data-autocomplete-companion="game"
+                            value="{{ old('game_name') }}"
+                            placeholder="Type a game name..." autocomplete="off">
+                        <input type="hidden" name="game" value="{{ old('game') }}">
+
+                        @error('game')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="mb-3">
@@ -145,29 +167,34 @@
                     </div>
             </fieldset>
 
-            @if ($review->games[0]->screenshots->isNotEmpty())
+
                 <fieldset class="lightbox-gallery">
                     <legend>Screenshots</legend>
-                    @foreach ($review->games[0]->screenshots->sortBy('screenshot_id') as $screenshot)
-                        <div class="row mb-3">
-                            <div class="col-2">
-                                <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $review->games[0]) }}" alt="Game screenshot">
-                            </div>
-                            <div class="col-10">
-                                <input type="text" class="form-control @error('screenshot_comment_'.$screenshot->getKey()) is-invalid @enderror" id="screenshot-comment-{{ $screenshot->screenshot_id }}"
-                                    value="{{ old('screenshot_comment_'.$screenshot->getKey(), isset($review) ? $review->getScreenshotComment($screenshot->getKey())?->pivot?->comment?->comment_text : '') }}"
-                                    name="screenshot_comment_{{ $screenshot->getKey() }}" placeholder="Comment for this screenshot">
+                    @if (isset($review) && $review->games[0]->screenshots->isNotEmpty())
+                        @foreach ($review->games[0]->screenshots->sortBy('screenshot_id') as $screenshot)
+                            <div class="row mb-3">
+                                <div class="col-2">
+                                    <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $review->games[0]) }}" alt="Game screenshot">
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" class="form-control @error('screenshot_comment_'.$screenshot->getKey()) is-invalid @enderror" id="screenshot-comment-{{ $screenshot->screenshot_id }}"
+                                        value="{{ old('screenshot_comment_'.$screenshot->getKey(), isset($review) ? $review->getScreenshotComment($screenshot->getKey())?->pivot?->comment?->comment_text : '') }}"
+                                        name="screenshot_comment_{{ $screenshot->getKey() }}" placeholder="Comment for this screenshot">
 
-                                @error('screenshot_comment_'.$screenshot->getKey())
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                    @error('screenshot_comment_'.$screenshot->getKey())
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
+                        @endforeach
+                    @else
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle"></i> Please save the initial review first to be able to add screenshot comments.
                         </div>
-                    @endforeach
+                    @endif
                 </fieldset>
-            @endif
 
             <button type="submit" class="btn btn-success">Save</button>
             <a href="{{ route('admin.reviews.'.(old('submission', isset($review) ? $review->review_edit : false) ? 'submissions' : 'reviews').'.index') }}" class="btn btn-link">Cancel</a>
