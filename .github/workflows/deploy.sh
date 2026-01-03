@@ -57,3 +57,4 @@ ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan migrate --f
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan config:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan optimize:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan optimize"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan sndh:fetch"

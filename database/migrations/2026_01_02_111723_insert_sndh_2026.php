@@ -5,19 +5,24 @@ use App\Models\Sndh;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class InsertSndh45 extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        $songs = json_decode(file_get_contents(base_path(GenerateSNDHJson::SONGS_JSON_PATH) . '/songs-4.5.json'), true);
+        DB::table('sndh_archives')->insert([
+            'id'           => 'sndh2026lf',
+            'download_url' => 'https://sndh.atari.org/files/sndh2026_lf.zip',
+        ]);
+
+        $songs = json_decode(file_get_contents(base_path(GenerateSNDHJson::SONGS_JSON_PATH) . '/songs-sndh2026lf.json'), true);
         foreach ($songs as $path => $song) {
-            Sndh::create([
+            Sndh::updateOrCreate([
                 'id'              => $path,
+            ], [
+                'sndh_archive_id' => 'sndh2026lf',
                 'title'           => $song['title'] ?? null,
                 'composer'        => $song['composer'] ?? null,
                 'ripper'          => $song['ripper'] ?? null,
@@ -30,11 +35,15 @@ class InsertSndh45 extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        DB::table('sndhs')->delete();
+        DB::table('sndhs')
+            ->where('sndh_archive_id', 'sndh2026lf')
+            ->delete();
+
+        DB::table('sndh_archives')
+            ->where('id', 'sndh2026lf')
+            ->delete();
     }
-}
+};

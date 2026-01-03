@@ -63,7 +63,7 @@
                                             value="{{ $game->game_id }}:{{ $sndh->id }}"
                                             class="form-check-input">
                                         <label class="form-check-lable" for="{{ $game->game_id }}:{{ $sndh->id }}">
-                                            {{ $sndh->title}} <small class="text-muted ms-2">{{ $sndh->id }}</small>
+                                            {{ $sndh->title}} <small class="text-muted ms-2">{{ $sndh->id }} [{{ $sndh->sndh_archive_id }}]</small>
                                         </label>
                                     </div>
                                 @endforeach

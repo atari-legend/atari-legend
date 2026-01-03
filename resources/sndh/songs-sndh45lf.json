@@ -1,0 +1,263 @@
+{
+    "/505/DMA/YM2006": {
+        "title": "YM2006 (STE only)",
+        "composer": "505/checkpoint^paradox",
+        "ripper": "Not ripped (original track)",
+        "converter": "maxYMiser by Gareth Morris (c) 2006",
+        "year": 2006,
+        "subtunes": 1
+    },
+    "/Armstrong_Janette_R/TimeRunner-Title": {
+        "title": "TimeRunner - Title",
+        "composer": "Janette R. Armstrong",
+        "converter": "Evil",
+        "ripper": "Evil",
+        "subtunes": 1,
+        "year": 1989
+    },
+    "/Camp_Geoff/Maths_X_2": {
+        "title": "Maths X 2",
+        "composer": "Geoff Camp",
+        "ripper": "Grazey / PHF",
+        "converter": "Grazey / PHF",
+        "subtunes": 5
+    },
+    "/Cerror/Imaginary_Friend": {
+        "title": "Imaginary friend (st-version)",
+        "composer": "cerror (or.by.radix)",
+        "ripper": "cerror",
+        "converter": "Music-Mon V2.5",
+        "year": 2006,
+        "subtunes": 1,
+        "times": [
+            64
+        ]
+    },
+    "/Dma-Sc/Frankiki": {
+        "composer": "Dma-Sc"
+    },
+    "/Dubmood/Destroy_the_Template": {
+        "title": "Destroy the Template",
+        "composer": "Dubmood",
+        "ripper": "Not ripped (original track)",
+        "converter": "YM Rockerz",
+        "year": 2006,
+        "subtunes": 1
+    },
+    "/Excellence_In_Art/DMA/Talk_Talk_2_Main": {
+        "title": "Talk Talk 2 - The Church of Excellence in Art main tune",
+        "composer": "Per Almered (XiA) 2010",
+        "ripper": "GGN",
+        "year": 2010
+    },
+    "/Excellence_In_Art/DMA/The_pull_me_back_in": {
+        "title": "They pull me back in",
+        "composer": "Per Almered (XiA) 2009",
+        "ripper": "Not ripped (original track)",
+        "converter": "maxYMiser by Gareth Morris (c) 2009",
+        "year": 2009,
+        "subtunes": 1
+    },
+    "/Floopy/Teletubb": {
+        "title": "Teletubb",
+        "composer": "Floopy",
+        "ripper": "Floopy",
+        "converter": "SSD_SNDH",
+        "year": 2005,
+        "subtunes": 1
+    },
+    "/Gower_Andrew/Fleas": {
+        "title": "Fleas",
+        "composer": "Andrew Gower",
+        "ripper": "GGN",
+        "converter": "STOSRip v1.0",
+        "subtunes": 2
+    },
+    "/Greiml_Ewald/Eierkopf": {
+        "title": "Eierkopf",
+        "composer": "Ewald Greiml",
+        "year": 1993,
+        "ripper": "GGN",
+        "converter": "STOSRip v1.0",
+        "subtunes": 4
+    },
+    "/Helene/Temptrance": {
+        "title": "temptrance",
+        "composer": "helene",
+        "ripper": "Gene Galaxo",
+        "converter": "Music-Mon V2.5",
+        "year": 2007,
+        "subtunes": 1
+    },
+    "/Johansen_Benny/Yahtzee": {
+        "title": "Yatzy",
+        "composer": "Benny Johansen",
+        "ripper": "GGN",
+        "converter": "STOSRip v1.0",
+        "year": 1989,
+        "subtunes": 4
+    },
+    "/Lowe_Dave/Carrier_Command": {
+        "title": "Carrier Command",
+        "composer": "Dave Lowe",
+        "ripper": "Grazey",
+        "converter": "Evil",
+        "year": 1987,
+        "subtunes": 1
+    },
+    "/Lowe_Dave/Starglider_2": {
+        "title": "Starglider 2",
+        "composer": "Dave Lowe",
+        "converter": "Evil",
+        "ripper": "Grazey",
+        "subtunes": 1,
+        "year": 1989
+    },
+    "/Magnuson_Grant/Granshot": {
+        "title": "Granshot",
+        "composer": "Grant Magnuson",
+        "ripper": "GGN",
+        "converter": "STOSRip v1.0",
+        "subtunes": 2
+    },
+    "/Marcer/Simply_Larry": {
+        "title": "SIMPLY LARRY",
+        "composer": "Marcer",
+        "ripper": "",
+        "converter": "Music-Mon V2.5",
+        "year": 2006,
+        "subtunes": 1
+    },
+    "/Marcer/Sorn_Destiny_(Digi)": {
+        "title": "SORN DESTINY (DIGI)",
+        "composer": "Marcer",
+        "ripper": "",
+        "converter": "Music-Mon V2.5",
+        "year": 2005,
+        "subtunes": 1
+    },
+    "/Marcer/Square_Poker_Intro": {
+        "composer": "Marcer"
+    },
+    "/Massalski_Ingo/Tolteka-Title": {
+        "title": "Tolteka - Title",
+        "composer": "Ingo Massalski",
+        "converter": "Evil",
+        "ripper": "Evil",
+        "subtunes": 1,
+        "year": 1987
+    },
+    "/Miggy/Hyper_dog_poo": {
+        "title": "Hyper dog poo ( Unfinished )",
+        "composer": "Miggy",
+        "ripper": "original",
+        "converter": "Miggy",
+        "year": 1994,
+        "subtunes": 1
+    },
+    "/Peschardt_Vivian/Le_jeu_des_sons_1": {
+        "title": "Le jeu des sons no 1",
+        "composer": "V. Peschardt",
+        "ripper": "GGN",
+        "converter": "STOSRip v1.0",
+        "subtunes": 1
+    },
+    "/Spaz/Ooh_Crikey_Bummer": {
+        "title": "Ooh Crikey - What A Bummer",
+        "composer": "Spaz",
+        "ripper": "Mug UK",
+        "converter": "Quartet-2-SNDH (c) PHF",
+        "year": 1991,
+        "subtunes": 1,
+        "times": [
+            0
+        ]
+    },
+    "/Starbuck/One_Step_Foreward": {
+        "title": "One Step foreward (SNDH Version)",
+        "composer": "Starbuck^Creative Mind",
+        "ripper": "Not ripped (original track)",
+        "converter": "maxYMiser by Gareth Morris (c) 2005",
+        "year": 2006,
+        "subtunes": 1
+    },
+    "/Starbuck/Sonic-Bridge_Zone": {
+        "composer": "Starbuck^Creative Mind"
+    },
+    "/Tao/Songs_That_Make_You_Go_Mmh/Commando_Hiscore_digi": {
+        "title": "Commando (Stmygm)",
+        "composer": "Tao / Cream (orig. Rob Hubbard)",
+        "ripper": "Grazey / PHF",
+        "converter": "Grazey / PHF",
+        "year": 1991,
+        "subtunes": 1
+    },
+    "/Tao/Songs_That_Make_You_Go_Mmh/Sanxion_Loader": {
+        "title": "Sanxion Loader (Stmygm)",
+        "composer": "Tao / Cream (orig. Rob Hubbard)",
+        "ripper": "Grazey / PHF",
+        "converter": "Grazey / PHF",
+        "year": 1991,
+        "subtunes": 1
+    },
+    "/Unknown_Composer/Into_The_Eagles_Nest-Title": {
+        "title": "Into The Eagles Nest - Title",
+        "composer": "Unknown",
+        "converter": "Evil",
+        "ripper": "Evil",
+        "subtunes": 1,
+        "year": 1987
+    },
+    "/Unknown_Composer/Music_Studio/It_Came_Upon_MidnightClear": {
+        "title": "It Came Upon a Midnight Clear"
+    },
+    "/Unknown_Composer/Music_Studio/Orange_Blossom_Special": {
+        "title": "Orange Blossom Special"
+    },
+    "/Unknown_Composer/Victory-Title": {
+        "title": "Victory - Title",
+        "composer": "Unknown",
+        "converter": "Evil",
+        "ripper": "Evil",
+        "subtunes": 1,
+        "year": 1989
+    },
+    "/Unknown_Composer/X32/Carry_All": {
+        "title": "Carry All",
+        "composer": "Unknown",
+        "ripper": "N/A",
+        "converter": "Grazey / PHF",
+        "subtunes": 2
+    },
+    "/Unknown_Composer/X32/Pompom": {
+        "title": "Pompom",
+        "composer": "Unknown",
+        "ripper": "N/A",
+        "converter": "Grazey / PHF",
+        "subtunes": 1
+    },
+    "/Williams_Tony/Onslaught": {
+        "title": "Onslaught",
+        "composer": "Tony Williams",
+        "ripper": "Grazey / PHF",
+        "converter": "Grazey / PHF",
+        "year": 1989,
+        "subtunes": 3
+    },
+    "/gwEm/Acidic_Tears": {
+        "title": "Acidic Tears",
+        "composer": "gwEm",
+        "ripper": "",
+        "converter": "",
+        "year": 2005,
+        "subtunes": 1
+    },
+    "/gwEm/Future_Gone_Wrong": {
+        "title": "Future Gone Wrong",
+        "composer": "gwEm",
+        "ripper": "Not ripped (original track)",
+        "converter": "YM Rockerz",
+        "year": 2006,
+        "subtunes": 1
+    }
+}

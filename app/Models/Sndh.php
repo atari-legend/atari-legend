@@ -15,6 +15,7 @@ class Sndh extends Model
 
     protected $fillable = [
         'id',
+        'sndh_archive_id',
         'title',
         'composer',
         'ripper',
