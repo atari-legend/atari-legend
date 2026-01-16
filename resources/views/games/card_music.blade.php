@@ -33,7 +33,6 @@
                         ])
                         @php($index++)
                     @endif
-                    
                 @endforeach
             </table>
             </div>
