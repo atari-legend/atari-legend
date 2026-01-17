@@ -7,4 +7,9 @@
             @include('admin.interviews.interviews.card_edit')
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            @include('admin.interviews.interviews.card_images')
+        </div>
+    </div>
 @endsection

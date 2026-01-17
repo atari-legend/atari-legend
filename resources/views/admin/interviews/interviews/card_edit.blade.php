@@ -113,6 +113,9 @@
                         <label for="chapters" class="form-label">Chapters</label>
                         <textarea class="form-control sceditor @error('chapters') is-invalid @enderror" id="chapters" name="chapters"
                             rows="5">{{ old('chapters', isset($interview) ? Str::replace('<br />', "\n", $interview->texts->first()?->interview_chapters) : '') }}</textarea>
+                        <div class="form-text">
+                            Use <code>[hotspotUrl=#1]Chapter title[/hotspotUrl]</code> to create links to sections in the interview text.
+                        </div>
 
                         @error('chapters')
                             <span class="invalid-feedback" role="alert">
@@ -129,6 +132,9 @@
                         <label for="text" class="form-label">Interview Text</label>
                         <textarea class="form-control sceditor @error('text') is-invalid @enderror" id="text" name="text" required
                             rows="30">{{ old('text', isset($interview) ? Str::replace('<br />', "\n", $interview->texts->first()?->interview_text) : '') }}</textarea>
+                        <div class="form-text">
+                            Use <code>[hotspot=1]Question text[/hotspot]</code> to mark sections that correspond to chapter links.
+                        </div>
 
                         @error('text')
                             <span class="invalid-feedback" role="alert">
@@ -138,34 +144,6 @@
                     </div>
                 </div>
             </div>
-
-            <fieldset class="lightbox-gallery">
-                <legend>Screenshots</legend>
-                @if (isset($interview) && $interview->screenshots->isNotEmpty())
-                    @foreach ($interview->screenshots->sortBy('screenshot_id') as $screenshot)
-                        <div class="row mb-3">
-                            <div class="col-2">
-                                <img class="w-100" src="{{ $screenshot->getUrl('interview') }}" alt="Interview screenshot">
-                            </div>
-                            <div class="col-10">
-                                <input type="text" class="form-control @error('screenshot_comment_'.$screenshot->getKey()) is-invalid @enderror" id="screenshot-comment-{{ $screenshot->screenshot_id }}"
-                                    value="{{ old('screenshot_comment_'.$screenshot->getKey(), $interview->getScreenshotComment($screenshot->getKey())?->pivot?->comment?->comment_text ?? '') }}"
-                                    name="screenshot_comment_{{ $screenshot->getKey() }}" placeholder="Comment for this screenshot">
-
-                                @error('screenshot_comment_'.$screenshot->getKey())
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="alert alert-info" role="alert">
-                        <i class="fas fa-info-circle"></i> Please save the initial interview first to be able to add screenshot comments.
-                    </div>
-                @endif
-            </fieldset>
 
             <button type="submit" class="btn btn-success" name="stay" value="true">Save</button>
             <button type="submit" class="btn btn-primary">Save & Close</button>

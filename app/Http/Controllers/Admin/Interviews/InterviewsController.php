@@ -7,12 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Interview;
 use App\Models\InterviewText;
+use App\Models\Screenshot;
+use App\Models\ScreenshotInterview;
 use App\Models\ScreenshotInterviewComment;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class InterviewsController extends Controller
 {
@@ -139,6 +140,89 @@ class InterviewsController extends Controller
         ]);
 
         return redirect()->route('admin.interviews.interviews.index');
+    }
+
+    public function storeImage(Request $request, Interview $interview)
+    {
+        $request->validate([
+            'image' => 'array',
+        ]);
+
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $image) {
+                $screenshot = Screenshot::create([
+                    'imgext' => strtolower($image->extension()),
+                ]);
+
+                $image->storeAs($screenshot->getFolder('interview'), $screenshot->file, 'public');
+
+                $interview->screenshots()->attach($screenshot);
+
+                ChangelogHelper::insert([
+                    'action'           => Changelog::INSERT,
+                    'section'          => 'Interviews',
+                    'section_id'       => $interview->getKey(),
+                    'section_name'     => $interview->individual->ind_name,
+                    'sub_section'      => 'Screenshots',
+                    'sub_section_id'   => $screenshot->getKey(),
+                    'sub_section_name' => $screenshot->file,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.interviews.interviews.edit', $interview);
+    }
+
+    public function destroyImage(Interview $interview, Screenshot $image)
+    {
+        Storage::disk('public')->delete($image->getPath('interview'));
+        $image->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Interviews',
+            'section_id'       => $interview->getKey(),
+            'section_name'     => $interview->individual->ind_name,
+            'sub_section'      => 'Screenshots',
+            'sub_section_id'   => $image->getKey(),
+            'sub_section_name' => $image->file,
+        ]);
+
+        return redirect()->route('admin.interviews.interviews.edit', $interview);
+    }
+
+    public function updateImage(Request $request, Interview $interview)
+    {
+        $request->collect()
+            ->filter(fn ($value, $key) => str_starts_with($key, 'description-'))
+            ->each(function ($value, $key) {
+                $screenshotId = str_replace('description-', '', $key);
+                $screenshotInterview = ScreenshotInterview::findOrFail($screenshotId);
+                $comment = $screenshotInterview->comment;
+                if (! $comment && $value) {
+                    $screenshotInterview->comment()->save(new ScreenshotInterviewComment([
+                        'comment_text' => $value,
+                    ]));
+                } elseif ($comment && $value) {
+                    $comment->update([
+                        'comment_text' => $value,
+                    ]);
+                } elseif ($comment && ! $value) {
+                    $comment->delete();
+                }
+            });
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Interviews',
+            'section_id'       => $interview->getKey(),
+            'section_name'     => $interview->individual->ind_name,
+            'sub_section'      => 'Screenshots',
+            'sub_section_id'   => $interview->getKey(),
+            'sub_section_name' => $interview->individual->ind_name,
+        ]);
+
+        return redirect()->route('admin.interviews.interviews.edit', $interview);
     }
 
     private function getValidationRules(): array

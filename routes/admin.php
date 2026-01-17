@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemMemoryController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemMemoryEnhancementController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemTosController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\Interviews\InterviewsController;
 use App\Http\Controllers\Admin\Magazines\MagazineIndexTypesController;
 use App\Http\Controllers\Admin\Magazines\MagazineIssuesController;
 use App\Http\Controllers\Admin\Magazines\MagazinesController;
@@ -49,7 +50,6 @@ use App\Http\Controllers\Admin\News\NewsSubmissionsController;
 use App\Http\Controllers\Admin\Other\QuoteController;
 use App\Http\Controllers\Admin\Other\SpotlightController;
 use App\Http\Controllers\Admin\Other\TriviaController;
-use App\Http\Controllers\Admin\Interviews\InterviewsController;
 use App\Http\Controllers\Admin\Reviews\ReviewsController;
 use App\Http\Controllers\Admin\Reviews\ReviewsSubmissionsController;
 use App\Http\Controllers\Admin\User\CommentController;
@@ -193,6 +193,10 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/interviews')->name('interviews.')->group(function () {
                     Route::resource('interviews', InterviewsController::class);
+
+                    Route::post('interviews/{interview}/image', [InterviewsController::class, 'storeImage'])->name('interviews.image.store');
+                    Route::put('interviews/{interview}/image', [InterviewsController::class, 'updateImage'])->name('interviews.image.update');
+                    Route::delete('interviews/{interview}/image/{image}', [InterviewsController::class, 'destroyImage'])->name('interviews.image.destroy');
                 });
 
                 Route::prefix('/articles')->name('articles.')->group(function () {
