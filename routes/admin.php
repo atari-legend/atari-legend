@@ -49,6 +49,7 @@ use App\Http\Controllers\Admin\News\NewsSubmissionsController;
 use App\Http\Controllers\Admin\Other\QuoteController;
 use App\Http\Controllers\Admin\Other\SpotlightController;
 use App\Http\Controllers\Admin\Other\TriviaController;
+use App\Http\Controllers\Admin\Interviews\InterviewsController;
 use App\Http\Controllers\Admin\Reviews\ReviewsController;
 use App\Http\Controllers\Admin\Reviews\ReviewsSubmissionsController;
 use App\Http\Controllers\Admin\User\CommentController;
@@ -188,6 +189,10 @@ Route::middleware('verified')->group(function () {
                 Route::prefix('/reviews')->name('reviews.')->group(function () {
                     Route::resource('reviews', ReviewsController::class);
                     Route::resource('submissions', ReviewsSubmissionsController::class);
+                });
+
+                Route::prefix('/interviews')->name('interviews.')->group(function () {
+                    Route::resource('interviews', InterviewsController::class);
                 });
 
                 Route::prefix('/articles')->name('articles.')->group(function () {

@@ -49,14 +49,14 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#interviews" aria-expanded="false" aria-controls="interviews">
+                <button class="accordion-button @collapsedroute('admin.interviews.*') p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#interviews" aria-expanded="false" aria-controls="interviews">
                     <i class="fas fa-microphone fa-fw me-1"></i> Interviews
                 </button>
             </h2>
-            <div id="interviews" class="accordion-collapse collapse border-0">
+            <div id="interviews" class="accordion-collapse collapse @showroute('admin.interviews.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Interviews</a></li>
+                        <li><a class="@activeroute('admin.interviews.interviews.*')" href="{{ route('admin.interviews.interviews.index') }}">Interviews</a></li>
                     </ul>
                 </div>
             </div>

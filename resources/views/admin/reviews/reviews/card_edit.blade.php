@@ -196,7 +196,8 @@
                     @endif
                 </fieldset>
 
-            <button type="submit" class="btn btn-success">Save</button>
+            <button type="submit" class="btn btn-success" name="stay" value="true">Save</button>
+            <button type="submit" class="btn btn-primary">Save & Close</button>
             <a href="{{ route('admin.reviews.'.(old('submission', isset($review) ? $review->review_edit : false) ? 'submissions' : 'reviews').'.index') }}" class="btn btn-link">Cancel</a>
 
         </form>

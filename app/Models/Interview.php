@@ -13,6 +13,8 @@ class Interview extends Model implements Feedable
     protected $primaryKey = 'interview_id';
     public $timestamps = false;
 
+    protected $fillable = ['user_id', 'ind_id', 'draft'];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -38,6 +40,14 @@ class Interview extends Model implements Feedable
     public function comments()
     {
         return $this->belongsToMany(Comment::class, 'interview_user_comments', 'interview_id', 'comment_id');
+    }
+
+    /**
+     * Get the screenshot pivot for a specific screenshot in this interview.
+     */
+    public function getScreenshotComment(int $screenshotId)
+    {
+        return $this->screenshots->firstWhere('screenshot_id', '=', $screenshotId);
     }
 
     public function toFeedItem(): FeedItem

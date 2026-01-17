@@ -88,7 +88,11 @@ class ReviewsController extends Controller
             'sub_section_name' => $review->games[0]->game_name,
         ]);
 
-        return redirect()->route('admin.reviews.reviews.edit', $review);
+        if ($request->stay) {
+            return redirect()->route('admin.reviews.reviews.edit', $review);
+        } else {
+            return redirect()->route('admin.reviews.reviews.index');
+        }
     }
 
     public function update(Request $request, Review $review)
@@ -145,7 +149,11 @@ class ReviewsController extends Controller
             'sub_section_name' => $review->games[0]->game_name,
         ]);
 
-        return redirect()->route('admin.reviews.' . ($request->submission ? 'submissions' : 'reviews') . '.index');
+        if ($request->stay) {
+            return redirect()->route('admin.reviews.reviews.edit', $review);
+        } else {
+            return redirect()->route('admin.reviews.' . ($request->submission ? 'submissions' : 'reviews') . '.index');
+        }
     }
 
     public function destroy(Review $review)
