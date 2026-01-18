@@ -5,7 +5,7 @@
             <span class="text-uppercase d-none d-lg-inline">Interview</span>
 
             @contributor
-                <a href="{{ config('al.legacy.base_url').'/admin/interviews/interviews_edit.php?interview_id='.$interview->interview_id }}">
+                <a href="{{ route('admin.interviews.interviews.edit', $interview) }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                 </a>
             @endcontributor
