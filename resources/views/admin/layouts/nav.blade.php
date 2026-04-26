@@ -80,15 +80,15 @@
 
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#links" aria-expanded="false" aria-controls="links">
+                <button class="accordion-button @collapsedroute('admin.links.*') p-1 py-2 text-muted border-0 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#links" aria-expanded="false" aria-controls="links">
                     <i class="fas fa-link fa-fw me-1"></i> Links
                 </button>
             </h2>
-            <div id="links" class="accordion-collapse collapse border-0">
+            <div id="links" class="accordion-collapse collapse @showroute('admin.links.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Links</a></li>
-                        <li><a>Categories</a></li>
+                        <li><a class="@activeroute('admin.links.links.*')" href="{{ route('admin.links.links.index') }}">Links</a></li>
+                        <li><a class="@activeroute('admin.links.categories.*')" href="{{ route('admin.links.categories.index') }}">Categories</a></li>
                     </ul>
                 </div>
             </div>

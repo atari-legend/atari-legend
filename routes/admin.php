@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
 use App\Http\Controllers\Admin\Articles\ArticleController;
 use App\Http\Controllers\Admin\Articles\ArticleTypeController;
+use App\Http\Controllers\Admin\Links\LinkCategoryController;
+use App\Http\Controllers\Admin\Links\LinkController as AdminLinkController;
 use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Http\Controllers\Admin\Games\GameController;
@@ -184,6 +186,12 @@ Route::middleware('verified')->group(function () {
                     Route::get('submissions', [NewsSubmissionsController::class, 'index'])->name('submissions.index');
                     Route::delete('submissions/{submission}', [NewsSubmissionsController::class, 'destroy'])->name('submissions.destroy');
                     Route::post('submissions/{submission}', [NewsSubmissionsController::class, 'approve'])->name('submissions.approve');
+                });
+
+                Route::prefix('/links')->name('links.')->group(function () {
+                    Route::delete('links/{link}/image', [AdminLinkController::class, 'destroyImage'])->name('links.image');
+                    Route::resource('links', AdminLinkController::class);
+                    Route::resource('categories', LinkCategoryController::class);
                 });
 
                 Route::prefix('/reviews')->name('reviews.')->group(function () {

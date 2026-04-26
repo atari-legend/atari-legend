@@ -10,6 +10,10 @@ class WebsiteCategory extends Model
     protected $primaryKey = 'website_category_id';
     public $timestamps = false;
 
+    protected $fillable = [
+        'website_category_name',
+    ];
+
     public function websites()
     {
         return $this->belongsToMany(Website::class, 'website_category_cross', 'website_category_id', 'website_id');
