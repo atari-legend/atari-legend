@@ -52,7 +52,7 @@ if [ ! -z "$LEGACY_PATH" ]; then
     ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../$LEGACY_PATH/data public"
 fi
 
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan storage:link"
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && { test -e public/storage || test -L public/storage || php8.4-cli artisan storage:link; }"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan migrate --force"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan config:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan optimize:clear"
