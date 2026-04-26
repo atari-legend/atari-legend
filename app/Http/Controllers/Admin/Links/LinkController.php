@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Storage;
 class LinkController extends Controller
 {
     const VALIDATION_RULES = [
-        'name'        => 'required|max:128',
-        'url'         => 'required|url|max:255',
-        'description' => 'nullable',
+        'name'         => 'required|max:128',
+        'url'          => 'required|url|max:255',
+        'description'  => 'nullable',
         'inactive'     => 'nullable|boolean',
         'categories'   => 'nullable|array',
         'categories.*' => 'exists:website_category,website_category_id',
@@ -131,7 +131,7 @@ class LinkController extends Controller
     public function destroy(Website $link)
     {
         $name = $link->website_name;
-        $id   = $link->getKey();
+        $id = $link->getKey();
 
         $this->deleteImageFile($link);
         $link->categories()->detach();

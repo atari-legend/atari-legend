@@ -99,7 +99,7 @@ class LinkCategoryController extends Controller
     public function destroy(WebsiteCategory $category)
     {
         $name = $category->website_category_name;
-        $id   = $category->getKey();
+        $id = $category->getKey();
 
         $category->websites()->detach();
         $category->delete();

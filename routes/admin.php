@@ -5,8 +5,6 @@ use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
 use App\Http\Controllers\Admin\Articles\ArticleController;
 use App\Http\Controllers\Admin\Articles\ArticleTypeController;
-use App\Http\Controllers\Admin\Links\LinkCategoryController;
-use App\Http\Controllers\Admin\Links\LinkController as AdminLinkController;
 use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Http\Controllers\Admin\Games\GameController;
@@ -36,6 +34,8 @@ use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemMemoryEnhancementCont
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemTosController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Interviews\InterviewsController;
+use App\Http\Controllers\Admin\Links\LinkCategoryController;
+use App\Http\Controllers\Admin\Links\LinkController as AdminLinkController;
 use App\Http\Controllers\Admin\Magazines\MagazineIndexTypesController;
 use App\Http\Controllers\Admin\Magazines\MagazineIssuesController;
 use App\Http\Controllers\Admin\Magazines\MagazinesController;
