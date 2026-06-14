@@ -17,6 +17,7 @@
         "laravel/framework": "11.x",
         "laravel/ui": "4.x",
         "livewire/livewire": "^3.4",
+        "phpoffice/phpspreadsheet": "^5.8",
         "rappasoft/laravel-livewire-tables": "3.x",
         "sopamo/laravel-filepond": "^1.2",
         "spatie/laravel-feed": "^4.4",

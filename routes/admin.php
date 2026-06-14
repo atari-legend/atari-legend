@@ -43,6 +43,7 @@ use App\Http\Controllers\Admin\Menus\MenuConditionsController;
 use App\Http\Controllers\Admin\Menus\MenuCrewController;
 use App\Http\Controllers\Admin\Menus\MenuDisksContentController;
 use App\Http\Controllers\Admin\Menus\MenuDisksController;
+use App\Http\Controllers\Admin\Menus\MenuImportController;
 use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\Menus\MenuSetsController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
@@ -225,6 +226,8 @@ Route::middleware('verified')->group(function () {
                 });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {
+                    Route::get('sets/{set}/import', [MenuImportController::class, 'index'])->name('sets.import');
+                    Route::get('sets/{set}/import/template', [MenuImportController::class, 'template'])->name('sets.import.template');
                     Route::resource('sets', MenuSetsController::class);
 
                     Route::resource('menus', MenusController::class);

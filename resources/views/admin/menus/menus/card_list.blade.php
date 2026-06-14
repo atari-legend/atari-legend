@@ -55,5 +55,8 @@
         <a href="{{ route('admin.menus.menus.create', ['set' => $set]) }}" class="btn btn-success">
             <i class="fas fa-plus-square fa-fw"></i> Add a new menu to this set
         </a>
+        <a href="{{ route('admin.menus.sets.import', ['set' => $set]) }}" class="btn btn-outline-success">
+            <i class="fas fa-file-excel fa-fw"></i> Import menus from Excel
+        </a>
     </div>
 </div>
