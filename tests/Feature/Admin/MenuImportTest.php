@@ -293,6 +293,236 @@ class MenuImportTest extends TestCase
         $this->assertEquals(1, MenuDiskContent::where('menu_disk_id', $disk->id)->count());
     }
 
+    public function testRemoveDiskLeavesItOutOfTheImportAndKeepsOtherIndicesStable(): void
+    {
+        $set = $this->set();
+        $condition = MenuDiskCondition::create(['name' => 'Good']);
+        $kept = $this->game('Kept Game');
+        $dropped = $this->game('Dropped Game');
+
+        $menus = [$this->menu([
+            'number' => '3',
+            'disks'  => [
+                $this->disk([
+                    'part'         => 'A',
+                    'condition_id' => $condition->id,
+                    'contents'     => [$this->content([
+                        'game_id' => $dropped->game_id, 'game_name' => $dropped->game_name,
+                    ])],
+                ]),
+                $this->disk([
+                    'part'         => 'B',
+                    'condition_id' => $condition->id,
+                    'contents'     => [$this->content([
+                        'game_id' => $kept->game_id, 'game_name' => $kept->game_name,
+                    ])],
+                ]),
+            ],
+        ])];
+
+        $component = Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', $menus)
+            ->call('removeDisk', 0, 0);
+
+        // The surviving disk keeps its original index, so the review screen's
+        // index-addressed fields still point at the right row.
+        $this->assertNull($component->get('menus.0.disks.0'));
+        $this->assertEquals('B', $component->get('menus.0.disks.1.part'));
+
+        $component->call('runImport');
+
+        $this->assertEquals(1, MenuDisk::count());
+        $this->assertEquals('B', MenuDisk::first()->part);
+        $this->assertEquals(1, Release::where('game_id', $kept->game_id)->count());
+        $this->assertEquals(0, Release::where('game_id', $dropped->game_id)->count());
+    }
+
+    public function testRemovingTheLastDiskOfAMenuDropsTheMenu(): void
+    {
+        $set = $this->set();
+        $condition = MenuDiskCondition::create(['name' => 'Good']);
+        $game = $this->game('Only Game');
+
+        $menus = [
+            $this->menu([
+                'number' => '1',
+                'disks'  => [$this->disk(['part' => 'A', 'condition_id' => $condition->id])],
+            ]),
+            $this->menu([
+                'number' => '2',
+                'disks'  => [$this->disk([
+                    'part'         => 'A',
+                    'condition_id' => $condition->id,
+                    'contents'     => [$this->content([
+                        'game_id' => $game->game_id, 'game_name' => $game->game_name,
+                    ])],
+                ])],
+            ]),
+        ];
+
+        $component = Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', $menus)
+            ->call('removeDisk', 0, 0);
+
+        // Menu 1 had a single disk, so no empty shell is left behind.
+        $this->assertNull($component->get('menus.0'));
+        $this->assertEquals('2', $component->get('menus.1.number'));
+
+        $component->call('runImport');
+
+        $this->assertEquals(1, Menu::count());
+        $this->assertEquals('2', Menu::first()->number);
+    }
+
+    public function testRemovingTheLastDiskOfTheImportReturnsToTheUploadStep(): void
+    {
+        $set = $this->set();
+
+        Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', [$this->menu(['disks' => [$this->disk()]])])
+            ->call('removeDisk', 0, 0)
+            ->assertSet('reviewing', false)
+            ->assertSet('menus', []);
+    }
+
+    public function testRemoveContentClosesTheOrderGapAndKeepsOtherKeysStable(): void
+    {
+        $set = $this->set();
+        $condition = MenuDiskCondition::create(['name' => 'Good']);
+        $first = $this->game('First Game');
+        $dropped = $this->game('Dropped Game');
+        $last = $this->game('Last Game');
+
+        $component = Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', [$this->menu([
+                'number' => '4',
+                'disks'  => [$this->disk([
+                    'condition_id' => $condition->id,
+                    'contents'     => [
+                        $this->content(['order' => 1, 'game_id' => $first->game_id, 'game_name' => $first->game_name]),
+                        $this->content(['order' => 2, 'game_id' => $dropped->game_id, 'game_name' => $dropped->game_name]),
+                        $this->content(['order' => 3, 'game_id' => $last->game_id, 'game_name' => $last->game_name]),
+                    ],
+                ])],
+            ])])
+            ->call('removeContent', 0, 0, 1);
+
+        // The middle row is gone and the last one moved up to order 2, but it
+        // keeps its original array key so the index-addressed autocomplete
+        // inputs still point at it.
+        $this->assertNull($component->get('menus.0.disks.0.contents.1'));
+        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.order'));
+        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.2.order'));
+        $this->assertEquals($last->game_id, $component->get('menus.0.disks.0.contents.2.game_id'));
+
+        $component->call('runImport');
+
+        $orders = MenuDiskContent::orderBy('order')->pluck('order')->all();
+        $this->assertEquals([1, 2], $orders);
+        $this->assertEquals(0, Release::where('game_id', $dropped->game_id)->count());
+    }
+
+    public function testRemoveContentNormalisesOddSheetNumbering(): void
+    {
+        $set = $this->set();
+        $game = $this->game('Numbered Game');
+
+        // A sheet that started at 5 and had its own gaps.
+        $component = Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', [$this->menu(['disks' => [$this->disk(['contents' => [
+                $this->content(['order' => 5, 'game_id' => $game->game_id]),
+                $this->content(['order' => 6, 'game_id' => $game->game_id]),
+                $this->content(['order' => 9, 'game_id' => $game->game_id]),
+                $this->content(['order' => 12, 'game_id' => $game->game_id]),
+            ]])]])])
+            ->call('removeContent', 0, 0, 1);
+
+        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.order'));
+        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.2.order'));
+        $this->assertEquals(3, $component->get('menus.0.disks.0.contents.3.order'));
+    }
+
+    public function testRenumberDiskNormalisesWithoutDeleting(): void
+    {
+        $set = $this->set();
+
+        $component = Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', [$this->menu(['disks' => [$this->disk(['contents' => [
+                $this->content(['order' => 10]),
+                $this->content(['order' => '']),
+                $this->content(['order' => 40]),
+            ]])]])])
+            ->call('renumberDisk', 0, 0);
+
+        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.order'));
+        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.1.order'));
+        $this->assertEquals(3, $component->get('menus.0.disks.0.contents.2.order'));
+    }
+
+    public function testRemovingAMainReleaseRowFlagsItsDependentExtra(): void
+    {
+        $set = $this->set();
+        $condition = MenuDiskCondition::create(['name' => 'Good']);
+        $game = $this->game('Orphaned Game');
+
+        $component = Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', [$this->menu([
+                'disks' => [$this->disk([
+                    'condition_id' => $condition->id,
+                    'contents'     => [
+                        $this->content([
+                            'order' => 1, 'game_id' => $game->game_id, 'link_mode' => 'new_release',
+                        ]),
+                        $this->content([
+                            'order'   => 2, 'game_id' => $game->game_id,
+                            'subtype' => 'Docs', 'link_mode' => 'extra',
+                        ]),
+                    ],
+                ])],
+            ])]);
+
+        $this->assertEquals(0, $component->instance()->getErrorCount());
+
+        // Dropping the main release leaves the extra with nothing to attach to.
+        $component->call('removeContent', 0, 0, 0);
+
+        $this->assertEquals(1, $component->instance()->getErrorCount());
+        $component->assertSee('This game has no main release on this menu');
+    }
+
+    public function testRemovingTheLastContentRowKeepsTheDisk(): void
+    {
+        $set = $this->set();
+        $condition = MenuDiskCondition::create(['name' => 'Good']);
+
+        $component = Livewire::test(MenuImport::class, ['set' => $set])
+            ->set('reviewing', true)
+            ->set('menus', [$this->menu([
+                'number' => '5',
+                'disks'  => [$this->disk([
+                    'part'         => 'A',
+                    'condition_id' => $condition->id,
+                    'contents'     => [$this->content(['game_id' => $this->game('Solo Game')->game_id])],
+                ])],
+            ])])
+            ->call('removeContent', 0, 0, 0);
+
+        // A content-free disk is a normal record — it is kept, unlike an empty menu.
+        $this->assertEquals([], $component->get('menus.0.disks.0.contents'));
+        $component->call('runImport');
+
+        $this->assertEquals(1, Menu::count());
+        $this->assertEquals(1, MenuDisk::count());
+        $this->assertEquals(0, MenuDiskContent::count());
+    }
+
     public function testBothBlankNumberAndIssueNeverMatchAMenu(): void
     {
         $set = $this->set();

@@ -97,6 +97,27 @@
                 <div class="card-body">
                     @foreach ($menu['disks'] as $di => $disk)
                         <div class="border rounded p-3 mb-3 bg-light" wire:key="menu-{{ $mi }}-disk-{{ $di }}">
+                            @php($contentCount = count($disk['contents']))
+                            <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                                <div class="fw-bold">
+                                    Disk{{ $disk['part'] ? ' ' . $disk['part'] : '' }}
+                                    <span class="fw-normal text-muted">
+                                        — {{ $contentCount }} content row{{ $contentCount === 1 ? '' : 's' }}
+                                    </span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        wire:click="renumberDisk({{ $mi }}, {{ $di }})"
+                                        title="Renumber this disk's content rows 1, 2, 3…">
+                                        <i class="fas fa-list-ol fa-fw"></i> Renumber
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        wire:click="removeDisk({{ $mi }}, {{ $di }})"
+                                        wire:confirm="Leave this disk out of the import? Its {{ $contentCount }} content row{{ $contentCount === 1 ? '' : 's' }} will not be imported.{{ count($menu['disks']) === 1 ? ' As it is the last disk of this menu, the menu will be dropped too.' : '' }}">
+                                        <i class="fas fa-trash fa-fw"></i> Don't import this disk
+                                    </button>
+                                </div>
+                            </div>
                             <div class="row g-3 mb-2">
                                 <div class="col-6 col-md-2">
                                     <label class="form-label">Disk part</label>
@@ -170,6 +191,7 @@
                                             <th style="width: 11rem">Sub-type</th>
                                             <th style="width: 9rem">Version</th>
                                             <th style="width: 11rem">Requirements</th>
+                                            <th style="width: 3rem"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -251,10 +273,19 @@
                                                     <input type="text" class="form-control"
                                                         wire:model="menus.{{ $mi }}.disks.{{ $di }}.contents.{{ $ci }}.requirements">
                                                 </td>
+                                                <td class="text-end">
+                                                    @php($contentLabel = $content['game_name'] ?? $content['software_name'] ?? $content['query'] ?? $content['name'])
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        title="Don't import this row"
+                                                        wire:click="removeContent({{ $mi }}, {{ $di }}, {{ $ci }})"
+                                                        wire:confirm="Leave {{ $contentLabel ? '“' . $contentLabel . '”' : 'this row' }} out of the import? The rows below it move up and the whole disk is renumbered.">
+                                                        <i class="fas fa-trash fa-fw"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-muted">This disk has no content.</td>
+                                                <td colspan="7" class="text-muted">This disk has no content.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

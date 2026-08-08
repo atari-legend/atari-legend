@@ -85,6 +85,80 @@ class MenuImport extends Component
         $this->reset(['file', 'menus', 'reviewing', 'importAttempted']);
     }
 
+    /**
+     * Drop a disk from the review, so a disk whose data is wrong can be left
+     * out while the rest of the sheet is still imported.
+     *
+     * The remaining disks deliberately keep their original keys instead of
+     * being re-indexed: the review screen's autocomplete inputs are plain
+     * (non-wire:model) fields addressed by their menu/disk/content index, and
+     * shifting those indices would leave them pointing at a different row.
+     */
+    public function removeDisk(int $mi, int $di): void
+    {
+        if (! isset($this->menus[$mi]['disks'][$di])) {
+            return;
+        }
+
+        unset($this->menus[$mi]['disks'][$di]);
+
+        // A menu with no disks left would be imported as an empty shell.
+        if (count($this->menus[$mi]['disks']) === 0) {
+            unset($this->menus[$mi]);
+        }
+
+        if (count($this->menus) === 0) {
+            $this->startOver();
+
+            return;
+        }
+
+        // Rows disappeared from the DOM: re-register the autocompletes so the
+        // ones built for them are disposed of.
+        $this->dispatch('menu-import-rendered');
+    }
+
+    /**
+     * Drop a single content row, closing the gap it leaves in the disk's `order`
+     * sequence. Keys are preserved rather than re-indexed for the same reason as
+     * in {@see self::removeDisk()}.
+     *
+     * A disk left with no contents is kept: unlike an empty menu, it carries its
+     * own part / condition / donator / notes, and a content-free disk is a
+     * perfectly normal record. Use "Don't import this disk" to drop it.
+     */
+    public function removeContent(int $mi, int $di, int $ci): void
+    {
+        if (! isset($this->menus[$mi]['disks'][$di]['contents'][$ci])) {
+            return;
+        }
+
+        unset($this->menus[$mi]['disks'][$di]['contents'][$ci]);
+
+        $this->renumberDisk($mi, $di);
+
+        $this->dispatch('menu-import-rendered');
+    }
+
+    /**
+     * Renumber a disk's contents 1..N, following the order in which they are
+     * listed (which is the order they appear in on screen, and the order they
+     * came in from the sheet) rather than their current `order` values. Flattens
+     * out both the gap a deleted row leaves behind and any odd numbering the
+     * spreadsheet came with.
+     */
+    public function renumberDisk(int $mi, int $di): void
+    {
+        if (! isset($this->menus[$mi]['disks'][$di])) {
+            return;
+        }
+
+        $order = 1;
+        foreach ($this->menus[$mi]['disks'][$di]['contents'] as $ci => $content) {
+            $this->menus[$mi]['disks'][$di]['contents'][$ci]['order'] = $order++;
+        }
+    }
+
     // -----------------------------------------------------------------
     //  Resolution
     // -----------------------------------------------------------------
