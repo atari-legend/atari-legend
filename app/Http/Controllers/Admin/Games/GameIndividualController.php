@@ -100,9 +100,11 @@ class GameIndividualController extends Controller
             ]);
         }
 
+        // A blank field is stored as NULL rather than an empty string, so that
+        // "has a bio" stays a question the database can answer
         $text = new IndividualText([
-            'ind_profile' => $request->profile,
-            'ind_email'   => $request->email,
+            'ind_profile' => $request->filled('profile') ? $request->profile : null,
+            'ind_email'   => $request->filled('email') ? $request->email : null,
             'ind_imgext'  => $ext,
         ]);
         $individual->text()->save($text);
@@ -149,8 +151,8 @@ class GameIndividualController extends Controller
         ]);
 
         $attrs = [
-            'ind_profile' => $request->profile,
-            'ind_email'   => $request->email,
+            'ind_profile' => $request->filled('profile') ? $request->profile : null,
+            'ind_email'   => $request->filled('email') ? $request->email : null,
             'ind_imgext'  => $ext,
         ];
 

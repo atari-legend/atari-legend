@@ -73,8 +73,10 @@ class GameCompanyController extends Controller
             ]);
         }
 
+        // A blank field is stored as NULL rather than an empty string, so that
+        // "has a profile" stays a question the database can answer
         $text = new PublisherDeveloperText([
-            'pub_dev_profile' => $request->profile,
+            'pub_dev_profile' => $request->filled('profile') ? $request->profile : null,
             'pub_dev_imgext'  => $ext,
         ]);
         $company->text()->save($text);
@@ -120,7 +122,7 @@ class GameCompanyController extends Controller
         ]);
 
         $attrs = [
-            'pub_dev_profile' => $request->profile,
+            'pub_dev_profile' => $request->filled('profile') ? $request->profile : null,
             'pub_dev_imgext'  => $ext,
         ];
 
