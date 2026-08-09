@@ -93,12 +93,12 @@ class AdminStatisticsHelper
                 'Dumps'                 => DB::table('dump')->count(),
             ],
             'Menus' => [
-                'Menu sets'      => DB::table('menu_sets')->count(),
-                'Menus'          => DB::table('menus')->count(),
-                'Menu disks'     => DB::table('menu_disks')->count(),
-                'Disk contents'  => DB::table('menu_disk_contents')->count(),
-                'Disk dumps'     => DB::table('menu_disk_dumps')->count(),
-                'Screenshots'    => DB::table('menu_disk_screenshots')->count(),
+                'Menu sets'       => DB::table('menu_sets')->count(),
+                'Menus'           => DB::table('menus')->count(),
+                'Menu disks'      => DB::table('menu_disks')->count(),
+                'Disk contents'   => DB::table('menu_disk_contents')->count(),
+                'Disk dumps'      => DB::table('menu_disk_dumps')->count(),
+                'Screenshots'     => DB::table('menu_disk_screenshots')->count(),
                 'Software titles' => DB::table('menu_software')->count(),
             ],
             'Music' => [
@@ -108,30 +108,30 @@ class AdminStatisticsHelper
                 'Game / music links' => DB::table('game_sndh')->count(),
             ],
             'Content' => [
-                'Reviews'             => DB::table('review_main')->where('draft', self::PUBLISHED)->count(),
-                'Reviews (draft)'     => DB::table('review_main')->where('draft', self::DRAFT)->count(),
-                'Interviews'          => DB::table('interview_main')->where('draft', self::PUBLISHED)->count(),
-                'Interviews (draft)'  => DB::table('interview_main')->where('draft', self::DRAFT)->count(),
-                'Articles'            => DB::table('article_main')->where('draft', self::PUBLISHED)->count(),
-                'Articles (draft)'    => DB::table('article_main')->where('draft', self::DRAFT)->count(),
-                'News items'          => DB::table('news')->count(),
-                'Did you know?'       => DB::table('trivia')->count(),
-                'Quotes'              => DB::table('trivia_quotes')->count(),
-                'Spotlights'          => DB::table('spotlight')->count(),
-                'Magazines'           => DB::table('magazines')->count(),
-                'Magazine issues'     => DB::table('magazine_issues')->count(),
+                'Reviews'                => DB::table('review_main')->where('draft', self::PUBLISHED)->count(),
+                'Reviews (draft)'        => DB::table('review_main')->where('draft', self::DRAFT)->count(),
+                'Interviews'             => DB::table('interview_main')->where('draft', self::PUBLISHED)->count(),
+                'Interviews (draft)'     => DB::table('interview_main')->where('draft', self::DRAFT)->count(),
+                'Articles'               => DB::table('article_main')->where('draft', self::PUBLISHED)->count(),
+                'Articles (draft)'       => DB::table('article_main')->where('draft', self::DRAFT)->count(),
+                'News items'             => DB::table('news')->count(),
+                'Did you know?'          => DB::table('trivia')->count(),
+                'Quotes'                 => DB::table('trivia_quotes')->count(),
+                'Spotlights'             => DB::table('spotlight')->count(),
+                'Magazines'              => DB::table('magazines')->count(),
+                'Magazine issues'        => DB::table('magazine_issues')->count(),
                 'Magazine index entries' => DB::table('magazine_indices')->count(),
-                'Links'               => DB::table('website')->count(),
-                'Links pending review' => DB::table('website_validate')->count(),
+                'Links'                  => DB::table('website')->count(),
+                'Links pending review'   => DB::table('website_validate')->count(),
             ],
             'People & companies' => [
-                'Individuals'          => DB::table('individuals')->count(),
-                'Individuals with bio' => self::countWithText('individual_text', 'ind_profile', 'ind_id'),
-                'Nicknames'            => DB::table('individual_nicks')->count(),
-                'Crews'                => DB::table('crew')->count(),
-                'Sub-crews'            => DB::table('sub_crew')->count(),
-                'Crew members'         => DB::table('crew_individual')->count(),
-                'Companies'            => DB::table('pub_dev')->count(),
+                'Individuals'            => DB::table('individuals')->count(),
+                'Individuals with bio'   => self::countWithText('individual_text', 'ind_profile', 'ind_id'),
+                'Nicknames'              => DB::table('individual_nicks')->count(),
+                'Crews'                  => DB::table('crew')->count(),
+                'Sub-crews'              => DB::table('sub_crew')->count(),
+                'Crew members'           => DB::table('crew_individual')->count(),
+                'Companies'              => DB::table('pub_dev')->count(),
                 'Companies with profile' => self::countWithText('pub_dev_text', 'pub_dev_profile', 'pub_dev_id'),
             ],
             'Community' => [
@@ -200,7 +200,7 @@ class AdminStatisticsHelper
     /**
      * Database changes per month, split by action.
      *
-     * @param  int  $months Number of months to look back, including the current one
+     * @param  int  $months  Number of months to look back, including the current one
      * @return array ['labels' => string[], 'datasets' => [['label' => string, 'data' => int[]]]]
      */
     public static function changesByMonth($months = 24)
@@ -527,7 +527,7 @@ class AdminStatisticsHelper
      *
      * @param  string  $table
      * @param  string  $column
-     * @param  string  $owner Foreign key identifying who the text belongs to
+     * @param  string  $owner  Foreign key identifying who the text belongs to
      * @return int
      */
     private static function countWithText($table, $column, $owner)
@@ -569,7 +569,7 @@ class AdminStatisticsHelper
     /**
      * Turn a list of dates into a per-year series with no gaps.
      *
-     * @param  \Illuminate\Support\Collection  $dates Unix timestamps, or date strings when $epoch is false
+     * @param  \Illuminate\Support\Collection  $dates  Unix timestamps, or date strings when $epoch is false
      * @param  bool  $epoch
      * @return array ['labels' => string[], 'data' => int[]]
      */
@@ -599,7 +599,7 @@ class AdminStatisticsHelper
      * Count how many of the given dates fall in each year.
      *
      * @param  \Illuminate\Support\Collection  $dates
-     * @param  bool  $epoch Whether the values are unix timestamps rather than date strings
+     * @param  bool  $epoch  Whether the values are unix timestamps rather than date strings
      * @return array Map of year => count
      */
     private static function countByYear($dates, $epoch = true)
