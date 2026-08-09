@@ -8,7 +8,7 @@
             <p class="text-muted">A random selection of 30 releases:</p>
         @endif
 
-        @foreach ($releasesWithoutScans->random(30) as $release)
+        @foreach ($releasesWithoutScans->shuffle()->take(30) as $release)
             <a href="{{ route('admin.games.releases.scans.index', [
                 'game' => $release->game,
                 'release' => $release

@@ -6,11 +6,7 @@
                 <p class="text-muted">A random selection of 30 games:</p>
             @endif
 
-            @foreach ($gamesWithoutScreenshot->random(30) as $game)
-                @if ($loop->index > 30)
-                    …
-                    @break
-                @endif
+            @foreach ($gamesWithoutScreenshot->shuffle()->take(30) as $game)
                 <a href="{{ config('al.legacy.base_url').'/admin/games/games_detail.php?game_id='.$game->game_id }}">{{ $game->game_name }}</a>@if(!$loop->last)<span class="me-2">,</span>@endif
             @endforeach
         </p>

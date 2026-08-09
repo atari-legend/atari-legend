@@ -21,7 +21,8 @@ class IssuesController extends Controller
         $gameWithoutGenre = Game::has('screenshots')
             ->doesntHave('genres')
             ->get()
-            ->random();
+            ->shuffle()
+            ->first();
         $gamesWithoutScreenshot = Game::doesntHave('screenshots')
             ->orderBy('game_name')
             ->get();

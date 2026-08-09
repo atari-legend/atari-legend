@@ -1,3 +1,4 @@
+@isset ($gameWithoutGenre)
 <div class="card mb-3 bg-light">
     <div class="card-body p-0">
         @if ($gameWithoutGenre->screenshots->isNotEmpty())
@@ -27,3 +28,4 @@
 
     </div>
 </div>
+@endisset
