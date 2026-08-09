@@ -5,6 +5,19 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+
+    services:
+      # Pinned to the same image the docker-compose development environment
+      # uses, so CI cannot disagree with it on server behaviour.
+      mysql:
+        image: mysql:5.7.44
+        env:
+          MYSQL_DATABASE: atarilegend_e2e
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -61,7 +74,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 19
+          # Playwright refuses to start on anything below 20
+          node-version: 22
 
       - name: Install NPM dependencies
         # ci installs exactly what package-lock.json pins and fails if the
@@ -72,6 +86,63 @@ jobs:
 
       - name: Build frontend assets
         run: npm run build
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright system dependencies
+        run: npx playwright install-deps chromium
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
+
+      # The development environment runs MySQL with an explicit sql-mode (see
+      # mysqld.cnf), which notably leaves out ONLY_FULL_GROUP_BY. Stock 5.7
+      # enables it, so without this CI would reject queries that are fine in
+      # development and in production.
+      - name: Match the development MySQL configuration
+        run: |
+          mysql --protocol=TCP -h 127.0.0.1 -P 3306 -u root -proot -e \
+            "SET GLOBAL sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"
+
+      - name: Run E2E Database Migrations & Seeder
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: atarilegend_e2e
+          DB_USERNAME: root
+          DB_PASSWORD: root
+          APP_ENV: testing
+          APP_KEY: base64:AckfSECXIvnK5r28GVIWUAxmbBSjTsmF/0rZh1cyWXk=
+        run: |
+          php artisan migrate:fresh --force
+          php artisan db:seed --class=E2ESeeder --force
+
+      - name: Run Playwright E2E Tests
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: atarilegend_e2e
+          DB_USERNAME: root
+          DB_PASSWORD: root
+          APP_ENV: testing
+          APP_KEY: base64:AckfSECXIvnK5r28GVIWUAxmbBSjTsmF/0rZh1cyWXk=
+        run: npm run test:e2e
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
 
       - name: Production optimizations
         if: github.ref == 'refs/heads/master'
