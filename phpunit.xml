@@ -17,6 +17,13 @@
         <include>
             <directory>app</directory>
         </include>
+        <exclude>
+            <!-- A one-off import of the Stonish menu data. It has already been
+                 run and will not be run again or changed, so counting its ~270
+                 statements as a coverage gap only misreports how much of the
+                 living code is tested. -->
+            <file>app/Console/Commands/ImportStonishData.php</file>
+        </exclude>
     </source>
     <coverage>
         <report>
