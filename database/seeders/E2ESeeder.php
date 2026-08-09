@@ -74,6 +74,17 @@ class E2ESeeder extends Seeder
             ]);
         }
 
+        // A release gives the game page something to link to. It needs a date:
+        // the link on the game page is labelled with the release year, and an
+        // empty label is not clickable.
+        if (DB::table('game_release')->count() === 0) {
+            DB::table('game_release')->insert([
+                'game_id' => 1,
+                'date'    => '1989-01-01',
+                'license' => 'Commercial',
+            ]);
+        }
+
         if (DB::table('screenshot_main')->count() === 0) {
             DB::table('screenshot_main')->insert([
                 'screenshot_id' => 1,
@@ -143,6 +154,43 @@ class E2ESeeder extends Seeder
             DB::table('interview_main')->insert([
                 'interview_id' => 2,
                 'user_id'      => 1,
+            ]);
+        }
+
+        if (DB::table('magazines')->count() === 0) {
+            DB::table('magazines')->insert([
+                'name' => 'Test Magazine',
+            ]);
+        }
+
+        // The menu set index inner-joins sets to menus to disks, so a set on
+        // its own would not appear at all.
+        //
+        // These tables are Eloquent-managed, so their timestamps are never
+        // null in practice. Set them explicitly: a raw insert would leave them
+        // null, and the "Latest menus" card formats updated_at unguarded.
+        if (DB::table('menu_sets')->count() === 0) {
+            $now = now();
+
+            $setId = DB::table('menu_sets')->insertGetId([
+                'name'       => 'Test Menu Set',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+            $menuId = DB::table('menus')->insertGetId([
+                'menu_set_id' => $setId,
+                'number'      => 1,
+                'date'        => '1990-01-01',
+                'created_at'  => $now,
+                'updated_at'  => $now,
+            ]);
+            DB::table('menu_disks')->insert([
+                'menu_id'                => $menuId,
+                'menu_disk_condition_id' => DB::table('menu_disk_conditions')
+                    ->where('name', 'Intact')
+                    ->value('id'),
+                'created_at'             => $now,
+                'updated_at'             => $now,
             ]);
         }
 
