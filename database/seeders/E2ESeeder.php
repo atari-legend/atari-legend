@@ -113,8 +113,35 @@ class E2ESeeder extends Seeder
         }
 
         if (DB::table('interview_main')->count() === 0) {
+            // Interview 1 is complete: the "Who is it?" card on the home page
+            // only picks an interview whose individual has a picture, and the
+            // card then reads the interview's text, so seed the whole chain.
+            DB::table('individuals')->insert([
+                'ind_id'   => 1,
+                'ind_name' => 'Test Individual',
+            ]);
+            DB::table('individual_text')->insert([
+                'ind_id'     => 1,
+                'ind_imgext' => 'png',
+            ]);
             DB::table('interview_main')->insert([
                 'interview_id' => 1,
+                'user_id'      => 1,
+                'ind_id'       => 1,
+            ]);
+            DB::table('interview_text')->insert([
+                'interview_id'    => 1,
+                'interview_intro' => 'Playwright test interview intro.',
+                'interview_text'  => 'Playwright test interview content.',
+                'interview_date'  => now()->timestamp,
+            ]);
+
+            // Interview 2 deliberately has neither an individual nor a text
+            // row. The admin table joins those, and a row with no match is
+            // what used to null out its primary key - keep a row of that shape
+            // so the regression stays covered.
+            DB::table('interview_main')->insert([
+                'interview_id' => 2,
                 'user_id'      => 1,
             ]);
         }
