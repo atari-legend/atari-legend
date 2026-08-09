@@ -64,7 +64,11 @@ jobs:
           node-version: 19
 
       - name: Install NPM dependencies
-        run: npm install
+        # ci installs exactly what package-lock.json pins and fails if the
+        # lockfile has drifted from package.json. install would silently
+        # re-resolve and rewrite the lockfile, so what CI built was never
+        # guaranteed to be what the lockfile describes.
+        run: npm ci
 
       - name: Build frontend assets
         run: npm run build
