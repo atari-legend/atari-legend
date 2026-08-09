@@ -28,7 +28,7 @@ class InterviewsTable extends DataTableComponent
                     fn ($row) => $row->ind_name
                 )
                 ->location(
-                    fn ($row) => route('admin.interviews.interviews.edit', $row)
+                    fn ($row) => route('admin.interviews.interviews.edit', $row->interview_id)
                 )
                 ->searchable(
                     fn ($query, $term) => $query->where('ind_name', 'like', "%{$term}%")
@@ -60,7 +60,7 @@ class InterviewsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Interview::select()
+        return Interview::select('interview_main.*', 'individuals.ind_name', 'interview_text.interview_date')
             ->leftJoin('interview_text', 'interview_text.interview_id', '=', 'interview_main.interview_id')
             ->leftJoin('individuals', 'individuals.ind_id', '=', 'interview_main.ind_id');
     }

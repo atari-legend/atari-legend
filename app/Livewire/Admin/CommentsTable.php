@@ -17,7 +17,7 @@ class CommentsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('comment_id');
+        $this->setPrimaryKey('comments_id');
         $this->setDefaultSort('timestamp');
     }
 
@@ -64,7 +64,7 @@ class CommentsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Comment::select();
+        return Comment::select('comments.*');
     }
 
     public function filters(): array

@@ -59,7 +59,7 @@ class ArticlesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Article::select()
+        return Article::select('article_main.*', 'article_text.article_title', 'article_text.article_date')
             ->leftJoin('article_text', 'article_text.article_id', '=', 'article_main.article_id');
     }
 
