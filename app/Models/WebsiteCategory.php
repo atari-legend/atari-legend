@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class WebsiteCategory extends Model
 {
+    use HasFactory;
+
     protected $table = 'website_category';
     protected $primaryKey = 'website_category_id';
     public $timestamps = false;

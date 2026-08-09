@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Release extends Model
 {
+    use HasFactory;
+
     const LICENCE_COMMERCIAL = 'Commercial';
     const LICENSE_NON_COMMERCIAL = 'Non-Commercial';
     const LICENSES = [

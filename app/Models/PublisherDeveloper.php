@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PublisherDeveloper extends Model
 {
+    use HasFactory;
+
     protected $table = 'pub_dev';
     protected $primaryKey = 'pub_dev_id';
     public $timestamps = false;

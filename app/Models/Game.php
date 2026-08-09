@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Helpers\GameHelper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Game extends Model
 {
+    use HasFactory;
+
     protected $table = 'game';
     protected $primaryKey = 'game_id';
 

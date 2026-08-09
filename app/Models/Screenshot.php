@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Helpers\Helper;
 use GuzzleHttp\Psr7\MimeType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Screenshot extends Model
 {
+    use HasFactory;
+
     protected $table = 'screenshot_main';
     protected $primaryKey = 'screenshot_id';
     protected $fillable = ['imgext'];

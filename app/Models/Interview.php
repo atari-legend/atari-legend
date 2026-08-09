@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 
 class Interview extends Model implements Feedable
 {
+    use HasFactory;
+
     protected $table = 'interview_main';
     protected $primaryKey = 'interview_id';
     public $timestamps = false;

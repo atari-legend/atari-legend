@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Individual extends Model
 {
+    use HasFactory;
+
     protected $table = 'individuals';
     protected $primaryKey = 'ind_id';
     public $timestamps = false;
