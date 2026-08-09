@@ -20,14 +20,14 @@
             @isset ($content)
                 @if ($content->game)
                     <p>
-                        This content points to the game <a href="{{ config('al.legacy.base_url').'/admin/games/games_detail.php?game_id='.$content->game->game_id }}">{{ $content->game->game_name }}</a>.
+                        This content points to the game <a href="{{ route('admin.games.games.edit', $content->game) }}">{{ $content->game->game_name }}</a>.
                         It has no release, meaning the game itself is not present on the menu. It is either a documentation, trainer, hint, … so the
                         <strong>subtype field must be provided</strong>.
                     </p>
                 @elseif ($content->release)
                     <p>
-                        This content points to a specific <a href="{{ config('al.legacy.base_url').'/admin/games/games_release_detail.php?release_id='.$content->release->id.'&game_id='.$content->release->game->game_is }}">release</a>
-                        of <a href="{{ config('al.legacy.base_url').'/admin/games/games_detail.php?game_id='.$content->release->game->game_id }}">{{ $content->release->game->game_name }}</a>.
+                        This content points to a specific <a href="{{ route('admin.games.releases.show', ['game' => $content->release->game, 'release' => $content->release]) }}">release</a>
+                        of <a href="{{ route('admin.games.games.edit', $content->release->game) }}">{{ $content->release->game->game_name }}</a>.
                         It means the game itself is present on the menu, or it is a documentation / trainer / hint for a game present on another disk of the menu.
                     </p>
                 @elseif ($content->menuSoftware)

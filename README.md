@@ -8,10 +8,10 @@ This is the source code for [Atari Legend](https://www.atarilegend.com/), a webs
 
 It is built with [Laravel](https://laravel.com/) and [Bootstrap](https://v5.getbootstrap.com/).
 
-This repository contains the source code for the public site. It is a 2020 re-implementation
-of the legacy site with Laravel and Bootstrap. The administration part (Control Panel aka CPANEL)
-is still running on the legacy codebase (See the [Legacy](https://github.com/atari-legend/legacy)
-repository).
+This repository contains the source code for the public site and its administration part
+(Control Panel). It is a 2020 re-implementation of the legacy site with Laravel and
+Bootstrap. The legacy codebase (See the [Legacy](https://github.com/atari-legend/legacy)
+repository) still holds the data directory, but this site no longer links to it.
 
 ## Build & Development
 
@@ -27,7 +27,7 @@ In addition to the standard Laravel settings in your `.env` file, the following 
 settings are supported:
 
 ```
-# Base URL for the legacy site, used to make links to CPANEL
+# Base URL for the legacy site, used to link to the database dumps download
 AL_LEGACY_BASE_URL=http://legacy.atarilegend.com
 
 # hCaptcha configuration. Use the configuration below for development and testing

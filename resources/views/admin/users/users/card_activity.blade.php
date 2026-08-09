@@ -44,9 +44,7 @@
         @if ($user->websiteSubmissions->isNotEmpty())
             <p>
                 @foreach ($user->websiteSubmissions->sortByDesc('website_date') as $website)
-                    <a
-                        href="{{ config('al.legacy.base_url') . '/admin/links/link_addnew.php' }}">{{ $website->website_name }}</a>
-                    @if (!$loop->last), @endif
+                    {{ $website->website_name }}@if (!$loop->last), @endif
                 @endforeach
             </p>
         @else
@@ -58,7 +56,7 @@
             <p>
                 @foreach ($user->gameSubmissions->sortByDesc('timestamp') as $submission)
                     <a
-                        href="{{ config('al.legacy.base_url') . '/admin/games/submission_games.php' }}">{{ $submission->game->game_name }}</a>
+                        href="{{ route('admin.games.submissions.show', $submission) }}">{{ $submission->game->game_name }}</a>
                     @if (!$loop->last), @endif
                 @endforeach
             </p>

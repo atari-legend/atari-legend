@@ -16,17 +16,17 @@ app/
 ├── Helpers/              # Utility classes (GameHelper, DumpHelper, BBCode, etc.)
 ├── Http/
 │   ├── Controllers/
-│   │   ├── Admin/        # Admin API (used by legacy CPANEL)
+│   │   ├── Admin/        # Admin panel controllers (auth: 'verified' + 'admin')
 │   │   └── Ajax/         # AJAX endpoints for autocomplete/search
 │   ├── Livewire/         # Livewire components (admin tables)
 │   └── Middleware/
 ├── Models/               # Eloquent models
 └── Rules/                # Custom validation (Slug, YoutubeUrl)
 config/
-├── al.php                # App-specific config (legacy URLs, Stonish, HxCFE)
+├── al.php                # App-specific config (legacy site URL, Stonish, HxCFE)
 routes/
 ├── web.php               # Public routes
-├── admin.php             # Admin API routes
+├── admin.php             # Admin panel routes
 storage/public/           # Public file storage (symlinked to public/storage)
 ```
 
@@ -79,7 +79,7 @@ artisan filepond:discard       # Clean abandoned uploads
 ## Environment Variables
 
 ```env
-AL_LEGACY_BASE_URL=       # Legacy CPANEL URL
+AL_LEGACY_BASE_URL=       # Legacy site URL (database dumps download)
 AL_HXCFE=                 # HxC Floppy Emulator path
 STONISH_ROOT=             # Stonish menu data path
 MATOMO_ID=                # Analytics tracking ID
@@ -102,10 +102,14 @@ php artisan test # Run PHPUnit tests
 
 ## Admin Architecture
 
-There is a legacy admin panel CPANEL as a separate application. The admin panel in this repo provides:
-- Admin routes (`routes/admin.php`)
+The admin panel lives in this repo:
+- Admin routes (`routes/admin.php`), behind the `verified` and `admin` middleware
 - Livewire tables for data management
-- Links to the legacy CPANEL for editing (via `AL_LEGACY_BASE_URL`)
+
+A legacy admin panel (CPANEL) still exists as a separate application sharing the
+same database and data directory, but this app no longer links to it. Some
+content was written by it and is normalised on read (see the `<br />` handling in
+the News, Articles and Reviews edit forms).
 
 ### Admin Patterns
 

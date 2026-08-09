@@ -37,7 +37,7 @@ const adminRoutes = [
   { name: 'Admin Magazine Index Types', path: '/admin/magazines/index-types' },
 ];
 
-test.describe('CPANEL Admin Pages Sanity Checks', () => {
+test.describe('Admin Pages Sanity Checks', () => {
   for (const route of adminRoutes) {
     test(`renders ${route.name} (${route.path}) as authenticated admin`, async ({ page }) => {
       const uncaughtErrors = [];

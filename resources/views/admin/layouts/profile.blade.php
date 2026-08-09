@@ -6,8 +6,7 @@
     <div class="text-muted mb-2">{{ Auth::user()->userid }}</div>
 
     <div class="">
-        <a href="{{ route('home.index') }}">Main site</a><br>
-        <a href="{{ config('al.legacy.base_url').'/admin/' }}">Legacy CPANEL</a><br><br>
+        <a href="{{ route('home.index') }}">Main site</a><br><br>
         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             Log out
         </a>
