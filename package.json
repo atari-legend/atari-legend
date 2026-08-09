@@ -1,4 +1,5 @@
 {
+    "name": "atari-legend",
     "private": true,
     "type": "module",
     "scripts": {
