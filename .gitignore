@@ -12,7 +12,10 @@
 .env
 .env.backup
 .phpunit.result.cache
+.phpunit.cache
+/build
 .phplint-cache
+.phplint.cache
 .vscode
 Homestead.json
 Homestead.yaml

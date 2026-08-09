@@ -10,6 +10,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          coverage: pcov
+          ini-values: pcov.directory=app
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -31,8 +33,17 @@ jobs:
       - name: PHP Lint
         run: ./vendor/bin/phplint ./ --exclude=vendor
 
+      # --min is a ratchet against regressions, not a target: raise it as
+      # coverage grows. The baseline when it was introduced was 16.3%.
       - name: Run tests
-        run: php artisan test
+        run: php artisan test --coverage --min=15 --coverage-clover=build/logs/clover.xml
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: build/
 
       - name: Get npm cache directory
         id: npm-cache-dir
