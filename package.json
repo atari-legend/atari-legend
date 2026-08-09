@@ -5,10 +5,13 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "postbuild": "cp public/.htaccess-build public/build/.htaccess"
+        "postbuild": "cp public/.htaccess-build public/build/.htaccess",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui"
     },
     "devDependencies": {
         "@fontsource/audiowide": "^5.0",
+        "@playwright/test": "^1.50.0",
         "@popperjs/core": "2.11.x",
         "@tarekraafat/autocomplete.js": "^8.3.2",
         "axios": "^1.7",

@@ -22,3 +22,10 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 .vscode/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/tests/e2e/.auth/
