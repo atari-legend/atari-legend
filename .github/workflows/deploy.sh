@@ -19,6 +19,13 @@ RSYNC_FLAGS=(
     --exclude storage/app/public
     # Exclude folder storing user sessions
     --exclude storage/framework/sessions
+    # Do not sync E2E artefacts: the reports can be large and the auth state
+    # holds a live admin session cookie. They are gitignored, but the CI job
+    # produces them in the workspace before this script runs.
+    --exclude playwright-report
+    --exclude test-results
+    --exclude blob-report
+    --exclude tests/e2e/.auth
 
     # Some safety patterns below in case the development points to the
     # wrong older, as the deployment user has access to the root folder
