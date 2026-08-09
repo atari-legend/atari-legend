@@ -170,7 +170,7 @@
             <div id="other" class="accordion-collapse collapse @showroute('admin.others.*') border-0">
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
-                        <li><a>Statistics</a></li>
+                        <li><a class="@activeroute('admin.others.statistics.*')" href="{{ route('admin.others.statistics.index') }}">Statistics</a></li>
                         <li><a class="@activeroute('admin.others.changelog.*')" href="{{ route('admin.others.changelog.index') }}">Changelog</a></li>
                         <li><a class="@activeroute('admin.others.trivias.*')" href="{{ route('admin.others.trivias.index') }}">Did You Know?</a></li>
                         <li><a class="@activeroute('admin.others.quotes.*')" href="{{ route('admin.others.quotes.index') }}">Quotes</a></li>

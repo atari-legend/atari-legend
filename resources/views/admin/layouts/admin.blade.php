@@ -46,6 +46,8 @@
     @rappasoftTableScripts
     @rappasoftTableThirdPartyScripts
 
+    @yield('scripts')
+
     @vite(['resources/js/admin/app.js'])
 
     {{-- SCEditor does not work as a NPM module --}}
