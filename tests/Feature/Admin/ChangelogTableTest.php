@@ -125,11 +125,7 @@ class ChangelogTableTest extends TestCase
 
     public function test_admin_page_loads(): void
     {
-        // hasVerifiedEmail() also requires the legacy `inactive` flag to be cleared
-        $admin = User::factory()->create([
-            'permission' => User::PERMISSION_ADMIN,
-            'inactive'   => User::ACTIVE,
-        ]);
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)
             ->get(route('admin.others.changelog.index'))

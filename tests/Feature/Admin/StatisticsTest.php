@@ -220,11 +220,7 @@ class StatisticsTest extends TestCase
 
     public function test_admin_page_loads(): void
     {
-        // hasVerifiedEmail() also requires the legacy `inactive` flag to be cleared
-        $admin = User::factory()->create([
-            'permission' => User::PERMISSION_ADMIN,
-            'inactive'   => User::ACTIVE,
-        ]);
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)
             ->get(route('admin.others.statistics.index'))
@@ -242,10 +238,7 @@ class StatisticsTest extends TestCase
         $this->game(1, 'Xenon');
         $this->game(2, 'Turrican');
 
-        $admin = User::factory()->create([
-            'permission' => User::PERMISSION_ADMIN,
-            'inactive'   => User::ACTIVE,
-        ]);
+        $admin = User::factory()->admin()->create();
 
         $headlines = AdminStatisticsHelper::headlines();
         $this->assertSame(2, $headlines['Games']);
@@ -261,10 +254,7 @@ class StatisticsTest extends TestCase
 
     public function test_non_admins_are_turned_away(): void
     {
-        $user = User::factory()->create([
-            'permission' => User::PERMISSION_USER,
-            'inactive'   => User::ACTIVE,
-        ]);
+        $user = User::factory()->create();
 
         $this->actingAs($user)
             ->get(route('admin.others.statistics.index'))

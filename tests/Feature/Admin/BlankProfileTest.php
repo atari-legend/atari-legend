@@ -20,10 +20,7 @@ class BlankProfileTest extends TestCase
     {
         parent::setUp();
 
-        $this->actingAs(User::factory()->create([
-            'permission' => User::PERMISSION_ADMIN,
-            'inactive'   => User::ACTIVE,
-        ]));
+        $this->actingAs(User::factory()->admin()->create());
     }
 
     public function test_blank_individual_profile_is_stored_as_null(): void

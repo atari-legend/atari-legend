@@ -49,10 +49,6 @@
                                 @endif
 
 
-                                @if ($content->notes)
-                                    <small class="text-muted"><em>{{ $content->notes }}</em></small>
-                                @endif
-
                                 @if ($content->subtype)
                                     <small class="text-muted">[{{ $content->subtype }}]</small>
                                 @endif
