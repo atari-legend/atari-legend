@@ -39,7 +39,9 @@ class Tops extends Component
             ->join('game_release', 'game_release.pub_dev_id', '=', 'pub_dev.pub_dev_id')
             ->selectRaw('count(id) as release_count, pub_dev_name, pub_dev.pub_dev_id')
             ->where('pub_dev.pub_dev_name', '<>', Release::LICENSE_NON_COMMERCIAL)
-            ->groupBy('pub_dev_id')
+            // Both joined tables have a `pub_dev_id`, so it must be qualified:
+            // only MySQL resolves the bare name against the select list.
+            ->groupBy('pub_dev.pub_dev_id')
             ->orderBy('release_count', 'desc')
             ->orderBy('pub_dev_name')
             ->limit(5)

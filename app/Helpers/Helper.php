@@ -143,4 +143,29 @@ class Helper
             return null;
         }
     }
+
+    /**
+     * Constrain a query to the rows whose column starts with the letter picked
+     * in an A-Z filter, where the special value `0-9` matches any digit.
+     *
+     * Deliberately built out of `like` rather than `regexp`: `regexp` is
+     * MySQL-only, and the test suite runs against SQLite.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder  $query  Query to constrain
+     * @param  string  $column  Column holding the title
+     * @param  string  $letter  Letter to filter on, or `0-9` for any digit
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder The constrained query
+     */
+    public static function whereTitleStartsWith($query, string $column, string $letter)
+    {
+        if ($letter !== '0-9') {
+            return $query->where($column, 'like', $letter . '%');
+        }
+
+        return $query->where(function ($query) use ($column) {
+            foreach (range(0, 9) as $digit) {
+                $query->orWhere($column, 'like', $digit . '%');
+            }
+        });
+    }
 }

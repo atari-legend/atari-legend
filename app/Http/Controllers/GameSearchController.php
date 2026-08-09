@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\Genre;
@@ -45,13 +46,8 @@ class GameSearchController extends Controller
         $searchPossible = false;
 
         if ($request->filled('titleAZ')) {
-            if ($request->input('titleAZ') === '0-9') {
-                $games->where('game_name', 'regexp', '^[0-9]+');
-                $software->where('name', 'regexp', '^[0-9]+');
-            } else {
-                $games->where('game_name', 'like', $request->input('titleAZ') . '%');
-                $software->where('name', 'like', $request->input('titleAZ') . '%');
-            }
+            Helper::whereTitleStartsWith($games, 'game_name', $request->input('titleAZ'));
+            Helper::whereTitleStartsWith($software, 'name', $request->input('titleAZ'));
             $searchPossible = true;
             $softwareSearchPossible = true;
         }
@@ -299,9 +295,12 @@ class GameSearchController extends Controller
         $companies = PublisherDeveloper::all()
             ->sortBy('pub_dev_name');
 
+        // `substr()` rather than `YEAR()` as the latter is MySQL-only, and the
+        // test suite runs against SQLite. Dates are `YYYY-MM-DD` on both
+        // engines, so the first four characters are the year.
         $years = DB::table('game_release')
-            ->selectRaw('CAST(YEAR(date) AS CHAR) as year')
-            ->distinct('YEAR(date)')
+            ->selectRaw('substr(date, 1, 4) as year')
+            ->distinct()
             ->whereNotNull('date')
             ->where('date', '!=', 0)
             ->orderBy('year')

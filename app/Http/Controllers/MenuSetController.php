@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\Game;
 use App\Models\MenuDisk;
 use App\Models\MenuSet;
@@ -42,18 +43,28 @@ class MenuSetController extends Controller
     public function index()
     {
         // Get all sets with their total count of disks, and count of
-        // missing disks
+        // missing disks.
+        //
+        // The aggregates are cast in PHP rather than in SQL: `convert(...,
+        // unsigned integer)` is MySQL-only and the test suite runs against
+        // SQLite. The view compares `missing` with `===`, so the cast matters.
         $sets = DB::table('menu_sets')
             ->select('name', 'menu_sets.id')
             ->selectRaw("count('menu_disks.id') as disks")
-            ->selectRaw('convert(sum(case when menu_disks.menu_disk_condition_id != ? then 1 else 0 end), unsigned integer) as missing', [
+            ->selectRaw('sum(case when menu_disks.menu_disk_condition_id != ? then 1 else 0 end) as missing', [
                 MenuSetController::INTACT_CONDITION_ID,
             ])
             ->join('menus', 'menus.menu_set_id', 'menu_sets.id')
             ->join('menu_disks', 'menu_disks.menu_id', 'menus.id')
             ->groupBy('menu_sets.id')
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(function ($set) {
+                $set->disks = (int) $set->disks;
+                $set->missing = (int) $set->missing;
+
+                return $set;
+            });
 
         return view('menus.index')->with([
             'menusets' => $sets,
@@ -123,13 +134,8 @@ class MenuSetController extends Controller
         $searchPossible = false;
 
         if ($request->filled('titleAZ')) {
-            if ($request->input('titleAZ') === '0-9') {
-                $games->where('game_name', 'regexp', '^[0-9]+');
-                $software->where('name', 'regexp', '^[0-9]+');
-            } else {
-                $games->where('game_name', 'like', $request->input('titleAZ') . '%');
-                $software->where('name', 'like', $request->input('titleAZ') . '%');
-            }
+            Helper::whereTitleStartsWith($games, 'game_name', $request->input('titleAZ'));
+            Helper::whereTitleStartsWith($software, 'name', $request->input('titleAZ'));
             $searchPossible = true;
         }
 
