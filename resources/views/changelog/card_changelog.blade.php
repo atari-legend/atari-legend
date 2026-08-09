@@ -7,8 +7,12 @@
             This section lists the changes that were made to the Atari Legend database.
             You can select a specific section of the database you are interested in, and
             get an atom feed for your preferred filters.
-            There are currently <strong>{{ $changes->total() }}</strong> changes since
-            the first recorded one on {{ $firstChange->timestamp->format('F j, Y') }}.
+            There are currently <strong>{{ $changes->total() }}</strong> changes
+            @if ($firstChange !== null)
+                since the first recorded one on {{ $firstChange->timestamp->format('F j, Y') }}.
+            @else
+                recorded.
+            @endif
         </p>
         <div>
             <form id="filter" action="{{ route('changelog.index') }}" class="mb-4">

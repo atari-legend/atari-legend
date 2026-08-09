@@ -2,11 +2,13 @@
     <div class="card-header text-center">
         <h2 class="text-uppercase">
             Spotlight
-            @contributor
-                <a href="{{ route('admin.others.spotlights.edit', $spotlight) }}">
-                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
-                </a>
-            @endcontributor
+            @isset ($spotlight)
+                @contributor
+                    <a href="{{ route('admin.others.spotlights.edit', $spotlight) }}">
+                        <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                    </a>
+                @endcontributor
+            @endisset
         </h2>
     </div>
     <div class="card-body p-0">

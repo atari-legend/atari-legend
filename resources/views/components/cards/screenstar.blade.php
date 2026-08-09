@@ -4,26 +4,29 @@
     </div>
     <div class="card-body p-0">
         @isset ($screenstar)
-            <figure>
-                <img class="w-100 pixelated" src="{{ $screenstar->games[0]->screenshots[0]->getUrlRoute('game', $screenstar->games[0]) }}" alt="Screenshot of {{ $screenstar->games->first()->game_name }}">
-                <figcaption class="py-2 px-3">
-                    <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
-                    <div class="figcaption-title"><a href="{{ route('games.show', ['game' => $screenstar->games->first()]) }}">{{ $screenstar->games->first()->game_name }}</a></div>
-                    @if ($firstRelease !== null)
-                        <div class="figcaption-note">
-                            <a href="{{ route('games.search', ['year' => $firstRelease->date->year]) }}">{{ $firstRelease->date->year }}</a>
-                        </div>
-                    @endif
-                    <div class="figcaption-subtitle mb-2"><strong>Random review</strong></div>
-                </figcaption>
-            </figure>
+            @php ($game = $screenstar->games->first())
+            @if ($game !== null && $game->screenshots->isNotEmpty())
+                <figure>
+                    <img class="w-100 pixelated" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->game_name }}">
+                    <figcaption class="py-2 px-3">
+                        <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
+                        <div class="figcaption-title"><a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->game_name }}</a></div>
+                        @if ($firstRelease !== null)
+                            <div class="figcaption-note">
+                                <a href="{{ route('games.search', ['year' => $firstRelease->date->year]) }}">{{ $firstRelease->date->year }}</a>
+                            </div>
+                        @endif
+                        <div class="figcaption-subtitle mb-2"><strong>Random review</strong></div>
+                    </figcaption>
+                </figure>
+            @endif
             <div class="p-2">
                 <p class="card-text">
                     {!! Helper::bbCode(Helper::extractTag(e($screenstar->review_text), "screenstar")) !!}
                 </p>
                 <p class="card-subtitle text-muted">{{ $screenstar->review_date->format('F j, Y') }} by {{ Helper::user($screenstar->user) }}</p>
                 <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $screenstar->review_id]) }}">
-                    Read the review of {{ $screenstar->games[0]->game_name }} <i class="fas fa-chevron-right"></i>
+                    Read the review @isset ($game) of {{ $game->game_name }} @endisset <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endisset

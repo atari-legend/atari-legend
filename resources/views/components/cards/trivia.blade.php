@@ -2,11 +2,13 @@
     <div class="card-header text-center">
         <h2 class="text-uppercase">
             Did you know?
-            @contributor
-                <a href="{{ route('admin.others.trivias.index') }}#trivia-{{ $trivia->getKey() }}">
-                    <small><i class="fas fa-pencil-alt text-contributor"></i></small>
-                </a>
-            @endcontributor
+            @isset ($trivia)
+                @contributor
+                    <a href="{{ route('admin.others.trivias.index') }}#trivia-{{ $trivia->getKey() }}">
+                        <small><i class="fas fa-pencil-alt text-contributor"></i></small>
+                    </a>
+                @endcontributor
+            @endisset
         </h2>
     </div>
     <div class="card-body p-2">

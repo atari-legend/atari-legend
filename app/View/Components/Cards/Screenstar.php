@@ -31,7 +31,7 @@ class Screenstar extends Component
             ->first();
 
         if ($screenstar) {
-            $firstRelease = $screenstar->games->first()->releases
+            $firstRelease = $screenstar->games->first()?->releases
                 ->filter(function ($release) {
                     return $release->date !== null;
                 })
