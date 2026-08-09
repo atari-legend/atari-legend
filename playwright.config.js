@@ -57,7 +57,13 @@ export default defineConfig({
     },
   ],
   webServer: process.env.PLAYWRIGHT_TEST_BASE_URL ? undefined : {
-    command: `php artisan serve --port=${PORT}`,
+    // --no-reload is not just about the file watcher. Without it, `artisan
+    // serve` only forwards a small allowlist of variables to the PHP server it
+    // spawns whenever a .env file exists - DB_* is not on that list. CI has no
+    // .env today, so the E2E database settings happen to get through; adding
+    // one would silently point the served app at a different database from the
+    // one that was just migrated and seeded.
+    command: `php artisan serve --no-reload --port=${PORT}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
