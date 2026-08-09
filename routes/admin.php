@@ -50,6 +50,7 @@ use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
 use App\Http\Controllers\Admin\News\NewsController;
 use App\Http\Controllers\Admin\News\NewsSubmissionsController;
+use App\Http\Controllers\Admin\Other\ChangelogController;
 use App\Http\Controllers\Admin\Other\QuoteController;
 use App\Http\Controllers\Admin\Other\SpotlightController;
 use App\Http\Controllers\Admin\Other\TriviaController;
@@ -218,6 +219,8 @@ Route::middleware('verified')->group(function () {
                 });
 
                 Route::prefix('/others')->name('others.')->group(function () {
+                    Route::get('changelog', [ChangelogController::class, 'index'])->name('changelog.index');
+
                     Route::resource('trivias', TriviaController::class);
                     Route::resource('quotes', QuoteController::class);
 
