@@ -1,0 +1,49 @@
+import { test, expect } from '../support/test.js';
+import { FIXTURE } from '../support/fixture.js';
+import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
+
+test.describe('Menu sets', () => {
+  test('lists menu sets', async ({ page }) => {
+    const response = await page.goto('/menusets');
+
+    await expectPageRenders(page, response, '/menusets');
+    await expect(page.getByRole('heading', { name: 'Game menus', level: 1 })).toBeVisible();
+    await expect(page.getByRole('link', { name: FIXTURE.menuSet.name }).first()).toBeVisible();
+  });
+
+  test('displays one menu set', async ({ page }) => {
+    await page.goto('/menusets');
+
+    await page.getByRole('link', { name: FIXTURE.menuSet.name }).first().click();
+
+    await expect(page).toHaveURL(new RegExp(`/menusets/${FIXTURE.menuSet.id}$`));
+    await expect(page.getByRole('heading', { name: new RegExp(FIXTURE.menuSet.name), level: 1 }))
+      .toBeVisible();
+  });
+
+  test('searches menu sets', async ({ page }) => {
+    const response = await page.goto(`/menusets/search?search=${encodeURIComponent(FIXTURE.game.name)}`);
+
+    await expectPageRenders(page, response, '/menusets/search');
+  });
+
+  test('lists the menus containing a piece of software', async ({ page }) => {
+    const path = `/menusets/software/${FIXTURE.menuSoftware.id}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, path);
+  });
+
+  test.fixme('exports the scrolltexts as an EPUB', async ({ page }) => {
+    // The EPUB cover is drawn with imagettftext(), so it needs GD with
+    // FreeType. The docker dev image builds GD from libpng-dev only, so this
+    // 500s there while working in production. Un-fixme once the image is
+    // fixed (see tests/e2e/README.md).
+    const path = `/menusets/${FIXTURE.menuSet.id}/scrolltexts.epub`;
+
+    await expectResourceLoads(await page.request.get(path), path, { magic: 'PK' });
+  });
+
+  // TODO: the disk contents listing, the dump downloads, the condition
+  // filters, and the crew pages behind a menu.
+});

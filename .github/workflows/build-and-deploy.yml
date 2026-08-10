@@ -23,6 +23,12 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          # gd is needed by the routes that resize images (game covers, box
+          # scans, avatars) and by the menu set EPUB export, which draws its
+          # cover with FreeType. zip is needed by phpspreadsheet for the menu
+          # import template and by the EPUB writer. setup-php ships neither by
+          # default, so without this the e2e suite cannot reach any of them.
+          extensions: gd, zip
           coverage: pcov
           ini-values: pcov.directory=app
 

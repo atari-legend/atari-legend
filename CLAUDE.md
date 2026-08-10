@@ -6,7 +6,7 @@ Laravel 11 website for the Atari ST community - a comprehensive database of game
 
 - **Backend:** Laravel 11, PHP 8.4, MySQL
 - **Frontend:** Vite, Bootstrap 5, Livewire 3
-- **Testing:** PHPUnit 11 with SQLite in-memory
+- **Testing:** PHPUnit 11 with SQLite in-memory; Playwright for end-to-end
 
 ## Project Structure
 
@@ -37,7 +37,7 @@ storage/public/           # Public file storage (symlinked to public/storage)
 - **Games:** `game`, `game_release`, `game_aka`, `game_genre_cross`, `game_individual`
 - **Media:** `dump`, `media`, `media_scan`, `screenshot_main`, `game_release_scan`
 - **Music:** `sndh`, `sndh_archive`, `game_music`
-- **Menus:** `menu_sets`, `menus`, `menu_disks`, `menu_disk_dumps`, `menu_disk_content`
+- **Menus:** `menu_sets`, `menus`, `menu_disks`, `menu_disk_dumps`, `menu_disk_contents`
 - **Content:** `news`, `review_main`, `interview_main`, `article_main`
 - **Reference:** `individuals`, `pub_dev`, `crew`, `genre`, `engine`
 - **Users:** `users`, `game_vote`, `comments`
@@ -59,8 +59,12 @@ All in `storage/public/` (accessible via `Storage::disk('public')`):
 | `images/game_fact_screenshots/` | Game fact screenshots |
 | `images/article_screenshots/` | Article images |
 | `images/interview_screenshots/` | Interview photos |
+| `images/individual_screenshots/` | Individual avatars (keyed on `ind_id`) |
 | `images/menu_screenshots/` | Menu disk screenshots |
 | `images/magazine_covers/` | Magazine covers |
+| `images/game_release_scans/` | Release box scans |
+| `images/spotlight_screens/` | Spotlight images (keyed on `screenshot_id`) |
+| `images/website_images/` | Link screenshots |
 | `images/avatars/` | User avatars |
 | `sndh/` | SNDH music files |
 | `zips/menus/` | Menu dump ZIPs (`{menu_disk_dump_id}.zip`) |
@@ -97,6 +101,14 @@ npm run dev      # Development with hot reload
 npm run build    # Production build
 php artisan test # Run PHPUnit tests
 ```
+
+## Tests
+
+- `tests/Unit`, `tests/Feature` - PHPUnit, SQLite in-memory. `tests/Feature/Admin`
+  extends `AdminTestCase`, which signs in an admin and offers `assertChangelog()`.
+- `tests/e2e` - Playwright, organised as `public/` and `admin/`, one spec per
+  section of the site. See `tests/e2e/README.md` for the conventions, how to run
+  it, and what it does not cover yet.
 
 **CI/CD:** GitHub Actions deploys `development` → dev.atarilegend.com, `master` → www.atarilegend.com
 

@@ -14,6 +14,19 @@ function escapeForRegExp(value) {
 }
 
 /**
+ * A URL ends in `path`, ignoring any query string.
+ *
+ * Anchoring on the path alone rather than the whole URL is what makes the
+ * check a redirect check: '/links?category=1' must still be on /links, but a
+ * bounce to '/' must fail.
+ */
+function endsWithPath(path) {
+  const [pathname] = path.split('?');
+
+  return new RegExp(`${escapeForRegExp(pathname)}(\\?.*)?$`);
+}
+
+/**
  * Assert that `path` rendered as itself.
  *
  * The URL check is not redundant with the status check. An unauthenticated
@@ -23,7 +36,7 @@ function escapeForRegExp(value) {
  */
 export async function expectPageRenders(page, response, path) {
   expect(response?.status()).toBe(200);
-  await expect(page).toHaveURL(new RegExp(`${escapeForRegExp(path)}$`));
+  await expect(page).toHaveURL(endsWithPath(path));
 
   const content = await page.content();
   for (const marker of EXCEPTION_MARKERS) {
@@ -55,7 +68,7 @@ export async function expectPageRenders(page, response, path) {
  */
 export async function expectResourceLoads(response, path, { contentType, magic } = {}) {
   expect(response.status()).toBe(200);
-  expect(response.url()).toMatch(new RegExp(`${escapeForRegExp(path)}$`));
+  expect(response.url()).toMatch(endsWithPath(path));
 
   if (contentType) {
     // toContain, not toBe: Laravel appends '; charset=UTF-8' to text types.

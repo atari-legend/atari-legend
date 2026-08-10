@@ -59,21 +59,31 @@ export default defineConfig({
     },
   ],
   webServer: process.env.PLAYWRIGHT_TEST_BASE_URL ? undefined : {
-    // --no-reload is not just about the file watcher. Without it, `artisan
-    // serve` only forwards a small allowlist of variables to the PHP server it
-    // spawns whenever a .env file exists - DB_* is not on that list. CI has no
-    // .env today, so the E2E database settings happen to get through; adding
-    // one would silently point the served app at a different database from the
-    // one that was just migrated and seeded.
-    command: `php artisan serve --no-reload --port=${PORT}`,
+    // The PHP dev server directly, rather than `php artisan serve`.
+    //
+    // ServeCommand wraps the same `php -S` invocation, but it also parses the
+    // server's log lines to pretty-print them, and that parser races under
+    // concurrency: with several workers in flight it dies on 'Undefined array
+    // key 0' partway through a run, taking every remaining test with it. It
+    // survived while the suite was small and started failing as it grew.
+    //
+    // Going direct also means the server inherits the full environment.
+    // `artisan serve` forwards only a small allowlist of variables - DB_* not
+    // among them - whenever a .env file exists, which is a trap waiting for
+    // the first person to add one to CI.
+    //
+    // tests/e2e/support/server.php is the mod_rewrite shim ServeCommand would
+    // otherwise supply; see the comment in that file.
+    command: `php -S 127.0.0.1:${PORT} -t public tests/e2e/support/server.php`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
     env: {
-      // artisan serve defaults to one request at a time, so parallel Playwright
-      // workers would queue behind each other. Comfortably above the worker
-      // count, since one page load fans out into several asset requests.
-      PHP_CLI_SERVER_WORKERS: '8',
+      // The dev server handles one request at a time by default, so parallel
+      // Playwright workers would queue behind each other. Comfortably above
+      // the worker count, since one page load fans out into several asset
+      // requests.
+      PHP_CLI_SERVER_WORKERS: '16',
     },
   },
 });
