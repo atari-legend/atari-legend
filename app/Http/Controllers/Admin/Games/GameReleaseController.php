@@ -204,7 +204,15 @@ class GameReleaseController extends Controller
         ]);
 
         if ($release->publisher?->getKey() !== $request->publisher) {
-            $release->publisher()->associate(PublisherDeveloper::findOrFail($request->publisher));
+            // Clearing the publisher used to reach findOrFail(null), which
+            // aborted the whole save with a 404 - so a release could never have
+            // its publisher removed once it had one.
+            if ($request->publisher) {
+                $release->publisher()->associate(PublisherDeveloper::findOrFail($request->publisher));
+            } else {
+                $release->publisher()->dissociate();
+            }
+
             $release->save();
         }
 
