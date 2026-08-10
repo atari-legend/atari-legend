@@ -66,6 +66,69 @@ class AutocompleteTest extends TestCase
         $this->assertSame(['Xenon 2', 'Super Xenon'], $this->names($results));
     }
 
+    /**
+     * Both endpoints feed a search box, so they must rank the same titles the
+     * same way: earliest match first, then shortest, then alphabetically.
+     *
+     * They used to disagree - games.json ranked on match position alone. The
+     * length tie-break existed in games-and-software.json but did nothing,
+     * because CHAR_LENGTH('game_name') measured the quoted literal rather than
+     * the column.
+     */
+    public function test_both_endpoints_rank_titles_the_same_way(): void
+    {
+        foreach (['Super Xenon', 'Xenon 2 Megablast', 'Xenon'] as $name) {
+            $this->game($name);
+        }
+
+        $expected = ['Xenon', 'Xenon 2 Megablast', 'Super Xenon'];
+
+        $this->assertSame(
+            $expected,
+            $this->names($this->getJson(route('ajax.games', ['q' => 'Xenon']))->assertOk()->json())
+        );
+
+        $this->assertSame(
+            $expected,
+            $this->names(
+                $this->getJson(route('ajax.games-and-software', ['q' => 'Xenon']))->assertOk()->json(),
+                'name'
+            )
+        );
+    }
+
+    /**
+     * Titles matching at the same position are ordered by length, so the
+     * shortest - usually the one being looked for - comes first.
+     */
+    public function test_equally_good_matches_are_ordered_shortest_first(): void
+    {
+        foreach (['Xenon 2 Megablast', 'Xenon', 'Xenon 2'] as $name) {
+            $this->game($name);
+        }
+
+        $this->assertSame(
+            ['Xenon', 'Xenon 2', 'Xenon 2 Megablast'],
+            $this->names($this->getJson(route('ajax.games', ['q' => 'Xenon']))->assertOk()->json())
+        );
+    }
+
+    /**
+     * Titles of the same length fall back to alphabetical order, so the list
+     * is not left to whatever order the rows came back in.
+     */
+    public function test_titles_of_the_same_length_are_alphabetical(): void
+    {
+        foreach (['Xenon B', 'Xenon A'] as $name) {
+            $this->game($name);
+        }
+
+        $this->assertSame(
+            ['Xenon A', 'Xenon B'],
+            $this->names($this->getJson(route('ajax.games', ['q' => 'Xenon']))->assertOk()->json())
+        );
+    }
+
     public function test_alternative_titles_are_searched_too(): void
     {
         $game = $this->game('Bubble Bobble');
@@ -90,14 +153,24 @@ class AutocompleteTest extends TestCase
         $this->assertSame(route('games.show', $game->getKey()), $results[0]['url']);
     }
 
-    public function test_no_query_lists_games_alphabetically(): void
+    /**
+     * With no term there is nothing to rank against, so both endpoints fall
+     * back to alphabetical order rather than to the shortest title.
+     */
+    public function test_no_query_lists_everything_alphabetically(): void
     {
         $this->game('Zynaps');
         $this->game('Arkanoid');
 
-        $results = $this->getJson(route('ajax.games'))->assertOk()->json();
+        $this->assertSame(
+            ['Arkanoid', 'Zynaps'],
+            $this->names($this->getJson(route('ajax.games'))->assertOk()->json())
+        );
 
-        $this->assertSame(['Arkanoid', 'Zynaps'], $this->names($results));
+        $this->assertSame(
+            ['Arkanoid', 'Zynaps'],
+            $this->names($this->getJson(route('ajax.games-and-software'))->assertOk()->json(), 'name')
+        );
     }
 
     public function test_at_most_ten_games_come_back(): void
@@ -191,6 +264,37 @@ class AutocompleteTest extends TestCase
 
         $this->assertSame('Xenon [The Bitmap Brothers]', $results[0]['game_name']);
         $this->assertSame($game->getKey(), $results[0]['game_id']);
+    }
+
+    /**
+     * The admin autocomplete ranks by the same three rules, so an editor
+     * looking something up sees it in the order the public boxes would.
+     */
+    public function test_the_admin_autocomplete_ranks_titles_the_same_way(): void
+    {
+        foreach (['Super Xenon', 'Xenon 2 Megablast', 'Xenon'] as $name) {
+            $this->game($name);
+        }
+
+        $results = $this->actingAs(User::factory()->admin()->create())
+            ->getJson(route('admin.ajax.games', ['q' => 'Xenon']))
+            ->assertOk()
+            ->json();
+
+        $this->assertSame(['Xenon', 'Xenon 2 Megablast', 'Super Xenon'], $this->names($results));
+    }
+
+    public function test_the_admin_autocomplete_lists_alphabetically_with_no_query(): void
+    {
+        $this->game('Zynaps');
+        $this->game('Arkanoid');
+
+        $results = $this->actingAs(User::factory()->admin()->create())
+            ->getJson(route('admin.ajax.games'))
+            ->assertOk()
+            ->json();
+
+        $this->assertSame(['Arkanoid', 'Zynaps'], $this->names($results));
     }
 
     public function test_the_admin_autocomplete_is_closed_to_non_admins(): void

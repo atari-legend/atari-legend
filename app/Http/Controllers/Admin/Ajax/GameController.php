@@ -80,10 +80,23 @@ class GameController extends Controller
         // too...
         // See: https://stackoverflow.com/a/67237117/582594
 
-        $data = collect($gameData)->merge(collect($akaData))
-            ->sortBy([
-                fn ($a, $b) => strpos(Str::lower($a['game_name']), Str::lower($request->q)) <=> strpos(Str::lower($b['game_name']), Str::lower($request->q)),
-            ])
+        $data = collect($gameData)->merge(collect($akaData));
+
+        // Ranked the same way as the two public autocompletes: earliest match
+        // first, then shortest title, then alphabetically. Only when there is
+        // a term, otherwise every title matches at position 0 and the length
+        // rule would undo the alphabetical order the query asked for.
+        if ($request->filled('q')) {
+            $term = Str::lower($request->q);
+
+            $data = $data->sortBy([
+                fn ($a, $b) => strpos(Str::lower($a['game_name']), $term) <=> strpos(Str::lower($b['game_name']), $term),
+                fn ($a, $b) => strlen($a['game_name']) <=> strlen($b['game_name']),
+                fn ($a, $b) => $a['game_name'] <=> $b['game_name'],
+            ]);
+        }
+
+        $data = $data
             ->map(function ($data) {
                 return [
                     'game_name' => $data['game_name'] . $data['developers'],

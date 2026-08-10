@@ -54,16 +54,27 @@ class GameAndSoftwareController extends Controller
             $software = $software->orderBy('name');
         }
 
-        $term = Str::lower($q ?? '');
-
+        // The SQL above orders each group; this orders the groups against each
+        // other, by the same three rules.
+        //
+        // Only when there is a term to rank against: with no term every title
+        // matches at position 0, and sorting on that would drop through to the
+        // length rule and undo the alphabetical order the query asked for.
         $all = $games->get()
             ->merge($akas->get())
-            ->merge($software->get())
-            ->sortBy([
+            ->merge($software->get());
+
+        if ($q !== null) {
+            $term = Str::lower($q);
+
+            $all = $all->sortBy([
                 fn ($a, $b) => strpos(Str::lower($a->name), $term) <=> strpos(Str::lower($b->name), $term),
                 fn ($a, $b) => strlen($a->name) <=> strlen($b->name),
                 fn ($a, $b) => $a->name <=> $b->name,
-            ])
+            ]);
+        }
+
+        $all = $all
             ->values()
             ->take(GameAndSoftwareController::MAX)
             // Built here rather than by CONCAT() in the query, which is
