@@ -2,7 +2,7 @@
     onsubmit="javascript:return confirm('This item will be permanently deleted')">
     @csrf
     @method('DELETE')
-    <button title="Delete issue '{{ $row->number }}'" class="btn">
+    <button title="Delete issue '{{ $row->display_label }}'" class="btn">
         <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
     </button>
 </form>
