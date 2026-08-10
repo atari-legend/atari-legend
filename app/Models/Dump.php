@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class Dump extends Model
 {
+    use HasFactory;
+
     const FORMATS = ['MSA', 'SCP', 'ST', 'STX'];
 
     const TRACKPICTURES_DIRECTORY = 'images/dump_trackpictures';
