@@ -20,13 +20,21 @@ class GameController extends Controller
             ->limit(GameController::MAX);
 
         if ($request->filled('q')) {
+            // instr() and length() are spelled the same in MySQL and SQLite;
+            // LOCATE() and CHAR_LENGTH() are MySQL-only. instr() takes
+            // (haystack, needle), the reverse of LOCATE(), and the term is
+            // bound rather than pasted into the SQL, which it used to be.
+            //
+            // The length ordering used to read CHAR_LENGTH('game_name'): the
+            // quotes made it measure the literal string, the same number for
+            // every row, so it sorted nothing.
             $games = $games->where('game_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw("LOCATE('" . $request->q . "', game_name)")
-                ->orderbyRaw("CHAR_LENGTH('game_name')")
+                ->orderByRaw('instr(game_name, ?)', [$request->q])
+                ->orderByRaw('length(game_name)')
                 ->orderBy('game_name');
             $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw("LOCATE('" . $request->q . "', aka_name)")
-                ->orderbyRaw("CHAR_LENGTH('aka_name')")
+                ->orderByRaw('instr(aka_name, ?)', [$request->q])
+                ->orderByRaw('length(aka_name)')
                 ->orderBy('aka_name');
         } else {
             $games = $games->orderBy('game_name');

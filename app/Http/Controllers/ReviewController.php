@@ -72,7 +72,9 @@ class ReviewController extends Controller
     public function edit(Request $request)
     {
         if (! $request->filled('game')) {
-            return response(400);
+            // response(400) would have set the *body* to '400' and left the
+            // status at 200, so a form with no game looked like a success.
+            abort(400);
         }
 
         $game = Game::find($request->game);

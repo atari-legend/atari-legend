@@ -49,7 +49,7 @@ jobs:
       # --min is a ratchet against regressions, not a target: raise it as
       # coverage grows. The baseline when it was introduced was 16.3%.
       - name: Run tests
-        run: php artisan test --coverage --min=25 --coverage-clover=build/logs/clover.xml
+        run: php artisan test --coverage --min=35 --coverage-clover=build/logs/clover.xml
 
       - name: Upload coverage report
         if: always()

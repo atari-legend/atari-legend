@@ -13,6 +13,11 @@ class Sndh extends Model
 
     protected $keyType = 'string';
 
+    // The key is the tune's path inside the archive, not a generated integer.
+    // Without this, inserting a tune would overwrite the path in memory with
+    // whatever the driver reports as the last insert id.
+    public $incrementing = false;
+
     protected $fillable = [
         'id',
         'sndh_archive_id',

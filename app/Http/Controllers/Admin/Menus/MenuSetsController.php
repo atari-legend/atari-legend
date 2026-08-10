@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Menus;
 
 use App\Helpers\ChangelogHelper;
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Crew;
@@ -23,14 +24,8 @@ class MenuSetsController extends Controller
         $sets = MenuSet::select()
             ->orderBy('name');
 
-        if ($request->letter && $request->letter === '0-9') {
-            $sets = $sets
-                ->where('name', 'regexp', '^[0-9]+')
-                // Essentially disable pagination when filtering on a letter
-                ->paginate(PHP_INT_MAX);
-        } elseif ($request->letter) {
-            $sets = $sets
-                ->where('name', 'like', $request->letter . '%')
+        if ($request->letter) {
+            $sets = Helper::whereTitleStartsWith($sets, 'name', $request->letter)
                 // Essentially disable pagination when filtering on a letter
                 ->paginate(PHP_INT_MAX);
         } else {

@@ -12,4 +12,8 @@ class SndhArchive extends Model
     public $timestamps = false;
 
     protected $keyType = 'string';
+
+    // The key is the archive's name, not a generated integer - see the same
+    // note on Sndh.
+    public $incrementing = false;
 }

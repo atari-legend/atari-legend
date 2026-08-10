@@ -31,6 +31,10 @@
         </report>
     </coverage>
     <php>
+        <!-- The suite renders a lot of Blade in one process, and PHP's default
+             128M runs out partway through a full run. Only the test process is
+             affected; nothing here changes the limit the site runs under. -->
+        <ini name="memory_limit" value="512M"/>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="base64:AckfSECXIvnK5r28GVIWUAxmbBSjTsmF/0rZh1cyWXk="/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
