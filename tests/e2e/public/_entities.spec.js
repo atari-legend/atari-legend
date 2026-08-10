@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectPageRenders } from './assertions.js';
+import { expectPageRenders } from '../support/assertions.js';
 
 // Detail pages are reached the way a visitor reaches them: by following links
 // from a starting page. Nothing here names an id or a slug, so these specs work

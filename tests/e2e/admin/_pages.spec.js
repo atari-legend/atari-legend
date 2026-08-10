@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectPageRenders } from './assertions.js';
+import { expectPageRenders } from '../support/assertions.js';
 
 const adminRoutes = [
   { name: 'Admin Dashboard', path: '/admin' },

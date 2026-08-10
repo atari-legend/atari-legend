@@ -31,8 +31,10 @@ export default defineConfig({
   // takes out the admin specs. When they shared one project, every public
   // spec depended on 'setup' too and could not run at all.
   //
-  // Each project selects its specs by filename: a new spec file must be named
-  // admin-*.spec.js or public-*.spec.js, or no project will pick it up.
+  // Each project selects its specs by directory: a spec belongs in
+  // tests/e2e/public/ or tests/e2e/admin/, one file per section of the site.
+  // A spec anywhere else - tests/e2e/support/, or the wrong directory - is
+  // silently skipped, so check `npx playwright test --list` after adding one.
   projects: [
     {
       name: 'setup',
@@ -40,7 +42,7 @@ export default defineConfig({
     },
     {
       name: 'public',
-      testMatch: /public-.*\.spec\.js/,
+      testMatch: 'public/**/*.spec.js',
       use: {
         ...devices['Desktop Chrome'],
         storageState: { cookies: [], origins: [] },
@@ -48,7 +50,7 @@ export default defineConfig({
     },
     {
       name: 'admin',
-      testMatch: /admin-.*\.spec\.js/,
+      testMatch: 'admin/**/*.spec.js',
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'tests/e2e/.auth/admin.json',

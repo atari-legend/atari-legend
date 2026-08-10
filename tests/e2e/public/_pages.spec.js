@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectPageRenders } from './assertions.js';
+import { expectPageRenders } from '../support/assertions.js';
 
 // Runs unauthenticated: the 'public' project supplies an empty storage state
 // and, unlike 'admin', does not depend on the login setup.
