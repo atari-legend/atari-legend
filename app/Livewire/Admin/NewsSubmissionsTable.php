@@ -20,11 +20,17 @@ class NewsSubmissionsTable extends DataTableComponent
     {
         return [
             Column::make('Headline', 'news_headline')
-                ->searchable(fn ($row) => fn ($query, $term) => $query->where('news_headline', 'like', "%{$term}%")
+                // The callback used to return another closure rather than
+                // constrain the query, so searching submissions did nothing.
+                ->searchable(fn ($query, $term) => $query->where('news_headline', 'like', "%{$term}%")
                     ->orWhere('news_text', 'like', "%{$term}%"))
                 ->sortable(),
+            // Sortable so that configure()'s default sort on this column takes
+            // effect - without it the queue came back in insertion order rather
+            // than newest first.
             Column::make('Date', 'news_date')
-                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-'),
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
+                ->sortable(),
             Column::make('Text', 'news_text')
                 ->sortable()
                 ->format(fn ($value) => Helper::bbCode(stripslashes(nl2br(e($value)))))

@@ -46,19 +46,31 @@ class UsersTable extends DataTableComponent
                         ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
                         : '-'
                 )
-                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw("convert(join_date, unsigned) $direction")),
+                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw(
+                    'join_date + 0 ' . self::direction($direction)
+                )),
             Column::make('Last visit', 'last_visit')
                 ->format(
                     fn ($value) => $value
                         ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
                         : '-'
                 )
-                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw("convert(last_visit, unsigned) $direction")),
+                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw(
+                    'last_visit + 0 ' . self::direction($direction)
+                )),
             Column::make('Actions')
                 ->label(
                     fn ($row) => view('admin.users.users.datatable_actions')->with(['row' => $row])
                 ),
         ];
+    }
+
+    /**
+     * Only ever 'asc' or 'desc', since the value is interpolated into raw SQL.
+     */
+    private static function direction(string $direction): string
+    {
+        return $direction === 'asc' ? 'asc' : 'desc';
     }
 
     public function builder(): Builder

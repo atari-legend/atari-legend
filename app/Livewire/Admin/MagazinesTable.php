@@ -26,8 +26,10 @@ class MagazinesTable extends DataTableComponent
                 ->location(
                     fn ($row) => route('admin.magazines.magazines.edit', $row)
                 )
+                // The callback used to return another closure rather than
+                // constrain the query, so searching magazines did nothing.
                 ->searchable(
-                    fn (Builder $query, string $term) => fn ($query, $term) => $query->where('name', 'like', '%' . $term . '%')
+                    fn (Builder $query, string $term) => $query->where('name', 'like', '%' . $term . '%')
                 )
                 ->sortable(
                     fn (Builder $query, string $direction) => $query->orderBy('name', $direction)

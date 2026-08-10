@@ -40,7 +40,9 @@ class CommentsTable extends DataTableComponent
                     // Validate direction to avoid SQL injections
                     $d = $direction === 'asc' ? 'asc' : 'desc';
 
-                    return $query->orderByRaw("convert(`timestamp`, unsigned) $d");
+                    // `+ 0` coerces the varchar timestamp to a number in both
+                    // MySQL and SQLite; convert(..., unsigned) is MySQL-only.
+                    return $query->orderByRaw("`timestamp` + 0 $d");
                 }),
             Column::make('Type')
                 ->label(
