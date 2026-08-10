@@ -114,7 +114,7 @@ Route::middleware('verified')->group(function () {
                         Route::post('vs', [GameController::class, 'storeVs'])->name('games.vs.store');
                         Route::delete('vs/{vs}/destroy', [GameController::class, 'destroyVs'])->name('games.destroy.vs');
 
-                        Route::resource('releases', GameReleaseController::class);
+                        Route::resource('releases', GameReleaseController::class)->except(['edit']);
 
                         Route::prefix('/{release}')->name('releases.')->group(function () {
                             Route::get('scene', [ReleaseSceneController::class, 'index'])->name('scene.index');
@@ -140,32 +140,36 @@ Route::middleware('verified')->group(function () {
                             Route::post('system-disk-protection', [ReleaseSystemDiskProtectionController::class, 'store'])->name('system-disk-protection.store');
                             Route::delete('system-disk-protection/{protection}', [ReleaseSystemDiskProtectionController::class, 'destroy'])->name('system-disk-protection.destroy');
 
-                            Route::resource('medias', ReleaseMediasController::class);
-                            Route::resource('scans', ReleaseScansController::class);
+                            Route::resource('medias', ReleaseMediasController::class)->except(['create', 'show', 'edit']);
+                            Route::resource('scans', ReleaseScansController::class)->except(['create', 'show', 'edit']);
 
                             Route::prefix('/{media}')->name('medias.')->group(function () {
-                                Route::resource('scans', ReleaseMediasScansController::class);
-                                Route::resource('dumps', ReleaseMediasDumpsController::class);
+                                Route::resource('scans', ReleaseMediasScansController::class)->only(['store', 'update', 'destroy']);
+                                Route::resource('dumps', ReleaseMediasDumpsController::class)->only(['store', 'update', 'destroy']);
                             });
                         });
                     });
 
-                    Route::resource('games', GameController::class);
+                    Route::resource('games', GameController::class)->except(['show']);
 
-                    Route::resource('submissions', GameSubmissionController::class);
+                    Route::resource('submissions', GameSubmissionController::class)->except(['create', 'store', 'edit']);
                     Route::delete('submissions/{submission}/screenshots/{screenshot}', [GameSubmissionController::class, 'destroyScreenshot'])->name('submissions.screenshots.destroy');
 
                     Route::delete('individuals/{individual}/avatar', [GameIndividualController::class, 'destroyAvatar'])->name('individuals.avatar.destroy');
                     Route::post('individuals/{individual}/nickname', [GameIndividualController::class, 'storeNickname'])->name('individuals.nickname.store');
                     Route::delete('individuals/{individual}/nickname/{nickname}', [GameIndividualController::class, 'destroyNickname'])->name('individuals.nickname.destroy');
-                    Route::resource('individuals', GameIndividualController::class);
+                    Route::resource('individuals', GameIndividualController::class)->except(['show']);
 
                     Route::delete('companies/{company}/logo', [GameCompanyController::class, 'destroyLogo'])->name('companies.logo.destroy');
-                    Route::resource('companies', GameCompanyController::class);
+                    Route::resource('companies', GameCompanyController::class)->except(['show']);
 
                     Route::delete('series/{series}/game/{game}', [GameSeriesController::class, 'removeGame'])->name('series.game.destroy');
                     Route::post('series/{series}/game', [GameSeriesController::class, 'addGame'])->name('series.game.store');
-                    Route::resource('series', GameSeriesController::class);
+                    // 'destroy' is kept although GameSeriesController does not implement it:
+                    // the series datatable renders a delete form pointing at it, so removing
+                    // the route breaks the list page. Implement the method (or drop the
+                    // button) rather than pruning it here.
+                    Route::resource('series', GameSeriesController::class)->except(['show']);
 
                     Route::get('config', function () {
                         return redirect()->route('admin.games.configuration.show', 'engine');
@@ -178,13 +182,13 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/users')->name('users.')->group(function () {
                     Route::delete('users/{user}/avatar', [UserController::class, 'destroyAvatar'])->name('users.avatar');
-                    Route::resource('users', UserController::class);
-                    Route::resource('comments', CommentController::class);
+                    Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
+                    Route::resource('comments', CommentController::class)->except(['create', 'store', 'show']);
                 });
 
                 Route::prefix('/news')->name('news.')->group(function () {
                     Route::delete('news/{news}/image', [NewsController::class, 'destroyImage'])->name('news.image');
-                    Route::resource('news', NewsController::class);
+                    Route::resource('news', NewsController::class)->except(['show']);
 
                     Route::get('submissions', [NewsSubmissionsController::class, 'index'])->name('submissions.index');
                     Route::delete('submissions/{submission}', [NewsSubmissionsController::class, 'destroy'])->name('submissions.destroy');
@@ -193,17 +197,17 @@ Route::middleware('verified')->group(function () {
 
                 Route::prefix('/links')->name('links.')->group(function () {
                     Route::delete('links/{link}/image', [AdminLinkController::class, 'destroyImage'])->name('links.image');
-                    Route::resource('links', AdminLinkController::class);
-                    Route::resource('categories', LinkCategoryController::class);
+                    Route::resource('links', AdminLinkController::class)->except(['show']);
+                    Route::resource('categories', LinkCategoryController::class)->except(['show']);
                 });
 
                 Route::prefix('/reviews')->name('reviews.')->group(function () {
-                    Route::resource('reviews', ReviewsController::class);
-                    Route::resource('submissions', ReviewsSubmissionsController::class);
+                    Route::resource('reviews', ReviewsController::class)->except(['show']);
+                    Route::resource('submissions', ReviewsSubmissionsController::class)->only(['index']);
                 });
 
                 Route::prefix('/interviews')->name('interviews.')->group(function () {
-                    Route::resource('interviews', InterviewsController::class);
+                    Route::resource('interviews', InterviewsController::class)->except(['show']);
 
                     Route::post('interviews/{interview}/image', [InterviewsController::class, 'storeImage'])->name('interviews.image.store');
                     Route::put('interviews/{interview}/image', [InterviewsController::class, 'updateImage'])->name('interviews.image.update');
@@ -211,8 +215,8 @@ Route::middleware('verified')->group(function () {
                 });
 
                 Route::prefix('/articles')->name('articles.')->group(function () {
-                    Route::resource('types', ArticleTypeController::class);
-                    Route::resource('articles', ArticleController::class);
+                    Route::resource('types', ArticleTypeController::class)->except(['create', 'show', 'edit']);
+                    Route::resource('articles', ArticleController::class)->except(['show']);
 
                     Route::post('articles/{article}/image', [ArticleController::class, 'storeImage'])->name('articles.image.store');
                     Route::put('articles/{article}/image', [ArticleController::class, 'updateImage'])->name('articles.image.update');
@@ -223,35 +227,35 @@ Route::middleware('verified')->group(function () {
                     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
                     Route::get('changelog', [ChangelogController::class, 'index'])->name('changelog.index');
 
-                    Route::resource('trivias', TriviaController::class);
-                    Route::resource('quotes', QuoteController::class);
+                    Route::resource('trivias', TriviaController::class)->except(['create', 'show', 'edit']);
+                    Route::resource('quotes', QuoteController::class)->except(['create', 'show', 'edit']);
 
                     Route::delete('spotlights/{spotlight}/image', [SpotlightController::class, 'destroyImage'])->name('spotlights.image.destroy');
-                    Route::resource('spotlights', SpotlightController::class);
+                    Route::resource('spotlights', SpotlightController::class)->except(['show']);
                 });
 
                 Route::prefix('/menus')->name('menus.')->group(function () {
                     Route::get('sets/{set}/import', [MenuImportController::class, 'index'])->name('sets.import');
                     Route::get('sets/{set}/import/template', [MenuImportController::class, 'template'])->name('sets.import.template');
-                    Route::resource('sets', MenuSetsController::class);
+                    Route::resource('sets', MenuSetsController::class)->except(['show']);
 
-                    Route::resource('menus', MenusController::class);
+                    Route::resource('menus', MenusController::class)->except(['index', 'show']);
 
-                    Route::resource('disks', MenuDisksController::class);
+                    Route::resource('disks', MenuDisksController::class)->except(['index', 'show']);
                     Route::post('/disks/{disk}/screenshot', [MenuDisksController::class, 'storeScreenshot'])->name('disks.storeScreenshot');
                     Route::delete('/disks/{disk}/screenshot/{screenshot}', [MenuDisksController::class, 'destroyScreenshot'])->name('disks.destroyScreenshot');
                     Route::post('/disks/{disk}/dump', [MenuDisksController::class, 'storeDump'])->name('disks.storeDump');
                     Route::delete('/disks/{disk}/dump/{dump}', [MenuDisksController::class, 'destroyDump'])->name('disks.destroyDump');
 
-                    Route::resource('disks.content', MenuDisksContentController::class);
+                    Route::resource('disks.content', MenuDisksContentController::class)->except(['index', 'show']);
 
-                    Route::resource('conditions', MenuConditionsController::class);
+                    Route::resource('conditions', MenuConditionsController::class)->except(['show']);
 
-                    Route::resource('content-types', MenuSoftwareContentTypesController::class);
+                    Route::resource('content-types', MenuSoftwareContentTypesController::class)->except(['show']);
 
-                    Route::resource('software', MenuSoftwareController::class);
+                    Route::resource('software', MenuSoftwareController::class)->except(['show']);
 
-                    Route::resource('crews', MenuCrewController::class);
+                    Route::resource('crews', MenuCrewController::class)->except(['show']);
                     Route::post('/crews/{crew}/individual', [MenuCrewController::class, 'addIndividual'])->name('crews.addIndividual');
                     Route::delete('/crews/{crew}/individual/{individual}', [MenuCrewController::class, 'removeIndividual'])->name('crews.removeIndividual');
                     Route::post('/crews/{crew}/subcrew', [MenuCrewController::class, 'addSubCrew'])->name('crews.addSubCrew');
@@ -262,9 +266,9 @@ Route::middleware('verified')->group(function () {
                 });
 
                 Route::prefix('/magazines')->name('magazines.')->group(function () {
-                    Route::resource('magazines', MagazinesController::class);
-                    Route::resource('magazines/{magazine}/issues', MagazineIssuesController::class);
-                    Route::resource('index-types', MagazineIndexTypesController::class);
+                    Route::resource('magazines', MagazinesController::class)->except(['show']);
+                    Route::resource('magazines/{magazine}/issues', MagazineIssuesController::class)->except(['index', 'show']);
+                    Route::resource('index-types', MagazineIndexTypesController::class)->except(['create', 'show', 'edit']);
                 });
 
                 Route::name('ajax.')->group(function () {

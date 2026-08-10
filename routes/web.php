@@ -104,7 +104,10 @@ Route::middleware(['verified', 'nondraft'])->group(function () {
 
     Route::resource('/about', AboutController::class)->only(['index']);
 
-    Route::resource('/magazines', MagazineController::class);
+    // Only the read actions exist. The write ones were also routed here, without
+    // any auth middleware - 'verified' is a no-op for a guest - and only failed
+    // because the controller has no such methods.
+    Route::resource('/magazines', MagazineController::class)->only(['index', 'show']);
 
     Route::get('/about/andreas', [AboutController::class, 'andreas'])->name('about.andreas');
 
