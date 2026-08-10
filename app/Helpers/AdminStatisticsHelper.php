@@ -28,13 +28,6 @@ class AdminStatisticsHelper
     ];
 
     /**
-     * Typos found in change_log.section.
-     */
-    const SECTION_ALIASES = [
-        'Menu Softwre' => 'Menu Software',
-    ];
-
-    /**
      * The lowest and highest year we accept from user-entered year columns.
      */
     const YEAR_MIN = 1980;
@@ -257,21 +250,15 @@ class AdminStatisticsHelper
      */
     public static function changesBySection($limit = 15)
     {
-        $sections = [];
-
-        $rows = DB::table('change_log')
+        $sections = DB::table('change_log')
             ->select('section', DB::raw('count(*) as total'))
             ->groupBy('section')
-            ->get();
+            ->orderByDesc('total')
+            ->limit($limit)
+            ->pluck('total', 'section')
+            ->all();
 
-        foreach ($rows as $row) {
-            $section = self::SECTION_ALIASES[$row->section] ?? $row->section;
-            $sections[$section] = ($sections[$section] ?? 0) + $row->total;
-        }
-
-        arsort($sections);
-
-        return self::toChartData(array_slice($sections, 0, $limit, true));
+        return self::toChartData($sections);
     }
 
     /**

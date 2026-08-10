@@ -59,11 +59,13 @@ class StatisticsTest extends TestCase
     }
 
     /**
-     * The "Menu Softwre" typo in the data is merged into the correct section.
+     * Sections are counted as they are stored. The "Menu Softwre" typo used to
+     * be folded on read; it is corrected in the data instead, by
+     * 2026_08_10_120000_fix_menu_software_changelog_section.
      */
-    public function test_changelog_section_typo_is_folded(): void
+    public function test_changes_are_counted_by_section(): void
     {
-        $this->entry(Changelog::INSERT, 'Menu Softwre', '2025-01-01');
+        $this->entry(Changelog::INSERT, 'Menu Software', '2025-01-01');
         $this->entry(Changelog::INSERT, 'Menu Software', '2025-01-01');
         $this->entry(Changelog::INSERT, 'Games', '2025-01-01');
 
@@ -71,6 +73,23 @@ class StatisticsTest extends TestCase
         $counts = array_combine($sections['labels'], $sections['data']);
 
         $this->assertSame(['Menu Software' => 2, 'Games' => 1], $counts);
+    }
+
+    /**
+     * Busiest first, and no more than asked for.
+     */
+    public function test_only_the_busiest_sections_are_charted(): void
+    {
+        $this->entry(Changelog::INSERT, 'Games', '2025-01-01');
+        $this->entry(Changelog::INSERT, 'Games', '2025-01-02');
+        $this->entry(Changelog::INSERT, 'Reviews', '2025-01-03');
+        $this->entry(Changelog::INSERT, 'Menus', '2025-01-04');
+
+        $sections = AdminStatisticsHelper::changesBySection(limit: 2);
+
+        $this->assertCount(2, $sections['labels']);
+        $this->assertSame('Games', $sections['labels'][0]);
+        $this->assertSame(2, $sections['data'][0]);
     }
 
     /**

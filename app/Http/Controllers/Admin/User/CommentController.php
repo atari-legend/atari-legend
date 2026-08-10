@@ -65,16 +65,24 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment)
     {
+        // Read what the comment was on before deleting it. Both `type` and
+        // `target` are worked out from the pivot tables, which the delete takes
+        // with it - reading them afterwards threw 'Unknown comment type', so
+        // the comment went but the changelog entry never got written.
+        $section = self::COMMENT_CHANGELOG_SECTIONS[$comment->type];
+        $targetId = $comment->target_id;
+        $target = $comment->target;
+
         $comment->delete();
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
-            'section'          => self::COMMENT_CHANGELOG_SECTIONS[$comment->type],
-            'section_id'       => $comment->target_id,
-            'section_name'     => $comment->target,
+            'section'          => $section,
+            'section_id'       => $targetId,
+            'section_name'     => $target,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $comment->getKey(),
-            'sub_section_name' => $comment->target,
+            'sub_section_name' => $target,
         ]);
 
         return redirect()->route('admin.users.comments.index');

@@ -52,7 +52,7 @@ class MenuSoftwareController extends Controller
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
-            'section'          => 'Menu Softwre',
+            'section'          => 'Menu Software',
             'section_id'       => $software->getKey(),
             'section_name'     => $software->name,
             'sub_section'      => 'Software',
@@ -93,7 +93,7 @@ class MenuSoftwareController extends Controller
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
-            'section'          => 'Menu Softwre',
+            'section'          => 'Menu Software',
             'section_id'       => $software->getKey(),
             'section_name'     => $software->getOriginal('name'),
             'sub_section'      => 'Software',
@@ -110,7 +110,7 @@ class MenuSoftwareController extends Controller
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
-            'section'          => 'Menu Softwre',
+            'section'          => 'Menu Software',
             'section_id'       => $software->getKey(),
             'section_name'     => $software->getOriginal('name'),
             'sub_section'      => 'Software',

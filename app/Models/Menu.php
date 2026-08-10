@@ -27,7 +27,10 @@ class Menu extends Model
         }
 
         if ($this->version) {
-            $parts[] = ' v' . $this->version;
+            // No leading space: join() adds the separator. With one, the label
+            // came out as '#189  v1.0' - invisible in HTML, but not in the
+            // changelog or in the filename a disk downloads as.
+            $parts[] = 'v' . $this->version;
         }
 
         return collect($parts)
