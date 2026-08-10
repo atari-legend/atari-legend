@@ -69,17 +69,32 @@ class NewsControllerTest extends AdminTestCase
     }
 
     /**
-     * NOTE: creating a news item records the change as an Update, not an
-     * Insert - NewsController::store() passes Changelog::UPDATE. That looks
-     * like a copy-and-paste slip from update(), but it is what the audit log
-     * has recorded for every news item so far, so this test pins the current
-     * behaviour rather than the intended one. Change both together.
+     * A new item is an Insert. It was logged as an Update until 2026-08-10, so
+     * changelog entries written before then say Update for news items that were
+     * in fact created - AdminStatisticsHelper::changesByMonth() will show that
+     * as a dip in inserts.
      */
     public function test_store_records_the_change(): void
     {
         $this->post(route('admin.news.news.store'), $this->payload());
 
-        $this->assertChangelog(Changelog::UPDATE, 'News', 'Automation 189 released');
+        $this->assertChangelog(Changelog::INSERT, 'News', 'Automation 189 released');
+    }
+
+    /**
+     * Insert and Update have to stay distinguishable: the two paths differ by
+     * one constant, so a regression in either is invisible without this.
+     */
+    public function test_creating_and_editing_are_logged_differently(): void
+    {
+        $this->post(route('admin.news.news.store'), $this->payload());
+
+        $this->put(route('admin.news.news.update', News::sole()), $this->payload([
+            'headline' => 'Automation 189 re-released',
+        ]));
+
+        $this->assertChangelog(Changelog::INSERT, 'News', 'Automation 189 released');
+        $this->assertChangelog(Changelog::UPDATE, 'News', 'Automation 189 re-released');
     }
 
     public function test_store_requires_every_field(): void

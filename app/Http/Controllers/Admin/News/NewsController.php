@@ -95,7 +95,7 @@ class NewsController extends Controller
         $this->addOrUpdateImage($request, $news);
 
         ChangelogHelper::insert([
-            'action'           => Changelog::UPDATE,
+            'action'           => Changelog::INSERT,
             'section'          => 'News',
             'section_id'       => $news->getKey(),
             'section_name'     => $news->news_headline,
