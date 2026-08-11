@@ -45,11 +45,7 @@ test.describe('Games', () => {
     });
   });
 
-  test.fixme('serves a release box scan', async ({ page }) => {
-    // Encodes WebP through Intervention. The docker dev image builds GD from
-    // libpng-dev only - no WebP, no FreeType - so this 500s there while
-    // working in production. Un-fixme once the image is fixed (see
-    // tests/e2e/README.md).
+  test('serves a release box scan', async ({ page }) => {
     const path = `/games/release/${FIXTURE.release.id}/boxscan-${FIXTURE.release.boxscanId}.webp`;
 
     await expectResourceLoads(await page.request.get(path), path, {

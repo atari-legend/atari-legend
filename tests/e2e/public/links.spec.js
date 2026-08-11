@@ -18,9 +18,7 @@ test.describe('Links', () => {
     await expect(page.getByRole('heading', { name: FIXTURE.website.name })).toBeVisible();
   });
 
-  test.fixme('serves a link screenshot', async ({ page }) => {
-    // WebP, so it needs a GD build the docker dev image does not have. See
-    // tests/e2e/README.md.
+  test('serves a link screenshot', async ({ page }) => {
     const path = `/websites/${FIXTURE.website.id}/screenshot.webp`;
 
     await expectResourceLoads(await page.request.get(path), path, {

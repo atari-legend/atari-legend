@@ -34,11 +34,7 @@ test.describe('Menu sets', () => {
     await expectPageRenders(page, response, path);
   });
 
-  test.fixme('exports the scrolltexts as an EPUB', async ({ page }) => {
-    // The EPUB cover is drawn with imagettftext(), so it needs GD with
-    // FreeType. The docker dev image builds GD from libpng-dev only, so this
-    // 500s there while working in production. Un-fixme once the image is
-    // fixed (see tests/e2e/README.md).
+  test('exports the scrolltexts as an EPUB', async ({ page }) => {
     const path = `/menusets/${FIXTURE.menuSet.id}/scrolltexts.epub`;
 
     await expectResourceLoads(await page.request.get(path), path, { magic: 'PK' });

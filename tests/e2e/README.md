@@ -78,7 +78,7 @@ test.describe('Games', () => {
 - **Leave a `TODO` naming what the section still does not cover.** Those comments
   are the backlog; the checklist below is their summary.
 - **Everything is read-only.** `fullyParallel` is on and every worker shares one
-  seeded database, so a spec that writes needs its own fixtures — see follow-up 4.
+  seeded database, so a spec that writes needs its own fixtures — see follow-up 3.
 
 ## Adding a section
 
@@ -111,14 +111,19 @@ docker compose run --rm npm run build      # @vite needs public/build/manifest.j
 
 docker compose run -d --name al-e2e-serve -p 8123:8000 $E2E \
   -e APP_URL=http://127.0.0.1:8123 -e PHP_CLI_SERVER_WORKERS=16 \
-  --entrypoint php artisan -S 0.0.0.0:8000 -t public tests/e2e/support/server.php
+  --entrypoint php site -S 0.0.0.0:8000 -t public tests/e2e/support/server.php
 
 cd site && PLAYWRIGHT_TEST_BASE_URL=http://127.0.0.1:8123 npx playwright test
 docker rm -f al-e2e-serve
 ```
 
-Two things that will bite otherwise:
+Three things that will bite otherwise:
 
+- **Serve from the `site` service, not `artisan`.** Both can run the router, but
+  they are different images: `site` is `httpd.dockerfile`, which is what actually
+  serves this application and builds GD with JPEG, WebP and FreeType. `artisan`
+  is `php.dockerfile`, an Alpine image shared with the legacy CPANEL whose GD is
+  PNG-only, so every route that re-encodes an image 500s under it.
 - **`APP_ENV=testing` makes Laravel read `.env.testing` *instead of* `.env`**, and
   that file sets only `DB_CONNECTION=sqlite`. Every other `DB_*` value has to be
   passed explicitly, `APP_KEY` included, or the app quietly points somewhere
@@ -138,15 +143,15 @@ today, and what it does not:
 | Section | Covered | Not yet |
 |---|---|---|
 | Home | page renders, nav links to each section | the cards (Screenstar, Who is it?, Latest menus, Trivia) |
-| Games | list, detail, release, slug redirect, screenshot | advanced search, A-Z browse, voting, comments, gallery, similar games |
+| Games | list, detail, release, slug redirect, screenshot, box scan | advanced search, A-Z browse, voting, comments, gallery, similar games |
 | News | list | submitting news, pagination |
 | Reviews | list, detail | submit form, comments, scores, unpublished hidden |
 | Interviews | list, detail | chapter hotspots, comments, screenshots |
 | Articles | list, detail | type filter, comments, screenshots |
-| Menu sets | list, detail, search, by-software | disk contents, dump downloads, condition filters, crews |
+| Menu sets | list, detail, search, by-software, EPUB export | disk contents, dump downloads, condition filters, crews |
 | Magazines | list, detail | issues, covers, archive.org links, the index |
-| Links | list, category filter | submitting a link, dead-link flagging |
-| Music | — | the SNDH player (ym2149-wasm), covers |
+| Links | list, category filter, screenshot | submitting a link, dead-link flagging |
+| Music | cover image | the SNDH player (ym2149-wasm), the sndhrecord.atari.org proxy |
 | Account | sign in, profile, review form, guests kept out | profile edit, password change, avatar, voting, commenting |
 | Crawler | sitemaps, robots.txt, both feeds | that they list the right entities |
 | Admin games | list, edit, 7 game panels, 5 release panels, issues, music, 4 reference sections, 20 config tables | creating and saving anything, changelog rows |
@@ -157,8 +162,6 @@ today, and what it does not:
 | Admin users | list, edit, comments | permissions, deactivation, moderation |
 | Admin others | trivia, quotes, spotlights, statistics, changelog, 3 autocompletes | statistics figures |
 
-Four tests are `test.fixme()` rather than missing — see follow-up 3.
-
 ## Follow-ups
 
 1. **The public `magazines` write routes had no auth middleware.** They sat in a
@@ -168,19 +171,13 @@ Four tests are `test.fixme()` rather than missing — see follow-up 3.
 2. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
    fixed: a `Route::resource()` without `only()`/`except()` registers actions the
    controller does not implement, and those answer 500 rather than 404.
-3. **The docker dev image has PNG-only GD.** `../php.dockerfile` (parent repo)
-   installs GD from `libpng-dev` alone — no WebP, no FreeType — so the box scan,
-   avatar, spotlight, link screenshot, music cover and EPUB routes 500 there
-   today, independently of these tests. Their specs are `test.fixme()` with the
-   reason inline. Fix with `docker-php-ext-configure gd --with-freetype
-   --with-jpeg --with-webp`, then un-fixme them.
-4. **Mutating flows are untested end to end** — creating and editing content
+3. **Mutating flows are untested end to end** — creating and editing content
    through the admin forms, voting, commenting. They cannot join this suite as it
    stands: `fullyParallel` is on and all workers share one seeded database. The
    shape to reach for is a serial project with per-test fixtures. Until then the
    `tests/Feature/Admin/*` PHPUnit suite covers them at the HTTP layer.
-5. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
+4. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
-6. **Subresource 404s are invisible.** A `page.on('response')` check for
+5. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.

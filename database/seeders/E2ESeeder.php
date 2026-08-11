@@ -79,15 +79,20 @@ class E2ESeeder extends Seeder
     public const WEBSITE_CATEGORY_NAME = 'Playwright Test Category';
 
     /**
-     * An 8x8 opaque PNG, base64-encoded.
+     * An 8x8 opaque RGBA PNG, base64-encoded.
      *
      * Deliberately a constant rather than something GD draws: the routes that
      * read these files are the ones most likely to be broken by a GD build
      * missing WebP or FreeType, and a fixture that needs GD to produce its own
      * input cannot tell you that.
+     *
+     * It has to survive imagecreatefromstring(), not just look like a PNG -
+     * several routes re-encode it through Intervention. A header alone is not
+     * enough: `file` and getimagesizefromstring() both read one happily while
+     * GD rejects the image.
      */
-    private const PIXEL_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAHElEQVQoz2P8'
-        . '//8/AymAiYFEMKphVMOohuGiAQCP2gN/8FnhAgAAAABJRU5ErkJggg==';
+    private const PIXEL_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAEklEQVR42mMwTpv5Hx9m'
+        . 'GBkKAANgjEFZddhTAAAAAElFTkSuQmCC';
 
     /**
      * Seed the application for End-to-End (E2E) Playwright tests.
