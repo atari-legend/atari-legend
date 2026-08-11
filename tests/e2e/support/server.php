@@ -14,7 +14,6 @@
  * Ten lines here are cheaper than that coupling, and than depending on a path
  * inside vendor/ that a framework upgrade may move.
  */
-
 $publicPath = dirname(__DIR__, 3) . '/public';
 
 $uri = urldecode(
