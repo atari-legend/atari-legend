@@ -80,6 +80,35 @@ class GameSeriesController extends Controller
         return redirect()->route('admin.games.series.edit', $series);
     }
 
+    public function destroy(Request $request, GameSeries $series)
+    {
+        $games = $series->games()->count();
+
+        if ($games > 0) {
+            $request->session()->flash(
+                'alert-danger',
+                "Cannot delete '{$series->name}': {$games} game(s) still belong to it."
+                    . ' Remove them from the series first.'
+            );
+
+            return redirect()->route('admin.games.series.index');
+        }
+
+        $series->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Game series',
+            'section_id'       => $series->getKey(),
+            'section_name'     => $series->name,
+            'sub_section'      => 'Series',
+            'sub_section_id'   => $series->getKey(),
+            'sub_section_name' => $series->name,
+        ]);
+
+        return redirect()->route('admin.games.series.index');
+    }
+
     public function removeGame(GameSeries $series, Game $game)
     {
         $game->series()->dissociate();

@@ -78,7 +78,7 @@ test.describe('Games', () => {
 - **Leave a `TODO` naming what the section still does not cover.** Those comments
   are the backlog; the checklist below is their summary.
 - **Everything is read-only.** `fullyParallel` is on and every worker shares one
-  seeded database, so a spec that writes needs its own fixtures — see follow-up 5.
+  seeded database, so a spec that writes needs its own fixtures — see follow-up 4.
 
 ## Adding a section
 
@@ -157,36 +157,30 @@ today, and what it does not:
 | Admin users | list, edit, comments | permissions, deactivation, moderation |
 | Admin others | trivia, quotes, spotlights, statistics, changelog, 3 autocompletes | statistics figures |
 
-Four tests are `test.fixme()` rather than missing — see follow-up 4.
+Four tests are `test.fixme()` rather than missing — see follow-up 3.
 
 ## Follow-ups
 
-1. **`GameSeriesController::destroy()` does not exist**, but the series datatable
-   renders a delete form pointing at it, so clicking Delete 500s on the live
-   site. The route is deliberately kept (and allowlisted in
-   `tests/Feature/RoutesTest.php`) because removing it would break the list page.
-   Implement the method — roughly `GameCompanyController::destroy` plus a
-   `ChangelogHelper::insert` — or drop the button.
-2. **The public `magazines` write routes had no auth middleware.** They sat in a
+1. **The public `magazines` write routes had no auth middleware.** They sat in a
    group with only `verified` and `nondraft`, which is a no-op for a guest, and
    failed only because the controller methods were missing. Pruning the resource
    to `only(['index', 'show'])` closed that; do not re-add them without auth.
-3. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
+2. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
    fixed: a `Route::resource()` without `only()`/`except()` registers actions the
    controller does not implement, and those answer 500 rather than 404.
-4. **The docker dev image has PNG-only GD.** `../php.dockerfile` (parent repo)
+3. **The docker dev image has PNG-only GD.** `../php.dockerfile` (parent repo)
    installs GD from `libpng-dev` alone — no WebP, no FreeType — so the box scan,
    avatar, spotlight, link screenshot, music cover and EPUB routes 500 there
    today, independently of these tests. Their specs are `test.fixme()` with the
    reason inline. Fix with `docker-php-ext-configure gd --with-freetype
    --with-jpeg --with-webp`, then un-fixme them.
-5. **Mutating flows are untested end to end** — creating and editing content
+4. **Mutating flows are untested end to end** — creating and editing content
    through the admin forms, voting, commenting. They cannot join this suite as it
    stands: `fullyParallel` is on and all workers share one seeded database. The
    shape to reach for is a serial project with per-test fixtures. Until then the
    `tests/Feature/Admin/*` PHPUnit suite covers them at the HTTP layer.
-6. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
+5. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
-7. **Subresource 404s are invisible.** A `page.on('response')` check for
+6. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.

@@ -165,10 +165,6 @@ Route::middleware('verified')->group(function () {
 
                     Route::delete('series/{series}/game/{game}', [GameSeriesController::class, 'removeGame'])->name('series.game.destroy');
                     Route::post('series/{series}/game', [GameSeriesController::class, 'addGame'])->name('series.game.store');
-                    // 'destroy' is kept although GameSeriesController does not implement it:
-                    // the series datatable renders a delete form pointing at it, so removing
-                    // the route breaks the list page. Implement the method (or drop the
-                    // button) rather than pruning it here.
                     Route::resource('series', GameSeriesController::class)->except(['show']);
 
                     Route::get('config', function () {
