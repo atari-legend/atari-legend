@@ -9,6 +9,7 @@ use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
 use App\Models\PublisherDeveloper;
+use App\Models\Release;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -24,7 +25,8 @@ use Tests\TestCase;
  * `data-autocomplete-id` in the search forms name the very keys asserted below,
  * so dropping or renaming one silently empties a dropdown.
  *
- * `ajax.release-years` is missing here: see the note on the last test.
+ * `ajax.release-years` is shaped differently - it matches a year prefix rather
+ * than a name - so it is tested on its own at the end.
  */
 class AjaxEndpointsTest extends TestCase
 {
@@ -245,14 +247,62 @@ class AjaxEndpointsTest extends TestCase
     }
 
     /**
-     * The release year box is the one endpoint with no test of its own: it
-     * selects on MySQL's YEAR(), which SQLite has no equivalent for, so it
-     * cannot be exercised on the connection the suite runs against. This at
-     * least pins the route down, which is what the search form builds its URL
-     * from.
+     * The release year box selects on MySQL's YEAR(), which SQLite has no
+     * equivalent for, so the tests below teach the test connection the same
+     * function before calling the endpoint. Dates are stored as `Y-m-d`
+     * strings, so the year is the first four characters.
      */
+    protected function teachSqliteTheYearFunction(): void
+    {
+        DB::connection()->getPdo()->sqliteCreateFunction(
+            'YEAR',
+            fn ($date) => $date === null ? null : (int) substr((string) $date, 0, 4),
+            1
+        );
+    }
+
     public function test_the_release_year_endpoint_is_routed(): void
     {
         $this->assertSame(url('/ajax/release-years.json'), route('ajax.release-years'));
+    }
+
+    public function test_the_release_year_endpoint_filters_on_the_year_typed_so_far(): void
+    {
+        $this->teachSqliteTheYearFunction();
+
+        foreach (['1988-05-02', '1989-11-30', '1992-01-01'] as $date) {
+            Release::factory()->create(['date' => $date]);
+        }
+
+        $years = $this->getJson(route('ajax.release-years', ['q' => '198']))->assertOk()->json();
+
+        $this->assertSame(['1988', '1989'], array_column($years, 'year'));
+    }
+
+    /**
+     * `q` reaches a whereRaw(), so it has to arrive as a binding rather than be
+     * pasted into the SQL. Pasted, the first payload closes the quoted term and
+     * ors a true condition onto it - handing back every year in the database -
+     * and the second leaves a quote unbalanced, which is a syntax error rather
+     * than an empty dropdown.
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('injectionPayloads')]
+    public function test_the_release_year_endpoint_treats_the_query_as_data(string $payload): void
+    {
+        $this->teachSqliteTheYearFunction();
+
+        Release::factory()->create(['date' => '1988-05-02']);
+
+        $this->getJson(route('ajax.release-years', ['q' => $payload]))
+            ->assertOk()
+            ->assertExactJson([]);
+    }
+
+    public static function injectionPayloads(): array
+    {
+        return [
+            'always true'      => ["1900' or '1' like '1"],
+            'unbalanced quote' => ["19'"],
+        ];
     }
 }

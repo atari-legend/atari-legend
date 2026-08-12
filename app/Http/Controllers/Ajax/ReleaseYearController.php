@@ -19,7 +19,7 @@ class ReleaseYearController extends Controller
             ->limit(10);
 
         if ($request->filled('q')) {
-            $years = $years->whereRaw("YEAR(date) like '$request->q%'");
+            $years = $years->whereRaw('YEAR(date) like ?', [$request->input('q') . '%']);
         }
 
         return response()->json($years->get());
