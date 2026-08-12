@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ReleaseScan extends Model
 {
+    use HasFactory;
+
     const TYPE_OTHER = 'Other';
     const TYPE_BOX_FRONT = 'Box front';
     const TYPE_BOX_BACK = 'Box back';

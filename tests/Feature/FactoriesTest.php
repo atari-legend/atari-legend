@@ -4,28 +4,40 @@ namespace Tests\Feature;
 
 use App\Models\Article;
 use App\Models\ArticleType;
+use App\Models\Comment;
 use App\Models\CopyProtection;
 use App\Models\Crew;
+use App\Models\Dump;
 use App\Models\Game;
 use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\Language;
 use App\Models\Magazine;
+use App\Models\MagazineIndex;
+use App\Models\MagazineIndexType;
 use App\Models\MagazineIssue;
+use App\Models\Media;
+use App\Models\MediaScan;
+use App\Models\MediaScanType;
 use App\Models\Memory;
 use App\Models\Menu;
 use App\Models\MenuDisk;
+use App\Models\MenuDiskDump;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\News;
+use App\Models\NewsSubmission;
 use App\Models\PublisherDeveloper;
 use App\Models\PublisherDeveloperText;
 use App\Models\Release;
+use App\Models\ReleaseScan;
 use App\Models\Resolution;
 use App\Models\Review;
 use App\Models\Screenshot;
+use App\Models\Spotlight;
 use App\Models\Trainer;
+use App\Models\Trivia;
 use App\Models\User;
 use App\Models\Website;
 use App\Models\WebsiteCategory;
@@ -89,8 +101,69 @@ class FactoriesTest extends TestCase
             'menu software'       => [MenuSoftware::class],
             'magazine'            => [Magazine::class],
             'magazine issue'      => [MagazineIssue::class],
+            'magazine index'      => [MagazineIndex::class],
+            'magazine index type' => [MagazineIndexType::class],
+            'release scan'        => [ReleaseScan::class],
+            'media'               => [Media::class],
+            'media scan'          => [MediaScan::class],
+            'media scan type'     => [MediaScanType::class],
+            'dump'                => [Dump::class],
+            'menu disk dump'      => [MenuDiskDump::class],
+            'spotlight'           => [Spotlight::class],
+            'comment'             => [Comment::class],
+            'news submission'     => [NewsSubmission::class],
+            'trivia'              => [Trivia::class],
             'user'                => [User::class],
         ];
+    }
+
+    /**
+     * A comment reaches whatever it is attached to through one of four pivot
+     * tables, and `type` throws outright when it is attached to none of them.
+     * Each state has to land in the right table.
+     */
+    public function test_comment_states_attach_to_their_target(): void
+    {
+        $this->assertSame(Comment::TYPE_GAME, Comment::factory()->onGame()->create()->type);
+        $this->assertSame(Comment::TYPE_REVIEW, Comment::factory()->onReview()->create()->type);
+        $this->assertSame(Comment::TYPE_ARTICLE, Comment::factory()->onArticle()->create()->type);
+        $this->assertSame(Comment::TYPE_INTERVIEW, Comment::factory()->onInterview()->create()->type);
+    }
+
+    public function test_a_comment_can_be_attached_to_a_named_game(): void
+    {
+        $game = Game::factory()->named('Turrican')->create();
+
+        $comment = Comment::factory()->onGame($game)->create();
+
+        $this->assertSame('Turrican', $comment->target);
+        $this->assertSame($game->game_id, $comment->target_id);
+    }
+
+    /**
+     * The scan types are what the release and media scan panels group by, so a
+     * scan created with a type has to read that type back.
+     */
+    public function test_scan_factories_carry_their_type(): void
+    {
+        $scan = ReleaseScan::factory()->ofType(ReleaseScan::TYPE_BOX_BACK)->create();
+        $this->assertSame(ReleaseScan::TYPE_BOX_BACK, $scan->type);
+
+        $mediaScan = MediaScan::factory()->create();
+        $this->assertNotNull($mediaScan->type);
+        $this->assertSame(MediaScanType::TYPE_OTHER, $mediaScan->type->name);
+    }
+
+    /**
+     * A spotlight with no screenshot is a real state - the image is keyed on
+     * `screenshot_id`, so a null one means no image rather than a broken one.
+     */
+    public function test_a_spotlight_can_have_no_screenshot(): void
+    {
+        $spotlight = Spotlight::factory()->withoutScreenshot()->create();
+
+        $this->assertNull($spotlight->screenshot_id);
+        $this->assertNull($spotlight->screenshot);
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('factoryProvider')]

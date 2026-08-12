@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Error;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    use HasFactory;
+
     const TYPE_GAME = 'game';
     const TYPE_REVIEW = 'review';
     const TYPE_INTERVIEW = 'interview';

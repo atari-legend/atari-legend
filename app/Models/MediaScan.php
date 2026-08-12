@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MediaScan extends Model
 {
+    use HasFactory;
+
     protected $table = 'media_scan';
     public $timestamps = false;
 
