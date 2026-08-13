@@ -25,6 +25,14 @@ test.describe('Admin others', () => {
     await expectPageRenders(page, await page.goto(path), path);
   });
 
+  test('opens the create form for a spotlight', async ({ page }) => {
+    // The only create form in this section - trivia and quotes are added
+    // inline in their table.
+    const path = '/admin/others/spotlights/create';
+
+    await expectPageRenders(page, await page.goto(path), path);
+  });
+
   // TODO: the statistics page runs the heaviest queries in the admin and is
   // the most likely to regress on a schema change - it deserves assertions on
   // the numbers, not just that it renders.

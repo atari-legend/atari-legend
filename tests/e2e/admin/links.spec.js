@@ -26,6 +26,17 @@ test.describe('Admin links', () => {
     await expectPageRenders(page, await page.goto(path), path);
   });
 
+  const createForms = [
+    { name: 'a link', path: '/admin/links/links/create' },
+    { name: 'a category', path: '/admin/links/categories/create' },
+  ];
+
+  for (const form of createForms) {
+    test(`opens the create form for ${form.name}`, async ({ page }) => {
+      await expectPageRenders(page, await page.goto(form.path), form.path);
+    });
+  }
+
   // TODO: approving a submitted link, and the dead-link report that
   // `artisan links:check` populates.
 });

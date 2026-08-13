@@ -12,6 +12,9 @@ test.describe('Crawler endpoints', () => {
     { name: 'robots.txt', path: '/robots.txt', contentType: 'text/plain' },
     { name: 'the main feed', path: '/feed', contentType: 'xml' },
     { name: 'the changelog feed', path: '/feed/changelog', contentType: 'xml' },
+    // Not a crawler endpoint, but the same shape of test and the same reason
+    // for existing: it is what the deployment asks whether the app is up.
+    { name: 'the health check', path: '/up', contentType: 'text/html' },
   ];
 
   for (const endpoint of endpoints) {

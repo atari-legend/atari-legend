@@ -20,6 +20,16 @@ test.describe('Games', () => {
     await expect(page.getByRole('heading', { name: FIXTURE.game.name, level: 1 })).toBeVisible();
   });
 
+  test('opens a game by its slug', async ({ page }) => {
+    // The click-through above proves the list links correctly; this proves the
+    // URL works on its own, which is how every inbound link arrives.
+    const path = `/games/${FIXTURE.game.slug}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, path);
+    await expect(page.getByRole('heading', { name: FIXTURE.game.name, level: 1 })).toBeVisible();
+  });
+
   test('displays one release', async ({ page }) => {
     const response = await page.goto(`/games/release/${FIXTURE.release.id}`);
 
@@ -54,6 +64,58 @@ test.describe('Games', () => {
     });
   });
 
-  // TODO: advanced search (genre, year, publisher filters), the A-Z browse,
-  // voting, commenting, the screenshot gallery, similar games.
+  // TODO: the remaining search filters (genre, engine, publisher, developer,
+  // and the has-review/has-download checkboxes), voting, commenting, the
+  // screenshot gallery, similar games.
+});
+
+// /games/search is a second controller action with its own view, and its
+// behaviour depends on which criteria were supplied rather than on the route.
+// The cases below are the different things it can return.
+//
+// Every assertion is scoped to #results, the container holding the matches.
+// The page also carries the Screenstar and latest-comment cards, which link to
+// games too - an unscoped locator passes on those alone and would report a
+// search that returns nothing as working.
+test.describe('Games search', () => {
+  test('lists the matches for a partial title', async ({ page }) => {
+    const path = `/games/search?title=${encodeURIComponent('Xenon')}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('browses games by first letter', async ({ page }) => {
+    const path = '/games/search?titleAZ=X';
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('redirects an exact title match to the game', async ({ page }) => {
+    // A shortcut worth protecting: the nav search box posts straight here, so
+    // typing a game's full name has to land on the game rather than on a
+    // results page listing it alone.
+    await page.goto(`/games/search?title=${encodeURIComponent(FIXTURE.game.name)}`);
+
+    await expect(page).toHaveURL(new RegExp(`/games/${FIXTURE.game.slug}$`));
+  });
+
+  test('returns nothing when no criteria were given', async ({ page }) => {
+    // Deliberate: with no constraints the controller forces an impossible
+    // where() rather than paginating the whole table.
+    const response = await page.goto('/games/search');
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(page.getByText('No game found')).toBeVisible();
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name })
+    ).toHaveCount(0);
+  });
 });

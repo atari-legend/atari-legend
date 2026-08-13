@@ -23,6 +23,17 @@ test.describe('Admin magazines', () => {
     await expectPageRenders(page, await page.goto(path), path);
   });
 
+  const createForms = [
+    { name: 'a magazine', path: '/admin/magazines/magazines/create' },
+    { name: 'an issue', path: `/admin/magazines/magazines/${FIXTURE.magazine.id}/issues/create` },
+  ];
+
+  for (const form of createForms) {
+    test(`opens the create form for ${form.name}`, async ({ page }) => {
+      await expectPageRenders(page, await page.goto(form.path), form.path);
+    });
+  }
+
   test('lists the index types', async ({ page }) => {
     await expectPageRenders(page, await page.goto('/admin/magazines/index-types'), '/admin/magazines/index-types');
   });

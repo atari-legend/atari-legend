@@ -1,5 +1,6 @@
 import { test, expect } from '../support/test.js';
-import { expectPageRenders } from '../support/assertions.js';
+import { FIXTURE } from '../support/fixture.js';
+import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
 
 test.describe('Home', () => {
   test('renders the home page', async ({ page }) => {
@@ -27,6 +28,16 @@ test.describe('Home', () => {
       await expect(nav.getByRole('link', { name: label, exact: true }))
         .toHaveAttribute('href', new RegExp(`${path}$`));
     }
+  });
+
+  test('serves the spotlight image', async ({ page }) => {
+    // The spotlight card is the only place this route is used.
+    const path = `/spotlights/${FIXTURE.spotlight.id}/spotlight.webp`;
+
+    await expectResourceLoads(await page.request.get(path), path, {
+      contentType: 'image/webp',
+      magic: 'WEBP',
+    });
   });
 
   // TODO: the home page cards (Screenstar, Who is it?, Latest menus, Trivia)

@@ -18,6 +18,29 @@ test.describe('Admin games', () => {
     await expect(page.locator(`input[value="${FIXTURE.game.name}"]`).first()).toBeVisible();
   });
 
+  // Create renders the same Blade view as edit with no model behind it, so it
+  // exercises a different branch of every `isset($game)` in the template and
+  // can break entirely on its own. That is true of every create form below.
+  const createForms = [
+    { name: 'a game', path: '/admin/games/games/create' },
+    { name: 'a release', path: `/admin/games/${FIXTURE.game.id}/releases/create` },
+    { name: 'a fact', path: `/admin/games/${FIXTURE.game.id}/facts/create` },
+  ];
+
+  for (const form of createForms) {
+    test(`opens the create form for ${form.name}`, async ({ page }) => {
+      await expectPageRenders(page, await page.goto(form.path), form.path);
+    });
+  }
+
+  test('opens the edit form for a fact', async ({ page }) => {
+    // No /edit suffix on this one - the route is a bare {fact}, declared after
+    // facts/create so that 'create' still resolves. See routes/admin.php.
+    const path = `/admin/games/${FIXTURE.game.id}/facts/${FIXTURE.game.factId}`;
+
+    await expectPageRenders(page, await page.goto(path), path);
+  });
+
   // The per-game panels all hang off the same edit screen. They are separate
   // controllers reading different corners of the schema, so a broken one
   // takes out only its own tab - which is why they are listed rather than
@@ -68,10 +91,12 @@ test.describe('Admin games', () => {
 
 test.describe('Admin game reference data', () => {
   const sections = [
+    // Submissions are reviewed, never created, which is why it alone has no
+    // create form - routes/admin.php prunes the action.
     { name: 'submissions', index: '/admin/games/submissions', detail: `/admin/games/submissions/${FIXTURE.submission.id}` },
-    { name: 'individuals', index: '/admin/games/individuals', detail: `/admin/games/individuals/${FIXTURE.individual.id}/edit` },
-    { name: 'companies', index: '/admin/games/companies', detail: `/admin/games/companies/${FIXTURE.company.id}/edit` },
-    { name: 'series', index: '/admin/games/series', detail: `/admin/games/series/${FIXTURE.series.id}/edit` },
+    { name: 'individuals', index: '/admin/games/individuals', detail: `/admin/games/individuals/${FIXTURE.individual.id}/edit`, create: '/admin/games/individuals/create' },
+    { name: 'companies', index: '/admin/games/companies', detail: `/admin/games/companies/${FIXTURE.company.id}/edit`, create: '/admin/games/companies/create' },
+    { name: 'series', index: '/admin/games/series', detail: `/admin/games/series/${FIXTURE.series.id}/edit`, create: '/admin/games/series/create' },
   ];
 
   for (const section of sections) {
@@ -82,6 +107,12 @@ test.describe('Admin game reference data', () => {
     test(`opens one of the ${section.name}`, async ({ page }) => {
       await expectPageRenders(page, await page.goto(section.detail), section.detail);
     });
+
+    if (section.create) {
+      test(`opens the create form for ${section.name}`, async ({ page }) => {
+        await expectPageRenders(page, await page.goto(section.create), section.create);
+      });
+    }
   }
 
   test('redirects the bare configuration route to the first section', async ({ page }) => {

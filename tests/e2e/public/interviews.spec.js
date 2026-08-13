@@ -1,6 +1,6 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { expectPageRenders } from '../support/assertions.js';
+import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
 
 test.describe('Interviews', () => {
   test('lists interviews', async ({ page }) => {
@@ -17,6 +17,17 @@ test.describe('Interviews', () => {
 
     await expectPageRenders(page, response, `/interviews/${FIXTURE.interview.id}`);
     await expect(page.getByRole('heading', { name: FIXTURE.individual.name, level: 1 })).toBeVisible();
+  });
+
+  test("serves the individual's avatar", async ({ page }) => {
+    // Lives here rather than in a spec of its own: an interview is the only
+    // page that renders it, individuals having no public page.
+    const path = `/individuals/${FIXTURE.individual.id}/avatar.webp`;
+
+    await expectResourceLoads(await page.request.get(path), path, {
+      contentType: 'image/webp',
+      magic: 'WEBP',
+    });
   });
 
   // TODO: the chapter hotspot links ([hotspotUrl] / [hotspot] BBCode),

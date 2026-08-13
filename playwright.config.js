@@ -10,10 +10,10 @@ export default defineConfig({
   // These specs only ask whether a page renders. Retrying them would turn an
   // intermittent 500 - exactly what we want to hear about - into a pass.
   retries: 0,
-  // Every spec is a GET and asserts only on its own response, so nothing here
-  // shares state and the suite is safe to parallelise. Keep it that way: a
-  // spec that creates or edits data would need its own fixtures, since all
-  // workers share one seeded database.
+  // Every spec in the 'public' and 'admin' projects is a GET that asserts only
+  // on its own response, so nothing there shares state and those projects are
+  // safe to parallelise. Keep it that way: anything that writes belongs in the
+  // 'admin-write' project below, which opts out of both settings.
   workers: process.env.CI ? 4 : undefined,
   reporter: [
     ['html', { open: 'never' }],
@@ -32,9 +32,10 @@ export default defineConfig({
   // spec depended on 'setup' too and could not run at all.
   //
   // Each project selects its specs by directory: a spec belongs in
-  // tests/e2e/public/ or tests/e2e/admin/, one file per section of the site.
-  // A spec anywhere else - tests/e2e/support/, or the wrong directory - is
-  // silently skipped, so check `npx playwright test --list` after adding one.
+  // tests/e2e/public/, tests/e2e/admin/ or tests/e2e/admin-write/, one file
+  // per section of the site. A spec anywhere else - tests/e2e/support/, or the
+  // wrong directory - is silently skipped, so check
+  // `npx playwright test --list` after adding one.
   projects: [
     {
       name: 'setup',
@@ -56,6 +57,26 @@ export default defineConfig({
         storageState: 'tests/e2e/.auth/admin.json',
       },
       dependencies: ['setup'],
+    },
+    // The specs that create and delete data, which the two projects above
+    // deliberately do not.
+    //
+    // Serial and last. fullyParallel is per-project, so turning it off here
+    // leaves the read projects parallel; depending on them means nothing is
+    // still reading the database while these write to it. Each spec creates
+    // its own uniquely-named row and deletes it again, so the seeded fixture
+    // is never touched and a run leaves the database as it found it - see
+    // tests/e2e/support/write.js.
+    {
+      name: 'admin-write',
+      testMatch: 'admin-write/**/*.spec.js',
+      fullyParallel: false,
+      workers: 1,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'tests/e2e/.auth/admin.json',
+      },
+      dependencies: ['setup', 'public', 'admin'],
     },
   ],
   webServer: process.env.PLAYWRIGHT_TEST_BASE_URL ? undefined : {

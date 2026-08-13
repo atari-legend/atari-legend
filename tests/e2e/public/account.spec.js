@@ -1,6 +1,7 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
 import { expectPageRenders } from '../support/assertions.js';
+import { signIn, signOut } from '../support/auth.js';
 
 // The pages a signed-in visitor - not an admin - can reach.
 //
@@ -9,20 +10,9 @@ import { expectPageRenders } from '../support/assertions.js';
 // an ordinary account can do. Signing in through the form each time also means
 // the login flow itself is covered by something other than auth.setup.js.
 
-async function signIn(page) {
-  await page.goto('/login');
-  await page.fill('input[name="userid"]', FIXTURE.user.userid);
-  await page.fill('input[name="password"]', FIXTURE.user.password);
-  await Promise.all([
-    page.waitForNavigation(),
-    page.click('form[action*="login"] button[type="submit"]'),
-  ]);
-  await expect(page).not.toHaveURL(/\/login$/);
-}
-
 test.describe('Account', () => {
   test('signs in and reaches the profile page', async ({ page }) => {
-    await signIn(page);
+    await signIn(page, FIXTURE.user);
 
     const response = await page.goto('/profile');
 
@@ -31,7 +21,7 @@ test.describe('Account', () => {
   });
 
   test('opens the review submission form for a game', async ({ page }) => {
-    await signIn(page);
+    await signIn(page, FIXTURE.user);
 
     // The form is always about a specific game; without one the controller
     // deliberately aborts with a 400.
@@ -42,11 +32,31 @@ test.describe('Account', () => {
   });
 
   test('rejects the review form with no game', async ({ page }) => {
-    await signIn(page);
+    await signIn(page, FIXTURE.user);
 
     const response = await page.request.get('/reviews/submit');
 
     expect(response.status()).toBe(400);
+  });
+
+  test('opens the password confirmation page', async ({ page }) => {
+    await signIn(page, FIXTURE.user);
+
+    const response = await page.goto('/password/confirm');
+
+    await expectPageRenders(page, response, '/password/confirm');
+    await expect(page.locator('input[name="password"]')).toBeVisible();
+  });
+
+  test('signs out again', async ({ page }) => {
+    await signIn(page, FIXTURE.user);
+    await page.goto('/');
+
+    await signOut(page);
+
+    // Back to a guest: the profile page no longer resolves.
+    await page.goto('/profile');
+    await expect(page).not.toHaveURL(/\/profile$/);
   });
 
   test('keeps a guest out of the profile page', async ({ page }) => {
@@ -56,6 +66,22 @@ test.describe('Account', () => {
   });
 
   // TODO: updating the profile, changing the password, uploading an avatar,
-  // voting on a game, and posting a comment - all of which write, so they need
-  // their own fixtures before they can run alongside the read-only specs.
+  // voting on a game, and posting a comment. Those write, so they belong in
+  // the admin-write project's sibling - a public-write project - rather than
+  // here; see tests/e2e/README.md.
+});
+
+// An account that never confirmed its address. Every route in the app sits
+// behind the `verified` middleware, so this is the one user for whom the app
+// is a single page - which makes it the only way to prove that middleware
+// still turns anyone away.
+test.describe('Unverified account', () => {
+  test('is sent to the verification notice', async ({ page }) => {
+    await signIn(page, FIXTURE.unverifiedUser);
+
+    await page.goto('/profile');
+
+    await expect(page).toHaveURL(/\/email\/verify$/);
+    await expect(page.getByText(/verif/i).first()).toBeVisible();
+  });
 });

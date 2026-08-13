@@ -29,6 +29,7 @@ class E2ESeeder extends Seeder
 {
     public const USER_ADMIN_ID = 1;
     public const USER_STANDARD_ID = 2;
+    public const USER_UNVERIFIED_ID = 3;
 
     public const GAME_ID = 1;
     public const RELEASE_ID = 1;
@@ -134,15 +135,21 @@ class E2ESeeder extends Seeder
         // user_id is the primary key and is not fillable, so these rely on
         // insertion order on a fresh database - admin first, hence
         // USER_ADMIN_ID = 1. Keep the order.
+        //
+        // The third user has never confirmed its address. Every route in the
+        // app sits behind the `verified` middleware, so it is the only way to
+        // reach the verification notice - and the only account that proves the
+        // middleware still turns people away.
         foreach ([
-            ['admin', 'admin@atarilegend.com', User::PERMISSION_ADMIN],
-            ['testuser', 'test@example.com', User::PERMISSION_USER],
-        ] as [$userid, $email, $permission]) {
+            ['admin', 'admin@atarilegend.com', User::PERMISSION_ADMIN, true],
+            ['testuser', 'test@example.com', User::PERMISSION_USER, true],
+            ['unverified', 'unverified@example.com', User::PERMISSION_USER, false],
+        ] as [$userid, $email, $permission, $verified]) {
             User::updateOrCreate(
                 ['userid' => $userid],
                 [
                     'email'             => $email,
-                    'email_verified_at' => now(),
+                    'email_verified_at' => $verified ? now() : null,
                     'password'          => Hash::make('password'),
                     'salt'              => $salt,
                     'sha512_password'   => $sha512Password,

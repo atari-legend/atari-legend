@@ -1,6 +1,6 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { expectPageRenders } from '../support/assertions.js';
+import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
 
 test.describe('Admin menus', () => {
   test('lists menu sets', async ({ page }) => {
@@ -25,14 +25,48 @@ test.describe('Admin menus', () => {
     });
   }
 
+  // Everything below a set is created from inside its parent, so these create
+  // routes carry state in the query string: which menu the disk belongs to,
+  // which of the three content forms to render. None of the controllers check
+  // for it, so a bare URL is a 500 rather than a 404 - worth fixing, but the
+  // links in the admin always supply it, and that is the shape to assert.
+  //
+  // The three content types are three separate partials
+  // (content/create_{release,game,software}.blade.php), so each is listed.
+  const createForms = [
+    { name: 'a menu set', path: '/admin/menus/sets/create' },
+    { name: 'a menu', path: `/admin/menus/menus/create?set=${FIXTURE.menuSet.id}` },
+    { name: 'a menu disk', path: `/admin/menus/disks/create?menu=${FIXTURE.menu.id}` },
+    ...['release', 'game', 'software'].map((type) => ({
+      name: `a ${type} content entry`,
+      path: `/admin/menus/disks/${FIXTURE.menuDisk.id}/content/create?type=${type}`,
+    })),
+  ];
+
+  for (const form of createForms) {
+    test(`opens the create form for ${form.name}`, async ({ page }) => {
+      // expectPageRenders compares against the path only, query string aside.
+      const path = form.path.split('?')[0];
+
+      await expectPageRenders(page, await page.goto(form.path), path);
+    });
+  }
+
   test('opens the import screen for a menu set', async ({ page }) => {
     const path = `/admin/menus/sets/${FIXTURE.menuSet.id}/import`;
 
     await expectPageRenders(page, await page.goto(path), path);
   });
 
-  // TODO: downloading the import spreadsheet template (needs the zip
-  // extension), running an import, and the disk screenshot/dump uploads.
+  test('serves the import spreadsheet template', async ({ page }) => {
+    const path = `/admin/menus/sets/${FIXTURE.menuSet.id}/import/template`;
+
+    // A .xlsx is a zip, hence the PK magic - the same check the EPUB export
+    // uses in public/menus.spec.js.
+    await expectResourceLoads(await page.request.get(path), path, { magic: 'PK' });
+  });
+
+  // TODO: running an import, and the disk screenshot/dump uploads.
 });
 
 test.describe('Admin menu reference data', () => {
@@ -44,12 +78,20 @@ test.describe('Admin menu reference data', () => {
   ];
 
   for (const section of sections) {
+    const singular = section.name.replace(/s$/, '');
+
     test(`lists ${section.name}`, async ({ page }) => {
       await expectPageRenders(page, await page.goto(section.index), section.index);
     });
 
-    test(`opens the edit form for a ${section.name.replace(/s$/, '')}`, async ({ page }) => {
+    test(`opens the edit form for a ${singular}`, async ({ page }) => {
       await expectPageRenders(page, await page.goto(section.edit), section.edit);
+    });
+
+    test(`opens the create form for a ${singular}`, async ({ page }) => {
+      const path = `${section.index}/create`;
+
+      await expectPageRenders(page, await page.goto(path), path);
     });
   }
 

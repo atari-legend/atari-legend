@@ -4,9 +4,9 @@ Playwright specs that drive a real browser against a real server, so they catch
 what the PHPUnit feature suite cannot: JavaScript errors, Livewire not booting,
 images that 500, pages that render blank.
 
-This is a skeleton with one or two tests per section, not a finished suite. Most
-files here are small on purpose — the value is that there is an obvious place to
-put the next test.
+Every page of the site has a test that loads it and asserts the one thing it is
+for. That is the floor, not the ceiling: most files here are still small, and the
+value is that there is now an obvious place to put the next test.
 
 ## Layout
 
@@ -16,19 +16,23 @@ tests/e2e/
 ├── support/            shared modules; matched by no project, so never run as tests
 │   ├── test.js         the `test` every spec imports
 │   ├── assertions.js   expectPageRenders / expectResourceLoads
+│   ├── auth.js         signIn / signOut through the real forms
+│   ├── write.js        helpers the admin-write project needs
 │   ├── fixture.js      the seeded ids and names
 │   └── server.php      dev-server router (see playwright.config.js)
 ├── public/             the public site, one file per section
-└── admin/              the admin panel, one file per section
+├── admin/              the admin panel, read-only, one file per section
+└── admin-write/        the admin panel, creating and deleting
 ```
 
 **A spec's directory decides which project runs it**, and therefore whether it
-has a session:
+has a session and whether it may write:
 
-| Directory | Project | Session |
-|---|---|---|
-| `public/` | `public` | none — a clean guest |
-| `admin/` | `admin` | signed in as admin, via `auth.setup.js` |
+| Directory | Project | Session | Writes |
+|---|---|---|---|
+| `public/` | `public` | none — a clean guest | no |
+| `admin/` | `admin` | signed in as admin, via `auth.setup.js` | no |
+| `admin-write/` | `admin-write` | signed in as admin | yes — see below |
 
 A spec anywhere else is silently skipped. After adding one, check it was picked
 up:
@@ -77,12 +81,39 @@ test.describe('Games', () => {
   `page.request.get()` instead.
 - **Leave a `TODO` naming what the section still does not cover.** Those comments
   are the backlog; the checklist below is their summary.
-- **Everything is read-only.** `fullyParallel` is on and every worker shares one
-  seeded database, so a spec that writes needs its own fixtures — see follow-up 3.
+- **`public/` and `admin/` are read-only.** `fullyParallel` is on there and every
+  worker shares one seeded database. Anything that writes goes in `admin-write/`.
+
+## Writing specs that write
+
+`admin-write/` is a fourth project: serial (`workers: 1`, `fullyParallel: false`)
+and dependent on `public` and `admin`, so it runs once nothing else is reading.
+Its rules, which is what makes running the suite twice against one database safe:
+
+- **Create your own row, never edit a seeded one.** `uniqueName('News')` gives you
+  an `E2E News <timestamp>` no other row will have — and something greppable in
+  the database if a run is killed halfway through.
+- **Delete it again in the same test.** `deleteRow(page, term)` for a Livewire
+  table, `deleteByAction(page, '/releases/42')` for the cards that stand in for a
+  table on releases, menus, disks and issues.
+- **Every delete button is wrapped in `confirm()`, and Playwright dismisses
+  dialogs by default** — which cancels the submit and fails the test somewhere
+  else entirely. `deleteRow` and `deleteByAction` accept it for you;
+  `acceptConfirms(page)` if you are clicking one yourself.
+- **Drive the JavaScript rather than the field it writes to.** The hidden `author`
+  / `game` / `individual` inputs are filled by the autocomplete's `onSelection`,
+  and the body of every content form is posted by SCEditor, not by the textarea in
+  the markup — so use `pickAutocomplete()` and `fillEditor()`. Filling the hidden
+  input directly is exactly what the PHPUnit suite already does, and passes
+  whether or not any of it still works.
+- **Do not re-assert the controller.** Validation rules and changelog rows belong
+  to `tests/Feature/Admin`. What is only testable here is that the rendered form
+  submits at all.
 
 ## Adding a section
 
-1. Create `public/<section>.spec.js` or `admin/<section>.spec.js`.
+1. Create `public/<section>.spec.js`, `admin/<section>.spec.js` or
+   `admin-write/<section>.spec.js`.
 2. Seed anything it needs in `database/seeders/E2ESeeder.php`, with an explicit
    primary key exposed as a constant, and mirror it in `support/fixture.js`.
 3. Write "lists X" and "displays one X", then a `TODO` for the rest.
@@ -142,25 +173,28 @@ today, and what it does not:
 
 | Section | Covered | Not yet |
 |---|---|---|
-| Home | page renders, nav links to each section | the cards (Screenstar, Who is it?, Latest menus, Trivia) |
-| Games | list, detail, release, slug redirect, screenshot, box scan | advanced search, A-Z browse, voting, comments, gallery, similar games |
+| Home | page renders, nav links to each section, spotlight image | the cards (Screenstar, Who is it?, Latest menus, Trivia) |
+| Games | list, detail by slug, release, slug redirect, screenshot, box scan | voting, comments, gallery, similar games |
+| Games search | title, A-Z browse, exact-match redirect, empty state | genre, engine, publisher, developer and checkbox filters; the export view |
+| Autocomplete | all 9 public endpoints, `?q=` filtering, a quote as data | ranking, the follow-URL behaviour of the nav box |
 | News | list | submitting news, pagination |
 | Reviews | list, detail | submit form, comments, scores, unpublished hidden |
-| Interviews | list, detail | chapter hotspots, comments, screenshots |
+| Interviews | list, detail, individual avatar | chapter hotspots, comments, screenshots |
 | Articles | list, detail | type filter, comments, screenshots |
 | Menu sets | list, detail, search, by-software, EPUB export | disk contents, dump downloads, condition filters, crews |
 | Magazines | list, detail | issues, covers, archive.org links, the index |
 | Links | list, category filter, screenshot | submitting a link, dead-link flagging |
 | Music | cover image | the SNDH player (ym2149-wasm), the sndhrecord.atari.org proxy |
-| Account | sign in, profile, review form, guests kept out | profile edit, password change, avatar, voting, commenting |
-| Crawler | sitemaps, robots.txt, both feeds | that they list the right entities |
-| Admin games | list, edit, 7 game panels, 5 release panels, issues, music, 4 reference sections, 20 config tables | creating and saving anything, changelog rows |
-| Admin content | list/create/edit for news, reviews, interviews, articles | saving, image uploads, `<br />` normalisation |
-| Admin menus | sets list, 4 edit forms, import screen | running an import, screenshot and dump uploads, crew relationships |
-| Admin magazines | list, magazine and issue edit, index types | cover upload, index entries |
-| Admin links | list, edit, categories | approving submissions |
+| Account | sign in, sign out, profile, review form, password confirm, guests kept out, unverified redirect | profile edit, password change, avatar, voting, commenting |
+| Crawler | sitemaps, robots.txt, both feeds, health check | that they list the right entities |
+| Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables | — |
+| Admin content | list/create/edit for news, reviews, interviews, articles | image uploads, `<br />` normalisation |
+| Admin menus | sets list, 4 edit forms, 6 create forms, 3 disk-content types, import screen and template | running an import, screenshot and dump uploads, crew relationships |
+| Admin magazines | list, magazine and issue create/edit, index types | cover upload, index entries |
+| Admin links | list, create and edit, categories | approving submissions |
 | Admin users | list, edit, comments | permissions, deactivation, moderation |
-| Admin others | trivia, quotes, spotlights, statistics, changelog, 3 autocompletes | statistics figures |
+| Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog, 3 autocompletes | statistics figures |
+| **Writes** | news, reviews, interviews, articles, game AKA, release, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form | creating a game (see follow-up 3), trivia and quotes (inline tables), every Filepond upload |
 
 ## Follow-ups
 
@@ -171,13 +205,29 @@ today, and what it does not:
 2. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
    fixed: a `Route::resource()` without `only()`/`except()` registers actions the
    controller does not implement, and those answer 500 rather than 404.
-3. **Mutating flows are untested end to end** — creating and editing content
-   through the admin forms, voting, commenting. They cannot join this suite as it
-   stands: `fullyParallel` is on and all workers share one seeded database. The
-   shape to reach for is a serial project with per-test fixtures. Until then the
-   `tests/Feature/Admin/*` PHPUnit suite covers them at the HTTP layer.
-4. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
+3. **A game cannot be deleted.** `GameController@destroy` throws
+   `'Game deletion is not implemented yet'`, but the games table still renders a
+   delete button on every row, so clicking it is a 500. That is why
+   `admin-write/games.spec.js` covers an AKA rather than a game: there is no way
+   to undo a created game, and a spec that leaks one breaks the "run it twice"
+   property the whole project depends on. Either implement deletion or hide the
+   button; then the create round-trip can go in.
+4. **The statistics page is intermittently broken.** Its charts are built by an
+   inline `DOMContentLoaded` handler that calls `new Chart(...)`, while `Chart`
+   itself arrives from a Vite module chunk. Under load the handler sometimes wins
+   the race and the page throws `Cannot read properties of undefined (reading
+   'set')` — which is what `admin/others.spec.js` fails on, roughly one run in
+   several. Retries are off on purpose, so it is visible rather than hidden. The
+   fix belongs in the page, not the spec.
+5. **Mutating flows on the *public* side are still untested** — voting,
+   commenting, submitting news, links and reviews. `admin-write/` is the shape to
+   copy: a sibling `public-write/` project, serial, depending on the read ones.
+6. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
-5. **Subresource 404s are invisible.** A `page.on('response')` check for
+7. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.
+8. **Two admin create routes are a 500 rather than a 404 when reached bare.**
+   `MenusController@create` and `MenuDisksController@create` dereference the
+   parent they look up from the query string without checking it. The links in
+   the admin always supply it, which is the shape the specs assert.

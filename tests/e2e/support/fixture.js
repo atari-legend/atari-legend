@@ -11,6 +11,9 @@
 export const FIXTURE = {
   admin: { id: 1, userid: 'admin', password: 'password' },
   user: { id: 2, userid: 'testuser', password: 'password' },
+  // Never confirmed its address, so every route redirects it to the
+  // verification notice. See E2ESeeder::seedUsers().
+  unverifiedUser: { id: 3, userid: 'unverified', password: 'password' },
 
   game: {
     id: 1,
