@@ -205,29 +205,28 @@ today, and what it does not:
 2. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
    fixed: a `Route::resource()` without `only()`/`except()` registers actions the
    controller does not implement, and those answer 500 rather than 404.
-3. **A game cannot be deleted.** `GameController@destroy` throws
-   `'Game deletion is not implemented yet'`, but the games table still renders a
-   delete button on every row, so clicking it is a 500. That is why
+3. **A game cannot be deleted (#270).** `GameController@destroy` throws, but the
+   games table still renders a delete button on every row. That is why
    `admin-write/games.spec.js` covers an AKA rather than a game: there is no way
    to undo a created game, and a spec that leaks one breaks the "run it twice"
-   property the whole project depends on. Either implement deletion or hide the
-   button; then the create round-trip can go in.
-4. **The statistics page is intermittently broken.** Its charts are built by an
-   inline `DOMContentLoaded` handler that calls `new Chart(...)`, while `Chart`
-   itself arrives from a Vite module chunk. Under load the handler sometimes wins
-   the race and the page throws `Cannot read properties of undefined (reading
-   'set')` — which is what `admin/others.spec.js` fails on, roughly one run in
-   several. Retries are off on purpose, so it is visible rather than hidden. The
-   fix belongs in the page, not the spec.
-5. **Mutating flows on the *public* side are still untested** — voting,
+   property the whole project depends on.
+4. **A missing SCEditor script takes out the admin's JavaScript (#272).**
+   `admin/others.spec.js` failed once with an uncaught `Cannot read properties of
+   undefined (reading 'set')` — `resources/js/admin/sceditor.js` reaching for a
+   global that `formats/bbcode.js` had not set. It has not recurred, and the
+   trigger looks environmental, but the unguarded globals are real. Retries are
+   off on purpose, so if it comes back it will be visible rather than hidden.
+5. **Two admin create routes are a 500 rather than a 404 when reached bare
+   (#271).** `MenusController@create` and `MenuDisksController@create` dereference
+   the parent they look up from the query string without checking it. The links
+   in the admin always supply it, which is the shape the specs assert.
+6. **Mutating flows on the *public* side are still untested** — voting,
    commenting, submitting news, links and reviews. `admin-write/` is the shape to
    copy: a sibling `public-write/` project, serial, depending on the read ones.
-6. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
+7. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
-7. **Subresource 404s are invisible.** A `page.on('response')` check for
+8. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.
-8. **Two admin create routes are a 500 rather than a 404 when reached bare.**
-   `MenusController@create` and `MenuDisksController@create` dereference the
-   parent they look up from the query string without checking it. The links in
-   the admin always supply it, which is the shape the specs assert.
+   Follow-up 4 is the case for it: a script that never arrived is exactly what
+   this would have caught at the time.
