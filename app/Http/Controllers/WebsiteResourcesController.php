@@ -10,7 +10,7 @@ class WebsiteResourcesController extends Controller
 {
     public function screenshot(Website $website)
     {
-        if ($website->file) {
+        if ($website->file && Storage::disk('public')->exists($website->path)) {
             $image = ImageManagerStatic::make(Storage::disk('public')->get($website->path));
 
             return response()->stream(function () use ($image) {
