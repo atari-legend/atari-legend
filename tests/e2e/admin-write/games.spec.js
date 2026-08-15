@@ -66,17 +66,11 @@ test.describe('Admin games', () => {
     test.setTimeout(180000);
     acceptConfirms(page);
 
-    await page.route('**/youtube.com/**', (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          title: 'E2E Test Video',
-          author_name: 'Atari Legend',
-          html: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>',
-        }),
-      })
-    );
+    // The video step embeds a real YouTube URL. The title and author are
+    // fetched by the server, not the browser, so there is nothing to stub here
+    // - the controller falls back to the video ID when YouTube is unreachable,
+    // and the embed itself is blocked so the test never waits on the network.
+    await page.route('**youtube**', (route) => route.abort());
 
     const gameName = uniqueName('Full Game');
     const slug = `e2e-full-game-${Date.now()}`;

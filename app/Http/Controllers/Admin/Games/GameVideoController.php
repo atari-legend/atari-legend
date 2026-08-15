@@ -10,7 +10,9 @@ use App\Models\GameVideo;
 use App\Rules\YoutubeUrl;
 use App\View\Components\Admin\Crumb;
 use Embed\Embed;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Waynestate\Youtube\ParseId;
 
 class GameVideoController extends Controller
@@ -34,13 +36,28 @@ class GameVideoController extends Controller
             'video' => new YoutubeUrl,
         ]);
 
-        $embed = new Embed();
-        $info = $embed->get($request->video);
+        $youtubeId = ParseId::fromUrl($request->video);
+
+        // The title and author come from YouTube itself. If it cannot be
+        // reached, or answers without them, keep the video and fall back to
+        // its ID rather than failing the whole save.
+        $title = null;
+        $author = null;
+
+        try {
+            $embed = new Embed();
+            $info = $embed->get($request->video);
+
+            $title = $info->title;
+            $author = $info->authorName;
+        } catch (Exception $e) {
+            Log::warning('Error retrieving details of YouTube video ' . $youtubeId, ['Exception' => $e]);
+        }
 
         $video = GameVideo::create([
-            'title'      => $info->title,
-            'author'     => $info->authorName,
-            'youtube_id' => ParseId::fromUrl($request->video),
+            'title'      => $title ?: $youtubeId,
+            'author'     => $author ?: '',
+            'youtube_id' => $youtubeId,
             'game_id'    => $game->game_id,
         ]);
 
