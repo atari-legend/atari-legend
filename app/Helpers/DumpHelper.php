@@ -62,12 +62,22 @@ class DumpHelper
         $zipPath = Storage::disk('public')->path($dump->path);
 
         $zip = new ZipArchive();
-        if ($zip->open($zipPath, ZipArchive::CREATE) === true) {
-            $filenameInZip = $dump->getKey() . '.' . strtolower($dump->format);
-            $zip->addFile($path, $filenameInZip);
-            // Use compression level of 5 to reduce zipping time
-            $zip->setCompressionName($filenameInZip, ZipArchive::CM_DEFLATE, 5);
+        $status = $zip->open($zipPath, ZipArchive::CREATE);
+        if ($status !== true) {
+            throw new \RuntimeException("Failed to create ZIP archive [{$zipPath}], error code: {$status}");
+        }
+
+        $filenameInZip = $dump->getKey() . '.' . strtolower($dump->format);
+        if (! $zip->addFile($path, $filenameInZip)) {
             $zip->close();
+            throw new \RuntimeException("Failed to add file [{$path}] to ZIP archive [{$zipPath}]");
+        }
+
+        // Use compression level of 5 to reduce zipping time
+        $zip->setCompressionName($filenameInZip, ZipArchive::CM_DEFLATE, 5);
+
+        if (! $zip->close()) {
+            throw new \RuntimeException("Failed to save ZIP archive [{$zipPath}]");
         }
     }
 
