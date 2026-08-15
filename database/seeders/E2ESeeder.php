@@ -43,6 +43,23 @@ class E2ESeeder extends Seeder
     public const INDIVIDUAL_ID = 1;
     public const CREW_ID = 1;
 
+    public const PORT_ID = 1;
+    public const PORT_NAME = 'Playwright Test Port';
+    public const PROGRESS_SYSTEM_ID = 1;
+    public const PROGRESS_SYSTEM_NAME = 'Playwright Test Progress';
+    public const GENRE_ID = 1;
+    public const GENRE_NAME = 'Playwright Test Genre';
+    public const PROGRAMMING_LANGUAGE_ID = 1;
+    public const PROGRAMMING_LANGUAGE_NAME = 'Playwright Test Assembly';
+    public const ENGINE_ID = 1;
+    public const ENGINE_NAME = 'Playwright Test Engine';
+    public const CONTROL_ID = 1;
+    public const CONTROL_NAME = 'Playwright Test Joystick';
+    public const SOUND_HARDWARE_ID = 1;
+    public const SOUND_HARDWARE_NAME = 'Playwright Test YM2149';
+    public const COPY_PROTECTION_ID = 1;
+    public const COPY_PROTECTION_NAME = 'Playwright Test Copy Protection';
+
     public const ARTICLE_ID = 1;
     public const REVIEW_ID = 1;
     public const INTERVIEW_ID = 1;
@@ -120,6 +137,7 @@ class E2ESeeder extends Seeder
         }
 
         $this->seedGames();
+        $this->seedReferenceData();
         $this->seedContent();
         $this->seedMagazines();
         $this->seedMenus();
@@ -365,6 +383,18 @@ class E2ESeeder extends Seeder
             'link'          => 'https://example.com/',
         ]);
         $this->seedImage('images/spotlight_screens/' . self::SPOTLIGHT_SCREENSHOT_ID . '.png');
+    }
+
+    private function seedReferenceData(): void
+    {
+        $this->insert('port', ['id' => self::PORT_ID], ['name' => self::PORT_NAME]);
+        $this->insert('game_progress_system', ['id' => self::PROGRESS_SYSTEM_ID], ['name' => self::PROGRESS_SYSTEM_NAME]);
+        $this->insert('game_genre', ['id' => self::GENRE_ID], ['name' => self::GENRE_NAME]);
+        $this->insert('programming_language', ['id' => self::PROGRAMMING_LANGUAGE_ID], ['name' => self::PROGRAMMING_LANGUAGE_NAME]);
+        $this->insert('engine', ['id' => self::ENGINE_ID], ['name' => self::ENGINE_NAME]);
+        $this->insert('control', ['id' => self::CONTROL_ID], ['name' => self::CONTROL_NAME]);
+        $this->insert('sound_hardware', ['id' => self::SOUND_HARDWARE_ID], ['name' => self::SOUND_HARDWARE_NAME]);
+        $this->insert('copy_protection', ['id' => self::COPY_PROTECTION_ID], ['name' => self::COPY_PROTECTION_NAME]);
     }
 
     /**

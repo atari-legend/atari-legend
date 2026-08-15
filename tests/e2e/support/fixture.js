@@ -30,6 +30,15 @@ export const FIXTURE = {
   individual: { id: 1, name: 'Playwright Test Individual' },
   crew: { id: 1, name: 'Playwright Test Crew' },
 
+  port: { id: 1, name: 'Playwright Test Port' },
+  progressSystem: { id: 1, name: 'Playwright Test Progress' },
+  genre: { id: 1, name: 'Playwright Test Genre' },
+  programmingLanguage: { id: 1, name: 'Playwright Test Assembly' },
+  engine: { id: 1, name: 'Playwright Test Engine' },
+  control: { id: 1, name: 'Playwright Test Joystick' },
+  soundHardware: { id: 1, name: 'Playwright Test YM2149' },
+  copyProtection: { id: 1, name: 'Playwright Test Copy Protection' },
+
   article: { id: 1, title: 'Playwright Test Article' },
   review: { id: 1 },
   interview: { id: 1 },

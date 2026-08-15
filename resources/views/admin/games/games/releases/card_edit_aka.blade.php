@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($release->akas->sortBy('aka_name') as $aka)
+                @foreach($release->akas->sortBy('name') as $aka)
                     <tr>
                         <td>{{ $aka->name }}</td>
                         <td>{{ $aka->language?->name ?? '-' }}</td>
@@ -50,7 +50,7 @@
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf
                                 @method('DELETE')
-                                <button title="Delete AKA '{{ $aka->aka_name }}'" class="btn btn-sm">
+                                <button title="Delete AKA '{{ $aka->name }}'" class="btn btn-sm">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
                             </form>

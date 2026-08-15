@@ -319,12 +319,13 @@ class GameController extends Controller
 
     public function destroyVs(Game $game, int $amigaId)
     {
-        $query = GameVs::where('atari_id', $game->getKey())
-            ->where('amiga_id', $amigaId);
+        $vs = GameVs::where('atari_id', $game->getKey())
+            ->where('amiga_id', $amigaId)
+            ->firstOrFail();
 
-        $vs = $query->firstOrFail();
-
-        $query->delete();
+        GameVs::where('atari_id', $game->getKey())
+            ->where('amiga_id', $amigaId)
+            ->delete();
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,

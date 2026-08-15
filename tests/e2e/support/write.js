@@ -25,8 +25,15 @@ export function uniqueName(label) {
  * leaves the row in place - the test then fails several assertions later with
  * no hint as to why. Call this before clicking anything that deletes.
  */
+const listeningPages = new WeakSet();
+
 export function acceptConfirms(page) {
-  page.on('dialog', (dialog) => dialog.accept());
+  if (!listeningPages.has(page)) {
+    listeningPages.add(page);
+    page.on('dialog', (dialog) => {
+      dialog.accept().catch(() => {});
+    });
+  }
 }
 
 /**
@@ -92,18 +99,18 @@ function tableRows(page) {
  * the typing rather than a bare wait: if the first attempt was too early, the
  * next one types into a booted component.
  *
- * The search box is the only text input with a Search placeholder; the one in
- * the site nav is type="search" and belongs to the games search.
+ * The search box is the text input with a Search placeholder; the one in
+ * the site nav is type="search" and belongs to the games search. We use
+ * .first() to select the table search input if multiple search fields are present.
  */
 async function searchTable(page, term, expectedRows) {
-  const search = page.locator('input[type="text"][placeholder="Search"]');
+  const search = page.locator('input[type="text"][placeholder="Search"]').first();
   const rows = tableRows(page);
 
   await expect(async () => {
-    await search.fill('');
-    await search.pressSequentially(term, { delay: 20 });
-    await expect(rows).toHaveCount(expectedRows, { timeout: 2000 });
-  }).toPass({ timeout: 20000 });
+    await search.fill(term);
+    await expect(rows).toHaveCount(expectedRows, { timeout: 3000 });
+  }).toPass({ timeout: 15000 });
 
   return rows;
 }
@@ -149,6 +156,7 @@ export async function deleteRow(page, term) {
 
   const row = await findRow(page, term);
   await row.locator('form button').click();
+  await page.waitForLoadState('domcontentloaded');
 
   // Deleting is a plain form POST, not a Livewire call, so the page reloads
   // with the table unfiltered. Search again rather than assuming the filter
