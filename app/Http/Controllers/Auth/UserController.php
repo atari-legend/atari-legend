@@ -72,6 +72,7 @@ class UserController extends Controller
             $user = Auth::user();
             if (is_null($user->salt)) {
                 $validator->errors()->add('password_current', "Your account uses a legacy password scheme. Please use the 'Forgot Your Password?' link on the login page to reset your password.");
+
                 return;
             }
 
