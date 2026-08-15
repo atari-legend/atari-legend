@@ -305,9 +305,6 @@ class MagazinesTest extends AdminTestCase
      * Deleting a type leaves the index entries that used it in place, with no
      * type - the foreign key is nulled rather than cascaded, so an accidental
      * delete does not take an issue's index with it.
-     *
-     * Note: the controller records this as an UPDATE rather than a DELETE; the
-     * assertion below describes what it does today.
      */
     public function test_an_index_type_can_be_deleted_without_losing_its_entries(): void
     {
@@ -322,7 +319,7 @@ class MagazinesTest extends AdminTestCase
         $this->assertSame(0, MagazineIndexType::where('name', 'Cover disk')->count());
         $this->assertNotNull($index->fresh());
         $this->assertNull($index->fresh()->magazine_index_type_id);
-        $this->assertChangelog(Changelog::UPDATE, 'Magazines', 'Cover disk');
+        $this->assertChangelog(Changelog::DELETE, 'Magazines', 'Cover disk');
     }
 
     public function test_an_index_type_needs_a_name(): void
