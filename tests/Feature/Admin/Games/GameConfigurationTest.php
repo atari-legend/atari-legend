@@ -61,8 +61,11 @@ class GameConfigurationTest extends AdminTestCase
             DB::table('game_genre')->pluck('name')->all()
         );
 
+        $id = (int) DB::table('game_genre')->where('name', 'Shoot-em-up')->value('id');
         $this->assertChangelog(Changelog::INSERT, 'Games Config', 'Shoot-em-up');
         $this->assertSame('Genre', Changelog::sole()->sub_section);
+        $this->assertSame($id, (int) Changelog::sole()->section_id);
+        $this->assertSame($id, (int) Changelog::sole()->sub_section_id);
     }
 
     public function test_an_entry_needs_a_name(): void
