@@ -34,7 +34,8 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })->create();
 
-if ($storagePath = env('APP_STORAGE_PATH')) {
+$storagePath = env('APP_STORAGE_PATH');
+if ($storagePath) {
     $app->useStoragePath($storagePath);
     foreach (['/framework/cache', '/framework/views', '/framework/sessions', '/framework/testing', '/logs'] as $dir) {
         if (! is_dir($storagePath . $dir)) {
