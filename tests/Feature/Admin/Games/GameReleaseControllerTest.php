@@ -36,11 +36,11 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_the_release_list_and_forms_load(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = Release::factory()->publishedBy('Bitmap Brothers')->create(['game_id' => $game->getKey()]);
 
         $this->get(route('admin.games.releases.index', $game))->assertOk()->assertSee('Xenon');
         $this->get(route('admin.games.releases.create', $game))->assertOk();
-        $this->get(route('admin.games.releases.show', [$game, $release]))->assertOk();
+        $this->get(route('admin.games.releases.show', [$game, $release]))->assertOk()->assertSee('Bitmap Brothers');
     }
 
     public function test_store_creates_the_release_against_its_game(): void

@@ -47,7 +47,7 @@
                 <div class="col">
                     <label for="publisher" class="form-label">Publisher</label>
                     <select class="form-select @error('publisher') is-invalid @enderror" name="publisher">
-                        <option @if (old('publisher', $release?->publisher ?? null) === null) selected @endif value="">-</option>
+                        <option @if (old('publisher', isset($release) ? $release->publisher?->getKey() : null) === null) selected @endif value="">-</option>
                         @foreach ($companies as $publisher)
                             <option value="{{ $publisher->getKey() }}"
                                 @if (old('publisher', isset($release) ? $release->publisher?->getKey() : null) === $publisher->getKey()) selected @endif>
