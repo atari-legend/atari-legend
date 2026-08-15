@@ -81,6 +81,8 @@ class MenuSoftwareController extends Controller
 
     public function update(Request $request, MenuSoftware $software)
     {
+        $oldName = $software->name;
+
         $software->update([
             'name'                          => $request->name,
             'menu_software_content_type_id' => $request->type,
@@ -91,7 +93,7 @@ class MenuSoftwareController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Menu Software',
             'section_id'       => $software->getKey(),
-            'section_name'     => $software->getOriginal('name'),
+            'section_name'     => $oldName,
             'sub_section'      => 'Software',
             'sub_section_id'   => $software->getKey(),
             'sub_section_name' => $software->name,
@@ -102,16 +104,18 @@ class MenuSoftwareController extends Controller
 
     public function destroy(MenuSoftware $software)
     {
+        $oldName = $software->name;
+
         $software->delete();
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
             'section'          => 'Menu Software',
             'section_id'       => $software->getKey(),
-            'section_name'     => $software->getOriginal('name'),
+            'section_name'     => $oldName,
             'sub_section'      => 'Software',
             'sub_section_id'   => $software->getKey(),
-            'sub_section_name' => $software->name,
+            'sub_section_name' => $oldName,
         ]);
 
         return redirect()->route('admin.menus.software.index');
