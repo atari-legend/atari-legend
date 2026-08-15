@@ -25,6 +25,10 @@ class UserProvider extends EloquentUserProvider
             throw new \Exception("Unsupported Authenticatable type: $user");
         }
 
+        if (is_null($user->salt) || empty($credentials['password'])) {
+            return false;
+        }
+
         $hashedPassword = UserHelper::hashPassword($credentials['password'], $user->salt);
 
         return $user->inactive === User::ACTIVE && $user->sha512_password === $hashedPassword;

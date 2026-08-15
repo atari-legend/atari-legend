@@ -330,4 +330,34 @@ class ProfileTest extends TestCase
             'password_confirmation' => 'the-new-password',
         ])->assertRedirect(route('login'));
     }
+
+    public function test_the_current_password_is_required(): void
+    {
+        $user = $this->userWithPassword('the-old-password');
+
+        $this->actingAs($user)
+            ->post(route('auth.password'), [
+                'password'              => 'the-new-password',
+                'password_confirmation' => 'the-new-password',
+            ])
+            ->assertSessionHasErrors('password_current');
+    }
+
+    public function test_a_legacy_user_with_null_salt_cannot_change_password_and_is_told_to_reset(): void
+    {
+        $user = User::factory()->create([
+            'salt'            => null,
+            'sha512_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.password'), [
+                'password_current'      => 'any-password',
+                'password'              => 'the-new-password',
+                'password_confirmation' => 'the-new-password',
+            ])
+            ->assertSessionHasErrors([
+                'password_current' => "Your account uses a legacy password scheme. Please use the 'Forgot Your Password?' link on the login page to reset your password.",
+            ]);
+    }
 }

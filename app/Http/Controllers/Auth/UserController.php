@@ -65,11 +65,22 @@ class UserController extends Controller
     public function password(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password_current' => ['required', 'string'],
+            'password'         => ['required', 'string', 'min:8', 'confirmed'],
         ]);
         $validator->after(function ($validator) use ($request) {
-            $hashedPassword = UserHelper::hashPassword($request->password_current, Auth::user()->salt);
-            if ($hashedPassword !== Auth::user()->sha512_password) {
+            $user = Auth::user();
+            if (is_null($user->salt)) {
+                $validator->errors()->add('password_current', "Your account uses a legacy password scheme. Please use the 'Forgot Your Password?' link on the login page to reset your password.");
+                return;
+            }
+
+            if (empty($request->password_current)) {
+                return;
+            }
+
+            $hashedPassword = UserHelper::hashPassword($request->password_current, $user->salt);
+            if ($hashedPassword !== $user->sha512_password) {
                 $validator->errors()->add('password_current', 'The password does not match your current password');
             }
         });

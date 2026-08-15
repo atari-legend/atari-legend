@@ -277,6 +277,22 @@ class AuthTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_login_rejects_legacy_account_with_null_salt_gracefully(): void
+    {
+        User::factory()->create([
+            'userid'          => 'legacy_user',
+            'salt'            => null,
+            'sha512_password' => null,
+        ]);
+
+        $this->from(route('login'))
+            ->post(route('login'), ['userid' => 'legacy_user', 'password' => 'a-good-password'])
+            ->assertRedirect(route('login'))
+            ->assertSessionHasErrors('userid');
+
+        $this->assertGuest();
+    }
+
     /**
      * `inactive` is the legacy site's way of disabling an account, and the
      * custom user provider honours it even when the password is right.

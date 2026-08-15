@@ -39,12 +39,16 @@ class UserHelper
     /**
      * Hash a password with the given salt.
      *
-     * @param  string  $password  Plain-text password to hash
-     * @param  string  $salt  Salt to use in the hashing
-     * @return string Hashed password
+     * @param  string|null  $password  Plain-text password to hash
+     * @param  string|null  $salt  Salt to use in the hashing
+     * @return string|null Hashed password
      */
-    public static function hashPassword(string $password, string $salt)
+    public static function hashPassword(?string $password, ?string $salt): ?string
     {
+        if (is_null($password) || is_null($salt)) {
+            return null;
+        }
+
         // Hash the password with sha512. This was initially done client-side
         // so that only the hashed password would get sent. With HTTPS is this
         // not needed anymore
