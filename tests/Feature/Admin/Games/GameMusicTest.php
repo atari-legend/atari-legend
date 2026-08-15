@@ -21,9 +21,8 @@ use Tests\Feature\Admin\AdminTestCase;
  * `MATCH(title) AGAINST(?)`, which the SQLite test database has no equivalent
  * for. Only the write paths are covered.
  *
- * The detach route carries the tune's key in the URL under the constraint
- * '[\w\s\-_\/()]+', which has no dot in it, so the keys used below have no
- * '.sndh' extension - with one the route does not match at all.
+ * The detach route carries the tune's key in the URL. Keys do not carry a
+ * `.sndh` extension; the template appends it when generating links.
  */
 class GameMusicTest extends AdminTestCase
 {
@@ -91,6 +90,20 @@ class GameMusicTest extends AdminTestCase
         $this->assertSame([$other->getKey()], $game->fresh()->sndhs->modelKeys());
 
         $this->assertChangelog(Changelog::DELETE, 'Games', 'Xenon');
+    }
+
+    public function test_a_song_with_unusual_characters_can_be_detached(): void
+    {
+        $game = Game::factory()->named('Pareidolia')->create();
+        $sndh = Sndh::factory()->create(['id' => 'AD/Pareidolia+MadMax_megamix']);
+
+        $game->sndhs()->attach($sndh->getKey());
+
+        $this->delete(route('admin.games.game-music.destroy', ['game' => $game, 'sndh' => $sndh]))
+            ->assertRedirect(route('admin.games.game-music.index', $game));
+
+        $this->assertCount(0, $game->fresh()->sndhs);
+        $this->assertChangelog(Changelog::DELETE, 'Games', 'Pareidolia');
     }
 
     /**
