@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class MenuSoftwareContentTypesController extends Controller
 {
+    const VALIDATION_RULES = [
+        'name' => 'required',
+    ];
+
     public function index()
     {
         $contentTypes = MenuSoftwareContentType::orderBy('name')
@@ -40,6 +44,8 @@ class MenuSoftwareContentTypesController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(MenuSoftwareContentTypesController::VALIDATION_RULES);
+
         $contentType = MenuSoftwareContentType::create([
             'name' => $request->name,
         ]);
@@ -72,6 +78,8 @@ class MenuSoftwareContentTypesController extends Controller
 
     public function update(Request $request, MenuSoftwareContentType $contentType)
     {
+        $request->validate(MenuSoftwareContentTypesController::VALIDATION_RULES);
+
         $oldName = $contentType->name;
 
         $contentType->update(['name' => $request->name]);

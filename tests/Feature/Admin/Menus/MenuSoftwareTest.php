@@ -185,6 +185,36 @@ class MenuSoftwareTest extends AdminTestCase
             ->assertSee('Intact');
     }
 
+    public function test_a_software_cannot_be_saved_with_an_empty_name(): void
+    {
+        $this->post(route('admin.menus.software.store'), ['name' => ''])
+            ->assertSessionHasErrors('name');
+
+        $software = MenuSoftware::factory()->named('Xtracker')->create();
+        $this->put(route('admin.menus.software.update', $software), ['name' => ''])
+            ->assertSessionHasErrors('name');
+    }
+
+    public function test_a_content_type_cannot_be_saved_with_an_empty_name(): void
+    {
+        $this->post(route('admin.menus.content-types.store'), ['name' => ''])
+            ->assertSessionHasErrors('name');
+
+        $type = MenuSoftwareContentType::create(['name' => 'Cracktro']);
+        $this->put(route('admin.menus.content-types.update', $type), ['name' => ''])
+            ->assertSessionHasErrors('name');
+    }
+
+    public function test_a_condition_cannot_be_saved_with_an_empty_name(): void
+    {
+        $this->post(route('admin.menus.conditions.store'), ['name' => ''])
+            ->assertSessionHasErrors('name');
+
+        $condition = MenuDiskCondition::findOrFail(MenuSetController::INTACT_CONDITION_ID);
+        $this->put(route('admin.menus.conditions.update', $condition), ['name' => ''])
+            ->assertSessionHasErrors('name');
+    }
+
     public function test_the_reference_data_editors_are_closed_to_non_admins(): void
     {
         $this->assertNonAdminIsTurnedAway(route('admin.menus.software.create'));

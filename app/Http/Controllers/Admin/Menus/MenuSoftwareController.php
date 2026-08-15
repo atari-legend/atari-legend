@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 
 class MenuSoftwareController extends Controller
 {
+    const VALIDATION_RULES = [
+        'name' => 'required',
+    ];
+
     public function index()
     {
         return view('admin.menus.software.index')
@@ -40,6 +44,8 @@ class MenuSoftwareController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(MenuSoftwareController::VALIDATION_RULES);
+
         $software = MenuSoftware::create([
             'name'                          => $request->name,
             'menu_software_content_type_id' => $request->type,
@@ -81,6 +87,8 @@ class MenuSoftwareController extends Controller
 
     public function update(Request $request, MenuSoftware $software)
     {
+        $request->validate(MenuSoftwareController::VALIDATION_RULES);
+
         $oldName = $software->name;
 
         $software->update([

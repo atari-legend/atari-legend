@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class MenuConditionsController extends Controller
 {
+    const VALIDATION_RULES = [
+        'name' => 'required',
+    ];
+
     public function index()
     {
         $conditions = MenuDiskCondition::orderBy('name')
@@ -40,6 +44,8 @@ class MenuConditionsController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(MenuConditionsController::VALIDATION_RULES);
+
         $condition = MenuDiskCondition::create([
             'name' => $request->name,
         ]);
@@ -72,6 +78,8 @@ class MenuConditionsController extends Controller
 
     public function update(Request $request, MenuDiskCondition $condition)
     {
+        $request->validate(MenuConditionsController::VALIDATION_RULES);
+
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Menu Conditions',
