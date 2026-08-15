@@ -49,8 +49,6 @@ class AdminRenderTest extends AdminTestCase
      * Nothing belongs here that a fixture could satisfy.
      */
     private const SKIPPED = [
-        'admin.games.music'               => 'MySQL MATCH ... AGAINST full-text search, which the SQLite test database has no equivalent for',
-        'admin.games.game-music.index'    => 'MySQL MATCH ... AGAINST full-text search, which the SQLite test database has no equivalent for',
         'admin.games.configuration.index' => 'A bare redirect rather than a screen; asserted on its own below',
     ];
 

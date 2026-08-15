@@ -246,21 +246,6 @@ class AjaxEndpointsTest extends TestCase
         );
     }
 
-    /**
-     * The release year box selects on MySQL's YEAR(), which SQLite has no
-     * equivalent for, so the tests below teach the test connection the same
-     * function before calling the endpoint. Dates are stored as `Y-m-d`
-     * strings, so the year is the first four characters.
-     */
-    protected function teachSqliteTheYearFunction(): void
-    {
-        DB::connection()->getPdo()->sqliteCreateFunction(
-            'YEAR',
-            fn ($date) => $date === null ? null : (int) substr((string) $date, 0, 4),
-            1
-        );
-    }
-
     public function test_the_release_year_endpoint_is_routed(): void
     {
         $this->assertSame(url('/ajax/release-years.json'), route('ajax.release-years'));
@@ -268,8 +253,6 @@ class AjaxEndpointsTest extends TestCase
 
     public function test_the_release_year_endpoint_filters_on_the_year_typed_so_far(): void
     {
-        $this->teachSqliteTheYearFunction();
-
         foreach (['1988-05-02', '1989-11-30', '1992-01-01'] as $date) {
             Release::factory()->create(['date' => $date]);
         }
@@ -289,7 +272,6 @@ class AjaxEndpointsTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('injectionPayloads')]
     public function test_the_release_year_endpoint_treats_the_query_as_data(string $payload): void
     {
-        $this->teachSqliteTheYearFunction();
 
         Release::factory()->create(['date' => '1988-05-02']);
 

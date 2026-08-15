@@ -17,16 +17,19 @@ use Tests\Feature\Admin\AdminTestCase;
  * several of them at once. The pairs they write are the same rows in
  * `game_sndh`, so what is tested here is which of them each action touches.
  *
- * Neither index page can be exercised here: both look for candidate tunes with
- * `MATCH(title) AGAINST(?)`, which the SQLite test database has no equivalent
- * for. Only the write paths are covered.
- *
  * The detach route carries the tune's key in the URL. Keys do not carry a
  * `.sndh` extension; the template appends it when generating links.
  */
 class GameMusicTest extends AdminTestCase
 {
     // One game at a time
+
+    public function test_the_game_music_index_page_can_be_rendered(): void
+    {
+        $game = Game::factory()->create();
+
+        $this->get(route('admin.games.game-music.index', $game))->assertOk();
+    }
 
     public function test_a_song_can_be_attached_to_a_game(): void
     {
@@ -143,6 +146,11 @@ class GameMusicTest extends AdminTestCase
     }
 
     // Across games
+
+    public function test_the_music_batch_index_page_can_be_rendered(): void
+    {
+        $this->get(route('admin.games.music'))->assertOk();
+    }
 
     /**
      * The batch screen takes 'game:tune' pairs, so one submission can associate
