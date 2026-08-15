@@ -17,6 +17,8 @@ class MenuDisksContentController extends Controller
 {
     public function create(Request $request, MenuDisk $disk)
     {
+        abort_unless(in_array($request->type, ['game', 'release', 'software', 'text', 'sub_menu']), 404);
+
         $diskReleases = $disk->menu
             ->disks
             ->flatMap(function ($disk) {
