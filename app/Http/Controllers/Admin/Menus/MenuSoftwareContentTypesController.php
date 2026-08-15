@@ -72,13 +72,15 @@ class MenuSoftwareContentTypesController extends Controller
 
     public function update(Request $request, MenuSoftwareContentType $contentType)
     {
+        $oldName = $contentType->name;
+
         $contentType->update(['name' => $request->name]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Menu Content Types',
             'section_id'       => $contentType->getKey(),
-            'section_name'     => $contentType->getOriginal('name'),
+            'section_name'     => $oldName,
             'sub_section'      => 'Type',
             'sub_section_id'   => $contentType->getKey(),
             'sub_section_name' => $contentType->name,

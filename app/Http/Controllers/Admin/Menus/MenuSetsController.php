@@ -114,6 +114,8 @@ class MenuSetsController extends Controller
                 $set->crews()->attach($crew);
             });
 
+        $oldName = $set->name;
+
         $set->update([
             'name'       => $request->name,
             'menus_sort' => $request->sort,
@@ -123,7 +125,7 @@ class MenuSetsController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Menus',
             'section_id'       => $set->getKey(),
-            'section_name'     => $set->getOriginal('name'),
+            'section_name'     => $oldName,
             'sub_section'      => 'Set',
             'sub_section_id'   => $set->getKey(),
             'sub_section_name' => $set->name,
