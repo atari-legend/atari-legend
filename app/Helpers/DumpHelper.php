@@ -30,9 +30,9 @@ class DumpHelper
                 $header = fread($f, 4);
                 if ($header[0] === 'S' && $header[1] === 'C' && $header[2] === 'P') {
                     $format = 'SCP';
-                } elseif ($header[0] === 0x0E && $header[1] === 0x0F) {
+                } elseif (ord($header[0]) === 0x0E && ord($header[1]) === 0x0F) {
                     $format = 'MSA';
-                } elseif ($header[0] === 'R' && $header[1] === 'S' && $header[2] === 'Y' && $header[3] === 0x00) {
+                } elseif ($header[0] === 'R' && $header[1] === 'S' && $header[2] === 'Y' && ord($header[3]) === 0x00) {
                     $format = 'STX';
                 }
 
