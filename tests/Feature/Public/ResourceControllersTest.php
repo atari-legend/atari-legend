@@ -196,6 +196,13 @@ class ResourceControllersTest extends TestCase
         $this->get(route('individuals.avatar', $individual))->assertNotFound();
     }
 
+    public function test_an_individual_with_no_text_row_is_a_404(): void
+    {
+        $individual = Individual::factory()->create();
+
+        $this->get(route('individuals.avatar', $individual))->assertNotFound();
+    }
+
     public function test_a_spotlight_screenshot_is_served_as_a_webp(): void
     {
         $this->requireWebp();
