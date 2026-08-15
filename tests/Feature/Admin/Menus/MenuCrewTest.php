@@ -68,10 +68,7 @@ class MenuCrewTest extends AdminTestCase
         $this->assertSame('Replicants', $crew->crew_name);
         $this->assertSame('Cracking since 1988.', $crew->crew_history);
 
-        // The entry is left unnamed here: the controller means to record the
-        // name the crew had before the edit, but reads it back after the save,
-        // so what it actually stores is the new one.
-        $this->assertChangelog(Changelog::UPDATE, 'Crew');
+        $this->assertChangelog(Changelog::UPDATE, 'Crew', 'The Replicants');
         $this->assertSame($crew->getKey(), Changelog::where('action', Changelog::UPDATE)->sole()->section_id);
     }
 

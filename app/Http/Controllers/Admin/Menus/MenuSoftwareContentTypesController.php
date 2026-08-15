@@ -80,13 +80,15 @@ class MenuSoftwareContentTypesController extends Controller
     {
         $request->validate(MenuSoftwareContentTypesController::VALIDATION_RULES);
 
+        $oldName = $contentType->name;
+
         $contentType->update(['name' => $request->name]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Menu Content Types',
             'section_id'       => $contentType->getKey(),
-            'section_name'     => $contentType->getOriginal('name'),
+            'section_name'     => $oldName,
             'sub_section'      => 'Type',
             'sub_section_id'   => $contentType->getKey(),
             'sub_section_name' => $contentType->name,

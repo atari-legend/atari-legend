@@ -94,9 +94,7 @@ class MenuSoftwareTest extends AdminTestCase
         $this->assertSame($type->getKey(), $software->menu_software_content_type_id);
         $this->assertSame(4321, $software->demozoo_id);
 
-        // Left unnamed: the controller means to record the name the software
-        // had before the edit, but reads it back after the save.
-        $this->assertChangelog(Changelog::UPDATE, 'Menu Software');
+        $this->assertChangelog(Changelog::UPDATE, 'Menu Software', 'Xtracker');
     }
 
     // Content types

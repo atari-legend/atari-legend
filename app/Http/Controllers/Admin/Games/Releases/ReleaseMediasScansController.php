@@ -18,6 +18,8 @@ class ReleaseMediasScansController extends Controller
 {
     public function store(Game $game, Release $release, Media $media, Request $request)
     {
+        $request->validate(['file' => 'required|array']);
+
         $filepond = app(\Sopamo\LaravelFilepond\Filepond::class);
         $otherType = MediaScanType::where('name', '=', MediaScanType::TYPE_OTHER)->first();
 
