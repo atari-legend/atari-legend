@@ -272,7 +272,6 @@ class AjaxEndpointsTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('injectionPayloads')]
     public function test_the_release_year_endpoint_treats_the_query_as_data(string $payload): void
     {
-
         Release::factory()->create(['date' => '1988-05-02']);
 
         $this->getJson(route('ajax.release-years', ['q' => $payload]))
