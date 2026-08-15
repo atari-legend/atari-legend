@@ -48,7 +48,7 @@ class ReleaseMediasController extends Controller
     public function update(Game $game, Release $release, Media $media, Request $request)
     {
         if ($request->delete) {
-            $this->destroy($media);
+            $this->deleteMedia($media);
         } else {
             if ($request->type) {
                 $type = MediaType::findOrFail($request->type);
@@ -101,7 +101,7 @@ class ReleaseMediasController extends Controller
         ]);
     }
 
-    public function destroy(Media $media)
+    private function deleteMedia(Media $media): void
     {
         foreach ($media->dumps as $dump) {
             Storage::disk('public')->delete($dump->path);

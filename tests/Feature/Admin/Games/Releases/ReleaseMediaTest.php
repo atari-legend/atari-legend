@@ -164,6 +164,15 @@ class ReleaseMediaTest extends AdminTestCase
         $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
     }
 
+    public function test_the_delete_route_is_not_allowed(): void
+    {
+        $release = Release::factory()->create();
+        $media = $this->media($release);
+
+        $this->delete(route('admin.games.releases.medias.update', [$release->game, $release, $media]))
+            ->assertStatus(405);
+    }
+
     // Dumps
 
     public function test_a_dump_is_uploaded_and_zipped(): void

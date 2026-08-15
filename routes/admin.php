@@ -140,7 +140,7 @@ Route::middleware('verified')->group(function () {
                             Route::post('system-disk-protection', [ReleaseSystemDiskProtectionController::class, 'store'])->name('system-disk-protection.store');
                             Route::delete('system-disk-protection/{protection}', [ReleaseSystemDiskProtectionController::class, 'destroy'])->name('system-disk-protection.destroy');
 
-                            Route::resource('medias', ReleaseMediasController::class)->except(['create', 'show', 'edit']);
+                            Route::resource('medias', ReleaseMediasController::class)->except(['create', 'show', 'edit', 'destroy']);
                             Route::resource('scans', ReleaseScansController::class)->except(['create', 'show', 'edit']);
 
                             Route::prefix('/{media}')->name('medias.')->group(function () {
