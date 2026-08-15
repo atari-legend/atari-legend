@@ -32,10 +32,6 @@ class ReleaseMediaTest extends AdminTestCase
 
         Storage::fake('local');
         Storage::fake('public');
-
-        // Dumps are zipped straight into this directory with ZipArchive, which
-        // will not create it - on the live site it is already there.
-        Storage::disk('public')->makeDirectory('zips/games');
     }
 
     private function media(?Release $release = null): Media
