@@ -11,7 +11,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
         commands: __DIR__ . '/../routes/console.php',
@@ -33,3 +33,15 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
+
+$storagePath = env('APP_STORAGE_PATH');
+if ($storagePath) {
+    $app->useStoragePath($storagePath);
+    foreach (['/framework/cache', '/framework/views', '/framework/sessions', '/framework/testing', '/logs'] as $dir) {
+        if (! is_dir($storagePath . $dir)) {
+            mkdir($storagePath . $dir, 0755, true);
+        }
+    }
+}
+
+return $app;

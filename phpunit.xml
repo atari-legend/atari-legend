@@ -37,6 +37,10 @@
         <ini name="memory_limit" value="512M"/>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="base64:AckfSECXIvnK5r28GVIWUAxmbBSjTsmF/0rZh1cyWXk="/>
+        <!-- Point the test storage root at /tmp outside the repository bind mount,
+             so concurrent test runs in separate containers do not wipe each other's
+             faked storage fixtures in storage/framework/testing/disks. -->
+        <env name="APP_STORAGE_PATH" value="/tmp/atari-legend-storage"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>
