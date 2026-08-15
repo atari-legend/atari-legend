@@ -114,7 +114,7 @@ class GameConfigurationController extends Controller
                 $data = array_merge($data, ['description' => $request->description]);
             }
             $id = DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
-                ->insert($data);
+                ->insertGetId($data);
 
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,
