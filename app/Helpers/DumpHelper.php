@@ -57,16 +57,28 @@ class DumpHelper
      */
     public static function storeDump(Dump $dump, string $path): void
     {
+        Storage::disk('public')->makeDirectory(dirname($dump->path));
+
         $zipPath = Storage::disk('public')->path($dump->path);
 
         $zip = new ZipArchive();
-        $zip->open($zipPath, ZipArchive::CREATE);
+        $status = $zip->open($zipPath, ZipArchive::CREATE);
+        if ($status !== true) {
+            throw new \RuntimeException("Failed to create ZIP archive [{$zipPath}], error code: {$status}");
+        }
 
         $filenameInZip = $dump->getKey() . '.' . strtolower($dump->format);
-        $zip->addFile($path, $filenameInZip);
+        if (! $zip->addFile($path, $filenameInZip)) {
+            $zip->close();
+            throw new \RuntimeException("Failed to add file [{$path}] to ZIP archive [{$zipPath}]");
+        }
+
         // Use compression level of 5 to reduce zipping time
         $zip->setCompressionName($filenameInZip, ZipArchive::CM_DEFLATE, 5);
-        $zip->close();
+
+        if (! $zip->close()) {
+            throw new \RuntimeException("Failed to save ZIP archive [{$zipPath}]");
+        }
     }
 
     /**
