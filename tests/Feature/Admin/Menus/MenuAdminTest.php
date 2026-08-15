@@ -144,6 +144,33 @@ class MenuAdminTest extends AdminTestCase
         $this->assertSame($set->getKey(), $menu->menu_set_id);
     }
 
+    public function test_the_menu_create_form_names_the_set_it_will_belong_to(): void
+    {
+        $set = $this->set('Automation');
+
+        $this->get(route('admin.menus.menus.create', ['set' => $set->getKey()]))
+            ->assertOk()
+            ->assertSee('Automation')
+            ->assertSee('Create menu');
+    }
+
+    /**
+     * Menus have no index of their own: the create form is reached from the
+     * set, which carries its id in the query string. A bare or stale one is a
+     * 404 rather than an error page, which is what implicit route-model
+     * binding gives every other admin route for free.
+     */
+    public function test_a_menu_cannot_be_created_without_a_set_that_exists(): void
+    {
+        $this->get(route('admin.menus.menus.create'))->assertNotFound();
+        $this->get(route('admin.menus.menus.create', ['set' => 9999]))->assertNotFound();
+
+        $this->post(route('admin.menus.menus.store'), ['set' => 9999, 'number' => 189])
+            ->assertNotFound();
+
+        $this->assertSame(0, Menu::query()->count());
+    }
+
     public function test_a_menu_can_be_edited_and_deleted(): void
     {
         $menu = $this->menu();
@@ -223,6 +250,26 @@ class MenuAdminTest extends AdminTestCase
 
         // The changelog names the disk by set, menu and part together
         $this->assertChangelog(Changelog::INSERT, 'Menu Disks', 'Automation #189A');
+    }
+
+    /**
+     * As for menus above: a disk is created from a link on its menu, so the
+     * menu id only ever arrives in the query string.
+     */
+    public function test_a_disk_cannot_be_created_without_a_menu_that_exists(): void
+    {
+        $this->get(route('admin.menus.disks.create'))->assertNotFound();
+        $this->get(route('admin.menus.disks.create', ['menu' => 9999]))->assertNotFound();
+
+        // The condition is validated first, so it has to be present to reach
+        // the lookup at all.
+        $this->post(route('admin.menus.disks.store'), [
+            'menu'      => 9999,
+            'part'      => 'A',
+            'condition' => MenuSetController::INTACT_CONDITION_ID,
+        ])->assertNotFound();
+
+        $this->assertSame(0, MenuDisk::query()->count());
     }
 
     public function test_a_disk_needs_a_condition(): void

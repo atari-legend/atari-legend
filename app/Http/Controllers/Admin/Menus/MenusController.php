@@ -14,7 +14,7 @@ class MenusController extends Controller
 {
     public function create(Request $request)
     {
-        $set = MenuSet::find($request->set);
+        $set = MenuSet::findOrFail($request->set);
 
         return view('admin.menus.menus.edit')
             ->with([
@@ -30,7 +30,7 @@ class MenusController extends Controller
 
     public function store(Request $request)
     {
-        $set = MenuSet::find($request->set);
+        $set = MenuSet::findOrFail($request->set);
         $menu = Menu::create([
             'number'       => $request->number,
             'issue'        => $request->issue,

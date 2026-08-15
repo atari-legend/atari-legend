@@ -25,7 +25,7 @@ class MenuDisksController extends Controller
 
     public function create(Request $request)
     {
-        $menu = Menu::find($request->menu);
+        $menu = Menu::findOrFail($request->menu);
 
         return view('admin.menus.disks.edit')
             ->with([
@@ -46,7 +46,7 @@ class MenuDisksController extends Controller
     {
         $request->validate(MenuDisksController::VALIDATION_RULES);
 
-        $menu = Menu::find($request->menu);
+        $menu = Menu::findOrFail($request->menu);
         $disk = MenuDisk::create([
             'part'                     => $request->part,
             'notes'                    => $request->notes,

@@ -189,7 +189,7 @@ today, and what it does not:
 | Crawler | sitemaps, robots.txt, both feeds, health check | that they list the right entities |
 | Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables | — |
 | Admin content | list/create/edit for news, reviews, interviews, articles | image uploads, `<br />` normalisation |
-| Admin menus | sets list, 4 edit forms, 6 create forms, 3 disk-content types, import screen and template | running an import, screenshot and dump uploads, crew relationships |
+| Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template | running an import, screenshot and dump uploads, crew relationships |
 | Admin magazines | list, magazine and issue create/edit, index types | cover upload, index entries |
 | Admin links | list, create and edit, categories | approving submissions |
 | Admin users | list, edit, comments | permissions, deactivation, moderation |
@@ -216,17 +216,13 @@ today, and what it does not:
    global that `formats/bbcode.js` had not set. It has not recurred, and the
    trigger looks environmental, but the unguarded globals are real. Retries are
    off on purpose, so if it comes back it will be visible rather than hidden.
-5. **Two admin create routes are a 500 rather than a 404 when reached bare
-   (#271).** `MenusController@create` and `MenuDisksController@create` dereference
-   the parent they look up from the query string without checking it. The links
-   in the admin always supply it, which is the shape the specs assert.
-6. **Mutating flows on the *public* side are still untested** — voting,
+5. **Mutating flows on the *public* side are still untested** — voting,
    commenting, submitting news, links and reviews. `admin-write/` is the shape to
    copy: a sibling `public-write/` project, serial, depending on the read ones.
-7. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
+6. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
-8. **Subresource 404s are invisible.** A `page.on('response')` check for
+7. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.
    Follow-up 4 is the case for it: a script that never arrived is exactly what
    this would have caught at the time.

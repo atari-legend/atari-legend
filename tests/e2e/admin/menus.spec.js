@@ -27,9 +27,7 @@ test.describe('Admin menus', () => {
 
   // Everything below a set is created from inside its parent, so these create
   // routes carry state in the query string: which menu the disk belongs to,
-  // which of the three content forms to render. None of the controllers check
-  // for it, so a bare URL is a 500 rather than a 404 - worth fixing, but the
-  // links in the admin always supply it, and that is the shape to assert.
+  // which of the three content forms to render.
   //
   // The three content types are three separate partials
   // (content/create_{release,game,software}.blade.php), so each is listed.
@@ -49,6 +47,24 @@ test.describe('Admin menus', () => {
       const path = form.path.split('?')[0];
 
       await expectPageRenders(page, await page.goto(form.path), path);
+    });
+  }
+
+  // The parent only ever arrives in the query string, so a bare or stale URL
+  // has to answer 404 rather than an error page. Only a hand-edited URL or a
+  // stale bookmark gets here - every link in the admin supplies the id.
+  const parentlessCreateForms = [
+    { name: 'a menu without its set', path: '/admin/menus/menus/create' },
+    { name: 'a menu whose set is gone', path: '/admin/menus/menus/create?set=999999' },
+    { name: 'a disk without its menu', path: '/admin/menus/disks/create' },
+    { name: 'a disk whose menu is gone', path: '/admin/menus/disks/create?menu=999999' },
+  ];
+
+  for (const form of parentlessCreateForms) {
+    test(`404s on the create form for ${form.name}`, async ({ page }) => {
+      const response = await page.goto(form.path);
+
+      expect(response?.status()).toBe(404);
     });
   }
 
