@@ -70,7 +70,7 @@ class MagazineIndexTypesController extends Controller
         $indexType->delete();
 
         ChangelogHelper::insert([
-            'action'           => Changelog::UPDATE,
+            'action'           => Changelog::DELETE,
             'section'          => 'Magazines',
             'section_id'       => $indexType->getKey(),
             'section_name'     => $indexType->name,
