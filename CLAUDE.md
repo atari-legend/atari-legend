@@ -61,7 +61,7 @@ All in `storage/public/` (accessible via `Storage::disk('public')`):
 | `images/interview_screenshots/` | Interview photos |
 | `images/individual_screenshots/` | Individual avatars (keyed on `ind_id`) |
 | `images/menu_screenshots/` | Menu disk screenshots |
-| `images/magazine_covers/` | Magazine covers |
+| `images/magazine_scans/` | Magazine covers |
 | `images/game_release_scans/` | Release box scans |
 | `images/spotlight_screens/` | Spotlight images (keyed on `screenshot_id`) |
 | `images/website_images/` | Link screenshots |
