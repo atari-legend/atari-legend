@@ -103,6 +103,27 @@ class AuthTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    public function test_a_visitor_can_register_with_omitted_optional_fields(): void
+    {
+        Notification::fake();
+        $this->fakeCaptcha();
+
+        $data = $this->registration();
+        unset($data['website'], $data['facebook'], $data['twitter'], $data['af']);
+
+        $this->post(route('register'), $data)->assertRedirect('/');
+
+        $user = User::sole();
+
+        $this->assertSame('sysop', $user->userid);
+        $this->assertSame('sysop@example.org', $user->email);
+        $this->assertNull($user->user_website);
+        $this->assertNull($user->user_fb);
+        $this->assertNull($user->user_twitter);
+        $this->assertNull($user->user_af);
+        $this->assertAuthenticatedAs($user);
+    }
+
     /**
      * The password is stored under the legacy scheme, never in plain text and
      * never reusing another user's salt.
