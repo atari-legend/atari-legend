@@ -20,9 +20,13 @@ class MusicController extends Controller
             ->limit(50)
             ->get()
             ->each(function ($game) use (&$matches) {
-                $sndhs = Sndh::select()
-                    ->whereRaw('MATCH(title) AGAINST(?)', [$game->game_name])
-                    ->get();
+                $query = Sndh::select();
+                if (\Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite') {
+                    $query->where('title', 'like', '%' . $game->game_name . '%');
+                } else {
+                    $query->whereRaw('MATCH(title) AGAINST(?)', [$game->game_name]);
+                }
+                $sndhs = $query->get();
                 array_push($matches, [
                     'game'  => $game,
                     'sndhs' => $sndhs,

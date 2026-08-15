@@ -14,10 +14,13 @@ class GameMusicController extends Controller
 {
     public function index(Game $game)
     {
-        $sndhs = Sndh::select()
-            ->whereRaw('MATCH(title) AGAINST(?)', [$game->game_name])
-            ->whereNotIn('id', $game->sndhs->pluck('id'))
-            ->get();
+        $query = Sndh::select();
+        if (\Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite') {
+            $query->where('title', 'like', '%' . $game->game_name . '%');
+        } else {
+            $query->whereRaw('MATCH(title) AGAINST(?)', [$game->game_name]);
+        }
+        $sndhs = $query->whereNotIn('id', $game->sndhs->pluck('id'))->get();
 
         return view('admin.games.games.music.index')
             ->with([
