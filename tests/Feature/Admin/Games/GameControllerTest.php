@@ -3,15 +3,27 @@
 namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
+use App\Models\Comment;
 use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameAka;
+use App\Models\GameSubmitInfo;
+use App\Models\GameVote;
 use App\Models\GameVs;
 use App\Models\Genre;
+use App\Models\Individual;
 use App\Models\Language;
+use App\Models\MagazineIndex;
+use App\Models\MenuDisk;
 use App\Models\ProgrammingLanguage;
+use App\Models\PublisherDeveloper;
+use App\Models\Release;
+use App\Models\Review;
+use App\Models\Screenshot;
+use App\Models\Sndh;
 use App\Models\SoundHardware;
+use Illuminate\Support\Facades\DB;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -230,18 +242,167 @@ class GameControllerTest extends AdminTestCase
         $this->delete(route('admin.games.games.destroy.vs', [$game, 9999]))->assertNotFound();
     }
 
+    // Deleting
+
     /**
-     * Deleting a game is deliberately not implemented - a game has releases,
-     * dumps and scans hanging off it. The button must not quietly do nothing.
+     * Create one row of the given relation against the game, so a delete can be
+     * tried with exactly one thing hanging off it.
      */
-    public function test_deleting_a_game_is_not_implemented(): void
+    private function attachDependent(Game $game, string $relation): void
     {
-        $game = Game::factory()->create();
+        match ($relation) {
+            'releases'    => Release::factory()->create(['game_id' => $game->getKey()]),
+            'screenshots' => $game->screenshots()->attach(Screenshot::factory()->create()),
+            'facts'       => $game->facts()->create(['game_fact' => 'Written in a fortnight.']),
+            'individuals' => $game->individuals()->attach(
+                Individual::factory()->create(),
+                ['individual_role_id' => DB::table('individual_role')->insertGetId(['name' => 'Coder'])]
+            ),
+            'developers' => $game->developers()->attach(
+                PublisherDeveloper::factory()->create(),
+                ['developer_role_id' => DB::table('developer_role')->insertGetId(['name' => 'Developer'])]
+            ),
+            'sndhs'   => $game->sndhs()->attach(Sndh::factory()->create()),
+            'videos'  => $game->videos()->create([
+                'title'      => 'Longplay',
+                'author'     => 'Someone',
+                'youtube_id' => 'dQw4w9WgXcQ',
+            ]),
+            'reviews'          => $game->reviews()->attach(Review::factory()->create()),
+            'menuDiskContents' => $game->menuDiskContents()->create([
+                'order'        => 1,
+                'menu_disk_id' => MenuDisk::factory()->create()->getKey(),
+            ]),
+            'magazineIndices' => MagazineIndex::factory()->create(['game_id' => $game->getKey()]),
+            'infoSubmissions' => DB::table('game_submitinfo')->insert([
+                'game_id'     => $game->getKey(),
+                'user_id'     => $this->admin->user_id,
+                'timestamp'   => (string) mktime(12, 0, 0, 6, 1, 2020),
+                'submit_text' => 'The musician is Jochen Hippel.',
+                'game_done'   => GameSubmitInfo::SUBMISSION_NEW,
+            ]),
+            'similarGames'        => $game->similarGames()->attach(Game::factory()->create()),
+            'similarGamesReverse' => $game->similarGamesReverse()->attach(Game::factory()->create()),
+            'akas'                => GameAka::create(['game_id' => $game->getKey(), 'aka_name' => 'Xenon II']),
+            'vs'                  => GameVs::create(['atari_id' => $game->getKey(), 'amiga_id' => 1234]),
+            'comments'            => $game->comments()->attach(Comment::factory()->create()),
+            'votes'               => GameVote::factory()->create([
+                'game_id' => $game->getKey(),
+                'user_id' => $this->admin->user_id,
+            ]),
+        };
+    }
 
-        $this->withoutExceptionHandling();
-        $this->expectException(\Error::class);
+    /**
+     * A game is deletable only while nothing references it, so what it takes
+     * with it is everything the database will not remove on its own: the two
+     * tables with no foreign key, and the comment rows behind a pivot that
+     * cascades without them.
+     */
+    public function test_a_deletable_game_takes_its_loose_ends_with_it(): void
+    {
+        $game = Game::factory()->named('Xenon')->create();
 
-        $this->delete(route('admin.games.games.destroy', $game));
+        $game->genres()->attach(Genre::factory()->create());
+        foreach (['akas', 'vs', 'comments', 'votes'] as $relation) {
+            $this->attachDependent($game, $relation);
+        }
+
+        $this->delete(route('admin.games.games.destroy', $game))
+            ->assertRedirect(route('admin.games.games.index'));
+
+        $this->assertSame(0, Game::query()->count());
+        $this->assertSame(0, GameAka::query()->count());
+        $this->assertSame(0, GameVs::query()->count());
+        $this->assertSame(0, GameVote::query()->count());
+
+        // The pivot cascades, but the comment behind it does not - a comment
+        // that belongs to nothing throws when the admin lists it
+        $this->assertSame(0, Comment::query()->count());
+        $this->assertSame(0, DB::table('game_user_comments')->count());
+
+        // Reference data is an attribute of the game, and goes with it
+        $this->assertSame(0, DB::table('game_genre_cross')->count());
+
+        $this->assertChangelog(Changelog::DELETE, 'Games', 'Xenon');
+    }
+
+    /**
+     * Spelled out rather than read from the model, so that this is an
+     * assertion about what should block rather than an echo of what does.
+     */
+    public static function blockingRelations(): array
+    {
+        return [
+            ['releases'],
+            ['screenshots'],
+            ['facts'],
+            ['individuals'],
+            ['developers'],
+            ['sndhs'],
+            ['videos'],
+            ['reviews'],
+            ['menuDiskContents'],
+            ['magazineIndices'],
+            ['infoSubmissions'],
+            ['similarGames'],
+            ['similarGamesReverse'],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('blockingRelations')]
+    public function test_a_game_is_not_deleted_while_something_references_it(string $relation): void
+    {
+        $game = Game::factory()->named('Xenon')->create();
+        $this->attachDependent($game, $relation);
+
+        $this->delete(route('admin.games.games.destroy', $game))
+            ->assertRedirect(route('admin.games.games.index'))
+            ->assertSessionHas('alert-danger');
+
+        // Not a count: the two `similar games` cases need a second game to be
+        // similar to, and it is still there too
+        $this->assertNotNull($game->fresh());
+        $this->assertNoChangelog();
+    }
+
+    public static function nonBlockingRelations(): array
+    {
+        return [['akas'], ['vs'], ['comments'], ['votes']];
+    }
+
+    /**
+     * The other half of the pair above: moving a relation between the two lists
+     * fails the provider it left, so nothing gets reclassified in silence.
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('nonBlockingRelations')]
+    public function test_a_game_is_still_deleted_when_only_loose_ends_reference_it(string $relation): void
+    {
+        $game = Game::factory()->named('Xenon')->create();
+        $this->attachDependent($game, $relation);
+
+        $this->delete(route('admin.games.games.destroy', $game))
+            ->assertRedirect(route('admin.games.games.index'));
+
+        $this->assertSame(0, Game::query()->count());
+    }
+
+    public function test_the_games_table_disables_delete_for_a_game_that_cannot_go(): void
+    {
+        Game::factory()->named('Xenon')->create();
+        Game::factory()->named('Bubble Bobble')->withRelease()->create();
+
+        $response = $this->get(route('admin.games.games.index'))->assertOk();
+
+        // Both rows render a button; the blocked one is named for why it cannot
+        // be used, which is also what a screen reader announces.
+        //
+        // Without escaping: the quotes around the name are literal in the
+        // template, so only the name itself comes through escaped.
+        $response->assertSee("Delete game 'Xenon'", false);
+        $response->assertSee("Cannot delete game 'Bubble Bobble': something still references it", false);
+        $response->assertSee('Cannot be deleted: something still references this game', false);
+        $response->assertDontSee("Delete game 'Bubble Bobble'", false);
     }
 
     public function test_non_admins_are_turned_away(): void

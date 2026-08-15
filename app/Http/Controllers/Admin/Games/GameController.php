@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Games;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
+use App\Models\Comment;
 use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
@@ -19,8 +20,8 @@ use App\Models\ProgressSystem;
 use App\Models\SoundHardware;
 use App\Rules\Slug;
 use App\View\Components\Admin\Crumb;
-use Error;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class GameController extends Controller
@@ -119,9 +120,59 @@ class GameController extends Controller
         return redirect()->route('admin.games.games.edit', $game);
     }
 
-    public function destroy(Game $game)
+    public function destroy(Request $request, Game $game)
     {
-        throw new Error('Game deletion is not implemented yet');
+        // The disabled button in the games table is an affordance, not a
+        // boundary: a hand-crafted request has to be refused here, or it
+        // reaches a foreign-key error page. It is not an authorisation failure
+        // and the game is not missing, so this is a refused write rather than a
+        // 403 or a 404.
+        if (! $game->is_deletable) {
+            $request->session()->flash(
+                'alert-danger',
+                "'{$game->game_name}' cannot be deleted while anything still references it."
+            );
+
+            return redirect()->route('admin.games.games.index');
+        }
+
+        // The changelog outlives the game, so read what names it first
+        $key = $game->getKey();
+        $name = $game->game_name;
+
+        DB::transaction(function () use ($game) {
+            // Everything with a foreign key to `game` cascades. These three are
+            // what the database will not do:
+            //
+            //   game_aka - no foreign key at all; would be orphaned
+            //   game_vs  - no foreign key at all; would be orphaned
+            //   comments - game_user_comments cascades, but the comments row it
+            //              points at does not, and Comment::getType() throws on
+            //              a comment that belongs to nothing, which would take
+            //              out the admin comments table.
+            //
+            // Read the comments before deleting the game: the pivot rows that
+            // reach them are gone the moment it goes.
+            $commentIds = $game->comments->modelKeys();
+
+            $game->akas()->delete();
+            $game->vs()->delete();
+            $game->delete();
+
+            Comment::destroy($commentIds);
+        });
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Games',
+            'section_id'       => $key,
+            'section_name'     => $name,
+            'sub_section'      => 'Game',
+            'sub_section_id'   => $key,
+            'sub_section_name' => $name,
+        ]);
+
+        return redirect()->route('admin.games.games.index');
     }
 
     public function updateBaseInfo(Request $request, Game $game)

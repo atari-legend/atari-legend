@@ -22,6 +22,77 @@ class Game extends Model
         'multiplayer_type', 'multiplayer_hardware',
     ];
 
+    /**
+     * A game can only be deleted while nothing references it.
+     *
+     * The test is not whether the data is valuable but whether removing it
+     * would be more than one DELETE. Alternative titles, cross-links, comments
+     * and votes all come out cleanly and are handled by
+     * GameController@destroy, so they are not listed here. Screenshots are: the
+     * pivot has no foreign key, the screenshot_main row it points at has no
+     * foreign key, and there is a file on disk.
+     *
+     * Genres, engines, controls, sound hardware and programming languages never
+     * block. They are attributes of the game rather than entities of their own,
+     * and requiring them empty would mean un-ticking every checkbox first.
+     */
+    public function getIsDeletableAttribute(): bool
+    {
+        if ($this->releases()->exists()) {
+            return false;
+        }
+
+        if ($this->screenshots()->exists()) {
+            return false;
+        }
+
+        if ($this->facts()->exists()) {
+            return false;
+        }
+
+        if ($this->individuals()->exists()) {
+            return false;
+        }
+
+        if ($this->developers()->exists()) {
+            return false;
+        }
+
+        if ($this->sndhs()->exists()) {
+            return false;
+        }
+
+        if ($this->videos()->exists()) {
+            return false;
+        }
+
+        if ($this->reviews()->exists()) {
+            return false;
+        }
+
+        if ($this->menuDiskContents()->exists()) {
+            return false;
+        }
+
+        if ($this->magazineIndices()->exists()) {
+            return false;
+        }
+
+        if ($this->infoSubmissions()->exists()) {
+            return false;
+        }
+
+        if ($this->similarGames()->exists()) {
+            return false;
+        }
+
+        if ($this->similarGamesReverse()->exists()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function screenshots()
     {
         return $this->belongsToMany(Screenshot::class, 'screenshot_game', 'game_id', 'screenshot_id');

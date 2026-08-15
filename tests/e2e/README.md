@@ -96,6 +96,10 @@ Its rules, which is what makes running the suite twice against one database safe
 - **Delete it again in the same test.** `deleteRow(page, term)` for a Livewire
   table, `deleteByAction(page, '/releases/42')` for the cards that stand in for a
   table on releases, menus, disks and issues.
+- **A games row is only deletable while nothing references it.** The button is
+  rendered either way but disabled once the game has releases, screenshots or
+  credits, so `deleteRow` on a seeded game times out on the actionability check
+  rather than failing outright. Create your own game, as the spec does.
 - **Every delete button is wrapped in `confirm()`, and Playwright dismisses
   dialogs by default** — which cancels the submit and fails the test somewhere
   else entirely. `deleteRow` and `deleteByAction` accept it for you;
@@ -194,7 +198,7 @@ today, and what it does not:
 | Admin links | list, create and edit, categories | approving submissions |
 | Admin users | list, edit, comments | permissions, deactivation, moderation |
 | Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog, 3 autocompletes | statistics figures |
-| **Writes** | news, reviews, interviews, articles, game AKA, release, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form | creating a game (see follow-up 3), trivia and quotes (inline tables), every Filepond upload |
+| **Writes** | news, reviews, interviews, articles, game, game AKA, release, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form | trivia and quotes (inline tables), every Filepond upload |
 
 ## Follow-ups
 
@@ -205,24 +209,19 @@ today, and what it does not:
 2. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
    fixed: a `Route::resource()` without `only()`/`except()` registers actions the
    controller does not implement, and those answer 500 rather than 404.
-3. **A game cannot be deleted (#270).** `GameController@destroy` throws, but the
-   games table still renders a delete button on every row. That is why
-   `admin-write/games.spec.js` covers an AKA rather than a game: there is no way
-   to undo a created game, and a spec that leaks one breaks the "run it twice"
-   property the whole project depends on.
-4. **A missing SCEditor script takes out the admin's JavaScript (#272).**
+3. **A missing SCEditor script takes out the admin's JavaScript (#272).**
    `admin/others.spec.js` failed once with an uncaught `Cannot read properties of
    undefined (reading 'set')` — `resources/js/admin/sceditor.js` reaching for a
    global that `formats/bbcode.js` had not set. It has not recurred, and the
    trigger looks environmental, but the unguarded globals are real. Retries are
    off on purpose, so if it comes back it will be visible rather than hidden.
-5. **Mutating flows on the *public* side are still untested** — voting,
+4. **Mutating flows on the *public* side are still untested** — voting,
    commenting, submitting news, links and reviews. `admin-write/` is the shape to
    copy: a sibling `public-write/` project, serial, depending on the read ones.
-6. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
+5. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
-7. **Subresource 404s are invisible.** A `page.on('response')` check for
+6. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.
    Follow-up 4 is the case for it: a script that never arrived is exactly what
    this would have caught at the time.

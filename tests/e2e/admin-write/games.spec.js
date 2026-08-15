@@ -1,6 +1,6 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { uniqueName, acceptConfirms, deleteByAction } from '../support/write.js';
+import { uniqueName, acceptConfirms, deleteByAction, deleteRow } from '../support/write.js';
 
 test.describe('Admin games', () => {
   test('adds and removes an AKA on a game', async ({ page }) => {
@@ -43,13 +43,25 @@ test.describe('Admin games', () => {
     await deleteByAction(page, `/releases/${releaseId}`);
   });
 
-  // TODO: creating a game. The form works, but GameController@destroy throws
-  // 'Game deletion is not implemented yet' while the list still renders a
-  // delete button for every row, so there is no way to undo it - and a spec
-  // that leaves a game behind breaks the property the rest of this project
-  // relies on. Worth covering once deletion exists, or once the button is
-  // taken away.
-  //
+  test('creates and deletes a game', async ({ page }) => {
+    const name = uniqueName('Game');
+
+    await page.goto('/admin/games/games/create');
+    await page.fill('#name', name);
+    // The slug is optional to the validator, but the games table links every
+    // row to its public page, and route('games.show') on a null slug throws.
+    await page.fill('#slug', `e2e-game-${Date.now()}`);
+    await page.getByRole('button', { name: 'Save' }).first().click();
+
+    await expect(page).toHaveURL(/\/admin\/games\/games\/\d+\/edit$/);
+
+    // A game is deletable only while nothing references it, which is exactly
+    // what a game created a moment ago looks like. On any other game the
+    // button is disabled, and this would time out rather than quietly pass.
+    await page.goto('/admin/games/games');
+    await deleteRow(page, name);
+  });
+
   // TODO: the panels that hang off a release - medias, dumps, scans - and the
   // screenshot upload, which goes through Filepond.
 });
