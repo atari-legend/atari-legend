@@ -8,8 +8,6 @@
     <title>@yield('title', 'Administration') | Atari Legend</title>
 
     @vite(['resources/sass/admin/admin.scss'])
-    {{-- Attempting to import the SCEditor CSS in SASS doesn't work well (images missing) --}}
-    <link rel="stylesheet" href="{{ asset('js/sceditor-3.1.1/themes/square.min.css') }}" />
 
     @livewireStyles
     @rappasoftTableStyles
@@ -49,10 +47,6 @@
     @yield('scripts')
 
     @vite(['resources/js/admin/app.js'])
-
-    {{-- SCEditor does not work as a NPM module --}}
-    <script src="{{ asset('js/sceditor-3.1.1/sceditor.min.js') }}"></script>
-    <script src="{{ asset('js/sceditor-3.1.1/formats/bbcode.js') }}"></script>
 </body>
 
 </html>

@@ -25,6 +25,7 @@
         "isotope-layout": "3.0.x",
         "laravel-vite-plugin": "1.x",
         "sass": "1.57.x",
+        "sceditor": "^3.2.1",
         "simple-lightbox": "2.1.x",
         "tabulator-tables": "4.9.x",
         "vite": "^5.x",

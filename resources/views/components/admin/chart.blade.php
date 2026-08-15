@@ -70,16 +70,12 @@
     @endif
     <div class="card-body">
         <div style="height: {{ $height }}px">
-            <canvas id="{{ $id }}"></canvas>
+            {{-- Drawn by resources/js/charts.js, which picks up every canvas
+                 carrying a config. --}}
+            <canvas id="{{ $id }}" data-chart-config='@json($config)'></canvas>
         </div>
         @if ($footnote)
             <p class="card-text text-muted small mt-2 mb-0">{{ $footnote }}</p>
         @endif
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        new Chart('{{ $id }}', @json($config));
-    });
-</script>

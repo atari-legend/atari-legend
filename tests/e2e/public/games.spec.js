@@ -11,6 +11,15 @@ test.describe('Games', () => {
     await expect(page.getByRole('link', { name: FIXTURE.game.name }).first()).toBeVisible();
   });
 
+  test('draws the updates chart', async ({ page }) => {
+    await page.goto('/games');
+
+    // chartjs-render-monitor is the class Chart.js puts on a canvas it has
+    // attached to, so this is the difference between the canvas being in the
+    // markup and something having been drawn in it.
+    await expect(page.locator('#updates-chart.chartjs-render-monitor')).toBeVisible();
+  });
+
   test('displays one game', async ({ page }) => {
     await page.goto('/games');
 

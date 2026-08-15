@@ -33,6 +33,21 @@ test.describe('Admin others', () => {
     await expectPageRenders(page, await page.goto(path), path);
   });
 
+  test('draws every chart on the statistics page', async ({ page }) => {
+    await page.goto('/admin/others/statistics');
+
+    // Chart.js adds chartjs-render-monitor to each canvas it attaches to, so
+    // comparing the two counts asks whether every chart the page asked for was
+    // actually drawn. Before charts.js owned the drawing, a page whose bundle
+    // never arrived looked exactly like one with no data to plot.
+    const canvases = page.locator('canvas[data-chart-config]');
+    const drawn = page.locator('canvas.chartjs-render-monitor');
+
+    const expected = await canvases.count();
+    expect(expected, 'the statistics page renders charts').toBeGreaterThan(0);
+    await expect(drawn).toHaveCount(expected);
+  });
+
   // TODO: the statistics page runs the heaviest queries in the admin and is
   // the most likely to regress on a schema change - it deserves assertions on
   // the numbers, not just that it renders.

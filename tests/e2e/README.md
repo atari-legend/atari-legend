@@ -17,6 +17,7 @@ tests/e2e/
 │   ├── test.js         the `test` every spec imports
 │   ├── assertions.js   expectPageRenders / expectResourceLoads
 │   ├── auth.js         signIn / signOut through the real forms
+│   ├── editor.js       driving the SCEditor BBCode editors
 │   ├── write.js        helpers and parent factories the admin-write project needs
 │   ├── fixture.js      the seeded ids and names
 │   └── server.php      dev-server router (see playwright.config.js)
@@ -254,6 +255,8 @@ today, and what it does not:
 | Crawler | sitemaps, robots.txt, both feeds, health check | that they list the right entities |
 | Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables | — |
 | Admin content | list/create/edit for news, reviews, interviews, articles | image uploads, `<br />` normalisation |
+| BBCode editor | boots on all 8 forms that host one; the custom toolbar buttons; a custom code round-tripping WYSIWYG ↔ source | the emoticon dropdown, image/link commands, maximize |
+| Charts | the admin statistics page draws all of them, the updates chart on /games | the magazine page-count chart (needs 5 seeded issues) |
 | Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template | running an import, screenshot and dump uploads, crew relationships |
 | Admin magazines | list, magazine and issue create/edit, index types | cover upload, index entries |
 | Admin links | list, create and edit, categories | approving submissions |
@@ -270,18 +273,19 @@ today, and what it does not:
 2. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
    fixed: a `Route::resource()` without `only()`/`except()` registers actions the
    controller does not implement, and those answer 500 rather than 404.
-3. **A missing SCEditor script takes out the admin's JavaScript (#272), and it
-   is now the suite's one real flake.** An uncaught `Cannot read properties of
-   undefined (reading 'set')` — or `(reading 'command')` —
-   `resources/js/admin/sceditor.js` reaching for a global that
-   `formats/bbcode.js` had not set. It was recorded here as a one-off with an
-   environmental-looking trigger; since the projects stopped running one after
-   another it turns up in roughly one full run in three, on whichever admin page
-   happens to lose the race. Nothing about the JavaScript changed — more admin
-   pages simply load at once now, which is what the unguarded globals were
-   always vulnerable to, so this is the bug becoming visible rather than a new
-   one. Retries are off on purpose, so it fails loudly. **Guarding those globals
-   is the fix**, and until then a full run may need repeating.
+3. **Fixed: a missing SCEditor script took out the admin's JavaScript (#272),
+   and it had become the suite's one real flake.** An uncaught `Cannot read
+   properties of undefined (reading 'set')` — or `(reading 'command')` —
+   `resources/js/admin/sceditor.js` reaching for a global that a separate
+   `<script>` tag had not set. It was recorded here as a one-off with an
+   environmental-looking trigger; once the projects stopped running one after
+   another it turned up in roughly one full run in three, on whichever admin
+   page happened to lose the race. Nothing about the JavaScript had changed —
+   more admin pages simply load at once now, which is what the unguarded globals
+   were always vulnerable to. SCEditor and Chart.js are both bundled through
+   Vite now, so the library is an `import` rather than a request that can go
+   missing, and `admin/editor.spec.js` asserts the editors boot rather than only
+   that the page renders.
 4. **Mutating flows on the *public* side are still untested** — voting,
    commenting, submitting news, links and reviews. `admin-write/` is the shape to
    copy: a sibling `public-write/` project depending on nothing but a session,
@@ -294,5 +298,5 @@ today, and what it does not:
    of depending on a third party.
 6. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.
-   Follow-up 4 is the case for it: a script that never arrived is exactly what
+   Follow-up 3 is the case for it: a script that never arrived is exactly what
    this would have caught at the time.

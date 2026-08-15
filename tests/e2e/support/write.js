@@ -96,25 +96,11 @@ export async function pickAutocomplete(page, inputId, term) {
 /**
  * Type into one of the BBCode editors that replace a textarea.sceditor.
  *
- * SCEditor hides the textarea behind a contenteditable iframe and copies the
- * content back on submit, so page.fill() on the textarea would post an empty
- * body. Reaching through the frame is also the only way to find out that the
- * editor booted at all.
- *
- * Several of these forms have three of them (intro, chapters, text), so the
- * textarea's id picks one: SCEditor inserts its container immediately before
- * the element it replaced.
+ * Re-exported so that a spec creating a record imports everything it needs
+ * from here; the editor helpers themselves live in support/editor.js, because
+ * tests/e2e/admin/editor.spec.js drives them without writing anything.
  */
-export async function fillEditor(page, textareaId, text) {
-  const container = page
-    .locator(`#${textareaId}`)
-    .locator('xpath=preceding-sibling::div[contains(@class, "sceditor-container")][1]');
-
-  const body = container.frameLocator('iframe').locator('body');
-
-  await body.click();
-  await body.fill(text);
-}
+export { fillEditor } from './editor.js';
 
 /**
  * Every row of the Livewire table on screen that represents a record.

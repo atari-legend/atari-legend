@@ -1,3 +1,18 @@
+// SCEditor has no main/module/exports field, so it cannot be imported by
+// package name - but these paths can, and importing them is what guarantees
+// the library is there. Loading them as plain <script> tags left every editor
+// on the page one failed request away from silently not existing (#272).
+//
+// Order matters: formats/bbcode.js reads the global that sceditor.min.js sets,
+// and side-effect imports are evaluated in the order they are written.
+//
+// The theme has to come through the bundler rather than through SASS, which
+// inlines a .css import without rewriting the url() inside it - that is why
+// the toolbar sprite used to go missing.
+import 'sceditor/minified/sceditor.min.js';
+import 'sceditor/minified/formats/bbcode.js';
+import 'sceditor/minified/themes/square.min.css';
+
 document.addEventListener('DOMContentLoaded', () => {
 
     /**

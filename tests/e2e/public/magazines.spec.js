@@ -22,4 +22,9 @@ test.describe('Magazines', () => {
 
   // TODO: the issue list and its covers, the archive.org links, and the
   // magazine index (which articles appeared in which issue).
+  //
+  // TODO: the page-count chart, which the equivalent test in public/games.spec.js
+  // covers for /games. card_page_count.blade.php renders only above four issues
+  // and E2ESeeder seeds one, so this needs five seeded before it can assert
+  // anything.
 });
