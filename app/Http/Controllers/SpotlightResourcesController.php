@@ -10,7 +10,7 @@ class SpotlightResourcesController extends Controller
 {
     public function screenshot(Spotlight $spotlight)
     {
-        if ($spotlight->screenshot) {
+        if ($spotlight->screenshot && Storage::disk('public')->exists($spotlight->screenshot->getPath('spotlight'))) {
             $image = ImageManagerStatic::make(Storage::disk('public')->get($spotlight->screenshot->getPath('spotlight')));
 
             return response()->stream(function () use ($image) {

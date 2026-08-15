@@ -81,6 +81,8 @@ class GameConfigurationController extends Controller
 
     public function index(string $type)
     {
+        abort_unless(array_key_exists($type, GameConfigurationController::CONFIG_TYPES_TABLES), 404);
+
         $items = DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$type])
             ->orderBy('name')
             ->get();
@@ -104,82 +106,82 @@ class GameConfigurationController extends Controller
 
     public function store(Request $request)
     {
+        abort_unless($request->type && array_key_exists($request->type, GameConfigurationController::CONFIG_TYPES_TABLES), 404);
+
         $request->validate(['name' => 'required']);
 
-        if ($request->type && GameConfigurationController::CONFIG_TYPES_TABLES[$request->type]) {
-            $data = [
-                'name' => $request->name,
-            ];
-            if (in_array($request->type, GameConfigurationController::CONFIG_HAS_DESCRIPTION)) {
-                $data = array_merge($data, ['description' => $request->description]);
-            }
-            $id = DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
-                ->insertGetId($data);
-
-            ChangelogHelper::insert([
-                'action'           => Changelog::INSERT,
-                'section'          => 'Games Config',
-                'section_id'       => $id,
-                'section_name'     => $request->name,
-                'sub_section'      => GameConfigurationController::CONFIG_TYPES_CHANGELOG[$request->type],
-                'sub_section_id'   => $id,
-                'sub_section_name' => $request->name,
-            ]);
+        $data = [
+            'name' => $request->name,
+        ];
+        if (in_array($request->type, GameConfigurationController::CONFIG_HAS_DESCRIPTION)) {
+            $data = array_merge($data, ['description' => $request->description]);
         }
+        $id = DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
+            ->insertGetId($data);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::INSERT,
+            'section'          => 'Games Config',
+            'section_id'       => $id,
+            'section_name'     => $request->name,
+            'sub_section'      => GameConfigurationController::CONFIG_TYPES_CHANGELOG[$request->type],
+            'sub_section_id'   => $id,
+            'sub_section_name' => $request->name,
+        ]);
 
         return redirect()->route('admin.games.configuration.show', $request->type);
     }
 
     public function update(Request $request)
     {
-        if ($request->type && GameConfigurationController::CONFIG_TYPES_TABLES[$request->type]) {
-            $data = [
-                'name' => $request->name,
-            ];
-            if (in_array($request->type, GameConfigurationController::CONFIG_HAS_DESCRIPTION)) {
-                $data = array_merge($data, ['description' => $request->description]);
-            }
-            DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
-                ->where('id', '=', $request->id)
-                ->update($data);
+        abort_unless($request->type && array_key_exists($request->type, GameConfigurationController::CONFIG_TYPES_TABLES), 404);
 
-            ChangelogHelper::insert([
-                'action'           => Changelog::UPDATE,
-                'section'          => 'Games Config',
-                'section_id'       => $request->id,
-                'section_name'     => $request->name,
-                'sub_section'      => GameConfigurationController::CONFIG_TYPES_CHANGELOG[$request->type],
-                'sub_section_id'   => $request->id,
-                'sub_section_name' => $request->name,
-            ]);
+        $data = [
+            'name' => $request->name,
+        ];
+        if (in_array($request->type, GameConfigurationController::CONFIG_HAS_DESCRIPTION)) {
+            $data = array_merge($data, ['description' => $request->description]);
         }
+        DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
+            ->where('id', '=', $request->id)
+            ->update($data);
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::UPDATE,
+            'section'          => 'Games Config',
+            'section_id'       => $request->id,
+            'section_name'     => $request->name,
+            'sub_section'      => GameConfigurationController::CONFIG_TYPES_CHANGELOG[$request->type],
+            'sub_section_id'   => $request->id,
+            'sub_section_name' => $request->name,
+        ]);
 
         return redirect()->route('admin.games.configuration.show', $request->type);
     }
 
     public function destroy(Request $request)
     {
-        if ($request->type && GameConfigurationController::CONFIG_TYPES_TABLES[$request->type]) {
-            $name = DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
-                ->select('name')
-                ->where('id', '=', $request->id)
-                ->first()
-                ->name;
+        abort_unless($request->type && array_key_exists($request->type, GameConfigurationController::CONFIG_TYPES_TABLES), 404);
 
-            DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
-                ->where('id', '=', $request->id)
-                ->delete();
+        $name = DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
+            ->select('name')
+            ->where('id', '=', $request->id)
+            ->first()
+            ->name;
 
-            ChangelogHelper::insert([
-                'action'           => Changelog::DELETE,
-                'section'          => 'Games Config',
-                'section_id'       => $request->id,
-                'section_name'     => $name,
-                'sub_section'      => GameConfigurationController::CONFIG_TYPES_CHANGELOG[$request->type],
-                'sub_section_id'   => $request->id,
-                'sub_section_name' => $name,
-            ]);
-        }
+        DB::table(GameConfigurationController::CONFIG_TYPES_TABLES[$request->type])
+            ->where('id', '=', $request->id)
+            ->delete();
+
+        ChangelogHelper::insert([
+            'action'           => Changelog::DELETE,
+            'section'          => 'Games Config',
+            'section_id'       => $request->id,
+            'section_name'     => $name,
+            'sub_section'      => GameConfigurationController::CONFIG_TYPES_CHANGELOG[$request->type],
+            'sub_section_id'   => $request->id,
+            'sub_section_name' => $name,
+        ]);
 
         return redirect()->route('admin.games.configuration.show', $request->type);
     }

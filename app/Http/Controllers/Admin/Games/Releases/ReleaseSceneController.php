@@ -44,7 +44,10 @@ class ReleaseSceneController extends Controller
     {
         $request->validate(['trainers' => 'array']);
 
-        if ($release->trainers->pluck('id') !== $request->trainers) {
+        $existing = $release->trainers->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all();
+        $requested = collect($request->input('trainers', []))->map(fn ($id) => (int) $id)->sort()->values()->all();
+
+        if ($existing !== $requested) {
             $release->trainers()->detach();
             if ($request->trainers) {
                 $release->trainers()->saveMany(

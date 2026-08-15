@@ -19,7 +19,10 @@ class ReleaseSystemMemoryController extends Controller
             'incompatible_memory' => 'array',
         ]);
 
-        if ($release->memoryMinimums->pluck('memory.id') !== $request->minimum_memory) {
+        $existingMin = $release->memoryMinimums->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all();
+        $requestedMin = collect($request->input('minimum_memory', []))->map(fn ($id) => (int) $id)->sort()->values()->all();
+
+        if ($existingMin !== $requestedMin) {
             $release->memoryMinimums()->detach();
             if ($request->minimum_memory) {
                 $release->memoryMinimums()->saveMany(
@@ -40,7 +43,10 @@ class ReleaseSystemMemoryController extends Controller
             ]);
         }
 
-        if ($release->memoryIncompatibles()->pluck('memory.id') !== $request->incompatible_memory) {
+        $existingIncompat = $release->memoryIncompatibles->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all();
+        $requestedIncompat = collect($request->input('incompatible_memory', []))->map(fn ($id) => (int) $id)->sort()->values()->all();
+
+        if ($existingIncompat !== $requestedIncompat) {
             $release->memoryIncompatibles()->detach();
             if ($request->incompatible_memory) {
                 $release->memoryIncompatibles()->saveMany(

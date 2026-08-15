@@ -79,6 +79,8 @@ class MenuCrewController extends Controller
     {
         $request->validate(MenuCrewController::VALIDATION_RULES);
 
+        $oldName = $crew->crew_name;
+
         $crew->update([
             'crew_name'    => $request->name,
             'crew_history' => $request->history,
@@ -88,7 +90,7 @@ class MenuCrewController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Crew',
             'section_id'       => $crew->getKey(),
-            'section_name'     => $crew->getOriginal('crew_name'),
+            'section_name'     => $oldName,
             'sub_section'      => 'Crew',
             'sub_section_id'   => $crew->getKey(),
             'sub_section_name' => $crew->crew_name,

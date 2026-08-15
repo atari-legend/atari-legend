@@ -14,7 +14,7 @@ class GameReleaseResourcesController extends Controller
             ->first(function ($s) use ($id) {
                 return $s->getKey() === $id;
             });
-        if ($boxscan) {
+        if ($boxscan && Storage::disk('public')->exists($boxscan->path)) {
             $image = ImageManagerStatic::make(Storage::disk('public')->get($boxscan->path));
 
             return response()->stream(function () use ($image) {

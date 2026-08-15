@@ -241,6 +241,49 @@ class ResourceControllersTest extends TestCase
      * Links are submitted without a screenshot; an administrator adds one
      * later, and until then there is nothing to serve.
      */
+    public function test_a_box_scan_missing_from_disk_is_a_404(): void
+    {
+        $release = Release::factory()->create();
+        $scan = ReleaseScan::factory()->create([
+            'game_release_id' => $release->getKey(),
+            'imgext'          => 'png',
+        ]);
+        // Do not store file on disk
+
+        $this->get(route('games.releases.boxscan', [
+            'release' => $release,
+            'id'      => $scan->getKey(),
+        ]))->assertNotFound();
+    }
+
+    public function test_an_avatar_missing_from_disk_is_a_404(): void
+    {
+        $individual = Individual::factory()->create();
+        IndividualText::forceCreate([
+            'ind_id'     => $individual->getKey(),
+            'ind_imgext' => 'png',
+        ]);
+        // Do not store file on disk
+
+        $this->get(route('individuals.avatar', $individual))->assertNotFound();
+    }
+
+    public function test_a_spotlight_screenshot_missing_from_disk_is_a_404(): void
+    {
+        $spotlight = Spotlight::factory()->create();
+        // Do not store file on disk
+
+        $this->get(route('spotlights.screenshot', $spotlight))->assertNotFound();
+    }
+
+    public function test_a_link_screenshot_missing_from_disk_is_a_404(): void
+    {
+        $website = Website::factory()->create(['website_imgext' => 'png']);
+        // Do not store file on disk
+
+        $this->get(route('websites.screenshot', $website))->assertNotFound();
+    }
+
     public function test_a_link_with_no_screenshot_is_a_404(): void
     {
         $this->get(route('websites.screenshot', Website::factory()->create()))->assertNotFound();

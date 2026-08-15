@@ -85,6 +85,8 @@ class ReleaseScansController extends Controller
 
     public function store(Game $game, Release $release, Request $request)
     {
+        $request->validate(['file' => 'required|array']);
+
         $filepond = app(\Sopamo\LaravelFilepond\Filepond::class);
 
         foreach ($request->file as $file) {

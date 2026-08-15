@@ -260,6 +260,20 @@ class AdminRenderTest extends AdminTestCase
         $this->assertNonAdminIsTurnedAway(route('admin.ajax.games'));
     }
 
+    public function test_create_screens_without_required_query_string_are_404(): void
+    {
+        $fixtures = $this->fixtures();
+
+        $this->get(route('admin.menus.menus.create'))->assertNotFound();
+        $this->get(route('admin.menus.disks.create'))->assertNotFound();
+        $this->get(route('admin.menus.disks.content.create', $fixtures['disk']))->assertNotFound();
+    }
+
+    public function test_unknown_game_configuration_type_is_404(): void
+    {
+        $this->get(route('admin.games.configuration.show', 'unknown-type'))->assertNotFound();
+    }
+
     /**
      * A signed-out visitor gets the same treatment as a signed-in one without
      * the permission: the admin panel never announces itself.
