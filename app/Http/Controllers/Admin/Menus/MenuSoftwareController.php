@@ -15,16 +15,12 @@ class MenuSoftwareController extends Controller
 {
     public function index()
     {
-        $softwares = MenuSoftware::orderBy('name')
-            ->paginate(20);
-
         return view('admin.menus.software.index')
             ->with([
                 'breadcrumbs' => [
                     new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.software.index'), 'Software'),
                 ],
-                'softwares'   => $softwares,
             ]);
     }
 

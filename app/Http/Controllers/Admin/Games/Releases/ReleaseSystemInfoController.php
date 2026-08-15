@@ -75,7 +75,10 @@ class ReleaseSystemInfoController extends Controller
 
         $release->update(['hd_installable' => $request->hd === 'true']);
 
-        if ($release->resolutions->pluck('id') !== $request->resolutions) {
+        $existingRes = $release->resolutions->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all();
+        $requestedRes = collect($request->input('resolutions', []))->map(fn ($id) => (int) $id)->sort()->values()->all();
+
+        if ($existingRes !== $requestedRes) {
             $release->resolutions()->detach();
             if ($request->resolutions) {
                 $release->resolutions()->saveMany(
@@ -86,7 +89,10 @@ class ReleaseSystemInfoController extends Controller
             }
         }
 
-        if ($release->systemIncompatibles->pluck('id') !== $request->systems) {
+        $existingSys = $release->systemIncompatibles->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all();
+        $requestedSys = collect($request->input('systems', []))->map(fn ($id) => (int) $id)->sort()->values()->all();
+
+        if ($existingSys !== $requestedSys) {
             $release->systemIncompatibles()->detach();
             if ($request->systems) {
                 $release->systemIncompatibles()->saveMany(
@@ -97,7 +103,10 @@ class ReleaseSystemInfoController extends Controller
             }
         }
 
-        if ($release->emulatorIncompatibles()->pluck('emulator.id') !== $request->emulators) {
+        $existingEmu = $release->emulatorIncompatibles->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all();
+        $requestedEmu = collect($request->input('emulators', []))->map(fn ($id) => (int) $id)->sort()->values()->all();
+
+        if ($existingEmu !== $requestedEmu) {
             $release->emulatorIncompatibles()->detach();
             if ($request->emulators) {
                 $release->emulatorIncompatibles()->saveMany(
