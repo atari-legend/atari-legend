@@ -79,7 +79,7 @@ Route::middleware('verified')->group(function () {
                         Route::post('music', [GameMusicController::class, 'store'])->name('game-music.store');
                         Route::post('music/associate', [GameMusicController::class, 'associate'])->name('game-music.associate');
                         Route::delete('music/{sndh}', [GameMusicController::class, 'destroy'])
-                            ->where(['sndh' => '[\w\s\-_\/()]+'])
+                            ->where(['sndh' => '[\w\s\-_\/()+!#.]+'])
                             ->name('game-music.destroy');
 
                         Route::get('credits', [GameCreditsController::class, 'index'])->name('game-credits.index');
