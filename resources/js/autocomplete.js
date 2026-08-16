@@ -121,6 +121,16 @@ document.addEventListener('DOMContentLoaded', () => {
         pendingFocus = [];
 
         document.querySelectorAll('.autocomplete').forEach(el => {
+            // A field that is focused already will never fire the focus event
+            // we would be waiting for, and would stay inert until it is blurred
+            // and focused again. That happens both to someone who clicks into
+            // the field before the scripts have run, and to a field a Livewire
+            // re-render hands back still focused, so build it now instead.
+            if (document.activeElement === el) {
+                build(el);
+                return;
+            }
+
             const handler = () => {
                 el.removeEventListener('focus', handler);
                 pendingFocus = pendingFocus.filter(p => p.el !== el);
