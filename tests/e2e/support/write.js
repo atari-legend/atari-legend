@@ -386,18 +386,62 @@ export async function deleteMenuSet(page, set) {
  *
  * A menu is identified by its number within its set rather than by a name, and
  * the set is new here, so 1 is free.
+ *
+ * MenusController validates nothing, so number is the only field worth a
+ * default; the rest are here so a spec building a second menu in the same set
+ * does not need a factory of its own. The label the admin and the public site
+ * both show is assembled from number and version - see
+ * Menu::getLabelAttribute() - so it is returned rather than recomputed.
  */
-export async function createMenu(page, set) {
+export async function createMenu(page, set, { number = '1', issue = '', version = '', date = '' } = {}) {
   await page.goto(`/admin/menus/menus/create?set=${set.id}`);
-  await page.fill('#number', '1');
+  await page.fill('#number', number);
+  await page.fill('#issue', issue);
+  await page.fill('#version', version);
+  await page.fill('#date', date);
   await page.getByRole('button', { name: 'Save' }).click();
 
   await expect(page).toHaveURL(/\/admin\/menus\/menus\/\d+\/edit$/);
 
-  return { id: page.url().split('/').at(-2), setId: set.id };
+  const label = [number !== '' ? `#${number}` : issue, version ? `v${version}` : null]
+    .filter((part) => part)
+    .join(' ');
+
+  return { id: page.url().split('/').at(-2), setId: set.id, label };
 }
 
 export async function deleteMenu(page, menu) {
   await page.goto(`/admin/menus/sets/${menu.setId}/edit`);
   await deleteByAction(page, `/menus/${menu.id}`);
+}
+
+/**
+ * Create a disk within a menu - the parent a disk content belongs to.
+ *
+ * The condition is the only field the controller requires. Conditions come from
+ * a migration rather than from the seeder, so there is no form to create one
+ * with - this selects a seeded row without writing to it, which is the one
+ * thing these specs may still do.
+ */
+export async function createMenuDisk(page, menu, { part = 'A', condition = FIXTURE.menuCondition.id } = {}) {
+  await page.goto(`/admin/menus/disks/create?menu=${menu.id}`);
+  await page.fill('#part', part);
+  await page.selectOption('#condition', String(condition));
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await expect(page).toHaveURL(/\/admin\/menus\/disks\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), menuId: menu.id, part };
+}
+
+/**
+ * Disks are cards on their menu rather than rows in a table of their own, so
+ * the form is identified by the id in its action.
+ *
+ * Deleting a disk takes its contents with it, and any release those contents
+ * created - see MenuDisksController::destroy().
+ */
+export async function deleteMenuDisk(page, disk) {
+  await page.goto(`/admin/menus/menus/${disk.menuId}/edit`);
+  await deleteByAction(page, `/disks/${disk.id}`);
 }

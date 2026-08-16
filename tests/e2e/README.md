@@ -134,9 +134,10 @@ row is a peer — nothing appears under it that a read spec looks at.
 data.
 
 - **`support/write.js` has a factory for each parent** — `createGame()`,
-  `createIndividual()`, `createMagazine()`, `createMenuSet()`, `createMenu()` —
-  each returning `{ id, name }` and each with a matching `delete…()`. They drive
-  the real create form, so the parent's form is covered as a side effect.
+  `createIndividual()`, `createMagazine()`, `createMenuSet()`, `createMenu()`,
+  `createMenuDisk()` — each returning an `{ id, … }` carrying whatever its
+  children need, and each with a matching `delete…()`. They drive the real
+  create form, so the parent's form is covered as a side effect.
 - **Name rows with `uniqueName('News')`**, which gives an
   `E2E News <timestamp><random>` no other row will have — and something greppable
   in the database if a run is killed halfway through. The random suffix matters:
@@ -256,7 +257,7 @@ today, and what it does not:
 | Reviews | list, detail | submit form, comments, scores, unpublished hidden |
 | Interviews | list, detail, individual avatar | chapter hotspots, comments, screenshots |
 | Articles | list, detail | type filter, comments, screenshots |
-| Menu sets | list, detail, search, by-software, EPUB export, the software and crews autocompletes | disk contents, dump downloads, condition filters, crews; those two autocompletes as widgets, on the admin forms that host them |
+| Menu sets | list, detail, search, by-software, EPUB export, the software and crews autocompletes; a disk card end to end — contents in all three shapes, condition, donor, notes, scrolltext, screenshot and dump download; the software page and a game's menus card | condition filters, crew pages; the crews autocomplete as a widget |
 | Magazines | list, detail, the rendered index of an issue and all four of its row shapes | covers, archive.org links |
 | Links | list, category filter, screenshot | submitting a link, dead-link flagging |
 | Music | cover image | the SNDH player (ym2149-wasm), the sndhrecord.atari.org proxy |
@@ -266,12 +267,12 @@ today, and what it does not:
 | Admin content | list/create/edit for news, reviews, interviews, articles | image uploads, `<br />` normalisation |
 | BBCode editor | boots on all 8 forms that host one; the custom toolbar buttons; a custom code round-tripping WYSIWYG ↔ source | the emoticon dropdown, image/link commands, maximize |
 | Charts | the admin statistics page draws all of them, the updates chart on /games | the magazine page-count chart (needs 5 seeded issues) |
-| Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template | running an import, screenshot and dump uploads, crew relationships |
+| Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template, screenshot and dump uploads | running an import, crew relationships |
 | Admin magazines | list, magazine and issue create/edit, index types, the index editor rendering its rows and re-sorting them | cover upload, the archive.org cover fetch |
 | Admin links | list, create and edit, categories | approving submissions |
 | Admin users | list, edit, comments, the users autocomplete | permissions, deactivation, moderation |
 | Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog | statistics figures |
-| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, magazine, issue, menu software, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change | trivia and quotes (inline tables), every Filepond upload, the menu disk-content / crew genealogy pickers |
+| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, disk content, magazine, issue, menu software, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game, software and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change; a menu set built up to two menus and three disks, with a screenshot and a dump uploaded, and checked on the public page after every change | trivia and quotes (inline tables), every Filepond upload, the crew genealogy picker |
 
 ## Follow-ups
 
@@ -317,3 +318,18 @@ today, and what it does not:
    same-origin 404s would catch a missing `storage:link` and broken asset paths.
    Follow-up 3 is the case for it: a script that never arrived is exactly what
    this would have caught at the time.
+8. **Fixed: a menu set's sort direction did not survive its own edit form.**
+   `admin/menus/sets/card_edit.blade.php` compared the stored `menus_sort`
+   against `'ascending'` / `'descending'`, but the column is an enum of `asc` /
+   `desc`. So on a saved set neither option was marked `selected`, the browser
+   fell back to the first, and the next save silently put the direction back to
+   `asc` - a set could only be descending until someone edited its name.
+   `MenuAdminTest` never saw it: it posts `sort` and reads the column back, so
+   the round trip it checks never goes through the rendered select. Found while
+   writing `admin-write/menus.spec.js`, which now asserts the select in both
+   directions *and* the order of the disks it produces on `/menusets/{set}`.
+9. **`public/menus.spec.js` searches on the wrong parameter.** It requests
+   `/menusets/search?search=…`, but `MenuSetController::search()` reads `title`
+   and `titleAZ`; with neither present it forces both result sets empty. So the
+   test asserts that a deliberately blank search page renders, which is not what
+   it says it does. `?title=` plus an assertion on the results is the fix.

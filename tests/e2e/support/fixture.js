@@ -73,8 +73,14 @@ export const FIXTURE = {
   menuDisk: { id: 1, contentId: 1 },
   menuSoftware: { id: 1, name: 'Playwright Test Software' },
 
-  // Seeded by migrations rather than by E2ESeeder.
+  // Seeded by migrations rather than by E2ESeeder. The four conditions come
+  // from 2020_12_20_141639_create_new_menu_structure.php, in this order:
+  // Missing, Intro only or partially damaged, Slightly damaged, Intact.
+  //
+  // Only Intact counts as available - MenuSetController::INTACT_CONDITION_ID -
+  // so a set needs one of the other three to be anything less than complete.
   menuCondition: { id: 4, name: 'Intact' },
+  menuConditionMissing: { id: 1, name: 'Missing' },
   menuContentType: { id: 1, name: 'Game' },
 
   website: { id: 1, name: 'Playwright Test Website' },
