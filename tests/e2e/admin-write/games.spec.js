@@ -777,3 +777,79 @@ test.describe('Admin release panels', () => {
   // TODO: the release system info card (resolutions, systems, emulators), the
   // dump update form, several scans in one upload.
 });
+
+/**
+ * The music panel on a game: the SNDH picker, the candidates the archive
+ * suggests, and taking a song off again.
+ *
+ * The seeded tune is referenced rather than written to. The game is the parent
+ * here and the tune is a peer - the same bargain the full-game test above
+ * strikes with the seeded company and individual.
+ */
+test.describe('Admin game music', () => {
+  test('associates a song through the picker and removes it', async ({ page }) => {
+    const game = await createGame(page);
+    const music = `/admin/games/${game.id}/music`;
+
+    try {
+      await page.goto(music);
+      await expect(page.getByText('No music associated with the game yet.')).toBeVisible();
+
+      // The picker is the point: `song` is what the admin types into, and the
+      // controller reads the hidden `sndh` that its onSelection fills. Typing
+      // the title and pressing Add without choosing a suggestion posts nothing.
+      await pickAutocomplete(page, 'song', FIXTURE.sndh.title);
+      await page.getByRole('button', { name: 'Add song' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${music}$`));
+      await expect(page.getByRole('cell', { name: FIXTURE.sndh.id })).toBeVisible();
+
+      acceptConfirms(page);
+      await page.getByRole('button', { name: `Delete song '${FIXTURE.sndh.id}'` }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${music}$`));
+      await expect(page.getByText('No music associated with the game yet.')).toBeVisible();
+    } finally {
+      await deleteGame(page, game).catch(() => {});
+    }
+  });
+
+  test('associates a song the candidates card suggests', async ({ page }) => {
+    // The candidates are a full-text match of the *game name* against the SNDH
+    // titles, so this game has to be named after the tune to be offered it -
+    // which is the only way to reach the associate route through the UI.
+    const name = `${FIXTURE.sndh.title} ${uniqueName('Music Game')}`;
+    let game = null;
+
+    try {
+      await page.goto('/admin/games/games/create');
+      await page.fill('#name', name);
+      await page.fill('#slug', uniqueSlug(name));
+      await page.getByRole('button', { name: 'Save' }).first().click();
+
+      await expect(page).toHaveURL(/\/admin\/games\/games\/\d+\/edit$/);
+      game = { id: page.url().split('/').at(-2), name };
+
+      const music = `/admin/games/${game.id}/music`;
+      await page.goto(music);
+
+      // Checked by its value rather than by its label: the label is the
+      // title, and the archive shipped by the migrations has titles of its own
+      // that the same match can turn up.
+      await page.locator(`input[name="associations[]"][value="${FIXTURE.sndh.id}"]`).check();
+      await page.getByRole('button', { name: 'Associate' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${music}$`));
+      await expect(page.getByRole('cell', { name: FIXTURE.sndh.id })).toBeVisible();
+
+      acceptConfirms(page);
+      await page.getByRole('button', { name: `Delete song '${FIXTURE.sndh.id}'` }).click();
+
+      await expect(page.getByText('No music associated with the game yet.')).toBeVisible();
+    } finally {
+      if (game) {
+        await deleteGame(page, game).catch(() => {});
+      }
+    }
+  });
+});
