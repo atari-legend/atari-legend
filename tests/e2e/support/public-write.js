@@ -1,4 +1,9 @@
-import { test as base, expect, guardAgainstPageErrors } from './test.js';
+import {
+  test as base,
+  expect,
+  guardAgainstPageErrors,
+  guardAgainstMissingSubresources,
+} from './test.js';
 
 /**
  * The `test` the public-write project imports.
@@ -30,18 +35,20 @@ import { test as base, expect, guardAgainstPageErrors } from './test.js';
 export const test = base.extend({
   // Lazy, like every Playwright fixture: a spec that never names `adminPage`
   // never opens the context, so the public-only specs pay nothing for it.
-  adminPage: async ({ browser }, use) => {
+  adminPage: async ({ browser, baseURL }, use) => {
     const context = await browser.newContext({
       storageState: 'tests/e2e/.auth/admin.json',
     });
     const page = await context.newPage();
     const expectNoPageErrors = guardAgainstPageErrors(page);
+    const expectNoMissingSubresources = guardAgainstMissingSubresources(page, baseURL);
 
     await use(page);
 
     // Named, because 'uncaught JS errors on the page' pointing at a context
     // the test never mentions is a puzzle rather than a message.
     expectNoPageErrors('uncaught JS errors on the admin setup page');
+    expectNoMissingSubresources('subresources that 404ed on the admin setup page');
     await context.close();
   },
 });

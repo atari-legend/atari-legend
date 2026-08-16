@@ -21,22 +21,72 @@ export function guardAgainstPageErrors(page) {
 }
 
 /**
+ * Fail a test when a page asked this application for a subresource and got a
+ * 404 back.
+ *
+ * Nothing else in the suite notices one. A page whose stylesheet, script or
+ * image never arrived still answers 200, still has its heading, and still
+ * passes expectPageRenders() - which is exactly how a missing SCEditor script
+ * took out the admin's JavaScript for a while (see tests/e2e/README.md,
+ * follow-up 3), and how a missing `storage:link` would look today.
+ *
+ * Two things are deliberately not failures:
+ *
+ * - **A navigation.** Several specs assert a 404 on purpose - the create forms
+ *   that 404 without their parent in admin/menus.spec.js - so the document
+ *   request belongs to the spec, not to this guard.
+ * - **Another origin.** A game page embeds YouTube; what a third party answers
+ *   is not this application's to account for.
+ *
+ * Returns the teardown half, like guardAgainstPageErrors() above.
+ */
+export function guardAgainstMissingSubresources(page, baseURL) {
+  const missing = [];
+
+  page.on('response', (response) => {
+    if (response.status() !== 404) {
+      return;
+    }
+
+    const request = response.request();
+    if (request.resourceType() === 'document') {
+      return;
+    }
+
+    if (baseURL && !response.url().startsWith(baseURL)) {
+      return;
+    }
+
+    // The resource type is what makes the message actionable: 'script' and
+    // 'image' are read very differently by whoever sees this fail.
+    missing.push(`${request.resourceType()} ${response.url()}`);
+  });
+
+  return (label = 'subresources that 404ed') => {
+    expect(missing, label).toEqual([]);
+  };
+}
+
+/**
  * The `test` every spec imports, instead of the one from @playwright/test.
  *
- * It wraps the `page` fixture so that an uncaught JavaScript exception fails
- * the test, without every spec having to remember to wire up the listener.
+ * It wraps the `page` fixture so that an uncaught JavaScript exception, or a
+ * subresource this application answered 404 to, fails the test - without every
+ * spec having to remember to wire up the listener.
  *
  * The trade-off: the failure is reported against fixture teardown rather than
  * a line in the test, and a test that has already failed will report twice.
  * That is worth it - a check nobody can forget beats a check that reads nicely.
  */
 export const test = base.extend({
-  page: async ({ page }, use) => {
+  page: async ({ page, baseURL }, use) => {
     const expectNoPageErrors = guardAgainstPageErrors(page);
+    const expectNoMissingSubresources = guardAgainstMissingSubresources(page, baseURL);
 
     await use(page);
 
     expectNoPageErrors();
+    expectNoMissingSubresources();
   },
 });
 
