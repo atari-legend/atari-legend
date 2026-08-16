@@ -2,7 +2,7 @@ import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
 import { expectResourceLoads } from '../support/assertions.js';
 import {
-  PNG, uniqueName, acceptConfirms, pickAutocomplete, deleteByAction,
+  PNG, uniqueName, acceptConfirms, pickAutocomplete, deleteByAction, deleteRow, findRow,
   createMenuSet, deleteMenuSet, createMenu, deleteMenu, createMenuDisk, deleteMenuDisk,
   createGame, deleteGame, createIndividual, deleteIndividual,
   createMenuSoftware, deleteMenuSoftware,
@@ -519,4 +519,381 @@ test.describe('Admin menu sets', () => {
 
   // TODO: running a spreadsheet import - the one flow in this section with real
   // logic behind it, and the one that most deserves a test of its own.
+});
+
+/**
+ * Create a crew, and land on its edit screen.
+ *
+ * Local to this spec rather than in support/write.js: a crew is not the parent
+ * of anything the other write specs build - createMenuSet() *selects* the
+ * seeded one - so nothing else needs a factory for it.
+ *
+ * A crew has no slug and no required field but its name, and store() redirects
+ * to the new record, so the id is in the URL.
+ */
+async function createCrew(page) {
+  const name = uniqueName('Crew');
+
+  await page.goto('/admin/menus/crews/create');
+  await page.fill('#name', name);
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await expect(page).toHaveURL(/\/admin\/menus\/crews\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), name };
+}
+
+/**
+ * Crews are a Livewire table, searchable on crew_name.
+ *
+ * The trash button is *disabled* rather than absent while the crew is on a menu
+ * set - datatable_actions.blade.php - so a crew that still belongs to one makes
+ * this time out on the actionability check rather than fail outright. Nothing
+ * here puts a crew on a set; the genealogy and member links below do not stand
+ * in the way of a delete at all, which is its own finding (see below).
+ */
+async function deleteCrew(page, crew) {
+  await page.goto('/admin/menus/crews');
+  await deleteRow(page, crew.name);
+}
+
+/** One named card on the crew edit screen. */
+function crewCard(page, heading) {
+  return page.locator('.card').filter({
+    has: page.getByRole('heading', { name: heading, exact: true }),
+  });
+}
+
+/**
+ * Delete something in a `finally`, without burying the failure that got us
+ * there.
+ *
+ * A teardown that throws *replaces* the exception the test failed with, which
+ * turns "the sub-crew was still listed" into "no such crew". So while the test
+ * is already failing this only warns - and once it has passed, a delete that
+ * did not work is a failure in its own right, or a row leaks quietly. Same
+ * bargain as the cleanUp closure in the full-set test above.
+ */
+async function cleanUp(passed, label, remove) {
+  try {
+    await remove();
+  } catch (error) {
+    if (passed) {
+      throw error;
+    }
+    console.warn(`cleanup: could not delete the ${label}: ${error.message}`);
+  }
+}
+
+test.describe('Admin crews', () => {
+  // Every one of these is a handful of full page loads against the PHP dev
+  // server, running beside the rest of the project. Same budget as the sets
+  // above, for the same reason.
+  test.describe.configure({ timeout: 90000 });
+
+  test('creates, edits and deletes a crew', async ({ page }) => {
+    const crew = await createCrew(page);
+    const renamed = uniqueName('Crew');
+    const history = uniqueName('History');
+    let passed = false;
+
+    try {
+      await expect(page.locator('#name')).toHaveValue(crew.name);
+      await expect(page.locator('#history')).toHaveValue('');
+
+      await page.fill('#name', renamed);
+      await page.fill('#history', history);
+      await page.getByRole('button', { name: 'Save' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`/admin/menus/crews/${crew.id}/edit$`));
+      await expect(page.locator('#name')).toHaveValue(renamed);
+      await expect(page.locator('#history')).toHaveValue(history);
+      crew.name = renamed;
+
+      // And the table it is listed in agrees. findRow() searches crew_name,
+      // which is the column the row links through.
+      await page.goto('/admin/menus/crews');
+      const row = await findRow(page, crew.name);
+      await expect(row.getByRole('link', { name: crew.name })).toBeVisible();
+
+      passed = true;
+    } finally {
+      await cleanUp(passed, 'crew', () => deleteCrew(page, crew));
+    }
+  });
+
+  test('adds and removes a crew member', async ({ page }) => {
+    // Its own individual, and its own crew: attaching FIXTURE.individual to a
+    // crew - or anyone to FIXTURE.crew - writes to a row the read specs assert
+    // on. The individuals autocomplete is the widget under test here, so the
+    // hidden `individual` field is filled by pickAutocomplete() rather than by
+    // hand; addIndividual() reads that one and silently does nothing without it.
+    const crew = await createCrew(page);
+    const individual = await createIndividual(page);
+    let passed = false;
+
+    try {
+      await page.goto(`/admin/menus/crews/${crew.id}/edit`);
+
+      const members = crewCard(page, 'Members');
+      await expect(members.locator('table')).toHaveCount(0);
+
+      await pickAutocomplete(page, 'individual_name', individual.name);
+      await members.getByRole('button', { name: 'Add member' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`/admin/menus/crews/${crew.id}/edit$`));
+      await expect(members.getByRole('link', { name: individual.name })).toBeVisible();
+
+      // The membership is also what the table's Individuals column counts, and
+      // that cell reads '-' until there is one. By role rather than by column
+      // index: the name column carries a timestamp, so any assertion loose
+      // enough to survive a reordering would match a digit in there too.
+      await page.goto('/admin/menus/crews');
+      await expect((await findRow(page, crew.name)).getByRole('cell', { name: '1', exact: true }))
+        .toHaveCount(1);
+
+      await page.goto(`/admin/menus/crews/${crew.id}/edit`);
+      await deleteByAction(page, `/individual/${individual.id}`);
+
+      await expect(members.locator('table')).toHaveCount(0);
+
+      passed = true;
+    } finally {
+      // The crew first, and the order only matters the other way round: an
+      // individual still in a crew deletes happily - crew_individual has no
+      // constraint on it - which is why the detach above is the assertion and
+      // this is only tidying up.
+      await cleanUp(passed, 'crew', () => deleteCrew(page, crew));
+      await cleanUp(passed, 'individual', () => deleteIndividual(page, individual));
+    }
+  });
+
+  test('links a sub-crew and unlinks it from either end', async ({ page }) => {
+    // sub_crew is one table read from both sides - Crew::subCrews() and
+    // Crew::parentCrews() are the same rows with the columns swapped - and the
+    // admin renders a delete for each direction. Only a test owning both crews
+    // can drive both: removing from the child's end is a route of its own
+    // (removeParentCrew) that no other screen links to.
+    const parent = await createCrew(page);
+    const child = await createCrew(page);
+    let passed = false;
+
+    const parentUrl = `/admin/menus/crews/${parent.id}/edit`;
+    const childUrl = `/admin/menus/crews/${child.id}/edit`;
+
+    /** Attach `child` under `parent`, from the parent's Genealogy card. */
+    const link = async () => {
+      await page.goto(parentUrl);
+      await pickAutocomplete(page, 'subcrew_name', child.name);
+      await crewCard(page, 'Genealogy').getByRole('button', { name: 'Add sub-crew' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${parentUrl}$`));
+    };
+
+    try {
+      await link();
+
+      // Both ends of the relationship, each on its own screen.
+      let genealogy = crewCard(page, 'Genealogy');
+      await expect(genealogy.getByRole('link', { name: child.name }))
+        .toHaveAttribute('href', new RegExp(`${childUrl}$`));
+
+      await page.goto(childUrl);
+      genealogy = crewCard(page, 'Genealogy');
+      await expect(genealogy).toContainText('Part of');
+      await expect(genealogy.getByRole('link', { name: parent.name }))
+        .toHaveAttribute('href', new RegExp(`${parentUrl}$`));
+
+      // 1. Unlink from the parent's end.
+      await page.goto(parentUrl);
+      await deleteByAction(page, `/subcrew/${child.id}`);
+
+      await expect(crewCard(page, 'Genealogy').getByRole('link', { name: child.name }))
+        .toHaveCount(0);
+      await page.goto(childUrl);
+      await expect(crewCard(page, 'Genealogy')).not.toContainText('Part of');
+
+      // 2. And the other way round: the same row, removed from the child.
+      await link();
+
+      await page.goto(childUrl);
+      await deleteByAction(page, `/parentcrew/${parent.id}`);
+
+      await expect(crewCard(page, 'Genealogy')).not.toContainText('Part of');
+      await page.goto(parentUrl);
+      await expect(crewCard(page, 'Genealogy').getByRole('link', { name: child.name }))
+        .toHaveCount(0);
+
+      passed = true;
+    } finally {
+      await cleanUp(passed, 'sub-crew', () => deleteCrew(page, child));
+      await cleanUp(passed, 'crew', () => deleteCrew(page, parent));
+    }
+  });
+
+  test('uploads and removes a crew logo', async ({ page }) => {
+    const crew = await createCrew(page);
+    let passed = false;
+
+    try {
+      // A plain multipart form, not a Filepond pond. storeLogo() takes the
+      // extension from UploadedFile::extension(), which sniffs the content -
+      // so the buffer has to be a real PNG for the file to land at .png and the
+      // <img> below to point at anything.
+      const upload = page.locator('form:has(input[name="logo"])');
+      await upload.locator('input[name="logo"]').setInputFiles({
+        name: 'logo.png',
+        mimeType: 'image/png',
+        buffer: PNG,
+      });
+      await upload.getByRole('button', { name: 'Add' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`/admin/menus/crews/${crew.id}/edit$`));
+
+      const logo = crewCard(page, 'Logo').locator('img');
+      await expect(logo).toHaveAttribute(
+        'src',
+        new RegExp(`/storage/images/crew_logos/${crew.id}\\.png$`)
+      );
+
+      // The file itself, not just the markup pointing at it: the src is built
+      // from the extension stored on the row, so a logo saved as one thing and
+      // written as another still renders a plausible <img>.
+      const logoPath = new URL(await logo.getAttribute('src')).pathname;
+      await expectResourceLoads(await page.request.get(logoPath), logoPath, { magic: 'PNG' });
+
+      // The Livewire table builds the same URL by hand, off crew_logo rather
+      // than through Crew::getLogoFileAttribute().
+      await page.goto('/admin/menus/crews');
+      await expect((await findRow(page, crew.name)).locator('img')).toHaveCount(1);
+
+      // The button is a bare icon, named by its title. Its form posts to the
+      // same URL as the upload above, so it cannot be found by its action.
+      await page.goto(`/admin/menus/crews/${crew.id}/edit`);
+      acceptConfirms(page);
+      await page.getByRole('button', { name: 'Remove logo' }).click();
+      await page.waitForLoadState('domcontentloaded');
+
+      await expect(page.getByRole('button', { name: 'Remove logo' })).toHaveCount(0);
+      await expect(crewCard(page, 'Logo').locator('img')).toHaveCount(0);
+
+      passed = true;
+    } finally {
+      // The logo first, and through its own button. MenuCrewController::destroy()
+      // drops the crew row without ever unlinking what was written to
+      // storage/app/public, so a failure between the upload and the removal
+      // above would leave a stray png behind on every run. On the happy path
+      // this is a no-op.
+      await cleanUp(passed, 'logo', async () => {
+        acceptConfirms(page);
+        await page.goto(`/admin/menus/crews/${crew.id}/edit`);
+
+        const remove = page.getByRole('button', { name: 'Remove logo' });
+        while (await remove.count() > 0) {
+          await remove.first().click();
+          await page.waitForLoadState('domcontentloaded');
+        }
+      });
+
+      await cleanUp(passed, 'crew', () => deleteCrew(page, crew));
+    }
+  });
+
+  // TODO: a crew on a menu set - the one relationship that makes the trash
+  // button disabled rather than absent - and the crews autocomplete as the
+  // widget the menu set form hosts.
+});
+
+test.describe('Admin menus reference data', () => {
+  test.describe.configure({ timeout: 90000 });
+
+  /**
+   * The two reference tables below share a screen shape: a plain table, a
+   * create form that redirects back to it, and a delete that is disabled while
+   * anything points at the row. Neither has a Livewire search, so a row is
+   * found by its link and its id read out of the href - which is also the only
+   * place the id appears, store() having redirected to the index.
+   */
+  const referenceTable = (index) => ({
+    async create(page, label) {
+      const name = uniqueName(label);
+
+      await page.goto(`${index}/create`);
+      await page.fill('#name', name);
+      await page.getByRole('button', { name: 'Save' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${index}$`));
+
+      const row = page.getByRole('link', { name });
+      await expect(row).toBeVisible();
+
+      return { id: (await row.getAttribute('href')).split('/').at(-2), name };
+    },
+
+    async rename(page, record, name) {
+      await page.goto(`${index}/${record.id}/edit`);
+      await expect(page.locator('#name')).toHaveValue(record.name);
+
+      await page.fill('#name', name);
+      await page.getByRole('button', { name: 'Save' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${index}$`));
+      await expect(page.getByRole('link', { name })).toBeVisible();
+      await expect(page.getByRole('link', { name: record.name })).toHaveCount(0);
+
+      record.name = name;
+    },
+
+    async destroy(page, record) {
+      await page.goto(index);
+      await deleteByAction(page, `${index}/${record.id}`);
+      await expect(page.getByRole('link', { name: record.name })).toHaveCount(0);
+    },
+  });
+
+  const conditions = referenceTable('/admin/menus/conditions');
+  const contentTypes = referenceTable('/admin/menus/content-types');
+
+  test('creates, edits and deletes a menu condition', async ({ page }) => {
+    // Its own row rather than FIXTURE.menuCondition: the seeded conditions come
+    // from a migration and the read specs - and createMenuDisk() - name them.
+    const condition = await conditions.create(page, 'Condition');
+    let deleted = false;
+
+    try {
+      await conditions.rename(page, condition, uniqueName('Condition'));
+
+      await conditions.destroy(page, condition);
+      deleted = true;
+    } finally {
+      if (!deleted) {
+        await cleanUp(false, 'condition', () => conditions.destroy(page, condition));
+      }
+    }
+  });
+
+  test('creates, edits and deletes a software content type', async ({ page }) => {
+    const type = await contentTypes.create(page, 'Content Type');
+    let deleted = false;
+
+    try {
+      await contentTypes.rename(page, type, uniqueName('Content Type'));
+
+      // A content type is only reference data for one form, and the software
+      // one has no blank option - so a type that never reaches this select is a
+      // row nothing can ever be filed under.
+      await page.goto('/admin/menus/software/create');
+      await expect(page.locator('#type').getByRole('option', { name: type.name })).toHaveCount(1);
+
+      await contentTypes.destroy(page, type);
+      deleted = true;
+    } finally {
+      if (!deleted) {
+        await cleanUp(false, 'content type', () => contentTypes.destroy(page, type));
+      }
+    }
+  });
+
+  // TODO: the disabled trash button on a condition that a disk still uses, and
+  // on a content type that a piece of software still points at.
 });
