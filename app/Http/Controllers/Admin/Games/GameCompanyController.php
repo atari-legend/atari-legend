@@ -100,7 +100,11 @@ class GameCompanyController extends Controller
             'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')->ignore($company->pub_dev_id, 'pub_dev_id')],
         ]);
 
-        $ext = null;
+        // Keep the logo already on file when the form comes back without one -
+        // the same trap as GameIndividualController::update(): writing null
+        // here dropped the logo on any later edit, and destroyLogo() reads the
+        // same column to find the file.
+        $ext = $company->text?->pub_dev_imgext;
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $logo->storeAs('images/company_logos/', $company->pub_dev_id . '.' . $logo->extension(), 'public');

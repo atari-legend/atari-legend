@@ -129,7 +129,12 @@ class GameIndividualController extends Controller
             'email' => 'nullable|email',
         ]);
 
-        $ext = null;
+        // Keep the avatar already on file when the form comes back without one,
+        // which is every save that is not about the avatar. Writing null here
+        // dropped the avatar on any later edit, and destroyAvatar() builds its
+        // path out of the same column - so the file was then stranded on disk
+        // with nothing in the admin able to reach it.
+        $ext = $individual->text?->ind_imgext;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $avatar->storeAs('images/individual_screenshots/', $individual->ind_id . '.' . $avatar->extension(), 'public');
