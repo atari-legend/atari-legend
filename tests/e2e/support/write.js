@@ -45,13 +45,31 @@ export function acceptConfirms(page) {
  * directly and passes whether or not any of that still works.
  */
 export async function pickAutocomplete(page, inputId, term) {
-  await page.fill(`#${inputId}`, term);
-
+  const input = page.locator(`#${inputId}`);
   const suggestion = page.locator('.autocomplete-results li', { hasText: term }).first();
+
+  // The dropdown is built when the field is first focused, by a listener the
+  // page's scripts attach on DOMContentLoaded. A spec that reaches this
+  // straight after a form redirect can be early enough to type before that:
+  // the assertion that the row was added is satisfied by the parsed HTML
+  // alone. Nothing then requests the suggestions, and the click below waits
+  // out the whole test timeout on a list that is never rendered.
+  //
+  // Hence waiting for the load event, and retrying the typing rather than the
+  // click: filling again re-focuses a field that is wired up by now.
+  await page.waitForLoadState('load');
+
+  await expect(async () => {
+    await input.blur();
+    await input.fill('');
+    await input.fill(term);
+    await expect(suggestion).toBeVisible({ timeout: 5000 });
+  }).toPass({ timeout: 30000 });
+
   await suggestion.click();
 
   // The companion hidden field is what the controller actually reads.
-  const companion = await page.locator(`#${inputId}`).getAttribute('data-autocomplete-companion');
+  const companion = await input.getAttribute('data-autocomplete-companion');
   await expect(page.locator(`input[name="${companion}"]`)).not.toHaveValue('');
 }
 

@@ -166,16 +166,25 @@ test.describe('Admin games', () => {
       await page.getByRole('button', { name: 'Add media' }).click();
       await expect(page.getByRole('heading', { name: '1 media' })).toBeVisible();
 
-      await expect(page.locator('.filepond--root').first()).toBeVisible();
+      // FilePond replaces the plain file input with a browse input of its own,
+      // and only that one is wired to the pond that uploads the file. The
+      // original is still in the DOM for a frame or two after the first pond
+      // has rendered, so waiting on '.filepond--root' is not enough: files set
+      // on the input FilePond is about to discard go nowhere, and the upload
+      // button below then never enables.
       const dumpPayload = Buffer.from('Atari ST dummy dump content for testing e2e');
-      const fileInput = page.locator('form[action*="dumps"] input[type="file"]').first();
+      const fileInput = page.locator('form[action*="dumps"] input.filepond--browser').first();
+      await expect(fileInput).toBeAttached();
       await fileInput.setInputFiles({
         name: 'test_dump.st',
         mimeType: 'application/octet-stream',
         buffer: dumpPayload,
       });
+      // Enabled by FilePond's 'processfiles', i.e. once the dump has been
+      // uploaded to the temporary store - a second or two locally, and this is
+      // the one step of this spec that waits on a real upload.
       const uploadBtn = page.locator('button[data-upload-dump]').first();
-      await expect(uploadBtn).toBeEnabled({ timeout: 10000 });
+      await expect(uploadBtn).toBeEnabled({ timeout: 30000 });
       await uploadBtn.click();
       await expect(page.getByRole('button', { name: 'Delete dump' }).first()).toBeVisible();
 
