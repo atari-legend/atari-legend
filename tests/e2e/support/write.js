@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { FIXTURE } from './fixture.js';
 import { pickSuggestion } from './autocomplete.js';
+import { fillEditor } from './editor.js';
 
 /**
  * Helpers for the admin-write project.
@@ -13,6 +14,18 @@ import { pickSuggestion } from './autocomplete.js';
  * Everything here exists to make that round-trip - create, find, delete - a
  * one-liner.
  */
+
+/**
+ * A 1x1 PNG, for the forms that take a real upload.
+ *
+ * Has to be an actual image rather than a buffer with a .png name: both
+ * Screenshot::storeScreenshot() and GameController::submitInfo() take the
+ * extension from UploadedFile::extension(), which sniffs the content.
+ */
+export const PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+  'base64'
+);
 
 /**
  * A name no other row will have.
@@ -105,11 +118,15 @@ export { pickSuggestion };
 /**
  * Type into one of the BBCode editors that replace a textarea.sceditor.
  *
+ * Imported at the top rather than only re-exported here: the content factories
+ * below call it themselves, and `export ... from` forwards a binding without
+ * ever putting it in this module's scope.
+ *
  * Re-exported so that a spec creating a record imports everything it needs
  * from here; the editor helpers themselves live in support/editor.js, because
  * tests/e2e/admin/editor.spec.js drives them without writing anything.
  */
-export { fillEditor } from './editor.js';
+export { fillEditor };
 
 /**
  * Every row of the Livewire table on screen that represents a record.
@@ -161,6 +178,19 @@ export async function findRow(page, term) {
 }
 
 /**
+ * Assert that a Livewire table holds nothing matching `term`.
+ *
+ * `deleteRow` already checks this on the table it was called on - but a
+ * controller that redirects somewhere else after destroying leaves it checking
+ * the wrong list, and an empty result there means nothing. Reviews are the case
+ * in point: ReviewsController::destroy() redirects to the published index,
+ * where an unpublished submission was never listed to begin with.
+ */
+export async function expectNoRow(page, term) {
+  await searchTable(page, term, 0);
+}
+
+/**
  * Delete a record that is listed on its parent's page rather than in a table.
  *
  * Releases, menus and disks have no index of their own; they are shown as
@@ -180,15 +210,30 @@ export async function deleteByAction(page, actionSuffix) {
 }
 
 /**
+ * The delete form in a row that has more than one form in it.
+ *
+ * A news submission is listed with an approve button as well as a trash one,
+ * so the bare `form` a single-action row is found by matches twice and fails
+ * on strict mode. Both post to a route under .../submissions, and only the
+ * destructive one carries Laravel's method override - which is the difference
+ * worth selecting on rather than a position.
+ */
+export const DELETE_FORM = 'form:has(input[name="_method"][value="DELETE"])';
+
+/**
  * Delete a record from the Livewire table currently on screen.
  *
  * Assumes the caller is on the index page.
+ *
+ * `form` is the selector for the row's delete form, and defaults to the only
+ * form most rows have. Pass DELETE_FORM for a row that offers more than one
+ * action.
  */
-export async function deleteRow(page, term) {
+export async function deleteRow(page, term, { form = 'form' } = {}) {
   acceptConfirms(page);
 
   const row = await findRow(page, term);
-  await row.locator('form button').click();
+  await row.locator(`${form} button`).click();
   await page.waitForLoadState('domcontentloaded');
 
   // Deleting is a plain form POST, not a Livewire call, so the page reloads
@@ -249,6 +294,41 @@ export async function deleteGame(page, game) {
 }
 
 /**
+ * Add a screenshot to a game, and take it away again.
+ *
+ * Not every spec needs one, so it is a step rather than part of createGame():
+ * a game with a screenshot is not deletable, so anything that adds one has to
+ * remove it before teardown.
+ *
+ * The public review form is what wants this. It renders a comment field per
+ * screenshot on the game, and those fields are the only `.previewable`
+ * elements whose preview counterpart is generated rather than fixed - so a
+ * game with no screenshot never exercises that half of review/submit.js.
+ */
+export async function addGameScreenshot(page, game) {
+  await page.goto(`/admin/games/${game.id}/screenshots`);
+  await page.locator('input[name="screenshot[]"]').setInputFiles({
+    name: 'screenshot.png',
+    mimeType: 'image/png',
+    buffer: PNG,
+  });
+  await page.getByRole('button', { name: 'Add screenshot' }).click();
+
+  const screenshot = page.locator('form[action*="screenshots/"] img');
+  await expect(screenshot).toHaveCount(1);
+
+  // The id is in the delete form's action, which is the only place it appears.
+  const action = await page.locator('form[action*="screenshots/"]').getAttribute('action');
+
+  return { id: action.split('/').at(-1) };
+}
+
+export async function deleteGameScreenshot(page, game, screenshot) {
+  await page.goto(`/admin/games/${game.id}/screenshots`);
+  await deleteByAction(page, `/screenshots/${screenshot.id}`);
+}
+
+/**
  * Create an individual - the person an interview is with.
  */
 export async function createIndividual(page) {
@@ -266,6 +346,110 @@ export async function createIndividual(page) {
 export async function deleteIndividual(page, individual) {
   await page.goto('/admin/games/individuals');
   await deleteRow(page, individual.name);
+}
+
+/**
+ * Create a review - the parent a public comment on a review belongs to.
+ *
+ * A review is always about a game, and creates its own rather than reviewing
+ * the seeded one: a review is listed under its game on /reviews and on the
+ * game's own page, so reviewing the fixture would put a transient row in front
+ * of the public specs. The game comes back with it, because the caller has to
+ * delete the review before the game will go.
+ *
+ * The `submission` checkbox is left unticked deliberately. Ticking it stores
+ * the review as REVIEW_UNPUBLISHED, and /reviews/{id} hides those - which is
+ * the page a public comment has to be posted from.
+ *
+ * "Save", not "Save & Close": staying on the record is what puts its id in the
+ * URL, and a comment needs the id to reach /reviews/{id}.
+ */
+export async function createReview(page) {
+  const name = uniqueName('Review');
+  const game = await createGame(page);
+
+  await page.goto('/admin/reviews/reviews/create');
+  await pickAutocomplete(page, 'game_name', game.name);
+  // A review has no title of its own - it is listed under its game - so the
+  // unique name goes in the body, which is what the table searches.
+  await fillEditor(page, 'text', name);
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/admin\/reviews\/reviews\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), name, game };
+}
+
+export async function deleteReview(page, review) {
+  await page.goto('/admin/reviews/reviews');
+  await deleteRow(page, review.name);
+
+  // Only now: a game with a review on it is not deletable.
+  await deleteGame(page, review.game);
+}
+
+/**
+ * Create an interview - the parent a public comment on an interview belongs to.
+ *
+ * Its own individual, and that one is not optional. An interview is *titled*
+ * after its individual, and public/interviews.spec.js asserts on a heading
+ * carrying the seeded individual's name with no .first() - so an interview
+ * with the fixture would give that locator two matches and fail it on strict
+ * mode, from another project entirely.
+ */
+export async function createInterview(page) {
+  const name = uniqueName('Interview');
+  const individual = await createIndividual(page);
+
+  await page.goto('/admin/interviews/interviews/create');
+  await pickAutocomplete(page, 'individual_name', individual.name);
+  await fillEditor(page, 'text', name);
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/admin\/interviews\/interviews\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), name, individual };
+}
+
+export async function deleteInterview(page, interview) {
+  await page.goto('/admin/interviews/interviews');
+  await deleteRow(page, interview.name);
+
+  await deleteIndividual(page, interview.individual);
+}
+
+/**
+ * Create an article - the parent a public comment on an article belongs to.
+ *
+ * The odd one out: the article form has a single Save and its store() always
+ * redirects to the index, so unlike every other factory here there is no id in
+ * the URL to read. Hence the extra step - find the row and follow it to the
+ * edit screen, which is where the id finally appears.
+ *
+ * Both the intro and the body are editors, and both are required.
+ */
+export async function createArticle(page) {
+  const title = uniqueName('Article');
+
+  await page.goto('/admin/articles/articles/create');
+  await page.fill('#title', title);
+  await fillEditor(page, 'intro', 'Written by the e2e suite.');
+  await fillEditor(page, 'text', 'Written by the e2e suite.');
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await expect(page).toHaveURL(/\/admin\/articles\/articles$/);
+
+  const row = await findRow(page, title);
+  await row.getByRole('link', { name: title }).click();
+
+  await expect(page).toHaveURL(/\/admin\/articles\/articles\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), title };
+}
+
+export async function deleteArticle(page, article) {
+  await page.goto('/admin/articles/articles');
+  await deleteRow(page, article.title);
 }
 
 /**

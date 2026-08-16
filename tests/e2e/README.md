@@ -14,17 +14,20 @@ value is that there is now an obvious place to put the next test.
 tests/e2e/
 ├── auth.setup.js       signs in as admin, saves the session for the admin project
 ├── support/            shared modules; matched by no project, so never run as tests
-│   ├── test.js         the `test` every spec imports
+│   ├── test.js         the `test` most specs import
+│   ├── public-write.js the `test` the public-write specs import, plus `adminPage`
 │   ├── assertions.js   expectPageRenders / expectResourceLoads
 │   ├── auth.js         signIn / signOut through the real forms
 │   ├── editor.js       driving the SCEditor BBCode editors
 │   ├── autocomplete.js driving the autocomplete fields
-│   ├── write.js        helpers and parent factories the admin-write project needs
+│   ├── comments.js     posting, editing and deleting a comment
+│   ├── write.js        helpers and parent factories the write projects need
 │   ├── fixture.js      the seeded ids and names
 │   └── server.php      dev-server router (see playwright.config.js)
 ├── public/             the public site, one file per section
 ├── admin/              the admin panel, read-only, one file per section
-└── admin-write/        the admin panel, creating and deleting
+├── admin-write/        the admin panel, creating and deleting
+└── public-write/       the public site as a signed-in visitor, contributing
 ```
 
 **A spec's directory decides which project runs it**, and therefore whether it
@@ -35,13 +38,19 @@ has a session and whether it may write:
 | `public/` | `public` | none — a clean guest | no |
 | `admin/` | `admin` | signed in as admin, via `auth.setup.js` | no |
 | `admin-write/` | `admin-write` | signed in as admin | yes — see below |
+| `public-write/` | `public-write` | signs in as `FIXTURE.contributor` itself | yes — see below |
 
-**No project waits for another.** `admin` and `admin-write` depend on `setup`
-for a session and on nothing else, so all three run at once and any one of them
-runs on its own. `admin-write` used to depend on `public` and `admin` as well —
-a mutex against the shared database rather than a real dependency, which meant
-running one write spec ran the whole suite first. What replaced it is isolation
-in the specs themselves; see [Writing specs that write](#writing-specs-that-write).
+**No project waits for another.** Each of the four depends on `setup` for a
+session and on nothing else, so they all run at once and any one of them runs on
+its own. `admin-write` used to depend on `public` and `admin` as well — a mutex
+against the shared database rather than a real dependency, which meant running
+one write spec ran the whole suite first. What replaced it is isolation in the
+specs themselves; see [Writing specs that write](#writing-specs-that-write).
+
+`public-write` depends on `setup` for a reason that has nothing to do with its
+own session: it signs in through the login form like the `public` specs do, but
+a public form cannot create the game or the review it writes against, so it
+opens a *second* context from `.auth/admin.json` to build the parent.
 
 A spec anywhere else is silently skipped. After adding one, check it was picked
 up:
@@ -50,9 +59,10 @@ up:
 npx playwright test --list
 ```
 
-Pages that need a signed-in *non-admin* — `/profile`, `/reviews/submit` — live in
-`public/account.spec.js` and sign in for themselves, because what is worth
-testing there is what an ordinary account can do.
+Pages that need a signed-in *non-admin* and only read — `/profile`,
+`/reviews/submit` — live in `public/account.spec.js` and sign in for themselves,
+because what is worth testing there is what an ordinary account can do. What an
+ordinary account can *write* is `public-write/`.
 
 ## Conventions
 
@@ -97,11 +107,11 @@ test.describe('Games', () => {
   the input's next sibling — the games search alone has six on one page, and an
   unscoped `.autocomplete-results li` matches every one of them.
 - **`public/` and `admin/` are read-only.** Every worker shares one seeded
-  database. Anything that writes goes in `admin-write/`.
-- **A read spec must survive a row it did not expect.** `admin-write/` is running
-  at the same time, and however carefully it cleans up, one of its rows can be
-  alive while you are looking at a list. So assert that a `FIXTURE` name is
-  *there* — never a count, never a row position, and never a bare locator that a
+  database. Anything that writes goes in `admin-write/` or `public-write/`.
+- **A read spec must survive a row it did not expect.** The write projects are
+  running at the same time, and however carefully they clean up, one of their
+  rows can be alive while you are looking at a list. So assert that a `FIXTURE`
+  name is *there* — never a count, never a row position, and never a bare locator that a
   transient row could also match. `public/interviews.spec.js` is the worked
   example: an interview is titled after its individual, so
   `getByRole('heading', { name: FIXTURE.individual.name })` would have two
@@ -110,9 +120,9 @@ test.describe('Games', () => {
 
 ## Writing specs that write
 
-`admin-write/` is a fourth project, running in parallel with everything else
-against the same database. One rule is what makes that safe, and what makes
-running the suite twice over leave it as it started:
+`admin-write/` and `public-write/` run in parallel with everything else against
+the same database. One rule is what makes that safe, and what makes running the
+suite twice over leave it as it started:
 
 > **A write spec creates every row it modifies — the parent as well as the
 > child — and deletes them all again before it ends.**
@@ -173,15 +183,74 @@ needs that parent fails too, as setup rather than as its own assertion. That is
 the price of specs that owe nothing to each other, and it is the deliberate
 choice here.
 
+### Where `public-write/` bends the rule
+
+A public form creates a comment, a vote, a submission or a review. It cannot
+create the game, review, interview or article to hang one off, and for three of
+those it cannot delete the row again either — only the admin has a screen for a
+game submission, a news submission or an unpublished review.
+
+So a `public-write/` spec runs **two sessions at once**: `page`, signed in as
+`FIXTURE.contributor` through the real login form, and `adminPage`, a second
+context restored from `.auth/admin.json`. The parent is built and torn down over
+there with the same `support/write.js` factories `admin-write/` uses; everything
+the test is about happens over here. Import `test` from `support/public-write.js`
+rather than `support/test.js` to get that fixture — it extends the other one, so
+`page` still fails on an uncaught JavaScript exception.
+
+- **Two seeded accounts belong to this project and nothing else.**
+  `FIXTURE.contributor` writes; `FIXTURE.accountUser` is the one whose own
+  profile and password get rewritten, by `public-write/account.spec.js` alone.
+  Neither is `FIXTURE.user`, which owns the seeded comment on the seeded game
+  and which `admin-write/content.spec.js` picks in an autocomplete.
+- **`account.spec.js` is `mode: 'serial'`.** Its three tests all rewrite one row,
+  and the password one would sign the other two out halfway through.
+- **The JavaScript is the point.** `comments.js`, `user.js`, `bbcode.js` and
+  `review/submit.js` sit between the visitor and four of these POSTs, and
+  `tests/Feature/Public/` posts straight past all of them. Drive the pencil, the
+  trash link, the toolbar button and the Preview tab — never the form they
+  submit. `support/comments.js` does the comment round trip, assertions on the
+  `d-none` toggle included, because a test that only checked the text afterwards
+  would pass with the script deleted.
+- **Bootstrap rewrites roles as it boots.** A tab is `<a href="#preview">` in the
+  markup and `role="tab"` once Bootstrap 5.2 has seen it, so `getByRole('link')`
+  matches only before the script runs. `reviews.spec.js` addresses it by href and
+  waits for the attribute — which is also the wait for Bootstrap, since
+  `review/submit.js` hangs off `show.bs.tab`. An inactive tab pane is
+  `display: none`, so anything inside it is out of the accessibility tree: switch
+  back to `#edit` before looking for the Submit button.
+
+### The two rows a run leaves behind
+
+Everything else in the suite is back where it started afterwards. These two are
+not, and both are the application's doing rather than the spec's:
+
+1. **A `website_validate` row per run.** `public-write/links.spec.js` submits a
+   link, and the admin in this repo has no screen for `website_validate` at all —
+   link submissions are still approved in the legacy CPANEL, so there is no route
+   to delete one through. The row is named `E2E Link …`, renders nowhere, and is
+   greppable. Give the admin a submissions screen — follow-up 12 — and this
+   becomes an ordinary spec.
+2. **Two orphan `screenshot_main` rows per run.** Neither
+   `GameScreenshotsController::destroy()` nor `GameSubmissionController::destroy()`
+   deletes the `screenshot_main` row — the first only detaches the pivot, the
+   second deletes the file and the submission. The file on disk does go. See
+   follow-up 11.
+
+`SELECT * FROM website_validate WHERE website_name LIKE 'E2E %'` and the
+`screenshot_main` count are therefore the only two numbers that should move.
+Anything else growing across runs is a spec that failed to clean up.
+
 ## Adding a section
 
-1. Create `public/<section>.spec.js`, `admin/<section>.spec.js` or
-   `admin-write/<section>.spec.js`.
+1. Create `public/<section>.spec.js`, `admin/<section>.spec.js`,
+   `admin-write/<section>.spec.js` or `public-write/<section>.spec.js`.
 2. Seed anything a **read** spec needs in `database/seeders/E2ESeeder.php`, with
    an explicit primary key exposed as a constant, and mirror it in
    `support/fixture.js`. A **write** spec seeds nothing: it creates its parent
    through the admin, so add a factory to `support/write.js` if there is not one
-   already.
+   already. (The one exception is an account, which no public form can create
+   without solving an hCaptcha — hence `contributor` and `accounttester`.)
 3. Write "lists X" and "displays one X", then a `TODO` for the rest.
 4. `npx playwright test --list` to confirm the right project picked it up.
 
@@ -222,6 +291,7 @@ npx playwright test tests/e2e/admin-write/links.spec.js   # setup, then that fil
 npx playwright test --project=public                      # no login at all
 npx playwright test --project=admin-write --no-deps       # skip even the login,
                                                           # while .auth/admin.json holds
+npx playwright test --project=public --project=public-write   # the isolation claim
 ```
 
 Three things that will bite otherwise:
@@ -251,17 +321,17 @@ today, and what it does not:
 |---|---|---|
 | Home | page renders, nav links to each section, spotlight image | the cards (Screenstar, Who is it?, Latest menus, Trivia) |
 | Nav search | the games-and-software endpoint, `?q=`, url and icon on every row, following a game and a piece of software from the box | the icons as rendered, keyboard selection |
-| Games | list, detail by slug, release, slug redirect, screenshot, box scan, the magazines that covered it | voting, comments, gallery, similar games |
+| Games | list, detail by slug, release, slug redirect, screenshot, box scan, the magazines that covered it, the three contribution forms hidden from a guest | gallery, similar games |
 | Games search | title, A-Z browse, exact-match redirect, empty state; its 6 autocomplete endpoints, AKA merging and ranking, a quote as data; searching by title, year, individual and publisher through the widget | genre, engine, developer and checkbox filters; the export view |
-| News | list | submitting news, pagination |
-| Reviews | list, detail | submit form, comments, scores, unpublished hidden |
-| Interviews | list, detail, individual avatar | chapter hotspots, comments, screenshots |
-| Articles | list, detail | type filter, comments, screenshots |
+| News | list, no submission form for a guest | pagination |
+| Reviews | list, detail | the scores as published, unpublished hidden |
+| Interviews | list, detail, individual avatar | chapter hotspots, screenshots |
+| Articles | list, detail | type filter, screenshots |
 | Menu sets | list, detail, search, by-software, EPUB export, the software and crews autocompletes; a disk card end to end — contents in all three shapes, condition, donor, notes, scrolltext, screenshot and dump download; the software page and a game's menus card | condition filters, crew pages; the crews autocomplete as a widget |
 | Magazines | list, detail, the rendered index of an issue and all four of its row shapes | covers, archive.org links |
-| Links | list, category filter, screenshot | submitting a link, dead-link flagging |
+| Links | list, category filter, screenshot, no submission form for a guest | dead-link flagging |
 | Music | cover image | the SNDH player (ym2149-wasm), the sndhrecord.atari.org proxy |
-| Account | sign in, sign out, profile, review form, password confirm, guests kept out (pages and the admin autocompletes), unverified redirect | profile edit, password change, avatar, voting, commenting |
+| Account | sign in, sign out, profile, review form, password confirm, guests kept out (pages and the admin autocompletes), a signed-in non-admin kept out of /admin, unverified redirect | registering (needs a real hCaptcha), the e-mail field's uniqueness rule |
 | Crawler | sitemaps, robots.txt, both feeds, health check | that they list the right entities |
 | Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables, the games and sndh autocompletes | the sndh picker as a widget, on the music panel |
 | Admin content | list/create/edit for news, reviews, interviews, articles | image uploads, `<br />` normalisation |
@@ -269,10 +339,11 @@ today, and what it does not:
 | Charts | the admin statistics page draws all of them, the updates chart on /games | the magazine page-count chart (needs 5 seeded issues) |
 | Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template, screenshot and dump uploads | running an import, crew relationships |
 | Admin magazines | list, magazine and issue create/edit, index types, the index editor rendering its rows and re-sorting them | cover upload, the archive.org cover fetch |
-| Admin links | list, create and edit, categories | approving submissions |
+| Admin links | list, create and edit, categories | approving submissions — there is no screen for `website_validate` at all |
 | Admin users | list, edit, comments, the users autocomplete | permissions, deactivation, moderation |
 | Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog | statistics figures |
-| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, disk content, magazine, issue, menu software, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game, software and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change; a menu set built up to two menus and three disks, with a screenshot and a dump uploaded, and checked on the public page after every change | trivia and quotes (inline tables), every Filepond upload, the crew genealogy picker |
+| **Admin writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, disk content, magazine, issue, menu software, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game, software and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change; a menu set built up to two menus and three disks, with a screenshot and a dump uploaded, and checked on the public page after every change | trivia and quotes (inline tables), every Filepond upload, the crew genealogy picker |
+| **Public writes** | all 13 of the `auth:web` routes: rating a game and withdrawing it, commenting on a game, review, interview and article, editing and deleting one's own comment, correcting a game with a file attached, submitting a review — toolbar, preview tab and scores — submitting news and a link, updating the profile, adding and removing an avatar, changing the password and changing it back | approving any of the three queues, several files in one correction, a non-image attachment |
 
 ## Follow-ups
 
@@ -296,13 +367,14 @@ today, and what it does not:
    Vite now, so the library is an `import` rather than a request that can go
    missing, and `admin/editor.spec.js` asserts the editors boot rather than only
    that the page renders.
-4. **Mutating flows on the *public* side are still untested** — voting,
-   commenting, submitting news, links and reviews. `admin-write/` is the shape to
-   copy: a sibling `public-write/` project depending on nothing but a session,
-   whose specs create the game they vote on or comment against. Note that a
-   public form cannot create every parent an admin one can, so this is the first
-   place the rule above will have to bend — probably by creating the parent
-   through the admin and the child through the public form.
+4. **Done: mutating flows on the *public* side.** `public-write/` covers all 13
+   `auth:web` routes. It bent the rule exactly as predicted — the parent is
+   created through the admin in a second context, the child through the public
+   form — and see
+   [Where `public-write/` bends the rule](#where-public-write-bends-the-rule) for
+   what that cost. Registration is the one public write still out of reach: it
+   needs a real hCaptcha response, which is why `tests/Feature/Public/AuthTest`
+   swaps the captcha HTTP client instead.
 5. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
@@ -333,3 +405,32 @@ today, and what it does not:
    and `titleAZ`; with neither present it forces both result sets empty. So the
    test asserts that a deliberately blank search page renders, which is not what
    it says it does. `?title=` plus an assertion on the results is the fix.
+10. **Creating a review is not atomic, and any page listing reviews can catch
+    it half-done.** `ReviewsController::store()` and `ReviewController::submit()`
+    both insert the `review_main` row and attach `review_game` as two separate
+    statements outside a transaction, and
+    `resources/views/components/cards/reviews.blade.php` dereferences
+    `$review->games[0]` unguarded. A request that renders the "In-Depth Reviews"
+    card in that window gets `ErrorException: Undefined array key 0` — a 500 on
+    an unrelated page, for a visitor who did nothing but load it while somebody
+    else was submitting. Seen once while `public-write/reviews.spec.js` and its
+    sibling test were both creating reviews; not reproduced in the runs since,
+    which is what a race of two adjacent statements looks like. Wrapping both
+    controllers in a transaction is the fix; guarding the card with
+    `$review->games->first()` would also stop it 500ing, since a review with no
+    game is representable in this schema either way.
+11. **Deleting a screenshot never deletes its `screenshot_main` row.**
+    `GameScreenshotsController::destroy()` detaches the pivot and unlinks the
+    file; `GameSubmissionController::destroy()` unlinks the file and deletes the
+    submission. Neither removes the row, so the table accumulates ids with
+    nothing behind them — two per full e2e run, and one per screenshot a
+    moderator has ever removed in production. `MenuDisksController::destroyScreenshot()`
+    is the one that gets it right.
+12. **Link submissions have no screen in this admin at all.** `/links/submit`
+    writes a `WebsiteValidate` row and the only place one can be read or approved
+    is the legacy CPANEL — there is no route in this application to list, approve
+    or delete one, which is why `public-write/links.spec.js` is the single spec
+    in the suite that cannot delete what it creates. News submissions
+    (`admin/news/submissions`) are the shape to copy: an index, an approve and a
+    destroy. Doing that would close the last gap in the admin's coverage of the
+    three moderation queues, and turn that spec into an ordinary one.

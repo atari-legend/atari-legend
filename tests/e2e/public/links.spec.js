@@ -27,6 +27,14 @@ test.describe('Links', () => {
     });
   });
 
-  // TODO: submitting a link as a signed-in user, and the dead-link flagging
-  // that `artisan links:check` feeds.
+  test('offers a guest no submission form', async ({ page }) => {
+    await page.goto('/links');
+
+    // The rendered half of the guest rejection tests/Feature covers at the
+    // route. Submitting it as a signed-in user is public-write/links.spec.js.
+    await expect(page.getByText('Please log in to submit a link')).toBeVisible();
+    await expect(page.locator('form[action$="/links/submit"]')).toHaveCount(0);
+  });
+
+  // TODO: the dead-link flagging that `artisan links:check` feeds.
 });

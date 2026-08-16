@@ -11,12 +11,12 @@ export default defineConfig({
   // intermittent 500 - exactly what we want to hear about - into a pass.
   retries: 0,
   // Every spec in the 'public' and 'admin' projects is a GET that asserts only
-  // on its own response, so nothing there shares state. The 'admin-write'
-  // project does write, but only to rows it created a moment earlier and
-  // deletes before it finishes - so its work is invisible here, and every
-  // project can run at once. Keep both halves of that true: a read spec that
-  // asserts a count or a row position, or a write spec that touches a seeded
-  // row, breaks it. See tests/e2e/README.md.
+  // on its own response, so nothing there shares state. The 'admin-write' and
+  // 'public-write' projects do write, but only to rows they created a moment
+  // earlier and delete before they finish - so their work is invisible here,
+  // and every project can run at once. Keep both halves of that true: a read
+  // spec that asserts a count or a row position, or a write spec that touches a
+  // seeded row, breaks it. See tests/e2e/README.md.
   workers: process.env.CI ? 4 : undefined,
   reporter: [
     ['html', { open: 'never' }],
@@ -35,10 +35,10 @@ export default defineConfig({
   // spec depended on 'setup' too and could not run at all.
   //
   // Each project selects its specs by directory: a spec belongs in
-  // tests/e2e/public/, tests/e2e/admin/ or tests/e2e/admin-write/, one file
-  // per section of the site. A spec anywhere else - tests/e2e/support/, or the
-  // wrong directory - is silently skipped, so check
-  // `npx playwright test --list` after adding one.
+  // tests/e2e/public/, tests/e2e/admin/, tests/e2e/admin-write/ or
+  // tests/e2e/public-write/, one file per section of the site. A spec anywhere
+  // else - tests/e2e/support/, or the wrong directory - is silently skipped, so
+  // check `npx playwright test --list` after adding one.
   projects: [
     {
       name: 'setup',
@@ -80,6 +80,25 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'tests/e2e/.auth/admin.json',
+      },
+      dependencies: ['setup'],
+    },
+    // The same, for the writes an ordinary signed-in visitor makes: comments,
+    // votes, submissions, a review, their own profile.
+    //
+    // A clean guest rather than a stored session, because each spec signs in
+    // through the login form as FIXTURE.contributor - what is worth testing on
+    // these pages is what an ordinary account can do. It still depends on
+    // 'setup', for a reason that has nothing to do with its own session: a
+    // public form cannot create the game or the review it writes against, so
+    // the specs open a second context from .auth/admin.json to build the
+    // parent. See tests/e2e/support/public-write.js.
+    {
+      name: 'public-write',
+      testMatch: 'public-write/**/*.spec.js',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: { cookies: [], origins: [] },
       },
       dependencies: ['setup'],
     },

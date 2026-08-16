@@ -15,6 +15,22 @@ export const FIXTURE = {
   // verification notice. See E2ESeeder::seedUsers().
   unverifiedUser: { id: 3, userid: 'unverified', password: 'password' },
 
+  // The two accounts the public-write project signs in as, so that it never
+  // writes through `user` above - which owns the seeded comment on the seeded
+  // game, and which admin-write/content.spec.js picks in an autocomplete.
+  //
+  // `accountUser` is separate from `contributor` because
+  // public-write/account.spec.js rewrites its profile and its password. An
+  // account whose password is in flux cannot also be the one every other spec
+  // in the project is signing in with at the same moment.
+  contributor: { id: 4, userid: 'contributor', password: 'password' },
+  accountUser: {
+    id: 5,
+    userid: 'accounttester',
+    email: 'accounttester@example.com',
+    password: 'password',
+  },
+
   game: {
     id: 1,
     slug: 'xenon-2-megablast',

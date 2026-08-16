@@ -21,6 +21,9 @@ test.describe('Admin dashboard', () => {
     await guest.close();
   });
 
-  // TODO: a signed-in non-admin user (not just a guest) should be turned away
-  // too, and the dashboard's own statistics cards deserve their own checks.
+  // The other half of this - a signed-in non-admin, which is what actually
+  // exercises the `admin` middleware rather than the `auth` in front of it -
+  // is in public/account.spec.js, the only project with an ordinary session.
+  //
+  // TODO: the dashboard's own statistics cards deserve their own checks.
 });

@@ -87,9 +87,23 @@ test.describe('Games', () => {
     });
   });
 
+  test('offers a guest none of the contribution forms', async ({ page }) => {
+    await page.goto(`/games/${FIXTURE.game.slug}`);
+
+    // Three routes guard themselves in the controller and hide themselves in
+    // the view; this is the second half. Doing any of them as a signed-in user
+    // is public-write/games.spec.js.
+    await expect(page.getByText('Please log in to vote')).toBeVisible();
+    await expect(page.getByText('Please log in to add your own comment')).toBeVisible();
+    await expect(page.getByText('Please log in to submit info')).toBeVisible();
+
+    for (const action of ['/vote', '/comment', '/submitInfo']) {
+      await expect(page.locator(`form[action$="${action}"]`)).toHaveCount(0);
+    }
+  });
+
   // TODO: the remaining search filters (genre, engine, developer, and the
-  // has-review/has-download checkboxes), voting, commenting, the screenshot
-  // gallery, similar games.
+  // has-review/has-download checkboxes), the screenshot gallery, similar games.
 });
 
 // /games/search is a second controller action with its own view, and its

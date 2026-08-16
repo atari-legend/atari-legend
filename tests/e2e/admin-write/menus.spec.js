@@ -2,7 +2,7 @@ import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
 import { expectResourceLoads } from '../support/assertions.js';
 import {
-  uniqueName, acceptConfirms, pickAutocomplete, deleteByAction,
+  PNG, uniqueName, acceptConfirms, pickAutocomplete, deleteByAction,
   createMenuSet, deleteMenuSet, createMenu, deleteMenu, createMenuDisk, deleteMenuDisk,
   createGame, deleteGame, createIndividual, deleteIndividual,
   createMenuSoftware, deleteMenuSoftware,
@@ -14,14 +14,6 @@ import {
 //
 // Each test builds its own chain down from a set rather than hanging a menu or
 // a disk off the seeded one - see the factories in support/write.js for why.
-
-/** A 1x1 PNG. storeScreenshot() derives the extension from the file's own
- *  magic bytes (UploadedFile::extension() sniffs the content, not the name),
- *  so this has to be a real image rather than a buffer with a .png name. */
-const PNG = Buffer.from(
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
-  'base64'
-);
 
 /**
  * The summary card at the top of a menu set's public page.

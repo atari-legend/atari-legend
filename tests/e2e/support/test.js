@@ -1,6 +1,26 @@
 import { test as base, expect } from '@playwright/test';
 
 /**
+ * Fail a test on an uncaught JavaScript exception, without every spec having
+ * to remember to wire up the listener.
+ *
+ * Returns the teardown half, so a fixture reads as: collect, hand the page
+ * over, assert. Exported because support/public-write.js builds a second page
+ * fixture - the admin context those specs create their parents in - and it
+ * deserves the same guard as the primary one.
+ */
+export function guardAgainstPageErrors(page) {
+  const uncaughtErrors = [];
+  page.on('pageerror', exception => {
+    uncaughtErrors.push(exception.message);
+  });
+
+  return (label = 'uncaught JS errors on the page') => {
+    expect(uncaughtErrors, label).toEqual([]);
+  };
+}
+
+/**
  * The `test` every spec imports, instead of the one from @playwright/test.
  *
  * It wraps the `page` fixture so that an uncaught JavaScript exception fails
@@ -12,14 +32,11 @@ import { test as base, expect } from '@playwright/test';
  */
 export const test = base.extend({
   page: async ({ page }, use) => {
-    const uncaughtErrors = [];
-    page.on('pageerror', exception => {
-      uncaughtErrors.push(exception.message);
-    });
+    const expectNoPageErrors = guardAgainstPageErrors(page);
 
     await use(page);
 
-    expect(uncaughtErrors, 'uncaught JS errors on the page').toEqual([]);
+    expectNoPageErrors();
   },
 });
 

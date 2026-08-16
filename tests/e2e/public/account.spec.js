@@ -80,10 +80,23 @@ test.describe('Account', () => {
     }
   });
 
-  // TODO: updating the profile, changing the password, uploading an avatar,
-  // voting on a game, and posting a comment. Those write, so they belong in
-  // the admin-write project's sibling - a public-write project - rather than
-  // here; see tests/e2e/README.md.
+  test('keeps a signed-in non-admin out of the admin', async ({ page }) => {
+    await signIn(page, FIXTURE.user);
+
+    // Not the same check as the guest one in admin/dashboard.spec.js: a guest
+    // is stopped by `auth`, and only an account without the permission proves
+    // the `admin` middleware behind it. An unauthorised request is redirected
+    // rather than refused, so the URL is the assertion - the status would be
+    // 200 either way.
+    await page.goto('/admin');
+
+    await expect(page).not.toHaveURL(/\/admin$/);
+  });
+
+  // Everything an ordinary account can *write* - profile, password, avatar,
+  // votes, comments, submissions - lives in tests/e2e/public-write/, which is
+  // this file's sibling with a session and permission to write. See
+  // tests/e2e/README.md.
 });
 
 // An account that never confirmed its address. Every route in the app sits

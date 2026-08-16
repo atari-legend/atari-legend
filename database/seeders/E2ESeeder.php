@@ -31,6 +31,17 @@ class E2ESeeder extends Seeder
     public const USER_STANDARD_ID = 2;
     public const USER_UNVERIFIED_ID = 3;
 
+    // The two accounts tests/e2e/public-write/ signs in as. They exist so that
+    // project never has to write through USER_STANDARD_ID, which the read
+    // specs assert on: it owns the seeded comment on the seeded game, and
+    // admin-write/content.spec.js picks it in an autocomplete.
+    //
+    // Two rather than one because public-write/account.spec.js changes the
+    // password, and an account whose password is in flux cannot be the one
+    // every other spec in the project signs in with.
+    public const USER_CONTRIBUTOR_ID = 4;
+    public const USER_ACCOUNT_ID = 5;
+
     public const GAME_ID = 1;
     public const GAME_AKA_ID = 1;
     public const RELEASE_ID = 1;
@@ -198,10 +209,17 @@ class E2ESeeder extends Seeder
         // app sits behind the `verified` middleware, so it is the only way to
         // reach the verification notice - and the only account that proves the
         // middleware still turns people away.
+        //
+        // The last two belong to tests/e2e/public-write/ and nothing else.
+        // 'accounttester' is the one whose own profile and password get
+        // rewritten, which is why it is not 'contributor': every other spec in
+        // that project signs in as 'contributor' while it does.
         foreach ([
             ['admin', 'admin@atarilegend.com', User::PERMISSION_ADMIN, true],
             ['testuser', 'test@example.com', User::PERMISSION_USER, true],
             ['unverified', 'unverified@example.com', User::PERMISSION_USER, false],
+            ['contributor', 'contributor@example.com', User::PERMISSION_USER, true],
+            ['accounttester', 'accounttester@example.com', User::PERMISSION_USER, true],
         ] as [$userid, $email, $permission, $verified]) {
             User::updateOrCreate(
                 ['userid' => $userid],
