@@ -149,12 +149,12 @@
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="mb-3">
-                        <label for="forum" class="form-label"><i class="fas fa-fw fa-comments"></i> Atari
+                        <label for="af" class="form-label"><i class="fas fa-fw fa-comments"></i> Atari
                             Forum</label>
-                        <input type="url" class="form-control @error('forum') is-invalid @enderror" name="forum"
-                            id="forum" value="{{ old('forum', $user->user_af) }}">
+                        <input type="url" class="form-control @error('af') is-invalid @enderror" name="af"
+                            id="af" value="{{ old('af', $user->user_af) }}">
 
-                        @error('forum')
+                        @error('af')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

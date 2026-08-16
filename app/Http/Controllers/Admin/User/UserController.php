@@ -39,7 +39,12 @@ class UserController extends Controller
     {
         $request->validate(UserHelper::validationRules($user));
 
-        $ext = null;
+        // Keep the avatar the user already has when the form comes back without
+        // a file - which is every save that is not about the avatar. The field
+        // says "Select a file to replace the current avatar", and there is a
+        // separate route for deleting one, so overwriting it with null here
+        // dropped an avatar every time an admin edited an e-mail address.
+        $ext = $user->avatar_ext;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $avatar->storeAs('images/user_avatars/', $user->user_id . '.' . $avatar->extension(), 'public');
@@ -53,7 +58,7 @@ class UserController extends Controller
             'user_website' => $request->website,
             'user_fb'      => $request->facebook,
             'user_twitter' => $request->twitter,
-            'user_af'      => $request->forum,
+            'user_af'      => $request->af,
             'inactive'     => $request->active ? '0' : '1',
         ]);
 
