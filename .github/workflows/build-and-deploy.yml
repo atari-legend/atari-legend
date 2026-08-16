@@ -116,7 +116,7 @@ jobs:
           mysql --protocol=TCP -h 127.0.0.1 -P 3306 -u root -proot -e \
             "SET GLOBAL sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"
 
-      - name: Run E2E Database Migrations & Seeder
+      - name: Prepare the E2E database and storage
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
@@ -129,6 +129,13 @@ jobs:
         run: |
           php artisan migrate:fresh --force
           php artisan db:seed --class=E2ESeeder --force
+          # public/storage is gitignored, so a fresh checkout has neither the
+          # symlink nor the directory - and tests/e2e/support/server.php serves
+          # a path only when the file is really there, so every /storage/ URL
+          # 404s without this. The specs that upload a file and then fetch it
+          # back are the ones that notice. deploy.sh does the same on the
+          # servers; only CI was missing it.
+          php artisan storage:link
 
       - name: Run Playwright E2E Tests
         env:
