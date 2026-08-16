@@ -44,8 +44,8 @@
                         @enderror
                     </div>
                     <div class="col-12">
-                        <label class="form-label" for="add">&nbsp;</label>
-                        <button type="submit" class="btn btn-success w-100" id="add">Add memory
+                        <label class="form-label" aria-hidden="true">&nbsp;</label>
+                        <button type="submit" class="btn btn-success w-100">Add memory
                             enhancement</button>
                     </div>
                 </form>

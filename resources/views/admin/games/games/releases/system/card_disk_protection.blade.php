@@ -36,8 +36,8 @@
                         @enderror
                     </div>
                     <div class="col-12">
-                        <label class="form-label" for="add">&nbsp;</label>
-                        <button type="submit" class="btn btn-success w-100" id="add">Add disk protection</button>
+                        <label class="form-label" aria-hidden="true">&nbsp;</label>
+                        <button type="submit" class="btn btn-success w-100">Add disk protection</button>
                     </div>
                 </form>
 
@@ -73,7 +73,7 @@
                         </tbody>
                     </table>
                 @else
-                    <p class="text-center text-muted">No copy protection for this release.</p>
+                    <p class="text-center text-muted">No disk protection for this release.</p>
                 @endif
 
             </div>

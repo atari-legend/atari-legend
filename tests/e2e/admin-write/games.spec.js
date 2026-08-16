@@ -2,8 +2,89 @@ import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
 import {
   uniqueName, uniqueSlug, acceptConfirms, createGame, deleteGame, deleteByAction,
-  deleteRow, pickAutocomplete, fillEditor,
+  deleteRow, pickAutocomplete, fillEditor, PNG,
 } from '../support/write.js';
+
+/**
+ * A row in one of the twenty tables behind /admin/games/config/{type}.
+ *
+ * Every select on the release system and scene panels is fed by one of these,
+ * and the e2e database ships with none of them - the fixture seeds a copy
+ * protection and nothing else, because these tables are production data rather
+ * than migration data. So a spec that writes to those panels has to bring its
+ * own reference row, which is the same rule as everywhere else here: create
+ * what you modify, delete it again.
+ *
+ * They live in this file rather than in support/write.js because nothing
+ * outside the release panels needs one yet.
+ *
+ * The id comes back with the name because a multi-select is asserted on by
+ * value - toHaveValues() reads the option's value, not its label - and it is
+ * also what makes the delete unambiguous when the name is not unique.
+ */
+async function createConfigItem(page, type, label, fixedName = null) {
+  const name = fixedName ?? uniqueName(label);
+
+  await page.goto(`/admin/games/config/${type}`);
+
+  // '#name' is on the add form *and* on every row's rename form, so the add
+  // one has to be reached through the form its button belongs to.
+  const add = page.locator('form').filter({
+    has: page.getByRole('button', { name: 'Add', exact: true }),
+  });
+  await add.locator('#name').fill(name);
+  await add.getByRole('button', { name: 'Add', exact: true }).click();
+
+  // The new row's two forms both carry the id in their action, and that is the
+  // only place on the page it appears.
+  const row = page.locator(`form:has(button[title="Delete '${name}'"])`);
+  await expect(row).toHaveCount(1);
+  const id = (await row.getAttribute('action')).split('/').pop();
+
+  return { type, id, name };
+}
+
+/**
+ * The rename and the delete form of a config row post to the same URL, so the
+ * destructive one is picked by its method override rather than by its action -
+ * which is why this is not deleteByAction().
+ */
+async function deleteConfigItem(page, item) {
+  acceptConfirms(page);
+
+  await page.goto(`/admin/games/config/${item.type}`);
+
+  const action = `/config/${item.type}/${item.id}`;
+  const form = page.locator(`form[action$="${action}"]:has(input[name="_method"][value="DELETE"])`);
+  await expect(form).toHaveCount(1);
+  await form.locator('button').click();
+
+  await expect(page.locator(`form[action$="${action}"]`)).toHaveCount(0);
+}
+
+/**
+ * A release on a game this spec created, landing on the release itself.
+ *
+ * Saving is what puts the id in the URL, and a release has no name of its own
+ * to find it by afterwards - it is a card on its game rather than a row in a
+ * searchable table.
+ */
+async function createRelease(page, game) {
+  const name = uniqueName('Release');
+
+  await page.goto(`/admin/games/${game.id}/releases/create`);
+  await page.fill('#name', name);
+  await page.getByRole('button', { name: 'Save' }).first().click();
+
+  await expect(page).toHaveURL(new RegExp(`/admin/games/${game.id}/releases/\\d+$`));
+
+  return { id: page.url().split('/').pop(), name, gameId: game.id };
+}
+
+async function deleteRelease(page, release) {
+  await page.goto(`/admin/games/${release.gameId}/releases`);
+  await deleteByAction(page, `/releases/${release.id}`);
+}
 
 test.describe('Admin games', () => {
   test('adds and removes an AKA on a game', async ({ page }) => {
@@ -380,4 +461,319 @@ test.describe('Admin games', () => {
       }
     }
   });
+});
+
+/**
+ * The panels hanging off a release: /system, /scene, /scans and the scans of a
+ * media.
+ *
+ * Everything here needs a game and a release of its own, and most of it needs a
+ * reference row the e2e database does not have - see createConfigItem() above.
+ * So the teardown has four layers to undo - the panel row, the release, the
+ * game and the config rows - and it runs in a finally, so a failed assertion
+ * still leaves the database as it found it.
+ */
+test.describe('Admin release panels', () => {
+  test('adds and removes every row on a release system panel', async ({ page }) => {
+    test.setTimeout(180000);
+    acceptConfirms(page);
+
+    // A reference row per select this test writes through. The TOS card's
+    // Language select is left at '-' deliberately: languages are ISO codes in a
+    // table of their own, which the config screen has no form for.
+    const items = [];
+    let game = null;
+    let release = null;
+
+    try {
+      const diskProtection = await createConfigItem(page, 'disk-protection', 'Disk Protection');
+      const system = await createConfigItem(page, 'system', 'System');
+      const enhancement = await createConfigItem(page, 'enhancement', 'Enhancement');
+      const memory = await createConfigItem(page, 'memory', 'Memory');
+      const tos = await createConfigItem(page, 'tos', 'TOS');
+      items.push(diskProtection, system, enhancement, memory, tos);
+
+      game = await createGame(page);
+      release = await createRelease(page, game);
+
+      const systemPanel = `/admin/games/${game.id}/${release.id}/system`;
+      await page.goto(systemPanel);
+
+      // 1. Disk protection - the one panel here that also stores a free-text
+      // note, carried on the pivot rather than on a row of its own.
+      const notes = uniqueName('Fuzzy bits');
+      await page.selectOption('#disk_protection', { label: diskProtection.name });
+      await page.fill('#disk_protection_notes', notes);
+      await page.getByRole('button', { name: 'Add disk protection' }).click();
+
+      await expect(page.getByRole('cell', { name: diskProtection.name })).toBeVisible();
+      await expect(page.getByRole('cell', { name: notes })).toBeVisible();
+
+      // 2. System enhancement. Addressed by its form rather than by its name,
+      // which it does not have: all five add buttons on this page carry
+      // id="add" and a spacer <label for="add">&nbsp;</label>, so every one of
+      // those labels resolves to the *first* button with that id - this one -
+      // and an nbsp label wins over the button's own text. The result is an
+      // add button a screen reader announces as blank; the other four keep
+      // their names only because nothing points at them. Give the five ids of
+      // their own and this can go back to getByRole('button', { name }).
+      await page.selectOption('#system', { label: system.name });
+      await page.selectOption('#enhancement', { label: enhancement.name });
+      await page.locator('form[action$="/system-enhancement"]')
+        .getByRole('button').click();
+
+      await expect(page.getByRole('cell', { name: system.name })).toBeVisible();
+
+      // 3. Memory. A PUT rather than an add/remove pair: both selects are
+      // multiple, and unselecting everything is how a memory is taken off.
+      await page.selectOption('#minimum_memory', { label: memory.name });
+      await page.selectOption('#incompatible_memory', { label: memory.name });
+      // '/system-memory' exactly - '/system-memory-enhancement' is a card of
+      // its own, with a Save button that would match just as well.
+      await page.locator('form[action$="/system-memory"]')
+        .getByRole('button', { name: 'Save' }).click();
+
+      await expect(page.locator('#minimum_memory')).toHaveValues([memory.id]);
+      await expect(page.locator('#incompatible_memory')).toHaveValues([memory.id]);
+
+      // 4. Memory enhancement - a memory plus an optional enhancement, stored
+      // as a row rather than as a pivot.
+      await page.selectOption('#memory', { label: memory.name });
+      await page.selectOption('#memory_enhancement', { label: enhancement.name });
+      await page.getByRole('button', { name: 'Add memory enhancement' }).click();
+
+      await expect(page.getByRole('cell', { name: memory.name })).toBeVisible();
+
+      // 5. TOS incompatibility.
+      await page.selectOption('#tos', { label: tos.name });
+      await page.getByRole('button', { name: 'Add incompatibility' }).click();
+
+      await expect(page.getByRole('cell', { name: tos.name })).toBeVisible();
+
+      // Now take all five away again. Each delete redirects back to this page,
+      // so the next locator is resolved against a freshly rendered panel.
+      await page.getByRole('button', { name: `Delete protection '${diskProtection.name}'` }).click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page.getByRole('cell', { name: diskProtection.name })).toHaveCount(0);
+
+      // 'system-memory-enhancement/' does not contain 'system-enhancement/',
+      // so the trailing slash is what tells the two cards' delete forms apart -
+      // and it also excludes the add form, whose action has no id on the end.
+      await page.locator('form[action*="/system-enhancement/"] button').click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page.getByRole('cell', { name: system.name })).toHaveCount(0);
+
+      await page.locator('form[action*="/system-memory-enhancement/"] button').click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page.getByRole('cell', { name: memory.name })).toHaveCount(0);
+
+      await page.getByRole('button', { name: `Delete incompatibility '${tos.name}'` }).click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page.getByRole('cell', { name: tos.name })).toHaveCount(0);
+
+      // The memory panel has no delete button - clearing both selects is it.
+      await page.selectOption('#minimum_memory', []);
+      await page.selectOption('#incompatible_memory', []);
+      await page.locator('form[action$="/system-memory"]')
+        .getByRole('button', { name: 'Save' }).click();
+
+      await expect(page.locator('#minimum_memory')).toHaveValues([]);
+      await expect(page.locator('#incompatible_memory')).toHaveValues([]);
+    } finally {
+      if (release) {
+        await deleteRelease(page, release).catch(() => {});
+      }
+      if (game) {
+        await deleteGame(page, game).catch(() => {});
+      }
+      for (const item of items) {
+        await deleteConfigItem(page, item).catch(() => {});
+      }
+    }
+  });
+
+  test('sets and clears the trainers on a release', async ({ page }) => {
+    test.setTimeout(120000);
+    acceptConfirms(page);
+
+    let trainer = null;
+    let game = null;
+    let release = null;
+
+    try {
+      trainer = await createConfigItem(page, 'trainer', 'Trainer');
+      game = await createGame(page);
+      release = await createRelease(page, game);
+
+      // The scene panel is one multi-select and one Save, and the suite has
+      // only ever read it. Like the memory panel, unselecting everything is
+      // how a trainer comes off again.
+      const scene = `/admin/games/${game.id}/${release.id}/scene`;
+      await page.goto(scene);
+      await page.selectOption('#trainers', { label: trainer.name });
+      await page.getByRole('button', { name: 'Save' }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${scene}$`));
+      await expect(page.locator('#trainers')).toHaveValues([trainer.id]);
+
+      await page.selectOption('#trainers', []);
+      await page.getByRole('button', { name: 'Save' }).click();
+
+      await expect(page.locator('#trainers')).toHaveValues([]);
+    } finally {
+      if (release) {
+        await deleteRelease(page, release).catch(() => {});
+      }
+      if (game) {
+        await deleteGame(page, game).catch(() => {});
+      }
+      if (trainer) {
+        await deleteConfigItem(page, trainer).catch(() => {});
+      }
+    }
+  });
+
+  test('uploads, retypes and deletes a release scan', async ({ page }) => {
+    test.setTimeout(120000);
+    acceptConfirms(page);
+
+    let game = null;
+    let release = null;
+
+    try {
+      game = await createGame(page);
+      release = await createRelease(page, game);
+
+      await page.goto(`/admin/games/${game.id}/${release.id}/scans`);
+
+      // FilePond replaces the plain file input with a browse input of its own,
+      // and only that one is wired to the pond that uploads the file. See the
+      // dump upload in the full-game test above for the same trick.
+      const fileInput = page.locator('form[action$="/scans"] input.filepond--browser').first();
+      await expect(fileInput).toBeAttached();
+      await fileInput.setInputFiles({
+        name: 'e2e-box-front.png',
+        mimeType: 'image/png',
+        buffer: PNG,
+      });
+
+      // Enabled by FilePond's 'processfiles', i.e. once the file has reached
+      // the temporary store.
+      const upload = page.locator('#upload');
+      await expect(upload).toBeEnabled({ timeout: 30000 });
+      await upload.click();
+
+      // The type is inferred from the filename by the controller, which is the
+      // only reason the file above is called 'front' rather than anything.
+      await expect(page.getByRole('heading', { name: '1 scans' })).toBeVisible();
+      const scan = page.locator('form:has(select[name="type"])');
+      await expect(scan.locator('select[name="type"]')).toHaveValue('Box front');
+
+      // The update form: a type and a note, on the row rather than in a modal.
+      const notes = uniqueName('Publisher catalog');
+      await scan.locator('select[name="type"]').selectOption('Goodie');
+      await scan.locator('input[name="notes"]').fill(notes);
+      await scan.getByRole('button', { name: 'Update' }).click();
+
+      await expect(page.locator('select[name="type"]')).toHaveValue('Goodie');
+      await expect(page.locator('input[name="notes"]')).toHaveValue(notes);
+
+      // Not exact: the trash icon is a font glyph rendered through ::before,
+      // and it lands in the button's accessible name as a leading character -
+      // so the name is ' Delete' rather than 'Delete'.
+      await page.getByRole('button', { name: 'Delete' }).click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page.getByText('No scans for the release.')).toBeVisible();
+    } finally {
+      if (release) {
+        await deleteRelease(page, release).catch(() => {});
+      }
+      if (game) {
+        await deleteGame(page, game).catch(() => {});
+      }
+    }
+  });
+
+  test('uploads, retypes and deletes a media scan', async ({ page }) => {
+    test.setTimeout(120000);
+    acceptConfirms(page);
+
+    const items = [];
+    let game = null;
+    let release = null;
+
+    try {
+      // ReleaseMediasScansController::store() types every upload by looking up
+      // the media scan type *named* 'Other' - MediaScanType::TYPE_OTHER - so
+      // that row is not decoration here, it is what makes the POST work at all.
+      // Hence the fixed name rather than a uniqueName one.
+      const otherType = await createConfigItem(page, 'media-scan-type', 'Media Scan Type', 'Other');
+      const scanType = await createConfigItem(page, 'media-scan-type', 'Media Scan Type');
+      items.push(otherType, scanType);
+
+      game = await createGame(page);
+      release = await createRelease(page, game);
+
+      const medias = `/admin/games/${game.id}/${release.id}/medias`;
+      await page.goto(medias);
+      await page.getByRole('button', { name: 'Add media' }).click();
+      await expect(page.getByRole('heading', { name: '1 media' })).toBeVisible();
+
+      // Each media renders its own pond and its own upload button, keyed on
+      // the media id - which is also the only place that id is readable from.
+      const mediaId = await page.locator('[data-upload-media]').getAttribute('data-upload-media');
+
+      const fileInput = page
+        .locator(`form[action$="/${mediaId}/scans"] input.filepond--browser`)
+        .first();
+      await expect(fileInput).toBeAttached();
+      await fileInput.setInputFiles({
+        name: 'e2e-media-label.png',
+        mimeType: 'image/png',
+        buffer: PNG,
+      });
+
+      const upload = page.locator(`[data-upload-media="${mediaId}"]`);
+      await expect(upload).toBeEnabled({ timeout: 30000 });
+      await upload.click();
+
+      await expect(page.getByRole('button', { name: 'Remove scan' })).toBeVisible();
+
+      // The scan's own forms are the ones with an id after '/scans/'; the
+      // media's info card posts to '/medias/{media}' and carries a
+      // select[name="type"] of its own, so the action is what separates them.
+      const scan = page.locator('form[action*="/scans/"]:has(select[name="type"])');
+      await expect(scan.locator('select[name="type"]')).toHaveValue(otherType.id);
+
+      await scan.locator('select[name="type"]').selectOption(scanType.id);
+      await scan.getByRole('button', { name: 'Update' }).click();
+
+      await expect(
+        page.locator('form[action*="/scans/"] select[name="type"]')
+      ).toHaveValue(scanType.id);
+
+      await page.getByRole('button', { name: 'Remove scan' }).click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page.getByText('No scans for this media.')).toBeVisible();
+
+      // The media goes too: it is a child of the release, and the release
+      // cannot be tidied away underneath it.
+      await page.getByRole('button', { name: 'Delete media' }).click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page.getByRole('heading', { name: '0 media' })).toBeVisible();
+    } finally {
+      if (release) {
+        await deleteRelease(page, release).catch(() => {});
+      }
+      if (game) {
+        await deleteGame(page, game).catch(() => {});
+      }
+      for (const item of items) {
+        await deleteConfigItem(page, item).catch(() => {});
+      }
+    }
+  });
+
+  // TODO: the release system info card (resolutions, systems, emulators), the
+  // dump update form, several scans in one upload.
 });
