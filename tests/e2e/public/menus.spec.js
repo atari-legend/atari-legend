@@ -21,10 +21,35 @@ test.describe('Menu sets', () => {
       .toBeVisible();
   });
 
-  test('searches menu sets', async ({ page }) => {
-    const response = await page.goto(`/menusets/search?search=${encodeURIComponent(FIXTURE.game.name)}`);
+  // MenuSetController::search() reads `title` and `titleAZ`, and forces both
+  // result sets empty when neither is present. So the parameter name is the
+  // whole test: ask on the wrong one and the page renders a blank search that
+  // an assertion on the status alone is happy with.
+  test('searches software by title', async ({ page }) => {
+    const path = `/menusets/search?title=${encodeURIComponent(FIXTURE.menuSoftware.name)}`;
+    const response = await page.goto(path);
 
     await expectPageRenders(page, response, '/menusets/search');
+    await expect(page.getByRole('heading', { name: FIXTURE.menuSoftware.name }).first())
+      .toBeVisible();
+  });
+
+  test('browses software by first letter', async ({ page }) => {
+    const letter = FIXTURE.menuSoftware.name[0];
+    const path = `/menusets/search?titleAZ=${encodeURIComponent(letter)}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/menusets/search');
+    await expect(page.getByRole('heading', { name: FIXTURE.menuSoftware.name }).first())
+      .toBeVisible();
+  });
+
+  test('finds no software for a title nothing matches', async ({ page }) => {
+    const path = '/menusets/search?title=NoSuchSoftwareExists';
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/menusets/search');
+    await expect(page.getByText('No software found')).toBeVisible();
   });
 
   test('lists the menus containing a piece of software', async ({ page }) => {
