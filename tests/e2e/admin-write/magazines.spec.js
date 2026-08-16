@@ -13,6 +13,9 @@ import {
   createMenuSoftware,
   deleteMenuSoftware,
   pickAutocompleteBy,
+  acceptConfirms,
+  DELETE_FORM,
+  PNG,
 } from '../support/write.js';
 
 /**
@@ -123,6 +126,63 @@ async function openPublicIssue(page, issue) {
 /** One row of the rendered index, found by the title cell's text. */
 function publicRow(card, text) {
   return card.locator('tbody tr').filter({ hasText: text });
+}
+
+const INDEX_TYPES = '/admin/magazines/index-types';
+
+/**
+ * One row of the index types table, found by the name it holds.
+ *
+ * Not a Livewire table: the whole list is rendered at once, every row is an
+ * inline update form, and there is no search box to narrow it with. So the row
+ * has to be identified by its own content - and the text input is the wrong
+ * handle for that, because `value` in a CSS selector matches the *attribute*
+ * the server rendered, which stops tracking the field the moment a test types
+ * into it. The delete button's title is server-rendered too and does not
+ * double as an input, so it survives the rename this test does.
+ */
+function indexTypeRow(page, name) {
+  return page.locator(`tr:has(button[title="Delete '${name}'"])`);
+}
+
+/**
+ * Collect every alert()/confirm() the page raises, and accept it.
+ *
+ * `acceptConfirms()` already accepts, but throws the message away - and the
+ * message is the assertion for the two failure paths of the archive.org
+ * fetch, which report themselves through alert() and nothing else. Registered
+ * per test rather than per page, so the array only holds this test's dialogs.
+ */
+function captureDialogs(page) {
+  const messages = [];
+
+  page.on('dialog', (dialog) => {
+    messages.push(dialog.message());
+    dialog.accept().catch(() => {});
+  });
+
+  return messages;
+}
+
+/** The issue cover as it is rendered on the public magazine page. */
+function publicCover(card) {
+  return card.locator('img[alt^="Cover for"]');
+}
+
+/**
+ * Assert the browser actually decoded the image, not just that the src is
+ * right.
+ *
+ * The guard in support/test.js deliberately exempts /storage/, so nothing else
+ * would notice a cover that never arrived - and a file that does arrive but is
+ * not a valid image answers 200 either way. naturalWidth is 0 until the decode
+ * succeeds, which is the difference between "the path is right" and "there is
+ * an image there".
+ */
+async function expectImageLoads(image) {
+  await expect.poll(
+    () => image.evaluate((img) => img.complete && img.naturalWidth)
+  ).toBeGreaterThan(0);
 }
 
 test.describe('Admin magazines', () => {
@@ -417,9 +477,345 @@ test.describe('Admin magazines', () => {
     }
   });
 
-  // TODO: uploading an issue cover, which goes through a plain file field but
-  // shares its slot with the archive.org fetch below.
-  //
-  // TODO: the archive.org cover fetch behind #fetch-thumbnail, which calls out
-  // to a live third party from the server.
+  /**
+   * An index type, created here rather than borrowed.
+   *
+   * The types the fixture's index rows point at come from the magazines
+   * migration, and renaming or deleting one of those would change what
+   * public/magazines.spec.js reads out of the Type column - so this makes its
+   * own, uses it once, and takes it away again.
+   *
+   * The screen is the odd one out in this admin: a plain table of inline update
+   * forms rather than a Livewire one, with the create form in a card above it.
+   * Nothing about it is covered by a browser today, and the round trip it hides
+   * is that a type created on this page is immediately an option in the index
+   * editor - two screens and a Livewire component apart.
+   */
+  test('creates, renames and deletes a magazine index type', async ({ page }) => {
+    test.setTimeout(120000);
+
+    const name = uniqueName('Index type');
+    const renamed = uniqueName('Index type');
+
+    await page.goto(INDEX_TYPES);
+    await page.fill('#name', name);
+    await page.getByRole('button', { name: 'Add' }).click();
+
+    await expect(page).toHaveURL(new RegExp(`${INDEX_TYPES}$`));
+    await expect(indexTypeRow(page, name)).toHaveCount(1);
+    // A brand new type is used by nothing, which is what makes it deletable
+    // again at the end.
+    await expect(indexTypeRow(page, name).locator('td').last()).toHaveText('0 indices');
+
+    // The inline update form, which is the only way to rename one.
+    await indexTypeRow(page, name).locator('input[name="name"]').fill(renamed);
+    await indexTypeRow(page, name).getByRole('button', { name: 'Update' }).click();
+
+    await expect(page).toHaveURL(new RegExp(`${INDEX_TYPES}$`));
+    await expect(indexTypeRow(page, name)).toHaveCount(0);
+    await expect(indexTypeRow(page, renamed)).toHaveCount(1);
+    await expect(indexTypeRow(page, renamed).locator('input[name="name"]')).toHaveValue(renamed);
+
+    // Its own magazine and issue: the type is only worth anything as an option
+    // in the index editor, and an index row on a seeded issue would show up on
+    // a page the read specs open.
+    const magazine = await createMagazine(page);
+    const issue = await createMagazineIssue(page, magazine);
+    let testPassed = false;
+
+    try {
+      const title = uniqueName('Feature');
+
+      await page.goto(`/admin/magazines/magazines/${magazine.id}/issues/${issue.id}/edit`);
+      const rowId = await addIndexRow(page);
+      const row = indexRow(page, rowId);
+
+      await live(page, () => row.pageNumber.fill('7'));
+      await live(page, () => row.title.fill(title));
+      // By label rather than by id: what is being checked is that the name
+      // typed into the other screen reached this select.
+      await live(page, () => row.type.selectOption({ label: renamed }));
+      await saveIndex(page);
+
+      const card = await openPublicIssue(page, issue);
+      await expect(publicRow(card, title).locator('td').nth(1)).toHaveText(renamed);
+
+      // And the count on the types screen is the same relationship read from
+      // the other end.
+      await page.goto(INDEX_TYPES);
+      await expect(indexTypeRow(page, renamed).locator('td').last()).toHaveText('1 index');
+
+      testPassed = true;
+    } finally {
+      const cleanUp = async (label, remove) => {
+        try {
+          await remove();
+        } catch (error) {
+          if (testPassed) {
+            throw error;
+          }
+          console.warn(`cleanup: could not delete the ${label}: ${error.message}`);
+        }
+      };
+
+      await cleanUp('issue', () => deleteMagazineIssue(page, issue));
+      await cleanUp('magazine', () => deleteMagazine(page, magazine));
+    }
+
+    // The index row went with the issue, so the type is unused again.
+    await page.goto(INDEX_TYPES);
+    await expect(indexTypeRow(page, renamed).locator('td').last()).toHaveText('0 indices');
+
+    acceptConfirms(page);
+    await indexTypeRow(page, renamed).locator(`${DELETE_FORM} button`).click();
+
+    await expect(page).toHaveURL(new RegExp(`${INDEX_TYPES}$`));
+    await expect(indexTypeRow(page, renamed)).toHaveCount(0);
+  });
+
+  /**
+   * The cover, through the file field.
+   *
+   * Three things happen in the browser before anything is posted, and none of
+   * them is visible to MagazinesTest, which posts an UploadedFile straight at
+   * the controller: resources/js/admin/magazines/magazines.js previews the
+   * chosen file with a FileReader, and it owns the two hidden inputs -
+   * useArchiveOrgCover and destroyImage - that decide which of the three
+   * branches of addOrUpdateImage() runs. Picking a file has to clear the first
+   * and the second, or a save would fetch from archive.org or throw the upload
+   * away.
+   */
+  test('uploads a cover for an issue and removes it again', async ({ page }) => {
+    test.setTimeout(120000);
+
+    const magazine = await createMagazine(page);
+    const issue = await createMagazineIssue(page, magazine);
+    const editPath = `/admin/magazines/magazines/${magazine.id}/issues/${issue.id}/edit`;
+    const cover = page.locator('#issue-cover');
+    let testPassed = false;
+
+    try {
+      // 1. An issue starts with no cover at all, on both screens.
+      await page.goto(editPath);
+      await expect(cover).toHaveAttribute('src', /\/images\/no-cover\.svg$/);
+
+      let card = await openPublicIssue(page, issue);
+      await expect(publicCover(card)).toHaveAttribute('src', /\/images\/no-cover\.svg$/);
+
+      // 2. Choosing a file previews it without posting anything, and settles
+      //    the two hidden inputs on "upload this".
+      await page.goto(editPath);
+      await page.locator('#image').setInputFiles({
+        name: 'cover.png',
+        mimeType: 'image/png',
+        buffer: PNG,
+      });
+
+      await expect(cover).toHaveAttribute('src', /^data:image\/png;base64,/);
+      await expect(page.locator('#useArchiveOrgCover')).toHaveValue('');
+      await expect(page.locator('#destroyImage')).toHaveValue('');
+
+      // 3. Saved. The green Save keeps us on the issue, which is where the
+      //    stored cover is rendered back.
+      await page.locator(`form[action$="/issues/${issue.id}"]`)
+        .getByRole('button', { name: 'Save', exact: true })
+        .click();
+      await expect(page).toHaveURL(new RegExp(`${editPath}$`));
+
+      // The extension comes from UploadedFile::extension(), which sniffs the
+      // content rather than trusting the name - hence a real PNG in the buffer.
+      const stored = new RegExp(`/storage/images/magazine_scans/${issue.id}\\.png$`);
+      await expect(cover).toHaveAttribute('src', stored);
+      await expectImageLoads(cover);
+
+      // 4. And it is the cover the public magazine page shows.
+      card = await openPublicIssue(page, issue);
+      await expect(publicCover(card)).toHaveAttribute('src', stored);
+      await expectImageLoads(publicCover(card));
+
+      // 5. The trash button beside the preview is JavaScript only: it swaps the
+      //    placeholder back in and arms destroyImage, and nothing goes until
+      //    the form is saved.
+      await page.goto(editPath);
+      await page.locator('#destroy-image-button').click();
+
+      await expect(cover).toHaveAttribute('src', /\/images\/no-cover\.svg$/);
+      await expect(page.locator('#destroyImage')).toHaveValue('true');
+      await expect(page.locator('#useArchiveOrgCover')).toHaveValue('');
+
+      await page.locator(`form[action$="/issues/${issue.id}"]`)
+        .getByRole('button', { name: 'Save', exact: true })
+        .click();
+      await expect(page).toHaveURL(new RegExp(`${editPath}$`));
+      await expect(cover).toHaveAttribute('src', /\/images\/no-cover\.svg$/);
+
+      card = await openPublicIssue(page, issue);
+      await expect(publicCover(card)).toHaveAttribute('src', /\/images\/no-cover\.svg$/);
+
+      testPassed = true;
+    } finally {
+      // Deleting the issue would not have taken the file with it -
+      // MagazineIssuesController::destroy() deletes the row and nothing else -
+      // so removing the cover above is teardown as well as an assertion.
+      const cleanUp = async (label, remove) => {
+        try {
+          await remove();
+        } catch (error) {
+          if (testPassed) {
+            throw error;
+          }
+          console.warn(`cleanup: could not delete the ${label}: ${error.message}`);
+        }
+      };
+
+      await cleanUp('issue', () => deleteMagazineIssue(page, issue));
+      await cleanUp('magazine', () => deleteMagazine(page, magazine));
+    }
+  });
+
+  /**
+   * The archive.org cover fetch, as far as the browser goes.
+   *
+   * It is half a browser feature and half a server one, and only the first half
+   * is testable here:
+   *
+   * - In the browser, #fetch-thumbnail parses the archive.org URL out of the
+   *   form, points the preview `img` straight at
+   *   `https://archive.org/download/{id}/page/cover_w600.jpg`, and uses that
+   *   image's own load/error events to restore the button and set
+   *   useArchiveOrgCover. That is all interceptable with page.route(), because
+   *   the request is one the page makes.
+   * - On save, MagazineIssuesController::fetchImage() makes the *same* request
+   *   again from PHP, with Http::get() against a hard-coded host. Nothing a
+   *   browser test can do reaches that, so this test never submits the form
+   *   with the flag set - see the TODO at the bottom of the file.
+   *
+   * So what is asserted here is the flag, the preview and the two failure
+   * paths, all of which report themselves through alert() and nothing else.
+   */
+  test('fetches an issue cover from archive.org', async ({ page }) => {
+    test.setTimeout(120000);
+
+    const magazine = await createMagazine(page);
+    const issue = await createMagazineIssue(page, magazine);
+    const editPath = `/admin/magazines/magazines/${magazine.id}/issues/${issue.id}/edit`;
+    const archiveUrl = 'https://archive.org/details/e2e-cover-fixture/';
+    const cover = page.locator('#issue-cover');
+    const fetchButton = page.locator('#fetch-thumbnail');
+    const useArchiveOrgCover = page.locator('#useArchiveOrgCover');
+    let testPassed = false;
+
+    // Never a real request to archive.org: the point of the stub is that this
+    // test says nothing about whether a third party is up today.
+    let archiveResponds = 'image';
+    await page.route('https://archive.org/download/**', (route) => {
+      if (archiveResponds === 'image') {
+        return route.fulfill({ contentType: 'image/png', body: PNG });
+      }
+
+      return route.fulfill({ status: 404, contentType: 'text/plain', body: 'Not found' });
+    });
+
+    try {
+      const dialogs = captureDialogs(page);
+
+      await page.goto(editPath);
+
+      // 1. No URL to fetch from. The button is client-side validation and
+      //    nothing else, so the complaint is an alert.
+      await fetchButton.click();
+      await expect.poll(() => dialogs).toContain('Missing or invalid archive.org URL');
+      await expect(useArchiveOrgCover).toHaveValue('');
+      await expect(cover).toHaveAttribute('src', /\/images\/no-cover\.svg$/);
+
+      // 2. A URL that is not an archive.org details page is refused by the same
+      //    check, before any request is made.
+      await page.fill('#archiveorg_url', 'https://example.com/not-archive-org/');
+      await fetchButton.click();
+      await expect.poll(() => dialogs.length).toBe(2);
+      await expect(useArchiveOrgCover).toHaveValue('');
+
+      // 3. A valid URL whose cover is not there. The failure arrives as the
+      //    img's error event, which is the only thing this feature listens to.
+      archiveResponds = 'missing';
+      await page.fill('#archiveorg_url', archiveUrl);
+      await fetchButton.click();
+
+      await expect.poll(() => dialogs).toContain('Error fetching cover from archive.org');
+      // The button comes back either way, which is what makes a retry possible.
+      await expect(fetchButton).toBeEnabled();
+      await expect(fetchButton).toHaveText('Fetch from Archive.org');
+
+      // 4. The cover is there. The preview points at archive.org, the button
+      //    un-spins, and the hidden input tells the controller to fetch it
+      //    server-side on the next save.
+      archiveResponds = 'image';
+      await page.reload();
+      await page.fill('#archiveorg_url', archiveUrl);
+      await fetchButton.click();
+
+      await expect(useArchiveOrgCover).toHaveValue('true');
+      await expect(cover).toHaveAttribute(
+        'src',
+        'https://archive.org/download/e2e-cover-fixture/page/cover_w600.jpg'
+      );
+      await expectImageLoads(cover);
+      await expect(fetchButton).toBeEnabled();
+      await expect(fetchButton).toHaveText('Fetch from Archive.org');
+      await expect(page.locator('#destroyImage')).toHaveValue('');
+
+      // 5. The file field and the fetch share one slot, and picking a file
+      //    takes it back: without this the next save would ignore the upload
+      //    and go to archive.org instead.
+      await page.locator('#image').setInputFiles({
+        name: 'cover.png',
+        mimeType: 'image/png',
+        buffer: PNG,
+      });
+      await expect(useArchiveOrgCover).toHaveValue('');
+      await expect(cover).toHaveAttribute('src', /^data:image\/png;base64,/);
+
+      // Deselecting leaves the flags where they are - the change handler does
+      // nothing without a file - so the save below stores no cover and, with
+      // useArchiveOrgCover clear, makes no request from the server either.
+      await page.locator('#image').setInputFiles([]);
+      await expect(useArchiveOrgCover).toHaveValue('');
+
+      // 6. The URL itself is an ordinary field, and it is what the public page
+      //    builds its "read this issue" link from.
+      await page.locator(`form[action$="/issues/${issue.id}"]`)
+        .getByRole('button', { name: 'Save', exact: true })
+        .click();
+      await expect(page).toHaveURL(new RegExp(`${editPath}$`));
+      await expect(page.locator('#archiveorg_url')).toHaveValue(archiveUrl);
+      await expect(cover).toHaveAttribute('src', /\/images\/no-cover\.svg$/);
+
+      const card = await openPublicIssue(page, issue);
+      await expect(card.locator('a[href="https://archive.org/stream/e2e-cover-fixture/"]'))
+        .toHaveCount(1);
+
+      testPassed = true;
+    } finally {
+      const cleanUp = async (label, remove) => {
+        try {
+          await remove();
+        } catch (error) {
+          if (testPassed) {
+            throw error;
+          }
+          console.warn(`cleanup: could not delete the ${label}: ${error.message}`);
+        }
+      };
+
+      await cleanUp('issue', () => deleteMagazineIssue(page, issue));
+      await cleanUp('magazine', () => deleteMagazine(page, magazine));
+    }
+  });
+
+  // TODO: the server half of the archive.org fetch. MagazineIssuesController::
+  // fetchImage() calls Http::get() against a hard-coded https://archive.org,
+  // so saving an issue with useArchiveOrgCover set makes a real request to a
+  // third party that page.route() cannot see - which is why the test above
+  // stops at the flag. Extracting the host to config, as follow-up 5 proposes
+  // for sndhrecord.atari.org, would make the whole round trip testable.
 });
