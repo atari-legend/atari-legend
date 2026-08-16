@@ -1,61 +1,54 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { uniqueName, deleteByAction } from '../support/write.js';
+import {
+  createMenuSet, deleteMenuSet, createMenu, deleteMenu, deleteByAction,
+} from '../support/write.js';
 
 // A set holds menus, a menu holds disks. Only the set has an index of its own;
 // the two below it are cards on their parent, created from a link that carries
 // the parent's id in the query string.
+//
+// Each test builds its own chain down from a set rather than hanging a menu or
+// a disk off the seeded one - see the factories in support/write.js for why.
 
 test.describe('Admin menu sets', () => {
   test('creates and deletes a menu set', async ({ page }) => {
-    const name = uniqueName('Menu Set');
+    const set = await createMenuSet(page);
 
-    await page.goto('/admin/menus/sets/create');
-    await page.fill('#name', name);
-    // A set has to belong to at least one crew - the validation rules make
-    // `crews` required, and the field is a multi-select rather than an
-    // autocomplete.
-    await page.selectOption('select[name="crews[]"]', String(FIXTURE.crew.id));
-    await page.getByRole('button', { name: 'Save' }).click();
-
-    await expect(page).toHaveURL(/\/admin\/menus\/sets\/\d+\/edit$/);
-    const setId = page.url().split('/').at(-2);
-
-    // The sets index is a plain table rather than a Livewire one, so there is
-    // no search box to narrow it down with.
-    await page.goto('/admin/menus/sets');
-    await deleteByAction(page, `/sets/${setId}`);
+    await deleteMenuSet(page, set);
   });
 
   test('creates and deletes a menu', async ({ page }) => {
-    const set = `/admin/menus/sets/${FIXTURE.menuSet.id}/edit`;
+    const set = await createMenuSet(page);
+    const menu = await createMenu(page, set);
 
-    await page.goto(`/admin/menus/menus/create?set=${FIXTURE.menuSet.id}`);
-    // A menu is identified by its number within the set, so pick one no
-    // fixture uses rather than a generated name.
-    await page.fill('#number', '9999');
-    await page.getByRole('button', { name: 'Save' }).click();
-
-    await expect(page).toHaveURL(/\/admin\/menus\/menus\/\d+\/edit$/);
-    const menuId = page.url().split('/').at(-2);
-
-    await page.goto(set);
-    await deleteByAction(page, `/menus/${menuId}`);
+    await deleteMenu(page, menu);
+    await deleteMenuSet(page, set);
   });
 
   test('creates and deletes a menu disk', async ({ page }) => {
-    const menu = `/admin/menus/menus/${FIXTURE.menu.id}/edit`;
+    const set = await createMenuSet(page);
+    const menu = await createMenu(page, set);
 
-    await page.goto(`/admin/menus/disks/create?menu=${FIXTURE.menu.id}`);
+    await page.goto(`/admin/menus/disks/create?menu=${menu.id}`);
     await page.fill('#part', 'Z');
+    // Conditions come from a migration rather than from the seeder, so there
+    // is no form to create one with - this selects a seeded row without
+    // writing to it, which is the one thing these specs may still do.
     await page.selectOption('#condition', String(FIXTURE.menuCondition.id));
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page).toHaveURL(/\/admin\/menus\/disks\/\d+\/edit$/);
     const diskId = page.url().split('/').at(-2);
 
-    await page.goto(menu);
+    // Bottom up: a menu still holding a disk, or a set still holding a menu,
+    // takes its children with it and would leave this passing on a delete that
+    // did more than it said.
+    await page.goto(`/admin/menus/menus/${menu.id}/edit`);
     await deleteByAction(page, `/disks/${diskId}`);
+
+    await deleteMenu(page, menu);
+    await deleteMenuSet(page, set);
   });
 
   // TODO: disk contents, screenshot and dump uploads, and running a

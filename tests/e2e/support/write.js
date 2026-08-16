@@ -1,11 +1,16 @@
 import { expect } from '@playwright/test';
+import { FIXTURE } from './fixture.js';
 
 /**
  * Helpers for the admin-write project.
  *
- * These specs create their own rows rather than editing the seeded fixture,
- * so that a leaked row cannot change what a read spec sees. Everything here
- * exists to make that round-trip - create, find, delete - a one-liner.
+ * These specs create everything they modify - the parent as well as the child -
+ * rather than hanging something off a seeded row. Nothing they do is then
+ * visible to a spec reading the fixture at the same time, which is what lets
+ * this project run without waiting for the read ones. See playwright.config.js.
+ *
+ * Everything here exists to make that round-trip - create, find, delete - a
+ * one-liner.
  */
 
 /**
@@ -13,9 +18,24 @@ import { expect } from '@playwright/test';
  *
  * The 'E2E ' prefix is what you grep the database for when a run is killed
  * halfway through and leaves something behind.
+ *
+ * The random suffix is not decoration: these specs run in parallel across
+ * workers, and a timestamp alone collides whenever two of them reach this line
+ * in the same millisecond. A game's slug is validated unique, so a collision
+ * surfaces as a validation error several steps later.
  */
 export function uniqueName(label) {
-  return `E2E ${label} ${Date.now()}`;
+  return `E2E ${label} ${Date.now()}${Math.random().toString(36).slice(1, 5)}`;
+}
+
+/**
+ * A slug for a name from uniqueName().
+ *
+ * App\Rules\Slug accepts lower-case letters, digits and hyphens, and insists on
+ * at least one letter.
+ */
+export function uniqueSlug(name) {
+  return name.toLowerCase().replace(/[^0-9a-z]+/g, '-');
 }
 
 /**
@@ -180,4 +200,143 @@ export async function deleteRow(page, term) {
   // with the table unfiltered. Search again rather than assuming the filter
   // survived - otherwise this passes on whatever happens to be on page one.
   await searchTable(page, term, 0);
+}
+
+/**
+ * The parents a write spec attaches things to.
+ *
+ * A spec that needs a game to hang a release off creates the game too, rather
+ * than borrowing the seeded one. Two reasons, and the second is the load-
+ * bearing one:
+ *
+ * - A seeded row is what a read spec asserts on. Adding a child to it makes
+ *   this project's work visible over there, which is why admin-write used to
+ *   have to wait for the read projects to finish.
+ * - Anything created here is deleted here, so nothing accumulates.
+ *
+ * Reference data is the exception, and the line is mutation rather than
+ * reference: these forms still *select* a seeded crew, genre or condition.
+ * Menu conditions and content types come from migrations and have no create
+ * form at all, and un-ticking every checkbox is not what these specs are for.
+ *
+ * Every create returns an object carrying the id its children need; pass the
+ * same object back to the matching delete. Delete children before parents -
+ * Game::getIsDeletableAttribute() refuses a game that still has a release, a
+ * review, a fact, a credit or a similar-game link.
+ */
+
+/**
+ * Create a game, and land on its edit screen.
+ *
+ * The slug is optional to the validator, but the games table links every row
+ * through route('games.show'), which throws on a null slug - so the row this
+ * returns would break the very table its delete goes through.
+ */
+export async function createGame(page) {
+  const name = uniqueName('Game');
+
+  await page.goto('/admin/games/games/create');
+  await page.fill('#name', name);
+  await page.fill('#slug', uniqueSlug(name));
+  await page.getByRole('button', { name: 'Save' }).first().click();
+
+  await expect(page).toHaveURL(/\/admin\/games\/games\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), name };
+}
+
+export async function deleteGame(page, game) {
+  await page.goto('/admin/games/games');
+  await deleteRow(page, game.name);
+}
+
+/**
+ * Create an individual - the person an interview is with.
+ */
+export async function createIndividual(page) {
+  const name = uniqueName('Individual');
+
+  await page.goto('/admin/games/individuals/create');
+  await page.fill('#name', name);
+  await page.getByRole('button', { name: 'Save' }).first().click();
+
+  await expect(page).toHaveURL(/\/admin\/games\/individuals\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), name };
+}
+
+export async function deleteIndividual(page, individual) {
+  await page.goto('/admin/games/individuals');
+  await deleteRow(page, individual.name);
+}
+
+/**
+ * Create a magazine - the parent an issue belongs to.
+ */
+export async function createMagazine(page) {
+  const name = uniqueName('Magazine');
+
+  await page.goto('/admin/magazines/magazines/create');
+  await page.fill('#name', name);
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await expect(page).toHaveURL(/\/admin\/magazines\/magazines\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), name };
+}
+
+export async function deleteMagazine(page, magazine) {
+  await page.goto('/admin/magazines/magazines');
+  await deleteRow(page, magazine.name);
+}
+
+/**
+ * Create a menu set - the top of the menus hierarchy.
+ *
+ * A set has to belong to at least one crew: the validation rules make `crews`
+ * required, and the field is a multi-select rather than an autocomplete. The
+ * crew is only selected, never written to, so the seeded one is fair game.
+ */
+export async function createMenuSet(page) {
+  const name = uniqueName('Menu Set');
+
+  await page.goto('/admin/menus/sets/create');
+  await page.fill('#name', name);
+  await page.selectOption('select[name="crews[]"]', String(FIXTURE.crew.id));
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await expect(page).toHaveURL(/\/admin\/menus\/sets\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), name };
+}
+
+/**
+ * Sets have an index of their own, but a plain table rather than a Livewire
+ * one - so there is no search box, and the row is found by the id in its
+ * delete form's action.
+ */
+export async function deleteMenuSet(page, set) {
+  await page.goto('/admin/menus/sets');
+  await deleteByAction(page, `/sets/${set.id}`);
+}
+
+/**
+ * Create a menu within a set - the parent a disk belongs to.
+ *
+ * A menu is identified by its number within its set rather than by a name, and
+ * the set is new here, so 1 is free.
+ */
+export async function createMenu(page, set) {
+  await page.goto(`/admin/menus/menus/create?set=${set.id}`);
+  await page.fill('#number', '1');
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await expect(page).toHaveURL(/\/admin\/menus\/menus\/\d+\/edit$/);
+
+  return { id: page.url().split('/').at(-2), setId: set.id };
+}
+
+export async function deleteMenu(page, menu) {
+  await page.goto(`/admin/menus/sets/${menu.setId}/edit`);
+  await deleteByAction(page, `/menus/${menu.id}`);
 }

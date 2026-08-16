@@ -11,9 +11,12 @@ export default defineConfig({
   // intermittent 500 - exactly what we want to hear about - into a pass.
   retries: 0,
   // Every spec in the 'public' and 'admin' projects is a GET that asserts only
-  // on its own response, so nothing there shares state and those projects are
-  // safe to parallelise. Keep it that way: anything that writes belongs in the
-  // 'admin-write' project below, which opts out of both settings.
+  // on its own response, so nothing there shares state. The 'admin-write'
+  // project does write, but only to rows it created a moment earlier and
+  // deletes before it finishes - so its work is invisible here, and every
+  // project can run at once. Keep both halves of that true: a read spec that
+  // asserts a count or a row position, or a write spec that touches a seeded
+  // row, breaks it. See tests/e2e/README.md.
   workers: process.env.CI ? 4 : undefined,
   reporter: [
     ['html', { open: 'never' }],
@@ -61,22 +64,24 @@ export default defineConfig({
     // The specs that create and delete data, which the two projects above
     // deliberately do not.
     //
-    // Serial and last. fullyParallel is per-project, so turning it off here
-    // leaves the read projects parallel; depending on them means nothing is
-    // still reading the database while these write to it. Each spec creates
-    // its own uniquely-named row and deletes it again, so the seeded fixture
-    // is never touched and a run leaves the database as it found it - see
-    // tests/e2e/support/write.js.
+    // This used to be serial and last, depending on 'public' and 'admin' so
+    // that nothing was reading the database while it wrote. That was a mutex
+    // rather than a data dependency, and it cost the whole suite to run one
+    // write spec.
+    //
+    // What replaces it is isolation in the specs themselves: each one creates
+    // every row it modifies - the parent as well as the child - under a name
+    // no other row has, and deletes them again before it ends. There is
+    // nothing here for a read spec to see half-done, so this project needs
+    // nothing but a session. See tests/e2e/support/write.js.
     {
       name: 'admin-write',
       testMatch: 'admin-write/**/*.spec.js',
-      fullyParallel: false,
-      workers: 1,
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'tests/e2e/.auth/admin.json',
       },
-      dependencies: ['setup', 'public', 'admin'],
+      dependencies: ['setup'],
     },
   ],
   webServer: process.env.PLAYWRIGHT_TEST_BASE_URL ? undefined : {

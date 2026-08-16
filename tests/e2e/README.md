@@ -17,7 +17,7 @@ tests/e2e/
 │   ├── test.js         the `test` every spec imports
 │   ├── assertions.js   expectPageRenders / expectResourceLoads
 │   ├── auth.js         signIn / signOut through the real forms
-│   ├── write.js        helpers the admin-write project needs
+│   ├── write.js        helpers and parent factories the admin-write project needs
 │   ├── fixture.js      the seeded ids and names
 │   └── server.php      dev-server router (see playwright.config.js)
 ├── public/             the public site, one file per section
@@ -33,6 +33,13 @@ has a session and whether it may write:
 | `public/` | `public` | none — a clean guest | no |
 | `admin/` | `admin` | signed in as admin, via `auth.setup.js` | no |
 | `admin-write/` | `admin-write` | signed in as admin | yes — see below |
+
+**No project waits for another.** `admin` and `admin-write` depend on `setup`
+for a session and on nothing else, so all three run at once and any one of them
+runs on its own. `admin-write` used to depend on `public` and `admin` as well —
+a mutex against the shared database rather than a real dependency, which meant
+running one write spec ran the whole suite first. What replaced it is isolation
+in the specs themselves; see [Writing specs that write](#writing-specs-that-write).
 
 A spec anywhere else is silently skipped. After adding one, check it was picked
 up:
@@ -81,25 +88,61 @@ test.describe('Games', () => {
   `page.request.get()` instead.
 - **Leave a `TODO` naming what the section still does not cover.** Those comments
   are the backlog; the checklist below is their summary.
-- **`public/` and `admin/` are read-only.** `fullyParallel` is on there and every
-  worker shares one seeded database. Anything that writes goes in `admin-write/`.
+- **`public/` and `admin/` are read-only.** Every worker shares one seeded
+  database. Anything that writes goes in `admin-write/`.
+- **A read spec must survive a row it did not expect.** `admin-write/` is running
+  at the same time, and however carefully it cleans up, one of its rows can be
+  alive while you are looking at a list. So assert that a `FIXTURE` name is
+  *there* — never a count, never a row position, and never a bare locator that a
+  transient row could also match. `public/interviews.spec.js` is the worked
+  example: an interview is titled after its individual, so
+  `getByRole('heading', { name: FIXTURE.individual.name })` would have two
+  matches and fail on strict mode if a write spec ever interviewed the seeded
+  individual. It creates its own individual precisely so that stays true.
 
 ## Writing specs that write
 
-`admin-write/` is a fourth project: serial (`workers: 1`, `fullyParallel: false`)
-and dependent on `public` and `admin`, so it runs once nothing else is reading.
-Its rules, which is what makes running the suite twice against one database safe:
+`admin-write/` is a fourth project, running in parallel with everything else
+against the same database. One rule is what makes that safe, and what makes
+running the suite twice over leave it as it started:
 
-- **Create your own row, never edit a seeded one.** `uniqueName('News')` gives you
-  an `E2E News <timestamp>` no other row will have — and something greppable in
-  the database if a run is killed halfway through.
+> **A write spec creates every row it modifies — the parent as well as the
+> child — and deletes them all again before it ends.**
+
+The line is *mutation*, not reference. These forms still **select** a seeded
+crew, genre, port or condition; menu conditions and content types come from a
+migration and have no create form at all. What a spec may not do is make a
+seeded row the parent of something new: a release on the seeded game, an issue
+on the seeded magazine, an interview about the seeded individual. Those are the
+rows the read specs assert on, and a child of one is visible on its parent's
+page.
+
+An *association* the other way round is fine, and the full-game spec relies on
+it: crediting the seeded individual on a game it created, or linking that game
+to the seeded one as similar. The new row is the parent there, and the seeded
+row is a peer — nothing appears under it that a read spec looks at.
+
+`grep -rn "FIXTURE\." admin-write/` is the check. Every hit should be reference
+data.
+
+- **`support/write.js` has a factory for each parent** — `createGame()`,
+  `createIndividual()`, `createMagazine()`, `createMenuSet()`, `createMenu()` —
+  each returning `{ id, name }` and each with a matching `delete…()`. They drive
+  the real create form, so the parent's form is covered as a side effect.
+- **Name rows with `uniqueName('News')`**, which gives an
+  `E2E News <timestamp><random>` no other row will have — and something greppable
+  in the database if a run is killed halfway through. The random suffix matters:
+  workers run in parallel and a timestamp alone collides.
 - **Delete it again in the same test.** `deleteRow(page, term)` for a Livewire
   table, `deleteByAction(page, '/releases/42')` for the cards that stand in for a
   table on releases, menus, disks and issues.
-- **A games row is only deletable while nothing references it.** The button is
-  rendered either way but disabled once the game has releases, screenshots or
-  credits, so `deleteRow` on a seeded game times out on the actionability check
-  rather than failing outright. Create your own game, as the spec does.
+- **Delete children before parents.** `Game::getIsDeletableAttribute()`
+  (`app/Models/Game.php`) refuses a game that still has a release, a review, a
+  fact, a credit, a developer, a screenshot or a similar-game link — the button
+  is rendered either way but disabled, so `deleteRow` times out on the
+  actionability check rather than failing outright. AKAs and VS rows are
+  deliberately not on that list. The same goes down the menus hierarchy: disk,
+  then menu, then set.
 - **Every delete button is wrapped in `confirm()`, and Playwright dismisses
   dialogs by default** — which cancels the submit and fails the test somewhere
   else entirely. `deleteRow` and `deleteByAction` accept it for you;
@@ -114,12 +157,20 @@ Its rules, which is what makes running the suite twice against one database safe
   to `tests/Feature/Admin`. What is only testable here is that the rendered form
   submits at all.
 
+The trade-off, so it is not a surprise: break a create form and every spec that
+needs that parent fails too, as setup rather than as its own assertion. That is
+the price of specs that owe nothing to each other, and it is the deliberate
+choice here.
+
 ## Adding a section
 
 1. Create `public/<section>.spec.js`, `admin/<section>.spec.js` or
    `admin-write/<section>.spec.js`.
-2. Seed anything it needs in `database/seeders/E2ESeeder.php`, with an explicit
-   primary key exposed as a constant, and mirror it in `support/fixture.js`.
+2. Seed anything a **read** spec needs in `database/seeders/E2ESeeder.php`, with
+   an explicit primary key exposed as a constant, and mirror it in
+   `support/fixture.js`. A **write** spec seeds nothing: it creates its parent
+   through the admin, so add a factory to `support/write.js` if there is not one
+   already.
 3. Write "lists X" and "displays one X", then a `TODO` for the rest.
 4. `npx playwright test --list` to confirm the right project picked it up.
 
@@ -150,6 +201,16 @@ docker compose run -d --name al-e2e-serve -p 8123:8000 $E2E \
 
 cd site && PLAYWRIGHT_TEST_BASE_URL=http://127.0.0.1:8123 npx playwright test
 docker rm -f al-e2e-serve
+```
+
+Any subset runs on its own, which is the point of no project depending on
+another:
+
+```bash
+npx playwright test tests/e2e/admin-write/links.spec.js   # setup, then that file
+npx playwright test --project=public                      # no login at all
+npx playwright test --project=admin-write --no-deps       # skip even the login,
+                                                          # while .auth/admin.json holds
 ```
 
 Three things that will bite otherwise:
@@ -198,7 +259,7 @@ today, and what it does not:
 | Admin links | list, create and edit, categories | approving submissions |
 | Admin users | list, edit, comments | permissions, deactivation, moderation |
 | Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog, 3 autocompletes | statistics figures |
-| **Writes** | news, reviews, interviews, articles, game, game AKA, release, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form | trivia and quotes (inline tables), every Filepond upload |
+| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form, parents included | trivia and quotes (inline tables), every Filepond upload |
 
 ## Follow-ups
 
@@ -209,15 +270,25 @@ today, and what it does not:
 2. **`tests/Feature/RoutesTest.php` guards the whole class of bug** that pruning
    fixed: a `Route::resource()` without `only()`/`except()` registers actions the
    controller does not implement, and those answer 500 rather than 404.
-3. **A missing SCEditor script takes out the admin's JavaScript (#272).**
-   `admin/others.spec.js` failed once with an uncaught `Cannot read properties of
-   undefined (reading 'set')` — `resources/js/admin/sceditor.js` reaching for a
-   global that `formats/bbcode.js` had not set. It has not recurred, and the
-   trigger looks environmental, but the unguarded globals are real. Retries are
-   off on purpose, so if it comes back it will be visible rather than hidden.
+3. **A missing SCEditor script takes out the admin's JavaScript (#272), and it
+   is now the suite's one real flake.** An uncaught `Cannot read properties of
+   undefined (reading 'set')` — or `(reading 'command')` —
+   `resources/js/admin/sceditor.js` reaching for a global that
+   `formats/bbcode.js` had not set. It was recorded here as a one-off with an
+   environmental-looking trigger; since the projects stopped running one after
+   another it turns up in roughly one full run in three, on whichever admin page
+   happens to lose the race. Nothing about the JavaScript changed — more admin
+   pages simply load at once now, which is what the unguarded globals were
+   always vulnerable to, so this is the bug becoming visible rather than a new
+   one. Retries are off on purpose, so it fails loudly. **Guarding those globals
+   is the fix**, and until then a full run may need repeating.
 4. **Mutating flows on the *public* side are still untested** — voting,
    commenting, submitting news, links and reviews. `admin-write/` is the shape to
-   copy: a sibling `public-write/` project, serial, depending on the read ones.
+   copy: a sibling `public-write/` project depending on nothing but a session,
+   whose specs create the game they vote on or comment against. Note that a
+   public form cannot create every parent an admin one can, so this is the first
+   place the rule above will have to bend — probably by creating the parent
+   through the admin and the child through the public form.
 5. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.

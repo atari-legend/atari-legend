@@ -1,11 +1,15 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { uniqueName, acceptConfirms, deleteByAction, deleteRow, pickAutocomplete, fillEditor } from '../support/write.js';
+import {
+  uniqueName, uniqueSlug, acceptConfirms, createGame, deleteGame, deleteByAction,
+  deleteRow, pickAutocomplete, fillEditor,
+} from '../support/write.js';
 
 test.describe('Admin games', () => {
   test('adds and removes an AKA on a game', async ({ page }) => {
     const aka = uniqueName('AKA');
-    const edit = `/admin/games/games/${FIXTURE.game.id}/edit`;
+    const game = await createGame(page);
+    const edit = `/admin/games/games/${game.id}/edit`;
 
     // The AKA card is a second form on the game's edit screen, posting to its
     // own route. It is the game section's smallest complete round-trip, and
@@ -23,11 +27,17 @@ test.describe('Admin games', () => {
     await page.getByRole('button', { name: `Delete AKA '${aka}'` }).click();
 
     await expect(page.getByText(aka)).toHaveCount(0);
+
+    // An AKA is not one of the things Game::getIsDeletableAttribute() blocks
+    // on, so this would pass with the AKA still attached. Deleting it is the
+    // assertion above; deleting the game is only tidying up.
+    await deleteGame(page, game);
   });
 
   test('creates and deletes a release', async ({ page }) => {
     const name = uniqueName('Release');
-    const releases = `/admin/games/${FIXTURE.game.id}/releases`;
+    const game = await createGame(page);
+    const releases = `/admin/games/${game.id}/releases`;
 
     await page.goto(`${releases}/create`);
     await page.fill('#name', name);
@@ -41,6 +51,9 @@ test.describe('Admin games', () => {
     // Releases are listed as cards on the game, not in a searchable table.
     await page.goto(releases);
     await deleteByAction(page, `/releases/${releaseId}`);
+
+    // Only now: a game with a release on it is not deletable.
+    await deleteGame(page, game);
   });
 
   test('creates and deletes a game', async ({ page }) => {
@@ -50,7 +63,7 @@ test.describe('Admin games', () => {
     await page.fill('#name', name);
     // The slug is optional to the validator, but the games table links every
     // row to its public page, and route('games.show') on a null slug throws.
-    await page.fill('#slug', `e2e-game-${Date.now()}`);
+    await page.fill('#slug', uniqueSlug(name));
     await page.getByRole('button', { name: 'Save' }).first().click();
 
     await expect(page).toHaveURL(/\/admin\/games\/games\/\d+\/edit$/);
@@ -72,8 +85,12 @@ test.describe('Admin games', () => {
     // and the embed itself is blocked so the test never waits on the network.
     await page.route('**youtube**', (route) => route.abort());
 
+    // The seeded company, individual and game below are associated *to* the
+    // game this test creates, not written to: the new game is the parent and
+    // they are peers, so nothing appears under them for a read spec to trip
+    // over. That is the line the rule draws - see tests/e2e/README.md.
     const gameName = uniqueName('Full Game');
-    const slug = `e2e-full-game-${Date.now()}`;
+    const slug = uniqueSlug(gameName);
     let testPassed = false;
     let gameId = null;
     let releaseId = null;
