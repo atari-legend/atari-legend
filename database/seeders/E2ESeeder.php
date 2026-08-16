@@ -79,6 +79,18 @@ class E2ESeeder extends Seeder
 
     public const MAGAZINE_ID = 1;
     public const MAGAZINE_ISSUE_ID = 1;
+    // One index row per shape magazines/card_issues.blade.php can render: a
+    // game, a menu software, an individual, and one that links to nothing and
+    // is only its title.
+    //
+    // The text row is last but sits on the earliest page, so that the order
+    // these are stored in is not the order anything displays them in. The
+    // public view always sorts, and the editor sorts only when asked - neither
+    // could be told from a broken one if the two orders agreed.
+    public const MAGAZINE_INDEX_GAME_ID = 1;
+    public const MAGAZINE_INDEX_SOFTWARE_ID = 2;
+    public const MAGAZINE_INDEX_INDIVIDUAL_ID = 3;
+    public const MAGAZINE_INDEX_TEXT_ID = 4;
 
     public const MENU_SET_ID = 1;
     public const MENU_ID = 1;
@@ -92,6 +104,13 @@ class E2ESeeder extends Seeder
     /** Seeded by a migration, not by us. */
     public const MENU_CONDITION_INTACT_ID = 4;
     public const MENU_CONTENT_TYPE_GAME_ID = 1;
+    // Index types ship with the magazines migration. Names rather than ids:
+    // theirs come from the order that migration inserts them in, which is not
+    // something a fixture should depend on.
+    public const MAGAZINE_INDEX_TYPE_TEXT = 'Column';
+    public const MAGAZINE_INDEX_TYPE_GAME = 'Review';
+    public const MAGAZINE_INDEX_TYPE_SOFTWARE = 'Tutorial';
+    public const MAGAZINE_INDEX_TYPE_INDIVIDUAL = 'Interview';
 
     public const GAME_NAME = 'Xenon 2 Megablast';
     public const GAME_SLUG = 'xenon-2-megablast';
@@ -101,6 +120,10 @@ class E2ESeeder extends Seeder
     public const ARTICLE_TITLE = 'Playwright Test Article';
     public const INTERVIEW_INDIVIDUAL = 'Playwright Test Individual';
     public const MAGAZINE_NAME = 'Playwright Test Magazine';
+    public const MAGAZINE_INDEX_TEXT_TITLE = 'Playwright Test Editorial';
+    public const MAGAZINE_INDEX_GAME_SCORE = '92%';
+    public const MAGAZINE_INDEX_SOFTWARE_TITLE = 'Playwright Test Cover Disk';
+    public const MAGAZINE_INDEX_INDIVIDUAL_TITLE = 'Playwright Test Coder Profile';
     public const MENU_SET_NAME = 'Playwright Test Menu Set';
     public const MENU_SOFTWARE_NAME = 'Playwright Test Software';
     public const NEWS_HEADLINE = 'Welcome to Atari Legend';
@@ -154,8 +177,10 @@ class E2ESeeder extends Seeder
         $this->seedReferenceData();
         $this->seedContent();
         $this->seedGameLinks();
-        $this->seedMagazines();
         $this->seedMenus();
+        // After the menus: a magazine index row can link to a menu software,
+        // and the foreign key wants it to exist first.
+        $this->seedMagazines();
         $this->seedLinks();
         $this->seedOthers();
     }
@@ -374,6 +399,52 @@ class E2ESeeder extends Seeder
             'created_at'  => now(),
             'updated_at'  => now(),
         ]);
+
+        // An index covering all four row shapes, so that the public view and
+        // the Livewire editor both have every branch on screen. A row links to
+        // a game, a menu software, an individual or to nothing at all; the type
+        // is an orthogonal label, and the title is optional for the rows that
+        // link somewhere - card_issues.blade.php falls back to the linked
+        // record's name.
+        foreach ([
+            [self::MAGAZINE_INDEX_GAME_ID, 12, self::MAGAZINE_INDEX_TYPE_GAME, [
+                'game_id' => self::GAME_ID,
+                'score'   => self::MAGAZINE_INDEX_GAME_SCORE,
+            ]],
+            [self::MAGAZINE_INDEX_SOFTWARE_ID, 30, self::MAGAZINE_INDEX_TYPE_SOFTWARE, [
+                'menu_software_id' => self::MENU_SOFTWARE_ID,
+                'title'            => self::MAGAZINE_INDEX_SOFTWARE_TITLE,
+            ]],
+            [self::MAGAZINE_INDEX_INDIVIDUAL_ID, 44, self::MAGAZINE_INDEX_TYPE_INDIVIDUAL, [
+                'individual_id' => self::INDIVIDUAL_ID,
+                'title'         => self::MAGAZINE_INDEX_INDIVIDUAL_TITLE,
+            ]],
+            [self::MAGAZINE_INDEX_TEXT_ID, 3, self::MAGAZINE_INDEX_TYPE_TEXT, [
+                'title' => self::MAGAZINE_INDEX_TEXT_TITLE,
+            ]],
+        ] as [$id, $page, $type, $values]) {
+            $this->insert('magazine_indices', ['id' => $id], array_merge([
+                'magazine_issue_id'      => self::MAGAZINE_ISSUE_ID,
+                'magazine_index_type_id' => $this->magazineIndexTypeId($type),
+                'page'                   => $page,
+                'created_at'             => now(),
+                'updated_at'             => now(),
+            ], $values));
+        }
+    }
+
+    /**
+     * The id of one of the index types the magazines migration ships.
+     */
+    private function magazineIndexTypeId(string $name): int
+    {
+        $id = DB::table('magazine_index_types')->where('name', $name)->value('id');
+
+        if (null === $id) {
+            throw new RuntimeException("E2ESeeder: no magazine index type named '{$name}'.");
+        }
+
+        return $id;
     }
 
     private function seedMenus(): void

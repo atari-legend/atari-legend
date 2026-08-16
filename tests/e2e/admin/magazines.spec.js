@@ -1,6 +1,6 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { expectPageRenders } from '../support/assertions.js';
+import { expectPageRenders, expectValues } from '../support/assertions.js';
 
 test.describe('Admin magazines', () => {
   test('lists magazines', async ({ page }) => {
@@ -21,6 +21,34 @@ test.describe('Admin magazines', () => {
     const path = `/admin/magazines/magazines/${FIXTURE.magazine.id}/issues/${FIXTURE.magazineIssue.id}/edit`;
 
     await expectPageRenders(page, await page.goto(path), path);
+  });
+
+  test('renders the index editor on an issue', async ({ page }) => {
+    const path = `/admin/magazines/magazines/${FIXTURE.magazine.id}/issues/${FIXTURE.magazineIssue.id}/edit`;
+    const index = FIXTURE.magazineIndex;
+
+    await page.goto(path);
+
+    const editor = page.locator('.magazine-index-editor');
+    await expect(editor).toBeVisible();
+    await expect(editor.locator('tbody tr')).toHaveCount(4);
+    await expect(editor.getByRole('button', { name: 'Add row' })).toBeVisible();
+    await expect(editor.getByRole('button', { name: 'Save', exact: true })).toBeVisible();
+    await expect(page.locator('#autosort')).toBeVisible();
+
+    // The seeded rows arrive in their fields rather than as text, so the
+    // assertion is on the values the component bound. Unsorted, the editor
+    // shows them in the order they are stored, which is not page order.
+    const pageNumbers = editor.locator('tbody tr td:first-child input');
+    await expectValues(pageNumbers, ['12', '30', '44', '3']);
+    await expect(page.locator(`input[name="${index.game.id}_game_id"]`))
+      .toHaveValue(String(FIXTURE.game.id));
+
+    // A component that never booted renders the same markup minus the
+    // behaviour, so drive one control. Auto-sort is the only one that writes
+    // nothing: it reorders what is on screen and leaves the rows alone.
+    await page.locator('#autosort').check();
+    await expectValues(pageNumbers, ['3', '12', '30', '44']);
   });
 
   const createForms = [

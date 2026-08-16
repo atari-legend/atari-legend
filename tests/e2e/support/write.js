@@ -70,8 +70,23 @@ export function acceptConfirms(page) {
  * an admin form posts.
  */
 export async function pickAutocomplete(page, inputId, term) {
-  const selector = `#${inputId}`;
+  await pickAutocompleteBy(page, `#${inputId}`, term);
+}
 
+/**
+ * The same, for a field that has no id to address it by.
+ *
+ * The magazine index editor renders three autocompletes per row and gives none
+ * of them an id, so they have to be reached through their row - and the game
+ * field carries the same `name` on every row, so even that is not enough on its
+ * own. Hence a selector rather than an id.
+ *
+ * There the companion assertion is load-bearing twice over: the hidden field is
+ * what the form posts elsewhere, but in the editor it is also what carries
+ * wire:change, so a value arriving there is what proves the Livewire round trip
+ * fired.
+ */
+export async function pickAutocompleteBy(page, selector, term) {
   await pickSuggestion(page, selector, term);
 
   // The companion hidden field is what the controller actually reads.
@@ -214,15 +229,18 @@ export async function deleteRow(page, term) {
  */
 export async function createGame(page) {
   const name = uniqueName('Game');
+  const slug = uniqueSlug(name);
 
   await page.goto('/admin/games/games/create');
   await page.fill('#name', name);
-  await page.fill('#slug', uniqueSlug(name));
+  await page.fill('#slug', slug);
   await page.getByRole('button', { name: 'Save' }).first().click();
 
   await expect(page).toHaveURL(/\/admin\/games\/games\/\d+\/edit$/);
 
-  return { id: page.url().split('/').at(-2), name };
+  // The slug comes back too: route('games.show') builds its URL from it, so a
+  // spec checking that something links to this game needs it.
+  return { id: page.url().split('/').at(-2), name, slug };
 }
 
 export async function deleteGame(page, game) {
@@ -268,6 +286,69 @@ export async function createMagazine(page) {
 export async function deleteMagazine(page, magazine) {
   await page.goto('/admin/magazines/magazines');
   await deleteRow(page, magazine.name);
+}
+
+/**
+ * Create an issue of a magazine - the parent an index belongs to.
+ *
+ * "Save", not "Save & Close": staying on the record is what puts its id in the
+ * URL, and the issues table on the magazine has no searchable column to find it
+ * by afterwards.
+ */
+export async function createMagazineIssue(page, magazine) {
+  const label = uniqueName('Issue');
+
+  await page.goto(`/admin/magazines/magazines/${magazine.id}/issues/create`);
+  await page.fill('#issue', '9999');
+  await page.fill('#label', label);
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+
+  await expect(page).toHaveURL(
+    new RegExp(`/admin/magazines/magazines/${magazine.id}/issues/\\d+/edit$`)
+  );
+
+  return { id: page.url().split('/').at(-2), magazineId: magazine.id, label };
+}
+
+/**
+ * Issues are cards on their magazine rather than rows in a table of their own,
+ * so the form is identified by the id in its action.
+ *
+ * The index rows go with the issue: magazine_indices.magazine_issue_id cascades
+ * on delete.
+ */
+export async function deleteMagazineIssue(page, issue) {
+  await page.goto(`/admin/magazines/magazines/${issue.magazineId}/edit`);
+  await deleteByAction(page, `/issues/${issue.id}`);
+}
+
+/**
+ * Create a menu software - one of the three things a magazine index row can
+ * point at.
+ *
+ * Unlike the other factories this one has no id to return: store() redirects to
+ * the index rather than to the new record's edit screen. Nothing needs it - the
+ * autocomplete matches on the name, and the table is searchable by it.
+ *
+ * The type select is left alone deliberately. It has no blank option, so the
+ * browser posts the first one, and MenuSoftwareController::edit() dereferences
+ * the content type unguarded - a software without one 500s its own edit page.
+ */
+export async function createMenuSoftware(page) {
+  const name = uniqueName('Software');
+
+  await page.goto('/admin/menus/software/create');
+  await page.fill('#name', name);
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await expect(page).toHaveURL(/\/admin\/menus\/software$/);
+
+  return { name };
+}
+
+export async function deleteMenuSoftware(page, software) {
+  await page.goto('/admin/menus/software');
+  await deleteRow(page, software.name);
 }
 
 /**

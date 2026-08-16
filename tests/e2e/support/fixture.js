@@ -54,6 +54,19 @@ export const FIXTURE = {
 
   magazine: { id: 1, name: 'Playwright Test Magazine' },
   magazineIssue: { id: 1 },
+  // The issue's index, one row per shape the public view renders: a row links
+  // to a game, a menu software, an individual, or to nothing at all.
+  //
+  // Listed in id order, which is deliberately not page order - the text row is
+  // stored last and displays first. Anything asserting on the order has to say
+  // which one it means. The types are seeded by the magazines migration rather
+  // than by E2ESeeder.
+  magazineIndex: {
+    game: { id: 1, page: 12, type: 'Review', score: '92%' },
+    software: { id: 2, page: 30, type: 'Tutorial', title: 'Playwright Test Cover Disk' },
+    individual: { id: 3, page: 44, type: 'Interview', title: 'Playwright Test Coder Profile' },
+    text: { id: 4, page: 3, type: 'Column', title: 'Playwright Test Editorial' },
+  },
 
   menuSet: { id: 1, name: 'Playwright Test Menu Set' },
   menu: { id: 1 },

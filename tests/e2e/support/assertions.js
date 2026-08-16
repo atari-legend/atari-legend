@@ -45,6 +45,21 @@ export async function expectPageRenders(page, response, path) {
 }
 
 /**
+ * Assert on the values of several inputs at once, in order.
+ *
+ * toHaveText does this for text, and toHaveValues only understands a multiple
+ * select, so a column of inputs inside a table has nothing to assert against.
+ *
+ * Polls rather than reading once: the callers are looking at Livewire
+ * components, which replace the inputs underneath them.
+ */
+export async function expectValues(locator, values) {
+  await expect
+    .poll(() => locator.evaluateAll((inputs) => inputs.map((input) => input.value)))
+    .toEqual(values);
+}
+
+/**
  * Assert that a non-HTML route answered with the resource it claims to serve.
  *
  * expectPageRenders() is wrong for these: page.goto() on a download returns a

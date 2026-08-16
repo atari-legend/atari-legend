@@ -40,6 +40,19 @@ test.describe('Games', () => {
     await expect(page.getByRole('heading', { name: FIXTURE.game.name, level: 1 })).toBeVisible();
   });
 
+  test('lists the magazines that covered a game', async ({ page }) => {
+    // The other end of the magazine index: an index row entered against an
+    // issue is what puts the issue on the game it is about.
+    // tests/e2e/public/magazines.spec.js asserts on the same rows from the
+    // magazine's side.
+    await page.goto(`/games/${FIXTURE.game.slug}`);
+
+    const card = page.locator('.card').filter({ hasText: 'Magazines' });
+    await expect(card.getByRole('link', { name: new RegExp(FIXTURE.magazine.name) })).toBeVisible();
+    await expect(card).toContainText(FIXTURE.magazineIndex.game.type);
+    await expect(card).toContainText(FIXTURE.magazineIndex.game.score);
+  });
+
   test('displays one release', async ({ page }) => {
     const response = await page.goto(`/games/release/${FIXTURE.release.id}`);
 

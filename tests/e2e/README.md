@@ -250,14 +250,14 @@ today, and what it does not:
 |---|---|---|
 | Home | page renders, nav links to each section, spotlight image | the cards (Screenstar, Who is it?, Latest menus, Trivia) |
 | Nav search | the games-and-software endpoint, `?q=`, url and icon on every row, following a game and a piece of software from the box | the icons as rendered, keyboard selection |
-| Games | list, detail by slug, release, slug redirect, screenshot, box scan | voting, comments, gallery, similar games |
+| Games | list, detail by slug, release, slug redirect, screenshot, box scan, the magazines that covered it | voting, comments, gallery, similar games |
 | Games search | title, A-Z browse, exact-match redirect, empty state; its 6 autocomplete endpoints, AKA merging and ranking, a quote as data; searching by title, year, individual and publisher through the widget | genre, engine, developer and checkbox filters; the export view |
 | News | list | submitting news, pagination |
 | Reviews | list, detail | submit form, comments, scores, unpublished hidden |
 | Interviews | list, detail, individual avatar | chapter hotspots, comments, screenshots |
 | Articles | list, detail | type filter, comments, screenshots |
 | Menu sets | list, detail, search, by-software, EPUB export, the software and crews autocompletes | disk contents, dump downloads, condition filters, crews; those two autocompletes as widgets, on the admin forms that host them |
-| Magazines | list, detail | issues, covers, archive.org links, the index |
+| Magazines | list, detail, the rendered index of an issue and all four of its row shapes | covers, archive.org links |
 | Links | list, category filter, screenshot | submitting a link, dead-link flagging |
 | Music | cover image | the SNDH player (ym2149-wasm), the sndhrecord.atari.org proxy |
 | Account | sign in, sign out, profile, review form, password confirm, guests kept out (pages and the admin autocompletes), unverified redirect | profile edit, password change, avatar, voting, commenting |
@@ -267,11 +267,11 @@ today, and what it does not:
 | BBCode editor | boots on all 8 forms that host one; the custom toolbar buttons; a custom code round-tripping WYSIWYG ↔ source | the emoticon dropdown, image/link commands, maximize |
 | Charts | the admin statistics page draws all of them, the updates chart on /games | the magazine page-count chart (needs 5 seeded issues) |
 | Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template | running an import, screenshot and dump uploads, crew relationships |
-| Admin magazines | list, magazine and issue create/edit, index types | cover upload, index entries |
+| Admin magazines | list, magazine and issue create/edit, index types, the index editor rendering its rows and re-sorting them | cover upload, the archive.org cover fetch |
 | Admin links | list, create and edit, categories | approving submissions |
 | Admin users | list, edit, comments, the users autocomplete | permissions, deactivation, moderation |
 | Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog | statistics figures |
-| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game and user pickers driven as widgets | trivia and quotes (inline tables), every Filepond upload, the magazine index editor and the menu disk-content / crew genealogy pickers |
+| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, magazine, issue, menu software, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change | trivia and quotes (inline tables), every Filepond upload, the menu disk-content / crew genealogy pickers |
 
 ## Follow-ups
 
@@ -305,7 +305,15 @@ today, and what it does not:
 5. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
    that host to config so the music spec can point it at a local fixture instead
    of depending on a third party.
-6. **Subresource 404s are invisible.** A `page.on('response')` check for
+6. **Fixed: clearing an index row's type silently threw away the edit.** The
+   blank option of the magazine index editor's type select carried
+   `value="null"`, so choosing it bound the *string* `null` to an integer
+   column. Validation rejected it, the component has no `@error` output, and
+   the screen looked like it had saved. `MagazineIndexTest` never saw it - it
+   posts an id. Found by `admin-write/magazines.spec.js` on its first run, which
+   is the case for driving a Livewire component through a browser rather than
+   only through its own test helpers.
+7. **Subresource 404s are invisible.** A `page.on('response')` check for
    same-origin 404s would catch a missing `storage:link` and broken asset paths.
    Follow-up 3 is the case for it: a script that never arrived is exactly what
    this would have caught at the time.
