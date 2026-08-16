@@ -31,6 +31,17 @@ export const FIXTURE = {
     password: 'password',
   },
 
+  // The account admin-write/users.spec.js edits. A user is the one row no form
+  // in this application can create - registration is behind an hCaptcha and the
+  // admin has no create screen - so that spec cannot build its own parent the
+  // way every other write spec does, and rewrites this one instead. Nothing
+  // signs in as it and no read spec asserts on it.
+  moderatedUser: {
+    id: 6,
+    userid: 'moderated',
+    email: 'moderated@example.com',
+  },
+
   game: {
     id: 1,
     slug: 'xenon-2-megablast',

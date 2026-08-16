@@ -42,6 +42,15 @@ class E2ESeeder extends Seeder
     public const USER_CONTRIBUTOR_ID = 4;
     public const USER_ACCOUNT_ID = 5;
 
+    // The account tests/e2e/admin-write/users.spec.js edits, deactivates and
+    // gives an avatar to. It exists because a user is the one row in this
+    // application no form can create - registration is behind an hCaptcha and
+    // the admin has no create screen - so that spec cannot make its own parent
+    // the way every other write spec does. A sixth account it may rewrite
+    // freely is the next best thing: no read spec asserts on it, and it signs
+    // in nowhere.
+    public const USER_MODERATED_ID = 6;
+
     public const GAME_ID = 1;
     public const GAME_AKA_ID = 1;
     public const RELEASE_ID = 1;
@@ -210,16 +219,20 @@ class E2ESeeder extends Seeder
         // reach the verification notice - and the only account that proves the
         // middleware still turns people away.
         //
-        // The last two belong to tests/e2e/public-write/ and nothing else.
-        // 'accounttester' is the one whose own profile and password get
+        // The fourth and fifth belong to tests/e2e/public-write/ and nothing
+        // else. 'accounttester' is the one whose own profile and password get
         // rewritten, which is why it is not 'contributor': every other spec in
         // that project signs in as 'contributor' while it does.
+        //
+        // The sixth is the one tests/e2e/admin-write/users.spec.js edits - see
+        // USER_MODERATED_ID above.
         foreach ([
             ['admin', 'admin@atarilegend.com', User::PERMISSION_ADMIN, true],
             ['testuser', 'test@example.com', User::PERMISSION_USER, true],
             ['unverified', 'unverified@example.com', User::PERMISSION_USER, false],
             ['contributor', 'contributor@example.com', User::PERMISSION_USER, true],
             ['accounttester', 'accounttester@example.com', User::PERMISSION_USER, true],
+            ['moderated', 'moderated@example.com', User::PERMISSION_USER, true],
         ] as [$userid, $email, $permission, $verified]) {
             User::updateOrCreate(
                 ['userid' => $userid],
