@@ -30,13 +30,25 @@ export function guardAgainstPageErrors(page) {
  * took out the admin's JavaScript for a while (see tests/e2e/README.md,
  * follow-up 3), and how a missing `storage:link` would look today.
  *
- * Two things are deliberately not failures:
+ * Three things are deliberately not failures:
  *
  * - **A navigation.** Several specs assert a 404 on purpose - the create forms
  *   that 404 without their parent in admin/menus.spec.js - so the document
  *   request belongs to the spec, not to this guard.
  * - **Another origin.** A game page embeds YouTube; what a third party answers
  *   is not this application's to account for.
+ * - **Anything under /storage/.** Those files belong to database rows, and the
+ *   write projects are creating and deleting rows while this page is loading.
+ *   A card that picks a random review can render another spec's screenshot in
+ *   the moment between its HTML going out and that spec's teardown unlinking
+ *   the file - a 404 that says nothing about this application, and exactly the
+ *   "survive a row you did not expect" case the README asks read specs to
+ *   tolerate. The uploads worth asserting on are asserted deliberately, with
+ *   expectResourceLoads(), against a row the spec owns.
+ *
+ * What is left is everything the application ships rather than stores: its
+ * scripts, its stylesheets, its fonts and its static images. None of those
+ * depend on a row, so a 404 on one is a real defect on every run.
  *
  * Returns the teardown half, like guardAgainstPageErrors() above.
  */
@@ -54,6 +66,10 @@ export function guardAgainstMissingSubresources(page, baseURL) {
     }
 
     if (baseURL && !response.url().startsWith(baseURL)) {
+      return;
+    }
+
+    if (new URL(response.url()).pathname.startsWith('/storage/')) {
       return;
     }
 
