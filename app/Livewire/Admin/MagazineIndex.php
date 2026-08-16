@@ -53,7 +53,7 @@ class MagazineIndex extends Component
         } else {
             $index->menuSoftware()->dissociate();
         }
-        MagazineIndex::fixPage($index);
+        MagazineIndex::fixAttributes($index);
         $index->save();
         $this->issue->refresh();
     }
@@ -68,7 +68,7 @@ class MagazineIndex extends Component
         } else {
             $index->game()->dissociate();
         }
-        MagazineIndex::fixPage($index);
+        MagazineIndex::fixAttributes($index);
         $index->save();
         $this->issue->refresh();
     }
@@ -83,7 +83,7 @@ class MagazineIndex extends Component
         } else {
             $index->individual()->dissociate();
         }
-        MagazineIndex::fixPage($index);
+        MagazineIndex::fixAttributes($index);
         $index->save();
         $this->issue->refresh();
     }
@@ -94,7 +94,7 @@ class MagazineIndex extends Component
 
         if ($this->issue->indices) {
             $this->issue->indices->each(function ($index) {
-                MagazineIndex::fixPage($index);
+                MagazineIndex::fixAttributes($index);
                 $index->save();
             });
         }
@@ -125,15 +125,24 @@ class MagazineIndex extends Component
     }
 
     /**
-     * Fix the page attribute of an index, as the UI allows entering
-     * non-numeric values.
+     * Fix the attributes of an index the UI can leave in a state the database
+     * will not take.
      *
-     * @param  MagazineIndex  $index  Index to fix the page for.
+     * The page is a free text field, so it can hold anything. The type is a
+     * select whose blank option has no value of its own, and an empty string
+     * is not something an integer column accepts - MySQL rejects the UPDATE
+     * outright, and nothing on the screen says so.
+     *
+     * @param  MagazineIndex  $index  Index to fix the attributes of.
      */
-    private static function fixPage(ModelsMagazineIndex &$index)
+    private static function fixAttributes(ModelsMagazineIndex &$index)
     {
         if ($index->page !== null && ! is_numeric($index->page)) {
             $index->page = null;
+        }
+
+        if ('' === $index->magazine_index_type_id) {
+            $index->magazine_index_type_id = null;
         }
     }
 }

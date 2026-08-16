@@ -28,7 +28,7 @@
                         </td>
                         <td>
                             <select class="form-select" wire:model.live="issue.indices.{{ $index }}.magazine_index_type_id">
-                                <option value="null">-</option>
+                                <option value="">-</option>
                                 @foreach ($indexTypes->sortBy('name') as $type)
                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
                                 @endforeach
