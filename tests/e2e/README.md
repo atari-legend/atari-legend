@@ -18,6 +18,7 @@ tests/e2e/
 │   ├── assertions.js   expectPageRenders / expectResourceLoads
 │   ├── auth.js         signIn / signOut through the real forms
 │   ├── editor.js       driving the SCEditor BBCode editors
+│   ├── autocomplete.js driving the autocomplete fields
 │   ├── write.js        helpers and parent factories the admin-write project needs
 │   ├── fixture.js      the seeded ids and names
 │   └── server.php      dev-server router (see playwright.config.js)
@@ -89,6 +90,12 @@ test.describe('Games', () => {
   `page.request.get()` instead.
 - **Leave a `TODO` naming what the section still does not cover.** Those comments
   are the backlog; the checklist below is their summary.
+- **An autocomplete belongs to the section whose form calls it.** The endpoints
+  under `/ajax` and `/admin/ajax` are asserted from that section's spec rather
+  than from a file of their own, and `pickSuggestion()` drives the field itself.
+  It takes a selector, not a locator, because the suggestion list is rendered as
+  the input's next sibling — the games search alone has six on one page, and an
+  unscoped `.autocomplete-results li` matches every one of them.
 - **`public/` and `admin/` are read-only.** Every worker shares one seeded
   database. Anything that writes goes in `admin-write/`.
 - **A read spec must survive a row it did not expect.** `admin-write/` is running
@@ -153,7 +160,9 @@ data.
   and the body of every content form is posted by SCEditor, not by the textarea in
   the markup — so use `pickAutocomplete()` and `fillEditor()`. Filling the hidden
   input directly is exactly what the PHPUnit suite already does, and passes
-  whether or not any of it still works.
+  whether or not any of it still works. `pickAutocomplete()` is
+  `pickSuggestion()` from `support/autocomplete.js` — which the public specs use
+  too — plus the assertion that the companion id arrived.
 - **Do not re-assert the controller.** Validation rules and changelog rows belong
   to `tests/Feature/Admin`. What is only testable here is that the rendered form
   submits at all.
@@ -240,29 +249,29 @@ today, and what it does not:
 | Section | Covered | Not yet |
 |---|---|---|
 | Home | page renders, nav links to each section, spotlight image | the cards (Screenstar, Who is it?, Latest menus, Trivia) |
+| Nav search | the games-and-software endpoint, `?q=`, url and icon on every row, following a game and a piece of software from the box | the icons as rendered, keyboard selection |
 | Games | list, detail by slug, release, slug redirect, screenshot, box scan | voting, comments, gallery, similar games |
-| Games search | title, A-Z browse, exact-match redirect, empty state | genre, engine, publisher, developer and checkbox filters; the export view |
-| Autocomplete | all 9 public endpoints, `?q=` filtering, a quote as data | ranking, the follow-URL behaviour of the nav box |
+| Games search | title, A-Z browse, exact-match redirect, empty state; its 6 autocomplete endpoints, AKA merging and ranking, a quote as data; searching by title, year, individual and publisher through the widget | genre, engine, developer and checkbox filters; the export view |
 | News | list | submitting news, pagination |
 | Reviews | list, detail | submit form, comments, scores, unpublished hidden |
 | Interviews | list, detail, individual avatar | chapter hotspots, comments, screenshots |
 | Articles | list, detail | type filter, comments, screenshots |
-| Menu sets | list, detail, search, by-software, EPUB export | disk contents, dump downloads, condition filters, crews |
+| Menu sets | list, detail, search, by-software, EPUB export, the software and crews autocompletes | disk contents, dump downloads, condition filters, crews; those two autocompletes as widgets, on the admin forms that host them |
 | Magazines | list, detail | issues, covers, archive.org links, the index |
 | Links | list, category filter, screenshot | submitting a link, dead-link flagging |
 | Music | cover image | the SNDH player (ym2149-wasm), the sndhrecord.atari.org proxy |
-| Account | sign in, sign out, profile, review form, password confirm, guests kept out, unverified redirect | profile edit, password change, avatar, voting, commenting |
+| Account | sign in, sign out, profile, review form, password confirm, guests kept out (pages and the admin autocompletes), unverified redirect | profile edit, password change, avatar, voting, commenting |
 | Crawler | sitemaps, robots.txt, both feeds, health check | that they list the right entities |
-| Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables | — |
+| Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables, the games and sndh autocompletes | the sndh picker as a widget, on the music panel |
 | Admin content | list/create/edit for news, reviews, interviews, articles | image uploads, `<br />` normalisation |
 | BBCode editor | boots on all 8 forms that host one; the custom toolbar buttons; a custom code round-tripping WYSIWYG ↔ source | the emoticon dropdown, image/link commands, maximize |
 | Charts | the admin statistics page draws all of them, the updates chart on /games | the magazine page-count chart (needs 5 seeded issues) |
 | Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template | running an import, screenshot and dump uploads, crew relationships |
 | Admin magazines | list, magazine and issue create/edit, index types | cover upload, index entries |
 | Admin links | list, create and edit, categories | approving submissions |
-| Admin users | list, edit, comments | permissions, deactivation, moderation |
-| Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog, 3 autocompletes | statistics figures |
-| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form, parents included | trivia and quotes (inline tables), every Filepond upload |
+| Admin users | list, edit, comments, the users autocomplete | permissions, deactivation, moderation |
+| Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog | statistics figures |
+| **Writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, magazine, issue, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game and user pickers driven as widgets | trivia and quotes (inline tables), every Filepond upload, the magazine index editor and the menu disk-content / crew genealogy pickers |
 
 ## Follow-ups
 

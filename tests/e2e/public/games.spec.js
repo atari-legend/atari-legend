@@ -1,6 +1,7 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
 import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
+import { pickSuggestion } from '../support/autocomplete.js';
 
 test.describe('Games', () => {
   test('lists games', async ({ page }) => {
@@ -73,9 +74,9 @@ test.describe('Games', () => {
     });
   });
 
-  // TODO: the remaining search filters (genre, engine, publisher, developer,
-  // and the has-review/has-download checkboxes), voting, commenting, the
-  // screenshot gallery, similar games.
+  // TODO: the remaining search filters (genre, engine, developer, and the
+  // has-review/has-download checkboxes), voting, commenting, the screenshot
+  // gallery, similar games.
 });
 
 // /games/search is a second controller action with its own view, and its
@@ -126,5 +127,138 @@ test.describe('Games search', () => {
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name })
     ).toHaveCount(0);
+  });
+});
+
+// The search form is the only consumer of six of the nine /ajax/*.json
+// endpoints, so they are asserted here rather than as a sweep of their own.
+//
+// They are public - no session, no CSRF - and they take a user-supplied ?q=,
+// which is what makes them worth more than a "does it render" check.
+test.describe('Games search autocomplete', () => {
+  const endpoints = [
+    'games',
+    'companies',
+    'release-years',
+    'genres',
+    'engines',
+    'individuals',
+  ];
+
+  for (const endpoint of endpoints) {
+    test(`serves the ${endpoint} autocomplete`, async ({ page }) => {
+      const response = await page.request.get(`/ajax/${endpoint}.json`);
+
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-type'] ?? '').toContain('application/json');
+      // Parses, and is a collection rather than an error object.
+      expect(Array.isArray(await response.json())).toBe(true);
+    });
+  }
+
+  test('filters on the query string', async ({ page }) => {
+    const response = await page.request.get(
+      `/ajax/games.json?q=${encodeURIComponent(FIXTURE.game.name)}`
+    );
+
+    const names = (await response.json()).map((row) => row.game_name);
+    expect(names).toContain(FIXTURE.game.name);
+  });
+
+  test('merges AKAs into the games it suggests, shortest match first', async ({ page }) => {
+    // A game and its AKAs come from two tables and two queries, merged and
+    // then ranked in PHP: earliest match, then shortest title. The fixture's
+    // AKA matches at the same position as its game name and is shorter, so it
+    // has to come first - which is only true if the ranking runs at all.
+    const response = await page.request.get('/ajax/games.json?q=Xenon');
+
+    const names = (await response.json()).map((row) => row.game_name);
+    expect(names).toContain(FIXTURE.game.akaName);
+    expect(names.indexOf(FIXTURE.game.akaName)).toBeLessThan(names.indexOf(FIXTURE.game.name));
+  });
+
+  test('treats a quote in the query as data', async ({ page }) => {
+    // release-years builds its own SQL rather than going through the query
+    // builder, and shipped an injection because of it. A quote has to come
+    // back as an empty result, not as a 500 and not as the whole table.
+    const response = await page.request.get("/ajax/release-years.json?q=1990'");
+
+    expect(response.status()).toBe(200);
+    expect(await response.json()).toEqual([]);
+  });
+
+  // The four tests below drive the widget itself rather than the endpoint
+  // behind it. The title field carries data-autocomplete-submit, so picking a
+  // suggestion submits the form; the others only fill a field, one of them
+  // through a hidden companion input.
+  test('submits the form when a title suggestion is picked', async ({ page }) => {
+    await page.goto('/games');
+
+    await pickSuggestion(page, '#title', FIXTURE.game.akaName);
+
+    await expect(page).toHaveURL(/\/games\/search\?/);
+    // The results page repopulates the field, so this is what was searched on.
+    await expect(page.locator('#title')).toHaveValue(FIXTURE.game.akaName);
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('goes straight to the game when its own title is picked', async ({ page }) => {
+    // The other half of the same branch: the form is submitted the same way,
+    // and the controller then redirects because the title is an exact match.
+    await page.goto('/games');
+
+    await pickSuggestion(page, '#title', FIXTURE.game.name);
+
+    await expect(page).toHaveURL(new RegExp(`/games/${FIXTURE.game.slug}$`));
+  });
+
+  test('searches on a release year picked from the suggestions', async ({ page }) => {
+    await page.goto('/games');
+
+    await pickSuggestion(page, '#year', FIXTURE.release.year);
+    await expect(page.locator('#year')).toHaveValue(FIXTURE.release.year);
+
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('searches on an individual picked from the suggestions', async ({ page }) => {
+    await page.goto('/games');
+
+    await pickSuggestion(page, '#individual', FIXTURE.individual.name);
+
+    // This endpoint decorates a name with the games that person worked on, and
+    // the field shows what was picked - so the decoration is what lands in it.
+    await expect(page.locator('#individual')).toHaveValue(new RegExp(FIXTURE.game.name));
+    // Only the id is searched on, and only onSelection puts it there.
+    await expect(page.locator('input[name="individual_select"]')).toHaveValue(
+      String(FIXTURE.individual.id)
+    );
+
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('searches on a publisher picked from the suggestions', async ({ page }) => {
+    // No companion id on this one: the controller searches on the name, so
+    // filling the visible field is the whole of what onSelection has to do.
+    await page.goto('/games');
+
+    await pickSuggestion(page, '#publisher', FIXTURE.company.name);
+    await expect(page.locator('#publisher')).toHaveValue(FIXTURE.company.name);
+
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
   });
 });

@@ -1,4 +1,5 @@
 import { test, expect } from '../support/test.js';
+import { FIXTURE } from '../support/fixture.js';
 import {
   uniqueName, deleteRow, pickAutocomplete, fillEditor,
   createGame, deleteGame, createIndividual, deleteIndividual,
@@ -24,6 +25,10 @@ test.describe('Admin news', () => {
     await page.fill('#headline', headline);
     await fillEditor(page, 'text', 'Written by the e2e suite.');
     // The author and date are prefilled with the signed-in admin and today.
+    // Picking someone else covers the one autocomplete mode the other forms
+    // never exercise: replacing a value the field arrived with, name and
+    // hidden id both. The user is only referenced, never written to.
+    await pickAutocomplete(page, 'author_name', FIXTURE.user.userid);
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page).toHaveURL(/\/admin\/news\/news$/);

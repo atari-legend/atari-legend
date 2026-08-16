@@ -65,6 +65,21 @@ test.describe('Account', () => {
     await expect(page).not.toHaveURL(/\/profile$/);
   });
 
+  test('keeps a guest out of the admin autocompletes', async ({ page }) => {
+    // The public endpoints under /ajax are deliberately open; these three are
+    // not, and they are the ones that hand back user names and every game with
+    // its developers. Asserted from here because the `public` project is the
+    // only one running without a session.
+    for (const endpoint of ['games', 'users', 'sndh']) {
+      const response = await page.request.get(`/admin/ajax/${endpoint}.json`, {
+        maxRedirects: 0,
+      });
+
+      expect(response.status(), `/admin/ajax/${endpoint}.json as a guest`)
+        .not.toBe(200);
+    }
+  });
+
   // TODO: updating the profile, changing the password, uploading an avatar,
   // voting on a game, and posting a comment. Those write, so they belong in
   // the admin-write project's sibling - a public-write project - rather than

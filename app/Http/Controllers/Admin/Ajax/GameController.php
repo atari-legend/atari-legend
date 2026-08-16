@@ -103,7 +103,13 @@ class GameController extends Controller
                     'game_id'   => $data['game_id'],
                 ];
             })
-            ->take(GameController::MAX);
+            ->take(GameController::MAX)
+            // sortBy() keeps the original keys, so any query the ranking
+            // actually reorders would be serialised as a JSON object rather
+            // than an array - and autoComplete.js iterates on .length, so the
+            // dropdown silently comes back empty. The two public autocompletes
+            // already do this.
+            ->values();
 
         return response()->json($data);
     }

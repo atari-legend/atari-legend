@@ -19,6 +19,9 @@ export const FIXTURE = {
     id: 1,
     slug: 'xenon-2-megablast',
     name: 'Xenon 2 Megablast',
+    // Shorter than the name above and matching the same term, so the
+    // autocompletes that merge games with their AKAs have something to rank.
+    akaName: 'Xenon II',
     screenshotId: 1,
     screenshotExt: 'png',
     factId: 1,
@@ -26,9 +29,13 @@ export const FIXTURE = {
   release: { id: 1, year: '1989', boxscanId: 1 },
   submission: { id: 1 },
   series: { id: 1, name: 'Playwright Test Series' },
+  // The company publishes and developed the game, the individual is credited
+  // on it, and the genre and engine below are crossed with it - so each field
+  // of the game search has something to find. See E2ESeeder::seedGameLinks().
   company: { id: 1, name: 'Playwright Test Company' },
   individual: { id: 1, name: 'Playwright Test Individual' },
   crew: { id: 1, name: 'Playwright Test Crew' },
+  sndh: { id: 'Playwright/Test Tune.sndh', title: 'Playwright Test Tune' },
 
   port: { id: 1, name: 'Playwright Test Port' },
   progressSystem: { id: 1, name: 'Playwright Test Progress' },

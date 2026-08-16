@@ -43,3 +43,33 @@ test.describe('Menu sets', () => {
   // TODO: the disk contents listing, the dump downloads, the condition
   // filters, and the crew pages behind a menu.
 });
+
+// Two of the /ajax/*.json endpoints serve this section's data. Both are public
+// and take a user-supplied ?q=, but the fields that call them are on admin
+// forms - the magazine index, a disk's content, a crew's genealogy - so what
+// is asserted here is the endpoint rather than the widget.
+test.describe('Menu autocompletes', () => {
+  const endpoints = [
+    { name: 'software', term: FIXTURE.menuSoftware.name, key: 'name' },
+    { name: 'crews', term: FIXTURE.crew.name, key: 'crew_name' },
+  ];
+
+  for (const endpoint of endpoints) {
+    test(`serves the ${endpoint.name} autocomplete`, async ({ page }) => {
+      const response = await page.request.get(`/ajax/${endpoint.name}.json`);
+
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-type'] ?? '').toContain('application/json');
+      // Parses, and is a collection rather than an error object.
+      expect(Array.isArray(await response.json())).toBe(true);
+    });
+
+    test(`filters the ${endpoint.name} autocomplete on the query string`, async ({ page }) => {
+      const response = await page.request.get(
+        `/ajax/${endpoint.name}.json?q=${encodeURIComponent(endpoint.term)}`
+      );
+
+      expect((await response.json()).map((row) => row[endpoint.key])).toContain(endpoint.term);
+    });
+  }
+});

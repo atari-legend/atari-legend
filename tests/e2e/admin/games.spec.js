@@ -138,3 +138,63 @@ test.describe('Admin game reference data', () => {
     });
   }
 });
+
+// The two /admin/ajax endpoints this section's forms call: games behind the
+// similar-games, series and review pickers, sndh behind the music one. Unlike
+// their public counterparts these are behind the admin middleware - that they
+// turn a guest away is asserted from the public project, which is the only one
+// without a session.
+test.describe('Admin games autocompletes', () => {
+  test('serves the games autocomplete', async ({ page }) => {
+    const response = await page.request.get('/admin/ajax/games.json');
+
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type'] ?? '').toContain('application/json');
+    expect(Array.isArray(await response.json())).toBe(true);
+  });
+
+  test('suggests a game, its AKAs and their developers', async ({ page }) => {
+    // This endpoint differs from the public one in what it labels a game with
+    // rather than in what it finds: an admin picking one needs the developer
+    // to tell two identically named games apart. AKAs are merged in as well,
+    // so a game can be found under any of its titles, and the merged list is
+    // ranked shortest match first.
+    const rows = await (await page.request.get('/admin/ajax/games.json?q=Xenon')).json();
+
+    // A list, not an object keyed by position: sortBy() keeps its keys, and
+    // autoComplete.js walks the response by .length - so an object here is a
+    // dropdown that silently stays empty. Only a query the ranking reorders
+    // can catch it, which is what the fixture's AKA is for.
+    expect(Array.isArray(rows)).toBe(true);
+
+    const names = rows.map((row) => row.game_name);
+    const aka = `${FIXTURE.game.akaName} [${FIXTURE.company.name}]`;
+    const game = `${FIXTURE.game.name} [${FIXTURE.company.name}]`;
+
+    expect(names).toContain(aka);
+    expect(names).toContain(game);
+    // Relative rather than absolute: the shorter title ranks first, and that
+    // stays true however many rows a write spec has in flight.
+    expect(names.indexOf(aka)).toBeLessThan(names.indexOf(game));
+  });
+
+  test('serves the sndh autocomplete', async ({ page }) => {
+    const response = await page.request.get('/admin/ajax/sndh.json');
+
+    expect(response.status()).toBe(200);
+    expect(Array.isArray(await response.json())).toBe(true);
+  });
+
+  test('finds a tune by its title', async ({ page }) => {
+    // The field shows `display`, which the query builds by concatenating the
+    // title with the id - the id being the tune's path inside the archive.
+    const response = await page.request.get(
+      `/admin/ajax/sndh.json?q=${encodeURIComponent(FIXTURE.sndh.title)}`
+    );
+
+    const rows = await response.json();
+    expect(rows.map((row) => row.id)).toContain(FIXTURE.sndh.id);
+    expect(rows.find((row) => row.id === FIXTURE.sndh.id).display)
+      .toContain(FIXTURE.sndh.title);
+  });
+});

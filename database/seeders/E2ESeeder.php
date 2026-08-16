@@ -32,6 +32,7 @@ class E2ESeeder extends Seeder
     public const USER_UNVERIFIED_ID = 3;
 
     public const GAME_ID = 1;
+    public const GAME_AKA_ID = 1;
     public const RELEASE_ID = 1;
     public const SCREENSHOT_ID = 1;
     public const SPOTLIGHT_SCREENSHOT_ID = 2;
@@ -42,6 +43,16 @@ class E2ESeeder extends Seeder
     public const COMPANY_ID = 1;
     public const INDIVIDUAL_ID = 1;
     public const CREW_ID = 1;
+
+    // A tune of our own, even though a migration ships the whole SNDH
+    // catalogue: a spec asserting on one of those would be asserting on
+    // somebody else's data, which changes with the next archive. The key of an
+    // SNDH is the tune's path inside the archive, not a number, and the
+    // archive it belongs to is a foreign key - hence one the migration wrote.
+    public const SNDH_ID = 'Playwright/Test Tune.sndh';
+    public const SNDH_TITLE = 'Playwright Test Tune';
+    public const SNDH_COMPOSER = 'Playwright Test Composer';
+    public const SNDH_ARCHIVE_ID = 'sndh45lf';
 
     public const PORT_ID = 1;
     public const PORT_NAME = 'Playwright Test Port';
@@ -84,6 +95,9 @@ class E2ESeeder extends Seeder
 
     public const GAME_NAME = 'Xenon 2 Megablast';
     public const GAME_SLUG = 'xenon-2-megablast';
+    // Shorter than the game name and matching the same term, so the two
+    // autocompletes that merge games with their AKAs have something to rank.
+    public const GAME_AKA_NAME = 'Xenon II';
     public const ARTICLE_TITLE = 'Playwright Test Article';
     public const INTERVIEW_INDIVIDUAL = 'Playwright Test Individual';
     public const MAGAZINE_NAME = 'Playwright Test Magazine';
@@ -139,6 +153,7 @@ class E2ESeeder extends Seeder
         $this->seedGames();
         $this->seedReferenceData();
         $this->seedContent();
+        $this->seedGameLinks();
         $this->seedMagazines();
         $this->seedMenus();
         $this->seedLinks();
@@ -225,8 +240,62 @@ class E2ESeeder extends Seeder
             'game_done'   => 'N',
         ]);
 
+        $this->insert('game_aka', ['game_aka_id' => self::GAME_AKA_ID], [
+            'game_id'  => self::GAME_ID,
+            'aka_name' => self::GAME_AKA_NAME,
+        ]);
+
         $this->insert('game_series', ['id' => self::GAME_SERIES_ID], ['name' => self::SERIES_NAME]);
         $this->insert('pub_dev', ['pub_dev_id' => self::COMPANY_ID], ['pub_dev_name' => self::COMPANY_NAME]);
+
+        $this->insert('sndhs', ['id' => self::SNDH_ID], [
+            'sndh_archive_id' => self::SNDH_ARCHIVE_ID,
+            'title'           => self::SNDH_TITLE,
+            'composer'        => self::SNDH_COMPOSER,
+            'subtunes'        => 1,
+            'default_subtune' => 1,
+        ]);
+    }
+
+    /**
+     * Hang the reference rows off the game.
+     *
+     * Its own step, after seedReferenceData() and seedContent(): the company,
+     * genre, engine and individual all have to exist first, and pub_dev_id on
+     * a release is a foreign key.
+     *
+     * These links are what make the game search assertable through its
+     * autocompletes - each field searches on one of them - and they are also
+     * what makes the individuals autocomplete decorate a name with the games
+     * that person worked on. The roles are left null: the role tables are
+     * RESTRICT foreign keys with nothing seeded in them, and nothing here
+     * asserts on a role.
+     */
+    private function seedGameLinks(): void
+    {
+        DB::table('game_release')
+            ->where('id', self::RELEASE_ID)
+            ->update(['pub_dev_id' => self::COMPANY_ID]);
+
+        $this->insert('game_developer', [
+            'game_id'    => self::GAME_ID,
+            'dev_pub_id' => self::COMPANY_ID,
+        ], []);
+
+        $this->insert('game_genre_cross', [
+            'game_id'       => self::GAME_ID,
+            'game_genre_id' => self::GENRE_ID,
+        ], []);
+
+        $this->insert('game_engine', [
+            'game_id'   => self::GAME_ID,
+            'engine_id' => self::ENGINE_ID,
+        ], []);
+
+        $this->insert('game_individual', [
+            'game_id'       => self::GAME_ID,
+            'individual_id' => self::INDIVIDUAL_ID,
+        ], []);
     }
 
     private function seedContent(): void

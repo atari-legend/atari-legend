@@ -53,17 +53,6 @@ test.describe('Admin others', () => {
   // the numbers, not just that it renders.
 });
 
-test.describe('Admin autocomplete endpoints', () => {
-  const endpoints = ['games', 'users', 'sndh'];
-
-  for (const endpoint of endpoints) {
-    test(`serves the ${endpoint} autocomplete`, async ({ page }) => {
-      const response = await page.request.get(`/admin/ajax/${endpoint}.json`);
-
-      expect(response.status()).toBe(200);
-      expect(response.headers()['content-type'] ?? '').toContain('application/json');
-      // Parses, and is a collection rather than an error object.
-      expect(Array.isArray(await response.json())).toBe(true);
-    });
-  }
-});
+// The three /admin/ajax endpoints used to be asserted here, as a sweep. They
+// now live with the section whose forms call them: games and sndh in
+// admin/games.spec.js, users in admin/users.spec.js.

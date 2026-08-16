@@ -31,3 +31,24 @@ test.describe('Admin users', () => {
   // TODO: changing a user's permission, deactivating an account, deleting an
   // avatar, and moderating a comment.
 });
+
+// The author field on the news, review, interview and article forms picks a
+// user through this. It hands back account names, so it is behind the admin
+// middleware; the guest check for it lives in public/account.spec.js.
+test.describe('Admin users autocomplete', () => {
+  test('serves the users autocomplete', async ({ page }) => {
+    const response = await page.request.get('/admin/ajax/users.json');
+
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type'] ?? '').toContain('application/json');
+    expect(Array.isArray(await response.json())).toBe(true);
+  });
+
+  test('filters on the query string', async ({ page }) => {
+    const response = await page.request.get(
+      `/admin/ajax/users.json?q=${encodeURIComponent(FIXTURE.user.userid)}`
+    );
+
+    expect((await response.json()).map((row) => row.userid)).toContain(FIXTURE.user.userid);
+  });
+});

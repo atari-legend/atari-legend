@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { FIXTURE } from './fixture.js';
+import { pickSuggestion } from './autocomplete.js';
 
 /**
  * Helpers for the admin-write project.
@@ -63,35 +64,28 @@ export function acceptConfirms(page) {
  * field carries the name, the hidden one carries the id, and only the
  * autocomplete's onSelection puts the id there. A PHPUnit test posts the id
  * directly and passes whether or not any of that still works.
+ *
+ * The typing itself lives in support/autocomplete.js, which the public specs
+ * use too; what this adds is the assertion that the id arrived, which is what
+ * an admin form posts.
  */
 export async function pickAutocomplete(page, inputId, term) {
-  const input = page.locator(`#${inputId}`);
-  const suggestion = page.locator('.autocomplete-results li', { hasText: term }).first();
+  const selector = `#${inputId}`;
 
-  // The dropdown is built when the field is first focused, by a listener the
-  // page's scripts attach on DOMContentLoaded. A spec that reaches this
-  // straight after a form redirect can be early enough to type before that:
-  // the assertion that the row was added is satisfied by the parsed HTML
-  // alone. Nothing then requests the suggestions, and the click below waits
-  // out the whole test timeout on a list that is never rendered.
-  //
-  // Hence waiting for the load event, and retrying the typing rather than the
-  // click: filling again re-focuses a field that is wired up by now.
-  await page.waitForLoadState('load');
-
-  await expect(async () => {
-    await input.blur();
-    await input.fill('');
-    await input.fill(term);
-    await expect(suggestion).toBeVisible({ timeout: 5000 });
-  }).toPass({ timeout: 30000 });
-
-  await suggestion.click();
+  await pickSuggestion(page, selector, term);
 
   // The companion hidden field is what the controller actually reads.
-  const companion = await input.getAttribute('data-autocomplete-companion');
+  const companion = await page.locator(selector).getAttribute('data-autocomplete-companion');
   await expect(page.locator(`input[name="${companion}"]`)).not.toHaveValue('');
 }
+
+/**
+ * Type into an autocomplete field and pick a suggestion, asserting nothing.
+ *
+ * Re-exported for the same reason as fillEditor below: a spec creating a
+ * record imports everything from here.
+ */
+export { pickSuggestion };
 
 /**
  * Type into one of the BBCode editors that replace a textarea.sceditor.
