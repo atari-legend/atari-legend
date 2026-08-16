@@ -15,7 +15,7 @@
                     <label for="image[]" class="form-label">Add an image</label>
                     <input type="file" class="form-control @error('image') is-invalid @enderror" multiple name="image[]">
                 </div>
-                <button class="btn btn-success type="submit">Add image(s)</button>
+                <button class="btn btn-success" type="submit">Add image(s)</button>
             </form>
 
             <hr>

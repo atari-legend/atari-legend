@@ -13,7 +13,7 @@
                                 @method('PUT')
 
                                 <div class="input-group">
-                                    <input type="text" id="type" name="type" required  class="form-control" value="{{ $type->article_type }}">
+                                    <input type="text" id="type-{{ $type->getKey() }}" name="type" required class="form-control" value="{{ $type->article_type }}">
                                     <button class="btn btn-outline-success" type="submit">Update</button>
                                 </div>
                             </form>

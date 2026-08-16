@@ -63,7 +63,7 @@
                             src="{{ isset($news) ? $news->news_image ?? asset('images/image-placeholder.png') : asset('images/image-placeholder.png') }}" alt="News image">
 
                         @if (isset($news?->news_image))
-                            <button class="btn btn-link" type="button"
+                            <button class="btn btn-link" type="button" title="Delete image"
                                 onclick="if (confirm('The image will be deleted')) document.getElementById('delete-image').submit();">
                                 <i class="fas fa-trash-alt text-danger"></i>
                             </button>

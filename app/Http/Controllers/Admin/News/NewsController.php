@@ -131,6 +131,11 @@ class NewsController extends Controller
             Storage::disk('public')->delete('images/news_images/' . $news->image->file);
             $news->image->delete();
 
+            // And let go of it: deleting the row on its own left
+            // news.news_image_id pointing at an id that is no longer there.
+            $news->news_image_id = null;
+            $news->save();
+
             ChangelogHelper::insert([
                 'action'           => Changelog::DELETE,
                 'section'          => 'News',

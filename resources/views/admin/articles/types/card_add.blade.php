@@ -7,7 +7,7 @@
 
             <div class="mb-3">
                 <label for="type" class="form-label">Type</label>
-                <input type="type" class="form-control @error('name') is-invalid @enderror" id="type" name="type" required>
+                <input type="text" class="form-control @error('name') is-invalid @enderror" id="type" name="type" required>
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
