@@ -2,8 +2,10 @@ import { test, expect } from '../support/public-write.js';
 import { FIXTURE } from '../support/fixture.js';
 import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
 import { signIn } from '../support/auth.js';
-import { postComment, editComment, deleteComment } from '../support/comments.js';
-import { PNG, uniqueName, findRow, createGame, deleteGame } from '../support/write.js';
+import { postComment, editComment, deleteComment, findComment } from '../support/comments.js';
+import {
+  PNG, uniqueName, findRow, expectNoRow, createGame, deleteGame,
+} from '../support/write.js';
 
 // What a signed-in visitor can do to a game: rate it, comment on it, correct
 // it.
@@ -140,7 +142,75 @@ test.describe('Game info submissions', () => {
     // wrong.
     await deleteGame(adminPage, game);
   });
+
+  test('approves a correction, which turns it into a comment on the game', async ({ page, adminPage }) => {
+    const game = await createGame(adminPage);
+    const info = uniqueName('Submission');
+
+    await signIn(page, FIXTURE.contributor);
+    await page.goto(`/games/${game.slug}`);
+
+    // No attachment this time: the upload is the test above, and a screenshot
+    // here would leave an orphan screenshot_main row behind for nothing - see
+    // follow-up 11 in the README.
+    const form = page.locator(`form[action$="/${game.slug}/submitInfo"]`);
+    await form.locator('textarea[name="info"]').fill(info);
+    await form.getByRole('button', { name: 'Submit' }).click();
+
+    await expect(page.getByRole('alert')).toContainText('Thanks for your submission');
+
+    await adminPage.goto('/admin/games/submissions');
+    const row = await findRow(adminPage, game.name);
+    await row.getByRole('link', { name: game.name }).click();
+
+    await expect(adminPage).toHaveURL(/\/admin\/games\/submissions\/\d+$/);
+    const submission = { id: adminPage.url().split('/').at(-1) };
+    await expect(adminPage.locator('.card-subtitle')).toContainText('Reviewed No');
+
+    // 1. Mark as reviewed - the flag a moderator sets on the way past. It is
+    //    read back from the submission rather than from the queue: the table
+    //    means to hide reviewed rows by default and does not, because its
+    //    default is keyed 'processed' while the filter's own key is 'reviewed'
+    //    - see the note at the bottom of this file.
+    await adminPage.getByRole('button', { name: 'Mark as reviewed' }).click();
+    await expect(adminPage).toHaveURL(/\/admin\/games\/submissions$/);
+
+    await adminPage.goto(`/admin/games/submissions/${submission.id}`);
+    await expect(adminPage.locator('.card-subtitle')).toContainText('Reviewed Yes');
+
+    // 2. Approve it. There is no "publish" for a correction: what an editor
+    //    does with one worth keeping is convert it, which copies the text into
+    //    a comment on the game - author and timestamp included - and destroys
+    //    the submission.
+    await adminPage.getByRole('button', { name: 'Convert to comment' }).click();
+    await expect(adminPage).toHaveURL(/\/admin\/games\/submissions$/);
+    await expectNoRow(adminPage, game.name);
+
+    // The half nothing covered: the correction is now public, on the game the
+    // visitor was reading, under their own name.
+    await page.goto(`/games/${game.slug}`);
+    const comment = await findComment(page, info);
+    await expect(comment.text).toBeVisible();
+    await expect(comment.block).toContainText(FIXTURE.contributor.userid);
+
+    // The comment approval created is this test's row too, so it goes as well.
+    // The author is the visitor, so their own trash link is the cheapest way
+    // out - the admin's screens for a comment are driven from
+    // public-write/content.spec.js instead.
+    await deleteComment(page, comment);
+
+    await deleteGame(adminPage, game);
+  });
 });
 
 // TODO: several files in one correction, and a non-image attachment - the admin
 // renders those as a link rather than an <img>.
+//
+// Found writing the approval test, and left alone because fixing it is not a
+// test's job: App\Livewire\Admin\Games\GameSubmissionsTable declares
+// `public array $filters = ['processed' => 'no']` to open the queue on the
+// submissions nobody has looked at yet, but a filter's key is Str::snake() of
+// its *name* unless one is passed to make() - so the two filters there are
+// keyed 'reviewed' and 'has_attachments', 'processed' matches neither, and the
+// default is silently dropped. The queue has always opened on every submission
+// ever made, reviewed or not.
