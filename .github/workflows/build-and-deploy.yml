@@ -124,8 +124,11 @@ jobs:
           # symlink nor the directory - and tests/e2e/support/server.php serves
           # a path only when the file is really there, so every /storage/ URL
           # 404s without this. The specs that upload a file and then fetch it
-          # back are the ones that notice. deploy.sh does the same on the
-          # servers; only CI was missing it.
+          # back are the ones that notice.
+          #
+          # This writes an absolute link into the runner's own checkout, so it
+          # is only ever valid here. deploy.sh excludes public/storage from the
+          # rsync for that reason - the servers create and keep their own.
           php artisan storage:link
 
       - name: Run Playwright E2E Tests
