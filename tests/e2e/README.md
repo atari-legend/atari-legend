@@ -30,6 +30,11 @@ tests/e2e/
 └── public-write/       the public site as a signed-in visitor, contributing
 ```
 
+One file per section, with one exception: `admin-write/games.spec.js` covers the
+game and its releases, and `admin-write/games-reference.spec.js` the individuals,
+companies, series and configuration tables behind them. They were one file until
+it was a thousand lines of two unrelated subjects.
+
 **A spec's directory decides which project runs it**, and therefore whether it
 has a session and whether it may write:
 
@@ -84,8 +89,10 @@ test.describe('Games', () => {
 ```
 
 - **Import `test` from `support/test.js`**, not from `@playwright/test`. It wraps
-  the `page` fixture so an uncaught JavaScript exception fails the test without
-  every spec wiring up a listener.
+  the `page` fixture with the two checks nobody should have to remember: an
+  uncaught JavaScript exception fails the test, and so does a subresource this
+  application answered 404 to. The second one exempts `/storage/` and
+  navigations, for reasons worth knowing before you trip over them — follow-up 7.
 - **Assert content, not just a 200.** `expectPageRenders` checks the status, that
   the request was not redirected away, and that no Laravel exception page came
   back. That is the floor; a test earns its place by also asserting the thing the
@@ -198,6 +205,9 @@ the test is about happens over here. Import `test` from `support/public-write.js
 rather than `support/test.js` to get that fixture — it extends the other one, so
 `page` still fails on an uncaught JavaScript exception.
 
+- **A user is the one row no form can create**, so the account the admin section
+  edits — `FIXTURE.moderatedUser` — is seeded rather than built, and
+  `admin-write/users.spec.js` puts back whatever it changes. Follow-up 14.
 - **Two seeded accounts belong to this project and nothing else.**
   `FIXTURE.contributor` writes; `FIXTURE.accountUser` is the one whose own
   profile and password get rewritten, by `public-write/account.spec.js` alone.
@@ -220,26 +230,22 @@ rather than `support/test.js` to get that fixture — it extends the other one, 
   `display: none`, so anything inside it is out of the accessibility tree: switch
   back to `#edit` before looking for the Submit button.
 
-### The two rows a run leaves behind
+### The one row a run leaves behind
 
-Everything else in the suite is back where it started afterwards. These two are
-not, and both are the application's doing rather than the spec's:
+Everything else in the suite is back where it started afterwards. This one is
+not, and it is the application's doing rather than the spec's:
 
-1. **A `website_validate` row per run.** `public-write/links.spec.js` submits a
-   link, and the admin in this repo has no screen for `website_validate` at all —
-   link submissions are still approved in the legacy CPANEL, so there is no route
-   to delete one through. The row is named `E2E Link …`, renders nowhere, and is
-   greppable. Give the admin a submissions screen — follow-up 12 — and this
-   becomes an ordinary spec.
-2. **Two orphan `screenshot_main` rows per run.** Neither
-   `GameScreenshotsController::destroy()` nor `GameSubmissionController::destroy()`
-   deletes the `screenshot_main` row — the first only detaches the pivot, the
-   second deletes the file and the submission. The file on disk does go. See
-   follow-up 11.
+**A `website_validate` row per run.** `public-write/links.spec.js` submits a
+link, and the admin in this repo has no screen for `website_validate` at all -
+link submissions are still approved in the legacy CPANEL, so there is no route
+to delete one through. The row is named `E2E Link …`, renders nowhere, and is
+greppable. Give the admin a submissions screen - follow-up 12 - and this
+becomes an ordinary spec.
 
-`SELECT * FROM website_validate WHERE website_name LIKE 'E2E %'` and the
-`screenshot_main` count are therefore the only two numbers that should move.
-Anything else growing across runs is a spec that failed to clean up.
+`SELECT * FROM website_validate WHERE website_name LIKE 'E2E %'` is therefore
+the only number that should move. Anything else growing across runs is a spec
+that failed to clean up - including `screenshot_main`, which used to gain two
+rows a run until follow-up 11 was fixed and is now a useful canary.
 
 ## Adding a section
 
@@ -314,36 +320,36 @@ Without `PLAYWRIGHT_TEST_BASE_URL`, Playwright starts its own server via the
 
 ## Coverage checklist
 
-Route coverage is not the goal — feature coverage is. What the suite checks
+Route coverage is not the goal - feature coverage is. What the suite checks
 today, and what it does not:
 
 | Section | Covered | Not yet |
 |---|---|---|
-| Home | page renders, nav links to each section, spotlight image | the cards (Screenstar, Who is it?, Latest menus, Trivia) |
+| Home | page renders, nav links to each section, spotlight image, the Screenstar, Who is it? and Trivia cards | - |
 | Nav search | the games-and-software endpoint, `?q=`, url and icon on every row, following a game and a piece of software from the box | the icons as rendered, keyboard selection |
 | Games | list, detail by slug, release, slug redirect, screenshot, box scan, the magazines that covered it, the three contribution forms hidden from a guest | gallery, similar games |
-| Games search | title, A-Z browse, exact-match redirect, empty state; its 6 autocomplete endpoints, AKA merging and ranking, a quote as data; searching by title, year, individual and publisher through the widget | genre, engine, developer and checkbox filters; the export view |
-| News | list, no submission form for a guest | pagination |
+| Games search | title, A-Z browse, exact-match redirect, empty state; its 6 autocomplete endpoints, AKA merging and ranking, a quote as data; searching by title, year, individual and publisher through the widget; genre, engine and developer by name, by id and through the dropdown toggle; the checkbox filters in both directions | the export view |
+| News | list, no submission form for a guest, pagination across both pages | - |
 | Reviews | list, detail | the scores as published, unpublished hidden |
-| Interviews | list, detail, individual avatar | chapter hotspots, screenshots |
-| Articles | list, detail | type filter, screenshots |
-| Menu sets | list, detail, search, by-software, EPUB export, the software and crews autocompletes; a disk card end to end — contents in all three shapes, condition, donor, notes, scrolltext, screenshot and dump download; the software page and a game's menus card | condition filters, crew pages; the crews autocomplete as a widget |
-| Magazines | list, detail, the rendered index of an issue and all four of its row shapes | covers, archive.org links |
+| Interviews | list, detail, individual avatar, a chapter hotspot followed to its anchor, a screenshot and its caption | - |
+| Articles | list, detail, the type badge, a screenshot and its caption | filtering by type, which does not exist - see follow-up 13 |
+| Menu sets | list, detail, search by title and A-Z, the empty state, by-software, EPUB export, the software and crews autocompletes; a disk card end to end - contents in all three shapes, condition, donor, notes, scrolltext, screenshot and dump download; the software page, a game's menus card, and the Latest menus card | condition filters, crew pages |
+| Magazines | list, detail, the rendered index of an issue and all four of its row shapes, an issue cover, the archive.org read link and its /details/ to /stream/ rewrite | the page-count chart (needs 5 seeded issues) |
 | Links | list, category filter, screenshot, no submission form for a guest | dead-link flagging |
-| Music | cover image | the SNDH player (ym2149-wasm), the sndhrecord.atari.org proxy |
+| Music | cover image | the SNDH player (ym2149-wasm). The proxy is covered by ResourceControllersTest rather than here - see follow-up 5 |
 | Account | sign in, sign out, profile, review form, password confirm, guests kept out (pages and the admin autocompletes), a signed-in non-admin kept out of /admin, unverified redirect | registering (needs a real hCaptcha), the e-mail field's uniqueness rule |
 | Crawler | sitemaps, robots.txt, both feeds, health check | that they list the right entities |
-| Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables, the games and sndh autocompletes | the sndh picker as a widget, on the music panel |
-| Admin content | list/create/edit for news, reviews, interviews, articles | image uploads, `<br />` normalisation |
+| Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables, the games and sndh autocompletes | - |
+| Admin content | list/create/edit for news, reviews, interviews, articles | `<br />` normalisation |
 | BBCode editor | boots on all 8 forms that host one; the custom toolbar buttons; a custom code round-tripping WYSIWYG ↔ source | the emoticon dropdown, image/link commands, maximize |
 | Charts | the admin statistics page draws all of them, the updates chart on /games | the magazine page-count chart (needs 5 seeded issues) |
-| Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template, screenshot and dump uploads | running an import, crew relationships |
-| Admin magazines | list, magazine and issue create/edit, index types, the index editor rendering its rows and re-sorting them | cover upload, the archive.org cover fetch |
-| Admin links | list, create and edit, categories | approving submissions — there is no screen for `website_validate` at all |
-| Admin users | list, edit, comments, the users autocomplete | permissions, deactivation, moderation |
+| Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template, screenshot and dump uploads | running an import |
+| Admin magazines | list, magazine and issue create/edit, index types, the index editor rendering its rows and re-sorting them | - |
+| Admin links | list, create and edit, categories | approving submissions - there is no screen for `website_validate` at all |
+| Admin users | list, edit, comments, the users autocomplete | - |
 | Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog | statistics figures |
-| **Admin writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, disk content, magazine, issue, menu software, link, category, spotlight — each created and deleted through its form, parents included; the company, individual, game, software and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change; a menu set built up to two menus and three disks, with a screenshot and a dump uploaded, and checked on the public page after every change | trivia and quotes (inline tables), every Filepond upload, the crew genealogy picker |
-| **Public writes** | all 13 of the `auth:web` routes: rating a game and withdrawing it, commenting on a game, review, interview and article, editing and deleting one's own comment, correcting a game with a file attached, submitting a review — toolbar, preview tab and scores — submitting news and a link, updating the profile, adding and removing an avatar, changing the password and changing it back | approving any of the three queues, several files in one correction, a non-image attachment |
+| **Admin writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, disk content, magazine, issue, menu software, link, category, spotlight - each created and deleted through its form, parents included; the company, individual, game, software, sndh and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change; a menu set built up to two menus and three disks, with a screenshot and a dump uploaded, and checked on the public page after every change; all six release system panels, the scene panel, release and media scans; crews with members, sub-crews, parent crews and a logo; individual nicknames and avatar, company logo, series membership, the issues-screen genres action, the game music panel; the inline tables - game config, menu conditions, content types, article types, magazine index types, trivia and quotes; article, interview and news images; a user edited, promoted, deactivated and given an avatar | deleting a user (nothing can create one - follow-up 12), running a spreadsheet import, the crew genealogy picker on an individual |
+| **Public writes** | all 13 of the `auth:web` routes: rating a game and withdrawing it, commenting on a game, review, interview and article, editing and deleting one's own comment, correcting a game with a file attached, submitting a review - toolbar, preview tab and scores - submitting news and a link, updating the profile, adding and removing an avatar, changing the password and changing it back; and the moderation queues from both ends - a news submission and a review submission approved as well as deleted, a game submission approved, a comment edited and deleted from the admin | approving a link submission (no screen exists), several files in one correction, a non-image attachment |
 
 ## Follow-ups
 
@@ -358,53 +364,51 @@ today, and what it does not:
    and it had become the suite's one real flake.** An uncaught `Cannot read
    properties of undefined (reading 'set')` — or `(reading 'command')` —
    `resources/js/admin/sceditor.js` reaching for a global that a separate
-   `<script>` tag had not set. It was recorded here as a one-off with an
-   environmental-looking trigger; once the projects stopped running one after
-   another it turned up in roughly one full run in three, on whichever admin
-   page happened to lose the race. Nothing about the JavaScript had changed —
-   more admin pages simply load at once now, which is what the unguarded globals
-   were always vulnerable to. SCEditor and Chart.js are both bundled through
+   `<script>` tag had not set. SCEditor and Chart.js are both bundled through
    Vite now, so the library is an `import` rather than a request that can go
    missing, and `admin/editor.spec.js` asserts the editors boot rather than only
    that the page renders.
 4. **Done: mutating flows on the *public* side.** `public-write/` covers all 13
-   `auth:web` routes. It bent the rule exactly as predicted — the parent is
-   created through the admin in a second context, the child through the public
-   form — and see
-   [Where `public-write/` bends the rule](#where-public-write-bends-the-rule) for
-   what that cost. Registration is the one public write still out of reach: it
-   needs a real hCaptcha response, which is why `tests/Feature/Public/AuthTest`
-   swaps the captcha HTTP client instead.
-5. **`/music/{sndh}` proxies a live request to `sndhrecord.atari.org`.** Extract
-   that host to config so the music spec can point it at a local fixture instead
-   of depending on a third party.
+   `auth:web` routes, and now the approve half of the moderation queues as well.
+   Registration is the one public write still out of reach: it needs a real
+   hCaptcha response, which is why `tests/Feature/Public/AuthTest` swaps the
+   captcha HTTP client instead.
+5. **Fixed: `/music/{sndh}` had its upstream host spelled into the controller.**
+   `config('al.sndh.mp3_base_url')` supplies it now, defaulting to the same URL,
+   so a test can point it somewhere it controls. No e2e spec followed, and the
+   TODO in `public/music.spec.js` says why: `ResourceControllersTest` already
+   fakes the HTTP client and covers the URL composed, the subtune padding and a
+   404 passing through.
 6. **Fixed: clearing an index row's type silently threw away the edit.** The
    blank option of the magazine index editor's type select carried
    `value="null"`, so choosing it bound the *string* `null` to an integer
    column. Validation rejected it, the component has no `@error` output, and
    the screen looked like it had saved. `MagazineIndexTest` never saw it - it
-   posts an id. Found by `admin-write/magazines.spec.js` on its first run, which
-   is the case for driving a Livewire component through a browser rather than
-   only through its own test helpers.
-7. **Subresource 404s are invisible.** A `page.on('response')` check for
-   same-origin 404s would catch a missing `storage:link` and broken asset paths.
-   Follow-up 3 is the case for it: a script that never arrived is exactly what
-   this would have caught at the time.
+   posts an id. Found by `admin-write/magazines.spec.js` on its first run.
+7. **Fixed: subresource 404s were invisible.** `guardAgainstMissingSubresources()`
+   in `support/test.js` now fails any spec whose page asked this application for
+   a script, stylesheet, font or static image and got a 404 - the case follow-up
+   3 was.
+
+   It exempts `/storage/`, and that exemption is the interesting part: on its
+   first CI run the guard went red on another spec's game screenshot, because a
+   card that picks a random review had rendered it in the moment between that
+   spec's page load and its teardown unlinking the file. Stored uploads belong
+   to rows, rows come and go while everything runs in parallel, and that is the
+   "survive a row you did not expect" rule rather than a defect. Uploads worth
+   asserting on are asserted deliberately, with `expectResourceLoads()`, against
+   a row the spec owns.
 8. **Fixed: a menu set's sort direction did not survive its own edit form.**
    `admin/menus/sets/card_edit.blade.php` compared the stored `menus_sort`
    against `'ascending'` / `'descending'`, but the column is an enum of `asc` /
-   `desc`. So on a saved set neither option was marked `selected`, the browser
-   fell back to the first, and the next save silently put the direction back to
-   `asc` - a set could only be descending until someone edited its name.
-   `MenuAdminTest` never saw it: it posts `sort` and reads the column back, so
-   the round trip it checks never goes through the rendered select. Found while
-   writing `admin-write/menus.spec.js`, which now asserts the select in both
-   directions *and* the order of the disks it produces on `/menusets/{set}`.
-9. **`public/menus.spec.js` searches on the wrong parameter.** It requests
-   `/menusets/search?search=…`, but `MenuSetController::search()` reads `title`
-   and `titleAZ`; with neither present it forces both result sets empty. So the
-   test asserts that a deliberately blank search page renders, which is not what
-   it says it does. `?title=` plus an assertion on the results is the fix.
+   `desc`. `MenuAdminTest` never saw it: it posts `sort` and reads the column
+   back, so the round trip it checks never goes through the rendered select.
+9. **Fixed: `public/menus.spec.js` searched on the wrong parameter.** It
+   requested `/menusets/search?search=…`, but `MenuSetController::search()`
+   reads `title` and `titleAZ`; with neither present it forces both result sets
+   empty. So the test asserted that a deliberately blank search page renders.
+   It now asks on `title`, asserts the software that comes back, and covers the
+   A-Z browse and the empty state as well.
 10. **Creating a review is not atomic, and any page listing reviews can catch
     it half-done.** `ReviewsController::store()` and `ReviewController::submit()`
     both insert the `review_main` row and attach `review_game` as two separate
@@ -413,24 +417,64 @@ today, and what it does not:
     `$review->games[0]` unguarded. A request that renders the "In-Depth Reviews"
     card in that window gets `ErrorException: Undefined array key 0` — a 500 on
     an unrelated page, for a visitor who did nothing but load it while somebody
-    else was submitting. Seen once while `public-write/reviews.spec.js` and its
-    sibling test were both creating reviews; not reproduced in the runs since,
-    which is what a race of two adjacent statements looks like. Wrapping both
-    controllers in a transaction is the fix; guarding the card with
-    `$review->games->first()` would also stop it 500ing, since a review with no
-    game is representable in this schema either way.
-11. **Deleting a screenshot never deletes its `screenshot_main` row.**
-    `GameScreenshotsController::destroy()` detaches the pivot and unlinks the
-    file; `GameSubmissionController::destroy()` unlinks the file and deletes the
-    submission. Neither removes the row, so the table accumulates ids with
+    else was submitting. Wrapping both controllers in a transaction is the fix;
+    guarding the card with `$review->games->first()` would also stop it 500ing.
+11. **Fixed: deleting a screenshot never deleted its `screenshot_main` row.**
+    `GameScreenshotsController::destroy()` detached the pivot and unlinked the
+    file; `GameSubmissionController::destroy()` unlinked the file and deleted the
+    submission. Neither removed the row, so the table accumulated ids with
     nothing behind them — two per full e2e run, and one per screenshot a
-    moderator has ever removed in production. `MenuDisksController::destroyScreenshot()`
-    is the one that gets it right.
+    moderator had ever removed in production. Both delete the row now, as
+    `MenuDisksController::destroyScreenshot()` always did.
 12. **Link submissions have no screen in this admin at all.** `/links/submit`
     writes a `WebsiteValidate` row and the only place one can be read or approved
-    is the legacy CPANEL — there is no route in this application to list, approve
-    or delete one, which is why `public-write/links.spec.js` is the single spec
-    in the suite that cannot delete what it creates. News submissions
-    (`admin/news/submissions`) are the shape to copy: an index, an approve and a
-    destroy. Doing that would close the last gap in the admin's coverage of the
-    three moderation queues, and turn that spec into an ordinary one.
+    is the legacy CPANEL. News submissions (`admin/news/submissions`) are the
+    shape to copy: an index, an approve and a destroy. That would close the last
+    gap in the admin's coverage of the three moderation queues, and turn
+    `public-write/links.spec.js` into an ordinary spec.
+13. **There is no filter by article type.** `ArticleController::index()` takes no
+    `Request` at all. The checklist promised one for a long time; what exists is
+    the badge on the list, which `public/articles.spec.js` now covers. If the
+    filter is wanted, it is a feature request rather than a coverage gap.
+14. **A user cannot be created through any form**, so `admin-write/users.spec.js`
+    cannot delete one: registration is behind an hCaptcha and the admin has no
+    create screen. It rewrites `FIXTURE.moderatedUser` instead, seeded for that
+    file alone, and leaves the destroy route uncovered. An admin create screen -
+    or a per-run seeded account - would close it.
+15. **`MenuCrewController::destroy()` deletes the crew row and nothing else.** It
+    never detaches `crew_individual` or `sub_crew`, and never unlinks
+    `images/crew_logos/{id}.{ext}` — `destroyLogo()` is the only thing that
+    does. The trash button is disabled only for crews on a menu set, so deleting
+    a crew with members, a genealogy or a logo leaves orphan pivot rows and a
+    stray file. Same shape as follow-up 11.
+16. **Nothing validates a crew relationship.** `addIndividual()` and
+    `addSubCrew()` call `find()` and redirect as if they had saved when it
+    returns null, so the `@error('individual')` / `@error('subcrew')` markup in
+    those cards can never render. `sub_crew` also has no unique key on
+    `(crew_id, parent_id)` and `attach()` is unconditional, so the same
+    sub-crew twice - or a crew under itself - is representable.
+17. **A failed archive.org fetch is stored as the issue cover.**
+    `resources/js/admin/magazines/magazines.js` binds one handler to both `load`
+    and `error` and arms `useArchiveOrgCover` either way, and
+    `MagazineIssuesController::fetchImage()` never checks `$response->successful()`
+    — so archive.org's 404 page is written to `images/magazine_scans/{id}.html`
+    with `imgext` set to `html`, and the issue renders a permanently broken
+    cover. Two independent fixes: do not arm the flag on `error`, and guard on
+    the response being a successful image. `admin-write/magazines.spec.js`
+    stubs the host with `page.route()` and covers the browser half; the
+    controller makes the same request again from PHP, against a hard-coded host
+    that wants extracting the way follow-up 5 extracted the SNDH one.
+18. **`ReleaseMediasScansController` looks up its fallback scan type by name.**
+    `MediaScanType` `'Other'` is fetched with `where('name', …)->first()` and
+    `associate()`d without a null check, so a database whose reference data does
+    not happen to contain that row 500s on the next line. Read from the code
+    rather than reproduced.
+19. **Fixed: four forms dropped their own image on any unrelated save.** The user,
+    individual and company edit forms all started from `$ext = null` and wrote it
+    to their image-extension column whether or not a file had been chosen, so
+    editing an e-mail address or a name took the picture down and stranded the
+    file - the delete routes build their paths from that same column. Each keeps
+    what is on record now, and `admin-write/users.spec.js`,
+    `games-reference.spec.js` and `others.spec.js` each assert an image survives
+    an unrelated save. Worth remembering as a pattern when the next upload form
+    is written.
