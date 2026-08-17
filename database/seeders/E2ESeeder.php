@@ -56,6 +56,8 @@ class E2ESeeder extends Seeder
     public const RELEASE_ID = 1;
     public const SCREENSHOT_ID = 1;
     public const SPOTLIGHT_SCREENSHOT_ID = 2;
+    public const INTERVIEW_SCREENSHOT_ID = 3;
+    public const ARTICLE_SCREENSHOT_ID = 4;
     public const RELEASE_SCAN_ID = 1;
     public const GAME_FACT_ID = 1;
     public const GAME_SUBMISSION_ID = 1;
@@ -92,6 +94,7 @@ class E2ESeeder extends Seeder
     public const COPY_PROTECTION_NAME = 'Playwright Test Copy Protection';
 
     public const ARTICLE_ID = 1;
+    public const ARTICLE_TYPE_ID = 1;
     public const REVIEW_ID = 1;
     public const INTERVIEW_ID = 1;
     public const NEWS_ID = 1;
@@ -138,6 +141,7 @@ class E2ESeeder extends Seeder
     // autocompletes that merge games with their AKAs have something to rank.
     public const GAME_AKA_NAME = 'Xenon II';
     public const ARTICLE_TITLE = 'Playwright Test Article';
+    public const ARTICLE_TYPE_NAME = 'Playwright Test Article Type';
     public const INTERVIEW_INDIVIDUAL = 'Playwright Test Individual';
     public const MAGAZINE_NAME = 'Playwright Test Magazine';
     public const MAGAZINE_INDEX_TEXT_TITLE = 'Playwright Test Editorial';
@@ -147,6 +151,21 @@ class E2ESeeder extends Seeder
     public const MENU_SET_NAME = 'Playwright Test Menu Set';
     public const MENU_SOFTWARE_NAME = 'Playwright Test Software';
     public const NEWS_HEADLINE = 'Welcome to Atari Legend';
+
+    // /news pages at six items, so a second page needs a seventh row. These are
+    // the six extras, headlined by their number, and only the last of them can
+    // be asserted on page two.
+    public const NEWS_FILLER_COUNT = 6;
+    public const NEWS_FILLER_HEADLINE = 'Playwright Test Filler News';
+
+    // The caption on the seeded interview screenshot, and the chapter the
+    // interview's [hotspotUrl] links to. Both are BBCode features with nothing
+    // else in the fixture that renders them.
+    public const INTERVIEW_SCREENSHOT_CAPTION = 'Playwright Test Interview Screenshot';
+    public const INTERVIEW_CHAPTER = 'Playwright Test Chapter';
+    public const ARTICLE_SCREENSHOT_CAPTION = 'Playwright Test Article Screenshot';
+    public const TRIVIA_TEXT = 'Playwright test trivia.';
+    public const MAGAZINE_ARCHIVE_URL = 'https://archive.org/details/playwright-test-issue';
     public const COMPANY_NAME = 'Playwright Test Company';
     public const CREW_NAME = 'Playwright Test Crew';
     public const SERIES_NAME = 'Playwright Test Series';
@@ -356,13 +375,34 @@ class E2ESeeder extends Seeder
 
     private function seedContent(): void
     {
-        $this->insert('article_main', ['article_id' => self::ARTICLE_ID], ['user_id' => self::USER_ADMIN_ID]);
+        // The type is the badge on /articles. article_type ships empty and the
+        // article's column was null, so the badge rendered as nothing at all -
+        // indistinguishable from a badge that had stopped working.
+        $this->insert('article_type', ['article_type_id' => self::ARTICLE_TYPE_ID], [
+            'article_type' => self::ARTICLE_TYPE_NAME,
+        ]);
+        $this->insert('article_main', ['article_id' => self::ARTICLE_ID], [
+            'user_id'         => self::USER_ADMIN_ID,
+            'article_type_id' => self::ARTICLE_TYPE_ID,
+        ]);
         $this->insert('article_text', ['article_id' => self::ARTICLE_ID], [
             'article_title' => self::ARTICLE_TITLE,
             'article_intro' => 'Playwright test article intro.',
             'article_text'  => 'Playwright test article content.',
             'article_date'  => now()->timestamp,
         ]);
+
+        // Same chain as the interview screenshot below, one table along.
+        $this->insert('screenshot_main', ['screenshot_id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_article', ['screenshot_article_id' => 1], [
+            'article_id'    => self::ARTICLE_ID,
+            'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
+        ]);
+        $this->insert('article_comments', ['article_comment_id' => 1], [
+            'screenshot_article_id' => 1,
+            'comment_text'          => self::ARTICLE_SCREENSHOT_CAPTION,
+        ]);
+        $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
         $this->insert('review_main', ['review_id' => self::REVIEW_ID], [
             'user_id'     => self::USER_ADMIN_ID,
@@ -387,11 +427,34 @@ class E2ESeeder extends Seeder
             'user_id' => self::USER_ADMIN_ID,
             'ind_id'  => self::INDIVIDUAL_ID,
         ]);
+        // The chapters and the text carry the two halves of the interview
+        // BBCode: [hotspotUrl=#1] in the chapter list is the link, [hotspot=1]
+        // in the text is what it jumps to. Nothing else in the fixture renders
+        // either, so without this pair Helper::bbCode() could stop emitting the
+        // anchor entirely and every interview test would still pass.
         $this->insert('interview_text', ['interview_id' => self::INTERVIEW_ID], [
-            'interview_intro' => 'Playwright test interview intro.',
-            'interview_text'  => 'Playwright test interview content.',
-            'interview_date'  => now()->timestamp,
+            'interview_intro'    => 'Playwright test interview intro.',
+            'interview_text'     => '[hotspot=1]' . self::INTERVIEW_CHAPTER . '[/hotspot] '
+                . 'Playwright test interview content.',
+            'interview_chapters' => '[hotspotUrl=#1]' . self::INTERVIEW_CHAPTER . '[/hotspotUrl]',
+            'interview_date'     => now()->timestamp,
         ]);
+
+        // A screenshot on the interview, and the caption row that goes with it.
+        // interviews/card_interview.blade.php reads
+        // $screenshot->pivot->comment->comment_text without guarding it, so a
+        // screenshot seeded without its comment would 500 the public page
+        // rather than render an empty caption.
+        $this->insert('screenshot_main', ['screenshot_id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_interview', ['screenshot_interview_id' => 1], [
+            'interview_id'  => self::INTERVIEW_ID,
+            'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
+        ]);
+        $this->insert('interview_comments', ['interview_comment_id' => 1], [
+            'screenshot_interview_id' => 1,
+            'comment_text'            => self::INTERVIEW_SCREENSHOT_CAPTION,
+        ]);
+        $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 
         // Interview 2 deliberately has neither an individual nor a text row.
         // The admin table joins those, and a row with no match is what used to
@@ -405,6 +468,19 @@ class E2ESeeder extends Seeder
             'user_id'       => self::USER_ADMIN_ID,
             'news_date'     => now()->timestamp,
         ]);
+
+        // Enough news to paginate. /news shows six at a time and orders by
+        // date, so these are dated backwards from the headline above - which
+        // keeps NEWS_HEADLINE on page one and puts the oldest filler alone on
+        // page two.
+        for ($number = 1; $number <= self::NEWS_FILLER_COUNT; $number++) {
+            $this->insert('news', ['news_id' => self::NEWS_ID + $number], [
+                'news_headline' => self::NEWS_FILLER_HEADLINE . ' ' . $number,
+                'news_text'     => 'Playwright test filler news post.',
+                'user_id'       => self::USER_ADMIN_ID,
+                'news_date'     => now()->subDays($number)->timestamp,
+            ]);
+        }
 
         // The pivot is not optional: Comment::getTypeAttribute() throws
         // 'Unknown comment type' without one, and the admin comment form
@@ -423,13 +499,21 @@ class E2ESeeder extends Seeder
     private function seedMagazines(): void
     {
         $this->insert('magazines', ['id' => self::MAGAZINE_ID], ['name' => self::MAGAZINE_NAME]);
+        // The cover and the archive.org URL are both on the issue: imgext is
+        // what makes MagazineIssue::getCoverAttribute() build a path instead of
+        // falling back to no-cover.svg, and getReadUrlAttribute() rewrites
+        // /details/ to /stream/ - a rewrite no test could see while the column
+        // was null.
         $this->insert('magazine_issues', ['id' => self::MAGAZINE_ISSUE_ID], [
-            'magazine_id' => self::MAGAZINE_ID,
-            'issue'       => 1,
-            'published'   => '1990-01-01',
-            'created_at'  => now(),
-            'updated_at'  => now(),
+            'magazine_id'    => self::MAGAZINE_ID,
+            'issue'          => 1,
+            'imgext'         => 'png',
+            'archiveorg_url' => self::MAGAZINE_ARCHIVE_URL,
+            'published'      => '1990-01-01',
+            'created_at'     => now(),
+            'updated_at'     => now(),
         ]);
+        $this->seedImage('images/magazine_scans/' . self::MAGAZINE_ISSUE_ID . '.png');
 
         // An index covering all four row shapes, so that the public view and
         // the Livewire editor both have every branch on screen. A row links to
@@ -554,6 +638,11 @@ class E2ESeeder extends Seeder
             'link'          => 'https://example.com/',
         ]);
         $this->seedImage('images/spotlight_screens/' . self::SPOTLIGHT_SCREENSHOT_ID . '.png');
+
+        // The 'Did you know?' card picks a trivia at random and renders its
+        // heading either way, so an empty table looks exactly like a working
+        // card. One row is the difference.
+        $this->insert('trivia', ['trivia_id' => 1], ['trivia_text' => self::TRIVIA_TEXT]);
     }
 
     private function seedReferenceData(): void

@@ -73,14 +73,44 @@ export const FIXTURE = {
   soundHardware: { id: 1, name: 'Playwright Test YM2149' },
   copyProtection: { id: 1, name: 'Playwright Test Copy Protection' },
 
-  article: { id: 1, title: 'Playwright Test Article' },
+  article: {
+    id: 1,
+    title: 'Playwright Test Article',
+    // The badge on /articles. There is no filter by type anywhere in the
+    // application - ArticleController::index takes no Request at all - so the
+    // badge is the whole of the feature.
+    type: 'Playwright Test Article Type',
+    screenshotId: 4,
+    screenshotCaption: 'Playwright Test Article Screenshot',
+  },
   review: { id: 1 },
-  interview: { id: 1 },
-  news: { id: 1, headline: 'Welcome to Atari Legend' },
+  interview: {
+    id: 1,
+    screenshotId: 3,
+    screenshotCaption: 'Playwright Test Interview Screenshot',
+    // The interview's [hotspotUrl] chapter and the [hotspot] it jumps to are
+    // both titled this. Nothing else in the fixture exercises either tag.
+    chapter: 'Playwright Test Chapter',
+  },
+  news: {
+    id: 1,
+    headline: 'Welcome to Atari Legend',
+    // Six more, dated backwards, so /news has a second page. The oldest is the
+    // only item on it.
+    fillerCount: 6,
+    fillerHeadline: 'Playwright Test Filler News',
+  },
   comment: { id: 1 },
+  trivia: { text: 'Playwright test trivia.' },
 
   magazine: { id: 1, name: 'Playwright Test Magazine' },
-  magazineIssue: { id: 1 },
+  magazineIssue: {
+    id: 1,
+    coverExt: 'png',
+    // MagazineIssue::getReadUrlAttribute() rewrites /details/ to /stream/, so
+    // the link on the page is not the URL stored here.
+    archiveUrl: 'https://archive.org/details/playwright-test-issue',
+  },
   // The issue's index, one row per shape the public view renders: a row links
   // to a game, a menu software, an individual, or to nothing at all.
   //
