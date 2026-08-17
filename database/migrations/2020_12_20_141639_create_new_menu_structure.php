@@ -23,7 +23,7 @@ class CreateNewMenuStructure extends Migration
                 ->default('asc')
                 ->comment('How to sort menus of this set');
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_sets` comment 'Sets of menus'");
         }
 
@@ -34,7 +34,7 @@ class CreateNewMenuStructure extends Migration
 
             $table->foreign('crew_id')->references('crew_id')->on('crew');
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `crew_menu_set` comment 'Pivot between menu sets and crews'");
         }
 
@@ -47,7 +47,7 @@ class CreateNewMenuStructure extends Migration
             $table->string('version', 8)->nullable();
             $table->foreignId('menu_set_id')->constrained();
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menus` comment 'An individual menu'");
         }
 
@@ -56,7 +56,7 @@ class CreateNewMenuStructure extends Migration
             $table->timestamps();
             $table->string('name', 64);
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_disk_conditions` comment 'Condition of a menu disk'");
         }
         DB::table('menu_disk_conditions')->insert([
@@ -75,7 +75,7 @@ class CreateNewMenuStructure extends Migration
             // No constraint on user as users can get deleted
             $table->integer('user_id')->nullable()->comment('User who uploaded the dump');
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_disk_dumps` comment 'Dump of the physical menu disk'");
         }
 
@@ -92,7 +92,7 @@ class CreateNewMenuStructure extends Migration
 
             $table->foreign('donated_by_individual_id')->references('ind_id')->on('individuals');
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_disks` comment 'A single disk part of a menu'");
         }
 
@@ -102,7 +102,7 @@ class CreateNewMenuStructure extends Migration
             $table->foreignId('menu_disk_id')->constrained()->onDelete('cascade');
             $table->string('imgext', 4);
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_disk_screenshots` comment 'Screenshots of a menu disk'");
         }
 
@@ -111,7 +111,7 @@ class CreateNewMenuStructure extends Migration
             $table->timestamps();
             $table->string('name', 64);
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_software_content_types` comment 'Type of software part of a menu disk'");
         }
         DB::table('menu_software_content_types')->insert([
@@ -131,7 +131,7 @@ class CreateNewMenuStructure extends Migration
             $table->string('name', 255);
             $table->integer('demozoo_id')->nullable()->comment('ID of the DemoZoo production');
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_software` comment 'Non-game software present on menus'");
         }
 
@@ -150,7 +150,7 @@ class CreateNewMenuStructure extends Migration
             $table->foreign('game_release_id')->references('id')->on('game_release');
             $table->foreign('game_id')->references('game_id')->on('game');
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `menu_disk_contents` comment 'A software present on a menu disk'");
         }
     }

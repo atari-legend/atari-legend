@@ -33,7 +33,7 @@ class RevampMusicTables extends Migration
             $table->integer('default_subtune')->nullable();
             $table->integer('year')->nullable();
         });
-        if (DB::connection()->getDriverName() === 'mysql') {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             DB::statement('ALTER TABLE sndhs ADD FULLTEXT title_search (title)');
         }
 

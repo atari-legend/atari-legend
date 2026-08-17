@@ -3,6 +3,7 @@
 namespace App\View\Components\Cards;
 
 use App\Models\Game;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\Component;
 
 class TopGames extends Component
@@ -24,16 +25,18 @@ class TopGames extends Component
      */
     public function render()
     {
+        $votes = DB::table('game_votes')
+            ->selectRaw('game_id, avg(score) as avgScore, count(score) as numVotes')
+            ->groupBy('game_id');
+
         $games = Game::select('game.*')
-            ->selectRaw('avg(score) as avgScore, count(score) as numVotes')
-            ->join('game_votes', 'game.game_id', '=', 'game_votes.game_id')
-            ->groupBy('game.game_id')
+            ->addSelect('votes.avgScore', 'votes.numVotes')
+            ->joinSub($votes, 'votes', 'votes.game_id', '=', 'game.game_id')
             ->orderByDesc('avgScore')
             ->orderByDesc('numVotes')
             ->orderBy('game_name')
             ->limit(10)
-            ->get()
-            ->flatten();
+            ->get();
 
         return view('components.cards.top-games')
             ->with([

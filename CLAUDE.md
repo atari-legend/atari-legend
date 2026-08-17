@@ -4,7 +4,7 @@ Laravel 11 website for the Atari ST community - a comprehensive database of game
 
 ## Tech Stack
 
-- **Backend:** Laravel 11, PHP 8.4, MySQL
+- **Backend:** Laravel 11, PHP 8.4, MariaDB 10.11 (Laravel's `mariadb` driver)
 - **Frontend:** Vite, Bootstrap 5, Livewire 3
 - **Testing:** PHPUnit 11 with SQLite in-memory; Playwright for end-to-end
 

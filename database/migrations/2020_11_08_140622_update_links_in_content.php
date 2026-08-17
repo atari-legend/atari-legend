@@ -42,9 +42,9 @@ class UpdateLinksInContent extends Migration
      */
     public function up()
     {
-        // Only do on MySQL. SQLite does not support regexp by default,
-        // and this migration is unimportant for unit tests
-        if (DB::connection()->getDriverName() === 'mysql') {
+        // Skipped on SQLite, which does not support regexp by default, and
+        // this migration is unimportant for unit tests
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             collect(UpdateLinksInContent::REPLACEMENTS)->each(function ($replacement) {
                 News::where('news_text', 'regexp', $replacement['sql'])
                     ->each(function ($news) use ($replacement) {

@@ -263,17 +263,17 @@ rows a run until follow-up 11 was fixed and is now a useful canary.
 ## Running
 
 The app has to be served against the E2E database, and the fixture has to be
-seeded into it first. CI does this with host `php` and MySQL as a service; the
+seeded into it first. CI does this with host `php` and MariaDB as a service; the
 recipe below does it through Docker Compose, which is how this project is
 normally driven.
 
 ```bash
 # One-off: an empty database for the fixture.
-docker compose exec mysql mysql -uroot -patarilegend \
+docker compose exec db mariadb -uroot -patarilegend \
   -e 'CREATE DATABASE IF NOT EXISTS atarilegend_e2e;'
 
 cd /path/to/atari-legend
-E2E="-e DB_CONNECTION=mysql -e DB_HOST=mysql -e DB_DATABASE=atarilegend_e2e \
+E2E="-e DB_CONNECTION=mariadb -e DB_HOST=db -e DB_DATABASE=atarilegend_e2e \
      -e DB_USERNAME=root -e DB_PASSWORD=atarilegend -e APP_ENV=testing \
      -e APP_KEY=base64:AckfSECXIvnK5r28GVIWUAxmbBSjTsmF/0rZh1cyWXk="
 

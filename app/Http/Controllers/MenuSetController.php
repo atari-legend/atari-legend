@@ -56,7 +56,7 @@ class MenuSetController extends Controller
             ])
             ->join('menus', 'menus.menu_set_id', 'menu_sets.id')
             ->join('menu_disks', 'menu_disks.menu_id', 'menus.id')
-            ->groupBy('menu_sets.id')
+            ->groupBy('menu_sets.id', 'menu_sets.name')
             ->orderBy('name')
             ->get()
             ->map(function ($set) {

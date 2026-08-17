@@ -19,8 +19,8 @@ class CreateNewsSearchWordlistTable extends Migration
             $table->string('news_word_text', 50)->default('')->primary();
         });
 
-        // FIXME: Implement for other drivers?
-        if (DB::connection()->getDriverName() === 'mysql') {
+        // FIXME: Implement for SQLite too?
+        if (DB::connection()->getDriverName() !== 'sqlite') {
             // Add auto-increment to the ID column
             DB::statement('ALTER TABLE `news_search_wordlist` ADD KEY `news_word_id` (`news_word_id`)');
             DB::statement('ALTER TABLE `news_search_wordlist` MODIFY `news_word_id` mediumint AUTO_INCREMENT');

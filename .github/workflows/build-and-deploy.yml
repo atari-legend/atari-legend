@@ -9,14 +9,14 @@ jobs:
     services:
       # Pinned to the same image the docker-compose development environment
       # uses, so CI cannot disagree with it on server behaviour.
-      mysql:
-        image: mysql:5.7.44
+      db:
+        image: mariadb:10.11
         env:
-          MYSQL_DATABASE: atarilegend_e2e
-          MYSQL_ROOT_PASSWORD: root
+          MARIADB_DATABASE: atarilegend_e2e
+          MARIADB_ROOT_PASSWORD: root
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
       - name: Setup PHP
@@ -107,18 +107,9 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install chromium
 
-      # The development environment runs MySQL with an explicit sql-mode (see
-      # mysqld.cnf), which notably leaves out ONLY_FULL_GROUP_BY. Stock 5.7
-      # enables it, so without this CI would reject queries that are fine in
-      # development and in production.
-      - name: Match the development MySQL configuration
-        run: |
-          mysql --protocol=TCP -h 127.0.0.1 -P 3306 -u root -proot -e \
-            "SET GLOBAL sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"
-
       - name: Prepare the E2E database and storage
         env:
-          DB_CONNECTION: mysql
+          DB_CONNECTION: mariadb
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_DATABASE: atarilegend_e2e
@@ -139,7 +130,7 @@ jobs:
 
       - name: Run Playwright E2E Tests
         env:
-          DB_CONNECTION: mysql
+          DB_CONNECTION: mariadb
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_DATABASE: atarilegend_e2e
