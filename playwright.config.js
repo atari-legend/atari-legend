@@ -93,9 +93,19 @@ export default defineConfig({
     // public form cannot create the game or the review it writes against, so
     // the specs open a second context from .auth/admin.json to build the
     // parent. See tests/e2e/support/public-write.js.
+    //
+    // Every spec here is inherently long: it signs in through the real form,
+    // builds a parent in a second browser context, drives a public form, and
+    // tears the whole lot down again - twenty-odd page loads across two
+    // contexts against a single-process PHP dev server. The write specs in
+    // admin-write/ raise their own timeout test by test for the same reason;
+    // here it is every test, so it is set once. Two of them started timing out
+    // in CI as the suite grew past 300 tests and four workers began sharing
+    // that one server.
     {
       name: 'public-write',
       testMatch: 'public-write/**/*.spec.js',
+      timeout: 120000,
       use: {
         ...devices['Desktop Chrome'],
         storageState: { cookies: [], origins: [] },
