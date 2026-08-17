@@ -1,6 +1,6 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { expectPageRenders } from '../support/assertions.js';
+import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
 
 test.describe('Magazines', () => {
   test('lists magazines', async ({ page }) => {
@@ -14,7 +14,11 @@ test.describe('Magazines', () => {
   test('displays one magazine', async ({ page }) => {
     await page.goto('/magazines');
 
-    await page.getByRole('link', { name: FIXTURE.magazine.name }).first().click();
+    // exact: the entry in the list is a link whose whole name is the magazine.
+    // Now that the seeded issue has a cover, the "latest issues" and "random
+    // issue" cards render as well, and their links say more than the name and
+    // point at a page-and-anchor for the issue rather than at the magazine.
+    await page.getByRole('link', { name: FIXTURE.magazine.name, exact: true }).click();
 
     await expect(page).toHaveURL(new RegExp(`/magazines/${FIXTURE.magazine.id}$`));
     await expect(page.getByRole('heading', { name: FIXTURE.magazine.name, level: 1 })).toBeVisible();
@@ -63,8 +67,30 @@ test.describe('Magazines', () => {
     await expect(textRow).toContainText(index.text.type);
   });
 
-  // TODO: the issue covers and the archive.org read links.
-  //
+  test('shows an issue cover', async ({ page }) => {
+    await page.goto(`/magazines/${FIXTURE.magazine.id}`);
+
+    // getImageAttribute() returns images/no-cover.svg when imgext is null, so
+    // asserting an <img> is there would pass with the column ignored: the
+    // magazine_scans path is what says the stored cover was found.
+    const cover = page.locator(`img[src*="/magazine_scans/${FIXTURE.magazineIssue.id}."]`).first();
+    await expect(cover).toBeVisible();
+
+    const path = new URL(await cover.getAttribute('src')).pathname;
+    await expectResourceLoads(await page.request.get(path), path, { magic: 'PNG' });
+  });
+
+  test('links an issue to archive.org', async ({ page }) => {
+    await page.goto(`/magazines/${FIXTURE.magazine.id}`);
+
+    // getReadUrlAttribute() rewrites /details/ to /stream/, which is the point
+    // of the assertion - the stored URL is not the one on the page.
+    // .first(): the issue header carries the link twice, once on the cover and
+    // once as the book icon beside the issue number.
+    const read = FIXTURE.magazineIssue.archiveUrl.replace('/details/', '/stream/');
+    await expect(page.locator(`a[href="${read}"]`).first()).toBeVisible();
+  });
+
   // TODO: the page-count chart, which the equivalent test in public/games.spec.js
   // covers for /games. card_page_count.blade.php renders only above four issues
   // and E2ESeeder seeds one, so this needs five seeded before it can assert

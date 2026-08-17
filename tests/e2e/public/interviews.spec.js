@@ -30,6 +30,41 @@ test.describe('Interviews', () => {
     });
   });
 
-  // TODO: the chapter hotspot links ([hotspotUrl] / [hotspot] BBCode),
-  // commenting, and the interview screenshots.
+  // A hotspot is two halves of one feature, and Helper::bbCode renders each
+  // separately: [hotspotUrl=#1]Title[/hotspotUrl] in the chapters column
+  // becomes the link, [hotspot=1]Question[/hotspot] in the text becomes what
+  // it jumps to. Asserting the link alone would pass with the target tag
+  // silently dropped, so this follows it and looks for the anchor.
+  test('links a chapter to its hotspot in the text', async ({ page }) => {
+    await page.goto(`/interviews/${FIXTURE.interview.id}`);
+
+    const chapter = page.getByRole('link', { name: FIXTURE.interview.chapter });
+    await expect(chapter).toHaveAttribute('href', '#1');
+
+    await chapter.click();
+    await expect(page).toHaveURL(new RegExp(`/interviews/${FIXTURE.interview.id}#1$`));
+
+    // The element the link points at, carrying the question it marks.
+    // [id="1"] rather than #1: the ids Helper::bbCode emits for hotspots are
+    // numbers, which are valid HTML but not valid CSS id selectors.
+    await expect(page.locator('[id="1"]')).toContainText(FIXTURE.interview.chapter);
+  });
+
+  test('shows a screenshot with its caption', async ({ page }) => {
+    await page.goto(`/interviews/${FIXTURE.interview.id}`);
+
+    const screenshot = page.getByRole('img', { name: FIXTURE.interview.screenshotCaption });
+    await expect(screenshot).toBeVisible();
+
+    // A storage URL rather than a route, unlike the avatar above - so the
+    // image is fetched rather than left to the guard in support/test.js, which
+    // exempts /storage/ on purpose.
+    const path = new URL(await screenshot.getAttribute('src')).pathname;
+    expect(path).toContain(`/interview_screenshots/${FIXTURE.interview.screenshotId}.`);
+    await expectResourceLoads(await page.request.get(path), path, { magic: 'PNG' });
+
+    await expect(page.getByText(FIXTURE.interview.screenshotCaption).last()).toBeVisible();
+  });
+
+  // Commenting on an interview is public-write/content.spec.js.
 });

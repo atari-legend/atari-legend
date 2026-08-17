@@ -102,8 +102,7 @@ test.describe('Games', () => {
     }
   });
 
-  // TODO: the remaining search filters (genre, engine, developer, and the
-  // has-review/has-download checkboxes), the screenshot gallery, similar games.
+  // TODO: the screenshot gallery, similar games.
 });
 
 // /games/search is a second controller action with its own view, and its
@@ -133,6 +132,84 @@ test.describe('Games search', () => {
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
     ).toBeVisible();
+  });
+
+  test('filters on a genre', async ({ page }) => {
+    const path = `/games/search?genre=${encodeURIComponent(FIXTURE.genre.name)}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('filters on an engine', async ({ page }) => {
+    const path = `/games/search?engine=${encodeURIComponent(FIXTURE.engine.name)}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('filters on a developer', async ({ page }) => {
+    // Not the same field as the publisher above, and not the same table: a
+    // developer is a game_developer row, a publisher hangs off a release. One
+    // company is both here, which is the only reason a single fixture can
+    // exercise both branches.
+    const path = `/games/search?developer=${encodeURIComponent(FIXTURE.company.name)}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('filters on the genre, engine and developer ids at once', async ({ page }) => {
+    // Each of those three fields has a second, id-valued parameter behind the
+    // dropdown beside it, and the controller answers it in a branch of its
+    // own - a `where('id', …)` rather than a `like`. Sent together so the
+    // three constraints have to hold at the same time.
+    const path = `/games/search?genre_id=${FIXTURE.genre.id}`
+      + `&engine_id=${FIXTURE.engine.id}&developer_id=${FIXTURE.company.id}`;
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('keeps a game that has a screenshot, a boxscan and a review', async ({ page }) => {
+    // The checkbox row of the form. Each one is a has()/whereHas() down a
+    // different relation, and the seeded game satisfies these three.
+    const path = `/games/search?title=${encodeURIComponent(FIXTURE.game.akaName)}`
+      + '&screenshot=1&boxscan=1&review=1';
+    const response = await page.goto(path);
+
+    await expectPageRenders(page, response, '/games/search');
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('drops a game that has neither a dump nor a tune', async ({ page }) => {
+    // The other half of the same row, and the half that proves the boxes
+    // constrain anything: the seeded game has no media, no dump and no SNDH,
+    // so a title that finds it on its own has to stop finding it here.
+    for (const filter of ['download', 'music']) {
+      const path = `/games/search?title=${encodeURIComponent(FIXTURE.game.akaName)}&${filter}=1`;
+      const response = await page.goto(path);
+
+      await expectPageRenders(page, response, '/games/search');
+      await expect(page.getByText('No game found')).toBeVisible();
+      await expect(
+        page.locator('#results').getByRole('link', { name: FIXTURE.game.name })
+      ).toHaveCount(0);
+    }
   });
 
   test('redirects an exact title match to the game', async ({ page }) => {
@@ -284,6 +361,81 @@ test.describe('Games search autocomplete', () => {
 
     await page.getByRole('button', { name: 'Search' }).click();
 
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('searches on a developer picked from the suggestions', async ({ page }) => {
+    // Same endpoint as the publisher field and the same shape of onSelection,
+    // but a different parameter and a different join behind it - the two
+    // fields are only interchangeable because one company happens to be both.
+    await page.goto('/games');
+
+    await pickSuggestion(page, '#developer', FIXTURE.company.name);
+    await expect(page.locator('#developer')).toHaveValue(FIXTURE.company.name);
+
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('searches on an engine picked from the suggestions', async ({ page }) => {
+    await page.goto('/games');
+
+    await pickSuggestion(page, '#engine', FIXTURE.engine.name);
+    await expect(page.locator('#engine')).toHaveValue(FIXTURE.engine.name);
+
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+});
+
+// The rest of the search form: the two controls that are not autocompletes.
+//
+// Both are driven through the browser rather than through the query string,
+// because both depend on JavaScript - the dropdown on resources/js/game/search.js
+// and the checkboxes on nothing at all, which is exactly what makes the pair
+// worth asserting side by side.
+test.describe('Games search form', () => {
+  test('swaps the genre field for a dropdown and searches on the id', async ({ page }) => {
+    // The chevron beside the Genre label toggles d-none on both the
+    // autocomplete and the <select> of every genre. They post different
+    // parameters - genre and genre_id - so which one is visible decides which
+    // branch of the controller runs.
+    await page.goto('/games');
+
+    await expect(page.locator('#genre_id')).toBeHidden();
+    await page.locator('[data-dropdown-toggle="genre,genre_id"]').click();
+    await expect(page.locator('#genre')).toBeHidden();
+    await expect(page.locator('#genre_id')).toBeVisible();
+
+    await page.locator('#genre_id').selectOption({ label: FIXTURE.genre.name });
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    await expect(page).toHaveURL(new RegExp(`genre_id=${FIXTURE.genre.id}(&|$)`));
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('searches on the checkboxes as rendered', async ({ page }) => {
+    // The query-string tests above prove the controller; this proves the boxes
+    // in the markup are wired to those parameters at all.
+    await page.goto('/games');
+
+    await page.locator('#title').fill(FIXTURE.game.akaName);
+    await page.getByRole('checkbox', { name: 'Screenshot' }).check();
+    await page.getByRole('checkbox', { name: 'Review' }).check();
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    await expect(page).toHaveURL(/screenshot=on/);
+    await expect(page).toHaveURL(/review=on/);
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
     ).toBeVisible();
