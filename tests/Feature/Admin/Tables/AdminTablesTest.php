@@ -155,30 +155,37 @@ class AdminTablesTest extends AdminTestCase
         return $submission;
     }
 
+    /**
+     * The keys are 'processed' and 'attachments' because GameSubmissionsTable
+     * passes them to SelectFilter::make(). They used to be derived from the
+     * filters' names - 'reviewed' and 'has_attachments' - which is what this
+     * test was written against, and which is why the table's own
+     * `public array $filters = ['processed' => 'no']` default never applied.
+     */
     public function test_the_submissions_table_filters_on_reviewed_and_attachments(): void
     {
         $new = $this->submission('Xenon');
         $this->submission('Turrican', GameSubmitInfo::SUBMISSION_REVIEWED);
 
         Livewire::test(GameSubmissionsTable::class)
-            ->set('filterComponents.reviewed', 'no')
+            ->set('filterComponents.processed', 'no')
             ->assertSee('Xenon')
             ->assertDontSee('Turrican');
 
         Livewire::test(GameSubmissionsTable::class)
-            ->set('filterComponents.reviewed', 'yes')
+            ->set('filterComponents.processed', 'yes')
             ->assertSee('Turrican')
             ->assertDontSee('Xenon');
 
         $new->screenshots()->save(Screenshot::factory()->create());
 
         Livewire::test(GameSubmissionsTable::class)
-            ->set('filterComponents.has_attachments', 'yes')
+            ->set('filterComponents.attachments', 'yes')
             ->assertSee('Xenon')
             ->assertDontSee('Turrican');
 
         Livewire::test(GameSubmissionsTable::class)
-            ->set('filterComponents.has_attachments', 'no')
+            ->set('filterComponents.attachments', 'no')
             ->assertSee('Turrican')
             ->assertDontSee('Xenon');
     }

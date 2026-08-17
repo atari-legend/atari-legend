@@ -80,7 +80,13 @@ class GameSubmissionsTable extends DataTableComponent
     public function filters(): array
     {
         return [
-            'processed' => SelectFilter::make('Reviewed')
+            // The keys are passed explicitly because the default above is keyed
+            // by them. A filter's key is Str::snake() of its *name* unless one
+            // is given, so these two were keyed 'reviewed' and 'has_attachments'
+            // - 'processed' matched neither, the default was silently dropped,
+            // and the queue opened on every submission ever made rather than on
+            // the ones nobody has looked at yet.
+            'processed' => SelectFilter::make('Reviewed', 'processed')
                 ->options([
                     ''    => 'Any',
                     'yes' => 'Yes',
@@ -89,7 +95,7 @@ class GameSubmissionsTable extends DataTableComponent
                 ->filter(
                     fn (Builder $query, string $term) => $query->where('game_done', $term === 'yes' ? '=' : '!=', GameSubmitInfo::SUBMISSION_REVIEWED)
                 ),
-            'attachments' => SelectFilter::make('Has attachments')
+            'attachments' => SelectFilter::make('Has attachments', 'attachments')
                 ->options([
                     ''    => 'Any',
                     'yes' => 'Yes',
