@@ -1,0 +1,6 @@
+Options +Indexes
+IndexIgnore .??* *~ *# HEADER* README* RCS CVS *,v *,t ..
+HeaderName HEADER.html
+IndexOptions NameWidth=*
+AddDescription "MariaDB database dump" *.sql.gz
+AddDescription "Game images archive" *.zip
