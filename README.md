@@ -27,9 +27,6 @@ In addition to the standard Laravel settings in your `.env` file, the following 
 settings are supported:
 
 ```
-# Base URL for the legacy site, used to link to the database dumps download
-AL_LEGACY_BASE_URL=http://legacy.atarilegend.com
-
 # hCaptcha configuration. Use the configuration below for development and testing
 # See: https://docs.hcaptcha.com/#integrationtest
 CAPTCHA_SITEKEY=10000000-ffff-ffff-ffff-000000000001

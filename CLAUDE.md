@@ -23,7 +23,7 @@ app/
 ├── Models/               # Eloquent models
 └── Rules/                # Custom validation (Slug, YoutubeUrl)
 config/
-├── al.php                # App-specific config (legacy site URL, Stonish, HxCFE)
+├── al.php                # App-specific config (Stonish, HxCFE, SNDH)
 routes/
 ├── web.php               # Public routes
 ├── admin.php             # Admin panel routes
@@ -83,7 +83,6 @@ artisan filepond:discard       # Clean abandoned uploads
 ## Environment Variables
 
 ```env
-AL_LEGACY_BASE_URL=       # Legacy site URL (database dumps download)
 AL_HXCFE=                 # HxC Floppy Emulator path
 STONISH_ROOT=             # Stonish menu data path
 MATOMO_ID=                # Analytics tracking ID

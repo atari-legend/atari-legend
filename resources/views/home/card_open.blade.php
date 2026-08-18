@@ -15,7 +15,7 @@
             <p class="card-text">
                 Currently, exporting to different formats is already possible using
                 the <a href="{{ route('games.index') }}">game section</a>, daily database and screenshot dumps
-                <a href="{{ config('al.legacy.base_url') }}/data/database-dumps/">can be downloaded
+                <a href="{{ url('/data/database-dumps/') }}">can be downloaded
                 HERE</a> and an API is planned.
             </p>
 

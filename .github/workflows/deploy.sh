@@ -38,6 +38,11 @@ RSYNC_FLAGS=(
     --exclude _stonish
     # Do not delete logs
     --exclude logs
+    # The daily database and images exports are generated on the server, into
+    # a folder that is otherwise part of the repository. Only HEADER.html and
+    # .htaccess are ours; --delete would take the exports with it.
+    "--exclude=public/data/database-dumps/*.gz"
+    "--exclude=public/data/database-dumps/*.zip"
 )
 
 DEPLOY_USER=$1
@@ -53,7 +58,7 @@ fi
 mkdir -p ~/.ssh/
 ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 
-rsync ${RSYNC_FLAGS[@]} . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+rsync "${RSYNC_FLAGS[@]}" . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 
 # Create link to production data folder, if it does not already exist
 if [ ! -z "$LEGACY_PATH" ]; then
