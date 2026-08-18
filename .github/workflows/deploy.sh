@@ -48,7 +48,6 @@ RSYNC_FLAGS=(
 DEPLOY_USER=$1
 DEPLOY_HOST=$2
 DEPLOY_PATH=$3
-LEGACY_PATH=${4:-""}
 
 if [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_PATH" ] ; then
     echo "Missing mandatory deployment arguments"
@@ -60,10 +59,10 @@ ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 
 rsync "${RSYNC_FLAGS[@]}" . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 
-# Create link to production data folder, if it does not already exist
-if [ ! -z "$LEGACY_PATH" ]; then
-    ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH/storage/app/ && test -h public || ln -s ../../../$LEGACY_PATH/data public"
-fi
+# The site data - screenshots, scans, dump ZIPs - lives in storage/app/public
+# and is not in Git, which is what the rsync excludes above are for. Only
+# create the folder here, for a deployment target that has none yet.
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && mkdir -p storage/app/public"
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && { test -e public/storage || php8.4-cli artisan storage:link --force; }"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan migrate --force"

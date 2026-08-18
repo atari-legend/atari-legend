@@ -11,7 +11,8 @@ It is built with [Laravel](https://laravel.com/) and [Bootstrap](https://v5.getb
 This repository contains the source code for the public site and its administration part
 (Control Panel). It is a 2020 re-implementation of the legacy site with Laravel and
 Bootstrap. The legacy codebase (See the [Legacy](https://github.com/atari-legend/legacy)
-repository) still holds the data directory, but this site no longer links to it.
+repository) is no longer used: the site data - screenshots, scans, dump ZIPs -
+lives in this site's `storage/app/public`.
 
 ## Build & Development
 

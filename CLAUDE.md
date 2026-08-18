@@ -27,7 +27,7 @@ config/
 routes/
 ├── web.php               # Public routes
 ├── admin.php             # Admin panel routes
-storage/public/           # Public file storage (symlinked to public/storage)
+storage/app/public/       # Public file storage (symlinked from public/storage)
 ```
 
 ## Database
@@ -51,7 +51,7 @@ storage/public/           # Public file storage (symlinked to public/storage)
 
 ## File Storage
 
-All in `storage/public/` (accessible via `Storage::disk('public')`):
+All in `storage/app/public/` (accessible via `Storage::disk('public')`):
 
 | Path | Content |
 |------|---------|

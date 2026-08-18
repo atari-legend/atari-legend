@@ -168,10 +168,9 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
-          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "dev.atarilegend.com" "legacydev.atarilegend.com"
+          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "dev.atarilegend.com"
 
-      # Example of deploying a custom feature branch on a test site,
-      # without a legacy CPANEL
+      # Example of deploying a custom feature branch on a test site
       #
       # - name: Deploy prototype
       #   if: github.ref == 'refs/heads/prototype'
@@ -185,4 +184,4 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
-          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "www.atarilegend.com" "legacy.atarilegend.com"
+          ./.github/workflows/deploy.sh "${{ secrets.PROD_DEPLOY_USER }}" "${{ secrets.PROD_DEPLOY_HOST }}" "www.atarilegend.com"
