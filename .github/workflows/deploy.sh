@@ -4,45 +4,56 @@
 set -eu
 
 RSYNC_FLAGS=(
-    -alvvz
-    # Delete all unknown files, except the ones excluded below
+    -avvz
+    # Delete anything on the server that is not in the repository, except what
+    # the rules below protect
     --delete
 
-    # Do not sync environment file
-    --exclude .env
-    # Do not sync NPM modules
-    --exclude node_modules
-    # Do not sync the Git folder
-    --exclude .git
-    # Exclude public storage folders
-    --exclude public/public
-    --exclude storage/app/public
-    --exclude public/storage
-    # Exclude folder storing user sessions
-    --exclude storage/framework/sessions
-    # Do not sync E2E artefacts: the reports can be large and the auth state
-    # holds a live admin session cookie. They are gitignored, but the CI job
-    # produces them in the workspace before this script runs.
-    --exclude playwright-report
-    --exclude test-results
-    --exclude blob-report
-    --exclude tests/e2e/.auth
+    # Filter rule prefixes, first match wins:
+    #
+    #   -   exclude: not sent, and --delete leaves the server's copy alone
+    #   P   protect: --delete leaves the server's copy alone, ours is still sent
+    #
+    # A pattern without a leading / matches at any depth.
 
-    # Some safety patterns below in case the development points to the
-    # wrong older, as the deployment user has access to the root folder
-    # containing other things...
+    # -- Built in the CI workspace, no business on the server -----------------
+    "--filter=- node_modules"
+    "--filter=- .git"
+    # Coverage report, build/logs/clover.xml. Anchored, because public/build is
+    # the Vite output and has to be sent.
+    "--filter=- /build"
+    # E2E artefacts: the reports can be large and the auth state holds a live
+    # admin session cookie. They are gitignored, but the CI job produces them
+    # in the workspace before this script runs.
+    "--filter=- playwright-report"
+    "--filter=- test-results"
+    "--filter=- blob-report"
+    "--filter=- tests/e2e/.auth"
 
-    # _elite folder containing another site
-    --exclude _elite
-    # _stonish folder containing another site
-    --exclude _stonish
-    # Do not delete logs
-    --exclude logs
-    # The daily database and images exports are generated on the server, into
-    # a folder that is otherwise part of the repository. Only HEADER.html and
-    # .htaccess are ours; --delete would take the exports with it.
-    "--exclude=public/data/database-dumps/*.gz"
-    "--exclude=public/data/database-dumps/*.zip"
+    # -- The server's own state -----------------------------------------------
+    "--filter=- .env"
+    # Uploads, sessions, caches, logs. The repository tracks nothing in here
+    # but the .gitignore skeleton, which the mkdir below recreates. Anchored,
+    # so it cannot catch a vendor/ directory of the same name.
+    "--filter=- /storage"
+    # A symlink into the above, absolute and therefore host-specific: CI makes
+    # its own for the e2e run, the server creates and keeps its own.
+    "--filter=- public/storage"
+
+    # -- Ours to send, the server's to write ----------------------------------
+    # The daily database and images exports are generated on the server, into a
+    # folder that is otherwise part of the repository: --delete must not take
+    # the exports, while HEADER.html and .htaccess still have to be sent.
+    "--filter=P public/data/database-dumps/**"
+
+    # Safety net in case DEPLOY_PATH points at the wrong folder - the
+    # deployment user can reach the home directory holding these other sites.
+    # Unanchored: a wrong path could put them at any depth, and nothing in this
+    # repository goes by these names.
+    "--filter=P _marcer"
+    "--filter=P al-database-backups"
+    # Same case, for a logs folder at the deploy root.
+    "--filter=P /logs"
 )
 
 DEPLOY_USER=$1
@@ -59,10 +70,14 @@ ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 
 rsync "${RSYNC_FLAGS[@]}" . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 
-# The site data - screenshots, scans, dump ZIPs - lives in storage/app/public
-# and is not in Git, which is what the rsync excludes above are for. Only
-# create the folder here, for a deployment target that has none yet.
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && mkdir -p storage/app/public"
+# storage/ is excluded from the rsync, so a deployment target that has none yet
+# needs one built here. app/public holds the site data - screenshots, scans,
+# dump ZIPs - and framework/ is Laravel's scaffolding, without which artisan
+# optimize fails on view:cache before the site serves a request.
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && mkdir -p \
+    storage/app/public \
+    storage/framework/cache/data storage/framework/sessions storage/framework/views \
+    storage/logs"
 
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && { test -e public/storage || php8.4-cli artisan storage:link --force; }"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan migrate --force"
