@@ -11,24 +11,36 @@ RSYNC_FLAGS=(
 
     # Filter rule prefixes, first match wins:
     #
+    #   H   hide:    not sent, and --delete removes the server's copy
     #   -   exclude: not sent, and --delete leaves the server's copy alone
     #   P   protect: --delete leaves the server's copy alone, ours is still sent
+    #
+    # H and - both keep a path out of the transfer; they differ in what happens
+    # to a copy the server already has. Reserve - for the paths the server owns
+    # and use H everywhere else, so that a path we stop shipping actually goes
+    # away instead of being frozen at whatever the last deploy left behind.
     #
     # A pattern without a leading / matches at any depth.
 
     # -- Built in the CI workspace, no business on the server -----------------
-    "--filter=- node_modules"
-    "--filter=- .git"
+    "--filter=H node_modules"
+    "--filter=H .git"
     # Coverage report, build/logs/clover.xml. Anchored, because public/build is
     # the Vite output and has to be sent.
-    "--filter=- /build"
+    "--filter=H /build"
     # E2E artefacts: the reports can be large and the auth state holds a live
     # admin session cookie. They are gitignored, but the CI job produces them
     # in the workspace before this script runs.
-    "--filter=- playwright-report"
-    "--filter=- test-results"
-    "--filter=- blob-report"
-    "--filter=- tests/e2e/.auth"
+    "--filter=H playwright-report"
+    "--filter=H test-results"
+    "--filter=H blob-report"
+    "--filter=H tests/e2e/.auth"
+    # Caches written by the phplint and phpunit steps of the same job.
+    "--filter=H /.phplint.cache"
+    "--filter=H /.phpunit.cache"
+    # PHPUnit 9 left this one behind; a workspace that still has it would
+    # otherwise ship it too.
+    "--filter=H /.phpunit.result.cache"
 
     # -- The server's own state -----------------------------------------------
     "--filter=- .env"
