@@ -552,9 +552,34 @@ Verified: `article_main.id = 1001, article_text.id = 2001`. One trap —
 no unique constraint, so a plain `insert()` silently adds a duplicate row and
 the offset is ignored. It has to be `updateOrInsert()`.
 
-`E2ESeeder` needs the MariaDB equivalent, `ALTER TABLE … AUTO_INCREMENT = n` per
-table, and `tests/e2e/support/fixture.js` has to learn the new constants
-alongside it.
+The hook fires often enough for this to hold. In
+`Illuminate\Foundation\Testing\RefreshDatabase::refreshDatabase()`,
+`afterRefreshingDatabase()` sits *outside* the `RefreshDatabaseState::$migrated`
+guard, so it runs for every test rather than once per process — and it runs
+after `beginDatabaseTransaction()`, which means the `sqlite_sequence` write is
+part of the test's own transaction and is rolled back with it, then re-applied
+by the next test. `sqlite_sequence` is an ordinary transactional table, so that
+round trip is sound.
+
+Do not hand-maintain the table→offset map. There are 62 candidate tables, and a
+table missing from a hand-written list is silently back to the old behaviour —
+the same failure this change exists to remove. Enumerate the tables from
+`sqlite_master` and assign `base = index * 1000`, so a table added later is
+covered without anyone remembering to add it.
+
+**`E2ESeeder` needs a different fix from the one an earlier draft gave it.**
+`ALTER TABLE … AUTO_INCREMENT = n` does nothing there: the seeder inserts
+*explicit* primary keys (`['game_id' => self::GAME_ID]`), so the auto-increment
+counter is never consulted. The colliding values are the constants themselves —
+**37 of the 51 `*_ID` constants in `E2ESeeder` are literally `1`**, and
+`tests/e2e/support/fixture.js` mirrors them one for one (`game.id`,
+`release.id`, `review.id`, `company.id`, `individual.id`, `crew.id`, … all `1`).
+
+So the e2e half of this change is: give the constants distinct values, one
+range per table, and update `fixture.js` in the same commit. That is a wider
+edit than the SQLite hook — every constant is referenced from both sides — but
+without it the Playwright suite stays exactly as blind as it was in the article
+experiment, which is the suite Verification step 2 calls "the real net".
 
 This is the single change that would have turned the article experiment red. It
 also generalises well past this campaign: any test that passes only because two
