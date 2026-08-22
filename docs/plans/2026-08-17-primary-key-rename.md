@@ -298,8 +298,41 @@ today:
 - Aggregates and order-by clauses over a join name their table too —
   `count(game_release.id)`, not `count(id)`.
 
+### Make the second rule a lint, not a convention
+
+Fixing the nine is a snapshot, and Phase B is a campaign that runs for months —
+months during which these exact queries are the ones being edited. The day
+somebody adds a join to a query that still selects `*`, the silent class is
+back, and by then the plan that explains why it matters is a merged document
+nobody re-reads.
+
+Audited: `app/` holds **33** zero-argument `select()` calls, and only the nine
+above sit in a query that joins anything. The other 24 are one join away from
+being the tenth. Two shapes account for all of them —
+`Model::select()` used as a way to start a query, and `->…->select()` at the end
+of a chain.
+
+So close the class rather than the instances:
+
+1. Give all 33 an explicit select list. For the 24 with no join, `Model::query()`
+   is the honest spelling of what `Model::select()` is being used for, and the
+   change is behaviour-identical either way.
+2. Add a test that fails on a zero-argument `select()` anywhere under `app/` —
+   the same shape as harness change 2's ban on models in migrations, and cheap
+   for the same reason: a `grep` over a directory, not a runtime assertion.
+
+That test, had it existed, finds all nine call sites on its own without anybody
+knowing the collision exists. It is the only part of this campaign that keeps
+working after the campaign ends.
+
+The first rule cannot be linted the same way — a qualified aggregate over a
+join is not distinguishable by grep — so it stays a review convention, and
+Verification step 4 stays the place it is checked.
+
 Acceptance criterion: this changes no behaviour, so a green `artisan test` and a
-green Playwright run are the whole of it.
+green Playwright run are the whole of it. The new arch test is the exception —
+it should fail before the 33 are qualified and pass after, which is worth
+confirming in that order.
 
 ## Phase B — per-table rename (gated on CPANEL retirement, and on Phase A2)
 
@@ -336,6 +369,12 @@ One table per PR. Each PR does all of:
    MariaDB, and the PHPUnit suite on SQLite: SQLite handles `renameColumn` on a
    16-FK parent without complaint, and every stale reference fails loudly
    (`no such column: game.game_id`).
+
+   **Write the `down()`, and test it.** `renameColumn()` back the other way is
+   one line, which is exactly why it gets skipped — and it is the only thing
+   standing between a bad rename and an unrecoverable production state, because
+   the revert commit takes the migration file with it. See "Deploying a rename"
+   for the ordering this forces.
 
    **One `renameColumn()` per migration.** `Grammar::$transactions` is `false`
    in the base class with no override for any driver, so no migration in this
@@ -648,9 +687,27 @@ failing. Bound the window rather than hoping it is short:
   has no other floor.
 - **`artisan down` before the rsync, `artisan up` after `optimize`.** A
   maintenance page for the duration is a better answer than a minute of wrong
-  ids, and it also keeps CPANEL users from writing through the gap.
-- **Deploy renames on their own**, never bundled with unrelated changes, so the
-  revert is a single commit.
+  ids. It has to be a workflow input or a commit marker (e.g. `[offline]`) in
+  `.github/workflows/deploy.sh`, so the site only goes down for these
+  migrations and not for every deploy. Prose in this document is not a
+  mechanism: `deploy.sh` runs on push to `master`, so there is no moment at
+  which an operator could wedge the commands in by hand. The flag file itself
+  survives the transfer — `--filter=- /storage` keeps rsync off Laravel's
+  maintenance marker — so the only missing piece is the two `ssh` calls.
+- **Deploy renames on their own**, never bundled with unrelated changes.
+- **Reverting is two steps, in this order, and the order is not negotiable.**
+  "Revert the commit" is not a rollback plan here: `deploy.sh` only ever runs
+  `artisan migrate`, never `migrate:rollback`, and the revert commit *deletes*
+  the migration file. Deploy it first and the server is left with the new
+  schema, the old code, and nothing on disk that knows how to reverse the
+  rename. So:
+
+  1. `artisan migrate:rollback --step=1` over SSH, **while the migration file
+     is still on the server**.
+  2. Then push the revert.
+
+  This is what makes a real `down()` on every rename migration a hard
+  requirement rather than a formality — see Phase B step 1.
 - Ship to `development` and let dev.atarilegend.com sit for a day before the
   same PR goes to `master`. The whole campaign is optional work; nothing about
   it needs to be fast.
