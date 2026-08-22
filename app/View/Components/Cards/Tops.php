@@ -26,22 +26,23 @@ class Tops extends Component
     public function render()
     {
         $developers = DB::table('pub_dev')
-            ->join('game_developer', 'game_developer.dev_pub_id', '=', 'pub_dev.pub_dev_id')
-            ->selectRaw('count(game_id) as game_count, pub_dev_name, pub_dev_id')
+            ->join('game_developer', 'game_developer.dev_pub_id', '=', 'pub_dev.id')
+            ->selectRaw('count(game_id) as game_count, pub_dev_name, pub_dev.id')
             ->where('pub_dev.pub_dev_name', '<>', Release::LICENSE_NON_COMMERCIAL)
-            ->groupBy('pub_dev.pub_dev_id', 'pub_dev.pub_dev_name')
+            ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
             ->orderBy('game_count', 'desc')
             ->orderBy('pub_dev_name')
             ->limit(5)
             ->get();
 
         $publishers = DB::table('pub_dev')
-            ->join('game_release', 'game_release.pub_dev_id', '=', 'pub_dev.pub_dev_id')
-            ->selectRaw('count(id) as release_count, pub_dev_name, pub_dev.pub_dev_id')
+            ->join('game_release', 'game_release.pub_dev_id', '=', 'pub_dev.id')
+            ->selectRaw('count(pub_dev.id) as release_count, pub_dev_name, pub_dev.id')
             ->where('pub_dev.pub_dev_name', '<>', Release::LICENSE_NON_COMMERCIAL)
-            // Both joined tables have a `pub_dev_id`, so it must be qualified:
-            // only MySQL resolves the bare name against the select list.
-            ->groupBy('pub_dev.pub_dev_id', 'pub_dev.pub_dev_name')
+            // game_release still has a `pub_dev_id` foreign key while pub_dev's
+            // own key is now `id`, so both sides stay qualified: only MySQL
+            // resolves a bare name against the select list.
+            ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
             ->orderBy('release_count', 'desc')
             ->orderBy('pub_dev_name')
             ->limit(5)

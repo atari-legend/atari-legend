@@ -120,7 +120,7 @@ class ReleaseDescriptionHelper
 
             if ($release->publisher !== null) {
                 $desc .= 'published by ' .
-                    '[publisher=' . $release->publisher->pub_dev_id . ']' .
+                    '[publisher=' . $release->publisher->getKey() . ']' .
                     $release->publisher->pub_dev_name .
                     '[/publisher]';
             }

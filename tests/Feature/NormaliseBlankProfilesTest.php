@@ -30,7 +30,7 @@ class NormaliseBlankProfilesTest extends TestCase
     private function companies(int $count): void
     {
         foreach (range(1, $count) as $id) {
-            DB::table('pub_dev')->insert(['pub_dev_id' => $id, 'pub_dev_name' => 'Company ' . $id]);
+            DB::table('pub_dev')->insert(['id' => $id, 'pub_dev_name' => 'Company ' . $id]);
         }
     }
 

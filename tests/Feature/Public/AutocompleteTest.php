@@ -355,7 +355,7 @@ class AutocompleteTest extends TestCase
 
         $cases = [
             ['id', $this->getJson(route('ajax.crews', ['q' => 'Replicants']))],
-            ['pub_dev_id', $this->getJson(route('ajax.companies', ['q' => 'Ocean']))],
+            ['id', $this->getJson(route('ajax.companies', ['q' => 'Ocean']))],
             ['ind_id', $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))],
             ['user_id', $this->actingAs($admin)->getJson(route('admin.ajax.users', ['q' => 'pinned-admin']))],
         ];

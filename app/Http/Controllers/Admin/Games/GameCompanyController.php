@@ -97,7 +97,7 @@ class GameCompanyController extends Controller
     public function update(Request $request, PublisherDeveloper $company)
     {
         $request->validate([
-            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')->ignore($company->getKey(), 'pub_dev_id')],
+            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')->ignore($company->getKey(), 'id')],
         ]);
 
         // Keep the logo already on file when the form comes back without one -

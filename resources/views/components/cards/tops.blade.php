@@ -16,7 +16,7 @@
                                 <td class="text-nowrap" style="width: 45%;">
                                     {{-- Not getKey(): $developers comes from a DB::table() query in
                                          Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
-                                    <a href="{{ route('games.search', ['developer_id' => $developer->pub_dev_id]) }}">
+                                    <a href="{{ route('games.search', ['developer_id' => $developer->id]) }}">
                                         {{ $developer->pub_dev_name }}
                                     </a>
                                 </td>
@@ -37,7 +37,7 @@
                                 <td class="text-nowrap" style="width: 45%;">
                                     {{-- Not getKey(): $publishers comes from a DB::table() query in
                                          Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
-                                    <a href="{{ route('games.search', ['publisher_id' => $publisher->pub_dev_id]) }}">
+                                    <a href="{{ route('games.search', ['publisher_id' => $publisher->id]) }}">
                                         {{ $publisher->pub_dev_name }}
                                     </a>
                                 </td>

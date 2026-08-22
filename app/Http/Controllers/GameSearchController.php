@@ -76,7 +76,7 @@ class GameSearchController extends Controller
 
         if ($request->filled('developer_id')) {
             $games->whereHas('developers', function (Builder $query) use ($request) {
-                $query->where('pub_dev_id', $request->input('developer_id'));
+                $query->where('pub_dev.id', $request->input('developer_id'));
             });
             $searchPossible = true;
             $softwareSearchPossible = false;
@@ -95,7 +95,7 @@ class GameSearchController extends Controller
         if ($request->filled('publisher_id')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereHas('publisher', function (Builder $query2) use ($request) {
-                    $query2->where('pub_dev_id', $request->input('publisher_id'));
+                    $query2->where('pub_dev.id', $request->input('publisher_id'));
                 });
             });
             $searchPossible = true;

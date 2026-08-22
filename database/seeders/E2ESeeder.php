@@ -332,7 +332,7 @@ class E2ESeeder extends Seeder
         ]);
 
         $this->insert('game_series', ['id' => self::GAME_SERIES_ID], ['name' => self::SERIES_NAME]);
-        $this->insert('pub_dev', ['pub_dev_id' => self::COMPANY_ID], ['pub_dev_name' => self::COMPANY_NAME]);
+        $this->insert('pub_dev', ['id' => self::COMPANY_ID], ['pub_dev_name' => self::COMPANY_NAME]);
 
         $this->insert('sndhs', ['id' => self::SNDH_ID], [
             'sndh_archive_id' => self::SNDH_ARCHIVE_ID,

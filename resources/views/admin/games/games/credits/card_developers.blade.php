@@ -8,7 +8,7 @@
                 <input class="autocomplete form-control @error('developer_name') is-invalid @enderror"
                     name="developer_name" id="developer_name" type="search"
                     data-autocomplete-endpoint="{{ route('ajax.companies') }}"
-                    data-autocomplete-key="pub_dev_name" data-autocomplete-id="pub_dev_id"
+                    data-autocomplete-key="pub_dev_name" data-autocomplete-id="id"
                     data-autocomplete-companion="developer" value="{{ old('developer_name') }}"
                     placeholder="Type a company name..." autocomplete="off" required>
                 <input type="hidden" name="developer" value="{{ old('developer') }}">
