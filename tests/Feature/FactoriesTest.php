@@ -361,4 +361,13 @@ class FactoriesTest extends TestCase
 
         $this->assertSame(0, PublisherDeveloperText::query()->count());
     }
+
+    /**
+     * Prove that the harness change provides distinct id ranges for related tables.
+     */
+    public function test_related_models_have_distinct_ids_to_prevent_collision(): void
+    {
+        $article = Article::factory()->create();
+        $this->assertNotSame($article->getKey(), $article->texts->first()->getKey(), 'Article and ArticleText should have ids in different ranges');
+    }
 }
