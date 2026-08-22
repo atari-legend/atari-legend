@@ -125,7 +125,7 @@ class MenuImportComponentTest extends AdminTestCase
 
         $this->assertSame('A', $component->get('menus.0.disks.0.part'));
         $this->assertEquals($condition->id, $component->get('menus.0.disks.0.condition_id'));
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame('Sticker missing', $component->get('menus.0.disks.0.notes'));
         $this->assertSame('Greetings!', $component->get('menus.0.disks.0.scrolltext'));
 
@@ -286,9 +286,9 @@ class MenuImportComponentTest extends AdminTestCase
             ['new_disk' => 'x', 'disk_part' => 'E', 'disk_condition' => 'Intact'],
         ]);
 
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.1.donated_by_id'));
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.2.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.1.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.2.donated_by_id'));
 
         // A donator nobody knows is a problem; a blank one is not.
         $this->assertNull($component->get('menus.0.disks.3.donated_by_id'));
@@ -526,9 +526,9 @@ class MenuImportComponentTest extends AdminTestCase
         $this->assertNull($component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame(1, $component->instance()->getErrorCount());
 
-        $component->call('updateIndividual', 0, 0, (string) $bob->ind_id);
+        $component->call('updateIndividual', 0, 0, (string) $bob->getKey());
 
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame('Bob', $component->get('menus.0.disks.0.donated_by'));
         $this->assertSame(0, $component->instance()->getErrorCount());
 
@@ -540,7 +540,7 @@ class MenuImportComponentTest extends AdminTestCase
 
         $component->call('setDonatedBy', 0, 0, 'Bob (aka: Bobby)');
 
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame('Bob', $component->get('menus.0.disks.0.donated_by'));
 
         // Emptying the autocomplete's hidden id field unlinks the donator…
@@ -573,10 +573,10 @@ class MenuImportComponentTest extends AdminTestCase
             ['new_menu' => 'x', 'new_disk' => 'x', 'disk_condition' => 'Intact'],
         ]);
 
-        $component->call('updateIndividual', 0, 0, (string) $wanted->ind_id);
+        $component->call('updateIndividual', 0, 0, (string) $wanted->getKey());
         $component->call('setDonatedBy', 0, 0, 'Bob (aka: Bobby)');
 
-        $this->assertEquals($wanted->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($wanted->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
     }
 
     // -----------------------------------------------------------------
@@ -617,7 +617,7 @@ class MenuImportComponentTest extends AdminTestCase
         $disk = MenuDisk::where('menu_id', $menu->id)->firstOrFail();
         $this->assertSame('A', $disk->part);
         $this->assertEquals($condition->id, $disk->menu_disk_condition_id);
-        $this->assertEquals($bob->ind_id, $disk->donated_by_individual_id);
+        $this->assertEquals($bob->getKey(), $disk->donated_by_individual_id);
 
         // One row per content, each linked the way its mode says: the corrected
         // game through a new release, the software and the docs directly.

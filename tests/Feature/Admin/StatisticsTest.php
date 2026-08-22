@@ -153,10 +153,10 @@ class StatisticsTest extends TestCase
     public function test_coverage_ignores_individuals_without_a_bio(): void
     {
         DB::table('individuals')->insert([
-            ['ind_id' => 1, 'ind_name' => 'Alice'],
-            ['ind_id' => 2, 'ind_name' => 'Bob'],
-            ['ind_id' => 3, 'ind_name' => 'Carol'],
-            ['ind_id' => 4, 'ind_name' => 'Dave'],
+            ['id' => 1, 'ind_name' => 'Alice'],
+            ['id' => 2, 'ind_name' => 'Bob'],
+            ['id' => 3, 'ind_name' => 'Carol'],
+            ['id' => 4, 'ind_name' => 'Dave'],
         ]);
 
         DB::table('individual_text')->insert([

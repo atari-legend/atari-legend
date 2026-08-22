@@ -62,7 +62,7 @@ class InterviewsTable extends DataTableComponent
     {
         return Interview::select('interview_main.*', 'individuals.ind_name', 'interview_text.interview_date')
             ->leftJoin('interview_text', 'interview_text.interview_id', '=', 'interview_main.id')
-            ->leftJoin('individuals', 'individuals.ind_id', '=', 'interview_main.ind_id');
+            ->leftJoin('individuals', 'individuals.id', '=', 'interview_main.ind_id');
     }
 
     public function filters(): array

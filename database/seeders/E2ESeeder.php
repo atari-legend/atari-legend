@@ -428,7 +428,7 @@ class E2ESeeder extends Seeder
         // The "Who is it?" card on the home page only picks an interview whose
         // individual has a picture, and the card then reads the interview's
         // text, so seed the whole chain.
-        $this->insert('individuals', ['ind_id' => self::INDIVIDUAL_ID], [
+        $this->insert('individuals', ['id' => self::INDIVIDUAL_ID], [
             'ind_name' => self::INTERVIEW_INDIVIDUAL,
         ]);
         $this->insert('individual_text', ['ind_id' => self::INDIVIDUAL_ID], ['ind_imgext' => 'png']);

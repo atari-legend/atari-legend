@@ -45,7 +45,7 @@ class GameIndividualController extends Controller
 
         // Find possible duplicates for the main name
         $duplicates = Individual::where('ind_name', '=', $ind->ind_name)
-            ->where('ind_id', '!=', $ind->getKey())
+            ->whereKeyNot($ind->getKey())
             ->get();
 
         // Find possible duplicates for each nick

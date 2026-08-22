@@ -57,9 +57,9 @@ class Tops extends Component
             ->get();
 
         $individuals = DB::table('individuals')
-            ->join('game_individual', 'game_individual.individual_id', '=', 'individuals.ind_id')
-            ->selectRaw('count(game_id) as game_count, individuals.ind_name, individuals.ind_id')
-            ->groupBy('individuals.ind_id', 'individuals.ind_name')
+            ->join('game_individual', 'game_individual.individual_id', '=', 'individuals.id')
+            ->selectRaw('count(game_id) as game_count, individuals.ind_name, individuals.id')
+            ->groupBy('individuals.id', 'individuals.ind_name')
             ->orderBy('game_count', 'desc')
             ->orderBy('ind_name')
             ->limit(5)

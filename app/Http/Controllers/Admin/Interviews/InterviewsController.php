@@ -54,7 +54,7 @@ class InterviewsController extends Controller
     {
         $request->validate(array_merge(
             $this->getValidationRules(),
-            ['individual' => 'required|exists:individuals,ind_id']
+            ['individual' => 'required|exists:individuals,id']
         ));
 
         $interview = new Interview([

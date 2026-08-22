@@ -12,7 +12,7 @@ class GameIndividualsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('ind_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('ind_name');
     }
 
@@ -59,6 +59,6 @@ class GameIndividualsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Individual::select('individuals.*')
-            ->leftJoin('individual_text', 'individuals.ind_id', '=', 'individual_text.ind_id');
+            ->leftJoin('individual_text', 'individuals.id', '=', 'individual_text.ind_id');
     }
 }

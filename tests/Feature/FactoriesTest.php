@@ -339,12 +339,12 @@ class FactoriesTest extends TestCase
     public function test_legacy_primary_keys_resolve(): void
     {
         $this->assertSame('game_id', (new Game())->getKeyName());
-        $this->assertSame('ind_id', (new Individual())->getKeyName());
+        $this->assertSame('id', (new Individual())->getKeyName());
         $this->assertSame('screenshot_id', (new Screenshot())->getKeyName());
         $this->assertSame('id', (new Review())->getKeyName());
 
         $this->assertNotNull(Game::factory()->create()->game_id);
-        $this->assertNotNull(Individual::factory()->create()->ind_id);
+        $this->assertNotNull(Individual::factory()->create()->id);
     }
 
     public function test_faker_helpers_produce_usable_slugs(): void

@@ -357,7 +357,7 @@ class MenuImport extends Component
 
         // Try the name as-is first (so a real name that happens to contain
         // brackets still wins).
-        $id = Individual::where('ind_name', $name)->value('ind_id');
+        $id = Individual::where('ind_name', $name)->value('id');
         if ($id) {
             return $id;
         }
@@ -368,7 +368,7 @@ class MenuImport extends Component
         // back to matching the undecorated name.
         $stripped = trim(preg_replace('/\s*(?:\(aka:.*|\[[^\]]*\])\s*$/', '', $name));
         if ($stripped !== '' && $stripped !== $name) {
-            return Individual::where('ind_name', $stripped)->value('ind_id');
+            return Individual::where('ind_name', $stripped)->value('id');
         }
 
         return null;

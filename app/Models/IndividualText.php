@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class IndividualText extends Model
 {
     protected $table = 'individual_text';
-    protected $primaryKey = 'ind_text_id';
     public $timestamps = false;
 
     protected $fillable = ['ind_email', 'ind_profile', 'ind_imgext'];

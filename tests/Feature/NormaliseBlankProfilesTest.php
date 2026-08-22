@@ -23,7 +23,7 @@ class NormaliseBlankProfilesTest extends TestCase
     private function individuals(int $count): void
     {
         foreach (range(1, $count) as $id) {
-            DB::table('individuals')->insert(['ind_id' => $id, 'ind_name' => 'Individual ' . $id]);
+            DB::table('individuals')->insert(['id' => $id, 'ind_name' => 'Individual ' . $id]);
         }
     }
 

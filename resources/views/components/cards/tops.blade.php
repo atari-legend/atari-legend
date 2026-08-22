@@ -77,7 +77,7 @@
                                 <td class="text-nowrap" style="width: 45%;">
                                     {{-- Not getKey(): $individuals comes from a DB::table() query in
                                          Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
-                                    <a href="{{ route('games.search', ['individual_id' => $individual->ind_id]) }}">
+                                    <a href="{{ route('games.search', ['individual_id' => $individual->id]) }}">
                                         {{ $individual->ind_name }}
                                     </a>
                                 </td>
