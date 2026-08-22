@@ -29,7 +29,7 @@ class MigrationModelsTest extends TestCase
         $violations = [];
 
         foreach (File::files(database_path('migrations')) as $migration) {
-            $content = file_get_contents($migration->getPathname());
+            $content = $this->codeWithoutComments($migration->getPathname());
 
             // Catches both `use App\Models\Game;` and a fully qualified
             // `\App\Models\Game::find(...)` in the body.
@@ -59,6 +59,35 @@ class MigrationModelsTest extends TestCase
             $violations,
             ['', 'Use DB::table() with the column names the schema had at the time.']
         )));
+    }
+
+    /**
+     * The file's code with comments stripped.
+     *
+     * A docblock explaining *why* a column moved will happily mention
+     * `Review::screenshots()`, and a guard that fires on prose is one people
+     * learn to work around by rewording rather than by fixing. token_get_all
+     * makes the distinction exactly, so the check reads code and only code.
+     */
+    private function codeWithoutComments(string $path): string
+    {
+        $code = '';
+
+        foreach (token_get_all(file_get_contents($path)) as $token) {
+            if (is_array($token)) {
+                if ($token[0] === T_COMMENT || $token[0] === T_DOC_COMMENT) {
+                    continue;
+                }
+
+                $code .= $token[1];
+
+                continue;
+            }
+
+            $code .= $token;
+        }
+
+        return $code;
     }
 
     /**
