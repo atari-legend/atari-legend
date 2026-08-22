@@ -55,6 +55,7 @@ class E2ESeeder extends Seeder
     public const GAME_AKA_ID = 202;
     public const RELEASE_ID = 301;
     public const SCREENSHOT_ID = 401;
+    public const SPOTLIGHT_ID = 4001;
     public const SPOTLIGHT_SCREENSHOT_ID = 402;
     public const INTERVIEW_SCREENSHOT_ID = 403;
     public const ARTICLE_SCREENSHOT_ID = 404;
@@ -641,7 +642,7 @@ class E2ESeeder extends Seeder
     private function seedOthers(): void
     {
         $this->insert('screenshot_main', ['screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('spotlight', ['spotlight_id' => 1], [
+        $this->insert('spotlight', ['spotlight_id' => self::SPOTLIGHT_ID], [
             'screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID,
             'spotlight'     => 'Playwright test spotlight.',
             'link'          => 'https://example.com/',
