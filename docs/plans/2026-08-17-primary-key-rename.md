@@ -140,13 +140,18 @@ rename safe".
 
 ### Decisions taken
 
-- **CPANEL is retired first.** The legacy admin panel writes to the same
-  database, and every deploy runs `artisan migrate --force`. A rename would
-  break it the moment it lands. No rename migration ships until the panel is
-  gone. The `getKey()` pre-pass is safe to do now — it changes no schema.
+- **CPANEL is retired — this gate is now clear (2026-08-22).** The legacy admin
+  panel wrote to the same database, and every deploy runs
+  `artisan migrate --force`, so a rename would have broken it the moment it
+  landed. That is no longer a constraint. Worth confirming once before the first
+  rename ships rather than taking it on trust: that nothing still holds
+  credentials to this database outside this application, and that no cron or
+  script left behind by the panel still runs against it. A retired *panel* and a
+  retired *set of writers* are not automatically the same thing.
 - **The database server is not what gates this.** Development, CI and both
   servers run MariaDB 10.11, which makes each rename migration a one-liner (see
-  Phase B step 1). Phase B waits on CPANEL, and on nothing else.
+  Phase B step 1). With CPANEL gone, Phase B's only remaining prerequisites are
+  Phase A2 and the harness changes.
 - **Primary keys only, one table at a time.** Foreign key names stay exactly as
   they are. `game_release.game_id` pointing at `game.id` is already the Laravel
   convention.
@@ -334,7 +339,7 @@ green Playwright run are the whole of it. The new arch test is the exception —
 it should fail before the 33 are qualified and pass after, which is worth
 confirming in that order.
 
-## Phase B — per-table rename (gated on CPANEL retirement, and on Phase A2)
+## Phase B — per-table rename (gated on Phase A2 and the harness changes)
 
 One table per PR. Each PR does all of:
 
