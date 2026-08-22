@@ -14,15 +14,38 @@ done.
 | Harness 2 — no models in migrations | **Done.** Five migrations rewritten, `MigrationModelsTest` guards it. |
 | Harness 3 — MariaDB migration gate | **Done**, as `migrate:fresh` + `migrate:rollback --step=1`. See the note about why not a bare rollback. |
 | Harness 4 — pin the wire format | **Done.** All six endpoints assert their id key, and `pickAutocompleteBy` now rejects the string `"undefined"` in the hidden companion field, so every autocomplete spec guards the wire format. See the note below on why an emptiness check was not enough. |
-| B — the renames | **8 of 36.** `trivia`, `trivia_quotes`, `article_type`, `news_image`. Then `change_log`, `spotlight`, `website_category`, `crew`.
-
-Three things are now demonstrated rather than assumed: MariaDB rewrites an inbound foreign key to follow the rename and follows it back on rollback, so no drop-and-re-add is needed either way; validation `exists:`/`unique:` rules name the parent's own key and move with it; and an endpoint that serialises a model straight to JSON changes its payload key, which is why `crew` moved `data-autocomplete-id` and the two tests pinning that payload in the same commit. |
+| B — the renames | **Complete.** All 34 renameable primary keys are `id`. The only `$primaryKey` declarations left in `app/Models/` are the two excluded below, whose key doubles as a foreign key to a parent. |
 
 Run both suites before Phase B work, not just `artisan test`. The five defects
 above were all invisible to it.
 
 `artisan test` is 991 green, 18 skipped; Playwright is 319 green across all four
-projects. Both were run against the full stack.
+projects. Both were run against the full stack, and every rename was also put
+through `migrate:fresh` → `rollback` → `migrate` → reseed on MariaDB.
+
+### What the renames actually taught
+
+Three rules earned the hard way, each after a failing test rather than in
+advance:
+
+- **`withPivot()` follows a pivot's own key; `belongsToMany`'s key arguments do
+  not.** The third and fourth arguments name foreign keys on the pivot and
+  stay; `withPivot()` names the pivot's own columns and moves. Four admin tests
+  died on this before it was spotted.
+- **`whereHas('rel', …)` queries the *related* table.** So a `where()` inside
+  that closure names the related model's own key, not the foreign key of the
+  table you started from. The same shape was classified correctly for `pub_dev`
+  and wrongly for `users` in the same afternoon.
+- **The AJAX key question has three different right answers.** An endpoint that
+  serialises a model moves its key (`crew`, `pub_dev`, `users`). One that builds
+  an array literal keeps it (`individuals`). One that unions a renamed table
+  with a table whose foreign key shares the old name must *pin* it by aliasing
+  (`game`), or one payload's halves disagree. Decide per endpoint by reading it,
+  never by pattern.
+
+And one about method, not code: a `grep -rl '->game_id'` without `--` parses the
+pattern as options, matches nothing, and reports a clean sweep. A search that
+finds nothing looks exactly like a search that ran nothing.
 
 **Playwright earned its description as the real net.** It was run for the first
 time after all of the above had landed and PHPUnit had been green throughout,
