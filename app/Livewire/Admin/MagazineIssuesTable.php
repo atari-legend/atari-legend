@@ -65,6 +65,6 @@ class MagazineIssuesTable extends DataTableComponent
     public function builder(): Builder
     {
         return MagazineIssue::where('magazine_id', '=', $this->magazine)
-            ->select();
+            ->select('magazine_issues.*');
     }
 }

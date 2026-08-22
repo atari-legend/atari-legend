@@ -74,7 +74,7 @@ class GameSubmissionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return GameSubmitInfo::select();
+        return GameSubmitInfo::select('game_submitinfo.*');
     }
 
     public function filters(): array

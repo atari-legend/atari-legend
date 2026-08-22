@@ -14,7 +14,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::select()
+        $articles = Article::select('article_main.*', 'article_text.article_title')
             ->join('article_text', 'article_text.article_id', '=', 'article_main.article_id')
             ->orderByDesc('article_text.article_date')
             ->paginate(5);
@@ -35,7 +35,7 @@ class ArticleController extends Controller
                 ->get();
         }
 
-        $articles = Article::select()
+        $articles = Article::select('article_main.*', 'article_text.article_title')
             ->join('article_text', 'article_text.article_id', '=', 'article_main.article_id')
             ->orderByDesc('article_text.article_date')
             ->limit(5)

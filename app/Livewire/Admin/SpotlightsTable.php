@@ -39,6 +39,6 @@ class SpotlightsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Spotlight::select();
+        return Spotlight::select('spotlight.*');
     }
 }

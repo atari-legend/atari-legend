@@ -34,8 +34,8 @@ class GameSearchController extends Controller
 
     public function search(Request $request)
     {
-        $games = Game::select();
-        $software = MenuSoftware::select();
+        $games = Game::select('game.*');
+        $software = MenuSoftware::select('menu_software.*');
 
         // Boolean to check if a search on software can be made
         // Software search only works via title or titleAZ. If neither

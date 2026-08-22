@@ -45,7 +45,7 @@ class GameCompaniesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PublisherDeveloper::select();
+        return PublisherDeveloper::select('pub_dev.*');
     }
 
     public function filters(): array

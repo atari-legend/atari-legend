@@ -62,6 +62,6 @@ class CrewsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Crew::select();
+        return Crew::select('crew.*');
     }
 }

@@ -124,8 +124,8 @@ class MenuSetController extends Controller
 
     public function search(Request $request)
     {
-        $software = MenuSoftware::select();
-        $games = Game::select();
+        $software = MenuSoftware::select('menu_software.*');
+        $games = Game::select('game.*');
 
         // Boolean to check if a search can be made
         // Search only works via title or titleAZ. If neither

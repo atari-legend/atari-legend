@@ -10,7 +10,7 @@ class CompanyController extends Controller
 {
     public function companies(Request $request)
     {
-        $companies = PublisherDeveloper::select()
+        $companies = PublisherDeveloper::select('pub_dev.*')
             ->orderBy('pub_dev_name')
             ->limit(10);
 

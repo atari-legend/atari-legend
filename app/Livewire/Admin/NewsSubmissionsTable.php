@@ -47,6 +47,6 @@ class NewsSubmissionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return NewsSubmission::select();
+        return NewsSubmission::select('news_submission.*');
     }
 }

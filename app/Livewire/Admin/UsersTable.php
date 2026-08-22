@@ -75,7 +75,7 @@ class UsersTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return User::query()->select();
+        return User::query()->select('users.*');
     }
 
     public function filters(): array

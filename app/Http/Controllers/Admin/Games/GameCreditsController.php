@@ -18,10 +18,10 @@ class GameCreditsController extends Controller
 {
     public function index(Game $game)
     {
-        $roles = IndividualRole::select()
+        $roles = IndividualRole::select('individual_role.*')
             ->orderBy('name')
             ->get();
-        $developerRoles = DeveloperRole::select()
+        $developerRoles = DeveloperRole::select('developer_role.*')
             ->orderBy('name')
             ->get();
 

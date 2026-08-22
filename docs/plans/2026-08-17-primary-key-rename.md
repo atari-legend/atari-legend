@@ -319,9 +319,17 @@ of a chain.
 
 So close the class rather than the instances:
 
-1. Give all 33 an explicit select list. For the 24 with no join, `Model::query()`
-   is the honest spelling of what `Model::select()` is being used for, and the
-   change is behaviour-identical either way.
+1. Give all 33 an explicit select list, naming the query's own table:
+   `Game::select('game.*')`. **Do not reach for `Model::query()` on the sites
+   that do not join today** — an earlier draft of this plan called that
+   behaviour-identical, and it is not. A zero-argument `select()` leaves the
+   builder's `columns` as `[]` rather than `null`, and Rappasoft's
+   `DataTableComponent` treats the two differently: it narrows the select until
+   the primary key is missing. Measured, not reasoned — the `query()` version
+   failed 16 admin table tests with `MissingAttributeException: The attribute
+   [game_id] ... was not retrieved for model [App\Models\Game]`. Qualifying
+   preserves the builder state and states the rule positively: every query
+   names its own table, whether or not it joins today.
 2. Add a test that fails on a zero-argument `select()` anywhere under `app/` —
    the same shape as harness change 2's ban on models in migrations, and cheap
    for the same reason: a `grep` over a directory, not a runtime assertion.

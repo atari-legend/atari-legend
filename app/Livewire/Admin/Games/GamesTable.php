@@ -56,6 +56,6 @@ class GamesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Game::select();
+        return Game::select('game.*');
     }
 }
