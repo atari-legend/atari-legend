@@ -75,7 +75,7 @@ class LinkCategoryController extends Controller
     public function update(Request $request, WebsiteCategory $category)
     {
         $request->validate([
-            'name' => 'required|max:128|unique:website_category,website_category_name,' . $category->getKey() . ',website_category_id',
+            'name' => 'required|max:128|unique:website_category,website_category_name,' . $category->getKey() . ',id',
         ]);
 
         $oldName = $category->website_category_name;

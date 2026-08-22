@@ -64,7 +64,7 @@ class LinksTable extends DataTableComponent
             'category' => SelectFilter::make('Category')
                 ->options($categories)
                 ->filter(function (Builder $query, string $value) {
-                    $query->whereHas('categories', fn ($q) => $q->where('website_category.website_category_id', $value));
+                    $query->whereHas('categories', fn ($q) => $q->where('website_category.id', $value));
                 }),
             'inactive' => SelectFilter::make('Status')
                 ->options(['' => 'Any', '0' => 'Active', '1' => 'Inactive'])

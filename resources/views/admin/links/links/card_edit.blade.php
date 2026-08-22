@@ -59,7 +59,7 @@
                     <div class="mb-3">
                         <label class="form-label">Categories</label>
                         @php
-                            $selectedCategories = old('categories', isset($link) ? $link->categories->pluck('website_category_id')->map(fn($id) => strval($id))->all() : []);
+                            $selectedCategories = old('categories', isset($link) ? $link->categories->pluck('id')->map(fn($id) => strval($id))->all() : []);
                         @endphp
                         <div class="row">
                             @foreach ($categories as $category)
