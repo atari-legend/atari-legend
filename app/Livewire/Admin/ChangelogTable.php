@@ -17,7 +17,7 @@ class ChangelogTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('change_log_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('timestamp', 'desc');
     }
 
