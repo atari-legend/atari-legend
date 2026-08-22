@@ -59,7 +59,7 @@ class GameController extends Controller
             ->flatMap(function ($individual) {
                 return $individual->interviews;
             })
-            ->unique('interview_id');
+            ->unique('id');
 
         // Filter unpublished reviews
         $reviews = $game->reviews->reject(function ($review) {

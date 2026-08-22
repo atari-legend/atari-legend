@@ -15,7 +15,7 @@ class InterviewController extends Controller
     public function index()
     {
         $interviews = Interview::select('interview_main.*')
-            ->join('interview_text', 'interview_text.interview_id', '=', 'interview_main.interview_id')
+            ->join('interview_text', 'interview_text.interview_id', '=', 'interview_main.id')
             ->orderByDesc('interview_text.interview_date')
             ->paginate(5);
 
@@ -26,7 +26,7 @@ class InterviewController extends Controller
     public function show(Interview $interview)
     {
         $interviews = Interview::select('interview_main.*')
-            ->join('interview_text', 'interview_text.interview_id', '=', 'interview_main.interview_id')
+            ->join('interview_text', 'interview_text.interview_id', '=', 'interview_main.id')
             ->orderByDesc('interview_text.interview_date')
             ->limit(5)
             ->get();

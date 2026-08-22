@@ -16,7 +16,7 @@ class InterviewsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('interview_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('interview_date', 'desc');
     }
 
@@ -61,7 +61,7 @@ class InterviewsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Interview::select('interview_main.*', 'individuals.ind_name', 'interview_text.interview_date')
-            ->leftJoin('interview_text', 'interview_text.interview_id', '=', 'interview_main.interview_id')
+            ->leftJoin('interview_text', 'interview_text.interview_id', '=', 'interview_main.id')
             ->leftJoin('individuals', 'individuals.ind_id', '=', 'interview_main.ind_id');
     }
 

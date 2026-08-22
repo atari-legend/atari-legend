@@ -13,7 +13,6 @@ class Interview extends Model implements Feedable
     use HasFactory;
 
     protected $table = 'interview_main';
-    protected $primaryKey = 'interview_id';
     public $timestamps = false;
 
     protected $fillable = ['user_id', 'ind_id', 'draft'];
@@ -36,7 +35,10 @@ class Interview extends Model implements Feedable
     public function screenshots()
     {
         return $this->belongsToMany(Screenshot::class, 'screenshot_interview', 'interview_id', 'screenshot_id')
-            ->withPivot('screenshot_interview_id')
+            // withPivot names a column on the pivot itself, and this is the
+            // pivot's own key, so it follows the rename. The interview_id and
+            // screenshot_id arguments above are foreign keys and do not.
+            ->withPivot('id')
             ->using(ScreenshotInterview::class);
     }
 

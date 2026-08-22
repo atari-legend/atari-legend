@@ -124,7 +124,7 @@ class ContentPagesTest extends TestCase
 
         $this->assertSame(
             [$newer->getKey(), $older->getKey()],
-            $interviews->pluck('interview_id')->all()
+            $interviews->pluck('id')->all()
         );
     }
 
