@@ -17,20 +17,20 @@ abstract class TestCase extends BaseTestCase
 
     protected function afterRefreshingDatabase()
     {
-        if (config('database.default') !== 'sqlite') {
+        if (\Illuminate\Support\Facades\DB::connection()->getDriverName() !== 'sqlite') {
             return;
         }
 
         $tables = \Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
         
         $index = 1;
+        $seqs = [];
         foreach ($tables as $table) {
-            $offset = $index * 10000; // using 10000 to be safe
-            \Illuminate\Support\Facades\DB::table('sqlite_sequence')->updateOrInsert(
-                ['name' => $table->name],
-                ['seq' => $offset]
-            );
+            $seqs[] = ['name' => $table->name, 'seq' => $index * 10000];
             $index++;
         }
+        
+        \Illuminate\Support\Facades\DB::table('sqlite_sequence')->delete();
+        \Illuminate\Support\Facades\DB::table('sqlite_sequence')->insert($seqs);
     }
 }
