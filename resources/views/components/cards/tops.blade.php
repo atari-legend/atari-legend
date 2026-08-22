@@ -14,7 +14,9 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
-                                    <a href="{{ route('games.search', ['developer_id' => $developer->getKey()]) }}">
+                                    {{-- Not getKey(): $developers comes from a DB::table() query in
+                                         Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
+                                    <a href="{{ route('games.search', ['developer_id' => $developer->pub_dev_id]) }}">
                                         {{ $developer->pub_dev_name }}
                                     </a>
                                 </td>
@@ -73,7 +75,9 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
-                                    <a href="{{ route('games.search', ['individual_id' => $individual->getKey()]) }}">
+                                    {{-- Not getKey(): $individuals comes from a DB::table() query in
+                                         Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
+                                    <a href="{{ route('games.search', ['individual_id' => $individual->ind_id]) }}">
                                         {{ $individual->ind_name }}
                                     </a>
                                 </td>
