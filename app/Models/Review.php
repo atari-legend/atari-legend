@@ -16,7 +16,6 @@ class Review extends Model implements Feedable
     const REVIEW_PUBLISHED = 0;
 
     protected $table = 'review_main';
-    protected $primaryKey = 'review_id';
     public $timestamps = false;
 
     protected $fillable = ['user_id', 'draft', 'review_text', 'review_date', 'review_edit'];
@@ -38,7 +37,9 @@ class Review extends Model implements Feedable
     public function screenshots()
     {
         return $this->belongsToMany(Screenshot::class, 'screenshot_review', 'review_id', 'screenshot_id')
-            ->withPivot('screenshot_review_id')
+            // The pivot's own key, so this follows the rename; the
+            // belongsToMany arguments above are foreign keys and do not.
+            ->withPivot('id')
             ->using(ScreenshotReview::class);
     }
 

@@ -415,7 +415,7 @@ class E2ESeeder extends Seeder
         ]);
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
-        $this->insert('review_main', ['review_id' => self::REVIEW_ID], [
+        $this->insert('review_main', ['id' => self::REVIEW_ID], [
             'user_id'     => self::USER_ADMIN_ID,
             'review_text' => 'Great game!',
             'review_date' => now()->timestamp,

@@ -19,7 +19,7 @@ class ReviewsTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('review_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('review_date', 'desc');
     }
 
@@ -64,7 +64,7 @@ class ReviewsTable extends DataTableComponent
     {
         return Review::select('review_main.*', 'game.game_name')
             ->where('review_edit', '=', $this->submissions)
-            ->leftJoin('review_game', 'review_game.review_id', '=', 'review_main.review_id')
+            ->leftJoin('review_game', 'review_game.review_id', '=', 'review_main.id')
             ->leftJoin('game', 'review_game.game_id', '=', 'game.game_id');
     }
 

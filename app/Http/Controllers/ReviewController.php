@@ -49,7 +49,7 @@ class ReviewController extends Controller
 
         if (isset($review->user)) {
             $otherReviews = $this->getReviewsForUser($review->user)
-                ->where('review_id', '!=', $review->getKey())
+                ->whereKeyNot($review->getKey())
                 ->get();
         }
 

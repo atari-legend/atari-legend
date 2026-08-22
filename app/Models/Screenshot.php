@@ -72,6 +72,10 @@ class Screenshot extends Model
 
     public function reviewScreenshots()
     {
-        return $this->hasMany(ScreenshotReview::class, 'screenshot_review_id');
+        // FIXME: this names screenshot_review's own key, so it joins on the
+        // wrong column entirely -- it should be 'screenshot_id'. Pre-existing
+        // and unused; renamed here only to keep it consistent with the schema,
+        // not fixed, because that is a behaviour change and not a rename.
+        return $this->hasMany(ScreenshotReview::class, 'id');
     }
 }
