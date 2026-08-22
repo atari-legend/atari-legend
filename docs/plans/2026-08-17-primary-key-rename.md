@@ -14,7 +14,7 @@ done.
 | Harness 2 — no models in migrations | **Done.** Five migrations rewritten, `MigrationModelsTest` guards it. |
 | Harness 3 — MariaDB migration gate | **Done**, as `migrate:fresh` + `migrate:rollback --step=1`. See the note about why not a bare rollback. |
 | Harness 4 — pin the wire format | **Done.** All six endpoints assert their id key, and `pickAutocompleteBy` now rejects the string `"undefined"` in the hidden companion field, so every autocomplete spec guards the wire format. See the note below on why an emptiness check was not enough. |
-| B — the renames | **Started.** `trivia` done (f8dff25) — the recipe proved end to end, including a MariaDB rollback round trip. 35 models to go. |
+| B — the renames | **4 of 36.** `trivia`, `trivia_quotes`, `article_type`, `news_image`. The last two carry inbound foreign keys: MariaDB rewrites the constraint to follow the rename, and follows it back on rollback, both verified — so no drop-and-re-add is needed in either direction. |
 
 Run both suites before Phase B work, not just `artisan test`. The five defects
 above were all invisible to it.
