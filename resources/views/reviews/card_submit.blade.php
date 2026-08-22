@@ -59,7 +59,7 @@
                         @if ($game->screenshots->isNotEmpty())
                             <fieldset class="lightbox-gallery">
                                 <legend>Screenshots</legend>
-                                @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
+                                @foreach ($game->screenshots->sortBy('id') as $screenshot)
                                     <div class="row mb-3">
                                         <div class="col-2">
                                             <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
@@ -102,7 +102,7 @@
                             </div>
 
                             <div class="col-3 ps-2 text-center text-muted lightbox-gallery">
-                                @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
+                                @foreach ($game->screenshots->sortBy('id') as $screenshot)
                                     <div class="bg-dark p-2">
                                         <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
                                             <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $game) }}">

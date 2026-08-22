@@ -28,7 +28,9 @@ class ReviewController extends Controller
 
         if ($request->filled('author')) {
             $reviews->whereHas('user', function (Builder $query) use ($request) {
-                $query->where('user_id', $request->input('author'));
+                // Inside whereHas the query runs against `users`, so this is
+                // User's own key rather than review_main's foreign key.
+                $query->where('users.id', $request->input('author'));
             });
         }
 
@@ -112,7 +114,7 @@ class ReviewController extends Controller
         // Process screenshots comments. Screenshots were ordered by screenshot_id
         // so we should iterate over the same ordered list of game screenshots to
         // associate the comment with the correct screenshot
-        $gameScreenshots = $game->screenshots->sortBy('screenshot_id');
+        $gameScreenshots = $game->screenshots->sortBy('id');
         if ($request->filled('screenshot')) {
             $i = 0;
             foreach ($request->screenshot as $screenshotComment) {

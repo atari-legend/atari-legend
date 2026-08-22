@@ -28,7 +28,7 @@ class ReviewPagesTest extends TestCase
             ->forGame(Game::factory()->named($gameName)->create()->getKey())
             ->scored()
             ->create([
-                'user_id'     => ($author ?? User::factory()->create())->user_id,
+                'user_id'     => ($author ?? User::factory()->create())->getKey(),
                 'review_date' => strtotime($date),
             ]);
     }
@@ -63,7 +63,7 @@ class ReviewPagesTest extends TestCase
         $this->review('By Alice', $alice);
         $this->review('By someone else');
 
-        $reviews = $this->get(route('reviews.index', ['author' => $alice->user_id]))
+        $reviews = $this->get(route('reviews.index', ['author' => $alice->getKey()]))
             ->assertOk()
             ->viewData('reviews');
 
@@ -189,7 +189,7 @@ class ReviewPagesTest extends TestCase
 
         $this->assertSame(Review::REVIEW_UNPUBLISHED, $review->review_edit);
         $this->assertSame('A fine shoot-em-up.', $review->review_text);
-        $this->assertSame($user->user_id, $review->user_id);
+        $this->assertSame($user->getKey(), $review->user_id);
         $this->assertSame(5, $review->score->review_graphics);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());
     }
@@ -215,7 +215,7 @@ class ReviewPagesTest extends TestCase
     public function test_screenshot_comments_are_matched_by_position(): void
     {
         $game = Game::factory()->withScreenshot()->withScreenshot()->create();
-        $screenshots = $game->screenshots->sortBy('screenshot_id')->values();
+        $screenshots = $game->screenshots->sortBy('id')->values();
 
         $this->actingAs(User::factory()->create())
             ->post(route('reviews.submit'), [
@@ -229,7 +229,7 @@ class ReviewPagesTest extends TestCase
         $this->assertSame('The second screen', ScreenshotReviewComment::sole()->comment_text);
 
         $this->assertSame(
-            $screenshots[1]->screenshot_id,
+            $screenshots[1]->getKey(),
             (int) DB::table('screenshot_review')->value('screenshot_id')
         );
     }

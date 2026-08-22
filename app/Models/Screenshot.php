@@ -12,7 +12,6 @@ class Screenshot extends Model
     use HasFactory;
 
     protected $table = 'screenshot_main';
-    protected $primaryKey = 'screenshot_id';
     protected $fillable = ['imgext'];
     public $timestamps = false;
 

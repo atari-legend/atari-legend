@@ -299,7 +299,7 @@ class E2ESeeder extends Seeder
             'license' => 'Commercial',
         ]);
 
-        $this->insert('screenshot_main', ['screenshot_id' => self::SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_main', ['id' => self::SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('screenshot_game', [
             'game_id'       => self::GAME_ID,
             'screenshot_id' => self::SCREENSHOT_ID,
@@ -404,7 +404,7 @@ class E2ESeeder extends Seeder
         ]);
 
         // Same chain as the interview screenshot below, one table along.
-        $this->insert('screenshot_main', ['screenshot_id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_main', ['id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('screenshot_article', ['id' => 1], [
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
@@ -456,7 +456,7 @@ class E2ESeeder extends Seeder
         // $screenshot->pivot->comment->comment_text without guarding it, so a
         // screenshot seeded without its comment would 500 the public page
         // rather than render an empty caption.
-        $this->insert('screenshot_main', ['screenshot_id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_main', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('screenshot_interview', ['id' => 1], [
             'interview_id'  => self::INTERVIEW_ID,
             'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
@@ -642,7 +642,7 @@ class E2ESeeder extends Seeder
 
     private function seedOthers(): void
     {
-        $this->insert('screenshot_main', ['screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_main', ['id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('spotlight', ['id' => self::SPOTLIGHT_ID], [
             'screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID,
             'spotlight'     => 'Playwright test spotlight.',

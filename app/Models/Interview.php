@@ -52,7 +52,7 @@ class Interview extends Model implements Feedable
      */
     public function getScreenshotComment(int $screenshotId)
     {
-        return $this->screenshots->firstWhere('screenshot_id', '=', $screenshotId);
+        return $this->screenshots->firstWhere('id', '=', $screenshotId);
     }
 
     public function toFeedItem(): FeedItem

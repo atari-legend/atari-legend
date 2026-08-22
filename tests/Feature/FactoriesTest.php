@@ -340,7 +340,7 @@ class FactoriesTest extends TestCase
     {
         $this->assertSame('game_id', (new Game())->getKeyName());
         $this->assertSame('id', (new Individual())->getKeyName());
-        $this->assertSame('screenshot_id', (new Screenshot())->getKeyName());
+        $this->assertSame('id', (new Screenshot())->getKeyName());
         $this->assertSame('id', (new Review())->getKeyName());
 
         $this->assertNotNull(Game::factory()->create()->game_id);
