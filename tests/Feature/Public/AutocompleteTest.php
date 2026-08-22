@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Public;
 
+use App\Models\Crew;
 use App\Models\Game;
+use App\Models\Individual;
 use App\Models\MenuSoftware;
 use App\Models\PublisherDeveloper;
 use App\Models\User;
@@ -328,5 +330,42 @@ class AutocompleteTest extends TestCase
         $this->assertArrayHasKey('game_id', $adminResults[0], 'The wire format must expose the game_id key');
         $this->assertNotNull($adminResults[0]['game_id'], 'The game_id must not be null');
         $this->assertIsScalar($adminResults[0]['game_id'], 'The game_id must be a scalar');
+    }
+
+    /**
+     * The other four endpoints that serialise models straight to JSON, so their
+     * keys *are* the column names.
+     *
+     * autocomplete.js:83 looks the id up by the `data-autocomplete-id` attribute
+     * on the field. Rename the column without moving the Blade attribute and the
+     * lookup yields `undefined`, which is then written into the hidden companion
+     * field and submitted: no PHP error, no SQL error, nothing in the log. These
+     * assertions are what turns that into a failing test instead of a silently
+     * wrong association.
+     *
+     * See docs/plans/2026-08-17-primary-key-rename.md, Phase B step 8.
+     */
+    public function test_the_remaining_endpoints_pin_their_primary_keys(): void
+    {
+        Crew::factory()->create(['crew_name' => 'The Replicants']);
+        PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
+        Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+
+        $admin = User::factory()->admin()->create(['userid' => 'pinned-admin']);
+
+        $cases = [
+            ['crew_id', $this->getJson(route('ajax.crews', ['q' => 'Replicants']))],
+            ['pub_dev_id', $this->getJson(route('ajax.companies', ['q' => 'Ocean']))],
+            ['ind_id', $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))],
+            ['user_id', $this->actingAs($admin)->getJson(route('admin.ajax.users', ['q' => 'pinned-admin']))],
+        ];
+
+        foreach ($cases as [$key, $response]) {
+            $results = $response->assertOk()->json();
+
+            $this->assertNotEmpty($results, "No result to check the {$key} key against.");
+            $this->assertArrayHasKey($key, $results[0], "The wire format must expose the {$key} key.");
+            $this->assertNotNull($results[0][$key], "{$key} must not be null.");
+        }
     }
 }
