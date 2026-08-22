@@ -229,9 +229,18 @@ class E2ESeeder extends Seeder
         $salt = UserHelper::salt();
         $sha512Password = UserHelper::hashPassword('password', $salt);
 
+        // user_id is auto-increment and not fillable, so the ids come from the
+        // counter, not from the constants above. Start the counter at
+        // USER_ADMIN_ID so that insertion order lands on them: without this the
+        // users are 1..6 while everything pointing at them uses 101..106, and
+        // the first such insert fails on the foreign key.
+        if (DB::table('users')->count() === 0 && DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE users AUTO_INCREMENT = ' . self::USER_ADMIN_ID);
+        }
+
         // user_id is the primary key and is not fillable, so these rely on
-        // insertion order on a fresh database - admin first, hence
-        // USER_ADMIN_ID = 1. Keep the order.
+        // insertion order on a fresh database - admin first, then the counter
+        // set above walks USER_ADMIN_ID upwards. Keep the order.
         //
         // The third user has never confirmed its address. Every route in the
         // app sits behind the `verified` middleware, so it is the only way to
