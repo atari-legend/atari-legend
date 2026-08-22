@@ -166,7 +166,7 @@ class NewsController extends Controller
             }
 
             $image = $request->file('image');
-            $image->storeAs('images/news_images/', $newsImage->news_image_id . '.' . $image->extension(), 'public');
+            $image->storeAs('images/news_images/', $newsImage->getKey() . '.' . $image->extension(), 'public');
 
             $newsImage->update(['news_image_ext' => $image->extension()]);
 

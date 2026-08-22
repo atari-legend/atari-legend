@@ -99,7 +99,7 @@ class ReleaseDescriptionHelper
             $desc .= ') ';
         }
 
-        $desc .= 'of [game=' . $release->game->game_id . ']' . $release->game->game_name . '[/game]. ';
+        $desc .= 'of [game=' . $release->game->getKey() . ']' . $release->game->game_name . '[/game]. ';
 
         if ($release->locations->isNotEmpty()) {
             $desc .= 'It was released in ';

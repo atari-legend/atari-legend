@@ -22,7 +22,7 @@
                 <div class="col-8">
                     @foreach ($game->developers as $developer)
                         <div>
-                            <a href="{{ route('games.search', ['developer_id' => $developer->pub_dev_id]) }}">{{ $developer->pub_dev_name }}</a>
+                            <a href="{{ route('games.search', ['developer_id' => $developer->getKey()]) }}">{{ $developer->pub_dev_name }}</a>
                             @contributor
                                 <a class="d-inline-block" href="{{ route('admin.games.companies.edit', $developer) }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -34,8 +34,8 @@
                                 </a>
                             @endif
                             @if ($developer->text?->pub_dev_profile !== null && trim($developer->text?->pub_dev_profile) !== '')
-                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->pub_dev_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
-                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->pub_dev_id }}">
+                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->getKey() }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->getKey() }}"><i class="fas fa-info-circle text-muted"></i></a>
+                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->getKey() }}">
                                     {!! Helper::bbCode(nl2br(e($developer->text->pub_dev_profile), false)) !!}
                                 </p>
                             @endif

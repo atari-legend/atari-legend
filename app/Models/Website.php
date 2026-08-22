@@ -35,7 +35,7 @@ class Website extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->website_id, $this->website_imgext);
+        return Helper::filename($this->getKey(), $this->website_imgext);
     }
 
     public function getPathAttribute()

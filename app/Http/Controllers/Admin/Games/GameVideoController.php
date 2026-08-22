@@ -58,7 +58,7 @@ class GameVideoController extends Controller
             'title'      => $title ?: $youtubeId,
             'author'     => $author ?: '',
             'youtube_id' => $youtubeId,
-            'game_id'    => $game->game_id,
+            'game_id'    => $game->getKey(),
         ]);
 
         ChangelogHelper::insert([

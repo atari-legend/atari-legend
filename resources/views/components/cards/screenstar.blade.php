@@ -25,7 +25,7 @@
                     {!! Helper::bbCode(Helper::extractTag(e($screenstar->review_text), "screenstar")) !!}
                 </p>
                 <p class="card-subtitle text-muted">{{ $screenstar->review_date->format('F j, Y') }} by {{ Helper::user($screenstar->user) }}</p>
-                <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $screenstar->review_id]) }}">
+                <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $screenstar->getKey()]) }}">
                     Read the review @isset ($game) of {{ $game->game_name }} @endisset <i class="fas fa-chevron-right"></i>
                 </a>
             </div>

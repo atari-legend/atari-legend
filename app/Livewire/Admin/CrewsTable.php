@@ -29,7 +29,7 @@ class CrewsTable extends DataTableComponent
             Column::make('Logo')
                 ->label(
                     fn ($row) => $row->crew_logo !== null && trim($row->crew_logo) !== ''
-                        ? '<img style="max-height: 2rem; max-width: 5rem;" src="' . asset('storage/images/crew_logos/' . $row->crew_id . '.' . trim($row->crew_logo)) . '">'
+                        ? '<img style="max-height: 2rem; max-width: 5rem;" src="' . asset('storage/images/crew_logos/' . $row->getKey() . '.' . trim($row->crew_logo)) . '">'
                         : ''
                 )
                 ->html()

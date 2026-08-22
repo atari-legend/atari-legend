@@ -65,7 +65,7 @@ class InterviewsController extends Controller
         $interview->save();
 
         $text = new InterviewText([
-            'interview_id'       => $interview->interview_id,
+            'interview_id'       => $interview->getKey(),
             'interview_text'     => $request->text,
             'interview_intro'    => $request->intro,
             'interview_chapters' => $request->chapters,
@@ -99,7 +99,7 @@ class InterviewsController extends Controller
             'draft'   => $request->draft ? true : false,
         ]);
 
-        $text = $interview->texts->first() ?? new InterviewText(['interview_id' => $interview->interview_id]);
+        $text = $interview->texts->first() ?? new InterviewText(['interview_id' => $interview->getKey()]);
         $text->interview_text = $request->text;
         $text->interview_intro = $request->intro;
         $text->interview_chapters = $request->chapters;

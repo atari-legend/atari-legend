@@ -71,7 +71,7 @@ class LinkController extends Controller
             'website_url'  => $request->url,
             'description'  => $request->description,
             'website_date' => time(),
-            'user_id'      => $request->user()->user_id,
+            'user_id'      => $request->user()->getKey(),
             'inactive'     => $request->boolean('inactive'),
         ]);
 

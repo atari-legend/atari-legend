@@ -10,7 +10,7 @@
                 <p class="card-text mb-0">
                     {!! Helper::bbCode(e(Helper::extractTag($review->review_text, "frontpage"))) !!}
                 </p>
-                <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $review->review_id]) }}">
+                <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $review->getKey()]) }}">
                     <i title="Read the review of {{ $review->games[0]->game_name }}" class="fas fa-chevron-right"></i>
                 </a>
             </div>

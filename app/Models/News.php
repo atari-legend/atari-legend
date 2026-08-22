@@ -51,7 +51,7 @@ class News extends Model implements Feedable
             'updated'    => $this->news_date,
             // Use an ID so that articles in the feed have different IDs
             // The ID is effectively ignored in the News page
-            'link'       => route('news.index', ['news' => $this->news_id]),
+            'link'       => route('news.index', ['news' => $this->getKey()]),
             'authorName' => Helper::user($this->user),
         ]);
     }

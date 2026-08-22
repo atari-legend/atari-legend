@@ -15,6 +15,6 @@ class PublisherDeveloperText extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->pub_dev_id, $this->pub_dev_imgext);
+        return Helper::filename($this->getKey(), $this->pub_dev_imgext);
     }
 }

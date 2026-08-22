@@ -32,7 +32,7 @@ class IndividualController extends Controller
 
                 return [
                     'ind_name' => $ind_name,
-                    'ind_id'   => $individual->ind_id,
+                    'ind_id'   => $individual->getKey(),
                 ];
             });
 

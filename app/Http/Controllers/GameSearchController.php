@@ -163,7 +163,7 @@ class GameSearchController extends Controller
                     ->nicknames
                     ->pluck('ind_id')
                     ->concat($individual->individuals->pluck('ind_id'))
-                    ->concat(collect($individual->ind_id));
+                    ->concat(collect($individual->getKey()));
                 $games->whereHas('individuals', function (Builder $query) use ($ids) {
                     $query->whereIn('individual_id', $ids);
                 });

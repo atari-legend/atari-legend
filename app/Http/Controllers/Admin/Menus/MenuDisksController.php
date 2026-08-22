@@ -221,7 +221,7 @@ class MenuDisksController extends Controller
             $dump = null;
             if ($disk->menuDiskDump !== null) {
                 $disk->menuDiskDump->update([
-                    'user_id' => Auth::user()->user_id,
+                    'user_id' => Auth::user()->getKey(),
                     'format'  => $dumpFormat,
                     'sha512'  => $dumpChecksum,
                     'size'    => $dumpSize,
@@ -239,7 +239,7 @@ class MenuDisksController extends Controller
                 ]);
             } else {
                 $dump = MenuDiskDump::create([
-                    'user_id' => Auth::user()->user_id,
+                    'user_id' => Auth::user()->getKey(),
                     'format'  => $dumpFormat,
                     'sha512'  => $dumpChecksum,
                     'size'    => $dumpSize,

@@ -15,6 +15,6 @@ class NewsImage extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->news_image_id, $this->news_image_ext);
+        return Helper::filename($this->getKey(), $this->news_image_ext);
     }
 }

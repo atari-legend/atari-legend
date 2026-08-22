@@ -49,7 +49,7 @@ class ReviewController extends Controller
 
         if (isset($review->user)) {
             $otherReviews = $this->getReviewsForUser($review->user)
-                ->where('review_id', '!=', $review->review_id)
+                ->where('review_id', '!=', $review->getKey())
                 ->get();
         }
 
@@ -121,8 +121,8 @@ class ReviewController extends Controller
                 if ($screenshotComment !== null) {
                     $id = DB::table('screenshot_review')
                         ->insertGetId([
-                            'review_id'     => $review->review_id,
-                            'screenshot_id' => $gameScreenshot->screenshot_id,
+                            'review_id'     => $review->getKey(),
+                            'screenshot_id' => $gameScreenshot->getKey(),
                         ]);
                     $comment = new ScreenshotReviewComment();
                     $comment->comment_text = $screenshotComment;
@@ -175,7 +175,7 @@ class ReviewController extends Controller
 
     private function getReviewsForUser(User $user)
     {
-        return Review::where('user_id', $user->user_id)
+        return Review::where('user_id', $user->getKey())
             ->where('review_edit', Review::REVIEW_PUBLISHED)
             ->orderBy('review_date', 'desc');
     }

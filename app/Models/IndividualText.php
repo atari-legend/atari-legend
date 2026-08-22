@@ -15,7 +15,7 @@ class IndividualText extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->ind_id, $this->ind_imgext);
+        return Helper::filename($this->getKey(), $this->ind_imgext);
     }
 
     public function getImageUrlAttribute()

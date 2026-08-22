@@ -45,7 +45,7 @@ class GameIndividualController extends Controller
 
         // Find possible duplicates for the main name
         $duplicates = Individual::where('ind_name', '=', $ind->ind_name)
-            ->where('ind_id', '!=', $ind->ind_id)
+            ->where('ind_id', '!=', $ind->getKey())
             ->get();
 
         // Find possible duplicates for each nick
@@ -58,7 +58,7 @@ class GameIndividualController extends Controller
                         return ! $ind->nicknames->contains($item2);
                     });
 
-                return [$item->ind_id => $i];
+                return [$item->getKey() => $i];
             });
 
         return view('admin.games.individuals.edit')
@@ -86,7 +86,7 @@ class GameIndividualController extends Controller
         $ext = null;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $avatar->storeAs('images/individual_screenshots/', $individual->ind_id . '.' . $avatar->extension(), 'public');
+            $avatar->storeAs('images/individual_screenshots/', $individual->getKey() . '.' . $avatar->extension(), 'public');
             $ext = $avatar->extension();
 
             ChangelogHelper::insert([
@@ -137,7 +137,7 @@ class GameIndividualController extends Controller
         $ext = $individual->text?->ind_imgext;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $avatar->storeAs('images/individual_screenshots/', $individual->ind_id . '.' . $avatar->extension(), 'public');
+            $avatar->storeAs('images/individual_screenshots/', $individual->getKey() . '.' . $avatar->extension(), 'public');
             $ext = $avatar->extension();
 
             ChangelogHelper::insert([
@@ -202,7 +202,7 @@ class GameIndividualController extends Controller
     public function destroyAvatar(Individual $individual)
     {
         if ($individual->avatar) {
-            Storage::disk('public')->delete('images/individual_screenshots/' . $individual->ind_id . '.' . $individual->text->ind_imgext);
+            Storage::disk('public')->delete('images/individual_screenshots/' . $individual->getKey() . '.' . $individual->text->ind_imgext);
             $individual->text->ind_imgext = null;
             $individual->text->save();
 

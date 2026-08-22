@@ -56,7 +56,7 @@ class LinksTable extends DataTableComponent
     {
         $categories = WebsiteCategory::orderBy('website_category_name')
             ->get()
-            ->mapWithKeys(fn ($cat) => [strval($cat->website_category_id) => $cat->website_category_name])
+            ->mapWithKeys(fn ($cat) => [strval($cat->getKey()) => $cat->website_category_name])
             ->all();
         $categories = ['' => 'Any'] + $categories;
 

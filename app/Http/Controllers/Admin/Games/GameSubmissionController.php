@@ -82,7 +82,7 @@ class GameSubmissionController extends Controller
                     'section_id'       => $submission->game->getKey(),
                     'section_name'     => $submission->game->game_name,
                     'sub_section'      => 'Comment',
-                    'sub_section_id'   => $comment->comments_id,
+                    'sub_section_id'   => $comment->getKey(),
                     'sub_section_name' => $submission->game->game_name,
                 ]);
 

@@ -37,7 +37,7 @@
                             data-autocomplete-key="userid" data-autocomplete-id="user_id"
                             data-autocomplete-companion="author" value="{{ old('author_name', isset($news) ? $news->user?->userid : Auth::user()->userid ) }}"
                             placeholder="Type a user name..." autocomplete="off">
-                        <input type="hidden" name="author" value="{{ old('author', isset($news) ? $news->user?->user_id : Auth::user()->user_id) }}">
+                        <input type="hidden" name="author" value="{{ old('author', isset($news) ? $news->user?->getKey() : Auth::user()->getKey()) }}">
 
                         @error('author')
                             <span class="invalid-feedback" role="alert">

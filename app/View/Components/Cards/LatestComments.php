@@ -24,7 +24,7 @@ class LatestComments extends Component
         // Laravel provides a newly created user rather than NULL
         // So we check the user_id to see if it's a real user, or a newly
         // created one
-        if ($user !== null && $user->user_id !== null) {
+        if ($user !== null && $user->getKey() !== null) {
             $this->user = $user;
         }
     }
@@ -40,7 +40,7 @@ class LatestComments extends Component
             ->join('game_user_comments', 'comments_id', '=', 'game_user_comments.comment_id');
 
         if ($this->user !== null) {
-            $comments->where('user_id', $this->user->user_id);
+            $comments->where('user_id', $this->user->getKey());
         }
 
         $comments = $comments->orderBy('timestamp', 'desc')

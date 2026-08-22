@@ -129,7 +129,7 @@ class ReviewsController extends Controller
                     // Screenshot comment does not exist, create new pivot and comment
                     $id = DB::table('screenshot_review')
                         ->insertGetId([
-                            'review_id'     => $review->review_id,
+                            'review_id'     => $review->getKey(),
                             'screenshot_id' => $screenshotId,
                         ]);
                     $comment = new ScreenshotReviewComment();

@@ -67,10 +67,10 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox"
                                             name="categories[]"
-                                            value="{{ $category->website_category_id }}"
-                                            id="cat_{{ $category->website_category_id }}"
-                                            @checked(in_array(strval($category->website_category_id), $selectedCategories))>
-                                        <label class="form-check-label" for="cat_{{ $category->website_category_id }}">
+                                            value="{{ $category->getKey() }}"
+                                            id="cat_{{ $category->getKey() }}"
+                                            @checked(in_array(strval($category->getKey()), $selectedCategories))>
+                                        <label class="form-check-label" for="cat_{{ $category->getKey() }}">
                                             {{ $category->website_category_name }}
                                         </label>
                                     </div>

@@ -145,7 +145,7 @@ class GameFactsController extends Controller
                 $screenshot = Screenshot::create([
                     'imgext' => strtolower($file->extension()),
                 ]);
-                $file->storeAs($screenshot->getFolder('game_fact'), $screenshot->screenshot_id . '.' . $screenshot->imgext, 'public');
+                $file->storeAs($screenshot->getFolder('game_fact'), $screenshot->getKey() . '.' . $screenshot->imgext, 'public');
 
                 $fact->screenshots()->attach($screenshot);
             }

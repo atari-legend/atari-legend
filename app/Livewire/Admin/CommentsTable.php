@@ -75,7 +75,7 @@ class CommentsTable extends DataTableComponent
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [strval($user->user_id) => $user->userid];
+                return [strval($user->getKey()) => $user->userid];
             })->all();
         $authors = ['' => 'Any'] + $authors;
 

@@ -30,8 +30,8 @@ class ArticleController extends Controller
         $otherArticles = collect([]);
 
         if (isset($article->user)) {
-            $otherArticles = Article::where('user_id', $article->user->user_id)
-                ->where('article_id', '!=', $article->article_id)
+            $otherArticles = Article::where('user_id', $article->user->getKey())
+                ->where('article_id', '!=', $article->getKey())
                 ->get();
         }
 

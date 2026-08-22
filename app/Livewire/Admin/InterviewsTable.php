@@ -28,7 +28,7 @@ class InterviewsTable extends DataTableComponent
                     fn ($row) => $row->ind_name
                 )
                 ->location(
-                    fn ($row) => route('admin.interviews.interviews.edit', $row->interview_id)
+                    fn ($row) => route('admin.interviews.interviews.edit', $row->getKey())
                 )
                 ->searchable(
                     fn ($query, $term) => $query->where('ind_name', 'like', "%{$term}%")
@@ -71,7 +71,7 @@ class InterviewsTable extends DataTableComponent
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [strval($user->user_id) => $user->userid];
+                return [strval($user->getKey()) => $user->userid];
             })->all();
         $authors = ['' => 'Any'] + $authors;
 

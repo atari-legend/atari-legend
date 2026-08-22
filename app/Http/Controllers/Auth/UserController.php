@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $request->validate(UserHelper::validationRules(Auth::user()));
 
-        $user = User::find(Auth::user()->user_id);
+        $user = User::find(Auth::user()->getKey());
         $user->fill([
             'email'        => $request->email,
             'user_website' => $request->website,
@@ -35,10 +35,10 @@ class UserController extends Controller
 
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $avatar->storeAs('images/user_avatars/', $user->user_id . '.' . $avatar->extension(), 'public');
+            $avatar->storeAs('images/user_avatars/', $user->getKey() . '.' . $avatar->extension(), 'public');
             $user->avatar_ext = $avatar->extension();
         } elseif ($request->filled('avatar-removed')) {
-            Storage::disk('public')->delete('images/user_avatars/' . $user->user_id . '.' . $user->avatar_ext);
+            Storage::disk('public')->delete('images/user_avatars/' . $user->getKey() . '.' . $user->avatar_ext);
             $user->avatar_ext = null;
         }
 
@@ -89,7 +89,7 @@ class UserController extends Controller
 
         $salt = UserHelper::salt();
         $hashedPassword = UserHelper::hashPassword($request->password, $salt);
-        $user = User::find(Auth::user()->user_id);
+        $user = User::find(Auth::user()->getKey());
         $user->fill([
             'sha512_password' => $hashedPassword,
             'salt'            => $salt,

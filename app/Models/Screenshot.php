@@ -27,7 +27,7 @@ class Screenshot extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->screenshot_id, $this->imgext);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 
     public function getMimeTypeAttribute()

@@ -14,7 +14,7 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
-                                    <a href="{{ route('games.search', ['developer_id' => $developer->pub_dev_id]) }}">
+                                    <a href="{{ route('games.search', ['developer_id' => $developer->getKey()]) }}">
                                         {{ $developer->pub_dev_name }}
                                     </a>
                                 </td>
@@ -71,7 +71,7 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
-                                    <a href="{{ route('games.search', ['individual_id' => $individual->ind_id]) }}">
+                                    <a href="{{ route('games.search', ['individual_id' => $individual->getKey()]) }}">
                                         {{ $individual->ind_name }}
                                     </a>
                                 </td>

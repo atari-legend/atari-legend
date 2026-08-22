@@ -304,9 +304,11 @@ class MenuImport extends Component
 
         $candidates = collect();
         foreach ($games as $game) {
-            $candidates->push(['id' => $game->game_id, 'name' => $game->game_name]);
+            $candidates->push(['id' => $game->getKey(), 'name' => $game->game_name]);
         }
         foreach ($akas as $aka) {
+            // game_id is GameAka's foreign key to the game this alias belongs to,
+            // not GameAka's own primary key: the candidate list identifies games.
             $candidates->push(['id' => $aka->game_id, 'name' => $aka->aka_name . ' (AKA)']);
         }
         $candidates = $candidates->unique('id')->values();
@@ -406,7 +408,7 @@ class MenuImport extends Component
         $gameId = $gameId !== '' && $gameId !== null ? (int) $gameId : null;
         $game = $gameId ? Game::find($gameId) : null;
 
-        $this->menus[$mi]['disks'][$di]['contents'][$ci]['game_id'] = $game?->game_id;
+        $this->menus[$mi]['disks'][$di]['contents'][$ci]['game_id'] = $game?->getKey();
         $this->menus[$mi]['disks'][$di]['contents'][$ci]['game_name'] = $game?->game_name;
         $this->menus[$mi]['disks'][$di]['contents'][$ci]['query'] = $game?->game_name;
         $this->menus[$mi]['disks'][$di]['contents'][$ci]['candidates'] = [];
@@ -480,7 +482,7 @@ class MenuImport extends Component
         $individualId = $individualId !== '' && $individualId !== null ? (int) $individualId : null;
         $individual = $individualId ? Individual::find($individualId) : null;
 
-        $this->menus[$mi]['disks'][$di]['donated_by_id'] = $individual?->ind_id;
+        $this->menus[$mi]['disks'][$di]['donated_by_id'] = $individual?->getKey();
         $this->menus[$mi]['disks'][$di]['donated_by'] = $individual?->ind_name;
     }
 

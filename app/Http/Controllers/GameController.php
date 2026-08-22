@@ -140,7 +140,7 @@ class GameController extends Controller
         $votes = DB::table('game_votes')
             ->selectRaw('avg(score) as score')
             ->selectRaw('count(score) as votes')
-            ->where('game_id', '=', $game->game_id)
+            ->where('game_id', '=', $game->getKey())
             ->groupBy('game_id')
             ->first();
         $score = null;
@@ -205,7 +205,7 @@ class GameController extends Controller
 
                 $info->screenshots()->save($screenshot);
 
-                $file->storeAs('images/game_submit_screenshots', $screenshot->screenshot_id . '.' . $screenshot->imgext, 'public');
+                $file->storeAs('images/game_submit_screenshots', $screenshot->getKey() . '.' . $screenshot->imgext, 'public');
             }
         }
 

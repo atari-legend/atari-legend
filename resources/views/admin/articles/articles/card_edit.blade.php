@@ -41,7 +41,7 @@
                             value="{{ old('author_name', isset($article) ? $article->user?->userid : Auth::user()->userid) }}"
                             placeholder="Type a user name..." autocomplete="off">
                         <input type="hidden" name="author"
-                            value="{{ old('author', isset($article) ? $article->user?->user_id : Auth::user()->user_id) }}">
+                            value="{{ old('author', isset($article) ? $article->user?->getKey() : Auth::user()->getKey()) }}">
 
                         @error('author')
                             <span class="invalid-feedback" role="alert">

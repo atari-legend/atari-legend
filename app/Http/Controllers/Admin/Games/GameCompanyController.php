@@ -59,7 +59,7 @@ class GameCompanyController extends Controller
         $ext = null;
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            $logo->storeAs('images/company_logos/', $company->pub_dev_id . '.' . $logo->extension(), 'public');
+            $logo->storeAs('images/company_logos/', $company->getKey() . '.' . $logo->extension(), 'public');
             $ext = $logo->extension();
 
             ChangelogHelper::insert([
@@ -97,7 +97,7 @@ class GameCompanyController extends Controller
     public function update(Request $request, PublisherDeveloper $company)
     {
         $request->validate([
-            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')->ignore($company->pub_dev_id, 'pub_dev_id')],
+            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')->ignore($company->getKey(), 'pub_dev_id')],
         ]);
 
         // Keep the logo already on file when the form comes back without one -
@@ -107,7 +107,7 @@ class GameCompanyController extends Controller
         $ext = $company->text?->pub_dev_imgext;
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            $logo->storeAs('images/company_logos/', $company->pub_dev_id . '.' . $logo->extension(), 'public');
+            $logo->storeAs('images/company_logos/', $company->getKey() . '.' . $logo->extension(), 'public');
             $ext = $logo->extension();
 
             ChangelogHelper::insert([
@@ -171,7 +171,7 @@ class GameCompanyController extends Controller
     public function destroyLogo(PublisherDeveloper $company)
     {
         if ($company->logo) {
-            Storage::disk('public')->delete('images/company_logos/' . $company->pub_dev_id . '.' . $company->text->pub_dev_imgext);
+            Storage::disk('public')->delete('images/company_logos/' . $company->getKey() . '.' . $company->text->pub_dev_imgext);
             $company->text->pub_dev_imgext = null;
             $company->text->save();
 

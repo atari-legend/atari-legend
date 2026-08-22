@@ -53,7 +53,7 @@
                     data-autocomplete-key="ind_name" data-autocomplete-id="ind_id"
                     data-autocomplete-companion="donated" value="{{ old('individual_name', isset($disk) ? $disk->donatedBy?->ind_name : '') }}"
                     placeholder="Type an individual name..." autocomplete="off">
-                <input type="hidden" name="donated" value="{{ old('donated', isset($disk) ? $disk->donatedBy?->ind_id : '') }}">
+                <input type="hidden" name="donated" value="{{ old('donated', isset($disk) ? $disk->donatedBy?->getKey() : '') }}">
 
                 @error('donated')
                     <span class="invalid-feedback" role="alert">

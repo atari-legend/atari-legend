@@ -10,7 +10,7 @@
             <ul class="list-unstyled ms-2">
                 @foreach ($game->series->games->sortBy('game_name') as $g)
                     <li>
-                        @if ($g->game_id === $game->game_id)
+                        @if ($g->getKey() === $game->getKey())
                             <i class="fas fa-caret-right text-muted"></i> <strong class="text-muted">{{ $g->game_name }}</strong>
                         @else
                             <a href="{{ route('games.show', ['game' => $g ]) }}">{{ $g->game_name }}</a>
