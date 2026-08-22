@@ -4,7 +4,7 @@
     </div>
 
     <div class="card-body p-0 striped">
-        @forelse ($interview->individual->games->groupBy("game_id") as $gameRoles)
+        @forelse ($interview->individual->games->groupBy("id") as $gameRoles)
             <div class="p-2">
                 <a href="{{ route('games.show', ['game' => $gameRoles->first()]) }}">{{ $gameRoles->first()->game_name }}</a><br>
                 <span class="text-muted">{{ $gameRoles->pluck('pivot')->pluck('role')->pluck('name')->join(', ')}}</span>

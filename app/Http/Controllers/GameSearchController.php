@@ -211,7 +211,7 @@ class GameSearchController extends Controller
         if (! $searchPossible) {
             // Force no game results when there were no search
             // constraints
-            $games->where('game_id', '<', 0);
+            $games->where('game.id', '<', 0);
         }
 
         $games = $games

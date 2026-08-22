@@ -31,7 +31,7 @@ class TopGames extends Component
 
         $games = Game::select('game.*')
             ->addSelect('votes.avgScore', 'votes.numVotes')
-            ->joinSub($votes, 'votes', 'votes.game_id', '=', 'game.game_id')
+            ->joinSub($votes, 'votes', 'votes.game_id', '=', 'game.id')
             ->orderByDesc('avgScore')
             ->orderByDesc('numVotes')
             ->orderBy('game_name')

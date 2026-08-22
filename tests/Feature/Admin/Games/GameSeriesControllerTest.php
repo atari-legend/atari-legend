@@ -69,7 +69,7 @@ class GameSeriesControllerTest extends AdminTestCase
         $series = GameSeries::forceCreate(['name' => 'Xenon series']);
         $game = Game::factory()->named('Xenon')->create();
 
-        $this->post(route('admin.games.series.game.store', $series), ['game' => $game->game_id])
+        $this->post(route('admin.games.series.game.store', $series), ['game' => $game->getKey()])
             ->assertRedirect(route('admin.games.series.edit', $series));
 
         $this->assertSame($series->id, $game->fresh()->game_series_id);
@@ -85,7 +85,7 @@ class GameSeriesControllerTest extends AdminTestCase
             ->assertRedirect(route('admin.games.series.edit', $series));
 
         $this->assertNull($game->fresh()->game_series_id);
-        $this->assertDatabaseHas('game', ['game_id' => $game->game_id]);
+        $this->assertDatabaseHas('game', ['id' => $game->getKey()]);
         $this->assertChangelog(Changelog::DELETE, 'Game series', 'Xenon series');
     }
 

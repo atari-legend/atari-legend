@@ -154,7 +154,7 @@ class MenuSetController extends Controller
         if (! $searchPossible) {
             // Force no software results when there were no titles selected
             $software->where('id', '<', 0);
-            $games->where('game_id', '<', 0);
+            $games->where('game.id', '<', 0);
         }
 
         $games->orderBy('game_name')

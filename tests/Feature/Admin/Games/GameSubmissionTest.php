@@ -126,7 +126,7 @@ class GameSubmissionTest extends AdminTestCase
         $this->assertSame('Best soundtrack on the ST.', $comment->comment);
         $this->assertSame($this->visitor->getKey(), $comment->user_id);
         $this->assertSame($submission->timestamp, (string) $comment->timestamp);
-        $this->assertSame([$game->getKey()], $comment->games->pluck('game_id')->all());
+        $this->assertSame([$game->getKey()], $comment->games->pluck('id')->all());
 
         $this->assertSame(0, GameSubmitInfo::query()->count());
 

@@ -11,7 +11,6 @@ class Game extends Model
     use HasFactory;
 
     protected $table = 'game';
-    protected $primaryKey = 'game_id';
 
     const MULTIPLAYER_TYPES = ['Simultaneous', 'Turn by turn'];
     const MULTIPLAYER_HARDWARE = ['Cartridge', 'Midi-Link'];
@@ -122,7 +121,8 @@ class Game extends Model
 
     public function releases()
     {
-        return $this->hasMany(Release::class, 'game_id', 'game_id');
+        // No third argument: game's own key is now `id`, the default.
+        return $this->hasMany(Release::class, 'game_id');
     }
 
     public function individuals()
@@ -189,7 +189,7 @@ class Game extends Model
 
     public function getAllSimilarGamesAttribute()
     {
-        return $this->similarGames->merge($this->similarGamesReverse)->unique('game_id');
+        return $this->similarGames->merge($this->similarGamesReverse)->unique('id');
     }
 
     public function facts()

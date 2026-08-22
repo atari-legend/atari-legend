@@ -61,7 +61,7 @@ class ReleaseDescriptionHelperTest extends TestCase
         $release = $this->release(gameName: 'Xenon');
 
         $this->assertSame(
-            'This is a release of [game=' . $release->game->game_id . ']Xenon[/game].',
+            'This is a release of [game=' . $release->game->getKey() . ']Xenon[/game].',
             trim($this->describe($release))
         );
     }

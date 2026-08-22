@@ -16,7 +16,7 @@ class GameController extends Controller
         $q = $request->q;
 
         $games = DB::table('game')
-            ->select('game_name', 'game_id')
+            ->select('game_name', 'id as game_id')
             ->limit(GameController::MAX);
 
         $akas = DB::table('game_aka')

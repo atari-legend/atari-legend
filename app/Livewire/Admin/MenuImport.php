@@ -299,7 +299,7 @@ class MenuImport extends Component
             return [null, null, []];
         }
 
-        $games = Game::where('game_name', $name)->get(['game_id', 'game_name']);
+        $games = Game::where('game_name', $name)->get(['id', 'game_name']);
         $akas = GameAka::where('aka_name', $name)->get(['game_id', 'aka_name']);
 
         $candidates = collect();

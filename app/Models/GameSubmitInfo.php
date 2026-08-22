@@ -10,7 +10,6 @@ class GameSubmitInfo extends Model
     const SUBMISSION_REVIEWED = '1';
 
     protected $table = 'game_submitinfo';
-    protected $primaryKey = 'game_submitinfo_id';
     public $timestamps = false;
 
     public function game()

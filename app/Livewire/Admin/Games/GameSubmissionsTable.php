@@ -20,7 +20,7 @@ class GameSubmissionsTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('game_submitinfo_id');
+        $this->setPrimaryKey('id');
     }
 
     public function columns(): array
@@ -38,7 +38,7 @@ class GameSubmissionsTable extends DataTableComponent
                         })
                 )
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->join('game', 'game_submitinfo.game_id', '=', 'game.game_id')
+                    return $query->join('game', 'game_submitinfo.game_id', '=', 'game.id')
                         ->orderBy('game.game_name', $direction);
                 }),
             Column::make('User')

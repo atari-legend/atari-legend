@@ -286,7 +286,7 @@ class E2ESeeder extends Seeder
 
     private function seedGames(): void
     {
-        $this->insert('game', ['game_id' => self::GAME_ID], [
+        $this->insert('game', ['id' => self::GAME_ID], [
             'game_name' => self::GAME_NAME,
             'slug'      => self::GAME_SLUG,
         ]);
@@ -313,12 +313,12 @@ class E2ESeeder extends Seeder
         ]);
         $this->seedImage('images/game_release_scans/' . self::RELEASE_SCAN_ID . '.png');
 
-        $this->insert('game_fact', ['game_fact_id' => self::GAME_FACT_ID], [
+        $this->insert('game_fact', ['id' => self::GAME_FACT_ID], [
             'game_id'   => self::GAME_ID,
             'game_fact' => 'The Bitmap Brothers wrote this one.',
         ]);
 
-        $this->insert('game_submitinfo', ['game_submitinfo_id' => self::GAME_SUBMISSION_ID], [
+        $this->insert('game_submitinfo', ['id' => self::GAME_SUBMISSION_ID], [
             'game_id'     => self::GAME_ID,
             'user_id'     => self::USER_STANDARD_ID,
             'timestamp'   => (string) now()->timestamp,
@@ -326,7 +326,7 @@ class E2ESeeder extends Seeder
             'game_done'   => 'N',
         ]);
 
-        $this->insert('game_aka', ['game_aka_id' => self::GAME_AKA_ID], [
+        $this->insert('game_aka', ['id' => self::GAME_AKA_ID], [
             'game_id'  => self::GAME_ID,
             'aka_name' => self::GAME_AKA_NAME,
         ]);

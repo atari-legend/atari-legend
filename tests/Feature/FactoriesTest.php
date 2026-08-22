@@ -137,7 +137,7 @@ class FactoriesTest extends TestCase
         $comment = Comment::factory()->onGame($game)->create();
 
         $this->assertSame('Turrican', $comment->target);
-        $this->assertSame($game->game_id, $comment->target_id);
+        $this->assertSame($game->getKey(), $comment->target_id);
     }
 
     /**
@@ -333,17 +333,18 @@ class FactoriesTest extends TestCase
     }
 
     /**
-     * A sanity check on the one thing the whole legacy schema hinges on: models
-     * with non-standard primary keys still resolve their key correctly.
+     * Every model now resolves its key as `id`. This started life as a check
+     * that the legacy prefixed keys resolved; it is kept, inverted, as the
+     * assertion that none of them came back.
      */
-    public function test_legacy_primary_keys_resolve(): void
+    public function test_primary_keys_all_resolve_to_id(): void
     {
-        $this->assertSame('game_id', (new Game())->getKeyName());
+        $this->assertSame('id', (new Game())->getKeyName());
         $this->assertSame('id', (new Individual())->getKeyName());
         $this->assertSame('id', (new Screenshot())->getKeyName());
         $this->assertSame('id', (new Review())->getKeyName());
 
-        $this->assertNotNull(Game::factory()->create()->game_id);
+        $this->assertNotNull(Game::factory()->create()->getKey());
         $this->assertNotNull(Individual::factory()->create()->id);
     }
 

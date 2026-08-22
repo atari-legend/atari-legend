@@ -32,7 +32,7 @@ class StatisticsTest extends TestCase
     private function game(int $id, string $name): void
     {
         DB::table('game')->insert([
-            'game_id'   => $id,
+            'id'        => $id,
             'game_name' => $name,
             'slug'      => strtolower($name),
         ]);

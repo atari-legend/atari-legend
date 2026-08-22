@@ -115,7 +115,7 @@ class SearchDialectTest extends TestCase
 
         foreach (['1988-06-01', '1989-01-15'] as $date) {
             $release = new Release();
-            $release->game_id = $game->game_id;
+            $release->game_id = $game->getKey();
             $release->date = $date;
             $release->save();
         }
