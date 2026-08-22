@@ -1,5 +1,31 @@
 # Preparing the primary-key rename
 
+## Status — 2026-08-22
+
+Everything before Phase B has landed on `docs/primary-key-rename-plan`. The
+per-phase headings below still read as proposals; this is what is actually
+done.
+
+| Phase | State |
+|---|---|
+| A — `getKey()` pre-pass | **Done.** Models, controllers, helpers, Blade. Two sites deliberately left: `Ajax/GameController:73` and `components/cards/tops.blade:36` read `DB::table()` rows, which are `stdClass`, so `getKey()` there is a fatal error, not a refinement. Both carry a comment saying so. |
+| A2 — qualify every select | **Done.** The nine joined queries, plus the other 22 zero-argument `select()` calls. `tests/Feature/QueryConventionsTest.php` now fails on any that comes back. |
+| Harness 1 — distinct id ranges | **Done**, and proven: `FactoriesTest::test_related_models_have_distinct_ids_to_prevent_collision` fails without it. The hook cannot be named `afterRefreshingDatabase()` — see the note under that section. |
+| Harness 2 — no models in migrations | **Done.** Five migrations rewritten, `MigrationModelsTest` guards it. |
+| Harness 3 — MariaDB migration gate | **Done**, as `migrate:fresh` + `migrate:rollback --step=1`. See the note about why not a bare rollback. |
+| Harness 4 — pin the wire format | **Partly done.** All six endpoints assert their id key. The round-trip spec — pick from an autocomplete, save, assert the association — is still missing. |
+| B — the renames | Not started. |
+
+`artisan test` is 990 green, 18 skipped. **The Playwright suite has not been run
+since any of this landed**, which matters more than usual: harness 1 rewrote 37
+of `E2ESeeder`'s id constants and every matching value in
+`tests/e2e/support/fixture.js`. Run it before trusting Phase A2's acceptance
+criterion.
+
+Known pre-existing defect, not caused by this work and not fixed by it: a
+full-history `migrate:rollback` fails at `2022_01_15_163533_add_news_foreign_keys`
+(`SQLSTATE 1830`), and there are likely more behind it.
+
 ## Context
 
 36 of the 88 models in `app/Models/` declare a legacy prefixed primary key
