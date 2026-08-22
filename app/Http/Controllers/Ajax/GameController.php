@@ -70,6 +70,10 @@ class GameController extends Controller
             // The URL is built here rather than by CONCAT() in the query, which
             // is MySQL-only and meant interpolating a route into the SQL.
             ->map(function ($data) {
+                // Not getKey(): $data is a stdClass row from DB::table(), not
+                // an Eloquent model, so getKey() does not exist on it. This
+                // column follows the schema and is renamed in Phase B, not by
+                // the getKey() pre-pass.
                 $data->url = route('games.show', $data->game_id);
 
                 return $data;

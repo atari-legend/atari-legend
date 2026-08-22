@@ -33,6 +33,8 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
+                                    {{-- Not getKey(): $publishers comes from a DB::table() query in
+                                         Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
                                     <a href="{{ route('games.search', ['publisher_id' => $publisher->pub_dev_id]) }}">
                                         {{ $publisher->pub_dev_name }}
                                     </a>
