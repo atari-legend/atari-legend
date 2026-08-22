@@ -55,7 +55,7 @@ class NewsTable extends DataTableComponent
     public function builder(): Builder
     {
         return News::query()
-            ->leftJoin('news_image', 'news.news_image_id', '=', 'news_image.news_image_id')
+            ->leftJoin('news_image', 'news.news_image_id', '=', 'news_image.id')
             ->select('news.*');
     }
 
