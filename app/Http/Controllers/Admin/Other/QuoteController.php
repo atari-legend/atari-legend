@@ -13,7 +13,7 @@ class QuoteController extends Controller
 {
     public function index()
     {
-        $quotes = TriviaQuote::orderByDesc('trivia_quote_id')
+        $quotes = TriviaQuote::orderByDesc('id')
             ->get();
 
         return view('admin.others.quotes.index')
