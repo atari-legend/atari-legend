@@ -305,4 +305,28 @@ class AutocompleteTest extends TestCase
             ->get(route('admin.ajax.games', ['q' => 'Xenon']))
             ->assertRedirect('/');
     }
+
+    /**
+     * Pin the autocomplete wire format so that a schema rename does not silently
+     * break the frontend by changing the keys.
+     */
+    public function test_the_wire_format_pins_the_primary_keys(): void
+    {
+        $this->game('Xenon');
+
+        $results = $this->getJson(route('ajax.games', ['q' => 'Xenon']))->assertOk()->json();
+        
+        $this->assertArrayHasKey('game_id', $results[0], 'The wire format must expose the game_id key');
+        $this->assertNotNull($results[0]['game_id'], 'The game_id must not be null');
+        $this->assertIsScalar($results[0]['game_id'], 'The game_id must be a scalar');
+
+        $adminResults = $this->actingAs(User::factory()->admin()->create())
+            ->getJson(route('admin.ajax.games', ['q' => 'Xenon']))
+            ->assertOk()
+            ->json();
+            
+        $this->assertArrayHasKey('game_id', $adminResults[0], 'The wire format must expose the game_id key');
+        $this->assertNotNull($adminResults[0]['game_id'], 'The game_id must not be null');
+        $this->assertIsScalar($adminResults[0]['game_id'], 'The game_id must be a scalar');
+    }
 }
