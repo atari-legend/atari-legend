@@ -27,9 +27,9 @@ use RuntimeException;
  */
 class E2ESeeder extends Seeder
 {
-    public const USER_ADMIN_ID = 1;
-    public const USER_STANDARD_ID = 2;
-    public const USER_UNVERIFIED_ID = 3;
+    public const USER_ADMIN_ID = 101;
+    public const USER_STANDARD_ID = 102;
+    public const USER_UNVERIFIED_ID = 103;
 
     // The two accounts tests/e2e/public-write/ signs in as. They exist so that
     // project never has to write through USER_STANDARD_ID, which the read
@@ -39,8 +39,8 @@ class E2ESeeder extends Seeder
     // Two rather than one because public-write/account.spec.js changes the
     // password, and an account whose password is in flux cannot be the one
     // every other spec in the project signs in with.
-    public const USER_CONTRIBUTOR_ID = 4;
-    public const USER_ACCOUNT_ID = 5;
+    public const USER_CONTRIBUTOR_ID = 104;
+    public const USER_ACCOUNT_ID = 105;
 
     // The account tests/e2e/admin-write/users.spec.js edits, deactivates and
     // gives an avatar to. It exists because a user is the one row in this
@@ -49,22 +49,22 @@ class E2ESeeder extends Seeder
     // the way every other write spec does. A sixth account it may rewrite
     // freely is the next best thing: no read spec asserts on it, and it signs
     // in nowhere.
-    public const USER_MODERATED_ID = 6;
+    public const USER_MODERATED_ID = 106;
 
-    public const GAME_ID = 1;
-    public const GAME_AKA_ID = 1;
-    public const RELEASE_ID = 1;
-    public const SCREENSHOT_ID = 1;
-    public const SPOTLIGHT_SCREENSHOT_ID = 2;
-    public const INTERVIEW_SCREENSHOT_ID = 3;
-    public const ARTICLE_SCREENSHOT_ID = 4;
-    public const RELEASE_SCAN_ID = 1;
-    public const GAME_FACT_ID = 1;
-    public const GAME_SUBMISSION_ID = 1;
-    public const GAME_SERIES_ID = 1;
-    public const COMPANY_ID = 1;
-    public const INDIVIDUAL_ID = 1;
-    public const CREW_ID = 1;
+    public const GAME_ID = 201;
+    public const GAME_AKA_ID = 202;
+    public const RELEASE_ID = 301;
+    public const SCREENSHOT_ID = 401;
+    public const SPOTLIGHT_SCREENSHOT_ID = 402;
+    public const INTERVIEW_SCREENSHOT_ID = 403;
+    public const ARTICLE_SCREENSHOT_ID = 404;
+    public const RELEASE_SCAN_ID = 501;
+    public const GAME_FACT_ID = 601;
+    public const GAME_SUBMISSION_ID = 701;
+    public const GAME_SERIES_ID = 801;
+    public const COMPANY_ID = 901;
+    public const INDIVIDUAL_ID = 1001;
+    public const CREW_ID = 1101;
 
     // A tune of our own, even though a migration ships the whole SNDH
     // catalogue: a spec asserting on one of those would be asserting on
@@ -76,32 +76,32 @@ class E2ESeeder extends Seeder
     public const SNDH_COMPOSER = 'Playwright Test Composer';
     public const SNDH_ARCHIVE_ID = 'sndh45lf';
 
-    public const PORT_ID = 1;
+    public const PORT_ID = 1201;
     public const PORT_NAME = 'Playwright Test Port';
-    public const PROGRESS_SYSTEM_ID = 1;
+    public const PROGRESS_SYSTEM_ID = 1301;
     public const PROGRESS_SYSTEM_NAME = 'Playwright Test Progress';
-    public const GENRE_ID = 1;
+    public const GENRE_ID = 1401;
     public const GENRE_NAME = 'Playwright Test Genre';
-    public const PROGRAMMING_LANGUAGE_ID = 1;
+    public const PROGRAMMING_LANGUAGE_ID = 1501;
     public const PROGRAMMING_LANGUAGE_NAME = 'Playwright Test Assembly';
-    public const ENGINE_ID = 1;
+    public const ENGINE_ID = 1601;
     public const ENGINE_NAME = 'Playwright Test Engine';
-    public const CONTROL_ID = 1;
+    public const CONTROL_ID = 1701;
     public const CONTROL_NAME = 'Playwright Test Joystick';
-    public const SOUND_HARDWARE_ID = 1;
+    public const SOUND_HARDWARE_ID = 1801;
     public const SOUND_HARDWARE_NAME = 'Playwright Test YM2149';
-    public const COPY_PROTECTION_ID = 1;
+    public const COPY_PROTECTION_ID = 1901;
     public const COPY_PROTECTION_NAME = 'Playwright Test Copy Protection';
 
     public const ARTICLE_ID = 1;
     public const ARTICLE_TYPE_ID = 1;
-    public const REVIEW_ID = 1;
-    public const INTERVIEW_ID = 1;
-    public const NEWS_ID = 1;
-    public const COMMENT_ID = 1;
+    public const REVIEW_ID = 2101;
+    public const INTERVIEW_ID = 2201;
+    public const NEWS_ID = 2301;
+    public const COMMENT_ID = 2401;
 
     public const MAGAZINE_ID = 1;
-    public const MAGAZINE_ISSUE_ID = 1;
+    public const MAGAZINE_ISSUE_ID = 2501;
     // One index row per shape magazines/card_issues.blade.php can render: a
     // game, a menu software, an individual, and one that links to nothing and
     // is only its title.
@@ -110,19 +110,19 @@ class E2ESeeder extends Seeder
     // these are stored in is not the order anything displays them in. The
     // public view always sorts, and the editor sorts only when asked - neither
     // could be told from a broken one if the two orders agreed.
-    public const MAGAZINE_INDEX_GAME_ID = 1;
-    public const MAGAZINE_INDEX_SOFTWARE_ID = 2;
-    public const MAGAZINE_INDEX_INDIVIDUAL_ID = 3;
-    public const MAGAZINE_INDEX_TEXT_ID = 4;
+    public const MAGAZINE_INDEX_GAME_ID = 2601;
+    public const MAGAZINE_INDEX_SOFTWARE_ID = 2602;
+    public const MAGAZINE_INDEX_INDIVIDUAL_ID = 2603;
+    public const MAGAZINE_INDEX_TEXT_ID = 2604;
 
-    public const MENU_SET_ID = 1;
-    public const MENU_ID = 1;
-    public const MENU_DISK_ID = 1;
-    public const MENU_DISK_CONTENT_ID = 1;
-    public const MENU_SOFTWARE_ID = 1;
+    public const MENU_SET_ID = 2701;
+    public const MENU_ID = 2801;
+    public const MENU_DISK_ID = 2901;
+    public const MENU_DISK_CONTENT_ID = 3101;
+    public const MENU_SOFTWARE_ID = 3001;
 
-    public const WEBSITE_ID = 1;
-    public const WEBSITE_CATEGORY_ID = 1;
+    public const WEBSITE_ID = 3201;
+    public const WEBSITE_CATEGORY_ID = 3301;
 
     /** Seeded by a migration, not by us. */
     public const MENU_CONDITION_INTACT_ID = 4;
