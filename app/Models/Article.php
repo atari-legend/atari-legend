@@ -30,7 +30,9 @@ class Article extends Model implements Feedable
     public function screenshots()
     {
         return $this->belongsToMany(Screenshot::class, 'screenshot_article', 'article_id', 'screenshot_id')
-            ->withPivot('screenshot_article_id')
+            // The pivot's own key, so this follows the rename; the
+            // belongsToMany arguments above are foreign keys and do not.
+            ->withPivot('id')
             ->using(ScreenshotArticle::class);
     }
 

@@ -15,7 +15,7 @@ class NewsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('news_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('news_date', 'desc');
     }
 

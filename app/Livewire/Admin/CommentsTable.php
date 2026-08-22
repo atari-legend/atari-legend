@@ -17,7 +17,7 @@ class CommentsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('comments_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('timestamp');
     }
 

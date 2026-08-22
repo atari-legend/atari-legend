@@ -24,7 +24,7 @@ class LinkController extends Controller
         $websites = Website::select('website.*');
 
         if ($category !== null) {
-            $websites->join('website_category_cross', 'website_category_cross.website_id', '=', 'website.website_id')
+            $websites->join('website_category_cross', 'website_category_cross.website_id', '=', 'website.id')
                 ->where('website_category_cross.website_category_id', $category->getKey());
         }
 

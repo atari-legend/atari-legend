@@ -14,7 +14,7 @@ class LinksTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('website_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('website_name');
     }
 

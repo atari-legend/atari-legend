@@ -37,7 +37,7 @@ class LatestComments extends Component
     public function render()
     {
         $comments = Comment::select('comments.*')
-            ->join('game_user_comments', 'comments_id', '=', 'game_user_comments.comment_id');
+            ->join('game_user_comments', 'comments.id', '=', 'game_user_comments.comment_id');
 
         if ($this->user !== null) {
             $comments->where('user_id', $this->user->getKey());

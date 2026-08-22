@@ -405,7 +405,7 @@ class E2ESeeder extends Seeder
 
         // Same chain as the interview screenshot below, one table along.
         $this->insert('screenshot_main', ['screenshot_id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('screenshot_article', ['screenshot_article_id' => 1], [
+        $this->insert('screenshot_article', ['id' => 1], [
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
         ]);
@@ -473,7 +473,7 @@ class E2ESeeder extends Seeder
         // regression stays covered.
         $this->insert('interview_main', ['id' => 2], ['user_id' => self::USER_ADMIN_ID]);
 
-        $this->insert('news', ['news_id' => self::NEWS_ID], [
+        $this->insert('news', ['id' => self::NEWS_ID], [
             'news_headline' => self::NEWS_HEADLINE,
             'news_text'     => 'Playwright test news post.',
             'user_id'       => self::USER_ADMIN_ID,
@@ -485,7 +485,7 @@ class E2ESeeder extends Seeder
         // keeps NEWS_HEADLINE on page one and puts the oldest filler alone on
         // page two.
         for ($number = 1; $number <= self::NEWS_FILLER_COUNT; $number++) {
-            $this->insert('news', ['news_id' => self::NEWS_ID + $number], [
+            $this->insert('news', ['id' => self::NEWS_ID + $number], [
                 'news_headline' => self::NEWS_FILLER_HEADLINE . ' ' . $number,
                 'news_text'     => 'Playwright test filler news post.',
                 'user_id'       => self::USER_ADMIN_ID,
@@ -496,7 +496,7 @@ class E2ESeeder extends Seeder
         // The pivot is not optional: Comment::getTypeAttribute() throws
         // 'Unknown comment type' without one, and the admin comment form
         // builds a route name out of it.
-        $this->insert('comments', ['comments_id' => self::COMMENT_ID], [
+        $this->insert('comments', ['id' => self::COMMENT_ID], [
             'comment'   => 'Playwright test comment.',
             'timestamp' => (string) now()->timestamp,
             'user_id'   => self::USER_STANDARD_ID,
@@ -624,7 +624,7 @@ class E2ESeeder extends Seeder
         $this->insert('website_category', ['id' => self::WEBSITE_CATEGORY_ID], [
             'website_category_name' => self::WEBSITE_CATEGORY_NAME,
         ]);
-        $this->insert('website', ['website_id' => self::WEBSITE_ID], [
+        $this->insert('website', ['id' => self::WEBSITE_ID], [
             'website_name'   => self::WEBSITE_NAME,
             'website_url'    => 'https://example.com/',
             'website_date'   => now()->timestamp,

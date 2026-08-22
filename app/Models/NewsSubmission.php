@@ -10,7 +10,6 @@ class NewsSubmission extends Model
     use HasFactory;
 
     protected $table = 'news_submission';
-    protected $primaryKey = 'news_submission_id';
     public $timestamps = false;
 
     protected $casts = [

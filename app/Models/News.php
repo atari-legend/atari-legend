@@ -12,7 +12,6 @@ class News extends Model implements Feedable
 {
     use HasFactory;
 
-    protected $primaryKey = 'news_id';
     public $timestamps = false;
 
     protected $fillable = [

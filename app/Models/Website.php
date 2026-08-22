@@ -11,7 +11,6 @@ class Website extends Model
     use HasFactory;
 
     protected $table = 'website';
-    protected $primaryKey = 'website_id';
     public $timestamps = false;
 
     protected $fillable = [
