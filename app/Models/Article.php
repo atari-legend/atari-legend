@@ -13,7 +13,6 @@ class Article extends Model implements Feedable
     use HasFactory;
 
     protected $table = 'article_main';
-    protected $primaryKey = 'article_id';
     public $timestamps = false;
 
     protected $fillable = ['user_id', 'article_type_id', 'draft'];
