@@ -621,9 +621,29 @@ MariaDB. CI catches it today only as a side effect of the "Prepare the E2E
 database and storage" step, which is not where anyone looks when a migration
 fails.
 
-Add a job that runs `migrate:fresh` and then `migrate:rollback` against
-MariaDB, named for what it does, so this class fails fast and legibly rather
-than surfacing as a confusing e2e setup error.
+Add a job that runs `migrate:fresh` and then `migrate:rollback --step=1`
+against MariaDB, named for what it does, so this class fails fast and legibly
+rather than surfacing as a confusing e2e setup error.
+
+**`--step=1`, not a bare rollback.** After `migrate:fresh` every migration sits
+in a single batch, so a bare `migrate:rollback` tries to reverse all 262 of
+them. Measured: it dies after 32, on `down()` methods written years ago and
+never run since —
+
+- `2022_09_10_120014_magazine_individual.php` drops a column whose index an
+  inbound foreign key still needs (`SQLSTATE 1553`). Fixed.
+- `2022_01_15_163533_add_news_foreign_keys.php` restores a column to `NOT NULL`
+  while a `SET NULL` foreign key still points at it (`SQLSTATE 1830`). Not
+  fixed, and there are likely more behind it.
+
+Reversing the entire history is not what this campaign needs and has never
+worked; making the gate demand it would just paint CI red. What has to work is
+reversing **the newest migration**, which is exactly what a bad rename deploy
+would do — see "Deploying a rename". `--step=1` tests that, and it passes
+today.
+
+The full-history rollback is worth fixing eventually, but as its own piece of
+work, not as a prerequisite hidden inside this one.
 
 ### 4. Pin the autocomplete wire format
 
