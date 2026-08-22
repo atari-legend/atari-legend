@@ -389,7 +389,7 @@ class E2ESeeder extends Seeder
         // The type is the badge on /articles. article_type ships empty and the
         // article's column was null, so the badge rendered as nothing at all -
         // indistinguishable from a badge that had stopped working.
-        $this->insert('article_type', ['article_type_id' => self::ARTICLE_TYPE_ID], [
+        $this->insert('article_type', ['id' => self::ARTICLE_TYPE_ID], [
             'article_type' => self::ARTICLE_TYPE_NAME,
         ]);
         $this->insert('article_main', ['article_id' => self::ARTICLE_ID], [
