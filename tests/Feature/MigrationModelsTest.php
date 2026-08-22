@@ -20,7 +20,7 @@ class MigrationModelsTest extends TestCase
         $violations = [];
         foreach ($migrations as $migration) {
             $content = file_get_contents($migration->getPathname());
-            if (preg_match('/^\s*use\s+App\\\Models\\\.+;/m', $content)) {
+            if (str_contains($content, 'App\Models') || preg_match('/\b([A-Z][a-zA-Z0-9_]*)::(where|create|update|all|find|updateOrCreate|firstOrCreate|insert|delete|truncate)\b/', $content)) {
                 $violations[] = $migration->getFilename();
             }
         }
