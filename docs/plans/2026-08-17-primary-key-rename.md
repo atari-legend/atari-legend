@@ -14,7 +14,9 @@ done.
 | Harness 2 — no models in migrations | **Done.** Five migrations rewritten, `MigrationModelsTest` guards it. |
 | Harness 3 — MariaDB migration gate | **Done**, as `migrate:fresh` + `migrate:rollback --step=1`. See the note about why not a bare rollback. |
 | Harness 4 — pin the wire format | **Done.** All six endpoints assert their id key, and `pickAutocompleteBy` now rejects the string `"undefined"` in the hidden companion field, so every autocomplete spec guards the wire format. See the note below on why an emptiness check was not enough. |
-| B — the renames | **4 of 36.** `trivia`, `trivia_quotes`, `article_type`, `news_image`. The last two carry inbound foreign keys: MariaDB rewrites the constraint to follow the rename, and follows it back on rollback, both verified — so no drop-and-re-add is needed in either direction. |
+| B — the renames | **8 of 36.** `trivia`, `trivia_quotes`, `article_type`, `news_image`. Then `change_log`, `spotlight`, `website_category`, `crew`.
+
+Three things are now demonstrated rather than assumed: MariaDB rewrites an inbound foreign key to follow the rename and follows it back on rollback, so no drop-and-re-add is needed either way; validation `exists:`/`unique:` rules name the parent's own key and move with it; and an endpoint that serialises a model straight to JSON changes its payload key, which is why `crew` moved `data-autocomplete-id` and the two tests pinning that payload in the same commit. |
 
 Run both suites before Phase B work, not just `artisan test`. The five defects
 above were all invisible to it.
@@ -552,6 +554,18 @@ Start with a low-fanout table to prove the recipe end to end, then work up:
    migrations to model the FK drop/re-add on.
 4. `individuals`, `pub_dev`, `users`, `comments`, `screenshot_main`.
 5. `game` last — the widest fanout by a distance.
+
+### Deliberately left stale
+
+`app/Console/Commands/ImportStonishData.php` reads `$crew->crew_id` at lines
+204, 221 and 363, and those reads are wrong after the `crew` rename. They stay
+that way on purpose: the command is a one-off import that is never invoked, and
+the standing instruction on it is not to test or refactor it. A stale read in
+code that never runs costs nothing; overriding that instruction to tidy dead
+code is the worse trade.
+
+Anything that revives this command has to fix those three lines first — and by
+then the whole file needs a review, not a token substitution.
 
 ### Not renameable by this plan
 
