@@ -13,7 +13,7 @@ class TriviaController extends Controller
 {
     public function index()
     {
-        $trivias = Trivia::orderByDesc('trivia_id')
+        $trivias = Trivia::orderByDesc('id')
             ->get();
 
         return view('admin.others.trivias.index')

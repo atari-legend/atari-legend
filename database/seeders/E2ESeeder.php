@@ -56,6 +56,7 @@ class E2ESeeder extends Seeder
     public const RELEASE_ID = 301;
     public const SCREENSHOT_ID = 401;
     public const SPOTLIGHT_ID = 4001;
+    public const TRIVIA_ID = 4101;
     public const SPOTLIGHT_SCREENSHOT_ID = 402;
     public const INTERVIEW_SCREENSHOT_ID = 403;
     public const ARTICLE_SCREENSHOT_ID = 404;
@@ -652,7 +653,7 @@ class E2ESeeder extends Seeder
         // The 'Did you know?' card picks a trivia at random and renders its
         // heading either way, so an empty table looks exactly like a working
         // card. One row is the difference.
-        $this->insert('trivia', ['trivia_id' => 1], ['trivia_text' => self::TRIVIA_TEXT]);
+        $this->insert('trivia', ['id' => self::TRIVIA_ID], ['trivia_text' => self::TRIVIA_TEXT]);
     }
 
     private function seedReferenceData(): void
