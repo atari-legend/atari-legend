@@ -12,7 +12,7 @@ class CrewsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('crew_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('crew_name');
     }
 

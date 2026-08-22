@@ -616,12 +616,12 @@ class E2ESeeder extends Seeder
             'updated_at'   => $now,
         ]);
 
-        $this->insert('crew', ['crew_id' => self::CREW_ID], ['crew_name' => self::CREW_NAME]);
+        $this->insert('crew', ['id' => self::CREW_ID], ['crew_name' => self::CREW_NAME]);
     }
 
     private function seedLinks(): void
     {
-        $this->insert('website_category', ['website_category_id' => self::WEBSITE_CATEGORY_ID], [
+        $this->insert('website_category', ['id' => self::WEBSITE_CATEGORY_ID], [
             'website_category_name' => self::WEBSITE_CATEGORY_NAME,
         ]);
         $this->insert('website', ['website_id' => self::WEBSITE_ID], [
@@ -643,7 +643,7 @@ class E2ESeeder extends Seeder
     private function seedOthers(): void
     {
         $this->insert('screenshot_main', ['screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('spotlight', ['spotlight_id' => self::SPOTLIGHT_ID], [
+        $this->insert('spotlight', ['id' => self::SPOTLIGHT_ID], [
             'screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID,
             'spotlight'     => 'Playwright test spotlight.',
             'link'          => 'https://example.com/',

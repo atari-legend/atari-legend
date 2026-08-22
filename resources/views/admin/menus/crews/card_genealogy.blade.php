@@ -10,7 +10,7 @@
                     <input class="autocomplete form-control @error('subcrew') is-invalid @enderror"
                         name="subcrew_name" id="subcrew_name" type="search" required
                         data-autocomplete-endpoint="{{ route('ajax.crews') }}"
-                        data-autocomplete-key="crew_name" data-autocomplete-id="crew_id"
+                        data-autocomplete-key="crew_name" data-autocomplete-id="id"
                         data-autocomplete-companion="subcrew" value="{{ old('subcrew_name') }}"
                         placeholder="Type a crew name..." autocomplete="off">
                     <input type="hidden" name="subcrew" value="{{ old('subcrew') }}">
