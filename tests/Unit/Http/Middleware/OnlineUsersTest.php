@@ -34,8 +34,8 @@ class OnlineUsersTest extends TestCase
             $this->assertEquals(1, $req->attributes->get('onlineUsers')->count());
             $this->assertEquals(1, $req->attributes->get('pastDayUsers')->count());
 
-            $this->assertEquals($user->user_id, $req->attributes->get('onlineUsers')->first()->user_id);
-            $this->assertEquals($user->user_id, $req->attributes->get('pastDayUsers')->first()->user_id);
+            $this->assertEquals($user->getKey(), $req->attributes->get('onlineUsers')->first()->getKey());
+            $this->assertEquals($user->getKey(), $req->attributes->get('pastDayUsers')->first()->getKey());
         });
     }
 }

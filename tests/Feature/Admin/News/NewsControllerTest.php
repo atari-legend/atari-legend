@@ -21,7 +21,7 @@ class NewsControllerTest extends AdminTestCase
     {
         return array_merge([
             'headline' => 'Automation 189 released',
-            'author'   => $this->admin->user_id,
+            'author'   => $this->admin->getKey(),
             'date'     => '2026-03-14',
             'text'     => 'A new menu disk has been dumped.',
         ], $overrides);
@@ -59,7 +59,7 @@ class NewsControllerTest extends AdminTestCase
 
         $this->assertSame('Automation 189 released', $news->news_headline);
         $this->assertSame('A new menu disk has been dumped.', $news->news_text);
-        $this->assertSame($this->admin->user_id, $news->user_id);
+        $this->assertSame($this->admin->getKey(), $news->user_id);
 
         // news_date is a unix timestamp in an integer column
         $this->assertSame(
@@ -136,10 +136,10 @@ class NewsControllerTest extends AdminTestCase
         $author = User::factory()->create();
 
         $this->put(route('admin.news.news.update', $news), $this->payload([
-            'author' => $author->user_id,
+            'author' => $author->getKey(),
         ]))->assertRedirect(route('admin.news.news.index'));
 
-        $this->assertSame($author->user_id, $news->fresh()->user_id);
+        $this->assertSame($author->getKey(), $news->fresh()->user_id);
     }
 
     public function test_update_rejects_an_empty_headline(): void

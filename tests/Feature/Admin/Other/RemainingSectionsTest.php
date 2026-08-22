@@ -292,7 +292,7 @@ class RemainingSectionsTest extends AdminTestCase
         $this->delete(route('admin.users.users.destroy', $user))
             ->assertRedirect(route('admin.users.users.index'));
 
-        $this->assertSame(0, User::where('user_id', $user->user_id)->count());
+        $this->assertSame(0, User::whereKey($user->getKey())->count());
     }
 
     public function test_a_comment_can_be_edited_and_deleted(): void

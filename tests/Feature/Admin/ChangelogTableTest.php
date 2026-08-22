@@ -48,7 +48,7 @@ class ChangelogTableTest extends TestCase
             'sub_section'      => $subSection,
             'sub_section_id'   => 0,
             'sub_section_name' => '',
-            'user_id'          => $user->user_id,
+            'user_id'          => $user->getKey(),
             'timestamp'        => Carbon::parse($date . ' 12:00:00')->timestamp,
         ]);
     }
@@ -102,7 +102,7 @@ class ChangelogTableTest extends TestCase
     public function test_filters_by_user(): void
     {
         Livewire::test(ChangelogTable::class)
-            ->set('filterComponents.user', strval($this->bob->user_id))
+            ->set('filterComponents.user', strval($this->bob->getKey()))
             ->assertSee('Xenon review')
             ->assertDontSee('Bubble Bobble');
     }

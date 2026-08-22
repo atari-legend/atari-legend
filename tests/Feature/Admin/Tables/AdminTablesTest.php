@@ -123,7 +123,7 @@ class AdminTablesTest extends AdminTestCase
             ->assertSee('Still holds up.');
 
         Livewire::test(CommentsTable::class)
-            ->set('filterComponents.author', strval($author->user_id))
+            ->set('filterComponents.author', strval($author->getKey()))
             ->assertSee('Still holds up.');
     }
 
@@ -146,7 +146,7 @@ class AdminTablesTest extends AdminTestCase
     {
         $submission = new GameSubmitInfo();
         $submission->game_id = Game::factory()->named($gameName)->create()->getKey();
-        $submission->user_id = User::factory()->create()->user_id;
+        $submission->user_id = User::factory()->create()->getKey();
         $submission->submit_text = 'Something is wrong with ' . $gameName;
         $submission->timestamp = time();
         $submission->game_done = $done;
@@ -383,13 +383,13 @@ class AdminTablesTest extends AdminTestCase
         NewsSubmission::forceCreate([
             'news_headline' => 'Older submission',
             'news_text'     => 'Text',
-            'user_id'       => User::factory()->create()->user_id,
+            'user_id'       => User::factory()->create()->getKey(),
             'news_date'     => strtotime('2026-01-01'),
         ]);
         NewsSubmission::forceCreate([
             'news_headline' => 'Newer submission',
             'news_text'     => 'Text',
-            'user_id'       => User::factory()->create()->user_id,
+            'user_id'       => User::factory()->create()->getKey(),
             'news_date'     => strtotime('2026-06-01'),
         ]);
 

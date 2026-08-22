@@ -39,7 +39,7 @@ class GameSubmissionTest extends AdminTestCase
     ): GameSubmitInfo {
         $id = DB::table('game_submitinfo')->insertGetId([
             'game_id'     => $game->getKey(),
-            'user_id'     => $this->visitor->user_id,
+            'user_id'     => $this->visitor->getKey(),
             'timestamp'   => (string) mktime(12, 0, 0, 6, 1, 2020),
             'submit_text' => $text,
             'game_done'   => $done,
@@ -124,7 +124,7 @@ class GameSubmissionTest extends AdminTestCase
         $comment = Comment::sole();
 
         $this->assertSame('Best soundtrack on the ST.', $comment->comment);
-        $this->assertSame($this->visitor->user_id, $comment->user_id);
+        $this->assertSame($this->visitor->getKey(), $comment->user_id);
         $this->assertSame($submission->timestamp, (string) $comment->timestamp);
         $this->assertSame([$game->getKey()], $comment->games->pluck('game_id')->all());
 

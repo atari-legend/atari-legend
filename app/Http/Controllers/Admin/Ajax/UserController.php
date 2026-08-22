@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function users(Request $request)
     {
-        $users = User::select('userid', 'user_id')
+        $users = User::select('userid', 'id')
             ->orderBy('userid')
             ->limit(10);
 

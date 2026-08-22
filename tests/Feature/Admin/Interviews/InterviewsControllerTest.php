@@ -25,7 +25,7 @@ class InterviewsControllerTest extends AdminTestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'author'   => $this->admin->user_id,
+            'author'   => $this->admin->getKey(),
             'date'     => '2026-03-14',
             'text'     => 'The interview itself.',
             'intro'    => 'A short introduction.',

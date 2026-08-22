@@ -270,9 +270,9 @@ class AdminStatisticsHelper
     public static function topContributors($limit = 15)
     {
         $rows = DB::table('change_log')
-            ->join('users', 'users.user_id', '=', 'change_log.user_id')
+            ->join('users', 'users.id', '=', 'change_log.user_id')
             ->select('users.userid', DB::raw('count(*) as total'))
-            ->groupBy('users.user_id', 'users.userid')
+            ->groupBy('users.id', 'users.userid')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();

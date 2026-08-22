@@ -228,7 +228,7 @@ class InterviewsController extends Controller
     private function getValidationRules(): array
     {
         return [
-            'author'   => 'required|exists:users,user_id',
+            'author'   => 'required|exists:users,id',
             'date'     => 'required|date',
             'text'     => 'required',
             'intro'    => 'nullable',

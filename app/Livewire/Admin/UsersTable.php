@@ -14,7 +14,7 @@ class UsersTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('user_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('userid');
     }
 

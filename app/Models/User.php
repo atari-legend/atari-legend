@@ -18,7 +18,6 @@ class User extends Authenticatable implements MustVerifyEmail
     const ACTIVE = 0;
     const INACTIVE = 1;
 
-    protected $primaryKey = 'user_id';
     public $timestamps = false;
 
     /* The attributes that are mass assignable.

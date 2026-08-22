@@ -169,7 +169,7 @@ class GamePageTest extends TestCase
 
         GameVote::factory()->scored(3)->create([
             'game_id' => $game->getKey(),
-            'user_id' => $user->user_id,
+            'user_id' => $user->getKey(),
         ]);
 
         $this->assertNull($this->get(route('games.show', $game))->viewData('vote'));
@@ -231,7 +231,7 @@ class GamePageTest extends TestCase
 
         $this->assertSame('The publisher is wrong.', $submission->submit_text);
         $this->assertSame(GameSubmitInfo::SUBMISSION_NEW, $submission->game_done);
-        $this->assertSame($user->user_id, $submission->user_id);
+        $this->assertSame($user->getKey(), $submission->user_id);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());
     }
 

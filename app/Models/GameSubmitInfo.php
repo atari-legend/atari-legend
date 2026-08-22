@@ -25,6 +25,7 @@ class GameSubmitInfo extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        // No third argument: the owner key on User is now `id`, the default.
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

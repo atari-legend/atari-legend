@@ -36,7 +36,7 @@
                         <input class="autocomplete form-control @error('author') is-invalid @enderror"
                             name="author_name" id="author_name" type="search" required
                             data-autocomplete-endpoint="{{ route('admin.ajax.users') }}"
-                            data-autocomplete-key="userid" data-autocomplete-id="user_id"
+                            data-autocomplete-key="userid" data-autocomplete-id="id"
                             data-autocomplete-companion="author"
                             value="{{ old('author_name', isset($article) ? $article->user?->userid : Auth::user()->userid) }}"
                             placeholder="Type a user name..." autocomplete="off">

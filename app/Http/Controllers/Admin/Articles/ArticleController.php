@@ -237,7 +237,7 @@ class ArticleController extends Controller
     {
         return [
             'title'  => 'required',
-            'author' => 'required|exists:users,user_id',
+            'author' => 'required|exists:users,id',
             'date'   => 'required|date',
             'intro'  => 'required',
             'text'   => 'required',

@@ -27,7 +27,7 @@ class ArticleControllerTest extends AdminTestCase
     {
         return array_merge([
             'title'  => 'Coding the blitter',
-            'author' => $this->admin->user_id,
+            'author' => $this->admin->getKey(),
             'date'   => '2026-03-14',
             'intro'  => 'A short introduction.',
             'text'   => 'The body of the article.',
@@ -71,7 +71,7 @@ class ArticleControllerTest extends AdminTestCase
         $article = Article::sole();
         $text = $article->texts->first();
 
-        $this->assertSame($this->admin->user_id, $article->user_id);
+        $this->assertSame($this->admin->getKey(), $article->user_id);
         $this->assertSame('Coding the blitter', $text->article_title);
         $this->assertSame('A short introduction.', $text->article_intro);
         $this->assertSame('The body of the article.', $text->article_text);

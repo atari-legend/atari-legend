@@ -23,7 +23,7 @@ class GameVoteHelperTest extends TestCase
         for ($i = 0; $i < $times; $i++) {
             GameVote::forceCreate([
                 'game_id' => $game->getKey(),
-                'user_id' => User::factory()->create()->user_id,
+                'user_id' => User::factory()->create()->getKey(),
                 'score'   => $score,
             ]);
         }
