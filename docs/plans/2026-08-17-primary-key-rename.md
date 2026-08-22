@@ -13,7 +13,7 @@ done.
 | Harness 1 — distinct id ranges | **Done**, and proven: `FactoriesTest::test_related_models_have_distinct_ids_to_prevent_collision` fails without it. The hook cannot be named `afterRefreshingDatabase()` — see the note under that section. |
 | Harness 2 — no models in migrations | **Done.** Five migrations rewritten, `MigrationModelsTest` guards it. |
 | Harness 3 — MariaDB migration gate | **Done**, as `migrate:fresh` + `migrate:rollback --step=1`. See the note about why not a bare rollback. |
-| Harness 4 — pin the wire format | **Partly done.** All six endpoints assert their id key. The round-trip spec — pick from an autocomplete, save, assert the association — is still missing. |
+| Harness 4 — pin the wire format | **Done.** All six endpoints assert their id key, and `pickAutocompleteBy` now rejects the string `"undefined"` in the hidden companion field, so every autocomplete spec guards the wire format. See the note below on why an emptiness check was not enough. |
 | B — the renames | Not started. |
 
 Run both suites before Phase B work, not just `artisan test`. The five defects
@@ -704,8 +704,16 @@ step 8 therefore has nothing watching it. Two cheap additions:
   legacy id key — `Ajax/Crew`, `Ajax/Company`, `Ajax/Game`, `Ajax/Individual`,
   `Admin/Ajax/User`, `Admin/Ajax/Game` — naming that key explicitly, so a
   changed key is a failed assertion rather than a changed page.
+- A guard on the hidden companion field, in `pickAutocompleteBy`. **Checking it
+  is non-empty is not enough**, which is why this is worth spelling out:
+  `autocomplete.js:83` reads `value[dataset.autocompleteId]`, and assigning a
+  missing key to `input.value` stringifies it, so the field holds the *string*
+  `"undefined"` and submits happily. Rejecting `"undefined"`/`"null"` there
+  turns every existing autocomplete spec into a wire-format guard, which is a
+  wider net than one new spec would have been.
 - One write spec that picks a value from an autocomplete, saves the form, and
-  asserts the resulting association — the round trip, not just the response.
+  asserts the resulting association **by id** — the round trip, not just the
+  response. The similar-games step of `admin-write/games.spec.js` does this.
 
 ## Verification
 
