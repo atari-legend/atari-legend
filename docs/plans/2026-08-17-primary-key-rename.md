@@ -16,11 +16,33 @@ done.
 | Harness 4 — pin the wire format | **Partly done.** All six endpoints assert their id key. The round-trip spec — pick from an autocomplete, save, assert the association — is still missing. |
 | B — the renames | Not started. |
 
-`artisan test` is 990 green, 18 skipped. **The Playwright suite has not been run
-since any of this landed**, which matters more than usual: harness 1 rewrote 37
-of `E2ESeeder`'s id constants and every matching value in
-`tests/e2e/support/fixture.js`. Run it before trusting Phase A2's acceptance
-criterion.
+Run both suites before Phase B work, not just `artisan test`. The five defects
+above were all invisible to it.
+
+`artisan test` is 991 green, 18 skipped; Playwright is 319 green across all four
+projects. Both were run against the full stack.
+
+**Playwright earned its description as the real net.** It was run for the first
+time after all of the above had landed and PHPUnit had been green throughout,
+and it found five defects the feature suite could not see:
+
+- `components/cards/tops.blade.php` called `getKey()` on `DB::table()` rows.
+  `Call to undefined method stdClass::getKey()` — **`/games` returned 500 for
+  every visitor**, as did every page carrying that card.
+- `IndividualText` and `PublisherDeveloperText` build an image filename from
+  their *parent's* id, but their own keys are `ind_text_id` and `pub_dev_text`.
+  Rewritten to `getKey()`, every individual avatar and company logo 404d.
+- `E2ESeeder` would not run at all: `user_id` is auto-increment and not
+  fillable, so moving `USER_ADMIN_ID` to 101 left the rows at 1..6 and the
+  first foreign key insert failed.
+- Four seeder constants stayed at `1` while `fixture.js` moved to the new
+  ranges, and `fixture.js` gave `magazine` and `magazineIssue` the same id.
+
+The pattern in the first two is the one Phase A's rule exists to prevent, and
+worth restating: **the receiver must own the column as its primary key.** Where
+it does not, the token is a foreign key and stays. `PublisherDeveloperText` is
+called out below as "especially unsafe" for token matching; that turned out to
+be exactly right.
 
 Known pre-existing defect, not caused by this work and not fixed by it: a
 full-history `migrate:rollback` fails at `2022_01_15_163533_add_news_foreign_keys`
