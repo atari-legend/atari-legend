@@ -105,7 +105,7 @@ export const FIXTURE = {
 
   magazine: { id: 2501, name: 'Playwright Test Magazine' },
   magazineIssue: {
-    id: 2501,
+    id: 2502,
     coverExt: 'png',
     // MagazineIssue::getReadUrlAttribute() rewrites /details/ to /stream/, so
     // the link on the page is not the URL stored here.

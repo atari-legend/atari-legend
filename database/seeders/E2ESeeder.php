@@ -93,15 +93,15 @@ class E2ESeeder extends Seeder
     public const COPY_PROTECTION_ID = 1901;
     public const COPY_PROTECTION_NAME = 'Playwright Test Copy Protection';
 
-    public const ARTICLE_ID = 1;
-    public const ARTICLE_TYPE_ID = 1;
+    public const ARTICLE_ID = 2001;
+    public const ARTICLE_TYPE_ID = 2002;
     public const REVIEW_ID = 2101;
     public const INTERVIEW_ID = 2201;
     public const NEWS_ID = 2301;
     public const COMMENT_ID = 2401;
 
-    public const MAGAZINE_ID = 1;
-    public const MAGAZINE_ISSUE_ID = 2501;
+    public const MAGAZINE_ID = 2501;
+    public const MAGAZINE_ISSUE_ID = 2502;
     // One index row per shape magazines/card_issues.blade.php can render: a
     // game, a menu software, an individual, and one that links to nothing and
     // is only its title.
