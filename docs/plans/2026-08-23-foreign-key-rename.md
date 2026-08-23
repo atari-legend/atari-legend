@@ -41,10 +41,11 @@ The 48 divergent relations are the last five rows. Two notes on the edges:
   only half fixed by its column rename: `game_release_id` moves and `pub_dev_id`
   does not, so it ends the campaign with one explicit argument rather than none.
 
-The 20 column-rename relations resolve to **five renames covering 16 columns
-across 16 tables**, listed in Phase C. So the campaign is: delete 76 arguments,
+The column-rename relations resolve to **six renames covering 18 columns
+across 18 tables**, listed in Phase C. So the campaign is: delete 76 arguments,
 delete one dead relation and convert one broken one, rename 5 methods, rename
-16 columns, and write down why the remaining 20 stay as they are. The first
+18 columns (with 16 more held pending a decision on the `*_main` tables), and
+write down why the rest stay as they are. The first
 item is the largest by a distance, carries no database risk at all, and can
 start today.
 
@@ -243,8 +244,27 @@ Priced by how ambiguous the token is:
 | `image` | 28 | Ambiguous — defer |
 | `type` | 105 | Ambiguous — **keep the explicit argument** |
 
-**Decided, with OpenCode: do `vs`, `series`, `donatedBy` and `role`; keep the
-arguments on `type()` and defer `image`.** `role` looked borderline on the hit
+**Reopened by nicolas (2026-08-23), and awaiting his answer.** The instruction
+was to *"stick to Laravel database conventions … update the column names, not
+just rename the methods"*. That conflicts with the Phase C rule from the same
+message, and the conflict is not a matter of taste:
+
+- Under **FK = table + `_id`**, Phase B's columns are *already correct*.
+  `article_type_id` points at `article_type`, `media_type_id` at `media_type`,
+  `developer_role_id` at `developer_role`, `news_image_id` at `news_image`.
+  Nothing to rename.
+- Under **Eloquent's rule**, `belongsTo` derives from the *method* name, so
+  convention-clean code means `type_id`, `role_id`, `image_id` — which is
+  strictly *less* table-consistent.
+
+The two instructions therefore point in opposite directions here. Reading the
+tiebreak from *"the database matters more than the code"*: **leave the columns,
+rename the methods** — the code bends to the schema, which is the stated
+priority. That is what the table below already proposes. Flagged for
+confirmation; if the columns are to move instead, this section inverts.
+
+The pre-existing decision, still standing unless overruled: **do `vs`, `series`,
+`donatedBy` and `role`; keep the arguments on `type()` and defer `image`.** `role` looked borderline on the hit
 count alone, and what settles it is that both `role()` relations live on custom
 `Pivot` models (`GameDeveloper`, `GameIndividual`) and are reached as
 `$x->pivot->role->name` from six Blade files and `GameCreditsController` — every
@@ -260,46 +280,108 @@ the repository, so relationship method renames cannot disturb route binding.
 
 ## Phase C — the column renames
 
-Only these actually need migrations. Each converges on a name **the schema
-already uses elsewhere**, which is the argument for doing them at all: the
-inconsistency is internal to this database, not merely a deviation from a
-framework's taste.
+**Direction changed on nicolas's instruction (2026-08-23).** Earlier drafts of
+this phase derived foreign key names from Eloquent's rule — the *model* class
+name — which made `release_id` the target. The standing decision is now:
 
-| Rename | Tables | Already-conventional siblings |
+> The table name is `game_release`, so any foreign key pointing to it should be
+> `game_release_id`. In general, the database matters more than the code. The DB
+> schema needs to be fully consistent.
+
+So the rule for this phase is **foreign key = singularised referenced-table name
++ `_id`**, and where that conflicts with what Eloquent would derive, the schema
+wins and the code carries an explicit argument. That inverts the previous
+`game_release_id` → `release_id` plan: it is the ten tables saying `release_id`
+that move.
+
+"Singularised" is an interpretation, not something the instruction said, and it
+matters: applied literally the rule produces `users_id`, `individuals_id`,
+`magazines_id`, `menus_id` and `sndhs_id`, because those tables are plural.
+Singularising gives `user_id` and `individual_id`, which is what the schema
+mostly already does. **Flagged to nicolas and awaiting confirmation.**
+
+### Where the schema stands against that rule
+
+Measured across all 138 declared foreign keys: **100 already match, 38 differ.**
+The 38 fall into three groups, and only the first is actionable today.
+
+**Group 1 — unambiguous, 18 columns.** These are the same answer under either
+rule, or are nicolas's explicit instruction.
+
+| Rename | Tables | Note |
 |---|---|---|
-| `game_release_id` → `release_id` | 9 | 10 tables already say `release_id` |
-| `ind_id` → `individual_id` | 4 | `game_individual`, `magazine_indices` |
-| `comments_id` → `comment_id` | 1 (`article_user_comments`) | the other 3 comment pivots |
-| `game_genre_id` → `genre_id` | 1 (`game_genre_cross`) | — |
-| `dev_pub_id` → `pub_dev_id` | 1 (`game_developer`) | `game_release`, `pub_dev_text` |
+| `release_id` → `game_release_id` | 10 | the instructed reversal |
+| `ind_id` → `individual_id` | 4 | `game_individual`, `magazine_indices` already agree |
+| `comments_id` → `comment_id` | 1 (`article_user_comments`) | the other 3 comment pivots already agree |
+| `dev_pub_id` → `pub_dev_id` | 1 (`game_developer`) | `game_release`, `pub_dev_text` already agree |
+| `progress_system_id` → `game_progress_system_id` | 1 (`game`) | table is `game_progress_system` |
+| `individual_nicks_id` → `individual_nick_id` | 1 (`crew_individual`) | plural |
 
-The `game_release_id` split is worth stating plainly, because it is the single
-best justification for this campaign: of the 19 tables holding a foreign key to
-`game_release`, **10 call it `release_id` and 9 call it `game_release_id`**. The
-schema is not consistently legacy; it is inconsistently half-migrated already,
-and a developer cannot guess which name a given pivot uses. Laravel's convention
-happens to pick the majority name.
+**`game_genre_id` → `genre_id` is cancelled.** It was in the previous draft
+because the model is `Genre`. The table is `game_genre`, so under the new rule
+the column is already correct and must not move.
 
-`ind_id` is the same shape at smaller scale (2 tables already say
-`individual_id`), and `comments_id` is a single outlier against three siblings.
+**Group 2 — the `_main` tables, 16 columns, held for a decision.** Applying the
+rule to `article_main`, `interview_main`, `review_main` and `screenshot_main`
+renames `article_id` → `article_main_id`, `interview_id` → `interview_main_id`,
+`review_id` → `review_main_id` and `screenshot_id` → `screenshot_main_id`
+across 16 foreign keys. That is consistent, and it propagates a legacy table
+name into sixteen further places. The inconsistency here is the *table* name,
+not the foreign key.
+
+Three options were put to nicolas:
+
+- **(a)** apply the rule and accept `article_main_id`;
+- **(b)** rename the tables first — `article_main` → `articles`, `review_main` →
+  `reviews`, `interview_main` → `interviews`, `screenshot_main` → `screenshots`
+  — after which the sixteen existing names are already correct and the renames
+  vanish;
+- **(c)** exempt `*_main` and record why.
+
+**(b) is the recommendation.** It fixes the cause rather than propagating it,
+and "the schema must be fully consistent" argues for it harder than for (a). It
+is a larger campaign and belongs in its own phase, not smuggled into this one.
+
+**Group 3 — four exceptions that stay.** Two are legitimate role-qualified
+foreign keys: `individual_nicks.nick_id` and `menu_disks.donated_by_individual_id`
+both point at `individuals`, and a table cannot hold two `individual_id`
+columns. The other two are artefacts of *singularising*, not of the schema — a
+naive rule wants `game_sery_id` from `game_series` and `to_id` from `tos`, and
+`game_series_id` and `tos_id` are already right. Anyone scripting this rule
+needs an irregular-noun exception list; without one it silently proposes
+nonsense.
+
+### What this costs the code, and the way out
+
+Eloquent derives foreign keys from the **model** class name. Adopting
+table-based naming therefore means the explicit relationship arguments **cannot
+be dropped** wherever the model and table names differ — `Release`/`game_release`
+and `Genre`/`game_genre` are the live cases. The campaign's original headline
+goal and full schema consistency are in direct tension, and the standing
+instruction resolves it in the schema's favour.
+
+There is a resolution that satisfies both, and it is cheap: **rename the models
+to match their tables** — `Release` → `GameRelease`, `Genre` → `GameGenre`.
+Eloquent then derives `game_release_id` and `game_genre_id` by itself, so the
+schema gets the convention *and* the arguments still disappear. `Release` has 7
+references in `app/` and 9 in `tests/`. Recommended, and put to nicolas.
+
+Until that is decided, assume the arguments stay and the divergence count does
+not fall as far as Phase A's numbers implied.
 
 ### Order
 
-Ascending by **silent** risk, not by table count — an earlier draft ordered by
-blast radius and OpenCode was right that this is the better axis. One column
-family per PR:
+Ascending by **silent** risk, not by table count. One column family per PR:
 
 1. `comments_id` → `comment_id` — one table, one relation pair, no `$fillable`.
-2. `game_genre_id` → `genre_id`, `dev_pub_id` → `pub_dev_id` — one table each.
-3. `game_release_id` → `release_id` — nine tables, but every one of them loud:
-   eight are `NOT NULL` pivots and the ninth, `menu_disk_contents`, is written
-   through a relationship save (below).
+2. `dev_pub_id` → `pub_dev_id`, `progress_system_id` →
+   `game_progress_system_id`, `individual_nicks_id` → `individual_nick_id` —
+   one table each.
+3. `release_id` → `game_release_id` — ten tables, every one of them loud.
 4. `ind_id` → `individual_id` — only four tables, but it carries the campaign's
-   single silent write. It goes **last**, not because it is the biggest but
-   because it is the one that can be got wrong quietly. By the time it runs the
-   recipe has been exercised twice, the checklist template has been proven, and
-   the decision about the production `$fillable` guard has already been taken.
-   Do it alone.
+   single silent write, so it goes **last**. By then the recipe has been
+   exercised twice, the checklist template has been proven, and the
+   `interview_main.ind_id` `NOT NULL` change has already landed. Do it alone.
 
 ### Worked example: every site the `ind_id` rename touches
 
@@ -595,8 +677,29 @@ candidate:
 looks dangerous and is not: both build the row *without* the release and then
 link it through the relation.
 
-Which reduces the entire silent class to a single sentence: **mass assignment
-into a nullable foreign key column, in production.** There are five non-pivot
+Which reduces the silent class to a single sentence: **mass assignment into a
+nullable foreign key column, in production.**
+
+**Two sites, not one — and the second only exists because of the direction
+change.** Phase C's new rule adds `game.progress_system_id` →
+`game_progress_system_id`, and that column is nullable, is in `Game::$fillable`,
+and is written by `GameController:178-183` through `$game->update([...])`. It
+was not in the campaign before the rule changed.
+
+It also fails *differently*, in a way the `NOT NULL` remedy below cannot reach:
+
+| | `interview_main.ind_id` | `game.progress_system_id` |
+|---|---|---|
+| Write | `new Interview([...])` — an INSERT | `$game->update([...])` — an UPDATE |
+| Dropped key does | writes `NULL` | omits the column entirely |
+| Result | row with no individual | row keeps its **old** value |
+| `NOT NULL` catches it | yes, 1364 | **no** — the column is never in the statement |
+
+So the correction to the recommendation below: **making a column `NOT NULL`
+protects INSERT paths only.** No schema constraint can see a key that was
+dropped from an UPDATE, and the symptom is harder to diagnose than a null — an
+admin changes the progress system, saves, and the value silently does not
+change. That reads as "the form didn't take", not as a bug. There are five non-pivot
 nullable candidates — `individual_text.ind_id`, `interview_main.ind_id`,
 `game_release.pub_dev_id`, `pub_dev_text.pub_dev_id`,
 `menu_disk_contents.game_release_id` — and of those, exactly one is in a
@@ -927,6 +1030,12 @@ What is genuinely missing:
   so like every other relationship write it is safe by construction. The test
   is worth writing because nothing exercises the field at all, not because the
   rename endangers it.
+- **An assertion on the game's progress system after saving it.**
+  `tests/e2e/admin-write/games.spec.js:194` already selects it and saves, but
+  never checks it came back, so a dropped key passes that spec green. Nothing in
+  PHPUnit touches `updateBaseInfo` at all. One added assertion on an existing
+  spec is the whole fix, and it is the *only* protection available for that
+  site — see the UPDATE row in the table above.
 - **Nothing new for the two defects, but one existing spec gets promoted.**
   `reviewScreenshots()` is deleted, so it owes no test. `GameAka::game()` is
   converted, and `tests/e2e/admin/games.spec.js:156-178` already covers the
