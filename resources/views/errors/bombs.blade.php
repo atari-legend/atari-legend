@@ -42,12 +42,12 @@
             @isset ($bombs)
                 <div class="bombs">
                     @for ($i = 0; $i < $bombs; $i++)
-                        <img src="{{ asset('images/bomb.png') }}" alt="Address Error">
+                        <img src="{{ asset('images/bomb.png') }}" alt="{{ $message }}">
                     @endfor
                 </div>
             @endisset
             <div class="message">
-                @yield('code') - @yield('message')
+                @yield('code') - {{ $message }}
             </div>
         </a>
     </body>
