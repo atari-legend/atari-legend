@@ -9,14 +9,14 @@ use App\Models\Game;
 use App\Models\Media;
 use App\Models\MediaScan;
 use App\Models\MediaScanType;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class ReleaseMediasScansController extends Controller
 {
-    public function store(Game $game, Release $release, Media $media, Request $request)
+    public function store(Game $game, GameRelease $release, Media $media, Request $request)
     {
         $request->validate(['file' => 'required|array']);
 
@@ -59,7 +59,7 @@ class ReleaseMediasScansController extends Controller
         ]);
     }
 
-    public function destroy(Game $game, Release $release, Media $media, MediaScan $scan)
+    public function destroy(Game $game, GameRelease $release, Media $media, MediaScan $scan)
     {
         Storage::disk('public')->delete($scan->path);
         $scan->delete();
@@ -80,7 +80,7 @@ class ReleaseMediasScansController extends Controller
         ]);
     }
 
-    public function update(Game $game, Release $release, Media $media, MediaScan $scan, Request $request)
+    public function update(Game $game, GameRelease $release, Media $media, MediaScan $scan, Request $request)
     {
         $scan->type()->associate(MediaScanType::findOrFail($request->type));
         $scan->save();

@@ -20,7 +20,7 @@ class ReleaseScanFactory extends Factory
     public function definition(): array
     {
         return [
-            'game_release_id' => ReleaseFactory::new(),
+            'game_release_id' => GameReleaseFactory::new(),
             'type'            => ReleaseScan::TYPE_BOX_FRONT,
             'imgext'          => 'jpg',
             'notes'           => null,

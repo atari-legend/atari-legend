@@ -6,13 +6,13 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseSystemEnhanced;
 use Illuminate\Http\Request;
 
 class ReleaseSystemEnhancementController extends Controller
 {
-    public function destroy(Game $game, Release $release, ReleaseSystemEnhanced $enhancement)
+    public function destroy(Game $game, GameRelease $release, ReleaseSystemEnhanced $enhancement)
     {
         $enhancement->delete();
 
@@ -32,7 +32,7 @@ class ReleaseSystemEnhancementController extends Controller
         ]);
     }
 
-    public function store(Request $request, Game $game, Release $release)
+    public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
             'enhancement' => 'nullable|numeric|exists:enhancement,id',

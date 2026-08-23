@@ -9,7 +9,7 @@ use App\Models\Game;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSoftware;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
@@ -96,13 +96,13 @@ class MenuDisksContentController extends Controller
                 break;
             case 'release':
                 if ($request->action === 'create-release') {
-                    $release = Release::create([
-                        'type'    => Release::TYPE_UNOFFICIAL,
+                    $release = GameRelease::create([
+                        'type'    => GameRelease::TYPE_UNOFFICIAL,
                         'game_id' => $request->game,
                     ]);
                     $release->menuDiskContents()->save($content);
                 } elseif ($request->action === 'use-release') {
-                    $release = Release::find($request->release);
+                    $release = GameRelease::find($request->release);
                     $release->menuDiskContents()->save($content);
                 }
                 break;

@@ -702,11 +702,20 @@ grep -rEn '(^|[^A-Za-z_])Release(::|\s*\$|\s*\||;|\)|,)' app/ tests/ database/ r
 
 The work is still mechanical — a class rename, its file, its import sites, its
 factory (`ReleaseFactory` → `GameReleaseFactory`, since `HasFactory` resolves by
-name) — and an IDE does most of it. `protected $table = 'game_release'` becomes
-redundant at the same moment and can go with it. But 58 files is a large diff to
+name) — and an IDE does most of it. But 58 files is a large diff to
 land in the same campaign as a schema change, so it goes in **its own pull
 request, before Phase A**, gated on the SQL diff being empty and both suites
 green.
+
+**`protected $table = 'game_release'` stays, and an earlier draft of this
+paragraph was wrong to say it "becomes redundant at the same moment".** Found
+while executing the rename. Eloquent derives a table name from the class with
+`Str::snake(Str::pluralStudly(class_basename($this)))`, which turns
+`GameRelease` into `game_releases`, not `game_release` — the singular table
+name is exactly why the property is there, and the class rename does not change
+that. Deleting it would have pointed the model at a table that does not exist.
+The *foreign key* derivation is the one the rename fixes, because
+`hasOne`/`hasMany` do not pluralise.
 
 **It is not, however, the "pure refactor" an earlier draft called it, and its
 stated gates could not have passed.** OpenCode's review is what established

@@ -10,7 +10,7 @@ use App\Models\MenuDiskContent;
 use App\Models\MenuDiskDump;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
@@ -336,10 +336,10 @@ class MenuDisksTest extends AdminTestCase
             'game'   => $game->getKey(),
         ]);
 
-        $release = Release::sole();
+        $release = GameRelease::sole();
 
         $this->assertSame($game->getKey(), $release->game_id);
-        $this->assertSame(Release::TYPE_UNOFFICIAL, $release->type);
+        $this->assertSame(GameRelease::TYPE_UNOFFICIAL, $release->type);
         $this->assertSame($release->getKey(), $content->game_release_id);
         $this->assertSame($disk->getKey(), $content->menu_disk_id);
 
@@ -428,7 +428,7 @@ class MenuDisksTest extends AdminTestCase
             'game'   => $game->getKey(),
         ]);
 
-        $release = Release::sole();
+        $release = GameRelease::sole();
 
         $docContent = $this->addContent($disk, [
             'type'    => 'release',
@@ -442,7 +442,7 @@ class MenuDisksTest extends AdminTestCase
             ->assertRedirect(route('admin.menus.disks.edit', $disk));
 
         $this->assertSame(0, MenuDiskContent::query()->count());
-        $this->assertSame(0, Release::query()->count());
+        $this->assertSame(0, GameRelease::query()->count());
         $this->assertNull(MenuDiskContent::find($docContent->getKey()));
         $this->assertSame(1, Game::query()->count());
 
@@ -493,7 +493,7 @@ class MenuDisksTest extends AdminTestCase
 
         $this->assertSame(0, MenuDisk::query()->count());
         $this->assertSame(0, MenuDiskContent::query()->count());
-        $this->assertSame(0, Release::query()->count());
+        $this->assertSame(0, GameRelease::query()->count());
         $this->assertSame(1, Game::query()->count());
 
         $this->assertChangelog(Changelog::DELETE, 'Menu Disks', 'Automation #189A');

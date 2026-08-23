@@ -18,7 +18,7 @@ use App\Models\MagazineIndex;
 use App\Models\MenuDisk;
 use App\Models\ProgrammingLanguage;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\Sndh;
@@ -251,7 +251,7 @@ class GameControllerTest extends AdminTestCase
     private function attachDependent(Game $game, string $relation): void
     {
         match ($relation) {
-            'releases'    => Release::factory()->create(['game_id' => $game->getKey()]),
+            'releases'    => GameRelease::factory()->create(['game_id' => $game->getKey()]),
             'screenshots' => $game->screenshots()->attach(Screenshot::factory()->create()),
             'facts'       => $game->facts()->create(['game_fact' => 'Written in a fortnight.']),
             'individuals' => $game->individuals()->attach(

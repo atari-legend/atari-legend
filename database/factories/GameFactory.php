@@ -60,7 +60,7 @@ class GameFactory extends Factory
     public function withRelease(int $count = 1): static
     {
         return $this->afterCreating(function (Game $game) use ($count) {
-            ReleaseFactory::new()->count($count)->create(['game_id' => $game->getKey()]);
+            GameReleaseFactory::new()->count($count)->create(['game_id' => $game->getKey()]);
         });
     }
 }

@@ -122,7 +122,7 @@ class Game extends Model
     public function releases()
     {
         // No third argument: game's own key is now `id`, the default.
-        return $this->hasMany(Release::class, 'game_id');
+        return $this->hasMany(GameRelease::class, 'game_id');
     }
 
     public function individuals()

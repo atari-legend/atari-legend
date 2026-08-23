@@ -7,14 +7,14 @@ use App\Helpers\ReleaseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\Trainer;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
 class ReleaseSceneController extends Controller
 {
-    public function index(Game $game, Release $release)
+    public function index(Game $game, GameRelease $release)
     {
         $trainers = Trainer::orderBy('name')->get();
 
@@ -40,7 +40,7 @@ class ReleaseSceneController extends Controller
             ]);
     }
 
-    public function update(Request $request, Game $game, Release $release)
+    public function update(Request $request, Game $game, GameRelease $release)
     {
         $request->validate(['trainers' => 'array']);
 

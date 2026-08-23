@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Genre;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
@@ -29,7 +29,7 @@ class IssuesController extends Controller
         $gamesWithBadSlug = Game::where('slug', 'like', '%-id-%')
             ->orderBy('game_name')
             ->get();
-        $releaseWithoutScans = Release::where('license', '=', 'Commercial')
+        $releaseWithoutScans = GameRelease::where('license', '=', 'Commercial')
             ->whereDoesntHave('boxscans')
             ->get();
 

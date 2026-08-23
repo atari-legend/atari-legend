@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin\Games\Releases;
 
 use App\Models\Changelog;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseScan;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
@@ -30,7 +30,7 @@ class ReleaseScansTest extends AdminTestCase
 
     public function test_the_scans_panel_loads(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         ReleaseScan::factory()->create(['game_release_id' => $release->getKey()]);
 
         $this->get(route('admin.games.releases.scans.index', [$release->game, $release]))
@@ -40,7 +40,7 @@ class ReleaseScansTest extends AdminTestCase
 
     public function test_a_scan_is_uploaded_and_stored_against_the_release(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.scans.store', [$release->game, $release]), [
             'file' => [$this->filepondServerId('goodie.png', 'image')],
@@ -62,7 +62,7 @@ class ReleaseScansTest extends AdminTestCase
      */
     public function test_the_type_is_guessed_from_the_filename(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.scans.store', [$release->game, $release]), [
             'file' => [
@@ -84,7 +84,7 @@ class ReleaseScansTest extends AdminTestCase
      */
     public function test_the_temporary_upload_is_removed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $serverId = $this->filepondServerId('front.png', 'image');
 
         $this->post(route('admin.games.releases.scans.store', [$release->game, $release]), [
@@ -100,7 +100,7 @@ class ReleaseScansTest extends AdminTestCase
      */
     public function test_an_empty_upload_slot_is_skipped(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.scans.store', [$release->game, $release]), [
             'file' => [null],
@@ -112,7 +112,7 @@ class ReleaseScansTest extends AdminTestCase
 
     public function test_a_scans_type_and_notes_can_be_corrected(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $scan = ReleaseScan::factory()->ofType(ReleaseScan::TYPE_OTHER)
             ->create(['game_release_id' => $release->getKey()]);
 
@@ -130,7 +130,7 @@ class ReleaseScansTest extends AdminTestCase
 
     public function test_a_scan_is_deleted_with_its_image(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $scan = ReleaseScan::factory()->create(['game_release_id' => $release->getKey()]);
         $other = ReleaseScan::factory()->ofType(ReleaseScan::TYPE_BOX_BACK)
             ->create(['game_release_id' => $release->getKey()]);
@@ -151,7 +151,7 @@ class ReleaseScansTest extends AdminTestCase
 
     public function test_non_admins_are_turned_away(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->assertNonAdminIsTurnedAway(
             route('admin.games.releases.scans.index', [$release->game, $release])

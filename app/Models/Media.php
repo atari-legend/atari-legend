@@ -29,6 +29,6 @@ class Media extends Model
 
     public function release()
     {
-        return $this->belongsTo(Release::class);
+        return $this->belongsTo(GameRelease::class);
     }
 }

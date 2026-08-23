@@ -18,7 +18,7 @@ class MenuDiskContent extends Model
 
     public function release()
     {
-        return $this->belongsTo(Release::class, 'game_release_id');
+        return $this->belongsTo(GameRelease::class, 'game_release_id');
     }
 
     public function game()

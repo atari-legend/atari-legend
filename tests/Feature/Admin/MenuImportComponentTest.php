@@ -13,7 +13,7 @@ use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
@@ -622,7 +622,7 @@ class MenuImportComponentTest extends AdminTestCase
         // One row per content, each linked the way its mode says: the corrected
         // game through a new release, the software and the docs directly.
         $this->assertSame(3, MenuDiskContent::where('menu_disk_id', $disk->id)->count());
-        $release = Release::where('game_id', $game->getKey())->sole();
+        $release = GameRelease::where('game_id', $game->getKey())->sole();
         $this->assertSame(1, MenuDiskContent::where('game_release_id', $release->id)->count());
         $this->assertSame(1, MenuDiskContent::where('menu_software_id', $software->id)->count());
         $this->assertSame(1, MenuDiskContent::where('game_id', $docs->getKey())->count());

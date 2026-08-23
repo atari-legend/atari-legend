@@ -7,7 +7,7 @@ use App\Helpers\ReleaseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseScan;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 
 class ReleaseScansController extends Controller
 {
-    public function index(Game $game, Release $release)
+    public function index(Game $game, GameRelease $release)
     {
         return view('admin.games.games.releases.scans.index')
             ->with([
@@ -40,7 +40,7 @@ class ReleaseScansController extends Controller
             ]);
     }
 
-    public function update(Game $game, Release $release, ReleaseScan $scan, Request $request)
+    public function update(Game $game, GameRelease $release, ReleaseScan $scan, Request $request)
     {
         $scan->type = $request->type;
         $scan->notes = $request->notes;
@@ -62,7 +62,7 @@ class ReleaseScansController extends Controller
         ]);
     }
 
-    public function destroy(Game $game, Release $release, ReleaseScan $scan, Request $request)
+    public function destroy(Game $game, GameRelease $release, ReleaseScan $scan, Request $request)
     {
         $scan->delete();
         Storage::disk('public')->delete($scan->path);
@@ -83,7 +83,7 @@ class ReleaseScansController extends Controller
         ]);
     }
 
-    public function store(Game $game, Release $release, Request $request)
+    public function store(Game $game, GameRelease $release, Request $request)
     {
         $request->validate(['file' => 'required|array']);
 

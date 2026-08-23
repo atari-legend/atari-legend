@@ -15,7 +15,7 @@ use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
@@ -376,7 +376,7 @@ class MenuAdminTest extends AdminTestCase
     public function test_an_existing_release_can_be_put_on_a_disk(): void
     {
         $disk = $this->disk();
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.menus.disks.content.store', $disk), [
             'disk'    => $disk->getKey(),

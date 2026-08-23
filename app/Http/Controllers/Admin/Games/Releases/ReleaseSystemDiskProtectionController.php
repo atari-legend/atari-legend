@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\DiskProtection;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Http\Request;
 
 class ReleaseSystemDiskProtectionController extends Controller
 {
-    public function destroy(Game $game, Release $release, DiskProtection $protection)
+    public function destroy(Game $game, GameRelease $release, DiskProtection $protection)
     {
         $release->diskProtections()->detach($protection);
 
@@ -32,7 +32,7 @@ class ReleaseSystemDiskProtectionController extends Controller
         ]);
     }
 
-    public function store(Request $request, Game $game, Release $release)
+    public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
             'disk_protection' => 'required|numeric|exists:disk_protection,id',

@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\View\Components\Admin\Crumb;
 
 /**
@@ -13,11 +13,11 @@ class ReleaseHelper
     /**
      * Get a list of breadcrumbs for sibling releases of a given release.
      *
-     * @param \App\Models\Release Release to get the siblings breadcrumbs for.
+     * @param \App\Models\GameRelease Release to get the siblings breadcrumbs for.
      * @param string              Route name to use, defaults to the release show page.
      * @return array[] Sibling releases breadcrumps.
      */
-    public static function siblingReleasesCrumbs(Release $release,
+    public static function siblingReleasesCrumbs(GameRelease $release,
         string $route = 'admin.games.releases.show')
     {
         return $release->game->releases

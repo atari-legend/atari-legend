@@ -6,13 +6,13 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseTOSIncompatibility;
 use Illuminate\Http\Request;
 
 class ReleaseSystemTosController extends Controller
 {
-    public function destroy(Game $game, Release $release, ReleaseTOSIncompatibility $incompatibility)
+    public function destroy(Game $game, GameRelease $release, ReleaseTOSIncompatibility $incompatibility)
     {
         $incompatibility->delete();
 
@@ -32,7 +32,7 @@ class ReleaseSystemTosController extends Controller
         ]);
     }
 
-    public function store(Request $request, Game $game, Release $release)
+    public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
             'tos'      => 'required|numeric|exists:tos,id',

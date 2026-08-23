@@ -5,7 +5,7 @@ namespace Tests\Feature\Public;
 use App\Models\Game;
 use App\Models\Individual;
 use App\Models\IndividualText;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseScan;
 use App\Models\Screenshot;
 use App\Models\Sndh;
@@ -91,7 +91,7 @@ class ResourceControllersTest extends TestCase
     {
         $this->requireWebp();
 
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $scan = ReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
             'imgext'          => 'png',
@@ -113,7 +113,7 @@ class ResourceControllersTest extends TestCase
     {
         $this->requireWebp();
 
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $scan = ReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
             'imgext'          => 'png',
@@ -135,7 +135,7 @@ class ResourceControllersTest extends TestCase
         $this->storePng($scan->path, 100, 100);
 
         $this->get(route('games.releases.boxscan', [
-            'release' => Release::factory()->create(),
+            'release' => GameRelease::factory()->create(),
             'id'      => $scan->getKey(),
         ]))->assertNotFound();
     }
@@ -143,7 +143,7 @@ class ResourceControllersTest extends TestCase
     public function test_an_unknown_box_scan_is_a_404(): void
     {
         $this->get(route('games.releases.boxscan', [
-            'release' => Release::factory()->create(),
+            'release' => GameRelease::factory()->create(),
             'id'      => 9999,
         ]))->assertNotFound();
     }
@@ -243,7 +243,7 @@ class ResourceControllersTest extends TestCase
      */
     public function test_a_box_scan_missing_from_disk_is_a_404(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $scan = ReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
             'imgext'          => 'png',

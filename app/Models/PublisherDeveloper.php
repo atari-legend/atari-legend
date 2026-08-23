@@ -27,7 +27,7 @@ class PublisherDeveloper extends Model
 
     public function releases()
     {
-        return $this->hasMany(Release::class, 'pub_dev_id');
+        return $this->hasMany(GameRelease::class, 'pub_dev_id');
     }
 
     public function getLogoAttribute()

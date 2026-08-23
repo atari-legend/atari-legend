@@ -6,22 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Release extends Model
+class GameRelease extends Model
 {
     use HasFactory;
 
     const LICENCE_COMMERCIAL = 'Commercial';
     const LICENSE_NON_COMMERCIAL = 'Non-Commercial';
     const LICENSES = [
-        Release::LICENCE_COMMERCIAL,
-        Release::LICENSE_NON_COMMERCIAL,
+        GameRelease::LICENCE_COMMERCIAL,
+        GameRelease::LICENSE_NON_COMMERCIAL,
     ];
 
     const TYPE_UNOFFICIAL = 'Unofficial';
     const TYPES = [
         'Re-release', 'Budget', 'Budget re-release',
         'Playable demo', 'Non-playable demo', 'Slideshow',
-        Release::TYPE_UNOFFICIAL, 'Data disk', 'Review copy',
+        GameRelease::TYPE_UNOFFICIAL, 'Data disk', 'Review copy',
     ];
 
     const STATUSES = ['Unfinished', 'Development', 'Unreleased'];
@@ -171,7 +171,9 @@ class Release extends Model
 
     public function medias()
     {
-        return $this->hasMany(Media::class);
+        // Temporary: the class now derives game_release_id, the column is still
+        // release_id. Delete this argument in the media.release_id rename (Phase C).
+        return $this->hasMany(Media::class, 'release_id');
     }
 
     public function menuDiskContents()

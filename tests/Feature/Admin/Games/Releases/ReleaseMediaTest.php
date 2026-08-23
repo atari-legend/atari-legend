@@ -8,7 +8,7 @@ use App\Models\Media;
 use App\Models\MediaScan;
 use App\Models\MediaScanType;
 use App\Models\MediaType;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
 use ZipArchive;
@@ -34,10 +34,10 @@ class ReleaseMediaTest extends AdminTestCase
         Storage::fake('public');
     }
 
-    private function media(?Release $release = null): Media
+    private function media(?GameRelease $release = null): Media
     {
         return Media::factory()->create([
-            'release_id' => ($release ?? Release::factory()->create())->getKey(),
+            'release_id' => ($release ?? GameRelease::factory()->create())->getKey(),
         ]);
     }
 
@@ -54,7 +54,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_the_media_panel_loads(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = Media::factory()->create([
             'release_id' => $release->getKey(),
             'label'      => 'Disk A',
@@ -73,7 +73,7 @@ class ReleaseMediaTest extends AdminTestCase
      */
     public function test_a_new_media_defaults_to_a_floppy(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         MediaType::factory()->create(['name' => 'Cartridge']);
         $floppy = MediaType::factory()->create(['name' => '3.5" DD floppy disk']);
 
@@ -89,7 +89,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_a_medias_type_and_label_can_be_changed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
         $cartridge = MediaType::factory()->create(['name' => 'Cartridge']);
 
@@ -111,7 +111,7 @@ class ReleaseMediaTest extends AdminTestCase
      */
     public function test_a_media_can_have_no_type(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->put(route('admin.games.releases.medias.update', [$release->game, $release, $media]), [
@@ -124,7 +124,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_an_unknown_media_type_is_a_404(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->put(route('admin.games.releases.medias.update', [$release->game, $release, $media]), [
@@ -138,7 +138,7 @@ class ReleaseMediaTest extends AdminTestCase
      */
     public function test_the_delete_button_removes_the_media_and_its_files(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
         $survivor = $this->media($release);
 
@@ -162,7 +162,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_the_delete_route_is_not_allowed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->delete(route('admin.games.releases.medias.update', [$release->game, $release, $media]))
@@ -173,7 +173,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_a_dump_is_uploaded_and_zipped(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->post(route('admin.games.releases.medias.dumps.store', [$release->game, $release, $media]), [
@@ -200,7 +200,7 @@ class ReleaseMediaTest extends AdminTestCase
      */
     public function test_an_unrecognised_header_falls_back_to_the_extension(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->post(route('admin.games.releases.medias.dumps.store', [$release->game, $release, $media]), [
@@ -216,7 +216,7 @@ class ReleaseMediaTest extends AdminTestCase
      */
     public function test_a_file_that_is_not_a_dump_is_ignored(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->post(route('admin.games.releases.medias.dumps.store', [$release->game, $release, $media]), [
@@ -233,7 +233,7 @@ class ReleaseMediaTest extends AdminTestCase
      */
     public function test_a_zip_is_unpacked_into_one_dump_per_image(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->post(route('admin.games.releases.medias.dumps.store', [$release->game, $release, $media]), [
@@ -253,7 +253,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_an_empty_upload_slot_is_skipped(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->post(route('admin.games.releases.medias.dumps.store', [$release->game, $release, $media]), [
@@ -265,7 +265,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_a_dumps_notes_can_be_edited(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
         $dump = Dump::factory()->create(['media_id' => $media->getKey()]);
 
@@ -280,7 +280,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_a_dump_is_deleted_with_its_zip(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
         $dump = Dump::factory()->create(['media_id' => $media->getKey()]);
         $survivor = Dump::factory()->create(['media_id' => $media->getKey()]);
@@ -306,7 +306,7 @@ class ReleaseMediaTest extends AdminTestCase
     {
         MediaScanType::factory()->create();
 
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
 
         $this->post(route('admin.games.releases.medias.scans.store', [$release->game, $release, $media]), [
@@ -331,7 +331,7 @@ class ReleaseMediaTest extends AdminTestCase
      */
     public function test_a_media_scans_type_can_be_corrected(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
         $scan = MediaScan::factory()->create(['media_id' => $media->getKey()]);
         $label = MediaScanType::factory()->named('Disk label')->create();
@@ -347,7 +347,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_an_unknown_media_scan_type_is_a_404(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
         $scan = MediaScan::factory()->create(['media_id' => $media->getKey()]);
 
@@ -358,7 +358,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_a_media_scan_is_deleted_with_its_image(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $media = $this->media($release);
         $scan = MediaScan::factory()->create(['media_id' => $media->getKey()]);
         $survivor = MediaScan::factory()->create(['media_id' => $media->getKey()]);
@@ -380,7 +380,7 @@ class ReleaseMediaTest extends AdminTestCase
 
     public function test_non_admins_are_turned_away(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->assertNonAdminIsTurnedAway(
             route('admin.games.releases.medias.index', [$release->game, $release])

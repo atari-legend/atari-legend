@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Support\Str;
 
 /**
@@ -13,10 +13,10 @@ class ReleaseDescriptionHelper
     /**
      * Get an editorial-style release description, from all the release attributes.
      *
-     * @param \App\Models\Release Release to get the description for.
+     * @param \App\Models\GameRelease Release to get the description for.
      * @return array[] Textual description of the release split into separate strings.
      */
-    public static function descriptions(Release $release)
+    public static function descriptions(GameRelease $release)
     {
         return collect([
             join(' ', [
@@ -45,10 +45,10 @@ class ReleaseDescriptionHelper
      * Get a description of a release that is part of a menu. Focuses on
      * release specific information (trainers, compatibility,…).
      *
-     * @param \App\Models\Release Release to get the description for.
+     * @param \App\Models\GameRelease Release to get the description for.
      * @return array[] Textual description of the release split into separate strings.
      */
-    public static function menuDescriptions(Release $release)
+    public static function menuDescriptions(GameRelease $release)
     {
         return collect([
             ReleaseDescriptionHelper::getLanguagesText($release),
@@ -68,7 +68,7 @@ class ReleaseDescriptionHelper
         })->all();
     }
 
-    private static function getMainDescriptionText(Release $release)
+    private static function getMainDescriptionText(GameRelease $release)
     {
         $desc = '';
 
@@ -165,7 +165,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    private static function getResolutionsText(Release $release)
+    private static function getResolutionsText(GameRelease $release)
     {
         $desc = '';
 
@@ -186,7 +186,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    private static function getEnhancementsText(Release $release)
+    private static function getEnhancementsText(GameRelease $release)
     {
         $desc = '';
         if ($release->memoryEnhanced->isNotEmpty() || $release->systemEnhanced->isNotEmpty()) {
@@ -227,7 +227,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    private static function getMemoryText(Release $release)
+    private static function getMemoryText(GameRelease $release)
     {
         $desc = '';
 
@@ -264,7 +264,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    private static function getProtectionsText(Release $release)
+    private static function getProtectionsText(GameRelease $release)
     {
         $desc = '';
 
@@ -317,7 +317,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    private static function getHDText(Release $release)
+    private static function getHDText(GameRelease $release)
     {
         if ($release->hd_installable) {
             return 'It can be installed on a hard-drive.';
@@ -326,7 +326,7 @@ class ReleaseDescriptionHelper
         }
     }
 
-    private static function getLanguagesText(Release $release)
+    private static function getLanguagesText(GameRelease $release)
     {
         if ($release->languages->isNotEmpty()) {
             return 'The following languages are supported: ' .
@@ -342,7 +342,7 @@ class ReleaseDescriptionHelper
         }
     }
 
-    private static function getIncompatibleText(Release $release)
+    private static function getIncompatibleText(GameRelease $release)
     {
         $desc = '';
         if ($release->systemIncompatibles->isNotEmpty() || $release->emulatorIncompatibles->isNotEmpty() || $release->tosIncompatibles->isNotEmpty()) {
@@ -390,7 +390,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    private static function getTrainerText(Release $release)
+    private static function getTrainerText(GameRelease $release)
     {
         if ($release->trainers->isNotEmpty()) {
             return Str::plural('The trainer', $release->trainers->count()) . ' ' . $release->trainers
@@ -405,7 +405,7 @@ class ReleaseDescriptionHelper
         }
     }
 
-    private static function getMenuText(Release $release)
+    private static function getMenuText(GameRelease $release)
     {
         $desc = '';
 
@@ -431,7 +431,7 @@ class ReleaseDescriptionHelper
         return $desc;
     }
 
-    private static function getCrewsText(Release $release)
+    private static function getCrewsText(GameRelease $release)
     {
         $desc = '';
 

@@ -30,7 +30,7 @@ use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\PublisherDeveloper;
 use App\Models\PublisherDeveloperText;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseScan;
 use App\Models\Resolution;
 use App\Models\Review;
@@ -77,7 +77,7 @@ class FactoriesTest extends TestCase
     {
         return [
             'game'                => [Game::class],
-            'release'             => [Release::class],
+            'release'             => [GameRelease::class],
             'screenshot'          => [Screenshot::class],
             'publisher/developer' => [PublisherDeveloper::class],
             'individual'          => [Individual::class],
@@ -208,7 +208,7 @@ class FactoriesTest extends TestCase
 
     public function test_release_states_attach_their_relations(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->publishedBy('Ocean')
             ->crackedBy('The Replicants')
             ->inLanguages('en', 'fr')
@@ -237,7 +237,7 @@ class FactoriesTest extends TestCase
 
     public function test_undated_releases_report_no_year(): void
     {
-        $this->assertSame('[no date]', Release::factory()->undated()->create()->year);
+        $this->assertSame('[no date]', GameRelease::factory()->undated()->create()->year);
     }
 
     public function test_review_states_build_a_complete_review(): void
@@ -314,12 +314,12 @@ class FactoriesTest extends TestCase
         $publisher = PublisherDeveloper::factory()->create();
 
         // pub_dev_id is not fillable on Release
-        $release = Release::factory()->create(['pub_dev_id' => $publisher->getKey()]);
+        $release = GameRelease::factory()->create(['pub_dev_id' => $publisher->getKey()]);
 
         $this->assertSame($publisher->getKey(), $release->fresh()->pub_dev_id);
         $this->assertFalse(
-            in_array('pub_dev_id', (new Release())->getFillable(), true),
-            'This test is only meaningful while pub_dev_id is outside Release::$fillable.'
+            in_array('pub_dev_id', (new GameRelease())->getFillable(), true),
+            'This test is only meaningful while pub_dev_id is outside GameRelease::$fillable.'
         );
     }
 
@@ -328,7 +328,7 @@ class FactoriesTest extends TestCase
         Game::factory()->count(2)->create();
 
         $this->assertSame(2, Game::query()->count());
-        $this->assertSame(0, Release::query()->count());
+        $this->assertSame(0, GameRelease::query()->count());
         $this->assertSame(0, Screenshot::query()->count());
     }
 

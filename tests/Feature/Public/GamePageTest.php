@@ -10,7 +10,7 @@ use App\Models\GameVote;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\User;
@@ -81,7 +81,7 @@ class GamePageTest extends TestCase
     public function test_box_scans_are_listed_front_first(): void
     {
         $game = Game::factory()->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         foreach (['Box back', 'Box front', 'Poster'] as $type) {
             DB::table('game_release_scan')->insert([

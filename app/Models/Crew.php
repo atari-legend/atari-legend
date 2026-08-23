@@ -27,7 +27,7 @@ class Crew extends Model
 
     public function releases()
     {
-        return $this->belongsToMany(Release::class, 'game_release_crew', 'crew_id', 'game_release_id');
+        return $this->belongsToMany(GameRelease::class, 'game_release_crew', 'crew_id', 'game_release_id');
     }
 
     public function individuals()

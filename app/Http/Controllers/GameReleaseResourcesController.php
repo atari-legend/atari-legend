@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic;
 
 class GameReleaseResourcesController extends Controller
 {
-    public function boxscan(Release $release, int $id)
+    public function boxscan(GameRelease $release, int $id)
     {
         $boxscan = $release->boxscans
             ->first(function ($s) use ($id) {

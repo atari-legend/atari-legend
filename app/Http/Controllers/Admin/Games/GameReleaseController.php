@@ -11,7 +11,7 @@ use App\Models\Game;
 use App\Models\Language;
 use App\Models\Location;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseAka;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
@@ -33,7 +33,7 @@ class GameReleaseController extends Controller
             ]);
     }
 
-    public function show(Game $game, Release $release)
+    public function show(Game $game, GameRelease $release)
     {
         $referenceData = $this->getReferenceData();
 
@@ -83,7 +83,7 @@ class GameReleaseController extends Controller
     public function store(Game $game, Request $request)
     {
         $this->validateRelease($request);
-        $release = Release::create([
+        $release = GameRelease::create([
             'game_id' => $game->getKey(),
         ]);
         $this->updateRelease($release, $request);
@@ -104,7 +104,7 @@ class GameReleaseController extends Controller
         ]);
     }
 
-    public function update(Game $game, Release $release, Request $request)
+    public function update(Game $game, GameRelease $release, Request $request)
     {
         $this->validateRelease($request);
         $this->updateRelease($release, $request);
@@ -122,7 +122,7 @@ class GameReleaseController extends Controller
         return redirect()->route('admin.games.releases.index', $release->game);
     }
 
-    public function destroy(Game $game, Release $release)
+    public function destroy(Game $game, GameRelease $release)
     {
         $release->delete();
 
@@ -139,7 +139,7 @@ class GameReleaseController extends Controller
         return redirect()->route('admin.games.releases.index', $release->game);
     }
 
-    public function storeAka(Request $request, Game $game, Release $release)
+    public function storeAka(Request $request, Game $game, GameRelease $release)
     {
         $aka = ReleaseAka::create([
             'game_release_id' => $release->getKey(),
@@ -160,7 +160,7 @@ class GameReleaseController extends Controller
         return redirect()->route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]);
     }
 
-    public function destroyAka(Game $game, Release $release, ReleaseAka $aka)
+    public function destroyAka(Game $game, GameRelease $release, ReleaseAka $aka)
     {
         $aka->delete();
 
@@ -182,9 +182,9 @@ class GameReleaseController extends Controller
         $request->validate([
             'year'         => 'nullable|numeric|between:1984,' . date('Y'),
             'publisher'    => 'nullable|numeric',
-            'type'         => ['nullable', Rule::in(Release::TYPES)],
-            'license'      => ['nullable', Rule::in(Release::LICENSES)],
-            'status'       => ['nullable', Rule::in(Release::STATUSES)],
+            'type'         => ['nullable', Rule::in(GameRelease::TYPES)],
+            'license'      => ['nullable', Rule::in(GameRelease::LICENSES)],
+            'status'       => ['nullable', Rule::in(GameRelease::STATUSES)],
             'locations'    => 'nullable|array',
             'crews'        => 'nullable|array',
             'languages'    => 'nullable|array',
@@ -192,7 +192,7 @@ class GameReleaseController extends Controller
         ]);
     }
 
-    private function updateRelease(Release $release, Request $request)
+    private function updateRelease(GameRelease $release, Request $request)
     {
         $release->update([
             'name'    => $request->name,
@@ -268,9 +268,9 @@ class GameReleaseController extends Controller
     private function getReferenceData(): array
     {
         $companies = PublisherDeveloper::orderBy('pub_dev_name')->get();
-        $licenses = Release::LICENSES;
-        $types = Release::TYPES;
-        $statuses = Release::STATUSES;
+        $licenses = GameRelease::LICENSES;
+        $types = GameRelease::TYPES;
+        $statuses = GameRelease::STATUSES;
         $locations = Location::orderBy('continent_code', 'asc')
             ->orderBy('type', 'asc')
             ->orderBy('name', 'asc')

@@ -24,7 +24,7 @@ use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\News;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\Review;
 use App\Models\Spotlight;
 use App\Models\User;
@@ -74,7 +74,7 @@ class AdminRenderTest extends AdminTestCase
     private function fixtures(): array
     {
         $game = Game::factory()->named('Xenon')->withScreenshot()->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
         Media::factory()->create(['release_id' => $release->getKey()]);
 
         $magazine = Magazine::factory()->create();

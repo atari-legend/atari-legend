@@ -13,7 +13,7 @@ use App\Models\Enhancement;
 use App\Models\Game;
 use App\Models\Language;
 use App\Models\Memory;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\Resolution;
 use App\Models\System;
 use App\Models\TOS;
@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 
 class ReleaseSystemInfoController extends Controller
 {
-    public function index(Game $game, Release $release)
+    public function index(Game $game, GameRelease $release)
     {
         $resolutions = Resolution::orderBy('name')->get();
         $systems = System::orderBy('name')->get();
@@ -65,7 +65,7 @@ class ReleaseSystemInfoController extends Controller
             ]);
     }
 
-    public function update(Request $request, Game $game, Release $release)
+    public function update(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
             'resolutions' => 'array',

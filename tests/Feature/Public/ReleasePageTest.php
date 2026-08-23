@@ -8,7 +8,7 @@ use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\Screenshot;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,7 +26,7 @@ class ReleasePageTest extends TestCase
     public function test_a_release_page_describes_the_release(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->publishedBy('Ocean')
             ->create(['game_id' => $game->getKey(), 'date' => '1988-06-01']);
 
@@ -41,7 +41,7 @@ class ReleasePageTest extends TestCase
      */
     public function test_a_release_that_only_exists_on_a_menu_has_no_page(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $set = MenuSet::factory()->create();
         $menu = Menu::factory()->create(['menu_set_id' => $set->getKey()]);
@@ -58,7 +58,7 @@ class ReleasePageTest extends TestCase
 
     public function test_only_box_scans_are_shown_as_box_scans(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         foreach (['Box front', 'Poster'] as $type) {
             DB::table('game_release_scan')->insert([
@@ -77,7 +77,7 @@ class ReleasePageTest extends TestCase
     public function test_a_release_page_carries_structured_data(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         $jsonLd = $this->get(route('games.releases.show', $release))
             ->assertOk()

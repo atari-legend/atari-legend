@@ -5,7 +5,7 @@ namespace Tests\Feature\Admin\Games;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Genre;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseScan;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -30,7 +30,7 @@ class GameIssuesTest extends AdminTestCase
         $game->genres()->attach($genre ?? Genre::factory()->create());
 
         ReleaseScan::factory()->create([
-            'game_release_id' => Release::factory()->create(['game_id' => $game->getKey()]),
+            'game_release_id' => GameRelease::factory()->create(['game_id' => $game->getKey()]),
         ]);
 
         return $game;
@@ -94,23 +94,23 @@ class GameIssuesTest extends AdminTestCase
     {
         $game = Game::factory()->named('Xenon')->create();
 
-        $scanned = Release::factory()->create([
+        $scanned = GameRelease::factory()->create([
             'game_id' => $game->getKey(),
             'name'    => 'Boxed',
-            'license' => Release::LICENCE_COMMERCIAL,
+            'license' => GameRelease::LICENCE_COMMERCIAL,
         ]);
         ReleaseScan::factory()->create(['game_release_id' => $scanned->getKey()]);
 
-        Release::factory()->create([
+        GameRelease::factory()->create([
             'game_id' => $game->getKey(),
             'name'    => 'Unboxed',
-            'license' => Release::LICENCE_COMMERCIAL,
+            'license' => GameRelease::LICENCE_COMMERCIAL,
         ]);
 
-        Release::factory()->create([
+        GameRelease::factory()->create([
             'game_id' => $game->getKey(),
             'name'    => 'Freeware',
-            'license' => Release::LICENSE_NON_COMMERCIAL,
+            'license' => GameRelease::LICENSE_NON_COMMERCIAL,
         ]);
 
         $this->get(route('admin.games.issues'))

@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Memory;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Http\Request;
 
 class ReleaseSystemMemoryController extends Controller
 {
-    public function update(Request $request, Game $game, Release $release)
+    public function update(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
             'minimum_memory'      => 'array',

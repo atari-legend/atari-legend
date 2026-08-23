@@ -11,7 +11,7 @@ use App\Helpers\BBCode\ReleaseYearBBCodeTag;
 use App\Helpers\BBCode\ReviewBBCodeTag;
 use App\Helpers\BBCode\SearchByIdBBCodeTag;
 use App\Helpers\BBCode\SmileyVisitor;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\User;
 
 class Helper
@@ -112,10 +112,10 @@ class Helper
     /**
      * Get the year + name of a release.
      *
-     * @param  \App\Models\Release  $release  Release to get the year + name of
+     * @param  \App\Models\GameRelease  $release  Release to get the year + name of
      * @return string Year + name of the release
      */
-    public static function releaseName(Release $release)
+    public static function releaseName(GameRelease $release)
     {
         $parts = [$release->year];
 
