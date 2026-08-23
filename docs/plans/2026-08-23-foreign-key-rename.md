@@ -75,10 +75,17 @@ in particular from the two "not from" clauses. `Release`'s table is
 `Article::type()` is a method called `type`, so convention wants `type_id`
 whatever the related class is called.
 
-## Phase A — delete the 76 redundant arguments
+## Phase A — delete the redundant arguments (76, of which 68 ship today)
 
 These relations pass an explicit key argument that is character-for-character
-what Eloquent would have derived anyway. Deleting the argument changes no SQL.
+what Eloquent would have derived anyway.
+
+**Eight of the 76 are held.** The `Release` relations listed under "Why that
+model rename is a prerequisite" pass `'release_id'`, which Phase C renames away
+from the Eloquent default. Deleting those arguments now is a no-op that becomes
+a defect one phase later. They ship with Phase A only if `Release` →
+`GameRelease` is approved; otherwise they are updated inside Phase C instead.
+**Phase A as it stands today is therefore 68 deletions, not 76.** Deleting the argument changes no SQL.
 There is no migration, no schema change, and no production risk; the only way
 to get it wrong is to delete an argument that was *not* redundant, and the
 script above is what says which is which.
@@ -130,7 +137,8 @@ one.
 
 ### One pull request, not thirty
 
-Settled with OpenCode. 76 deletions across 28 models is not reviewable by eye,
+Settled with OpenCode. 68 deletions across 28 models (76 less the eight held
+`Release` relations) is not reviewable by eye,
 and that is the argument *for* keeping it whole rather than against: it is
 reviewable **by diff** — the pivot snapshot must be unchanged, the generated SQL
 must be unchanged, and both suites must be green. Splitting it per model would
@@ -185,7 +193,12 @@ thing that survives a review of the output.
 With the classification corrected, the experiment was repeated:
 
 - **70 arguments deleted, SQL diff across all 162 relations empty.** Not one
-  character changed.
+  character changed. Note that this experiment ran *before* the direction change
+  and so deleted a **superset** of what Phase A now ships — it included the eight
+  `Release` arguments since held. That does not invalidate it: if removing 70 was
+  a no-op, removing the 62 of them that remain in scope is a no-op too. It does
+  mean the measurement should be repeated on the final set before the pull
+  request, not cited as though it had tested it.
 - **`artisan test`: 991 passed, 18 skipped, 3511 assertions** — identical to the
   figure the primary-key campaign signed off on.
 
