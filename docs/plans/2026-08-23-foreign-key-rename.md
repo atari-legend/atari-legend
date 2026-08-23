@@ -338,9 +338,22 @@ Three options were put to nicolas:
   vanish;
 - **(c)** exempt `*_main` and record why.
 
-**(b) is the recommendation.** It fixes the cause rather than propagating it,
-and "the schema must be fully consistent" argues for it harder than for (a). It
-is a larger campaign and belongs in its own phase, not smuggled into this one.
+**Option (a) adds no risk — checked, so the decision is about naming alone.**
+All 16 were assessed against the silent-write rule: thirteen are `NOT NULL`, so
+a stale key is a loud 1364. The three nullable ones —
+`interview_user_comments.interview_id`, `screenshot_game_submitinfo.screenshot_id`
+and `spotlight.screenshot_id` — are pivots written through `attach()`/`sync()`
+or are not mass-assignable at all. The only `*_main` foreign key that appears in
+a `$fillable` is `InterviewText.interview_id`, and that column is `NOT NULL`.
+
+**(b) remains the recommendation**, but on taste rather than safety: it fixes
+the cause instead of baking a legacy table name into sixteen more columns, and
+"the schema must be fully consistent" argues for it harder than for (a). It is a
+larger campaign and belongs in its own phase, not smuggled into this one. Since
+(a) is demonstrably safe to execute, this is a judgement call and not a risk
+trade-off — which is worth saying plainly, because it is the kind of decision
+that gets deferred forever while people look for a technical reason to prefer
+one side.
 
 **Group 3 — four exceptions that stay.** Two are legitimate role-qualified
 foreign keys: `individual_nicks.nick_id` and `menu_disks.donated_by_individual_id`
@@ -350,6 +363,16 @@ naive rule wants `game_sery_id` from `game_series` and `to_id` from `tos`, and
 `game_series_id` and `tos_id` are already right. Anyone scripting this rule
 needs an irregular-noun exception list; without one it silently proposes
 nonsense.
+
+### Pre-flight: no name collisions
+
+Checked before anything else, because it is the one condition that would make a
+rename impossible rather than merely awkward: **no table already holds both a
+target name and its current name.** Not `release_id`/`game_release_id`, not
+`ind_id`/`individual_id`, not `comments_id`/`comment_id`,
+`dev_pub_id`/`pub_dev_id`, or
+`progress_system_id`/`game_progress_system_id`. All 18 renames are free to
+proceed on that count.
 
 ### What this costs the code, and the way out
 
