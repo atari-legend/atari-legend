@@ -51,20 +51,49 @@ the question was live:
 | `interview_main` / `interview_text` | 80 | 80 | 80 | **strict 1:1** |
 | `individuals` / `individual_text` | 5,405 | 4,528 | — | 1:0..1 — merges with nullable columns |
 | `pub_dev` / `pub_dev_text` | 1,387 | 1,185 | — | 1:0..1 — merges with nullable columns |
-| `review_main` / `review_score` | 89 | 126 | — | **no — genuinely 1:many** |
+| `review_main` / `review_score` | 126 | 126 | 126 | **1:1 — merges, with a caveat** |
 
 So the two nicolas named are the clean cases, and both are strictly 1:1 despite
 `Article::texts()` and `Interview::texts()` being declared `hasMany`. The
 `individuals` and `pub_dev` pairs merge too, at the cost of nullable columns for
-the ~15% of rows with no text. `review_score` is not the same shape and must not
-be swept in with them.
+the ~15% of rows with no text.
+
+**`review_score` was wrong in an earlier draft of this table and is corrected
+here.** It said 89 parents to 126 children and called the pair "genuinely
+1:many". Re-measured 2026-08-23: `review_main` has 126 rows, `review_score` has
+126, there are 126 distinct `review_id` values, and the maximum number of score
+rows for any one review is **one**. The model agrees — `Review::score()` is a
+`hasOne`, not a `hasMany`, and both write paths
+(`ReviewsController:110`, `ReviewController:112`) reuse the existing row rather
+than adding one. So it merges too: four `NOT NULL` integer columns
+(`review_graphics`, `review_sound`, `review_gameplay`, `review_overall`) fold
+straight onto `review_main` with no nullability change, because every review has
+a score.
+
+The caveat is that nothing in the *schema* enforces the 1:1 — `review_score`
+has its own surrogate `id` and a plain `KEY` on `review_id`, not a unique one —
+so the merge has to assert one row per review at migration time rather than
+assume it. That is a smaller obstacle than the row counts in the old table
+suggested, and it means the merge campaign has three clean pairs to consider,
+not two.
 
 Worth noting for whoever picks that up: the primary-key campaign found the
 `article_main` / `article_text` pair impossible to test properly *because* their
 ids move in lockstep — see "What the suites cannot see" in that plan. Merging
 them removes that blind spot permanently, which is a second argument for it.
 
-## The short version## The short version
+Be precise about whose lockstep it is, because the two pairs are not in the same
+position. The lockstep is a property of the **fixtures**, and it applies to every
+pair: `ArticleFactory::configure()` creates exactly one `ArticleText` per
+`Article`, so the two id sequences advance together and a wrong-key hydration
+returns the right number anyway. In **production** the pairs have diverged —
+`article_main`/`article_text` are still 1-5 in lockstep, but interviews have
+drifted (interview 85's text row is 84), which is exactly why the primary-key
+campaign could prove the interview hydration correct against live data and could
+not prove the article one. So merging fixes the fixture blind spot for whichever
+pair is merged; it is not a statement that interviews are untestable today.
+
+## The short version
 
 The primary-key campaign framed itself as "rename 34 columns". Framing this one
 the same way is the mistake to avoid. **Most of the divergence from Laravel's
@@ -89,7 +118,7 @@ its own section.
 The 48 divergent relations are the last five rows. Two notes on the edges:
 
 - The 20 declined include the three `type()` relations, which Phase B could
-  reach by renaming a method and deliberately does not — `->type` is 105 hits
+  reach by renaming a method and deliberately does not — `->type` is 97 hits
   repo-wide and mostly plain columns.
 - One of the 20 — `Release::distributors()`, on `game_release_distributor` — is
   only half fixed by its column rename: `game_release_id` moves and `pub_dev_id`
@@ -98,7 +127,7 @@ The 48 divergent relations are the last five rows. Two notes on the edges:
 The column-rename relations resolve to **six renames covering 18 columns
 across 18 tables**, listed in Phase C. So the campaign is: delete 76 arguments,
 delete one dead relation and convert one broken one, rename 5 methods, rename
-18 columns (with 16 more held pending a decision on the `*_main` tables), and
+18 columns (with 16 more deferred alongside the `*_main` merge), and
 write down why the rest stay as they are. The first
 item is the largest by a distance, carries no database risk at all, and can
 start today.
@@ -152,8 +181,10 @@ $this->hasMany(Release::class, 'game_id')                     // Game::releases(
 $this->belongsToMany(Memory::class, 'game_release_memory_minimum', 'release_id', 'memory_id')
 ```
 
-The 76 are spread over 28 models; `User` contributes 9, `Game` 17, `Release` 8.
-The full list is reproducible from the audit script and is not reproduced here,
+The 76 are spread over 27 models; `Game` contributes 17, `User` 9 and `Release`
+9. Only eight of `Release`'s nine are held — the ninth, `Release::game()`,
+passes `'game_id'`, which Phase C does not touch, so it ships with the rest. The
+full list is reproducible from the audit script and is not reproduced here,
 because a list in a document goes stale and the script does not.
 
 Two cautions, both learned from the primary-key campaign:
@@ -191,7 +222,7 @@ one.
 
 ### One pull request, not thirty
 
-Settled with OpenCode. 68 deletions across 28 models (76 less the eight held
+Settled with OpenCode. 68 deletions across 27 models (76 less the eight held
 `Release` relations) is not reviewable by eye,
 and that is the argument *for* keeping it whole rather than against: it is
 reviewable **by diff** — the pivot snapshot must be unchanged, the generated SQL
@@ -294,13 +325,22 @@ them. The method names are what should move.
 primary-key campaign's hardest problem.** A relationship method rename has to
 follow through `->type`, `with('type')`, `whereHas('type')`, Livewire table
 sort and search keys, and Blade. And `type` is *also* an ordinary column on
-`ReleaseScan`, `MediaScan` and others: `grep -r '\->type'` returns **105** hits
+`ReleaseScan`, `MediaScan` and others: it returns **97** hits
 across `app/`, `resources/views/` and `tests/`, of which only a handful are the
 relationship. That is precisely the "roughly 85-90% of occurrences are
 something else" hazard the primary-key plan documented, and the reason that
 plan insisted on judgement per site rather than token substitution.
 
-Priced by how ambiguous the token is:
+Priced by how ambiguous the token is. Counted as **matching lines**, re-measured
+2026-08-23:
+
+```
+grep -rEn -- '->method[^A-Za-z_]' app/ resources/views/ tests/ | wc -l
+```
+
+The trailing character class is what makes the number mean anything: without it
+`->type` also counts `->types` and `->typeId`, and `->image` counts `->images`
+and `->imageFile`.
 
 | Method | `->method` hits repo-wide | Verdict |
 |---|---|---|
@@ -308,8 +348,16 @@ Priced by how ambiguous the token is:
 | `series` | 7 | Safe — do it |
 | `donatedBy` | 10 | Safe — do it |
 | `role` | 16 | Safe with care — two models |
-| `image` | 28 | Ambiguous — defer |
-| `type` | 105 | Ambiguous — **keep the explicit argument** |
+| `image` | 27 | Ambiguous — **defer** |
+| `type` | 97 | Ambiguous — **keep the explicit argument** |
+
+Earlier drafts quoted **105** for `type` and **28** for `image`. Neither
+reproduces under any counting method and both are corrected above; the stated
+command is now part of the table so the next re-measurement can be compared to
+it. For the record, counting raw *occurrences* rather than lines
+(`grep -ro`) gives 107 and 40, and the bare `grep -rn -- '->image'` line count
+is 36. The other four tokens are the same number however they are counted, which
+is itself a signal about how unambiguous they are.
 
 **Decided 2026-08-23: rename the methods, leave the columns.** The instruction
 had been *"stick to Laravel database conventions … update the column names, not
@@ -334,11 +382,21 @@ The pre-existing decision, still standing unless overruled: **do `vs`, `series`,
 count alone, and what settles it is that both `role()` relations live on custom
 `Pivot` models (`GameDeveloper`, `GameIndividual`) and are reached as
 `$x->pivot->role->name` from six Blade files and `GameCreditsController` — every
-call site names the concrete pivot class, so the token is fully traceable. There
+call site names the concrete pivot class, so the token is fully traceable.
+
+Worth heading off the obvious objection, since these are two of the five
+`Pivot` subclasses in the codebase and the other three are in Phase D under
+*"no default exists"*: **that trap does not apply here.** `AsPivot` overrides
+`getForeignKey()`, which is what `hasOne`/`hasMany` consult, so the three
+`Screenshot*::comment()` relations have no derivable default and their arguments
+are load-bearing. `role()` is a `belongsTo`, and `belongsTo` derives from the
+**method** name via `Str::snake($method).'_'.$related->getKeyName()` —
+`getForeignKey()` is never consulted. So renaming the method really does move
+the derived key, on a `Pivot` exactly as on any other model. There
 is also no bare `role` column anywhere; only `developer_role_id` and
 `individual_role_id`. Neither of those things is true of `type`.
 
-Three explicit arguments is a cheaper price than a 105-site token audit for no
+Three explicit arguments is a cheaper price than a 97-site token audit for no
 behavioural gain.
 
 There is no `getRouteKeyName()`, `resolveRouteBinding()` or `Route::bind()` in
@@ -382,6 +440,34 @@ rule, or are nicolas's explicit instruction.
 | `dev_pub_id` → `pub_dev_id` | 1 (`game_developer`) | `game_release`, `pub_dev_text` already agree |
 | `progress_system_id` → `game_progress_system_id` | 1 (`game`) | table is `game_progress_system` |
 | `individual_nicks_id` → `individual_nick_id` | 1 (`crew_individual`) | plural |
+
+The ten `release_id` tables, so that whoever executes the largest rename does
+not have to re-derive them: `game_release_copy_protection`,
+`game_release_disk_protection`, `game_release_emulator_incompatibility`,
+`game_release_language`, `game_release_memory_enhanced`,
+`game_release_memory_incompatible`, `game_release_memory_minimum`,
+`game_release_tos_version_incompatibility`, `game_release_trainer_option` and
+**`media`**. Nine pivots and one real table — `media` is the one that breaks the
+pattern and the one a `game_release_*` glob would miss. The list is reproducible
+rather than trusted:
+
+```sql
+SELECT TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = DATABASE() AND REFERENCED_TABLE_NAME IS NOT NULL
+  AND COLUMN_NAME = 'release_id';
+```
+
+**One of the eighteen points at a legacy primary key, and that is fine.**
+`crew_individual.individual_nicks_id` references
+`individual_nicks.individual_nicks_id` — a prefixed primary key the previous
+campaign left in place, one of the 36 it recorded as follow-up. Only the
+**child** column moves here: after the rename the constraint reads
+`FOREIGN KEY (individual_nick_id) REFERENCES individual_nicks (individual_nicks_id)`,
+which looks odd and is correct. Two things follow. The `down()` has nothing
+extra to do — it renames one column back, not two. And the two campaigns do not
+have to be ordered against each other: whenever `individual_nicks_id` → `id`
+happens on the parent, it does not touch the child column's name, and vice
+versa.
 
 **`game_genre_id` → `genre_id` is cancelled.** It was in the previous draft
 because the model is `Genre`. The table is `game_genre`, so under the new rule
@@ -457,8 +543,33 @@ instruction resolves it in the schema's favour.
 There is a resolution that satisfies both, and it is cheap: **rename the models
 to match their tables** — `Release` → `GameRelease`, `Genre` → `GameGenre`.
 Eloquent then derives `game_release_id` and `game_genre_id` by itself, so the
-schema gets the convention *and* the arguments still disappear. `Release` has 7
-references in `app/` and 9 in `tests/`.
+schema gets the convention *and* the arguments still disappear.
+
+**Size it honestly.** An earlier draft said `Release` has "7 references in
+`app/` and 9 in `tests/`", which is wrong by more than an order of magnitude and
+made the rename sound like a ten-minute job. Measured 2026-08-23, counting lines
+where `Release` appears as a class token — `::`, a typehint, an import, a
+parameter — and excluding every compound (`GameRelease`, `ReleaseAka`,
+`ReleaseScan`, `ReleaseHelper` and the rest):
+
+```
+grep -rEn '(^|[^A-Za-z_])Release(::|\s*\$|\s*\||;|\)|,)' app/ tests/ database/ resources/
+```
+
+| | Lines | Files |
+|---|---|---|
+| `app/` | 102 | 30 |
+| `tests/` | 206 | 26 |
+| `database/` | 20 | 1 |
+| `resources/` | 1 | 1 |
+| **Total** | **329** | **58** |
+
+The work is still mechanical — a class rename, its file, its import sites, its
+factory — and an IDE does most of it. But 58 files is a large diff to land in
+the same campaign as a schema change, so it goes in **its own pull request,
+before Phase C**, gated on the SQL diff being empty and both suites green. It is
+a pure refactor: no column moves, no relation key changes, and the audit
+script's three counts must be identical either side of it.
 
 ### Why that model rename is a prerequisite, not a nicety
 
@@ -516,8 +627,22 @@ Two false positives came out of that scan, and the cause is worth recording
 because it will bite the next tool as well: `Comment::articles()` and
 `Individual::individuals()` call **`belongstoMany`** — lowercase `t`. PHP method
 names are case-insensitive so both work, but case-sensitive tooling does not see
-them, and they were reported as argument-free when they are not. Worth fixing on
-sight.
+them, and they were reported as argument-free when they are not.
+
+**Those two are the ones this scan tripped over; there are four in the
+repository.** All of them:
+
+- `app/Models/Comment.php:39` — `articles()`, on `article_user_comments`
+- `app/Models/Comment.php:45` — `interviews()`, on `interview_user_comments`
+- `app/Models/Comment.php:51` — `reviews()`, on `review_user_comments`
+- `app/Models/Individual.php:50` — `individuals()`, on `individual_nicks`
+
+Only the first and the last touch a column this campaign renames, which is why
+only those two showed up here; the other two are the next tool's false
+positives, not this one's. The audit script's own relation-type regex is
+case-sensitive too and misses all four — it finds them by reflection instead,
+which is the same argument as everywhere else in this plan. Fix all four on
+sight, in Phase A, where the diff is already expected to be behaviour-free.
 
 Two ways out, then, not three:
 
@@ -712,7 +837,7 @@ bearing.
   it keeps its argument. Only `GameVs::game()` → `atari()` is in Phase B.
 - **`Article::type()`, `Media::type()`, `MediaScan::type()`.** Phase B *could*
   reach these by renaming the method, and declines to — see the pricing table
-  there. `->type` is 105 hits repo-wide and mostly plain columns on other
+  there. `->type` is 97 hits repo-wide and mostly plain columns on other
   models, which is the primary-key campaign's worst hazard reproduced for no
   behavioural gain. Three explicit arguments is the cheaper price. Listed here
   rather than in Phase B so the "declined" count is honest.
@@ -996,39 +1121,73 @@ DB::statement('ALTER TABLE `interview_main` ADD CONSTRAINT `interview_main_indiv
 After which `dropForeign(['individual_id'])` succeeds.
 
 **But that block is only correct for `interview_main`, and copying it is a
-trap.** Raised by OpenCode, then queried across all 16 renameable foreign key
-columns via `information_schema.STATISTICS` and `KEY_COLUMN_USAGE`. The two
-naming schemes are **asymmetric**:
+trap.** Raised by OpenCode, then queried across the renameable foreign key
+columns via `information_schema.STATISTICS` and `KEY_COLUMN_USAGE`.
+
+**Re-measured 2026-08-23, because the first pass ran before the direction
+reversal and surveyed the wrong set of columns.** It queried the *old* Group 1:
+the nine tables carrying `game_release_id`, the four `ind_id` tables,
+`article_user_comments.comments_id`, `game_developer.dev_pub_id` and
+`game_genre_cross.game_genre_id` — 16 columns, and its 16 / 6 / 10 split was
+correct **for that set**. The reversal changed twelve of them: the nine
+`game_release_id` columns became the ten `release_id` ones, `game_genre_id` was
+cancelled, and `game.progress_system_id` and
+`crew_individual.individual_nicks_id` arrived. Only six columns are in both
+sets. Under the current direction the set is the **18** of Group 1, and the
+numbers move:
 
 | | Laravel-named `<table>_<col>_foreign` | Named after the column |
 |---|---|---|
-| Constraints | **16 of 16** | 0 |
-| Indexes | 6 of 16 | **10 of 16** |
+| Constraints | **18 of 18** | 0 |
+| Indexes | 6 of 18 | **12 of 18** |
 
-So the constraint name can be derived. **The index name cannot.** The ten plain
-ones are `game_developer.dev_pub_id`, `game_genre_cross.game_cat_id`, and an
-index literally called `game_release_id` on all eight `game_release_*` tables —
-so `RENAME KEY game_release_aka_game_release_id_foreign` fails on eight of the
-nine tables in the largest rename. Read the index name out of
-`information_schema.STATISTICS` per table; never derive it:
+The conclusion survives intact and is if anything stronger: the constraint name
+can be derived, **the index name cannot**, and now two-thirds of the set is in
+the undesirable half rather than well under it.
+
+The six Laravel-named indexes are the four `ind_id` tables (`interview_main`,
+`individual_text`, `individual_nicks`, `crew_individual`),
+`crew_individual.individual_nicks_id` and `article_user_comments.comments_id` —
+the small renames. The **twelve** plain ones are the whole of the two largest:
+`game_developer.dev_pub_id`, `game.progress_system_id` (an index literally
+called `progress_system_id`), and an index literally called **`release_id`** on
+every one of the ten `release_id` tables, `media` included. So
+
+```
+RENAME KEY game_release_copy_protection_release_id_foreign TO ...
+```
+
+fails on all ten of them. Note which way round this goes:
+the index is named for the column as it stands *today*, so it is `release_id`
+that has to be renamed to `game_release_id`, not the reverse — the earlier draft
+had this backwards because it was still describing the pre-reversal plan.
+
+Read the index name out of `information_schema.STATISTICS` per table; never
+derive it:
 
 ```sql
 SELECT TABLE_NAME, INDEX_NAME, COLUMN_NAME FROM information_schema.STATISTICS
-WHERE TABLE_SCHEMA = DATABASE() AND COLUMN_NAME = 'game_release_id';
+WHERE TABLE_SCHEMA = DATABASE() AND COLUMN_NAME = 'release_id';
 ```
 
-(No renameable column carries more than one index, which is the one thing here
-that is simple.)
+(No renameable column carries more than one index — checked across all 18 —
+which is the one thing here that is simple.)
 
 One distinction worth drawing, because it changes how urgent this is. For the
 six `*_foreign` indexes, the rename *introduces* the 1091 trap. For the other
-ten, `dropIndex(['release_id'])` is **already** broken today — Laravel derives
-`<table>_<cols>_index` and the index is not named that either way — so renaming
-them is tidiness rather than a regression fix. Do it anyway: an index named
-`game_release_id` sitting on a column called `release_id` is precisely how
-`game_genre_cross` ended up with an index called `game_cat_id`, on a column
-that has not been called `game_cat_id` for years. That name is the empirical
-proof that this drift is real and that nobody goes back for it.
+twelve, `dropIndex(['release_id'])` is **already** broken today — Laravel
+derives `<table>_<cols>_index` and the index is not named that either way — so
+renaming them is tidiness rather than a regression fix.
+
+Do it anyway, because the alternative is an index named `release_id` sitting on
+a column called `game_release_id`, which is exactly the drift this campaign
+exists to stop. The proof that nobody goes back for it is in the schema
+already: `game_genre_cross` carries an index called **`game_cat_id`** on a
+column that has not been called `game_cat_id` for years. That column is out of
+this campaign's scope now — the `game_genre_id` → `genre_id` rename was
+cancelled — so the index keeps its stale name for the time being. It is left
+here deliberately, as the cheapest available illustration of what the other
+twelve become if the index rename is skipped.
 
 ### And PHPUnit is blind to half of it
 
