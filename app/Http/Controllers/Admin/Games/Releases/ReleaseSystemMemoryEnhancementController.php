@@ -42,7 +42,7 @@ class ReleaseSystemMemoryEnhancementController extends Controller
         $enhancement = ReleaseMemoryEnhanced::create([
             'enhancement_id'  => $request->memory_enhancement,
             'memory_id'       => $request->memory,
-            'release_id'      => $release->getKey(),
+            'game_release_id' => $release->getKey(),
         ]);
 
         ChangelogHelper::insert([

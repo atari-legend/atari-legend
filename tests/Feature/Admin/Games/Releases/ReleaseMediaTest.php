@@ -37,7 +37,7 @@ class ReleaseMediaTest extends AdminTestCase
     private function media(?GameRelease $release = null): Media
     {
         return Media::factory()->create([
-            'release_id' => ($release ?? GameRelease::factory()->create())->getKey(),
+            'game_release_id' => ($release ?? GameRelease::factory()->create())->getKey(),
         ]);
     }
 
@@ -56,7 +56,7 @@ class ReleaseMediaTest extends AdminTestCase
     {
         $release = GameRelease::factory()->create();
         $media = Media::factory()->create([
-            'release_id' => $release->getKey(),
+            'game_release_id' => $release->getKey(),
             'label'      => 'Disk A',
         ]);
         Dump::factory()->create(['media_id' => $media->getKey(), 'format' => 'STX']);
@@ -82,7 +82,7 @@ class ReleaseMediaTest extends AdminTestCase
 
         $media = Media::sole();
 
-        $this->assertSame($release->getKey(), $media->release_id);
+        $this->assertSame($release->getKey(), $media->game_release_id);
         $this->assertSame($floppy->getKey(), $media->media_type_id);
         $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
     }

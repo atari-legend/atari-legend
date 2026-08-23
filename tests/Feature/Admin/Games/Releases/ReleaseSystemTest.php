@@ -210,7 +210,7 @@ class ReleaseSystemTest extends AdminTestCase
 
         $row = ReleaseTOSIncompatibility::sole();
 
-        $this->assertSame($release->getKey(), $row->release_id);
+        $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('1.62', $row->tos->name);
         $this->assertSame('de', $row->language_id);
         $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
@@ -325,7 +325,7 @@ class ReleaseSystemTest extends AdminTestCase
 
         $row = ReleaseMemoryEnhanced::sole();
 
-        $this->assertSame($release->getKey(), $row->release_id);
+        $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('1 MB', $row->memory->name);
         $this->assertSame('Extra levels', $row->enhancement->name);
         $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);

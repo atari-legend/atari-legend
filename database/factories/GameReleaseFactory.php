@@ -168,9 +168,9 @@ class GameReleaseFactory extends Factory
     {
         return $this->afterCreating(function (GameRelease $release) use ($memory, $enhancement) {
             ReleaseMemoryEnhanced::create([
-                'release_id'     => $release->getKey(),
-                'memory_id'      => MemoryFactory::new()->create(['name' => $memory])->id,
-                'enhancement_id' => $enhancement === null
+                'game_release_id' => $release->getKey(),
+                'memory_id'       => MemoryFactory::new()->create(['name' => $memory])->id,
+                'enhancement_id'  => $enhancement === null
                     ? null
                     : EnhancementFactory::new()->create(['name' => $enhancement])->id,
             ]);
@@ -199,9 +199,9 @@ class GameReleaseFactory extends Factory
     {
         return $this->afterCreating(function (GameRelease $release) use ($version, $languageId) {
             ReleaseTOSIncompatibility::create([
-                'release_id'  => $release->getKey(),
-                'tos_id'      => TOSFactory::new()->create(['name' => $version])->id,
-                'language_id' => $languageId === null
+                'game_release_id' => $release->getKey(),
+                'tos_id'          => TOSFactory::new()->create(['name' => $version])->id,
+                'language_id'     => $languageId === null
                     ? null
                     : LanguageFactory::new()->create(['id' => $languageId, 'name' => $languageId])->id,
             ]);

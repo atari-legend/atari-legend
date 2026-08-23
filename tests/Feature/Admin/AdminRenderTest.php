@@ -75,7 +75,7 @@ class AdminRenderTest extends AdminTestCase
     {
         $game = Game::factory()->named('Xenon')->withScreenshot()->create();
         $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
-        Media::factory()->create(['release_id' => $release->getKey()]);
+        Media::factory()->create(['game_release_id' => $release->getKey()]);
 
         $magazine = Magazine::factory()->create();
         $set = MenuSet::factory()->create();

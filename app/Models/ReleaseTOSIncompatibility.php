@@ -8,7 +8,7 @@ class ReleaseTOSIncompatibility extends Model
 {
     protected $table = 'game_release_tos_version_incompatibility';
     public $timestamps = false;
-    protected $fillable = ['tos_id', 'language_id', 'release_id'];
+    protected $fillable = ['tos_id', 'language_id', 'game_release_id'];
 
     public function tos()
     {

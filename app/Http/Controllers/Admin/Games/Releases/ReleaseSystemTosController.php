@@ -40,9 +40,9 @@ class ReleaseSystemTosController extends Controller
         ]);
 
         $incompatibility = ReleaseTOSIncompatibility::create([
-            'tos_id'      => $request->tos,
-            'language_id' => $request->language,
-            'release_id'  => $release->getKey(),
+            'tos_id'          => $request->tos,
+            'language_id'     => $request->language,
+            'game_release_id' => $release->getKey(),
         ]);
 
         ChangelogHelper::insert([

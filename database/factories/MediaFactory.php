@@ -15,9 +15,9 @@ class MediaFactory extends Factory
     public function definition(): array
     {
         return [
-            'release_id'    => GameReleaseFactory::new(),
-            'media_type_id' => MediaTypeFactory::new(),
-            'label'         => 'Disk 1',
+            'game_release_id' => GameReleaseFactory::new(),
+            'media_type_id'   => MediaTypeFactory::new(),
+            'label'           => 'Disk 1',
         ];
     }
 }

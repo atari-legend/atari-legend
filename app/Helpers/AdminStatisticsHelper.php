@@ -175,9 +175,9 @@ class AdminStatisticsHelper
                 self::coverageRow('With a publisher', DB::table('game_release')->whereNotNull('pub_dev_id')->count(), $releases),
                 self::coverageRow('With a licence', DB::table('game_release')->whereNotNull('license')->count(), $releases),
                 self::coverageRow('With scans', DB::table('game_release_scan')->distinct('game_release_id')->count(), $releases),
-                self::coverageRow('With a language', DB::table('game_release_language')->distinct('release_id')->count(), $releases),
+                self::coverageRow('With a language', DB::table('game_release_language')->distinct('game_release_id')->count(), $releases),
                 self::coverageRow('With a location', DB::table('game_release_location')->distinct('game_release_id')->count(), $releases),
-                self::coverageRow('With media', DB::table('media')->distinct('release_id')->count(), $releases),
+                self::coverageRow('With media', DB::table('media')->distinct('game_release_id')->count(), $releases),
             ],
             'Other' => [
                 self::coverageRow('Individuals with a bio', self::countWithText('individual_text', 'ind_profile', 'ind_id'), $individuals),

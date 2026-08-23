@@ -117,27 +117,27 @@ class GameRelease extends Model
 
     public function memoryEnhanced()
     {
-        return $this->hasMany(ReleaseMemoryEnhanced::class, 'release_id');
+        return $this->hasMany(ReleaseMemoryEnhanced::class);
     }
 
     public function memoryMinimums()
     {
-        return $this->belongsToMany(Memory::class, 'game_release_memory_minimum', 'release_id', 'memory_id');
+        return $this->belongsToMany(Memory::class, 'game_release_memory_minimum');
     }
 
     public function memoryIncompatibles()
     {
-        return $this->belongsToMany(Memory::class, 'game_release_memory_incompatible', 'release_id', 'memory_id');
+        return $this->belongsToMany(Memory::class, 'game_release_memory_incompatible');
     }
 
     public function emulatorIncompatibles()
     {
-        return $this->belongsToMany(Emulator::class, 'game_release_emulator_incompatibility', 'release_id', 'emulator_id');
+        return $this->belongsToMany(Emulator::class, 'game_release_emulator_incompatibility');
     }
 
     public function tosIncompatibles()
     {
-        return $this->hasMany(ReleaseTOSIncompatibility::class, 'release_id');
+        return $this->hasMany(ReleaseTOSIncompatibility::class);
     }
 
     public function akas()
@@ -147,33 +147,31 @@ class GameRelease extends Model
 
     public function trainers()
     {
-        return $this->belongsToMany(Trainer::class, 'game_release_trainer_option', 'release_id', 'trainer_option_id');
+        return $this->belongsToMany(Trainer::class, 'game_release_trainer_option', 'game_release_id', 'trainer_option_id');
     }
 
     public function copyProtections()
     {
         return $this
-            ->belongsToMany(CopyProtection::class, 'game_release_copy_protection', 'release_id', 'copy_protection_id')
+            ->belongsToMany(CopyProtection::class, 'game_release_copy_protection')
             ->withPivot('notes');
     }
 
     public function diskProtections()
     {
         return $this
-            ->belongsToMany(DiskProtection::class, 'game_release_disk_protection', 'release_id', 'disk_protection_id')
+            ->belongsToMany(DiskProtection::class, 'game_release_disk_protection')
             ->withPivot('notes');
     }
 
     public function languages()
     {
-        return $this->belongsToMany(Language::class, 'game_release_language', 'release_id', 'language_id');
+        return $this->belongsToMany(Language::class, 'game_release_language');
     }
 
     public function medias()
     {
-        // Temporary: the class now derives game_release_id, the column is still
-        // release_id. Delete this argument in the media.release_id rename (Phase C).
-        return $this->hasMany(Media::class, 'release_id');
+        return $this->hasMany(Media::class);
     }
 
     public function menuDiskContents()
