@@ -732,6 +732,59 @@ Three further notes:
   validates. On `game_release_scan`-sized tables that is still fast, but it is
   the reason to keep one column family per migration.
 
+### The migration, written out and round-tripped
+
+The plan kept saying "write the `down()` and test it" without showing one, and
+the `down()` is where this gets fiddly: the constraint has to come back with its
+original name *and* its original `ON DELETE`, and the statements have to run in
+the opposite order. Verified on a scratch copy of the real `interview_main` DDL
+with rows present — after `up()` then `down()`, `SHOW CREATE TABLE` is
+**byte-identical to the original**.
+
+```php
+public function up(): void
+{
+    Schema::table('interview_main', fn (Blueprint $t) => $t->renameColumn('ind_id', 'individual_id'));
+
+    if (DB::connection()->getDriverName() === 'sqlite') {
+        return;                       // sqlite rewrites the fk clause itself
+    }
+
+    DB::statement('ALTER TABLE `interview_main`
+        RENAME KEY `interview_main_ind_id_foreign` TO `interview_main_individual_id_foreign`');
+    DB::statement('ALTER TABLE `interview_main` DROP FOREIGN KEY `interview_main_ind_id_foreign`');
+    DB::statement('ALTER TABLE `interview_main` ADD CONSTRAINT `interview_main_individual_id_foreign`
+        FOREIGN KEY (`individual_id`) REFERENCES `individuals` (`id`) ON DELETE CASCADE');
+}
+
+public function down(): void
+{
+    if (DB::connection()->getDriverName() !== 'sqlite') {
+        DB::statement('ALTER TABLE `interview_main` DROP FOREIGN KEY `interview_main_individual_id_foreign`');
+        DB::statement('ALTER TABLE `interview_main`
+            RENAME KEY `interview_main_individual_id_foreign` TO `interview_main_ind_id_foreign`');
+    }
+
+    Schema::table('interview_main', fn (Blueprint $t) => $t->renameColumn('individual_id', 'ind_id'));
+
+    if (DB::connection()->getDriverName() !== 'sqlite') {
+        DB::statement('ALTER TABLE `interview_main` ADD CONSTRAINT `interview_main_ind_id_foreign`
+            FOREIGN KEY (`ind_id`) REFERENCES `individuals` (`id`) ON DELETE CASCADE');
+    }
+}
+```
+
+Note the asymmetry: `up()` renames the key *before* dropping the constraint,
+`down()` drops the constraint *before* renaming the key back. Both orders are
+forced — MariaDB will not rename a key out from under a live constraint that
+depends on it in one direction, and will not leave the index name colliding in
+the other.
+
+Three things in that template have to be re-derived per table rather than
+copied: the index name (`information_schema.STATISTICS`), the `ON DELETE`
+clause (`SHOW CREATE TABLE`), and the referenced table. Only the shape carries
+over.
+
 Everything else follows the primary-key plan unchanged: append a new migration
 rather than editing historical ones, one rename per migration because no
 migration here runs in a transaction, and **write and test the `down()`** —
