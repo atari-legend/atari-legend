@@ -841,10 +841,16 @@ public function down(): void
 ```
 
 Note the asymmetry: `up()` renames the key *before* dropping the constraint,
-`down()` drops the constraint *before* renaming the key back. Both orders are
-forced — MariaDB will not rename a key out from under a live constraint that
-depends on it in one direction, and will not leave the index name colliding in
-the other.
+`down()` drops the constraint *before* renaming the key back.
+
+Only `down()`'s order is actually forced, and not for the reason an earlier
+draft gave. It said MariaDB will not rename a key out from under a live
+constraint — **it will**; OpenCode probed this on 10.11.18 and `RENAME KEY`
+is accepted in either order relative to the column rename, the constraint
+following the column silently both ways. The real constraint on `down()` is
+narrower: its final `ADD CONSTRAINT` needs the *old* name free, so the rename
+back has to happen after the drop. `up()`'s order is a readability choice, not
+a requirement.
 
 Three things in that template have to be re-derived per table rather than
 copied: the index name (`information_schema.STATISTICS`), the `ON DELETE`
