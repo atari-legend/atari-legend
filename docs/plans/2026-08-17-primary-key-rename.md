@@ -23,6 +23,37 @@ above were all invisible to it.
 projects. Both were run against the full stack, and every rename was also put
 through `migrate:fresh` → `rollback` → `migrate` → reseed on MariaDB.
 
+### Verified against production data (2026-08-23)
+
+A production dump was restored locally and the whole campaign run against it:
+6,205 games, 767 users, 28,744 screenshots, 5,405 individuals.
+
+- **Forward, then back, then forward again.** All 34 rename migrations applied,
+  all 34 rolled back, all 34 re-applied: about three seconds each way, with the
+  row counts and `MAX(id)` identical throughout. So the migration itself is not
+  what sizes the maintenance window -- the rsync and `optimize` are.
+- **The wrong-key hydration was testable here and is correct.** Articles could
+  not prove it: `article_main` and `article_text` are both 1-5 in production,
+  the same lockstep the fixtures had. Interviews have drifted -- interview 85's
+  text row is 84 -- so they can distinguish. Both the index and the RSS feed
+  emit 85, and `MAX(interview_text.id)` is 84, so the feed provably is not
+  reading the text table.
+- **`ReviewsTable`, the site this plan called the worst of them, is correct.**
+  Its edit links carry review ids 1-6; those reviews' game ids are 879, 2914,
+  314, 74, 3260 and 763. Unqualified, `game` would have hydrated over
+  `review_main` and every edit and delete link would have targeted a game. This
+  is the failure the plan predicted would appear "only once `game` renames" --
+  `game` has now renamed, and it does not appear.
+- **The rewritten raw SQL returns the right rows.** The Tops developers card
+  matches an independently written query row for row and in order, over 6,205
+  games.
+- Every public page and every admin table was exercised against this data with
+  `APP_DEBUG=true`, so a stale attribute read would have thrown rather than
+  returned null.
+
+What that leaves untested is only what cannot be tested off the server: the
+deploy itself.
+
 ### What the renames actually taught
 
 Three rules earned the hard way, each after a failing test rather than in
