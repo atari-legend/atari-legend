@@ -83,7 +83,9 @@ ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 # Down for the whole deploy: code ships before it migrates, and the rsync is not
 # atomic. Guarded on artisan existing, for a first deploy to a new target.
 # Depends on storage/ being excluded above - the flag is storage/framework/down.
-ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && { test -f artisan && php8.4-cli artisan down --retry=60 || true; }"
+# --render stores the page in that file now, while the code is still intact:
+# booting the app to render a view mid-rsync is exactly what cannot be relied on.
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && { test -f artisan && php8.4-cli artisan down --retry=60 --render=errors::503 || true; }"
 
 # A failed deploy stays down on purpose, so say so.
 trap 'echo "DEPLOY FAILED - $DEPLOY_HOST is still in maintenance mode." >&2; echo "Bring it back with: ssh $DEPLOY_USER@$DEPLOY_HOST \"cd $DEPLOY_PATH && php8.4-cli artisan up\"" >&2' ERR
