@@ -126,6 +126,21 @@ Acceptance: that diff empty, `artisan test` and Playwright both green, and no
 line of generated SQL changed. This is a pure no-op and should be reviewed as
 one.
 
+### One pull request, not thirty
+
+Settled with OpenCode. 76 deletions across 28 models is not reviewable by eye,
+and that is the argument *for* keeping it whole rather than against: it is
+reviewable **by diff** — the pivot snapshot must be unchanged, the generated SQL
+must be unchanged, and both suites must be green. Splitting it per model would
+multiply CI runs without adding a single bit of signal, and would make the SQL
+diff — the only check that actually proves the claim — into thirty partial
+diffs that each prove less.
+
+The six declarations the script cannot rewrite (multi-line, `->withPivot()`,
+`->using()`) are the exception worth calling out in the pull request text, so a
+reviewer knows which handful to read closely rather than skimming all 76
+equally.
+
 ### The harness earned its keep before the phase even started
 
 Phase A was run as an experiment rather than described: generated SQL captured
