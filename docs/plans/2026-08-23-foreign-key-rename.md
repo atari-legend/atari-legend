@@ -43,9 +43,10 @@ The 48 divergent relations are the last five rows. Two notes on the edges:
 
 The 20 column-rename relations resolve to **five renames covering 16 columns
 across 16 tables**, listed in Phase C. So the campaign is: delete 76 arguments,
-delete one dead relation and convert one broken one, rename 5 methods, rename 16 columns, and write down why
-the remaining 20 stay as they are. The first item is the largest by a distance,
-carries no database risk at all, and can start today.
+delete one dead relation and convert one broken one, rename 5 methods, rename
+16 columns, and write down why the remaining 20 stay as they are. The first
+item is the largest by a distance, carries no database risk at all, and can
+start today.
 
 ### How these numbers were obtained
 
