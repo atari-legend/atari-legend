@@ -414,22 +414,38 @@ request that never touched those lines — the same shape as the `id` collision
 the primary-key campaign spent its Phase A2 defusing, arriving from a new
 direction.
 
-It also inverts the campaign's headline. Those eight, plus `Media::release()`
-— which passes no argument today precisely because `release_id` is the default
-— all end up *needing* an explicit `'game_release_id'`. Without the model
-rename, Phase C hands back roughly ten explicit arguments that do not exist
-today, and Phase A's deletable count falls to match.
+**And the eight are not the whole set.** An earlier draft of this section said
+they were; enumerating every relation whose generated SQL names `release_id`
+gives **eleven**, in three kinds:
 
-Three ways out, in order of preference:
+| Kind | Count | What Phase C does to it |
+|---|---|---|
+| Passes `'release_id'` explicitly, redundant today | 8 | breaks *after* Phase A deletes the argument |
+| Passes **no** argument, relies on the default | 2 | **breaks outright, with or without Phase A** |
+| Passes `'release_id'` plus a divergent second key | 1 (`trainers()`) | needs the argument updated |
+
+The two argument-free ones are `Release::medias()` — `hasMany(Media::class)` —
+and `Media::release()` — `belongsTo(Release::class)`. Neither names a column
+anywhere, and both work today only because `release_id` is what Eloquent
+derives. They are invisible to any search for the token.
+
+That kills one of the escape routes: **running Phase C before Phase A does not
+avoid the problem**, because those two break regardless of when Phase A runs.
+
+Two ways out, then, not three:
 
 1. **Rename `Release` → `GameRelease`** before Phase C. Everything converges:
-   the arguments stay deletable, `Media::release()` needs nothing, and the
-   ordering conflict disappears.
-2. **Run Phase C before Phase A**, so the audit sees the final column names and
-   classifies correctly. Costs the campaign its safe, satisfying opening move.
-3. **Exclude those relations from Phase A by name** and update them inside
-   Phase C. Workable, but it relies on a hand-maintained exclusion list, which
-   is the failure mode the audit script exists to remove.
+   the eight arguments stay deletable, the two argument-free relations keep
+   working untouched, and `trainers()` needs only its second key. This is the
+   only option that fixes all eleven without hand-editing any of them.
+2. **Hand-edit all eleven inside Phase C** and exclude the eight from Phase A
+   by name. Workable, but it rests on a hand-maintained exclusion list — the
+   exact failure mode the audit script exists to remove — and it leaves the
+   campaign holding ten explicit arguments it did not have before.
+
+It also inverts the campaign's headline under option 2: Phase C hands back
+roughly ten explicit arguments that do not exist today, and Phase A's deletable
+count falls to match.
 
 Until this is decided, **Phase A must not run against the `Release` relations.**
 
