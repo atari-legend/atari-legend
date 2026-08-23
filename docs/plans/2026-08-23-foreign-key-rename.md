@@ -610,32 +610,35 @@ on `Pivot` subclasses, whose `getForeignKey()` is overridden by `AsPivot` to
 return a runtime value that is null outside a `belongsToMany` hydration. Their
 arguments are not redundant and cannot be removed — see the Phase A experiment.
 
-**Deliberately not adopted.**
+**Resolved outright by the table rule.** Four entries here were arguments about
+which convention to follow. Nicolas's rule settles them, and in every case
+**the schema is already correct** — only the code diverges. Verified against
+`information_schema`:
 
-- **`PublisherDeveloper` → `publisher_developer_id`.** Convention derives the
-  key from the class name, so it wants `publisher_developer_id` on
-  `game_release`, `game_release_distributor` and `pub_dev_text`. The table is
-  `pub_dev`, the columns are `pub_dev_*`, and `pub_dev` is the vocabulary the
-  whole application uses. The alternative — renaming the class to `PubDev` —
-  makes `pub_dev_id` conventional at the cost of 23 references in `app/` and 44
-  in `tests/`, and a worse class name. **Recommendation: keep the four explicit
-  arguments.** Still do `dev_pub_id` → `pub_dev_id` in Phase C, which is an
-  internal inconsistency worth fixing on its own merits and is unrelated to the
-  convention question.
-- **`Release::publisher()`** wants `publisher_id` by the method-name rule.
-  Follows the decision above: keep the argument.
+| Column | References | Under the table rule |
+|---|---|---|
+| `pub_dev_id` (3 tables) | `pub_dev` | already correct |
+| `game_submitinfo_id` | `game_submitinfo` | already correct |
+| `trainer_option_id` | `trainer_option` | already correct |
+| `game_genre_id` | `game_genre` | already correct |
+
+So `publisher_developer_id`, `game_submit_info_id`, `trainer_id` and `genre_id`
+are all off the table — they were only ever candidates because Eloquent derives
+from the *model* name. This is a real point in the rule's favour: **against the
+table convention this schema is far closer to consistent than it looked against
+Laravel's**, 100 of 138 rather than the picture the earlier drafts painted.
+
+What remains in each case is a code-side divergence only: the model name differs
+from the table name, so the explicit argument stays unless the model is renamed
+(`PublisherDeveloper` → `PubDev`, `Trainer` → `TrainerOption`, `Genre` →
+`GameGenre`). Those are now optional tidy-ups rather than convention questions —
+except for `Release` → `GameRelease`, which the section above shows is load
+bearing.
+
+**Deliberately not adopted.**
 - **`GameVs`'s `atari_id` / `amiga_id`.** These say something `game_id` would
   not. `Game::vs()` is a `hasMany` and so cannot be fixed by a method rename;
   it keeps its argument. Only `GameVs::game()` → `atari()` is in Phase B.
-- **`Release::trainers()`** wants `trainer_id`; the column is
-  `trainer_option_id` and the table is `trainer_option`. The clean fix is to
-  rename the *model* `Trainer` → `TrainerOption`, which also matches its table
-  — 7 references in `app/`, 9 in `tests/`. Cheap, but it is a model rename in a
-  foreign key plan; recorded as optional.
-- **`GameSubmitInfo::screenshots()`** wants `game_submit_info_id` for
-  `game_submitinfo_id`, purely because `Str::snake('GameSubmitInfo')` inserts an
-  underscore the table name does not have. Not worth a migration. Keep the
-  argument.
 - **`Article::type()`, `Media::type()`, `MediaScan::type()`.** Phase B *could*
   reach these by renaming the method, and declines to — see the pricing table
   there. `->type` is 105 hits repo-wide and mostly plain columns on other
