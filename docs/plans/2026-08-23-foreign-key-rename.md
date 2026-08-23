@@ -6,9 +6,35 @@ that follow-up. It is written to be read alongside the primary-key plan, and it
 does not repeat what that document already establishes about deploy ordering,
 `renameColumn` on MariaDB, or the strictness guards in `AppServiceProvider`.
 
-**Status: proposal. Nothing here has been implemented.** Every number and every
-behaviour claim below was measured against this repository and a local MariaDB
-10.11.18 on 2026-08-23; the commands are named so they can be re-run.
+**Status: executed on 2026-08-23.** Every number and every behaviour claim
+below was measured against this repository and a local MariaDB 10.11.18; the
+commands are named so they can be re-run. The campaign then ran in the order
+this document sets out, one pull request per step:
+
+| | Landed as | Audit after |
+|---|---|---|
+| 0 | the four `belongstoMany` spellings | 78 / 48 / 33 |
+| 1 | `Release` → `GameRelease`, 62 files | **79 / 48 / 32** — the movement derived in Phase A, to the relation |
+| 2 | Phase A: 79 arguments deleted, `reviewScreenshots()` deleted, `GameAka::game()` converted | 0 / 46 / 112 |
+| 3 | Phase B: five method renames | 0 / 41 / 117 |
+| 4 | the two write tests Phase C wanted first | — |
+| 5 | `comments_id` → `comment_id` | 0 / 39 / 119 |
+| 6 | `dev_pub_id` → `pub_dev_id` | 0 / 39 / 119 |
+| 7 | `progress_system_id` → `game_progress_system_id` | 0 / 39 / 119 |
+| 8 | `individual_nicks_id` → `individual_nick_id` | 0 / 39 / 119 |
+| 9 | `release_id` → `game_release_id`, ten tables | 0 / 31 / 127 |
+| 10 | `ind_id` → `individual_id`, four tables | 0 / 26 / 132 |
+| 11 | Phase D: the 26 declined, in a test rather than a document | 0 / 26 / 132 |
+
+Every step held the same gates: the generated SQL of all 158 relations diffed
+before and after, the resolved pivot table of all 51 `belongsToMany`
+unchanged, `artisan test` green, Playwright green, and — for the six
+migrations — `migrate`, `migrate:rollback --step=1` and `migrate` again on
+MariaDB plus a `migrate:fresh` on the e2e database. Two things the document
+had wrong were found by executing it and are corrected where they land:
+`protected $table` does **not** become redundant with the model rename, and
+index names differ between production and a `migrate:fresh` database, so the
+migrations read them rather than hard-coding what this document measured.
 
 Independently reviewed on 2026-08-23 by OpenCode, which re-ran the audit,
 re-queried the schema and re-tested the migration template from scratch on both
