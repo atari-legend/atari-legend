@@ -80,6 +80,14 @@ fi
 mkdir -p ~/.ssh/
 ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
 
+# Down for the whole deploy: code ships before it migrates, and the rsync is not
+# atomic. Guarded on artisan existing, for a first deploy to a new target.
+# Depends on storage/ being excluded above - the flag is storage/framework/down.
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && { test -f artisan && php8.4-cli artisan down --retry=60 || true; }"
+
+# A failed deploy stays down on purpose, so say so.
+trap 'echo "DEPLOY FAILED - $DEPLOY_HOST is still in maintenance mode." >&2; echo "Bring it back with: ssh $DEPLOY_USER@$DEPLOY_HOST \"cd $DEPLOY_PATH && php8.4-cli artisan up\"" >&2' ERR
+
 rsync "${RSYNC_FLAGS[@]}" . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
 
 # storage/ is excluded from the rsync, so a deployment target that has none yet
@@ -96,4 +104,9 @@ ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan migrate --f
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan config:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan optimize:clear"
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan optimize"
+
+# Before sndh:fetch, which downloads over HTTP and would stretch the window.
+ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan up"
+trap - ERR
+
 ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && php8.4-cli artisan sndh:fetch"

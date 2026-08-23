@@ -836,15 +836,28 @@ failing. Bound the window rather than hoping it is short:
   The daily export under `public/data/database-dumps/` is not that; it can be a
   day old. The point is not the rename — it is that a bad deploy at that moment
   has no other floor.
-- **`artisan down` before the rsync, `artisan up` after `optimize`.** A
-  maintenance page for the duration is a better answer than a minute of wrong
-  ids. It has to be a workflow input or a commit marker (e.g. `[offline]`) in
-  `.github/workflows/deploy.sh`, so the site only goes down for these
-  migrations and not for every deploy. Prose in this document is not a
-  mechanism: `deploy.sh` runs on push to `master`, so there is no moment at
-  which an operator could wedge the commands in by hand. The flag file itself
-  survives the transfer — `--filter=- /storage` keeps rsync off Laravel's
-  maintenance marker — so the only missing piece is the two `ssh` calls.
+- **Maintenance mode is now unconditional, and already implemented.**
+  `deploy.sh` runs `artisan down` before the rsync and `artisan up` after
+  `optimize`, on every deploy.
+
+  An earlier draft of this plan proposed gating it behind an `[offline]` commit
+  marker so only rename deploys took the site down. That was wrong twice over.
+  The window is not specific to renames — this script ships code before it
+  migrates, so *any* schema change has it, and an added column the new code
+  writes to is just as broken and less visible than a renamed one. And a marker
+  someone must remember to type is barely more of a mechanism than this
+  document is; the point of putting it in the script is that it cannot be
+  forgotten.
+
+  Two details in there are load-bearing: `artisan up` goes before `sndh:fetch`,
+  which downloads archives over HTTP and has no business inside the window; and
+  the whole thing depends on `--filter=- /storage`, because Laravel's
+  maintenance flag lives at `storage/framework/down` and shipping that
+  directory would wipe it mid-transfer.
+
+  A failed deploy leaves the site down deliberately — a half-deployed tree
+  should not serve traffic — and an `ERR` trap prints the command to bring it
+  back.
 - **Deploy renames on their own**, never bundled with unrelated changes.
 - **Reverting is two steps, in this order, and the order is not negotiable.**
   "Revert the commit" is not a rollback plan here: `deploy.sh` only ever runs
