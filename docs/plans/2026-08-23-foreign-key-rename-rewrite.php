@@ -14,7 +14,7 @@
  *   ... 2026-08-23-foreign-key-rename-rewrite.php --write
  *
  * It asks Laravel for every default rather than reimplementing the formula --
- * the audit script did reimplement it once and reported three Pivot relations
+ * the audit did reimplement it once and reported three Pivot relations
  * as redundant when AsPivot makes their arguments load-bearing.
  *
  * Two rules keep it honest:

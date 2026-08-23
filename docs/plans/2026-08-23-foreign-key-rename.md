@@ -301,13 +301,12 @@ depend on Laravel guessing `crew_menu_set`. One argument deleted a position too
 far turns `game_release_crew` into `crew_release`, and nothing fails until that
 relation is exercised.
 
-So Phase A gets a mechanism rather than a warning. The audit script takes a
-`pivots` argument and prints the resolved pivot table for all 51
+So Phase A gets a mechanism rather than a warning. The audit takes a
+`--pivots` option and prints the resolved pivot table for all 51
 `belongsToMany` relations; snapshot before the edit, snapshot after, and diff:
 
 ```
-docker compose run --rm --no-deps php php \
-  docs/plans/2026-08-23-foreign-key-rename-audit.php pivots > pivots.before
+docker compose run --rm artisan al:audit-relationship-keys --pivots > pivots.before
 # ... delete the arguments ...
 diff pivots.before pivots.after     # must be empty
 ```
@@ -1725,3 +1724,13 @@ divergence table. That also makes it a candidate arch test later — "the number
 of divergent relations must not increase" is the same shape as
 `QueryConventionsTest` and `MigrationModelsTest`, both of which came out of the
 previous campaign and are the parts of it still doing work.
+
+**Done, and the arch test went further than "must not increase".** The audit is
+`artisan al:audit-relationship-keys` (`--pivots` for the snapshot), over
+`App\Helpers\RelationshipKeyAudit`. `RelationshipKeyConventionsTest` asserts
+the divergent set is *exactly* the 26 declined relations, each with its reason,
+and that no relation passes a key argument it would derive anyway. An
+inequality would have let the set churn while the count held; naming them makes
+a reviewer read the reason. The two campaign tools that are not application
+code — the generated-SQL snapshot and the Phase A rewriter — stay in
+`docs/plans/` beside this document.
