@@ -16,6 +16,6 @@ class Spotlight extends Model
 
     public function screenshot()
     {
-        return $this->belongsTo(Screenshot::class, 'screenshot_id');
+        return $this->belongsTo(Screenshot::class);
     }
 }

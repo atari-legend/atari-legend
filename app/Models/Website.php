@@ -24,12 +24,12 @@ class Website extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function categories()
     {
-        return $this->belongsToMany(WebsiteCategory::class, 'website_category_cross', 'website_id', 'website_category_id');
+        return $this->belongsToMany(WebsiteCategory::class, 'website_category_cross');
     }
 
     public function getFileAttribute()

@@ -12,11 +12,11 @@ class ReleaseMemoryEnhanced extends Model
 
     public function memory()
     {
-        return $this->belongsTo(Memory::class, 'memory_id');
+        return $this->belongsTo(Memory::class);
     }
 
     public function enhancement()
     {
-        return $this->belongsTo(Enhancement::class, 'enhancement_id');
+        return $this->belongsTo(Enhancement::class);
     }
 }

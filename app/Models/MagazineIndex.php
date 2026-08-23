@@ -18,12 +18,12 @@ class MagazineIndex extends Model
 
     public function game()
     {
-        return $this->belongsTo(Game::class, 'game_id');
+        return $this->belongsTo(Game::class);
     }
 
     public function individual()
     {
-        return $this->belongsTo(Individual::class, 'individual_id');
+        return $this->belongsTo(Individual::class);
     }
 
     public function menuSoftware()

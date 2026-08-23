@@ -22,7 +22,7 @@ class Individual extends Model
 
     public function games()
     {
-        return $this->belongsToMany(Game::class, 'game_individual', 'individual_id', 'game_id')
+        return $this->belongsToMany(Game::class, 'game_individual')
             ->withPivot('individual_role_id')
             ->using(GameIndividual::class);
     }

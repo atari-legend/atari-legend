@@ -72,7 +72,7 @@ class GameRelease extends Model
 
     public function game()
     {
-        return $this->belongsTo(Game::class, 'game_id');
+        return $this->belongsTo(Game::class);
     }
 
     public function publisher()
@@ -82,12 +82,12 @@ class GameRelease extends Model
 
     public function crews()
     {
-        return $this->belongsToMany(Crew::class, 'game_release_crew', 'game_release_id', 'crew_id');
+        return $this->belongsToMany(Crew::class, 'game_release_crew');
     }
 
     public function boxscans()
     {
-        return $this->hasMany(ReleaseScan::class, 'game_release_id');
+        return $this->hasMany(ReleaseScan::class);
     }
 
     public function distributors()
@@ -97,22 +97,22 @@ class GameRelease extends Model
 
     public function locations()
     {
-        return $this->belongsToMany(Location::class, 'game_release_location', 'game_release_id', 'location_id');
+        return $this->belongsToMany(Location::class, 'game_release_location');
     }
 
     public function resolutions()
     {
-        return $this->belongsToMany(Resolution::class, 'game_release_resolution', 'game_release_id', 'resolution_id');
+        return $this->belongsToMany(Resolution::class, 'game_release_resolution');
     }
 
     public function systemEnhanced()
     {
-        return $this->hasMany(ReleaseSystemEnhanced::class, 'game_release_id');
+        return $this->hasMany(ReleaseSystemEnhanced::class);
     }
 
     public function systemIncompatibles()
     {
-        return $this->belongsToMany(System::class, 'game_release_system_incompatible', 'game_release_id', 'system_id');
+        return $this->belongsToMany(System::class, 'game_release_system_incompatible');
     }
 
     public function memoryEnhanced()
@@ -142,7 +142,7 @@ class GameRelease extends Model
 
     public function akas()
     {
-        return $this->hasMany(ReleaseAka::class, 'game_release_id');
+        return $this->hasMany(ReleaseAka::class);
     }
 
     public function trainers()
@@ -178,7 +178,7 @@ class GameRelease extends Model
 
     public function menuDiskContents()
     {
-        return $this->hasMany(MenuDiskContent::class, 'game_release_id');
+        return $this->hasMany(MenuDiskContent::class);
     }
 
     public function getMenuAttribute(): ?string

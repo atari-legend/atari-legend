@@ -12,11 +12,11 @@ class ReleaseTOSIncompatibility extends Model
 
     public function tos()
     {
-        return $this->belongsTo(TOS::class, 'tos_id');
+        return $this->belongsTo(TOS::class);
     }
 
     public function language()
     {
-        return $this->belongsTo(Language::class, 'language_id');
+        return $this->belongsTo(Language::class);
     }
 }

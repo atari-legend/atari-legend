@@ -13,7 +13,7 @@ class MenuSet extends Model
 
     public function crews()
     {
-        return $this->belongsToMany(Crew::class, null, null, 'crew_id');
+        return $this->belongsToMany(Crew::class);
     }
 
     public function menus()
