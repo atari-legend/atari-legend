@@ -178,9 +178,9 @@ class GameController extends Controller
     public function updateBaseInfo(Request $request, Game $game)
     {
         $game->update([
-            'port_id'            => $request->port,
-            'progress_system_id' => $request->progress,
-            'game_series_id'     => $request->series,
+            'port_id'                 => $request->port,
+            'game_progress_system_id' => $request->progress,
+            'game_series_id'          => $request->series,
         ]);
 
         $game->genres()->detach();

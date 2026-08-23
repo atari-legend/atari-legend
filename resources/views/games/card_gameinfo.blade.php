@@ -173,14 +173,14 @@
             </div>
         @endif
 
-        @if ($game->progressSystem !== null)
+        @if ($game->gameProgressSystem !== null)
             <div class="row p-2 g-0">
                 <div class="col-4 text-muted">
                     Progress
                 </div>
                 <div class="col-8">
                     <div class="mb-1">
-                        {{ $game->progressSystem->name }}
+                        {{ $game->gameProgressSystem->name }}
                     </div>
                 </div>
             </div>

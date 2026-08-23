@@ -16,7 +16,7 @@ class Game extends Model
     const MULTIPLAYER_HARDWARE = ['Cartridge', 'Midi-Link'];
 
     protected $fillable = [
-        'game_name', 'slug', 'port_id', 'progress_system_id', 'game_series_id',
+        'game_name', 'slug', 'port_id', 'game_progress_system_id', 'game_series_id',
         'number_players_on_same_machine', 'number_players_multiple_machines',
         'multiplayer_type', 'multiplayer_hardware',
     ];
@@ -152,7 +152,7 @@ class Game extends Model
         return $this->belongsTo(Port::class);
     }
 
-    public function progressSystem()
+    public function gameProgressSystem()
     {
         return $this->belongsTo(ProgressSystem::class);
     }

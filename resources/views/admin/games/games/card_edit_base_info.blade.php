@@ -130,7 +130,7 @@
                         <select class="form-select @error('progress') is-invalid @enderror" name="progress">
                             <option value="">-</option>
                             @foreach ($progressSystems as $system)
-                                <option value="{{ $system->id }}" @if (isset($game) && $game->progressSystem?->id === $system->id) selected @endif>{{ $system->name }}</option>
+                                <option value="{{ $system->id }}" @if (isset($game) && $game->gameProgressSystem?->id === $system->id) selected @endif>{{ $system->name }}</option>
                             @endforeach
                         </select>
 

@@ -27,7 +27,7 @@ class GameFactory extends Factory
             'slug'                             => Str::slug($name),
             'game_series_id'                   => null,
             'port_id'                          => null,
-            'progress_system_id'               => null,
+            'game_progress_system_id'          => null,
             'number_players_on_same_machine'   => 1,
             'number_players_multiple_machines' => null,
             'multiplayer_type'                 => null,
