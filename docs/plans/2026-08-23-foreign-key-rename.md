@@ -10,6 +10,22 @@ does not repeat what that document already establishes about deploy ordering,
 behaviour claim below was measured against this repository and a local MariaDB
 10.11.18 on 2026-08-23; the commands are named so they can be re-run.
 
+## Decisions needed before any of this starts
+
+Four questions are open, and three of them change what the phases contain. They
+are scattered across the sections below, so they are collected here with a
+recommendation each. Nothing should be implemented until they are answered.
+
+| # | Question | Recommendation | Blocks |
+|---|---|---|---|
+| 1 | Does "FK = table + `_id`" mean the **singularised** table name? Applied literally it gives `users_id`, `individuals_id`, `magazines_id`. | Yes, singularised. | All of Phase C |
+| 2 | The `*_main` tables: apply the rule (`article_id` → `article_main_id`, 16 keys), rename the tables instead, or exempt them? | Rename the tables, as its own phase. Option (a) is *safe* — checked, it adds no silent sites — so this is a naming judgement, not a risk trade. | 16 of the renames |
+| 3 | Phase B: your instruction ("update the column names, not just rename the methods") conflicts with the table rule, because those columns are **already** table-correct. | Leave the columns, rename the methods — the code bends to the schema, per "the database matters more than the code". | Phase B entirely |
+| 4 | Rename the model `Release` → `GameRelease`? | Yes, and treat it as a prerequisite. Without it the campaign *adds* ~10 explicit arguments instead of removing them, and eight Phase A deletions become defects one phase later. | Phase C, and 8 of Phase A's 76 |
+
+Question 4 is the one to answer first: it is the only one that changes whether
+the campaign still achieves what it set out to do.
+
 ## The short version
 
 The primary-key campaign framed itself as "rename 34 columns". Framing this one
