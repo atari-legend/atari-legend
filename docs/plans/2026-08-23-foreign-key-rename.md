@@ -27,7 +27,7 @@ its own section.
 | No explicit key argument (already clean) | 35 | — | No |
 | Divergent, fixed by renaming a **PHP method** | 5 | B | No |
 | Divergent, fixed by renaming a **column** | 20 | C | Yes |
-| Divergent, but the relation is **unused and wrong** | 2 | A | No — delete the relation |
+| Divergent because the relation is **wrong** (one unused, one live) | 2 | A | No — delete one, convert one |
 | Divergent, convention **unreachable or declined** | 20 | D | No — keep the argument, record why |
 | Divergent, **deferred** (`News::image()`) | 1 | — | No |
 | **Total relations in `app/Models/`** | **159** | | |
@@ -42,8 +42,8 @@ The 48 divergent relations are the last five rows. Two notes on the edges:
   does not, so it ends the campaign with one explicit argument rather than none.
 
 The 20 column-rename relations resolve to **five renames covering 16 columns
-across 16 tables**, listed in Phase C. So the campaign is: delete 76 arguments
-and 2 dead relations, rename 5 methods, rename 16 columns, and write down why
+across 16 tables**, listed in Phase C. So the campaign is: delete 76 arguments,
+delete one dead relation and convert one broken one, rename 5 methods, rename 16 columns, and write down why
 the remaining 20 stay as they are. The first item is the largest by a distance,
 carries no database risk at all, and can start today.
 
@@ -468,22 +468,34 @@ that actually calls it before the argument goes, otherwise the fix is unproven.
 pinned at both ends to model what is really a `belongsTo`. `belongsTo(Game::class)`
 derives `game_id` and needs no arguments.
 
-**But the better fix is to delete it.** It has no callers. Everything that
-reaches AKAs goes the other way through `Game::akas()` (`GameHelper:88`,
-`ReleaseDescriptionHelper:150`, the `whereHas('akas')` searches in
-`GameSearchController:59` and `MenuSetController:148`) or queries
-`DB::table('game_aka')` directly (`Ajax/GameAndSoftwareController:22`). So this
-is an unused inverse relation that is also implemented wrongly, and converting
-it means writing a test for a method nothing calls in order to justify keeping
-it. `hasOne` and `belongsTo` genuinely differ — eager-load direction,
-`associate()`, `save()` — so a conversion cannot be waved through as a no-op,
-and there is no reason to buy that risk for dead code.
+**Convert it; do not delete it.** An earlier draft of this plan recommended
+deletion on the grounds that it had no callers. That was wrong — it has six,
+in two controllers:
 
-The same argument applies to `reviewScreenshots()` above. Both are unused
-relations that the convention audit only surfaced because it calls every
-relation method; deleting them removes two divergences and two latent bugs at
-once. If either is wanted later it should be written fresh, correctly, with the
-caller that needs it.
+- `Admin/Ajax/GameController.php:47,48,54` — the admin game autocomplete reads
+  `$aka->game?->developers` to label an AKA row, and `$aka->game->getKey()` to
+  give the row its id.
+- `Admin/Games/GameController.php:289,290,296` — deleting an AKA reads
+  `$aka->game->getKey()` and `->game_name` for the changelog, then redirects to
+  `$aka->game`.
+
+Deleting the relation would have returned a 500 from the admin autocomplete for
+every AKA row and broken the AKA-delete redirect. The error came from running
+the caller search through `| head`, which truncated the output at ten lines and
+hid every `$aka->game` hit behind the `$game->akas` ones. The primary-key plan
+records that "a search that finds nothing looks exactly like a search that ran
+nothing"; this is its sibling — **a search that was truncated looks exactly like
+a search that was complete.**
+
+So this one is a genuine conversion, and it is covered: `tests/e2e/admin/games.spec.js:156-178`
+exercises the endpoint and asserts the AKA row comes back with its developer
+label and ranks ahead of the game. That spec is the net for the `hasOne` →
+`belongsTo` change, and it should be run specifically, not just as part of a
+full pass.
+
+**`reviewScreenshots()` really is unused** — an unrestricted search finds only
+its own declaration — so that one is still a deletion, and it removes a latent
+bug rather than converting one.
 
 ## The risk model, and why it is not the previous campaign's
 
@@ -854,10 +866,11 @@ What is genuinely missing:
   so like every other relationship write it is safe by construction. The test
   is worth writing because nothing exercises the field at all, not because the
   rename endangers it.
-- **Nothing, for the two defects** — they are proposed for deletion rather than
-  repair, precisely because writing a test for a method with no callers in order
-  to keep it is the wrong trade. If either is repaired instead of deleted, then
-  it needs a caller and a test, and that cost belongs on the repair.
+- **Nothing new for the two defects, but one existing spec gets promoted.**
+  `reviewScreenshots()` is deleted, so it owes no test. `GameAka::game()` is
+  converted, and `tests/e2e/admin/games.spec.js:156-178` already covers the
+  admin autocomplete path that reads `$aka->game` — run it deliberately as the
+  gate on that change rather than trusting a whole-suite pass.
 - **The statistics figures**, narrowly. `Tops.php` and
   `AdminStatisticsHelper::topPublishers()/topDevelopers()` join `pub_dev` in raw
   SQL and nothing asserts their output. The exposure is *not* a missed SQL
