@@ -36,7 +36,7 @@ class Comment extends Model
     public function articles()
     {
         // FIXME: Should be N:1
-        return $this->belongsToMany(Article::class, 'article_user_comments', 'comments_id', 'article_id');
+        return $this->belongsToMany(Article::class, 'article_user_comments');
     }
 
     public function interviews()
