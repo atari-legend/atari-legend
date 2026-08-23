@@ -311,10 +311,10 @@ Priced by how ambiguous the token is:
 | `image` | 28 | Ambiguous — defer |
 | `type` | 105 | Ambiguous — **keep the explicit argument** |
 
-**Reopened by nicolas (2026-08-23), and awaiting his answer.** The instruction
-was to *"stick to Laravel database conventions … update the column names, not
-just rename the methods"*. That conflicts with the Phase C rule from the same
-message, and the conflict is not a matter of taste:
+**Decided 2026-08-23: rename the methods, leave the columns.** The instruction
+had been *"stick to Laravel database conventions … update the column names, not
+just rename the methods"*, which conflicted with the Phase C rule from the same
+message. The conflict was not a matter of taste:
 
 - Under **FK = table + `_id`**, Phase B's columns are *already correct*.
   `article_type_id` points at `article_type`, `media_type_id` at `media_type`,
@@ -324,11 +324,10 @@ message, and the conflict is not a matter of taste:
   convention-clean code means `type_id`, `role_id`, `image_id` — which is
   strictly *less* table-consistent.
 
-The two instructions therefore point in opposite directions here. Reading the
-tiebreak from *"the database matters more than the code"*: **leave the columns,
-rename the methods** — the code bends to the schema, which is the stated
-priority. That is what the table below already proposes. Flagged for
-confirmation; if the columns are to move instead, this section inverts.
+The two instructions pointed in opposite directions. The tiebreak came from
+*"the database matters more than the code"*: **leave the columns, rename the
+methods** — the code bends to the schema. Confirmed by nicolas, so the table
+below stands as written.
 
 The pre-existing decision, still standing unless overruled: **do `vs`, `series`,
 `donatedBy` and `role`; keep the arguments on `type()` and defer `image`.** `role` looked borderline on the hit
@@ -365,7 +364,7 @@ that move.
 matters: applied literally the rule produces `users_id`, `individuals_id`,
 `magazines_id`, `menus_id` and `sndhs_id`, because those tables are plural.
 Singularising gives `user_id` and `individual_id`, which is what the schema
-mostly already does. **Flagged to nicolas and awaiting confirmation.**
+mostly already does. **Confirmed by nicolas (2026-08-23).**
 
 ### Where the schema stands against that rule
 
@@ -388,7 +387,11 @@ rule, or are nicolas's explicit instruction.
 because the model is `Genre`. The table is `game_genre`, so under the new rule
 the column is already correct and must not move.
 
-**Group 2 — the `_main` tables, 16 columns, held for a decision.** Applying the
+**Group 2 — the `_main` tables, 16 columns, DEFERRED and out of scope.**
+Decided 2026-08-23: these tables are to be merged with their `_text`
+counterparts, so renaming their foreign keys first is work done twice — see
+"Why the `_main` group is deferred" at the top. The analysis is kept because it
+will be needed when that merge happens. Applying the
 rule to `article_main`, `interview_main`, `review_main` and `screenshot_main`
 renames `article_id` → `article_main_id`, `interview_id` → `interview_main_id`,
 `review_id` → `review_main_id` and `screenshot_id` → `screenshot_main_id`
@@ -396,7 +399,7 @@ across 16 foreign keys. That is consistent, and it propagates a legacy table
 name into sixteen further places. The inconsistency here is the *table* name,
 not the foreign key.
 
-Three options were put to nicolas:
+The three options that were on the table, for the record:
 
 - **(a)** apply the rule and accept `article_main_id`;
 - **(b)** rename the tables first — `article_main` → `articles`, `review_main` →
@@ -413,7 +416,8 @@ and `spotlight.screenshot_id` — are pivots written through `attach()`/`sync()`
 or are not mass-assignable at all. The only `*_main` foreign key that appears in
 a `$fillable` is `InterviewText.interview_id`, and that column is `NOT NULL`.
 
-**(b) remains the recommendation**, but on taste rather than safety: it fixes
+**Neither was taken — the merge supersedes both.** (b) had been the
+recommendation, on taste rather than safety: it fixes
 the cause instead of baking a legacy table name into sixteen more columns, and
 "the schema must be fully consistent" argues for it harder than for (a). It is a
 larger campaign and belongs in its own phase, not smuggled into this one. Since
