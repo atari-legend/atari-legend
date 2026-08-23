@@ -139,8 +139,13 @@ foreach (glob(base_path('app/Models/*.php')) as $file) {
             $actual   = $relation->getForeignKeyName();
             $expected = Str::snake($method->name) . '_' . $related->getKeyName();
         } elseif ($relation instanceof HasOne || $relation instanceof HasMany) {
-            $actual   = $relation->getForeignKeyName();
-            $expected = Str::snake(class_basename($model)) . '_' . $model->getKeyName();
+            $actual = $relation->getForeignKeyName();
+            // Ask Laravel, do not reimplement the formula. Pivot subclasses
+            // override getForeignKey() (AsPivot returns the pivot's runtime
+            // foreign key, which is null on a fresh instance), so deriving
+            // Str::snake(class_basename).'_'.getKeyName() here reports three
+            // arguments as redundant that are in fact load-bearing.
+            $expected = $model->getForeignKey();
         } elseif ($relation instanceof BelongsToMany) {
             $actual   = $relation->getForeignPivotKeyName() . '|' . $relation->getRelatedPivotKeyName();
             $expected = Str::snake(class_basename($model)) . '_' . $model->getKeyName() . '|'

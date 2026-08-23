@@ -23,18 +23,18 @@ its own section.
 
 | | Relations | Phase | Needs a migration? |
 |---|---|---|---|
-| Explicit key argument that is **already** Eloquent's default | 79 | A | No — delete the argument |
+| Explicit key argument that is **already** Eloquent's default | 76 | A | No — delete the argument |
 | No explicit key argument (already clean) | 35 | — | No |
 | Divergent, fixed by renaming a **PHP method** | 5 | B | No |
 | Divergent, fixed by renaming a **column** | 20 | C | Yes |
 | Divergent, but the relation is **unused and wrong** | 2 | A | No — delete the relation |
-| Divergent, convention **unreachable or declined** | 17 | D | No — keep the argument, record why |
+| Divergent, convention **unreachable or declined** | 20 | D | No — keep the argument, record why |
 | Divergent, **deferred** (`News::image()`) | 1 | — | No |
 | **Total relations in `app/Models/`** | **159** | | |
 
-The 45 divergent relations are the last five rows. Two notes on the edges:
+The 48 divergent relations are the last five rows. Two notes on the edges:
 
-- The 17 declined include the three `type()` relations, which Phase B could
+- The 20 declined include the three `type()` relations, which Phase B could
   reach by renaming a method and deliberately does not — `->type` is 105 hits
   repo-wide and mostly plain columns.
 - One of the 20 — `Release::distributors()`, on `game_release_distributor` — is
@@ -42,9 +42,9 @@ The 45 divergent relations are the last five rows. Two notes on the edges:
   does not, so it ends the campaign with one explicit argument rather than none.
 
 The 20 column-rename relations resolve to **five renames covering 16 columns
-across 16 tables**, listed in Phase C. So the campaign is: delete 79 arguments
+across 16 tables**, listed in Phase C. So the campaign is: delete 76 arguments
 and 2 dead relations, rename 5 methods, rename 16 columns, and write down why
-the remaining 17 stay as they are. The first item is the largest by a distance,
+the remaining 20 stay as they are. The first item is the largest by a distance,
 carries no database risk at all, and can start today.
 
 ### How these numbers were obtained
@@ -73,7 +73,7 @@ in particular from the two "not from" clauses. `Release`'s table is
 `Article::type()` is a method called `type`, so convention wants `type_id`
 whatever the related class is called.
 
-## Phase A — delete the 79 redundant arguments
+## Phase A — delete the 76 redundant arguments
 
 These relations pass an explicit key argument that is character-for-character
 what Eloquent would have derived anyway. Deleting the argument changes no SQL.
@@ -89,7 +89,7 @@ $this->hasMany(Release::class, 'game_id')                     // Game::releases(
 $this->belongsToMany(Memory::class, 'game_release_memory_minimum', 'release_id', 'memory_id')
 ```
 
-The 79 are spread over 30 models; `User` contributes 9, `Game` 17, `Release` 8.
+The 76 are spread over 28 models; `User` contributes 9, `Game` 17, `Release` 8.
 The full list is reproducible from the audit script and is not reproduced here,
 because a list in a document goes stale and the script does not.
 
@@ -125,6 +125,38 @@ diff pivots.before pivots.after     # must be empty
 Acceptance: that diff empty, `artisan test` and Playwright both green, and no
 line of generated SQL changed. This is a pure no-op and should be reviewed as
 one.
+
+### The harness earned its keep before the phase even started
+
+Phase A was run as an experiment rather than described: generated SQL captured
+for all 162 relations, the deletions applied by script, SQL captured again and
+diffed. **Three relations changed**, and all three broke:
+
+```
+< ScreenshotArticle::comment()   | ... where `article_comments`.`screenshot_article_id` is null
+> ScreenshotArticle::comment()   | ... where `article_comments`.`` is null
+```
+
+`ScreenshotArticle`, `ScreenshotInterview` and `ScreenshotReview` all extend
+`Pivot`, and `AsPivot` **overrides `getForeignKey()`** to return the pivot's
+runtime-configured foreign key rather than one derived from the class name. On a
+freshly instantiated pivot that is null, so there is no derivable default and
+the explicit argument is load-bearing.
+
+The audit script had reported all three as redundant because it *reimplemented*
+Laravel's formula — `Str::snake(class_basename($model)).'_'.$model->getKeyName()`
+— instead of asking Laravel. It now calls `$model->getForeignKey()`, and the
+corrected counts are **76 redundant, 48 divergent, 35 clean**. Earlier drafts of
+this plan said 79 and 45.
+
+Two things worth taking from that. The narrow one: the three pivot relations
+move to Phase D, as a category of their own — *the model is a `Pivot`, so no
+default exists*. The general one: **a tool that reimplements the framework's
+rule is only as good as the reimplementation**, and the whole premise of this
+plan is that asking Laravel beats grepping. The audit was doing to Laravel's
+formula exactly what a `grep` does to a column name. The SQL diff is what caught
+it, which is the argument for running that diff on every Phase A pull request
+rather than trusting the count.
 
 ## Phase B — the ones that are a method name, not a column
 
@@ -337,7 +369,7 @@ Two things go with that decision, because "fossil" is a fair charge:
   That is consistency between *endpoints*, which is a better argument than
   consistency with the schema, and it is not this campaign's job.
 
-## Phase D — the six that convention cannot reach, and the eleven it should not
+## Phase D — the nine that convention cannot reach, and the eleven it should not
 
 Write these down rather than leaving them to be rediscovered.
 
@@ -351,6 +383,12 @@ arguments can never be deleted:
 
 (The `ind_id` half of `individual_nicks` still renames in Phase C; the relation
 keeps its arguments regardless.)
+
+**No default exists.** `ScreenshotArticle::comment()`,
+`ScreenshotInterview::comment()` and `ScreenshotReview::comment()` are declared
+on `Pivot` subclasses, whose `getForeignKey()` is overridden by `AsPivot` to
+return a runtime value that is null outside a `belongsToMany` hydration. Their
+arguments are not redundant and cannot be removed — see the Phase A experiment.
 
 **Deliberately not adopted.**
 
