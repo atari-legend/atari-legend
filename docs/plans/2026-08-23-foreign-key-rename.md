@@ -10,6 +10,15 @@ does not repeat what that document already establishes about deploy ordering,
 behaviour claim below was measured against this repository and a local MariaDB
 10.11.18 on 2026-08-23; the commands are named so they can be re-run.
 
+Independently reviewed on 2026-08-23 by OpenCode, which re-ran the audit,
+re-queried the schema and re-tested the migration template from scratch on both
+drivers. Almost everything reproduced; the four things that did not are
+corrected in place below, and each correction says so where it lands rather than
+being collected here. The largest was that this document's own account of *why*
+`Release` → `GameRelease` is a prerequisite misapplied the `belongsTo`
+derivation rule it states correctly elsewhere. That section is rewritten, and
+the campaign now has an explicit order.
+
 ## Decisions taken
 
 All settled with nicolas on 2026-08-23. Recorded here because three of them
@@ -20,7 +29,7 @@ changed what the phases contain.
 | 1 | Does "FK = table + `_id`" mean the singularised table name? | **Yes, singularised.** `users` → `user_id`, not `users_id`. |
 | 2 | The `*_main` tables (16 keys) | **Out of scope — deferred.** See below; the tables are to be merged, so renaming their foreign keys now is work thrown away. |
 | 3 | Phase B: columns or methods? | **Rename the methods, leave the columns.** They are already table-correct; the code bends to the schema. |
-| 4 | Rename `Release` → `GameRelease`? | **Yes, as a prerequisite to Phase C.** |
+| 4 | Rename `Release` → `GameRelease`? | **Yes, and it lands before Phase A**, not merely before Phase C — see the ordering under "Why that model rename is a prerequisite". |
 
 ### Why the `*_main` group is deferred rather than decided
 
@@ -63,9 +72,15 @@ here.** It said 89 parents to 126 children and called the pair "genuinely
 1:many". Re-measured 2026-08-23: `review_main` has 126 rows, `review_score` has
 126, there are 126 distinct `review_id` values, and the maximum number of score
 rows for any one review is **one**. The model agrees — `Review::score()` is a
-`hasOne`, not a `hasMany`, and both write paths
-(`ReviewsController:110`, `ReviewController:112`) reuse the existing row rather
-than adding one. So it merges too: four `NOT NULL` integer columns
+`hasOne`, not a `hasMany` — and so do the write paths, though not in the way an
+earlier draft of this paragraph said. It claimed "both write paths reuse the
+existing row"; corrected after OpenCode checked them. There are three, and only
+one reuses: `ReviewsController:110` (admin update) is
+`$review->score ?? new ReviewScore()`, while `ReviewsController:74` (admin
+create) and `ReviewController:106` (public submission) each build a `new
+ReviewScore()` — but each does so alongside a brand-new `Review`, so neither
+adds a *second* score to an existing one. The 1:1 conclusion is what survives,
+and the data agrees with it: max one score row per review. So it merges too: four `NOT NULL` integer columns
 (`review_graphics`, `review_sound`, `review_gameplay`, `review_overall`) fold
 straight onto `review_main` with no nullability change, because every review has
 a score.
@@ -106,8 +121,8 @@ its own section.
 
 | | Relations | Phase | Needs a migration? |
 |---|---|---|---|
-| Explicit key argument that is **already** Eloquent's default | 76 | A | No — delete the argument |
-| No explicit key argument (already clean) | 35 | — | No |
+| Explicit key argument that is **already** Eloquent's default | 78 | A | No — delete the argument |
+| No explicit key argument (already clean) | 33 | — | No |
 | Divergent, fixed by renaming a **PHP method** | 5 | B | No |
 | Divergent, fixed by renaming a **column** | 20 | C | Yes |
 | Divergent because the relation is **wrong** (one unused, one live) | 2 | A | No — delete one, convert one |
@@ -123,9 +138,14 @@ The 48 divergent relations are the last five rows. Two notes on the edges:
 - One of the 20 — `Release::distributors()`, on `game_release_distributor` — is
   only half fixed by its column rename: `game_release_id` moves and `pub_dev_id`
   does not, so it ends the campaign with one explicit argument rather than none.
+- The campaign also *adds* one argument that does not exist today.
+  `Media::release()` is in the 33 clean, and only because `release_id` happens to
+  be what its method name derives; Phase C renames that column and it gains a
+  permanent `'game_release_id'`. Counted where it lands, not where it starts —
+  see "The two hand-edits option 1 still needs".
 
 The column-rename relations resolve to **six renames covering 18 columns
-across 18 tables**, listed in Phase C. So the campaign is: delete 76 arguments,
+across 18 tables**, listed in Phase C. So the campaign is: delete 78 arguments,
 delete one dead relation and convert one broken one, rename 5 methods, rename
 18 columns (with 16 more deferred alongside the `*_main` merge), and
 write down why the rest stay as they are. The first
@@ -158,20 +178,74 @@ in particular from the two "not from" clauses. `Release`'s table is
 `Article::type()` is a method called `type`, so convention wants `type_id`
 whatever the related class is called.
 
-## Phase A — delete the redundant arguments (76, of which 68 ship today)
+**78 and 33 are corrected figures; the script said 76 and 35 until 2026-08-23.**
+Found by OpenCode reviewing this plan, and it is the same flaw the plan warns
+about two sections later from the other end. `Comment::interviews()` and
+`Comment::reviews()` are spelled **`belongstoMany`** — lowercase `t` — and both
+pass exactly the derived defaults, so they are redundant. But
+`passesKeyArgument()` matched the relation type with a case-sensitive regex, so
+it answered "no key argument passed" and filed both under *already clean*. The
+classification, not the discovery: reflection found the relations fine. The
+regex now carries an `/i` and the script reports **78 / 48 / 33**, which is what
+the rest of this document uses. That the plan called this out as a hazard for
+"the next tool" while it was live in this one is the second time the harness has
+caught the audit rather than the code — see the `Pivot` correction in Phase A.
+
+## Phase A — delete the redundant arguments (78 today, 79 after the model rename)
 
 These relations pass an explicit key argument that is character-for-character
-what Eloquent would have derived anyway.
-
-**Eight of the 76 are held.** The `Release` relations listed under "Why that
-model rename is a prerequisite" pass `'release_id'`, which Phase C renames away
-from the Eloquent default. Deleting those arguments now is a no-op that becomes
-a defect one phase later. They ship with Phase A only if `Release` →
-`GameRelease` is approved; otherwise they are updated inside Phase C instead.
-**Phase A as it stands today is therefore 68 deletions, not 76.** Deleting the argument changes no SQL.
+what Eloquent would have derived anyway. Deleting the argument changes no SQL.
 There is no migration, no schema change, and no production risk; the only way
 to get it wrong is to delete an argument that was *not* redundant, and the
 script above is what says which is which.
+
+### Phase A is not the first thing that lands
+
+An earlier draft of this section held eight `Release` relations back by name and
+said they would "ship with Phase A only if `Release` → `GameRelease` is
+approved". That is wrong under **every** ordering, and OpenCode's review is what
+established it. The eight pass `'release_id'`. If the model rename lands first,
+Eloquent derives `game_release_id` for them and they are *divergent* at Phase A
+time — not deletion candidates at all. If Phase A runs first and deletes them,
+the model-rename pull request is the thing that breaks. Either way there is no
+moment at which those eight are both redundant and safe to delete, and the
+"hold list" was an attempt to hand-maintain a fact the audit already knows.
+
+So the campaign has an order, and it is this:
+
+| | Lands | Why here |
+|---|---|---|
+| 0 | Fix the four `belongstoMany` spellings | Purely cosmetic — PHP method names are case-insensitive, so no SQL and no behaviour change — but it is what makes the audit's counts correct, and every number below is one of those counts. |
+| 1 | `Release` → `GameRelease` (58 files) | Moves nine relations into the deletable set and eight out of it, so that the audit computes Phase A's scope instead of a person doing it by hand. |
+| 2 | **Phase A** | Delete whatever the audit now calls redundant. |
+| 3 | Phase B, then Phase C | Method renames, then column renames. |
+
+**Derived, not yet measured: after steps 0 and 1 the audit should read
+79 / 48 / 32.** Worth predicting explicitly, because "the counts moved by
+exactly the number of relations this PR claims" is the campaign's progress
+metric and a rename that moves them in both directions at once is the one place
+that metric is hard to read. From today's 78 / 48 / 33:
+
+- the eight `Release` relations passing `'release_id'` go **redundant →
+  divergent** (`memoryEnhanced`, `memoryMinimums`, `memoryIncompatibles`,
+  `emulatorIncompatibles`, `tosIncompatibles`, `copyProtections`,
+  `diskProtections`, `languages`);
+- **nine** go **divergent → redundant** — the eight `Release` relations that
+  already pass `game_release_id` (`boxscans`, `systemEnhanced`, `akas`,
+  `menuDiskContents`, `crews`, `locations`, `resolutions`,
+  `systemIncompatibles`) and `Crew::releases()`, whose *related*-side key
+  converges;
+- `Release::medias()` goes **clean → divergent**, because the rename PR gives it
+  a temporary explicit `'release_id'` — see "Why that model rename is a
+  prerequisite", where that argument is the whole subject.
+
+Net: redundant 78 − 8 + 9 = **79**, divergent 48 + 8 − 9 + 1 = **48**, clean
+33 − 1 = **32**. `Release::distributors()` and `Release::trainers()` stay
+divergent (their second keys do not converge), and `ReleaseAka::release()`,
+`MenuDiskContent::release()` and `Media::release()` are unaffected by a class
+rename because `belongsTo` reads the method name. Re-run the audit either side
+of the rename PR and check it against this paragraph rather than against a bare
+"unchanged".
 
 Representative shapes, all already conventional today:
 
@@ -181,11 +255,12 @@ $this->hasMany(Release::class, 'game_id')                     // Game::releases(
 $this->belongsToMany(Memory::class, 'game_release_memory_minimum', 'release_id', 'memory_id')
 ```
 
-The 76 are spread over 27 models; `Game` contributes 17, `User` 9 and `Release`
-9. Only eight of `Release`'s nine are held — the ninth, `Release::game()`,
-passes `'game_id'`, which Phase C does not touch, so it ships with the rest. The
-full list is reproducible from the audit script and is not reproduced here,
-because a list in a document goes stale and the script does not.
+The 78 are spread over 27 models; `Game` contributes 17, `User` 9 and `Release`
+9. Of `Release`'s nine, only `Release::game()` — which passes `'game_id'`, a
+column Phase C does not touch — is in the same position after the model rename
+as before it; the other eight are the ones that move out of the set. The full
+list is reproducible from the audit script and is not reproduced here, because
+a list in a document goes stale and the script does not.
 
 Two cautions, both learned from the primary-key campaign:
 
@@ -222,8 +297,8 @@ one.
 
 ### One pull request, not thirty
 
-Settled with OpenCode. 68 deletions across 27 models (76 less the eight held
-`Release` relations) is not reviewable by eye,
+Settled with OpenCode. Seventy-odd deletions across nearly thirty models is not
+reviewable by eye,
 and that is the argument *for* keeping it whole rather than against: it is
 reviewable **by diff** — the pivot snapshot must be unchanged, the generated SQL
 must be unchanged, and both suites must be green. Splitting it per model would
@@ -231,10 +306,20 @@ multiply CI runs without adding a single bit of signal, and would make the SQL
 diff — the only check that actually proves the claim — into thirty partial
 diffs that each prove less.
 
-The six declarations the script cannot rewrite (multi-line, `->withPivot()`,
-`->using()`) are the exception worth calling out in the pull request text, so a
-reviewer knows which handful to read closely rather than skimming all 76
-equally.
+The declarations a line-oriented rewriter cannot touch (multi-line,
+`->withPivot()`, `->using()`) are the exception worth calling out in the pull
+request text, so a reviewer knows which handful to read closely rather than
+skimming all seventy-odd equally. There are **seven** of them in the redundant
+set — `Article::screenshots()`, `Game::individuals()`, `Individual::games()`,
+`Interview::screenshots()`, `Review::screenshots()` (all `->withPivot()` plus
+`->using()`) and `Release::copyProtections()` and `Release::diskProtections()`
+(`->withPivot('notes')`, both with the call split across two lines). An earlier
+draft said six; re-counted 2026-08-23 by OpenCode and confirmed against the
+audit's redundant list. Two of the seven are `Release` relations that leave the
+set at the model rename and come back in Phase C, so the count Phase A actually
+carries is **five**. Three more — `Comment::games()`, `Game::releases()`,
+`GameSubmitInfo::user()` — are wrapped or preceded by a comment but are single
+statements, and any rewriter handles them.
 
 ### The harness earned its keep before the phase even started
 
@@ -255,9 +340,11 @@ the explicit argument is load-bearing.
 
 The audit script had reported all three as redundant because it *reimplemented*
 Laravel's formula — `Str::snake(class_basename($model)).'_'.$model->getKeyName()`
-— instead of asking Laravel. It now calls `$model->getForeignKey()`, and the
-corrected counts are **76 redundant, 48 divergent, 35 clean**. Earlier drafts of
-this plan said 79 and 45.
+— instead of asking Laravel. It now calls `$model->getForeignKey()`, which took
+the counts from 79 / 45 to **76 redundant, 48 divergent, 35 clean**. A second
+correction — the case-sensitive relation-type regex, described under "How these
+numbers were obtained" — has since taken them to **78 / 48 / 33**, which is the
+figure the rest of this document uses.
 
 Two things worth taking from that. The narrow one: the three pivot relations
 move to Phase D, as a category of their own — *the model is a `Pivot`, so no
@@ -280,20 +367,36 @@ With the classification corrected, the experiment was repeated:
 - **70 arguments deleted, SQL diff across all 162 relations empty.** Not one
   character changed. Note that this experiment ran *before* the direction change
   and so deleted a **superset** of what Phase A now ships — it included the eight
-  `Release` arguments since held. That does not invalidate it: if removing 70 was
-  a no-op, removing the 62 of them that remain in scope is a no-op too. It does
-  mean the measurement should be repeated on the final set before the pull
-  request, not cited as though it had tested it.
+  `Release` arguments that the model rename now moves out of the set. That does
+  not invalidate it: if removing 70 was a no-op, removing the subset that remains
+  in scope is a no-op too. It does mean the measurement should be repeated on the
+  final set before the pull request, not cited as though it had tested it.
 - **`artisan test`: 991 passed, 18 skipped, 3511 assertions** — identical to the
   figure the primary-key campaign signed off on.
 
-So "Phase A is a no-op" is now a measurement rather than a claim. Two caveats
+("162 relations", here and in the pivot experiment, is the audit's 159 plus the
+three `MorphMany` relations the audit skips — `User::notifications()`,
+`::readNotifications()` and `::unreadNotifications()`, inherited from
+`Notifiable`. A morph relation has no foreign key to converge on, so it has no
+place in the three counts, but it does emit SQL and so belongs in the diff.)
+
+So "Phase A is a no-op" is now a measurement rather than a claim. Three caveats
 that belong with it rather than after it:
 
-- **The script reached 70 of the 76.** The remaining six are multi-line or
-  chained declarations — `->withPivot()`, `->using()` — that a line-oriented
-  rewrite cannot safely touch. Phase A is therefore about seventy mechanical
-  edits plus six careful ones, not one clean sweep.
+- **The rewrite script that produced it is not in the repository.** Only the
+  audit script is. Raised by OpenCode, and it is a fair hit: this plan's own
+  argument against lists in documents — "a list goes stale and the script does
+  not" — applies to the campaign's central no-op claim resting on a tool nobody
+  else can run. **Commit the rewriter next to the audit script before Phase A
+  opens**, so the 70 is reproducible rather than reported. Until it is, treat
+  "70 deleted, diff empty" as evidence that the *method* works, which the SQL
+  diff on the actual pull request will re-establish from scratch anyway.
+- **"70 of the 76" is not reproducible for the same reason, and the residue is
+  seven, not six.** Static analysis of the redundant declarations finds seven a
+  line-oriented rewriter cannot safely touch, enumerated under "One pull request,
+  not thirty" — five of them in Phase A's scope once the model rename has landed.
+  Phase A is therefore roughly seventy mechanical edits plus five careful ones,
+  not one clean sweep.
 - **An empty SQL diff and a green suite prove the *relations* are unchanged.**
   They do not prove nothing else in those 26 files was disturbed. That is what
   reading the diff is for, and it is the reason this phase is still a reviewed
@@ -380,9 +483,15 @@ below stands as written.
 The pre-existing decision, still standing unless overruled: **do `vs`, `series`,
 `donatedBy` and `role`; keep the arguments on `type()` and defer `image`.** `role` looked borderline on the hit
 count alone, and what settles it is that both `role()` relations live on custom
-`Pivot` models (`GameDeveloper`, `GameIndividual`) and are reached as
-`$x->pivot->role->name` from six Blade files and `GameCreditsController` — every
-call site names the concrete pivot class, so the token is fully traceable.
+`Pivot` models (`GameDeveloper`, `GameIndividual`) and every traversal of the
+relation is `$x->pivot->role`, in **Blade only** — 12 lines across six views.
+The relation has **no** call site in PHP. `GameCreditsController` was cited here
+in an earlier draft and does not belong: its four `->role` hits are
+`$request->role`, a form field, and they write the `individual_role_id` and
+`developer_role_id` columns directly. OpenCode caught the miscitation, and it
+makes the case stronger rather than weaker — the whole surface is six template
+files and every one of them names the concrete pivot, so the token is fully
+traceable.
 
 Worth heading off the obvious objection, since these are two of the five
 `Pivot` subclasses in the codebase and the other three are in Phase D under
@@ -565,11 +674,23 @@ grep -rEn '(^|[^A-Za-z_])Release(::|\s*\$|\s*\||;|\)|,)' app/ tests/ database/ r
 | **Total** | **329** | **58** |
 
 The work is still mechanical — a class rename, its file, its import sites, its
-factory — and an IDE does most of it. But 58 files is a large diff to land in
-the same campaign as a schema change, so it goes in **its own pull request,
-before Phase C**, gated on the SQL diff being empty and both suites green. It is
-a pure refactor: no column moves, no relation key changes, and the audit
-script's three counts must be identical either side of it.
+factory (`ReleaseFactory` → `GameReleaseFactory`, since `HasFactory` resolves by
+name) — and an IDE does most of it. `protected $table = 'game_release'` becomes
+redundant at the same moment and can go with it. But 58 files is a large diff to
+land in the same campaign as a schema change, so it goes in **its own pull
+request, before Phase A**, gated on the SQL diff being empty and both suites
+green.
+
+**It is not, however, the "pure refactor" an earlier draft called it, and its
+stated gates could not have passed.** OpenCode's review is what established
+this, and the correction is the subject of the next section: the rename moves
+one relation's generated SQL unless the pull request also carries a temporary
+explicit argument, and it necessarily moves the audit's three counts in both
+directions at once. The gates are therefore: **SQL diff empty** — which is true
+only with that temporary argument in place — both suites green, and the three
+counts landing on **79 / 48 / 32**, the movement derived in Phase A. "The counts
+must be identical" was a gate that could not pass, and a gate that cannot pass
+teaches whoever executes it to ignore gates.
 
 ### Why that model rename is a prerequisite, not a nicety
 
@@ -577,8 +698,8 @@ Phase A and Phase C conflict without it, and **Phase A's own gates cannot see
 the conflict.**
 
 Eight relations on `Release` pass `'release_id'` today, and that is exactly what
-Eloquent derives, so the audit classifies them as redundant and Phase A deletes
-them:
+Eloquent derives, so the audit classifies them as redundant and a Phase A that
+ran first would delete them:
 
 ```
 Release::memoryEnhanced()  memoryMinimums()  memoryIncompatibles()
@@ -589,8 +710,9 @@ diskProtections()          languages()
 Phase C then renames that column to `game_release_id`. Eloquent goes back to
 deriving `release_id`, which no longer exists, and all eight break.
 
-The dangerous part is the timing. At Phase A time the deletion genuinely *is* a
-no-op: the pivot snapshot is unchanged, the SQL diff is empty, the suite is 991
+The dangerous part is the timing, and it is why the ordering below puts the
+model rename first. Under the naive ordering the Phase A deletion genuinely *is*
+a no-op at the moment it lands: the pivot snapshot is unchanged, the SQL diff is empty, the suite is 991
 green. Every gate passes honestly. The failure lands one phase later, in a pull
 request that never touched those lines — the same shape as the `id` collision
 the primary-key campaign spent its Phase A2 defusing, arriving from a new
@@ -611,6 +733,15 @@ and `Media::release()` — `belongsTo(Release::class)`. Neither names a column
 anywhere, and both work today only because `release_id` is what Eloquent
 derives. They are invisible to any search for the token.
 
+**And they are invisible in different ways, which is the point an earlier draft
+of this section missed.** `Release::medias()` is a `hasMany`, so its key follows
+the **declaring class name** — the model rename does move it.
+`Media::release()` is a `belongsTo`, so its key follows the **method name** —
+the model rename does nothing for it at all. Verified live: `Media::release()`
+derives `release_id` whether the related class is `Release`, `GameRelease` or
+anything else. That is the rule this document states three times and misapplied
+once, and OpenCode's review is what caught it.
+
 That kills one of the escape routes: **running Phase C before Phase A does not
 avoid the problem**, because those two break regardless of when Phase A runs.
 
@@ -621,7 +752,8 @@ one, and **three** pass no argument at all — `Media::release()`,
 `belongsTo(ProgressSystem::class)` and derives `progress_system_id`. Renaming
 that column to `game_progress_system_id` breaks it with nothing in the diff to
 show for it. Being a `belongsTo`, it can be fixed either by adding an argument
-or by renaming the method to `gameProgressSystem()`.
+or by renaming the method — priced and settled under "The two hand-edits option
+1 still needs" below.
 
 Two false positives came out of that scan, and the cause is worth recording
 because it will bite the next tool as well: `Comment::articles()` and
@@ -640,16 +772,24 @@ repository.** All of them:
 Only the first and the last touch a column this campaign renames, which is why
 only those two showed up here; the other two are the next tool's false
 positives, not this one's. The audit script's own relation-type regex is
-case-sensitive too and misses all four — it finds them by reflection instead,
-which is the same argument as everywhere else in this plan. Fix all four on
-sight, in Phase A, where the diff is already expected to be behaviour-free.
+case-sensitive too, and the flaw was live rather than hypothetical: reflection
+found the relations, but `passesKeyArgument()` then classified two of the four
+through a case-sensitive regex and filed them under *already clean*. That is
+fixed (`/i`), and it is where 78 / 48 / 33 comes from. **Fix all four
+declarations before Phase A**, as step 0 of the ordering — it is a
+zero-behaviour change (PHP method names are case-insensitive) whose only purpose
+is that the counts driving Phase A are the real ones.
 
-Two ways out, then, not three:
+Two ways out, then, not three — and neither is free, which an earlier draft got
+wrong:
 
-1. **Rename `Release` → `GameRelease`** before Phase C. Everything converges:
-   the eight arguments stay deletable, the two argument-free relations keep
-   working untouched, and `trainers()` needs only its second key. This is the
-   only option that fixes all eleven without hand-editing any of them.
+1. **Rename `Release` → `GameRelease`** before Phase A. Ten of the eleven
+   converge by themselves: the eight `'release_id'` arguments become divergent
+   at the rename and are deleted in Phase C once the column agrees with them
+   again, `Release::medias()` derives the new name, and `trainers()` needs only
+   its second key. **The eleventh, `Media::release()`, is not fixed by any class
+   rename** and takes one hand-edit in Phase C. Ten of eleven automatically, one
+   by hand.
 2. **Hand-edit all eleven inside Phase C** and exclude the eight from Phase A
    by name. Workable, but it rests on a hand-maintained exclusion list — the
    exact failure mode the audit script exists to remove — and it leaves the
@@ -657,9 +797,68 @@ Two ways out, then, not three:
 
 It also inverts the campaign's headline under option 2: Phase C hands back
 roughly ten explicit arguments that do not exist today, and Phase A's deletable
-count falls to match.
+count falls to match. **Decision 4 takes option 1.**
 
-Until this is decided, **Phase A must not run against the `Release` relations.**
+#### The two hand-edits option 1 still needs
+
+Both were missed by the draft that called this section's conclusion "everything
+converges", and both are small. Naming them is what stops the rename PR going
+red for reasons nobody predicted.
+
+**One temporary argument, at the rename PR.** `Release::medias()` is
+`hasMany(Media::class)` with no argument, so the moment the class is
+`GameRelease` it derives `game_release_id` — while the column is still
+`release_id` until Phase C. Left alone, the rename PR changes that relation's
+SQL, `getDumpsAttribute()` (which reads `$this->medias`) starts raising 1054,
+and the suite goes red. So the rename PR adds `'release_id'` explicitly:
+
+```php
+// Temporary: the class now derives game_release_id, the column is still
+// release_id. Delete this argument in the media.release_id rename (Phase C).
+return $this->hasMany(Media::class, 'release_id');
+```
+
+With it, the SQL diff on the rename PR is **empty**, which is the gate worth
+keeping. The alternative OpenCode floated — accept a diff containing "exactly
+the `medias()` change and nothing else" — is weaker for no benefit, because it
+replaces a check anyone can run with a check someone has to read. The argument
+is deleted again in Phase C, where the column and the default finally agree.
+
+**One permanent argument, in Phase C.** `Media::release()` derives `release_id`
+from its method name and always will. When Phase C renames `media.release_id`
+to `media.game_release_id`, it breaks unless it is given
+`belongsTo(GameRelease::class, 'game_release_id')` or the method is renamed to
+`gameRelease()`.
+
+**Take the argument, not the method rename** — priced the same way Phase B
+prices everything else:
+
+```
+grep -rEn -- '->release[^A-Za-z_]' app/ resources/views/ tests/ | wc -l   # 77
+```
+
+77 lines, which is `->type` territory, and the three `release()` methods
+(`Media::release()`, `ReleaseAka::release()`, `MenuDiskContent::release()`) all
+point at the same table. Renaming all three to `gameRelease()` would close three
+divergences and cost ~70 site edits for no behavioural gain; two of the three
+already carry an explicit `'game_release_id'` today and are none the worse for
+it. So Phase C adds the third, and the campaign ends with three `release()`
+relations each naming their column — recorded in Phase D under *declined on
+pricing*, exactly like `type()`.
+
+`Game::progressSystem()` is the same shape and gets the opposite answer:
+`->progressSystem` is **3** hits, so renaming the method to
+`gameProgressSystem()` is the cheap fix there rather than adding an argument.
+
+#### The ordering that follows
+
+**Model rename → Phase A → Phase B → Phase C.** Stated explicitly because the
+draft this replaces said "before Phase C" and left Phase A's relationship to the
+rename to be inferred, which is precisely where it went wrong. With the rename
+first there is no hold list and no exclusion by name: the audit reclassifies the
+eight `Release` relations as divergent, Phase A deletes what the audit calls
+redundant, and Phase C picks the eight back up when it renames their column.
+Phase A's section carries the predicted count movement.
 
 ### Order
 
@@ -668,8 +867,17 @@ Ascending by **silent** risk, not by table count. One column family per PR:
 1. `comments_id` → `comment_id` — one table, one relation pair, no `$fillable`.
 2. `dev_pub_id` → `pub_dev_id`, `progress_system_id` →
    `game_progress_system_id`, `individual_nicks_id` → `individual_nick_id` —
-   one table each.
-3. `release_id` → `game_release_id` — ten tables, every one of them loud.
+   one table each. The `progress_system_id` PR also renames
+   `Game::progressSystem()` to `gameProgressSystem()`, which is what keeps that
+   relation working; `->progressSystem` is 3 hits.
+3. `release_id` → `game_release_id` — ten tables, every one of them loud. This
+   is the PR that settles the relation edits the model rename deferred: delete
+   the eight `'release_id'` arguments on `GameRelease` (now redundant again),
+   delete the temporary `'release_id'` on `GameRelease::medias()`, update
+   `trainers()`'s first key, and **add** `'game_release_id'` to
+   `Media::release()`. That last one names no column anywhere, so it is
+   invisible to a grep for `release_id` and is the line to name in the PR
+   description; the failure itself is loud (1054), it just is not findable.
 4. `ind_id` → `individual_id` — only four tables, but it carries the campaign's
    single silent write, so it goes **last**. By then the recipe has been
    exercised twice, the checklist template has been proven, and the
@@ -685,10 +893,15 @@ the *categories* are what generalise, not the line numbers.
 `interview_main`. `individual_nicks` also has `nick_id` pointing at the same
 parent, which stays — see Phase D.
 
-**Relationship definitions (6).** `Individual::text()`, `::interviews()`,
+**Relationship definitions (7).** `Individual::text()`, `::interviews()`,
 `::nicknames()`, `::individuals()`, `::crews()`, `Crew::individuals()`,
-`Interview::individual()`. Four of these lose their argument; the two
-self-referential ones keep both.
+`Interview::individual()`. **Five** of these lose their arguments — `text()`,
+`interviews()`, `crews()`, `Crew::individuals()` and `Interview::individual()`
+all converge on `individual_id` once the column moves, and the two
+`belongsToMany` among them lose *both* arguments, not one. Only the two
+self-referential relations on `individual_nicks` keep theirs. (An earlier draft
+counted this list as six and said four lose an argument; both were off by one,
+caught by OpenCode.)
 
 **`$fillable` (1).** `Interview.php:18` — and this is the campaign's one silent
 write, covered above.
@@ -709,8 +922,8 @@ company logo 404d". It is a `MissingAttributeException` in dev and a silent
 than an error page. Playwright is what catches it.
 
 **Query-builder string columns (4).** Two Livewire join closures —
-`InterviewsTable:65` (`interview_main.ind_id`) and `GameIndividualsTable:62`
-(`individual_text.ind_id`) — and two calls to a *helper* that takes the column
+`Admin/InterviewsTable:65` (`interview_main.ind_id`) and
+`Admin/Games/GameIndividualsTable:62` (`individual_text.ind_id`) — and two calls to a *helper* that takes the column
 name as an argument:
 
 ```php
@@ -835,6 +1048,12 @@ bearing.
 - **`GameVs`'s `atari_id` / `amiga_id`.** These say something `game_id` would
   not. `Game::vs()` is a `hasMany` and so cannot be fixed by a method rename;
   it keeps its argument. Only `GameVs::game()` → `atari()` is in Phase B.
+- **`Media::release()`, `ReleaseAka::release()`, `MenuDiskContent::release()`.**
+  All three point at `game_release`, all three could be closed by renaming the
+  method to `gameRelease()`, and all three decline on the same pricing:
+  `->release` is **77** lines across `app/`, `resources/views/` and `tests/`.
+  Two already carry an explicit `'game_release_id'`; Phase C gives the third
+  one. Three arguments against ~70 edits for no behavioural gain.
 - **`Article::type()`, `Media::type()`, `MediaScan::type()`.** Phase B *could*
   reach these by renaming the method, and declines to — see the pricing table
   there. `->type` is 97 hits repo-wide and mostly plain columns on other
@@ -898,7 +1117,7 @@ logs rather than throws in production. This campaign inherits that, but its
 characteristic failure is a **write**, and a write is not recoverable by
 redeploying.
 
-`AppServiceProvider.php:93` enables `preventSilentlyDiscardingAttributes()`
+`AppServiceProvider.php:94` enables `preventSilentlyDiscardingAttributes()`
 **outside production only**, and says why: *"a failed save is riskier to
 surface on the live site."* That is a defensible choice for normal operation
 and precisely the wrong one during a foreign key rename. After a column moves
@@ -1311,9 +1530,13 @@ Steps 1-3 and 6 are the primary-key plan's, unchanged. What differs:
    id.
 3. A MariaDB `migrate:fresh` and a `migrate:rollback --step=1`, per harness
    change 3 of the previous campaign.
-4. Re-run the relationship audit script and confirm the divergence count moved
-   by exactly the number of relations the PR claims. This is the campaign's
-   progress metric and it is cheap to check.
+4. Re-run the relationship audit script and confirm the three counts moved by
+   exactly what the PR claims. This is the campaign's progress metric and it is
+   cheap to check. **Predict the movement in the PR text rather than asserting
+   "no change"** — the `Release` → `GameRelease` PR in particular moves relations
+   in both directions at once (eight out of the redundant set, nine in, one out
+   of clean), so a net figure hides the interesting part. Phase A's section
+   carries the derivation.
 
 ## What the test suite must gain first
 
@@ -1405,7 +1628,11 @@ one does, and it is repairable only if somebody looks.
 
 The relationship audit is ~40 lines and should live in the repository rather
 than in a scratch file, because Phase A's progress is measured by it and Phase
-C's PRs are verified against it. Suggested home:
+C's PRs are verified against it. **The rewrite script that applies Phase A's
+deletions should be committed beside it, for the same reason and with more
+urgency**: it is the tool behind the "70 deleted, SQL diff empty" measurement,
+and until it is in the repository that measurement cannot be reproduced by
+anyone else. Suggested home:
 `artisan al:audit-relationship-keys`, printing the three counts, the pivot-table
 snapshot and the
 divergence table. That also makes it a candidate arch test later — "the number

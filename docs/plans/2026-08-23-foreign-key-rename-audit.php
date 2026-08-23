@@ -50,7 +50,12 @@ function passesKeyArgument(ReflectionMethod $method, bool $isBelongsToMany): boo
         $method->getEndLine() - $method->getStartLine() + 1
     ));
 
-    if (! preg_match('/(belongsToMany|hasMany|hasOne|belongsTo)\(\s*[A-Za-z]+::class\s*(,[^)]*)?\)/s', $body, $m)) {
+    // Case-insensitive on purpose: four declarations in app/Models/ spell it
+    // `belongstoMany` (lowercase t). PHP method names are case-insensitive so
+    // they work, but a case-sensitive regex here silently files two redundant
+    // declarations under "already clean" -- the exact flaw this plan warns the
+    // *next* tool about. Found by OpenCode's review of the plan.
+    if (! preg_match('/(belongsToMany|hasMany|hasOne|belongsTo)\(\s*[A-Za-z]+::class\s*(,[^)]*)?\)/si', $body, $m)) {
         return false;
     }
 
