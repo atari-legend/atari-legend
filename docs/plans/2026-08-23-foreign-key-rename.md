@@ -261,7 +261,18 @@ self::countWithText('individual_text', 'ind_profile', 'ind_id')
 
 That third category is worth naming separately: **a foreign key passed as data**.
 It is not a query literal and not a property, so a reviewer scanning for either
-shape misses it, and no arch test of the `QueryConventionsTest` kind can see it.
+shape misses it, and no arch test of the `QueryConventionsTest` kind can reach
+it — a lint over query syntax cannot know that the third argument of a helper is
+a column name.
+
+It is, however, covered *functionally*, which is the point of preferring
+functional tests: `Admin/StatisticsTest:153`
+(`test_coverage_ignores_individuals_without_a_bio`) inserts into
+`individual_text` and asserts the "Individuals with a bio" figure, so it runs
+that helper for real. It also writes `ind_id` twice through `DB::table()`, which
+is a raw insert and therefore fails loudly on 1054 after the rename. So the site
+is both covered and self-announcing — it just is not reachable by static
+tooling.
 
 **Factories and seeders (4).** `IndividualFactory:32`, `InterviewFactory:25`,
 `E2ESeeder:434` and `:439`. The primary-key campaign's harness change 1 gives
@@ -374,10 +385,24 @@ that actually calls it before the argument goes, otherwise the fix is unproven.
 
 **`GameAka::game()`** is `hasOne(Game::class, 'id', 'game_id')` — a `hasOne`
 pinned at both ends to model what is really a `belongsTo`. `belongsTo(Game::class)`
-derives `game_id` and needs no arguments. This one is **not** a no-op:
-`hasOne` and `belongsTo` differ in eager-load direction and in what
-`associate()` and `save()` do, so it needs a functional test of the pages that
-render a game's AKA names, not just a green suite.
+derives `game_id` and needs no arguments.
+
+**But the better fix is to delete it.** It has no callers. Everything that
+reaches AKAs goes the other way through `Game::akas()` (`GameHelper:88`,
+`ReleaseDescriptionHelper:150`, the `whereHas('akas')` searches in
+`GameSearchController:59` and `MenuSetController:148`) or queries
+`DB::table('game_aka')` directly (`Ajax/GameAndSoftwareController:22`). So this
+is an unused inverse relation that is also implemented wrongly, and converting
+it means writing a test for a method nothing calls in order to justify keeping
+it. `hasOne` and `belongsTo` genuinely differ — eager-load direction,
+`associate()`, `save()` — so a conversion cannot be waved through as a no-op,
+and there is no reason to buy that risk for dead code.
+
+The same argument applies to `reviewScreenshots()` above. Both are unused
+relations that the convention audit only surfaced because it calls every
+relation method; deleting them removes two divergences and two latent bugs at
+once. If either is wanted later it should be written fresh, correctly, with the
+caller that needs it.
 
 ## The risk model, and why it is not the previous campaign's
 
@@ -653,11 +678,11 @@ Steps 1-3 and 6 are the primary-key plan's, unchanged. What differs:
 
 ## What the test suite must gain first
 
-OpenCode is auditing coverage in parallel; that work belongs in
-`2026-08-23-foreign-key-rename-test-audit.md` and will be folded in here. The
-constraints agreed with nicolas up front: **no test is to be written to test
-renaming.** Anything added must be a functional test of a feature that a rename
-would break, and must earn its place with the renames deleted.
+Audited jointly with OpenCode; its findings are folded in below rather than
+kept in a separate document. The constraint agreed with nicolas up front:
+**no test is to be written to test renaming.** Anything added must be a
+functional test of a feature that a rename would break, and must still earn its
+place with the renames deleted.
 
 **The one silent site is already covered.** An earlier draft of this plan said
 nothing guarded the interview write end to end. That was wrong, and OpenCode
@@ -687,16 +712,18 @@ What is genuinely missing:
   more dangerous than no docblock, because it stops the next person looking.
   `game_release_distributor` carries **two** columns in this campaign
   (`game_release_id` and `pub_dev_id`), so it is the single pivot most in need
-  of a write test. Frame it as covering an untested feature rather than as
-  guarding a rename: `:258` links them with `saveMany()` through the relation,
+  of a write test. The natural home is
+  `GameReleaseControllerTest::test_locations_crews_and_languages_are_attached()`
+  at `:126` — extend it and rename it, so the test name stops disagreeing with
+  the file's own docblock. Frame it as covering an untested feature rather than
+  as guarding a rename: `:258` links them with `saveMany()` through the relation,
   so like every other relationship write it is safe by construction. The test
   is worth writing because nothing exercises the field at all, not because the
   rename endangers it.
-- **A test that calls `Screenshot::reviewScreenshots()`**, which today has no
-  caller at all — the argument cannot be fixed safely while the method is
-  unproven.
-- **A test of a game's AKA names** rendering, to cover the `hasOne` →
-  `belongsTo` change on `GameAka::game()`.
+- **Nothing, for the two defects** — they are proposed for deletion rather than
+  repair, precisely because writing a test for a method with no callers in order
+  to keep it is the wrong trade. If either is repaired instead of deleted, then
+  it needs a caller and a test, and that cost belongs on the repair.
 - **The statistics figures**, narrowly. `Tops.php` and
   `AdminStatisticsHelper::topPublishers()/topDevelopers()` join `pub_dev` in raw
   SQL and nothing asserts their output. The exposure is *not* a missed SQL
