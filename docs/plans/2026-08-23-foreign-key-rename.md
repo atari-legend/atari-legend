@@ -387,10 +387,51 @@ There is a resolution that satisfies both, and it is cheap: **rename the models
 to match their tables** — `Release` → `GameRelease`, `Genre` → `GameGenre`.
 Eloquent then derives `game_release_id` and `game_genre_id` by itself, so the
 schema gets the convention *and* the arguments still disappear. `Release` has 7
-references in `app/` and 9 in `tests/`. Recommended, and put to nicolas.
+references in `app/` and 9 in `tests/`.
 
-Until that is decided, assume the arguments stay and the divergence count does
-not fall as far as Phase A's numbers implied.
+### Why that model rename is a prerequisite, not a nicety
+
+Phase A and Phase C conflict without it, and **Phase A's own gates cannot see
+the conflict.**
+
+Eight relations on `Release` pass `'release_id'` today, and that is exactly what
+Eloquent derives, so the audit classifies them as redundant and Phase A deletes
+them:
+
+```
+Release::memoryEnhanced()  memoryMinimums()  memoryIncompatibles()
+emulatorIncompatibles()    tosIncompatibles()  copyProtections()
+diskProtections()          languages()
+```
+
+Phase C then renames that column to `game_release_id`. Eloquent goes back to
+deriving `release_id`, which no longer exists, and all eight break.
+
+The dangerous part is the timing. At Phase A time the deletion genuinely *is* a
+no-op: the pivot snapshot is unchanged, the SQL diff is empty, the suite is 991
+green. Every gate passes honestly. The failure lands one phase later, in a pull
+request that never touched those lines — the same shape as the `id` collision
+the primary-key campaign spent its Phase A2 defusing, arriving from a new
+direction.
+
+It also inverts the campaign's headline. Those eight, plus `Media::release()`
+— which passes no argument today precisely because `release_id` is the default
+— all end up *needing* an explicit `'game_release_id'`. Without the model
+rename, Phase C hands back roughly ten explicit arguments that do not exist
+today, and Phase A's deletable count falls to match.
+
+Three ways out, in order of preference:
+
+1. **Rename `Release` → `GameRelease`** before Phase C. Everything converges:
+   the arguments stay deletable, `Media::release()` needs nothing, and the
+   ordering conflict disappears.
+2. **Run Phase C before Phase A**, so the audit sees the final column names and
+   classifies correctly. Costs the campaign its safe, satisfying opening move.
+3. **Exclude those relations from Phase A by name** and update them inside
+   Phase C. Workable, but it relies on a hand-maintained exclusion list, which
+   is the failure mode the audit script exists to remove.
+
+Until this is decided, **Phase A must not run against the `Release` relations.**
 
 ### Order
 
