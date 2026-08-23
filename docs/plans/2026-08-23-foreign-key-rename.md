@@ -19,6 +19,16 @@ being collected here. The largest was that this document's own account of *why*
 derivation rule it states correctly elsewhere. That section is rewritten, and
 the campaign now has an explicit order.
 
+A second review, same day, re-ran the audit and every grep and found no factual
+error in the measurements. It did find four places where this document
+contradicted itself, all fixed below where they occur. One was not
+merely presentational: the summary table split the 48 divergent relations
+20 / 20 between Phases C and D while the sections split them 18 / 22, and the
+sections were right. Its one disputed finding is also recorded where it lands —
+it read the mass-assignment count as overstated, on a grep that missed the
+static `Model::create([` form; the original figure was close and now carries the
+command that reproduces it.
+
 ## Decisions taken
 
 All settled with nicolas on 2026-08-23. Recorded here because three of them
@@ -124,18 +134,27 @@ its own section.
 | Explicit key argument that is **already** Eloquent's default | 78 | A | No — delete the argument |
 | No explicit key argument (already clean) | 33 | — | No |
 | Divergent, fixed by renaming a **PHP method** | 5 | B | No |
-| Divergent, fixed by renaming a **column** | 20 | C | Yes |
+| Divergent, fixed by renaming a **column** (or by the model rename Phase C rests on) | 18 | C | Yes |
 | Divergent because the relation is **wrong** (one unused, one live) | 2 | A | No — delete one, convert one |
-| Divergent, convention **unreachable or declined** | 20 | D | No — keep the argument, record why |
+| Divergent, convention **unreachable or declined** | 22 | D | No — keep the argument, record why |
 | Divergent, **deferred** (`News::image()`) | 1 | — | No |
 | **Total relations in `app/Models/`** | **159** | | |
 
-The 48 divergent relations are the last five rows. Two notes on the edges:
+The 48 divergent relations are the last five rows. Three notes on the edges:
 
-- The 20 declined include the three `type()` relations, which Phase B could
+- The 22 declined include the three `type()` relations, which Phase B could
   reach by renaming a method and deliberately does not — `->type` is 97 hits
-  repo-wide and mostly plain columns.
-- One of the 20 — `Release::distributors()`, on `game_release_distributor` — is
+  repo-wide and mostly plain columns. They also include
+  `MenuDiskContent::release()` and `ReleaseAka::release()`, which an earlier
+  draft counted under Phase C. Neither belongs there:
+  `menu_disk_contents.game_release_id` and `game_release_aka.game_release_id`
+  are already table-correct and do not move, and `belongsTo` derives from the
+  **method** name, so the `Release` → `GameRelease` rename does not reach them
+  either. Only renaming the method to `gameRelease()` would, and that is
+  declined on pricing in Phase D. The rows read 18 / 22 for that reason, not
+  20 / 20; second review 2026-08-23 caught that the sections and the table
+  disagreed.
+- One of the 18 — `Release::distributors()`, on `game_release_distributor` — is
   only half fixed by its column rename: `game_release_id` moves and `pub_dev_id`
   does not, so it ends the campaign with one explicit argument rather than none.
 - The campaign also *adds* one argument that does not exist today.
@@ -145,7 +164,9 @@ The 48 divergent relations are the last five rows. Two notes on the edges:
   see "The two hand-edits option 1 still needs".
 
 The column-rename relations resolve to **six renames covering 18 columns
-across 18 tables**, listed in Phase C. So the campaign is: delete 78 arguments,
+across 18 tables**, listed in Phase C (that this is also 18 relations is a
+coincidence — the two sets are not in correspondence). So the campaign is:
+delete 78 arguments,
 delete one dead relation and convert one broken one, rename 5 methods, rename
 18 columns (with 16 more deferred alongside the `*_main` merge), and
 write down why the rest stay as they are. The first
@@ -396,9 +417,15 @@ that belong with it rather than after it:
   line-oriented rewriter cannot safely touch, enumerated under "One pull request,
   not thirty" — five of them in Phase A's scope once the model rename has landed.
   Phase A is therefore roughly seventy mechanical edits plus five careful ones,
-  not one clean sweep.
+  not one clean sweep. Nor does the residue arithmetic close: 70 deleted plus
+  a static residue of seven is 77 against a redundant set of 78, and 70 of the
+  pre-`/i` 76 leaves six where static analysis finds seven. Both gaps come from
+  the same missing tool, so neither is worth reconciling on paper. **When the
+  rewriter is committed, the pull request states its own split — how many the
+  script rewrote, how many were done by hand, out of how many — rather than
+  inheriting the 70.**
 - **An empty SQL diff and a green suite prove the *relations* are unchanged.**
-  They do not prove nothing else in those 26 files was disturbed. That is what
+  They do not prove nothing else in those 27 files was disturbed. That is what
   reading the diff is for, and it is the reason this phase is still a reviewed
   pull request rather than a scripted commit.
 
@@ -747,7 +774,11 @@ avoid the problem**, because those two break regardless of when Phase A runs.
 
 **The same trap exists outside the `Release` group.** Checked across all six
 renamed columns rather than stopping at `release_id`: 23 relations depend on
-one, and **three** pass no argument at all — `Media::release()`,
+one — 11 on `release_id`, 7 on `ind_id`, 2 on `comments_id`, 2 on
+`dev_pub_id`, 1 on `progress_system_id` and **none** on
+`individual_nicks_id`, which is a schema-only foreign key with no Eloquent
+relation anywhere in `app/` (so Phase C renames that column and edits no model
+at all) — and **three** pass no argument at all — `Media::release()`,
 `Release::medias()`, and `Game::progressSystem()`, which is
 `belongsTo(ProgressSystem::class)` and derives `progress_system_id`. Renaming
 that column to `game_progress_system_id` breaks it with nothing in the diff to
@@ -998,9 +1029,17 @@ Two things go with that decision, because "fossil" is a fair charge:
   That is consistency between *endpoints*, which is a better argument than
   consistency with the schema, and it is not this campaign's job.
 
-## Phase D — the nine that convention cannot reach, and the eleven it should not
+## Phase D — the nine that convention cannot reach, and the thirteen it should not
 
-Write these down rather than leaving them to be rediscovered.
+Write these down rather than leaving them to be rediscovered. Six unreachable,
+three with no derivable default, thirteen declined: 22 of today's 48 divergent
+relations end the campaign holding an explicit argument on purpose. The thirteen,
+so the count is checkable against the audit output rather than trusted — the
+three `type()` relations; the five that differ only because the model is
+`PublisherDeveloper` and the table is `pub_dev` (`Game::developers()`,
+`PublisherDeveloper::text()`/`games()`/`releases()`, `Release::publisher()`);
+`Game::genres()`; `GameSubmitInfo::screenshots()`; `Game::vs()`; and
+`ReleaseAka::release()` and `MenuDiskContent::release()`.
 
 **Unreachable.** A self-referential `belongsToMany` needs two *different* pivot
 key names, and convention derives the *same* name for both. The explicit
@@ -1054,6 +1093,11 @@ bearing.
   `->release` is **77** lines across `app/`, `resources/views/` and `tests/`.
   Two already carry an explicit `'game_release_id'`; Phase C gives the third
   one. Three arguments against ~70 edits for no behavioural gain.
+  `ReleaseAka::release()` and `MenuDiskContent::release()` count **here**, not
+  in Phase C: their columns are already `game_release_id` and Phase C does not
+  touch them, so nothing in that phase converges them. (`Media::release()` is
+  the third, and it is not in today's 48 at all — it is clean today and
+  divergent afterwards.)
 - **`Article::type()`, `Media::type()`, `MediaScan::type()`.** Phase B *could*
   reach these by renaming the method, and declines to — see the pricing table
   there. `->type` is 97 hits repo-wide and mostly plain columns on other
@@ -1244,9 +1288,21 @@ Two consequences for the plan:
   explicitly rather than relying on a grep.
 - **Do *not* enable `preventSilentlyDiscardingAttributes()` in production.**
   An earlier draft floated it and left it open. Measured, it is the wrong
-  instrument: the flag is global and would newly police **107 mass-assignment
-  call sites across 51 files** in production, in order to protect against a
-  risk that exists at **one** of them. Every latent stale key anywhere in the
+  instrument: the flag is global and would newly police **114 mass-assignment
+  call sites across 55 files** under `app/`, in order to protect against a risk
+  that exists at **one** of them. The command, because an earlier draft quoted
+  107 across 51 without one:
+
+  ```
+  grep -rEn -- '(->|::)(create|createMany|fill|forceFill|update|firstOrCreate|updateOrCreate)\(|new [A-Z][A-Za-z]*\(\s*\[' app/
+  ```
+
+  The `(->|::)` alternation is what makes the number mean anything: a second
+  review counted ~78 lines here and read the claim as overstated, having
+  matched only `->create(` and missed every static `Model::create([`. It is
+  still a floor — a call whose `(` and `[` land on different lines escapes any
+  line-oriented count — and the order of magnitude is the argument either way:
+  ~100 sites policed to protect one. Every latent stale key anywhere in the
   application — in paths that today work fine by dropping something harmless —
   would become a 500 instead. The suite being green with the flag on says
   nothing about the untested paths, which is precisely where such a key would
