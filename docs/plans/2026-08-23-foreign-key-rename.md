@@ -158,8 +158,15 @@ Priced by how ambiguous the token is:
 | `image` | 28 | Ambiguous — defer |
 | `type` | 105 | Ambiguous — **keep the explicit argument** |
 
-Recommendation: do the four safe ones, defer `image`, and keep the argument on
-the three `type()` relations permanently, recorded as a deliberate exception.
+**Decided, with OpenCode: do `vs`, `series`, `donatedBy` and `role`; keep the
+arguments on `type()` and defer `image`.** `role` looked borderline on the hit
+count alone, and what settles it is that both `role()` relations live on custom
+`Pivot` models (`GameDeveloper`, `GameIndividual`) and are reached as
+`$x->pivot->role->name` from six Blade files and `GameCreditsController` — every
+call site names the concrete pivot class, so the token is fully traceable. There
+is also no bare `role` column anywhere; only `developer_role_id` and
+`individual_role_id`. Neither of those things is true of `type`.
+
 Three explicit arguments is a cheaper price than a 105-site token audit for no
 behavioural gain.
 
@@ -280,10 +287,26 @@ pairs with seven `data-autocomplete-id="ind_id"` attributes in Blade, and
 The trap is the tidy-up. Renaming the JSON key for consistency without moving
 all seven Blade attributes assigns `undefined` into the hidden field, which
 stringifies and submits happily — no PHP error, no SQL error, nothing in the
-log. Either leave all eight alone, or move all eight in one commit. The
-primary-key plan's harness change 4 put a guard on exactly this: `pickAutocompleteBy`
-now rejects the string `"undefined"`, so every existing autocomplete spec is a
-wire-format check.
+log. The primary-key plan's harness change 4 put a guard on exactly this:
+`pickAutocompleteBy` now rejects the string `"undefined"`, so every existing
+autocomplete spec is a wire-format check.
+
+**Decision: the wire key stays `ind_id`.** An earlier draft offered "leave it or
+move it all together" and left the choice open, which OpenCode rightly called a
+dodge — so it is settled here. Moving it costs the endpoint, seven Blade
+attributes and `AjaxEndpointsTest:174`, buys no behaviour, and its failure mode
+is silent on both the server and the client. A rename campaign should not spend
+its risk budget on a name that no database column will carry.
+
+Two things go with that decision, because "fossil" is a fair charge:
+
+- A comment at `Ajax/IndividualController.php:35` saying the key is a wire name
+  and deliberately *not* the column, so the next person does not tidy it.
+- A separate follow-up, with its own PR and its own risk budget: **make every
+  autocomplete endpoint emit `id`.** Ten `data-autocomplete-id` attributes
+  already say `id`; only the seven `ind_id` and seven `game_id` ones do not.
+  That is consistency between *endpoints*, which is a better argument than
+  consistency with the schema, and it is not this campaign's job.
 
 ## Phase D — the four that convention cannot reach, and the ten it should not
 
@@ -407,7 +430,11 @@ rather than assumed:
 - **Pivot writes are safe.** `attach()` and `sync()` take their key names from
   the relationship definition, so they move with it by construction. Eight of
   the nine `game_release_id` columns and all four `ind_id` columns except one
-  are pivots.
+  are pivots. Note that `game_developer.dev_pub_id` and
+  `game_genre_cross.game_genre_id` are **nullable**, not `NOT NULL` as their
+  pivot shape suggests — so it is the write path that makes them safe, not the
+  column definition, and the safety argument has to be the one above rather
+  than "the constraint would catch it".
 
 Which reduces the entire silent class to a single sentence: **mass assignment
 into a nullable foreign key column, in production.** There are five non-pivot
@@ -495,7 +522,44 @@ DB::statement('ALTER TABLE `interview_main` ADD CONSTRAINT `interview_main_indiv
     FOREIGN KEY (`individual_id`) REFERENCES `individuals` (`id`) ON DELETE CASCADE');
 ```
 
-After which `dropForeign(['individual_id'])` succeeds. Three notes:
+After which `dropForeign(['individual_id'])` succeeds.
+
+**But that block is only correct for `interview_main`, and copying it is a
+trap.** Raised by OpenCode, then queried across all 16 renameable foreign key
+columns via `information_schema.STATISTICS` and `KEY_COLUMN_USAGE`. The two
+naming schemes are **asymmetric**:
+
+| | Laravel-named `<table>_<col>_foreign` | Named after the column |
+|---|---|---|
+| Constraints | **16 of 16** | 0 |
+| Indexes | 6 of 16 | **10 of 16** |
+
+So the constraint name can be derived. **The index name cannot.** The ten plain
+ones are `game_developer.dev_pub_id`, `game_genre_cross.game_cat_id`, and an
+index literally called `game_release_id` on all eight `game_release_*` tables —
+so `RENAME KEY game_release_aka_game_release_id_foreign` fails on eight of the
+nine tables in the largest rename. Read the index name out of
+`information_schema.STATISTICS` per table; never derive it:
+
+```sql
+SELECT TABLE_NAME, INDEX_NAME, COLUMN_NAME FROM information_schema.STATISTICS
+WHERE TABLE_SCHEMA = DATABASE() AND COLUMN_NAME = 'game_release_id';
+```
+
+(No renameable column carries more than one index, which is the one thing here
+that is simple.)
+
+One distinction worth drawing, because it changes how urgent this is. For the
+six `*_foreign` indexes, the rename *introduces* the 1091 trap. For the other
+ten, `dropIndex(['release_id'])` is **already** broken today — Laravel derives
+`<table>_<cols>_index` and the index is not named that either way — so renaming
+them is tidiness rather than a regression fix. Do it anyway: an index named
+`game_release_id` sitting on a column called `release_id` is precisely how
+`game_genre_cross` ended up with an index called `game_cat_id`, on a column
+that has not been called `game_cat_id` for years. That name is the empirical
+proof that this drift is real and that nobody goes back for it.
+
+Three further notes:
 
 - The `ON DELETE` clause must be copied from `SHOW CREATE TABLE`, not assumed.
   `interview_main_ind_id_foreign` is `ON DELETE CASCADE`; its sibling
