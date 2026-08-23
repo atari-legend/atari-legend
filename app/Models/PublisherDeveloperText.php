@@ -15,6 +15,8 @@ class PublisherDeveloperText extends Model
 
     public function getFileAttribute()
     {
+        // pub_dev_id, not getKey(): this model's key is pub_dev_text, and the
+        // logo is stored under the company's id.
         return Helper::filename($this->pub_dev_id, $this->pub_dev_imgext);
     }
 }

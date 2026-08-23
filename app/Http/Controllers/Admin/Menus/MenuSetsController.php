@@ -21,7 +21,7 @@ class MenuSetsController extends Controller
 
     public function index(Request $request)
     {
-        $sets = MenuSet::select()
+        $sets = MenuSet::select('menu_sets.*')
             ->orderBy('name');
 
         if ($request->letter) {

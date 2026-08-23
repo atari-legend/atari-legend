@@ -124,7 +124,7 @@ class AjaxEndpointsTest extends TestCase
         $results = $this->getJson(route('ajax.companies', ['q' => 'Psy']))->assertOk()->json();
 
         $this->assertSame('Psygnosis', $results[0]['pub_dev_name']);
-        $this->assertSame($company->getKey(), $results[0]['pub_dev_id']);
+        $this->assertSame($company->getKey(), $results[0]['id']);
     }
 
     public function test_a_crew_carries_its_id_and_nothing_else(): void
@@ -133,7 +133,7 @@ class AjaxEndpointsTest extends TestCase
 
         $results = $this->getJson(route('ajax.crews', ['q' => 'Auto']))->assertOk()->json();
 
-        $this->assertSame(['crew_name' => 'Automation', 'crew_id' => $crew->getKey()], $results[0]);
+        $this->assertSame(['crew_name' => 'Automation', 'id' => $crew->getKey()], $results[0]);
     }
 
     /**

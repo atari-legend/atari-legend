@@ -83,7 +83,7 @@
                                                         href="{{ route('menus.software', $index->menuSoftware) }}">{{ $index->menuSoftware->name }}</a>
                                                 @elseif ($index->individual)
                                                     <a
-                                                        href="{{ route('games.search', ['individual_id' => $index->individual->ind_id]) }}">{{ $index->individual->ind_name }}</a>
+                                                        href="{{ route('games.search', ['individual_id' => $index->individual->getKey()]) }}">{{ $index->individual->ind_name }}</a>
                                                 @endif
                                                 @if ($index->title)
                                                     : {{ $index->title }}

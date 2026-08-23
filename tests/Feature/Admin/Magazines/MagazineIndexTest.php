@@ -46,7 +46,7 @@ class MagazineIndexTest extends AdminTestCase
         MagazineIndex::factory()->forIndividual()->create([
             'magazine_issue_id' => $issue->getKey(),
             'title'             => 'Meet the coder',
-            'individual_id'     => Individual::factory()->create(['ind_name' => 'Jochen Hippel'])->ind_id,
+            'individual_id'     => Individual::factory()->create(['ind_name' => 'Jochen Hippel'])->getKey(),
         ]);
 
         MagazineIndex::factory()->create(['title' => 'Another issue entirely']);
@@ -223,9 +223,9 @@ class MagazineIndexTest extends AdminTestCase
         $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
 
         $component = Livewire::test(MagazineIndexComponent::class, ['issue' => $issue])
-            ->call('updateIndividual', $index->getKey(), $individual->ind_id);
+            ->call('updateIndividual', $index->getKey(), $individual->getKey());
 
-        $this->assertSame($individual->ind_id, $index->fresh()->individual_id);
+        $this->assertSame($individual->getKey(), $index->fresh()->individual_id);
         $component->assertSee('Jochen Hippel');
 
         $component->call('updateIndividual', $index->getKey(), null);

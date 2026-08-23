@@ -17,7 +17,7 @@ class ChangelogTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('change_log_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('timestamp', 'desc');
     }
 
@@ -34,7 +34,7 @@ class ChangelogTable extends DataTableComponent
                 ->label(fn ($row) => Helper::user($row->user))
                 ->sortable(function (Builder $query, $direction) {
                     // Left join so entries without a user (user_id -1) are kept
-                    return $query->leftJoin('users', 'change_log.user_id', '=', 'users.user_id')
+                    return $query->leftJoin('users', 'change_log.user_id', '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
             Column::make('Section', 'section')
@@ -63,7 +63,7 @@ class ChangelogTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        // Qualify the select: sorting on User joins `users`, which also has a `user_id`
+        // Qualify the select: sorting on User joins `users`, which now also has an `id`
         return Changelog::query()
             ->select('change_log.*')
             ->with('user');
@@ -162,7 +162,7 @@ class ChangelogTable extends DataTableComponent
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [strval($user->user_id) => $user->userid];
+                return [strval($user->getKey()) => $user->userid];
             })->all();
 
         return ['' => 'Any'] + $users;

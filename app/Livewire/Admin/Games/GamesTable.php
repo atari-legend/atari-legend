@@ -12,7 +12,7 @@ class GamesTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('game_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('game_name');
     }
 
@@ -56,6 +56,6 @@ class GamesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Game::select();
+        return Game::select('game.*');
     }
 }

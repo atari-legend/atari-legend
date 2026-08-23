@@ -61,7 +61,7 @@ class NewsController extends Controller
 
         $news->update([
             'news_headline' => $request->headline,
-            'user_id'       => User::find($request->author)->user_id,
+            'user_id'       => User::find($request->author)->getKey(),
             'news_date'     => Carbon::parse($request->date)->timestamp,
             'news_text'     => $request->text,
         ]);
@@ -87,7 +87,7 @@ class NewsController extends Controller
 
         $news = News::create([
             'news_headline' => $request->headline,
-            'user_id'       => User::find($request->author)->user_id,
+            'user_id'       => User::find($request->author)->getKey(),
             'news_date'     => Carbon::parse($request->date)->timestamp,
             'news_text'     => $request->text,
         ]);
@@ -166,7 +166,7 @@ class NewsController extends Controller
             }
 
             $image = $request->file('image');
-            $image->storeAs('images/news_images/', $newsImage->news_image_id . '.' . $image->extension(), 'public');
+            $image->storeAs('images/news_images/', $newsImage->getKey() . '.' . $image->extension(), 'public');
 
             $newsImage->update(['news_image_ext' => $image->extension()]);
 

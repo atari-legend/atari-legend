@@ -15,7 +15,7 @@ class NewsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('news_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('news_date', 'desc');
     }
 
@@ -55,8 +55,8 @@ class NewsTable extends DataTableComponent
     public function builder(): Builder
     {
         return News::query()
-            ->leftJoin('news_image', 'news.news_image_id', '=', 'news_image.news_image_id')
-            ->select();
+            ->leftJoin('news_image', 'news.news_image_id', '=', 'news_image.id')
+            ->select('news.*');
     }
 
     public function filters(): array
@@ -65,7 +65,7 @@ class NewsTable extends DataTableComponent
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [strval($user->user_id) => $user->userid];
+                return [strval($user->getKey()) => $user->userid];
             })->all();
         $authors = ['' => 'Any'] + $authors;
 

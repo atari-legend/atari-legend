@@ -14,7 +14,7 @@ class GameMusicController extends Controller
 {
     public function index(Game $game)
     {
-        $query = Sndh::select();
+        $query = Sndh::select('sndhs.*');
         if (\Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite') {
             $query->where('title', 'like', '%' . $game->game_name . '%');
         } else {

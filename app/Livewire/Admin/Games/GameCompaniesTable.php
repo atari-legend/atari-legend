@@ -13,7 +13,7 @@ class GameCompaniesTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('pub_dev_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('pub_dev_name');
     }
 
@@ -45,7 +45,7 @@ class GameCompaniesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PublisherDeveloper::select();
+        return PublisherDeveloper::select('pub_dev.*');
     }
 
     public function filters(): array

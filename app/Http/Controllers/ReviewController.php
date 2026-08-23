@@ -28,7 +28,9 @@ class ReviewController extends Controller
 
         if ($request->filled('author')) {
             $reviews->whereHas('user', function (Builder $query) use ($request) {
-                $query->where('user_id', $request->input('author'));
+                // Inside whereHas the query runs against `users`, so this is
+                // User's own key rather than review_main's foreign key.
+                $query->where('users.id', $request->input('author'));
             });
         }
 
@@ -49,7 +51,7 @@ class ReviewController extends Controller
 
         if (isset($review->user)) {
             $otherReviews = $this->getReviewsForUser($review->user)
-                ->where('review_id', '!=', $review->review_id)
+                ->whereKeyNot($review->getKey())
                 ->get();
         }
 
@@ -112,7 +114,7 @@ class ReviewController extends Controller
         // Process screenshots comments. Screenshots were ordered by screenshot_id
         // so we should iterate over the same ordered list of game screenshots to
         // associate the comment with the correct screenshot
-        $gameScreenshots = $game->screenshots->sortBy('screenshot_id');
+        $gameScreenshots = $game->screenshots->sortBy('id');
         if ($request->filled('screenshot')) {
             $i = 0;
             foreach ($request->screenshot as $screenshotComment) {
@@ -121,8 +123,8 @@ class ReviewController extends Controller
                 if ($screenshotComment !== null) {
                     $id = DB::table('screenshot_review')
                         ->insertGetId([
-                            'review_id'     => $review->review_id,
-                            'screenshot_id' => $gameScreenshot->screenshot_id,
+                            'review_id'     => $review->getKey(),
+                            'screenshot_id' => $gameScreenshot->getKey(),
                         ]);
                     $comment = new ScreenshotReviewComment();
                     $comment->comment_text = $screenshotComment;
@@ -175,7 +177,7 @@ class ReviewController extends Controller
 
     private function getReviewsForUser(User $user)
     {
-        return Review::where('user_id', $user->user_id)
+        return Review::where('user_id', $user->getKey())
             ->where('review_edit', Review::REVIEW_PUBLISHED)
             ->orderBy('review_date', 'desc');
     }

@@ -6,7 +6,7 @@
         @auth
             <form method="post" action="{{ route('reviews.submit', ['game' => $game->getKey()]) }}">
                 @csrf
-                <input type="hidden" name="game" value="{{ $game->game_id }}">
+                <input type="hidden" name="game" value="{{ $game->getKey() }}">
 
                 <ul class="nav nav-pills mb-2">
                     <li class="nav-item">
@@ -59,7 +59,7 @@
                         @if ($game->screenshots->isNotEmpty())
                             <fieldset class="lightbox-gallery">
                                 <legend>Screenshots</legend>
-                                @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
+                                @foreach ($game->screenshots->sortBy('id') as $screenshot)
                                     <div class="row mb-3">
                                         <div class="col-2">
                                             <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
@@ -67,7 +67,7 @@
                                             </a>
                                         </div>
                                         <div class="col-10 d-flex">
-                                            <input type="text" class="form-control align-self-center previewable" id="screenshot-comment-{{ $screenshot->screenshot_id }}" name="screenshot[]" placeholder="Comment for this screenshot">
+                                            <input type="text" class="form-control align-self-center previewable" id="screenshot-comment-{{ $screenshot->getKey() }}" name="screenshot[]" placeholder="Comment for this screenshot">
                                         </div>
                                     </div>
                                 @endforeach
@@ -102,12 +102,12 @@
                             </div>
 
                             <div class="col-3 ps-2 text-center text-muted lightbox-gallery">
-                                @foreach ($game->screenshots->sortBy('screenshot_id') as $screenshot)
+                                @foreach ($game->screenshots->sortBy('id') as $screenshot)
                                     <div class="bg-dark p-2">
                                         <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
                                             <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $game) }}">
                                         </a>
-                                        <p class="pb-5 mb-0" id="preview-screenshot-comment-{{ $screenshot->screenshot_id }}"></p>
+                                        <p class="pb-5 mb-0" id="preview-screenshot-comment-{{ $screenshot->getKey() }}"></p>
                                     </div>
                                 @endforeach
                             </div>

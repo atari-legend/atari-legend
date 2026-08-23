@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Game;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -20,42 +19,54 @@ return new class extends Migration
             $table->string('slug', 255)->index();
         });
 
-        Game::all()
-            ->sortByDesc(['developers.pub_dev_name', 'individuals.ind_name'])
-            ->each(function ($game) {
-                $slug = $game->game_name;
+        $games = DB::table('game')
+            ->select('game.game_id', 'game.game_name', 'pub_dev.pub_dev_name', 'individuals.ind_name')
+            ->leftJoin('game_developer', 'game.game_id', '=', 'game_developer.game_id')
+            ->leftJoin('pub_dev', 'game_developer.dev_pub_id', '=', 'pub_dev.pub_dev_id')
+            ->leftJoin('game_individual', 'game.game_id', '=', 'game_individual.game_id')
+            ->leftJoin('individuals', 'game_individual.individual_id', '=', 'individuals.ind_id')
+            ->orderByDesc('pub_dev.pub_dev_name')
+            ->orderByDesc('individuals.ind_name')
+            ->get()
+            ->groupBy('game_id');
 
-                // Handle names like "Enforcer, The" -> "The Enforcer"
-                foreach (['The', 'A', 'Das', 'Die', 'Der', 'Les', 'La', 'Le', "L'"] as $article) {
-                    if (Str::endsWith($slug, ", {$article}")) {
-                        $slug = $article . ' ' . preg_replace("/, {$article}$/", '', $slug);
-                    }
+        foreach ($games as $gameId => $gameRows) {
+            $firstRow = $gameRows->first();
+            $slug = $firstRow->game_name;
+
+            // Handle names like "Enforcer, The" -> "The Enforcer"
+            foreach (['The', 'A', 'Das', 'Die', 'Der', 'Les', 'La', 'Le', "L'"] as $article) {
+                if (Str::endsWith($slug, ", {$article}")) {
+                    $slug = $article . ' ' . preg_replace("/, {$article}$/", '', $slug);
                 }
-                $slug = Str::slug($slug);
-                $slug = str_replace('-ii-', '-2-', $slug);
-                $slug = str_replace('-iii-', '-3-', $slug);
+            }
+            $slug = Str::slug($slug);
+            $slug = str_replace('-ii-', '-2-', $slug);
+            $slug = str_replace('-iii-', '-3-', $slug);
 
-                // If duplicates, append the first developer
-                if (Game::where('slug', '=', $slug)->count()) {
-                    if ($game->developers->isNotEmpty()) {
-                        $slug .= '-' . Str::slug($game->developers->first()->pub_dev_name);
-                    }
+            // If duplicates, append the first developer
+            if (DB::table('game')->where('slug', '=', $slug)->count()) {
+                $devName = $gameRows->whereNotNull('pub_dev_name')->first()?->pub_dev_name;
+                if ($devName) {
+                    $slug .= '-' . Str::slug($devName);
                 }
+            }
 
-                // If duplicates, append the first individual
-                if (Game::where('slug', '=', $slug)->count()) {
-                    if ($game->individuals->isNotEmpty()) {
-                        $slug .= '-' . Str::slug($game->individuals->first()->ind_name);
-                    }
+            // If duplicates, append the first individual
+            if (DB::table('game')->where('slug', '=', $slug)->count()) {
+                $indName = $gameRows->whereNotNull('ind_name')->first()?->ind_name;
+                if ($indName) {
+                    $slug .= '-' . Str::slug($indName);
                 }
+            }
 
-                // If dupicates, not much more we can do. Append the ID
-                if (Game::where('slug', '=', $slug)->count()) {
-                    $slug .= '-id-' . $game->getKey();
-                }
+            // If dupicates, not much more we can do. Append the ID
+            if (DB::table('game')->where('slug', '=', $slug)->count()) {
+                $slug .= '-id-' . $gameId;
+            }
 
-                DB::update('update game set slug = ? where game_id = ?', [$slug, $game->getKey()]);
-            });
+            DB::update('update game set slug = ? where game_id = ?', [$slug, $gameId]);
+        }
 
         // Slugs cannot be purely numeric or they will conflict with IDs
         // Handle a few special cases

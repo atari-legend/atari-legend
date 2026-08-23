@@ -23,8 +23,8 @@ class GameVoteController extends Controller
         } elseif ($request->has('score')) {
             if (! $vote) {
                 $vote = new GameVote([
-                    'game_id' => $game->game_id,
-                    'user_id' => Auth::user()->user_id,
+                    'game_id' => $game->getKey(),
+                    'user_id' => Auth::user()->getKey(),
                 ]);
             }
 
@@ -37,8 +37,8 @@ class GameVoteController extends Controller
 
     public static function findVote(Game $game, User $user): ?GameVote
     {
-        return GameVote::where('game_id', '=', $game->game_id)
-            ->where('user_id', '=', $user->user_id)
+        return GameVote::where('game_id', '=', $game->getKey())
+            ->where('user_id', '=', $user->getKey())
             ->first();
     }
 }

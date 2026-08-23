@@ -18,7 +18,6 @@ class User extends Authenticatable implements MustVerifyEmail
     const ACTIVE = 0;
     const INACTIVE = 1;
 
-    protected $primaryKey = 'user_id';
     public $timestamps = false;
 
     /* The attributes that are mass assignable.
@@ -68,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvatarAttribute()
     {
         if ($this->avatar_ext !== null && $this->avatar_ext !== '') {
-            return asset('storage/images/user_avatars/' . $this->user_id . '.' . $this->avatar_ext);
+            return asset('storage/images/user_avatars/' . $this->getKey() . '.' . $this->avatar_ext);
         } else {
             return null;
         }

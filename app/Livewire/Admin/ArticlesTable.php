@@ -17,7 +17,7 @@ class ArticlesTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('article_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('article_date', 'desc');
     }
 
@@ -60,7 +60,7 @@ class ArticlesTable extends DataTableComponent
     public function builder(): Builder
     {
         return Article::select('article_main.*', 'article_text.article_title', 'article_text.article_date')
-            ->leftJoin('article_text', 'article_text.article_id', '=', 'article_main.article_id');
+            ->leftJoin('article_text', 'article_text.article_id', '=', 'article_main.id');
     }
 
     public function filters(): array
@@ -69,7 +69,7 @@ class ArticlesTable extends DataTableComponent
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [strval($user->user_id) => $user->userid];
+                return [strval($user->getKey()) => $user->userid];
             })->all();
         $authors = ['' => 'Any'] + $authors;
 

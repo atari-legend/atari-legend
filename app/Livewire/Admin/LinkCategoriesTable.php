@@ -12,7 +12,7 @@ class LinkCategoriesTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('website_category_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('website_category_name');
     }
 

@@ -14,7 +14,6 @@ class Changelog extends Model implements Feedable
     const DELETE = 'Delete';
 
     protected $table = 'change_log';
-    protected $primaryKey = 'change_log_id';
     public $timestamps = false;
 
     protected $fillable = [

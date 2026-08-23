@@ -22,7 +22,7 @@
                     <select class="form-select" id="author" name="author">
                         <option value="" selected>-</option>
                         @foreach ($authors as $author)
-                            <option value="{{ $author->user_id }}">{{ $author->userid }} ({{ $author->reviews->count() }})</option>
+                            <option value="{{ $author->getKey() }}">{{ $author->userid }} ({{ $author->reviews->count() }})</option>
                         @endforeach
                     </select>
                 </div>

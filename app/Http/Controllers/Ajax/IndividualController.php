@@ -11,7 +11,7 @@ class IndividualController extends Controller
 {
     public function individuals(Request $request)
     {
-        $individuals = Individual::select('ind_name', 'ind_id')
+        $individuals = Individual::select('ind_name', 'id')
             ->orderBy('ind_name')
             ->limit(10);
 
@@ -32,7 +32,7 @@ class IndividualController extends Controller
 
                 return [
                     'ind_name' => $ind_name,
-                    'ind_id'   => $individual->ind_id,
+                    'ind_id'   => $individual->getKey(),
                 ];
             });
 

@@ -26,7 +26,7 @@ class ReviewsControllerTest extends AdminTestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'author'   => $this->admin->user_id,
+            'author'   => $this->admin->getKey(),
             'date'     => '2026-03-14',
             'text'     => 'A fine shoot-em-up.',
             'graphics' => 5,
@@ -75,7 +75,7 @@ class ReviewsControllerTest extends AdminTestCase
         $review = Review::sole();
 
         $this->assertSame('A fine shoot-em-up.', $review->review_text);
-        $this->assertSame($this->admin->user_id, $review->user_id);
+        $this->assertSame($this->admin->getKey(), $review->user_id);
         $this->assertSame('Xenon', $review->games->first()->game_name);
         $this->assertSame(Review::REVIEW_PUBLISHED, $review->review_edit);
 
@@ -241,10 +241,10 @@ class ReviewsControllerTest extends AdminTestCase
         $author = User::factory()->create();
 
         $this->put(route('admin.reviews.reviews.update', $review), $this->payload([
-            'author' => $author->user_id,
+            'author' => $author->getKey(),
         ]));
 
-        $this->assertSame($author->user_id, $review->fresh()->user_id);
+        $this->assertSame($author->getKey(), $review->fresh()->user_id);
     }
 
     public function test_non_admins_are_turned_away(): void

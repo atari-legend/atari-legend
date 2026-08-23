@@ -164,9 +164,9 @@ class AuthTest extends TestCase
 
         $this->assertSame(Changelog::INSERT, $changelog->action);
         $this->assertSame('Users', $changelog->section);
-        $this->assertSame($user->user_id, $changelog->section_id);
+        $this->assertSame($user->getKey(), $changelog->section_id);
         $this->assertSame('sysop', $changelog->section_name);
-        $this->assertSame($user->user_id, $changelog->user_id);
+        $this->assertSame($user->getKey(), $changelog->user_id);
     }
 
     public function test_registration_needs_a_username_an_email_and_a_password(): void

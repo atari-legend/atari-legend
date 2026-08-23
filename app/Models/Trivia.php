@@ -9,7 +9,6 @@ class Trivia extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'trivia_id';
     public $timestamps = false;
 
     protected $fillable = ['trivia_text'];

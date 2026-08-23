@@ -13,12 +13,12 @@
                         <i class="fas fa-trash-alt text-danger"></i></a>
 
                     {{ $nick->ind_name }}
-                    @if ($nickDuplicates[$nick->ind_id]->count())
+                    @if ($nickDuplicates[$nick->getKey()]->count())
                         <span class="text-warning ms-2">
                             <i class="fa-solid fa-triangle-exclamation"></i>
-                            Possible nick {{ Str::plural('duplicate', $nickDuplicates[$nick->ind_id]) }} with:
+                            Possible nick {{ Str::plural('duplicate', $nickDuplicates[$nick->getKey()]) }} with:
                         </span>
-                        @foreach ($nickDuplicates[$nick->ind_id] as $duplicate)
+                        @foreach ($nickDuplicates[$nick->getKey()] as $duplicate)
                             <a href="{{ route('admin.games.individuals.edit', $duplicate) }}">
                                 {{ $duplicate->ind_name}}
                                 @if ($duplicate->aka_list->count())({{ $duplicate->aka_list->join(', ') }})@endif

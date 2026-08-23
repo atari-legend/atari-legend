@@ -9,7 +9,6 @@ class Spotlight extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'spotlight_id';
     protected $table = 'spotlight';
     public $timestamps = false;
 

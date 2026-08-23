@@ -117,10 +117,11 @@ The admin panel lives in this repo:
 - Admin routes (`routes/admin.php`), behind the `verified` and `admin` middleware
 - Livewire tables for data management
 
-A legacy admin panel (CPANEL) still exists as a separate application sharing the
-same database and data directory, but this app no longer links to it. Some
-content was written by it and is normalised on read (see the `<br />` handling in
-the News, Articles and Reviews edit forms).
+A legacy admin panel (CPANEL) used to run as a separate application against the
+same database and data directory. It was retired on 2026-08-22, so this
+application is now the only writer. Content it wrote is still in the database and
+is normalised on read (see the `<br />` handling in the News, Articles and
+Reviews edit forms).
 
 ### Admin Patterns
 

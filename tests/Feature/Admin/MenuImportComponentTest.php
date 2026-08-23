@@ -125,13 +125,13 @@ class MenuImportComponentTest extends AdminTestCase
 
         $this->assertSame('A', $component->get('menus.0.disks.0.part'));
         $this->assertEquals($condition->id, $component->get('menus.0.disks.0.condition_id'));
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame('Sticker missing', $component->get('menus.0.disks.0.notes'));
         $this->assertSame('Greetings!', $component->get('menus.0.disks.0.scrolltext'));
 
         // The game row: matched, and both the sheet's name and the live search
         // term start out as what the spreadsheet said.
-        $this->assertEquals($game->game_id, $component->get('menus.0.disks.0.contents.0.game_id'));
+        $this->assertEquals($game->getKey(), $component->get('menus.0.disks.0.contents.0.game_id'));
         $this->assertSame('Populous', $component->get('menus.0.disks.0.contents.0.game_name'));
         $this->assertSame('Populous', $component->get('menus.0.disks.0.contents.0.name'));
         $this->assertSame('Populous', $component->get('menus.0.disks.0.contents.0.query'));
@@ -189,7 +189,7 @@ class MenuImportComponentTest extends AdminTestCase
     {
         $populous = Game::factory()->named('Populous')->create();
         $rick = Game::factory()->named('Rick Dangerous')->create();
-        GameAka::create(['game_id' => $rick->game_id, 'aka_name' => 'Rick Hazardous']);
+        GameAka::create(['game_id' => $rick->getKey(), 'aka_name' => 'Rick Hazardous']);
         Game::factory()->named('Twin')->create();
         Game::factory()->named('Twin')->create(['slug' => 'twin-other']);
 
@@ -200,10 +200,10 @@ class MenuImportComponentTest extends AdminTestCase
             ['content_order' => 4, 'content_name' => 'Nonesuch', 'content_type' => 'Game'],
         ]);
 
-        $this->assertEquals($populous->game_id, $component->get('menus.0.disks.0.contents.0.game_id'));
+        $this->assertEquals($populous->getKey(), $component->get('menus.0.disks.0.contents.0.game_id'));
 
         // An AKA resolves to its game, labelled so the reviewer can see why.
-        $this->assertEquals($rick->game_id, $component->get('menus.0.disks.0.contents.1.game_id'));
+        $this->assertEquals($rick->getKey(), $component->get('menus.0.disks.0.contents.1.game_id'));
         $this->assertSame('Rick Hazardous (AKA)', $component->get('menus.0.disks.0.contents.1.game_name'));
 
         // Two games share the third name, so nothing is picked automatically.
@@ -286,9 +286,9 @@ class MenuImportComponentTest extends AdminTestCase
             ['new_disk' => 'x', 'disk_part' => 'E', 'disk_condition' => 'Intact'],
         ]);
 
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.1.donated_by_id'));
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.2.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.1.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.2.donated_by_id'));
 
         // A donator nobody knows is a problem; a blank one is not.
         $this->assertNull($component->get('menus.0.disks.3.donated_by_id'));
@@ -385,9 +385,9 @@ class MenuImportComponentTest extends AdminTestCase
         $this->assertSame(1, $component->instance()->getErrorCount());
 
         // The autocomplete posts the id of the suggestion, as a string.
-        $component->call('updateGame', 0, 0, 0, (string) $wanted->game_id);
+        $component->call('updateGame', 0, 0, 0, (string) $wanted->getKey());
 
-        $this->assertEquals($wanted->game_id, $component->get('menus.0.disks.0.contents.0.game_id'));
+        $this->assertEquals($wanted->getKey(), $component->get('menus.0.disks.0.contents.0.game_id'));
         $this->assertSame('Twin', $component->get('menus.0.disks.0.contents.0.game_name'));
         $this->assertSame('Twin', $component->get('menus.0.disks.0.contents.0.query'));
         $this->assertSame([], $component->get('menus.0.disks.0.contents.0.candidates'));
@@ -417,7 +417,7 @@ class MenuImportComponentTest extends AdminTestCase
         // which has to come back off before the name can be matched.
         $component->call('setGameSearch', 0, 0, 0, 'Nebulus [Hewson]');
 
-        $this->assertEquals($nebulus->game_id, $component->get('menus.0.disks.0.contents.0.game_id'));
+        $this->assertEquals($nebulus->getKey(), $component->get('menus.0.disks.0.contents.0.game_id'));
         $this->assertSame('Nebulus', $component->get('menus.0.disks.0.contents.0.query'));
         $this->assertSame(0, $component->instance()->getErrorCount());
 
@@ -454,10 +454,10 @@ class MenuImportComponentTest extends AdminTestCase
             ['new_menu' => 'x', 'new_disk' => 'x', 'disk_condition' => 'Intact', 'content_order' => 1, 'content_name' => 'Twin', 'content_type' => 'Game'],
         ]);
 
-        $component->call('updateGame', 0, 0, 0, (string) $wanted->game_id);
+        $component->call('updateGame', 0, 0, 0, (string) $wanted->getKey());
         $component->call('setGameSearch', 0, 0, 0, 'Twin [Reline]');
 
-        $this->assertEquals($wanted->game_id, $component->get('menus.0.disks.0.contents.0.game_id'));
+        $this->assertEquals($wanted->getKey(), $component->get('menus.0.disks.0.contents.0.game_id'));
 
         // Typing something else, on the other hand, does re-resolve.
         $component->call('setGameSearch', 0, 0, 0, 'Twin Peaks');
@@ -526,9 +526,9 @@ class MenuImportComponentTest extends AdminTestCase
         $this->assertNull($component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame(1, $component->instance()->getErrorCount());
 
-        $component->call('updateIndividual', 0, 0, (string) $bob->ind_id);
+        $component->call('updateIndividual', 0, 0, (string) $bob->getKey());
 
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame('Bob', $component->get('menus.0.disks.0.donated_by'));
         $this->assertSame(0, $component->instance()->getErrorCount());
 
@@ -540,7 +540,7 @@ class MenuImportComponentTest extends AdminTestCase
 
         $component->call('setDonatedBy', 0, 0, 'Bob (aka: Bobby)');
 
-        $this->assertEquals($bob->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($bob->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
         $this->assertSame('Bob', $component->get('menus.0.disks.0.donated_by'));
 
         // Emptying the autocomplete's hidden id field unlinks the donator…
@@ -573,10 +573,10 @@ class MenuImportComponentTest extends AdminTestCase
             ['new_menu' => 'x', 'new_disk' => 'x', 'disk_condition' => 'Intact'],
         ]);
 
-        $component->call('updateIndividual', 0, 0, (string) $wanted->ind_id);
+        $component->call('updateIndividual', 0, 0, (string) $wanted->getKey());
         $component->call('setDonatedBy', 0, 0, 'Bob (aka: Bobby)');
 
-        $this->assertEquals($wanted->ind_id, $component->get('menus.0.disks.0.donated_by_id'));
+        $this->assertEquals($wanted->getKey(), $component->get('menus.0.disks.0.donated_by_id'));
     }
 
     // -----------------------------------------------------------------
@@ -617,15 +617,15 @@ class MenuImportComponentTest extends AdminTestCase
         $disk = MenuDisk::where('menu_id', $menu->id)->firstOrFail();
         $this->assertSame('A', $disk->part);
         $this->assertEquals($condition->id, $disk->menu_disk_condition_id);
-        $this->assertEquals($bob->ind_id, $disk->donated_by_individual_id);
+        $this->assertEquals($bob->getKey(), $disk->donated_by_individual_id);
 
         // One row per content, each linked the way its mode says: the corrected
         // game through a new release, the software and the docs directly.
         $this->assertSame(3, MenuDiskContent::where('menu_disk_id', $disk->id)->count());
-        $release = Release::where('game_id', $game->game_id)->sole();
+        $release = Release::where('game_id', $game->getKey())->sole();
         $this->assertSame(1, MenuDiskContent::where('game_release_id', $release->id)->count());
         $this->assertSame(1, MenuDiskContent::where('menu_software_id', $software->id)->count());
-        $this->assertSame(1, MenuDiskContent::where('game_id', $docs->game_id)->count());
+        $this->assertSame(1, MenuDiskContent::where('game_id', $docs->getKey())->count());
 
         $this->assertChangelog(Changelog::INSERT, 'Menus');
     }

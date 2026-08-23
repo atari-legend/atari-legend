@@ -12,7 +12,6 @@ class Screenshot extends Model
     use HasFactory;
 
     protected $table = 'screenshot_main';
-    protected $primaryKey = 'screenshot_id';
     protected $fillable = ['imgext'];
     public $timestamps = false;
 
@@ -27,7 +26,7 @@ class Screenshot extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->screenshot_id, $this->imgext);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 
     public function getMimeTypeAttribute()
@@ -72,6 +71,10 @@ class Screenshot extends Model
 
     public function reviewScreenshots()
     {
-        return $this->hasMany(ScreenshotReview::class, 'screenshot_review_id');
+        // FIXME: this names screenshot_review's own key, so it joins on the
+        // wrong column entirely -- it should be 'screenshot_id'. Pre-existing
+        // and unused; renamed here only to keep it consistent with the schema,
+        // not fixed, because that is a behaviour change and not a rename.
+        return $this->hasMany(ScreenshotReview::class, 'id');
     }
 }

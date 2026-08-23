@@ -1,10 +1,5 @@
 <?php
 
-use App\Models\ArticleText;
-use App\Models\GameFact;
-use App\Models\InterviewText;
-use App\Models\News;
-use App\Models\Review;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -46,71 +41,76 @@ class UpdateLinksInContent extends Migration
         // this migration is unimportant for unit tests
         if (DB::connection()->getDriverName() !== 'sqlite') {
             collect(UpdateLinksInContent::REPLACEMENTS)->each(function ($replacement) {
-                News::where('news_text', 'regexp', $replacement['sql'])
-                    ->each(function ($news) use ($replacement) {
-                        $text = preg_replace(
-                            $replacement['regexp'],
-                            $replacement['replacement'],
-                            $news->news_text
-                        );
-                        $news->news_text = $text;
-                        $news->save();
+                DB::table('news')->where('news_text', 'regexp', $replacement['sql'])
+                    ->orderBy('news_id')->chunk(100, function ($rows) use ($replacement) {
+                        foreach ($rows as $news) {
+                            $text = preg_replace(
+                                $replacement['regexp'],
+                                $replacement['replacement'],
+                                $news->news_text
+                            );
+                            DB::table('news')->where('news_id', $news->news_id)->update(['news_text' => $text]);
+                        }
                     });
 
-                Review::withoutGlobalScopes()
-                    ->where('review_text', 'regexp', $replacement['sql'])
-                    ->each(function ($review) use ($replacement) {
-                        $text = preg_replace(
-                            $replacement['regexp'],
-                            $replacement['replacement'],
-                            $review->review_text
-                        );
-                        $review->review_text = $text;
-                        $review->save();
+                DB::table('review_main')->where('review_text', 'regexp', $replacement['sql'])
+                    ->orderBy('review_id')->chunk(100, function ($rows) use ($replacement) {
+                        foreach ($rows as $review) {
+                            $text = preg_replace(
+                                $replacement['regexp'],
+                                $replacement['replacement'],
+                                $review->review_text
+                            );
+                            DB::table('review_main')->where('review_id', $review->review_id)->update(['review_text' => $text]);
+                        }
                     });
 
-                InterviewText::where('interview_text', 'regexp', $replacement['sql'])
-                    ->each(function ($interview) use ($replacement) {
-                        $text = preg_replace(
-                            $replacement['regexp'],
-                            $replacement['replacement'],
-                            $interview->interview_text
-                        );
-                        $interview->interview_text = $text;
-                        $interview->save();
+                DB::table('interview_text')->where('interview_text', 'regexp', $replacement['sql'])
+                    ->orderBy('interview_text_id')->chunk(100, function ($rows) use ($replacement) {
+                        foreach ($rows as $interview) {
+                            $text = preg_replace(
+                                $replacement['regexp'],
+                                $replacement['replacement'],
+                                $interview->interview_text
+                            );
+                            DB::table('interview_text')->where('interview_text_id', $interview->interview_text_id)->update(['interview_text' => $text]);
+                        }
                     });
 
-                InterviewText::where('interview_intro', 'regexp', $replacement['sql'])
-                    ->each(function ($interview) use ($replacement) {
-                        $text = preg_replace(
-                            $replacement['regexp'],
-                            $replacement['replacement'],
-                            $interview->interview_intro
-                        );
-                        $interview->interview_intro = $text;
-                        $interview->save();
+                DB::table('interview_text')->where('interview_intro', 'regexp', $replacement['sql'])
+                    ->orderBy('interview_text_id')->chunk(100, function ($rows) use ($replacement) {
+                        foreach ($rows as $interview) {
+                            $text = preg_replace(
+                                $replacement['regexp'],
+                                $replacement['replacement'],
+                                $interview->interview_intro
+                            );
+                            DB::table('interview_text')->where('interview_text_id', $interview->interview_text_id)->update(['interview_intro' => $text]);
+                        }
                     });
 
-                ArticleText::where('article_text', 'regexp', $replacement['sql'])
-                    ->each(function ($article) use ($replacement) {
-                        $text = preg_replace(
-                            $replacement['regexp'],
-                            $replacement['replacement'],
-                            $article->article_text
-                        );
-                        $article->article_text = $text;
-                        $article->save();
+                DB::table('article_text')->where('article_text', 'regexp', $replacement['sql'])
+                    ->orderBy('article_text_id')->chunk(100, function ($rows) use ($replacement) {
+                        foreach ($rows as $article) {
+                            $text = preg_replace(
+                                $replacement['regexp'],
+                                $replacement['replacement'],
+                                $article->article_text
+                            );
+                            DB::table('article_text')->where('article_text_id', $article->article_text_id)->update(['article_text' => $text]);
+                        }
                     });
 
-                GameFact::where('game_fact', 'regexp', $replacement['sql'])
-                    ->each(function ($fact) use ($replacement) {
-                        $text = preg_replace(
-                            $replacement['regexp'],
-                            $replacement['replacement'],
-                            $fact->game_fact
-                        );
-                        $fact->game_fact = $text;
-                        $fact->save();
+                DB::table('game_fact')->where('game_fact', 'regexp', $replacement['sql'])
+                    ->orderBy('game_fact_id')->chunk(100, function ($rows) use ($replacement) {
+                        foreach ($rows as $fact) {
+                            $text = preg_replace(
+                                $replacement['regexp'],
+                                $replacement['replacement'],
+                                $fact->game_fact
+                            );
+                            DB::table('game_fact')->where('game_fact_id', $fact->game_fact_id)->update(['game_fact' => $text]);
+                        }
                     });
             });
         }

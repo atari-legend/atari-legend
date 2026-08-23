@@ -19,7 +19,7 @@ class LinkController extends Controller
         'description'  => 'nullable',
         'inactive'     => 'nullable|boolean',
         'categories'   => 'nullable|array',
-        'categories.*' => 'exists:website_category,website_category_id',
+        'categories.*' => 'exists:website_category,id',
         'image'        => 'nullable|image',
     ];
 
@@ -71,7 +71,7 @@ class LinkController extends Controller
             'website_url'  => $request->url,
             'description'  => $request->description,
             'website_date' => time(),
-            'user_id'      => $request->user()->user_id,
+            'user_id'      => $request->user()->getKey(),
             'inactive'     => $request->boolean('inactive'),
         ]);
 

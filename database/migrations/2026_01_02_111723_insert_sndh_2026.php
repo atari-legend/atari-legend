@@ -1,7 +1,6 @@
 <?php
 
 use App\Console\Commands\GenerateSNDHJson;
-use App\Models\Sndh;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
@@ -19,8 +18,8 @@ return new class extends Migration
 
         $songs = json_decode(file_get_contents(base_path(GenerateSNDHJson::SONGS_JSON_PATH) . '/songs-sndh2026lf.json'), true);
         foreach ($songs as $path => $song) {
-            Sndh::updateOrCreate([
-                'id'              => $path,
+            DB::table('sndhs')->updateOrInsert([
+                'id' => $path,
             ], [
                 'sndh_archive_id' => 'sndh2026lf',
                 'title'           => $song['title'] ?? null,

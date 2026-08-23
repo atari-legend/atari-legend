@@ -11,7 +11,6 @@ class Crew extends Model
     use HasFactory;
 
     protected $table = 'crew';
-    protected $primaryKey = 'crew_id';
     public $timestamps = false;
 
     protected $fillable = ['crew_name', 'crew_history'];

@@ -11,7 +11,6 @@ class Website extends Model
     use HasFactory;
 
     protected $table = 'website';
-    protected $primaryKey = 'website_id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -35,7 +34,7 @@ class Website extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->website_id, $this->website_imgext);
+        return Helper::filename($this->getKey(), $this->website_imgext);
     }
 
     public function getPathAttribute()

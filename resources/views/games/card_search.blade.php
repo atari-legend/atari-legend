@@ -60,7 +60,7 @@
                     <select class="form-select d-none" id="publisher_id" name="publisher_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}">{{ $company->pub_dev_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -78,7 +78,7 @@
                     <select class="form-select d-none" id="developer_id" name="developer_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->pub_dev_id }}">{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}">{{ $company->pub_dev_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -98,7 +98,7 @@
                     <select class="form-select d-none" id="individual_id" name="individual_id">
                         <option value="">-</option>
                         @foreach ($individuals as $individual)
-                            <option value="{{ $individual->ind_id }}">
+                            <option value="{{ $individual->getKey() }}">
                                 {{ $individual->ind_name }}
                             </option>
                         @endforeach

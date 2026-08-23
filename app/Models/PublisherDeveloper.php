@@ -10,7 +10,6 @@ class PublisherDeveloper extends Model
     use HasFactory;
 
     protected $table = 'pub_dev';
-    protected $primaryKey = 'pub_dev_id';
     public $timestamps = false;
 
     protected $fillable = ['pub_dev_name'];

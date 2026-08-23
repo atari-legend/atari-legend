@@ -112,9 +112,9 @@ class ProfileTest extends TestCase
 
         $this->assertSame(Changelog::UPDATE, $changelog->action);
         $this->assertSame('Users', $changelog->section);
-        $this->assertSame($user->user_id, $changelog->section_id);
+        $this->assertSame($user->getKey(), $changelog->section_id);
         $this->assertSame('sysop', $changelog->section_name);
-        $this->assertSame($user->user_id, $changelog->user_id);
+        $this->assertSame($user->getKey(), $changelog->user_id);
     }
 
     public function test_the_profile_needs_an_email(): void
@@ -183,7 +183,7 @@ class ProfileTest extends TestCase
             ->assertOk();
 
         $this->assertSame('png', $user->fresh()->avatar_ext);
-        Storage::disk('public')->assertExists('images/user_avatars/' . $user->user_id . '.png');
+        Storage::disk('public')->assertExists('images/user_avatars/' . $user->getKey() . '.png');
     }
 
     public function test_an_avatar_must_be_an_image(): void
@@ -206,14 +206,14 @@ class ProfileTest extends TestCase
         Storage::fake('public');
 
         $user = User::factory()->create(['avatar_ext' => 'png']);
-        Storage::disk('public')->put('images/user_avatars/' . $user->user_id . '.png', 'an image');
+        Storage::disk('public')->put('images/user_avatars/' . $user->getKey() . '.png', 'an image');
 
         $this->actingAs($user)
             ->post(route('auth.update'), $this->profile(['avatar-removed' => '1']))
             ->assertOk();
 
         $this->assertNull($user->fresh()->avatar_ext);
-        Storage::disk('public')->assertMissing('images/user_avatars/' . $user->user_id . '.png');
+        Storage::disk('public')->assertMissing('images/user_avatars/' . $user->getKey() . '.png');
     }
 
     public function test_a_user_can_change_their_password(): void
@@ -318,7 +318,7 @@ class ProfileTest extends TestCase
 
         $this->assertSame(Changelog::UPDATE, $changelog->action);
         $this->assertSame('Users', $changelog->section);
-        $this->assertSame($user->user_id, $changelog->section_id);
+        $this->assertSame($user->getKey(), $changelog->section_id);
         $this->assertSame('sysop', $changelog->section_name);
     }
 

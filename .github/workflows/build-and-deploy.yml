@@ -107,6 +107,25 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install chromium
 
+      - name: Test migrations (MariaDB)
+        env:
+          DB_CONNECTION: mariadb
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: atarilegend_e2e
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: |
+          # `artisan test` runs on SQLite and skips every migration guarded by
+          # `!== 'sqlite'`, so a fully green suite can sit on top of a
+          # migrate:fresh that is broken on MariaDB. This job is what sees that.
+          php artisan migrate:fresh --force
+          # --step=1, not a bare rollback. After migrate:fresh every migration
+          # is in one batch, so a bare rollback tries to reverse all 262 of
+          # them and dies around the 32nd on down() methods written years ago
+          # and never run since. What actually needs to work is reversing the
+          # newest migration, which is what a bad deploy would do.
+          php artisan migrate:rollback --step=1 --force
       - name: Prepare the E2E database and storage
         env:
           DB_CONNECTION: mariadb

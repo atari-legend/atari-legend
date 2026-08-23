@@ -54,7 +54,7 @@ class InterviewsController extends Controller
     {
         $request->validate(array_merge(
             $this->getValidationRules(),
-            ['individual' => 'required|exists:individuals,ind_id']
+            ['individual' => 'required|exists:individuals,id']
         ));
 
         $interview = new Interview([
@@ -65,7 +65,7 @@ class InterviewsController extends Controller
         $interview->save();
 
         $text = new InterviewText([
-            'interview_id'       => $interview->interview_id,
+            'interview_id'       => $interview->getKey(),
             'interview_text'     => $request->text,
             'interview_intro'    => $request->intro,
             'interview_chapters' => $request->chapters,
@@ -99,7 +99,7 @@ class InterviewsController extends Controller
             'draft'   => $request->draft ? true : false,
         ]);
 
-        $text = $interview->texts->first() ?? new InterviewText(['interview_id' => $interview->interview_id]);
+        $text = $interview->texts->first() ?? new InterviewText(['interview_id' => $interview->getKey()]);
         $text->interview_text = $request->text;
         $text->interview_intro = $request->intro;
         $text->interview_chapters = $request->chapters;
@@ -228,7 +228,7 @@ class InterviewsController extends Controller
     private function getValidationRules(): array
     {
         return [
-            'author'   => 'required|exists:users,user_id',
+            'author'   => 'required|exists:users,id',
             'date'     => 'required|date',
             'text'     => 'required',
             'intro'    => 'nullable',

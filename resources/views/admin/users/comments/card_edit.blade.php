@@ -8,7 +8,7 @@
             <span class="text-muted">on</span>
             {{ Carbon\Carbon::createFromTimestamp($comment->timestamp)->toDayDateTimeString() }}
             <br>
-            <span class="text-muted">{{ Str::ucfirst($comment->type) }}</span>: <a href="{{ route("{$comment->type}s.show", $comment->target_id) }}#comment-{{ $comment->comments_id }}">{{ $comment->target }}</a>
+            <span class="text-muted">{{ Str::ucfirst($comment->type) }}</span>: <a href="{{ route("{$comment->type}s.show", $comment->target_id) }}#comment-{{ $comment->getKey() }}">{{ $comment->target }}</a>
         </p>
 
         <form action="{{ route('admin.users.comments.update', $comment) }}"

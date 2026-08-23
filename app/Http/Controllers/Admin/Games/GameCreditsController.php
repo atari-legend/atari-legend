@@ -18,10 +18,10 @@ class GameCreditsController extends Controller
 {
     public function index(Game $game)
     {
-        $roles = IndividualRole::select()
+        $roles = IndividualRole::select('individual_role.*')
             ->orderBy('name')
             ->get();
-        $developerRoles = DeveloperRole::select()
+        $developerRoles = DeveloperRole::select('developer_role.*')
             ->orderBy('name')
             ->get();
 
@@ -50,7 +50,7 @@ class GameCreditsController extends Controller
                 'section_id'       => $game->getKey(),
                 'section_name'     => $game->game_name,
                 'sub_section'      => 'Creator',
-                'sub_section_id'   => $individual->ind_id,
+                'sub_section_id'   => $individual->getKey(),
                 'sub_section_name' => $individual->ind_name,
             ]);
         }
@@ -61,8 +61,8 @@ class GameCreditsController extends Controller
     public function destroy(Request $request, Game $game, Individual $individual)
     {
         DB::table('game_individual')
-            ->where('game_id', $game->game_id)
-            ->where('individual_id', $individual->ind_id)
+            ->where('game_id', $game->getKey())
+            ->where('individual_id', $individual->getKey())
             ->where('individual_role_id', $request->role)
             ->delete();
 
@@ -102,8 +102,8 @@ class GameCreditsController extends Controller
     public function destroyDeveloper(Request $request, Game $game, PublisherDeveloper $developer)
     {
         DB::table('game_developer')
-            ->where('game_id', $game->game_id)
-            ->where('dev_pub_id', $developer->pub_dev_id)
+            ->where('game_id', $game->getKey())
+            ->where('dev_pub_id', $developer->getKey())
             ->where('developer_role_id', $request->role)
             ->delete();
 

@@ -186,7 +186,7 @@ class ReleaseMediaTest extends AdminTestCase
         $this->assertSame('STX', $dump->format);
         $this->assertSame(hash('sha512', $this->stxContents()), $dump->sha512);
         $this->assertSame(strlen($this->stxContents()), $dump->size);
-        $this->assertSame($this->admin->user_id, $dump->user_id);
+        $this->assertSame($this->admin->getKey(), $dump->user_id);
 
         Storage::disk('public')->assertExists($dump->path);
         Storage::assertMissing('filepond/xenon.stx');

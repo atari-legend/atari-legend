@@ -32,7 +32,7 @@ class ContentPagesTest extends TestCase
     private function article(string $title, string $date = '2026-01-01', ?User $author = null): Article
     {
         $article = Article::factory()->titled($title)->create([
-            'user_id' => ($author ?? User::factory()->create())->user_id,
+            'user_id' => ($author ?? User::factory()->create())->getKey(),
         ]);
 
         $article->texts()->first()->update(['article_date' => Carbon::parse($date)->timestamp]);
@@ -124,7 +124,7 @@ class ContentPagesTest extends TestCase
 
         $this->assertSame(
             [$newer->getKey(), $older->getKey()],
-            $interviews->pluck('interview_id')->all()
+            $interviews->pluck('id')->all()
         );
     }
 
@@ -191,7 +191,7 @@ class ContentPagesTest extends TestCase
         $submission = NewsSubmission::sole();
 
         $this->assertSame('New dump released', $submission->news_headline);
-        $this->assertSame($user->user_id, $submission->user_id);
+        $this->assertSame($user->getKey(), $submission->user_id);
         $this->assertSame(0, News::query()->count());
         $this->assertSame(1, Changelog::where('sub_section', 'News submit')->count());
     }
@@ -340,7 +340,7 @@ class ContentPagesTest extends TestCase
             'sub_section'      => $subSection,
             'sub_section_id'   => 0,
             'sub_section_name' => '',
-            'user_id'          => User::factory()->create()->user_id,
+            'user_id'          => User::factory()->create()->getKey(),
             'timestamp'        => Carbon::parse($date)->timestamp,
         ]);
     }

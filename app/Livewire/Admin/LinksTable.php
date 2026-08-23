@@ -14,7 +14,7 @@ class LinksTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('website_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('website_name');
     }
 
@@ -56,7 +56,7 @@ class LinksTable extends DataTableComponent
     {
         $categories = WebsiteCategory::orderBy('website_category_name')
             ->get()
-            ->mapWithKeys(fn ($cat) => [strval($cat->website_category_id) => $cat->website_category_name])
+            ->mapWithKeys(fn ($cat) => [strval($cat->getKey()) => $cat->website_category_name])
             ->all();
         $categories = ['' => 'Any'] + $categories;
 
@@ -64,7 +64,7 @@ class LinksTable extends DataTableComponent
             'category' => SelectFilter::make('Category')
                 ->options($categories)
                 ->filter(function (Builder $query, string $value) {
-                    $query->whereHas('categories', fn ($q) => $q->where('website_category.website_category_id', $value));
+                    $query->whereHas('categories', fn ($q) => $q->where('website_category.id', $value));
                 }),
             'inactive' => SelectFilter::make('Status')
                 ->options(['' => 'Any', '0' => 'Active', '1' => 'Inactive'])

@@ -13,7 +13,7 @@ class SpotlightsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('spotlight_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('spotlight');
     }
 
@@ -39,6 +39,6 @@ class SpotlightsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Spotlight::select();
+        return Spotlight::select('spotlight.*');
     }
 }

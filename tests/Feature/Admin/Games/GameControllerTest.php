@@ -276,7 +276,7 @@ class GameControllerTest extends AdminTestCase
             'magazineIndices' => MagazineIndex::factory()->create(['game_id' => $game->getKey()]),
             'infoSubmissions' => DB::table('game_submitinfo')->insert([
                 'game_id'     => $game->getKey(),
-                'user_id'     => $this->admin->user_id,
+                'user_id'     => $this->admin->getKey(),
                 'timestamp'   => (string) mktime(12, 0, 0, 6, 1, 2020),
                 'submit_text' => 'The musician is Jochen Hippel.',
                 'game_done'   => GameSubmitInfo::SUBMISSION_NEW,
@@ -288,7 +288,7 @@ class GameControllerTest extends AdminTestCase
             'comments'            => $game->comments()->attach(Comment::factory()->create()),
             'votes'               => GameVote::factory()->create([
                 'game_id' => $game->getKey(),
-                'user_id' => $this->admin->user_id,
+                'user_id' => $this->admin->getKey(),
             ]),
         };
     }

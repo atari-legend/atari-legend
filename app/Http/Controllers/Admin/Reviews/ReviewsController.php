@@ -55,7 +55,7 @@ class ReviewsController extends Controller
     {
         $request->validate(array_merge(
             $this->getValidationRules(),
-            ['game' => 'required|exists:game,game_id']));
+            ['game' => 'required|exists:game,id']));
 
         $review = new Review([
             'user_id'     => $request->author,
@@ -129,7 +129,7 @@ class ReviewsController extends Controller
                     // Screenshot comment does not exist, create new pivot and comment
                     $id = DB::table('screenshot_review')
                         ->insertGetId([
-                            'review_id'     => $review->review_id,
+                            'review_id'     => $review->getKey(),
                             'screenshot_id' => $screenshotId,
                         ]);
                     $comment = new ScreenshotReviewComment();
@@ -178,7 +178,7 @@ class ReviewsController extends Controller
     private function getValidationRules(): array
     {
         return [
-            'author'     => 'required|exists:users,user_id',
+            'author'     => 'required|exists:users,id',
             'date'       => 'required|date',
             'text'       => 'required',
             'draft'      => 'nullable',

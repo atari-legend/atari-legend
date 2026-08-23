@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($spotlight))
-                Spotlight {{ $spotlight->spotlight_id }}
+                Spotlight {{ $spotlight->getKey() }}
             @else
                 Create spotlight
             @endif

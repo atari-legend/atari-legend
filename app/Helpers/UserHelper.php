@@ -28,7 +28,7 @@ class UserHelper
         ];
 
         if ($currentUser !== null) {
-            $rules['email'] = ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($currentUser->user_id, 'user_id')];
+            $rules['email'] = ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($currentUser->getKey(), 'id')];
         } else {
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
         }

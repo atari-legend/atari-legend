@@ -57,7 +57,7 @@ abstract class AdminTestCase extends TestCase
         );
 
         $this->assertSame(
-            $this->admin->user_id,
+            $this->admin->getKey(),
             $entries->first()->user_id,
             'The changelog entry was not attributed to the acting administrator.'
         );

@@ -16,7 +16,6 @@ class Comment extends Model
     const TYPE_ARTICLE = 'article';
 
     protected $table = 'comments';
-    protected $primaryKey = 'comments_id';
     public $timestamps = false;
 
     protected $fillable = [

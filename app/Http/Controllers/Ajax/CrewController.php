@@ -10,7 +10,7 @@ class CrewController extends Controller
 {
     public function crews(Request $request)
     {
-        $crews = Crew::select('crew_name', 'crew_id')
+        $crews = Crew::select('crew_name', 'id')
             ->orderBy('crew_name')
             ->limit(10);
 

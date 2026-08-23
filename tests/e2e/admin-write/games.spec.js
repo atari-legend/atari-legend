@@ -234,10 +234,17 @@ test.describe('Admin games', () => {
       await expect(page.locator('iframe[src*="youtube"]')).toBeVisible();
 
       // 6. Similar Games
+      //
+      // The one place the autocomplete wire format is asserted end to end: the
+      // id written into the hidden companion field comes from the endpoint's
+      // JSON, and this is what proves the *right* game was associated rather
+      // than merely that a name was rendered. Hence asserting the link's href
+      // carries the fixture's id, not just its title.
       await page.goto(`/admin/games/${gameId}/similar`);
       await pickAutocomplete(page, 'similar_name', FIXTURE.game.name);
       await page.getByRole('button', { name: 'Add similar game' }).click();
-      await expect(page.getByRole('link', { name: FIXTURE.game.name })).toBeVisible();
+      await expect(page.getByRole('link', { name: FIXTURE.game.name }))
+        .toHaveAttribute('href', new RegExp(`/admin/games/games/${FIXTURE.game.id}/edit$`));
 
       // 7. Release Creation & System details
       const releaseName = uniqueName('Full Release');

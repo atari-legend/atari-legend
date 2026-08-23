@@ -102,7 +102,7 @@ class ReleasePageTest extends TestCase
         $vote = GameVote::sole();
 
         $this->assertSame(4, $vote->score);
-        $this->assertSame($user->user_id, $vote->user_id);
+        $this->assertSame($user->getKey(), $vote->user_id);
     }
 
     public function test_voting_again_replaces_the_previous_vote(): void

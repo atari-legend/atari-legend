@@ -33,6 +33,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('magazine_indices', function (Blueprint $table) {
+            $table->dropForeign(['individual_id']);
             $table->dropColumn('individual_id');
         });
     }

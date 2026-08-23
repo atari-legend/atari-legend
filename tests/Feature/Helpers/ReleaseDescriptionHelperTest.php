@@ -61,7 +61,7 @@ class ReleaseDescriptionHelperTest extends TestCase
         $release = $this->release(gameName: 'Xenon');
 
         $this->assertSame(
-            'This is a release of [game=' . $release->game->game_id . ']Xenon[/game].',
+            'This is a release of [game=' . $release->game->getKey() . ']Xenon[/game].',
             trim($this->describe($release))
         );
     }
@@ -119,7 +119,7 @@ class ReleaseDescriptionHelperTest extends TestCase
         $publisher = $release->publisher;
 
         $this->assertStringContainsString(
-            'It was published by [publisher=' . $publisher->pub_dev_id . ']Ocean[/publisher].',
+            'It was published by [publisher=' . $publisher->getKey() . ']Ocean[/publisher].',
             $this->describe($release)
         );
     }
@@ -147,7 +147,7 @@ class ReleaseDescriptionHelperTest extends TestCase
             ->create();
 
         $this->assertStringContainsString(
-            'published by [publisher=' . $release->publisher->pub_dev_id . ']Ocean[/publisher], '
+            'published by [publisher=' . $release->publisher->getKey() . ']Ocean[/publisher], '
                 . 'distributed by [b]Erbe[/b], [b]Proein[/b].',
             $this->describe($release)
         );

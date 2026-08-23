@@ -107,7 +107,7 @@ class MenuDisksTest extends AdminTestCase
     public function test_the_edit_form_shows_the_disk_and_its_dump(): void
     {
         $disk = $this->disk();
-        $dump = MenuDiskDump::factory()->inFormat('MSA')->create(['user_id' => $this->admin->user_id]);
+        $dump = MenuDiskDump::factory()->inFormat('MSA')->create(['user_id' => $this->admin->getKey()]);
         $disk->menuDiskDump()->associate($dump);
         $disk->save();
 
@@ -135,7 +135,7 @@ class MenuDisksTest extends AdminTestCase
         $this->assertSame('ST', $dump->format);
         $this->assertSame(9, $dump->size);
         $this->assertSame(hash('sha512', 'DISKIMAGE'), $dump->sha512);
-        $this->assertSame($this->admin->user_id, $dump->user_id);
+        $this->assertSame($this->admin->getKey(), $dump->user_id);
         $this->assertSame($dump->getKey(), $disk->fresh()->menu_disk_dump_id);
 
         Storage::disk('public')->assertExists('zips/menus/' . $dump->getKey() . '.zip');
@@ -179,7 +179,7 @@ class MenuDisksTest extends AdminTestCase
         Storage::fake('public');
 
         $disk = $this->disk();
-        $dump = MenuDiskDump::factory()->inFormat('MSA')->create(['user_id' => $this->admin->user_id]);
+        $dump = MenuDiskDump::factory()->inFormat('MSA')->create(['user_id' => $this->admin->getKey()]);
         $disk->menuDiskDump()->associate($dump);
         $disk->save();
 

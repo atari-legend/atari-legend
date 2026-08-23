@@ -40,6 +40,6 @@ class GameSeriesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return GameSeries::select();
+        return GameSeries::select('game_series.*');
     }
 }

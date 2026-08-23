@@ -12,7 +12,7 @@ class NewsSubmissionsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('news_submission_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('news_date', 'desc');
     }
 
@@ -47,6 +47,6 @@ class NewsSubmissionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return NewsSubmission::select();
+        return NewsSubmission::select('news_submission.*');
     }
 }

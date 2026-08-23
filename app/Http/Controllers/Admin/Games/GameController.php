@@ -349,7 +349,7 @@ class GameController extends Controller
             'languages' => 'nullable|array',
             'engines'   => 'nullable|array',
             'controls'  => 'nullable|array',
-            'slug'      => [new Slug, Rule::unique('game')->ignore($gameId, 'game_id')],
+            'slug'      => [new Slug, Rule::unique('game')->ignore($gameId, 'id')],
         ]);
     }
 

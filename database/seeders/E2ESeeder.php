@@ -27,9 +27,9 @@ use RuntimeException;
  */
 class E2ESeeder extends Seeder
 {
-    public const USER_ADMIN_ID = 1;
-    public const USER_STANDARD_ID = 2;
-    public const USER_UNVERIFIED_ID = 3;
+    public const USER_ADMIN_ID = 101;
+    public const USER_STANDARD_ID = 102;
+    public const USER_UNVERIFIED_ID = 103;
 
     // The two accounts tests/e2e/public-write/ signs in as. They exist so that
     // project never has to write through USER_STANDARD_ID, which the read
@@ -39,8 +39,8 @@ class E2ESeeder extends Seeder
     // Two rather than one because public-write/account.spec.js changes the
     // password, and an account whose password is in flux cannot be the one
     // every other spec in the project signs in with.
-    public const USER_CONTRIBUTOR_ID = 4;
-    public const USER_ACCOUNT_ID = 5;
+    public const USER_CONTRIBUTOR_ID = 104;
+    public const USER_ACCOUNT_ID = 105;
 
     // The account tests/e2e/admin-write/users.spec.js edits, deactivates and
     // gives an avatar to. It exists because a user is the one row in this
@@ -49,22 +49,24 @@ class E2ESeeder extends Seeder
     // the way every other write spec does. A sixth account it may rewrite
     // freely is the next best thing: no read spec asserts on it, and it signs
     // in nowhere.
-    public const USER_MODERATED_ID = 6;
+    public const USER_MODERATED_ID = 106;
 
-    public const GAME_ID = 1;
-    public const GAME_AKA_ID = 1;
-    public const RELEASE_ID = 1;
-    public const SCREENSHOT_ID = 1;
-    public const SPOTLIGHT_SCREENSHOT_ID = 2;
-    public const INTERVIEW_SCREENSHOT_ID = 3;
-    public const ARTICLE_SCREENSHOT_ID = 4;
-    public const RELEASE_SCAN_ID = 1;
-    public const GAME_FACT_ID = 1;
-    public const GAME_SUBMISSION_ID = 1;
-    public const GAME_SERIES_ID = 1;
-    public const COMPANY_ID = 1;
-    public const INDIVIDUAL_ID = 1;
-    public const CREW_ID = 1;
+    public const GAME_ID = 201;
+    public const GAME_AKA_ID = 202;
+    public const RELEASE_ID = 301;
+    public const SCREENSHOT_ID = 401;
+    public const SPOTLIGHT_ID = 4001;
+    public const TRIVIA_ID = 4101;
+    public const SPOTLIGHT_SCREENSHOT_ID = 402;
+    public const INTERVIEW_SCREENSHOT_ID = 403;
+    public const ARTICLE_SCREENSHOT_ID = 404;
+    public const RELEASE_SCAN_ID = 501;
+    public const GAME_FACT_ID = 601;
+    public const GAME_SUBMISSION_ID = 701;
+    public const GAME_SERIES_ID = 801;
+    public const COMPANY_ID = 901;
+    public const INDIVIDUAL_ID = 1001;
+    public const CREW_ID = 1101;
 
     // A tune of our own, even though a migration ships the whole SNDH
     // catalogue: a spec asserting on one of those would be asserting on
@@ -76,32 +78,32 @@ class E2ESeeder extends Seeder
     public const SNDH_COMPOSER = 'Playwright Test Composer';
     public const SNDH_ARCHIVE_ID = 'sndh45lf';
 
-    public const PORT_ID = 1;
+    public const PORT_ID = 1201;
     public const PORT_NAME = 'Playwright Test Port';
-    public const PROGRESS_SYSTEM_ID = 1;
+    public const PROGRESS_SYSTEM_ID = 1301;
     public const PROGRESS_SYSTEM_NAME = 'Playwright Test Progress';
-    public const GENRE_ID = 1;
+    public const GENRE_ID = 1401;
     public const GENRE_NAME = 'Playwright Test Genre';
-    public const PROGRAMMING_LANGUAGE_ID = 1;
+    public const PROGRAMMING_LANGUAGE_ID = 1501;
     public const PROGRAMMING_LANGUAGE_NAME = 'Playwright Test Assembly';
-    public const ENGINE_ID = 1;
+    public const ENGINE_ID = 1601;
     public const ENGINE_NAME = 'Playwright Test Engine';
-    public const CONTROL_ID = 1;
+    public const CONTROL_ID = 1701;
     public const CONTROL_NAME = 'Playwright Test Joystick';
-    public const SOUND_HARDWARE_ID = 1;
+    public const SOUND_HARDWARE_ID = 1801;
     public const SOUND_HARDWARE_NAME = 'Playwright Test YM2149';
-    public const COPY_PROTECTION_ID = 1;
+    public const COPY_PROTECTION_ID = 1901;
     public const COPY_PROTECTION_NAME = 'Playwright Test Copy Protection';
 
-    public const ARTICLE_ID = 1;
-    public const ARTICLE_TYPE_ID = 1;
-    public const REVIEW_ID = 1;
-    public const INTERVIEW_ID = 1;
-    public const NEWS_ID = 1;
-    public const COMMENT_ID = 1;
+    public const ARTICLE_ID = 2001;
+    public const ARTICLE_TYPE_ID = 2002;
+    public const REVIEW_ID = 2101;
+    public const INTERVIEW_ID = 2201;
+    public const NEWS_ID = 2301;
+    public const COMMENT_ID = 2401;
 
-    public const MAGAZINE_ID = 1;
-    public const MAGAZINE_ISSUE_ID = 1;
+    public const MAGAZINE_ID = 2501;
+    public const MAGAZINE_ISSUE_ID = 2502;
     // One index row per shape magazines/card_issues.blade.php can render: a
     // game, a menu software, an individual, and one that links to nothing and
     // is only its title.
@@ -110,19 +112,19 @@ class E2ESeeder extends Seeder
     // these are stored in is not the order anything displays them in. The
     // public view always sorts, and the editor sorts only when asked - neither
     // could be told from a broken one if the two orders agreed.
-    public const MAGAZINE_INDEX_GAME_ID = 1;
-    public const MAGAZINE_INDEX_SOFTWARE_ID = 2;
-    public const MAGAZINE_INDEX_INDIVIDUAL_ID = 3;
-    public const MAGAZINE_INDEX_TEXT_ID = 4;
+    public const MAGAZINE_INDEX_GAME_ID = 2601;
+    public const MAGAZINE_INDEX_SOFTWARE_ID = 2602;
+    public const MAGAZINE_INDEX_INDIVIDUAL_ID = 2603;
+    public const MAGAZINE_INDEX_TEXT_ID = 2604;
 
-    public const MENU_SET_ID = 1;
-    public const MENU_ID = 1;
-    public const MENU_DISK_ID = 1;
-    public const MENU_DISK_CONTENT_ID = 1;
-    public const MENU_SOFTWARE_ID = 1;
+    public const MENU_SET_ID = 2701;
+    public const MENU_ID = 2801;
+    public const MENU_DISK_ID = 2901;
+    public const MENU_DISK_CONTENT_ID = 3101;
+    public const MENU_SOFTWARE_ID = 3001;
 
-    public const WEBSITE_ID = 1;
-    public const WEBSITE_CATEGORY_ID = 1;
+    public const WEBSITE_ID = 3201;
+    public const WEBSITE_CATEGORY_ID = 3301;
 
     /** Seeded by a migration, not by us. */
     public const MENU_CONDITION_INTACT_ID = 4;
@@ -229,9 +231,18 @@ class E2ESeeder extends Seeder
         $salt = UserHelper::salt();
         $sha512Password = UserHelper::hashPassword('password', $salt);
 
+        // user_id is auto-increment and not fillable, so the ids come from the
+        // counter, not from the constants above. Start the counter at
+        // USER_ADMIN_ID so that insertion order lands on them: without this the
+        // users are 1..6 while everything pointing at them uses 101..106, and
+        // the first such insert fails on the foreign key.
+        if (DB::table('users')->count() === 0 && DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE users AUTO_INCREMENT = ' . self::USER_ADMIN_ID);
+        }
+
         // user_id is the primary key and is not fillable, so these rely on
-        // insertion order on a fresh database - admin first, hence
-        // USER_ADMIN_ID = 1. Keep the order.
+        // insertion order on a fresh database - admin first, then the counter
+        // set above walks USER_ADMIN_ID upwards. Keep the order.
         //
         // The third user has never confirmed its address. Every route in the
         // app sits behind the `verified` middleware, so it is the only way to
@@ -275,7 +286,7 @@ class E2ESeeder extends Seeder
 
     private function seedGames(): void
     {
-        $this->insert('game', ['game_id' => self::GAME_ID], [
+        $this->insert('game', ['id' => self::GAME_ID], [
             'game_name' => self::GAME_NAME,
             'slug'      => self::GAME_SLUG,
         ]);
@@ -288,7 +299,7 @@ class E2ESeeder extends Seeder
             'license' => 'Commercial',
         ]);
 
-        $this->insert('screenshot_main', ['screenshot_id' => self::SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_main', ['id' => self::SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('screenshot_game', [
             'game_id'       => self::GAME_ID,
             'screenshot_id' => self::SCREENSHOT_ID,
@@ -302,12 +313,12 @@ class E2ESeeder extends Seeder
         ]);
         $this->seedImage('images/game_release_scans/' . self::RELEASE_SCAN_ID . '.png');
 
-        $this->insert('game_fact', ['game_fact_id' => self::GAME_FACT_ID], [
+        $this->insert('game_fact', ['id' => self::GAME_FACT_ID], [
             'game_id'   => self::GAME_ID,
             'game_fact' => 'The Bitmap Brothers wrote this one.',
         ]);
 
-        $this->insert('game_submitinfo', ['game_submitinfo_id' => self::GAME_SUBMISSION_ID], [
+        $this->insert('game_submitinfo', ['id' => self::GAME_SUBMISSION_ID], [
             'game_id'     => self::GAME_ID,
             'user_id'     => self::USER_STANDARD_ID,
             'timestamp'   => (string) now()->timestamp,
@@ -315,13 +326,13 @@ class E2ESeeder extends Seeder
             'game_done'   => 'N',
         ]);
 
-        $this->insert('game_aka', ['game_aka_id' => self::GAME_AKA_ID], [
+        $this->insert('game_aka', ['id' => self::GAME_AKA_ID], [
             'game_id'  => self::GAME_ID,
             'aka_name' => self::GAME_AKA_NAME,
         ]);
 
         $this->insert('game_series', ['id' => self::GAME_SERIES_ID], ['name' => self::SERIES_NAME]);
-        $this->insert('pub_dev', ['pub_dev_id' => self::COMPANY_ID], ['pub_dev_name' => self::COMPANY_NAME]);
+        $this->insert('pub_dev', ['id' => self::COMPANY_ID], ['pub_dev_name' => self::COMPANY_NAME]);
 
         $this->insert('sndhs', ['id' => self::SNDH_ID], [
             'sndh_archive_id' => self::SNDH_ARCHIVE_ID,
@@ -378,10 +389,10 @@ class E2ESeeder extends Seeder
         // The type is the badge on /articles. article_type ships empty and the
         // article's column was null, so the badge rendered as nothing at all -
         // indistinguishable from a badge that had stopped working.
-        $this->insert('article_type', ['article_type_id' => self::ARTICLE_TYPE_ID], [
+        $this->insert('article_type', ['id' => self::ARTICLE_TYPE_ID], [
             'article_type' => self::ARTICLE_TYPE_NAME,
         ]);
-        $this->insert('article_main', ['article_id' => self::ARTICLE_ID], [
+        $this->insert('article_main', ['id' => self::ARTICLE_ID], [
             'user_id'         => self::USER_ADMIN_ID,
             'article_type_id' => self::ARTICLE_TYPE_ID,
         ]);
@@ -393,18 +404,18 @@ class E2ESeeder extends Seeder
         ]);
 
         // Same chain as the interview screenshot below, one table along.
-        $this->insert('screenshot_main', ['screenshot_id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('screenshot_article', ['screenshot_article_id' => 1], [
+        $this->insert('screenshot_main', ['id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_article', ['id' => 1], [
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
         ]);
-        $this->insert('article_comments', ['article_comment_id' => 1], [
+        $this->insert('article_comments', ['id' => 1], [
             'screenshot_article_id' => 1,
             'comment_text'          => self::ARTICLE_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
-        $this->insert('review_main', ['review_id' => self::REVIEW_ID], [
+        $this->insert('review_main', ['id' => self::REVIEW_ID], [
             'user_id'     => self::USER_ADMIN_ID,
             'review_text' => 'Great game!',
             'review_date' => now()->timestamp,
@@ -417,13 +428,13 @@ class E2ESeeder extends Seeder
         // The "Who is it?" card on the home page only picks an interview whose
         // individual has a picture, and the card then reads the interview's
         // text, so seed the whole chain.
-        $this->insert('individuals', ['ind_id' => self::INDIVIDUAL_ID], [
+        $this->insert('individuals', ['id' => self::INDIVIDUAL_ID], [
             'ind_name' => self::INTERVIEW_INDIVIDUAL,
         ]);
         $this->insert('individual_text', ['ind_id' => self::INDIVIDUAL_ID], ['ind_imgext' => 'png']);
         $this->seedImage('images/individual_screenshots/' . self::INDIVIDUAL_ID . '.png');
 
-        $this->insert('interview_main', ['interview_id' => self::INTERVIEW_ID], [
+        $this->insert('interview_main', ['id' => self::INTERVIEW_ID], [
             'user_id' => self::USER_ADMIN_ID,
             'ind_id'  => self::INDIVIDUAL_ID,
         ]);
@@ -445,12 +456,12 @@ class E2ESeeder extends Seeder
         // $screenshot->pivot->comment->comment_text without guarding it, so a
         // screenshot seeded without its comment would 500 the public page
         // rather than render an empty caption.
-        $this->insert('screenshot_main', ['screenshot_id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('screenshot_interview', ['screenshot_interview_id' => 1], [
+        $this->insert('screenshot_main', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshot_interview', ['id' => 1], [
             'interview_id'  => self::INTERVIEW_ID,
             'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
         ]);
-        $this->insert('interview_comments', ['interview_comment_id' => 1], [
+        $this->insert('interview_comments', ['id' => 1], [
             'screenshot_interview_id' => 1,
             'comment_text'            => self::INTERVIEW_SCREENSHOT_CAPTION,
         ]);
@@ -460,9 +471,9 @@ class E2ESeeder extends Seeder
         // The admin table joins those, and a row with no match is what used to
         // null out its primary key - keep a row of that shape so the
         // regression stays covered.
-        $this->insert('interview_main', ['interview_id' => 2], ['user_id' => self::USER_ADMIN_ID]);
+        $this->insert('interview_main', ['id' => 2], ['user_id' => self::USER_ADMIN_ID]);
 
-        $this->insert('news', ['news_id' => self::NEWS_ID], [
+        $this->insert('news', ['id' => self::NEWS_ID], [
             'news_headline' => self::NEWS_HEADLINE,
             'news_text'     => 'Playwright test news post.',
             'user_id'       => self::USER_ADMIN_ID,
@@ -474,7 +485,7 @@ class E2ESeeder extends Seeder
         // keeps NEWS_HEADLINE on page one and puts the oldest filler alone on
         // page two.
         for ($number = 1; $number <= self::NEWS_FILLER_COUNT; $number++) {
-            $this->insert('news', ['news_id' => self::NEWS_ID + $number], [
+            $this->insert('news', ['id' => self::NEWS_ID + $number], [
                 'news_headline' => self::NEWS_FILLER_HEADLINE . ' ' . $number,
                 'news_text'     => 'Playwright test filler news post.',
                 'user_id'       => self::USER_ADMIN_ID,
@@ -485,7 +496,7 @@ class E2ESeeder extends Seeder
         // The pivot is not optional: Comment::getTypeAttribute() throws
         // 'Unknown comment type' without one, and the admin comment form
         // builds a route name out of it.
-        $this->insert('comments', ['comments_id' => self::COMMENT_ID], [
+        $this->insert('comments', ['id' => self::COMMENT_ID], [
             'comment'   => 'Playwright test comment.',
             'timestamp' => (string) now()->timestamp,
             'user_id'   => self::USER_STANDARD_ID,
@@ -605,15 +616,15 @@ class E2ESeeder extends Seeder
             'updated_at'   => $now,
         ]);
 
-        $this->insert('crew', ['crew_id' => self::CREW_ID], ['crew_name' => self::CREW_NAME]);
+        $this->insert('crew', ['id' => self::CREW_ID], ['crew_name' => self::CREW_NAME]);
     }
 
     private function seedLinks(): void
     {
-        $this->insert('website_category', ['website_category_id' => self::WEBSITE_CATEGORY_ID], [
+        $this->insert('website_category', ['id' => self::WEBSITE_CATEGORY_ID], [
             'website_category_name' => self::WEBSITE_CATEGORY_NAME,
         ]);
-        $this->insert('website', ['website_id' => self::WEBSITE_ID], [
+        $this->insert('website', ['id' => self::WEBSITE_ID], [
             'website_name'   => self::WEBSITE_NAME,
             'website_url'    => 'https://example.com/',
             'website_date'   => now()->timestamp,
@@ -631,8 +642,8 @@ class E2ESeeder extends Seeder
 
     private function seedOthers(): void
     {
-        $this->insert('screenshot_main', ['screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('spotlight', ['spotlight_id' => 1], [
+        $this->insert('screenshot_main', ['id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('spotlight', ['id' => self::SPOTLIGHT_ID], [
             'screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID,
             'spotlight'     => 'Playwright test spotlight.',
             'link'          => 'https://example.com/',
@@ -642,7 +653,7 @@ class E2ESeeder extends Seeder
         // The 'Did you know?' card picks a trivia at random and renders its
         // heading either way, so an empty table looks exactly like a working
         // card. One row is the difference.
-        $this->insert('trivia', ['trivia_id' => 1], ['trivia_text' => self::TRIVIA_TEXT]);
+        $this->insert('trivia', ['id' => self::TRIVIA_ID], ['trivia_text' => self::TRIVIA_TEXT]);
     }
 
     private function seedReferenceData(): void

@@ -16,7 +16,7 @@ class InterviewsTable extends DataTableComponent
 {
     public function configure(): void
     {
-        $this->setPrimaryKey('interview_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('interview_date', 'desc');
     }
 
@@ -28,7 +28,7 @@ class InterviewsTable extends DataTableComponent
                     fn ($row) => $row->ind_name
                 )
                 ->location(
-                    fn ($row) => route('admin.interviews.interviews.edit', $row->interview_id)
+                    fn ($row) => route('admin.interviews.interviews.edit', $row->getKey())
                 )
                 ->searchable(
                     fn ($query, $term) => $query->where('ind_name', 'like', "%{$term}%")
@@ -61,8 +61,8 @@ class InterviewsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Interview::select('interview_main.*', 'individuals.ind_name', 'interview_text.interview_date')
-            ->leftJoin('interview_text', 'interview_text.interview_id', '=', 'interview_main.interview_id')
-            ->leftJoin('individuals', 'individuals.ind_id', '=', 'interview_main.ind_id');
+            ->leftJoin('interview_text', 'interview_text.interview_id', '=', 'interview_main.id')
+            ->leftJoin('individuals', 'individuals.id', '=', 'interview_main.ind_id');
     }
 
     public function filters(): array
@@ -71,7 +71,7 @@ class InterviewsTable extends DataTableComponent
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [strval($user->user_id) => $user->userid];
+                return [strval($user->getKey()) => $user->userid];
             })->all();
         $authors = ['' => 'Any'] + $authors;
 

@@ -18,7 +18,7 @@ class SitemapController extends Controller
 
     public function general()
     {
-        $interviews = Interview::orderBy('interview_id')->get();
+        $interviews = Interview::orderBy('id')->get();
         $reviews = Review::where('review_edit', Review::REVIEW_PUBLISHED)
             ->orderBy('review_date')
             ->get();

@@ -14,7 +14,9 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
-                                    <a href="{{ route('games.search', ['developer_id' => $developer->pub_dev_id]) }}">
+                                    {{-- Not getKey(): $developers comes from a DB::table() query in
+                                         Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
+                                    <a href="{{ route('games.search', ['developer_id' => $developer->id]) }}">
                                         {{ $developer->pub_dev_name }}
                                     </a>
                                 </td>
@@ -33,7 +35,9 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
-                                    <a href="{{ route('games.search', ['publisher_id' => $publisher->pub_dev_id]) }}">
+                                    {{-- Not getKey(): $publishers comes from a DB::table() query in
+                                         Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
+                                    <a href="{{ route('games.search', ['publisher_id' => $publisher->id]) }}">
                                         {{ $publisher->pub_dev_name }}
                                     </a>
                                 </td>
@@ -71,7 +75,9 @@
                             <tr>
                                 <td class="text-muted text-nowrap" style="width: 2rem">{{ $loop->index+1 }}.</td>
                                 <td class="text-nowrap" style="width: 45%;">
-                                    <a href="{{ route('games.search', ['individual_id' => $individual->ind_id]) }}">
+                                    {{-- Not getKey(): $individuals comes from a DB::table() query in
+                                         Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
+                                    <a href="{{ route('games.search', ['individual_id' => $individual->id]) }}">
                                         {{ $individual->ind_name }}
                                     </a>
                                 </td>

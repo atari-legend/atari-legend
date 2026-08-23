@@ -57,12 +57,12 @@
                                 @foreach ($sndhs as $sndh)
                                     <div>
                                         <input type="checkbox"
-                                            id="{{ $game->game_id }}:{{ $sndh->id }}"
+                                            id="{{ $game->getKey() }}:{{ $sndh->id }}"
                                             @if (strtolower(trim($game->game_name)) === strtolower(trim($sndh->title))) checked @endif
                                             name="associations[]"
-                                            value="{{ $game->game_id }}:{{ $sndh->id }}"
+                                            value="{{ $game->getKey() }}:{{ $sndh->id }}"
                                             class="form-check-input">
-                                        <label class="form-check-lable" for="{{ $game->game_id }}:{{ $sndh->id }}">
+                                        <label class="form-check-lable" for="{{ $game->getKey() }}:{{ $sndh->id }}">
                                             {{ $sndh->title}} <small class="text-muted ms-2">{{ $sndh->id }} [{{ $sndh->sndh_archive_id }}]</small>
                                         </label>
                                     </div>

@@ -19,7 +19,7 @@ class ReviewsTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('review_id');
+        $this->setPrimaryKey('id');
         $this->setDefaultSort('review_date', 'desc');
     }
 
@@ -62,10 +62,10 @@ class ReviewsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Review::select()
+        return Review::select('review_main.*', 'game.game_name')
             ->where('review_edit', '=', $this->submissions)
-            ->leftJoin('review_game', 'review_game.review_id', '=', 'review_main.review_id')
-            ->leftJoin('game', 'review_game.game_id', '=', 'game.game_id');
+            ->leftJoin('review_game', 'review_game.review_id', '=', 'review_main.id')
+            ->leftJoin('game', 'review_game.game_id', '=', 'game.id');
     }
 
     public function filters(): array
@@ -74,7 +74,7 @@ class ReviewsTable extends DataTableComponent
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [strval($user->user_id) => $user->userid];
+                return [strval($user->getKey()) => $user->userid];
             })->all();
         $authors = ['' => 'Any'] + $authors;
 

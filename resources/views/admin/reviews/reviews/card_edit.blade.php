@@ -46,12 +46,12 @@
                         <input class="autocomplete form-control @error('author') is-invalid @enderror"
                             name="author_name" id="author_name" type="search" required
                             data-autocomplete-endpoint="{{ route('admin.ajax.users') }}"
-                            data-autocomplete-key="userid" data-autocomplete-id="user_id"
+                            data-autocomplete-key="userid" data-autocomplete-id="id"
                             data-autocomplete-companion="author"
                             value="{{ old('author_name', isset($review) ? $review->user?->userid : Auth::user()->userid) }}"
                             placeholder="Type a user name..." autocomplete="off">
                         <input type="hidden" name="author"
-                            value="{{ old('author', isset($review) ? $review->user?->user_id : Auth::user()->user_id) }}">
+                            value="{{ old('author', isset($review) ? $review->user?->getKey() : Auth::user()->getKey()) }}">
 
                         @error('author')
                             <span class="invalid-feedback" role="alert">
@@ -171,13 +171,13 @@
                 <fieldset class="lightbox-gallery">
                     <legend>Screenshots</legend>
                     @if (isset($review) && $review->games[0]->screenshots->isNotEmpty())
-                        @foreach ($review->games[0]->screenshots->sortBy('screenshot_id') as $screenshot)
+                        @foreach ($review->games[0]->screenshots->sortBy('id') as $screenshot)
                             <div class="row mb-3">
                                 <div class="col-2">
                                     <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $review->games[0]) }}" alt="Game screenshot">
                                 </div>
                                 <div class="col-10">
-                                    <input type="text" class="form-control @error('screenshot_comment_'.$screenshot->getKey()) is-invalid @enderror" id="screenshot-comment-{{ $screenshot->screenshot_id }}"
+                                    <input type="text" class="form-control @error('screenshot_comment_'.$screenshot->getKey()) is-invalid @enderror" id="screenshot-comment-{{ $screenshot->getKey() }}"
                                         value="{{ old('screenshot_comment_'.$screenshot->getKey(), isset($review) ? $review->getScreenshotComment($screenshot->getKey())?->pivot?->comment?->comment_text : '') }}"
                                         name="screenshot_comment_{{ $screenshot->getKey() }}" placeholder="Comment for this screenshot">
 

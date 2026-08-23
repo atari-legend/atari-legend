@@ -20,7 +20,7 @@ class MusicController extends Controller
             ->limit(50)
             ->get()
             ->each(function ($game) use (&$matches) {
-                $query = Sndh::select();
+                $query = Sndh::select('sndhs.*');
                 if (\Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite') {
                     $query->where('title', 'like', '%' . $game->game_name . '%');
                 } else {

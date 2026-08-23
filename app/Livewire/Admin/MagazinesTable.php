@@ -55,7 +55,7 @@ class MagazinesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Magazine::select();
+        return Magazine::select('magazines.*');
     }
 
     public function filters(): array

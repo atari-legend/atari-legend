@@ -3,27 +3,27 @@
         {{ Helper::user($comment->user) }}
 
         {{-- Edition controls --}}
-        @if (Auth::check() && Auth::user()->user_id === $comment->user?->user_id)
+        @if (Auth::check() && Auth::user()->getKey() === $comment->user?->getKey())
             <div class="float-end ms-2">
                 {{-- Save button --}}
-                <small class="me-1 d-none" data-comment-save="{{ $comment->comments_id }}">
-                    <a href="#" onclick="event.preventDefault(); document.getElementById('comment-edit-{{ $comment->comments_id }}').submit()"><i class="far fa-save text-success" title="Save comment"></i></a>
+                <small class="me-1 d-none" data-comment-save="{{ $comment->getKey() }}">
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('comment-edit-{{ $comment->getKey() }}').submit()"><i class="far fa-save text-success" title="Save comment"></i></a>
                 </small>
 
                 {{-- Edit / Cancel edit button --}}
                 <small class="me-1">
-                    <a href="#" data-comment-edit="{{ $comment->comments_id }}"><i class="fas fa-pencil-alt" title="Edit comment"></i></a>
+                    <a href="#" data-comment-edit="{{ $comment->getKey() }}"><i class="fas fa-pencil-alt" title="Edit comment"></i></a>
                 </small>
 
                 {{-- Delete button. Uses a form to POST the deletion --}}
 
-                <form id="comment-delete-{{ $comment->comments_id }}" action="{{ route('comments.delete') }}" method="POST" class="d-none">
+                <form id="comment-delete-{{ $comment->getKey() }}" action="{{ route('comments.delete') }}" method="POST" class="d-none">
                     @csrf
-                    <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
+                    <input type="hidden" name="comment_id" value="{{ $comment->getKey() }}">
                 </form>
                 <small>
                     <a href="{{ route('comments.delete') }}"
-                        onclick="event.preventDefault(); document.getElementById('comment-delete-{{ $comment->comments_id }}').submit()"><i class="far fa-trash-alt text-danger" title="Delete comment"></i></a>
+                        onclick="event.preventDefault(); document.getElementById('comment-delete-{{ $comment->getKey() }}').submit()"><i class="far fa-trash-alt text-danger" title="Delete comment"></i></a>
                 </small>
             </div>
         @endif
@@ -33,7 +33,7 @@
         @endif
     </div>
 
-    <div class="py-2 mb-1" id="comment-{{ $comment->comments_id }}">
+    <div class="py-2 mb-1" id="comment-{{ $comment->getKey() }}">
         @contributor
             <a class="d-inline-block me-1" href="{{ route('admin.users.comments.edit', $comment) }}">
                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -44,10 +44,10 @@
     </div>
 
     {{-- Comment edit form --}}
-    @if (Auth::check() && Auth::user()->user_id === $comment->user?->user_id)
-        <form id="comment-edit-{{ $comment->comments_id }}" method="post" action="{{ route('comments.update') }}" class="text-center d-none">
+    @if (Auth::check() && Auth::user()->getKey() === $comment->user?->getKey())
+        <form id="comment-edit-{{ $comment->getKey() }}" method="post" action="{{ route('comments.update') }}" class="text-center d-none">
             @csrf
-            <input type="hidden" name="comment_id" value="{{ $comment->comments_id }}">
+            <input type="hidden" name="comment_id" value="{{ $comment->getKey() }}">
             <input type="hidden" name="context" value="{{ $context ?? ''}}">
             <input type="hidden" name="id" value="{{ $id ?? ''}}">
             <textarea class="form-control" rows="5" name="comment" required>{{ stripslashes($comment->comment) }}</textarea>

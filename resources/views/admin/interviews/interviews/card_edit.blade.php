@@ -46,12 +46,12 @@
                         <input class="autocomplete form-control @error('author') is-invalid @enderror"
                             name="author_name" id="author_name" type="search" required
                             data-autocomplete-endpoint="{{ route('admin.ajax.users') }}"
-                            data-autocomplete-key="userid" data-autocomplete-id="user_id"
+                            data-autocomplete-key="userid" data-autocomplete-id="id"
                             data-autocomplete-companion="author"
                             value="{{ old('author_name', isset($interview) ? $interview->user?->userid : Auth::user()->userid) }}"
                             placeholder="Type a user name..." autocomplete="off">
                         <input type="hidden" name="author"
-                            value="{{ old('author', isset($interview) ? $interview->user?->user_id : Auth::user()->user_id) }}">
+                            value="{{ old('author', isset($interview) ? $interview->user?->getKey() : Auth::user()->getKey()) }}">
 
                         @error('author')
                             <span class="invalid-feedback" role="alert">

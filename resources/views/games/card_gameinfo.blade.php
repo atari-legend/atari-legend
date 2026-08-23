@@ -22,7 +22,7 @@
                 <div class="col-8">
                     @foreach ($game->developers as $developer)
                         <div>
-                            <a href="{{ route('games.search', ['developer_id' => $developer->pub_dev_id]) }}">{{ $developer->pub_dev_name }}</a>
+                            <a href="{{ route('games.search', ['developer_id' => $developer->getKey()]) }}">{{ $developer->pub_dev_name }}</a>
                             @contributor
                                 <a class="d-inline-block" href="{{ route('admin.games.companies.edit', $developer) }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -34,8 +34,8 @@
                                 </a>
                             @endif
                             @if ($developer->text?->pub_dev_profile !== null && trim($developer->text?->pub_dev_profile) !== '')
-                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->pub_dev_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->pub_dev_id }}"><i class="fas fa-info-circle text-muted"></i></a>
-                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->pub_dev_id }}">
+                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->getKey() }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->getKey() }}"><i class="fas fa-info-circle text-muted"></i></a>
+                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->getKey() }}">
                                     {!! Helper::bbCode(nl2br(e($developer->text->pub_dev_profile), false)) !!}
                                 </p>
                             @endif
@@ -58,7 +58,7 @@
                     {{-- Group by role to avoid repeating individuals with multiple roles --}}
                     @foreach ($game->individuals->groupBy('ind_name') as $individuals)
                         <div class="mb-1">
-                            <a href="{{ route('games.search', ['individual_id' => $individuals->first()->ind_id]) }}">{{ $individuals->first()->ind_name }}</a>
+                            <a href="{{ route('games.search', ['individual_id' => $individuals->first()->getKey()]) }}">{{ $individuals->first()->ind_name }}</a>
                             @contributor
                                 <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individuals->first()) }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -66,7 +66,7 @@
                             @endcontributor
                             {{-- We have to use trim() here because the profile column in the database contains 'empty' profiles full of spaces --}}
                             @if ($individuals->first()->text !== null && $individuals->first()->text->ind_profile !== null && trim($individuals->first()->text->ind_profile) !== '')
-                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $individuals->first()->ind_id }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $individuals->first()->ind_id }}"><i class="fas fa-info-circle text-muted"></i></a>
+                                <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
                             @if ($individuals->first()->text !== null && $individuals->first()->text->file !== null)
                                 <a class="lightbox-link d-inline-block" href="{{ $individuals->first()->text->image_url }}">
@@ -89,7 +89,7 @@
                                 <small class="text-muted">{{ $individual->pivot->role->name }}@if (!$loop->last),@endif</small>
                             @endforeach
                             @if ($individuals->first()->text !== null && $individuals->first()->text->ind_profile !== null && $individuals->first()->text->ind_profile !== '')
-                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individuals->first()->ind_id }}">
+                                <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}">
                                     {!! Helper::bbCode(nl2br(e($individuals->first()->text->ind_profile), false)) !!}
                                 </p>
                             @endif

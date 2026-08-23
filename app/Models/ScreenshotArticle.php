@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class ScreenshotArticle extends Pivot
 {
     protected $table = 'screenshot_article';
-    protected $primaryKey = 'screenshot_article_id';
     public $timestamps = false;
 
     public function comment()

@@ -28,7 +28,7 @@
                     <select class="form-select @if (!isset($publisher_id)) d-none @endif" id="publisher_id" name="publisher_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->pub_dev_id }}" @if (isset($publisher_id) && (int) $publisher_id === $company->pub_dev_id) selected @endif>{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}" @if (isset($publisher_id) && (int) $publisher_id === $company->getKey()) selected @endif>{{ $company->pub_dev_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -47,7 +47,7 @@
                     <select class="form-select @if (!isset($developer_id)) d-none @endif" id="developer_id" name="developer_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->pub_dev_id }}" @if (isset($developer_id) && (int) $developer_id === $company->pub_dev_id) selected @endif>{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}" @if (isset($developer_id) && (int) $developer_id === $company->getKey()) selected @endif>{{ $company->pub_dev_name }}</option>
                         @endforeach
                     </select>
                 </div>

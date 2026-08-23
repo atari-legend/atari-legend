@@ -270,9 +270,9 @@ class AdminStatisticsHelper
     public static function topContributors($limit = 15)
     {
         $rows = DB::table('change_log')
-            ->join('users', 'users.user_id', '=', 'change_log.user_id')
+            ->join('users', 'users.id', '=', 'change_log.user_id')
             ->select('users.userid', DB::raw('count(*) as total'))
-            ->groupBy('users.user_id', 'users.userid')
+            ->groupBy('users.id', 'users.userid')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();
@@ -320,9 +320,9 @@ class AdminStatisticsHelper
     public static function topPublishers($limit = 15)
     {
         $rows = DB::table('game_release')
-            ->join('pub_dev', 'pub_dev.pub_dev_id', '=', 'game_release.pub_dev_id')
+            ->join('pub_dev', 'pub_dev.id', '=', 'game_release.pub_dev_id')
             ->select('pub_dev.pub_dev_name', DB::raw('count(*) as total'))
-            ->groupBy('pub_dev.pub_dev_id', 'pub_dev.pub_dev_name')
+            ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();
@@ -339,9 +339,9 @@ class AdminStatisticsHelper
     public static function topDevelopers($limit = 15)
     {
         $rows = DB::table('game_developer')
-            ->join('pub_dev', 'pub_dev.pub_dev_id', '=', 'game_developer.dev_pub_id')
+            ->join('pub_dev', 'pub_dev.id', '=', 'game_developer.dev_pub_id')
             ->select('pub_dev.pub_dev_name', DB::raw('count(distinct game_developer.game_id) as total'))
-            ->groupBy('pub_dev.pub_dev_id', 'pub_dev.pub_dev_name')
+            ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();

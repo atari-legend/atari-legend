@@ -28,7 +28,7 @@ class ChangelogHelper
 
         $log = Changelog::create(
             array_merge($data, [
-                'user_id'          => $data['user_id'] ?? Auth::user()->user_id ?? -1,
+                'user_id'          => $data['user_id'] ?? Auth::user()->getKey() ?? -1,
                 'timestamp'        => time(),
             ])
         );

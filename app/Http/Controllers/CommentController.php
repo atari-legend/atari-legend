@@ -19,7 +19,7 @@ class CommentController extends Controller
         if ($request->filled('comment_id')) {
             $comment = Comment::find($request->comment_id);
 
-            if (Auth::user()->user_id === $comment->user->user_id) {
+            if (Auth::user()->getKey() === $comment->user->getKey()) {
                 $comment->delete();
 
                 $this->insertChangelog(Changelog::DELETE, $request->context, $request->id, $comment);
@@ -34,7 +34,7 @@ class CommentController extends Controller
         if ($request->filled('comment_id') && $request->filled('comment')) {
             $comment = Comment::find($request->comment_id);
 
-            if (Auth::user()->user_id === $comment->user->user_id) {
+            if (Auth::user()->getKey() === $comment->user->getKey()) {
                 $comment->comment = $request->comment;
                 $comment->timestamp = time();
                 $comment->save();
@@ -82,7 +82,7 @@ class CommentController extends Controller
             'section_id'       => $id,
             'section_name'     => $sectionName,
             'sub_section'      => 'Comment',
-            'sub_section_id'   => $comment->comments_id,
+            'sub_section_id'   => $comment->getKey(),
             'sub_section_name' => $sectionName,
         ]);
     }

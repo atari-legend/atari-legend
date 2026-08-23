@@ -16,7 +16,7 @@ class GameAndSoftwareController extends Controller
         $q = $request->q;
 
         $games = DB::table('game')
-            ->select('game_name as name', 'game_id as id', DB::raw("'fa-gamepad' as icon"))
+            ->select('game_name as name', 'id', DB::raw("'fa-gamepad' as icon"))
             ->limit(GameAndSoftwareController::MAX);
 
         $akas = DB::table('game_aka')

@@ -53,7 +53,7 @@ class SoftwareTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return MenuSoftware::select();
+        return MenuSoftware::select('menu_software.*');
     }
 
     public function filters(): array

@@ -104,7 +104,19 @@ export async function pickAutocompleteBy(page, selector, term) {
 
   // The companion hidden field is what the controller actually reads.
   const companion = await page.locator(selector).getAttribute('data-autocomplete-companion');
-  await expect(page.locator(`input[name="${companion}"]`)).not.toHaveValue('');
+  const hidden = page.locator(`input[name="${companion}"]`);
+
+  await expect(hidden).not.toHaveValue('');
+
+  // And not the *string* "undefined", which is the shape the failure takes
+  // when the endpoint's JSON key and the field's data-autocomplete-id stop
+  // agreeing - autocomplete.js:83 reads value[dataset.autocompleteId], and
+  // assigning a missing key to input.value stringifies it. The field is then
+  // non-empty and submits happily, so an emptiness check alone sees nothing.
+  // This is the one path in the primary-key rename that fails in the browser
+  // with nothing on the server side to notice; see
+  // docs/plans/2026-08-17-primary-key-rename.md, Phase B step 8.
+  await expect(hidden).not.toHaveValue(/^(undefined|null)$/);
 }
 
 /**

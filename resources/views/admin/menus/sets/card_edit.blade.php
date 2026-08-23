@@ -57,7 +57,7 @@
                 <label for="crews" class="form-label">Crews</label>
                 <select class="form-select @error('crews') is-invalid @enderror" multiple size="6" name="crews[]" required>
                     @foreach ($crews as $crew)
-                        <option value="{{ $crew->crew_id }}" @if (isset($set) && $set->crews->contains($crew)) selected @endif>{{ $crew->crew_name }}</option>
+                        <option value="{{ $crew->getKey() }}" @if (isset($set) && $set->crews->contains($crew)) selected @endif>{{ $crew->crew_name }}</option>
                     @endforeach
                 </select>
 
