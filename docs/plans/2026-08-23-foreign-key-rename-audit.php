@@ -147,9 +147,10 @@ foreach (glob(base_path('app/Models/*.php')) as $file) {
             // arguments as redundant that are in fact load-bearing.
             $expected = $model->getForeignKey();
         } elseif ($relation instanceof BelongsToMany) {
+            // Same rule as above: belongsToMany defaults both pivot keys to
+            // getForeignKey() on each side, so ask, do not reimplement.
             $actual   = $relation->getForeignPivotKeyName() . '|' . $relation->getRelatedPivotKeyName();
-            $expected = Str::snake(class_basename($model)) . '_' . $model->getKeyName() . '|'
-                      . Str::snake(class_basename($related)) . '_' . $related->getKeyName();
+            $expected = $model->getForeignKey() . '|' . $related->getForeignKey();
         } else {
             continue; // morph relations have no foreign key to converge on
         }

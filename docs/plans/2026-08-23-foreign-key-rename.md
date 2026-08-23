@@ -158,6 +158,32 @@ formula exactly what a `grep` does to a column name. The SQL diff is what caught
 it, which is the argument for running that diff on every Phase A pull request
 rather than trusting the count.
 
+Worth recording that the same flaw sat in the `belongsToMany` branch and was
+fixed with it. It changed no counts — no `belongsToMany` is declared on a
+`Pivot` — so it was latent rather than active, which is exactly the kind of
+thing that survives a review of the output.
+
+### Phase A, re-run and verified
+
+With the classification corrected, the experiment was repeated:
+
+- **70 arguments deleted, SQL diff across all 162 relations empty.** Not one
+  character changed.
+- **`artisan test`: 991 passed, 18 skipped, 3511 assertions** — identical to the
+  figure the primary-key campaign signed off on.
+
+So "Phase A is a no-op" is now a measurement rather than a claim. Two caveats
+that belong with it rather than after it:
+
+- **The script reached 70 of the 76.** The remaining six are multi-line or
+  chained declarations — `->withPivot()`, `->using()` — that a line-oriented
+  rewrite cannot safely touch. Phase A is therefore about seventy mechanical
+  edits plus six careful ones, not one clean sweep.
+- **An empty SQL diff and a green suite prove the *relations* are unchanged.**
+  They do not prove nothing else in those 26 files was disturbed. That is what
+  reading the diff is for, and it is the reason this phase is still a reviewed
+  pull request rather than a scripted commit.
+
 ## Phase B — the ones that are a method name, not a column
 
 Because `belongsTo` reads the **method** name, nine divergences *could* be
