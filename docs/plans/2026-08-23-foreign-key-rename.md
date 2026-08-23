@@ -1457,6 +1457,27 @@ WHERE TABLE_SCHEMA = DATABASE() AND COLUMN_NAME = 'release_id';
 (No renameable column carries more than one index — checked across all 18 —
 which is the one thing here that is simple.)
 
+**Read it at migration time, not at planning time — the names differ between
+databases.** Found while executing Phase C, and it is a sharper version of the
+rule above rather than an exception to it. This document measured the names
+against the production schema, where the index on `game.progress_system_id` is
+called `progress_system_id` and the one on `game_developer.dev_pub_id` is
+called `dev_pub_id`. A database built by `migrate:fresh` — which is what CI and
+the e2e suite run against — carries the names the *historical migrations* gave
+them instead: `game_progress_system_id_index` and
+`game_developer_dev_pub_id_index`. A migration that hard-codes either set
+passes on one and fails on the other with a 1176, and the failure is loud but
+lands halfway through: `renameColumn` has already committed by then, so the
+database is left with the new column and the old index and no migration row to
+say so.
+
+So the campaign's migrations look the names up at run time — index, constraint,
+referenced table and column, and both referential actions — and substitute the
+new column name into whatever they find. That also settles the `ON DELETE`
+question the next note raises, and one it does not: `UPDATE_RULE` is not
+uniform either (`media_release_id_foreign` is `ON UPDATE CASCADE`), so it is
+read rather than assumed alongside `DELETE_RULE`.
+
 One distinction worth drawing, because it changes how urgent this is. For the
 six `*_foreign` indexes, the rename *introduces* the 1091 trap. For the other
 twelve, `dropIndex(['release_id'])` is **already** broken today — Laravel
