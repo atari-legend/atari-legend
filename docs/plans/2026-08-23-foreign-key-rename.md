@@ -17,25 +17,35 @@ the same way is the mistake to avoid. **Most of the divergence from Laravel's
 convention is not in the schema at all**, and the schema changes that are worth
 making are a minority of the work:
 
-| | Relations | Needs a migration? |
-|---|---|---|
-| Explicit key argument that is **already** Eloquent's default | 79 | No — delete the argument |
-| No explicit key argument (already clean) | 35 | No |
-| Divergent, fixable by renaming a **PHP method** | 9 | No |
-| Divergent, fixable by renaming a **column** | 20 | Yes |
-| Divergent, convention **unreachable or unwanted** | 14 | No — keep the argument, record why |
-| Divergent because the relation is **wrong** (see "Two defects") | 2 | No |
-| **Total relations in `app/Models/`** | **159** | |
+This table is the plan's conclusion, not its starting analysis — the
+dispositions below were argued out in review and the reasoning for each is in
+its own section.
 
-(The 45 divergent relations are the last four rows. One of the 20 —
-`Release::distributors()`, on `game_release_distributor` — is only half fixed by
-its column rename: its `game_release_id` moves and its `pub_dev_id` does not, so
-it ends the campaign with one explicit argument rather than none.)
+| | Relations | Phase | Needs a migration? |
+|---|---|---|---|
+| Explicit key argument that is **already** Eloquent's default | 79 | A | No — delete the argument |
+| No explicit key argument (already clean) | 35 | — | No |
+| Divergent, fixed by renaming a **PHP method** | 5 | B | No |
+| Divergent, fixed by renaming a **column** | 20 | C | Yes |
+| Divergent, but the relation is **unused and wrong** | 2 | A | No — delete the relation |
+| Divergent, convention **unreachable or declined** | 17 | D | No — keep the argument, record why |
+| Divergent, **deferred** (`News::image()`) | 1 | — | No |
+| **Total relations in `app/Models/`** | **159** | | |
 
-So the campaign is roughly: delete 79 arguments, rename some methods, rename
-about a dozen columns, and write down why the remaining fourteen stay as they
-are. The first line of that list is the largest, carries no database risk at
-all, and can start today.
+The 45 divergent relations are the last five rows. Two notes on the edges:
+
+- The 17 declined include the three `type()` relations, which Phase B could
+  reach by renaming a method and deliberately does not — `->type` is 105 hits
+  repo-wide and mostly plain columns.
+- One of the 20 — `Release::distributors()`, on `game_release_distributor` — is
+  only half fixed by its column rename: `game_release_id` moves and `pub_dev_id`
+  does not, so it ends the campaign with one explicit argument rather than none.
+
+The 20 column-rename relations resolve to **five renames covering 16 columns
+across 16 tables**, listed in Phase C. So the campaign is: delete 79 arguments
+and 2 dead relations, rename 5 methods, rename 16 columns, and write down why
+the remaining 17 stay as they are. The first item is the largest by a distance,
+carries no database risk at all, and can start today.
 
 ### How these numbers were obtained
 
@@ -116,10 +126,11 @@ Acceptance: that diff empty, `artisan test` and Playwright both green, and no
 line of generated SQL changed. This is a pure no-op and should be reviewed as
 one.
 
-## Phase B — the nine that are a method name, not a column
+## Phase B — the ones that are a method name, not a column
 
-Because `belongsTo` reads the **method** name, nine divergences can be closed
-without the database being involved:
+Because `belongsTo` reads the **method** name, nine divergences *could* be
+closed without the database being involved. Five of them should be; the reasons
+the other four are not are as much a part of this phase as the renames:
 
 | Relation | Column today | Convention wants | Rename the method to |
 |---|---|---|---|
@@ -326,7 +337,7 @@ Two things go with that decision, because "fossil" is a fair charge:
   That is consistency between *endpoints*, which is a better argument than
   consistency with the schema, and it is not this campaign's job.
 
-## Phase D — the four that convention cannot reach, and the ten it should not
+## Phase D — the six that convention cannot reach, and the eleven it should not
 
 Write these down rather than leaving them to be rediscovered.
 
@@ -367,6 +378,12 @@ keeps its arguments regardless.)
   `game_submitinfo_id`, purely because `Str::snake('GameSubmitInfo')` inserts an
   underscore the table name does not have. Not worth a migration. Keep the
   argument.
+- **`Article::type()`, `Media::type()`, `MediaScan::type()`.** Phase B *could*
+  reach these by renaming the method, and declines to — see the pricing table
+  there. `->type` is 105 hits repo-wide and mostly plain columns on other
+  models, which is the primary-key campaign's worst hazard reproduced for no
+  behavioural gain. Three explicit arguments is the cheaper price. Listed here
+  rather than in Phase B so the "declined" count is honest.
 
 ## Two defects the audit found
 
