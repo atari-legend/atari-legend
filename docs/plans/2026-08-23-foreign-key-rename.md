@@ -624,11 +624,50 @@ Two consequences for the plan:
 
 - **The `ind_id` rename ships alone**, and its PR checklist names that line
   explicitly rather than relying on a grep.
-- **Consider enabling `preventSilentlyDiscardingAttributes()` in production for
-  the duration of Phase C.** The comment in `AppServiceProvider` is right that a
-  throwing save is risky; a silently incomplete save is worse, and a foreign key
-  rename is exactly the window where the trade inverts. The primary-key plan
-  reached the same conclusion about the read-side guard and did not act on it.
+- **Do *not* enable `preventSilentlyDiscardingAttributes()` in production.**
+  An earlier draft floated it and left it open. Measured, it is the wrong
+  instrument: the flag is global and would newly police **107 mass-assignment
+  call sites across 51 files** in production, in order to protect against a
+  risk that exists at **one** of them. Every latent stale key anywhere in the
+  application — in paths that today work fine by dropping something harmless —
+  would become a 500 instead. The suite being green with the flag on says
+  nothing about the untested paths, which is precisely where such a key would
+  survive. That is a large, permanent-feeling blast radius bought for a
+  one-line problem, and `AppServiceProvider`'s existing comment is right on its
+  own terms.
+
+### Make the one silent site loud instead
+
+The targeted fix is better than the global one, and it is a schema improvement
+that stands up without the campaign.
+
+`interview_main.ind_id` is nullable, which is the *only* reason the campaign has
+a silent class at all. It is also nullable for no reason: **80 interviews in
+production, zero with a null `ind_id`**, and the application already treats it
+as mandatory — `InterviewsController:57` validates
+`'individual' => 'required|exists:individuals,id'`. The schema simply never
+caught up with the form.
+
+Make it `NOT NULL`, in its own migration, **before** the `ind_id` rename:
+
+- A stale `'ind_id'` key in `new Interview([...])` then fails with 1364 in
+  production, exactly like the nine `NOT NULL` columns already do. The silent
+  class stops existing rather than being watched for.
+- It is compatible with the existing constraint: `interview_main_ind_id_foreign`
+  is `ON DELETE CASCADE`, so deleting an individual removes the interview rather
+  than trying to null the column. (Its sibling `interview_main_user_id_foreign`
+  is `ON DELETE SET NULL` — that one could *not* take `NOT NULL`, which is why
+  the delete rule has to be read before proposing this anywhere else.)
+- It is correct regardless of whether Phase C ever happens.
+
+The other four nullable non-pivot columns are deliberately left alone. Two of
+them genuinely hold nulls in production — `game_release.pub_dev_id` has 11,815
+and `menu_disk_contents.game_release_id` has 5,195 — so nullable is right there,
+and both are already safe because they are written through relationships.
+
+The one condition that would change this recommendation: if the campaign had
+many silent sites rather than one, the per-column fix would not scale and the
+global flag would start to look proportionate. It has one.
 
 ## Migration mechanics, verified
 
