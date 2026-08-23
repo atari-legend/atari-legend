@@ -202,6 +202,89 @@ Ascending by blast radius, one column family per PR:
 4. `game_release_id` → `release_id` — nine tables, but eight of the nine are
    pivots written through `attach()`/`sync()`, which is the safe path.
 
+### Worked example: every site the `ind_id` rename touches
+
+`ind_id` is the dangerous one, so it gets enumerated rather than left to a grep
+at the time. This doubles as the checklist template for the other four renames:
+the *categories* are what generalise, not the line numbers.
+
+**Schema (4 tables).** `crew_individual`, `individual_nicks`, `individual_text`,
+`interview_main`. `individual_nicks` also has `nick_id` pointing at the same
+parent, which stays — see Phase D.
+
+**Relationship definitions (6).** `Individual::text()`, `::interviews()`,
+`::nicknames()`, `::individuals()`, `::crews()`, `Crew::individuals()`,
+`Interview::individual()`. Four of these lose their argument; the two
+self-referential ones keep both.
+
+**`$fillable` (1).** `Interview.php:18` — and this is the campaign's one silent
+write, covered above.
+
+**A property read of the foreign key (1), and it is the one to fear.**
+
+```php
+// app/Models/IndividualText.php:17-21
+// ind_id, not getKey(): this model's key is ind_text_id, but the
+// ... filename is built from the PARENT's id
+return Helper::filename($this->ind_id, $this->ind_imgext);
+```
+
+The primary-key campaign hit this exact line from the other direction and
+records the outcome: rewritten to `getKey()`, "every individual avatar and
+company logo 404d". It is a `MissingAttributeException` in dev and a silent
+`null` filename in production, so the failure is 404s on every avatar rather
+than an error page. Playwright is what catches it.
+
+**Query-builder string columns (4).** Two Livewire join closures —
+`InterviewsTable:65` (`interview_main.ind_id`) and `GameIndividualsTable:62`
+(`individual_text.ind_id`) — and two calls to a *helper* that takes the column
+name as an argument:
+
+```php
+// app/Helpers/AdminStatisticsHelper.php:122 and :183
+self::countWithText('individual_text', 'ind_profile', 'ind_id')
+```
+
+That third category is worth naming separately: **a foreign key passed as data**.
+It is not a query literal and not a property, so a reviewer scanning for either
+shape misses it, and no arch test of the `QueryConventionsTest` kind can see it.
+
+**Factories and seeders (4).** `IndividualFactory:32`, `InterviewFactory:25`,
+`E2ESeeder:434` and `:439`. The primary-key campaign's harness change 1 gives
+each table a distinct id range, so a foreign key wired to the wrong parent now
+produces a visibly wrong number here rather than a coincidentally right one.
+
+**PHPUnit (7 files).** `NormaliseBlankProfilesTest`, `Admin/StatisticsTest`,
+`Admin/Interviews/InterviewsControllerTest`, `Public/AutocompleteTest`,
+`Public/GamePageTest`, `Public/ResourceControllersTest`,
+`Public/AjaxEndpointsTest`.
+
+**Playwright: nothing.** No spec names the column. It exercises the same paths
+through the UI, which is exactly why it is the net for the avatar bug above.
+
+**The autocomplete wire format: do not touch it, or move all eight together.**
+
+```php
+// app/Http/Controllers/Ajax/IndividualController.php:35
+'ind_id' => $individual->getKey(),
+```
+
+This is an **array literal**, so the JSON key is a name the endpoint chooses,
+not a column — it survived the primary-key rename unchanged for that reason. It
+pairs with seven `data-autocomplete-id="ind_id"` attributes in Blade, and
+`resources/js/autocomplete.js:83` reads
+`feedback.selection.value[el.dataset.autocompleteId]`. The form field is called
+`individual`, not `ind_id`, so the controller already maps between the two and
+**the column rename does not require this to change at all.**
+
+The trap is the tidy-up. Renaming the JSON key for consistency without moving
+all seven Blade attributes assigns `undefined` into the hidden field, which
+stringifies and submits happily — no PHP error, no SQL error, nothing in the
+log. Either leave all eight alone, or move all eight in one commit. The
+primary-key plan's harness change 4 put a guard on exactly this: `pickAutocompleteBy`
+now rejects the string `"undefined"`, so every existing autocomplete spec is a
+wire-format check.
+
 ## Phase D — the four that convention cannot reach, and the ten it should not
 
 Write these down rather than leaving them to be rediscovered.
