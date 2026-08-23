@@ -103,7 +103,7 @@ class GameCreditsController extends Controller
     {
         DB::table('game_developer')
             ->where('game_id', $game->getKey())
-            ->where('dev_pub_id', $developer->getKey())
+            ->where('pub_dev_id', $developer->getKey())
             ->where('developer_role_id', $request->role)
             ->delete();
 

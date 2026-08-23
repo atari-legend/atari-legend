@@ -26,7 +26,7 @@ class Tops extends Component
     public function render()
     {
         $developers = DB::table('pub_dev')
-            ->join('game_developer', 'game_developer.dev_pub_id', '=', 'pub_dev.id')
+            ->join('game_developer', 'game_developer.pub_dev_id', '=', 'pub_dev.id')
             ->selectRaw('count(game_id) as game_count, pub_dev_name, pub_dev.id')
             ->where('pub_dev.pub_dev_name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
             ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')

@@ -339,7 +339,7 @@ class AdminStatisticsHelper
     public static function topDevelopers($limit = 15)
     {
         $rows = DB::table('game_developer')
-            ->join('pub_dev', 'pub_dev.id', '=', 'game_developer.dev_pub_id')
+            ->join('pub_dev', 'pub_dev.id', '=', 'game_developer.pub_dev_id')
             ->select('pub_dev.pub_dev_name', DB::raw('count(distinct game_developer.game_id) as total'))
             ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
             ->orderByDesc('total')

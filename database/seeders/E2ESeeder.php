@@ -365,7 +365,7 @@ class E2ESeeder extends Seeder
 
         $this->insert('game_developer', [
             'game_id'    => self::GAME_ID,
-            'dev_pub_id' => self::COMPANY_ID,
+            'pub_dev_id' => self::COMPANY_ID,
         ], []);
 
         $this->insert('game_genre_cross', [
