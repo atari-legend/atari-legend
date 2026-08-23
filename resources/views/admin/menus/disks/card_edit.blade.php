@@ -51,9 +51,9 @@
                     name="individual_name" id="individual_name" type="search"
                     data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
                     data-autocomplete-key="ind_name" data-autocomplete-id="ind_id"
-                    data-autocomplete-companion="donated" value="{{ old('individual_name', isset($disk) ? $disk->donatedBy?->ind_name : '') }}"
+                    data-autocomplete-companion="donated" value="{{ old('individual_name', isset($disk) ? $disk->donatedByIndividual?->ind_name : '') }}"
                     placeholder="Type an individual name..." autocomplete="off">
-                <input type="hidden" name="donated" value="{{ old('donated', isset($disk) ? $disk->donatedBy?->getKey() : '') }}">
+                <input type="hidden" name="donated" value="{{ old('donated', isset($disk) ? $disk->donatedByIndividual?->getKey() : '') }}">
 
                 @error('donated')
                     <span class="invalid-feedback" role="alert">

@@ -10,9 +10,9 @@ class GameVs extends Model
     public $timestamps = false;
     protected $fillable = ['atari_id', 'amiga_id', 'lemon64_slug'];
 
-    public function game()
+    public function atari()
     {
-        return $this->belongsTo(Game::class, 'atari_id');
+        return $this->belongsTo(Game::class);
     }
 
     public function getLemonAmigaUrlAttribute()

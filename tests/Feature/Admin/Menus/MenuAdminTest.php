@@ -294,7 +294,7 @@ class MenuAdminTest extends AdminTestCase
             'donated'   => $donor->getKey(),
         ])->assertRedirect();
 
-        $this->assertSame('Someone', MenuDisk::sole()->donatedBy->ind_name);
+        $this->assertSame('Someone', MenuDisk::sole()->donatedByIndividual->ind_name);
     }
 
     public function test_a_disk_can_be_edited_and_deleted(): void

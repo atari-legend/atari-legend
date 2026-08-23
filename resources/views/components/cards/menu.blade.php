@@ -19,8 +19,8 @@
                     @if ($disk->menu->date !== null)
                         <div class="figcaption-note">{{ $disk->menu->date->format('F j, Y') }}</div>
                     @endif
-                    @if ($disk->donatedBy !== null)
-                        <div class="figcaption-subtitle mb-2">Donated by <strong>{{ $disk->donatedBy->public_nick }}</strong></div>
+                    @if ($disk->donatedByIndividual !== null)
+                        <div class="figcaption-subtitle mb-2">Donated by <strong>{{ $disk->donatedByIndividual->public_nick }}</strong></div>
                     @endif
                 </figcaption>
             </figure>

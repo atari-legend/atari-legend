@@ -40,8 +40,8 @@
                                 </p>
                             @endif
                             <br>
-                            @if ($developer->pivot->role !== null)
-                                <small class="text-muted">{{ $developer->pivot->role->name }}</small>
+                            @if ($developer->pivot->developerRole !== null)
+                                <small class="text-muted">{{ $developer->pivot->developerRole->name }}</small>
                             @endif
                         </div>
                     @endforeach
@@ -85,8 +85,8 @@
                                 </small>
                                 <br>
                             @endif
-                            @foreach ($individuals->whereNotNull('pivot.role.name')->sortBy('pivot.role.name') as $individual)
-                                <small class="text-muted">{{ $individual->pivot->role->name }}@if (!$loop->last),@endif</small>
+                            @foreach ($individuals->whereNotNull('pivot.individualRole.name')->sortBy('pivot.individualRole.name') as $individual)
+                                <small class="text-muted">{{ $individual->pivot->individualRole->name }}@if (!$loop->last),@endif</small>
                             @endforeach
                             @if ($individuals->first()->text !== null && $individuals->first()->text->ind_profile !== null && $individuals->first()->text->ind_profile !== '')
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}">

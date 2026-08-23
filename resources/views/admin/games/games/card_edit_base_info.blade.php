@@ -166,7 +166,7 @@
                     <select class="form-select @error('series') is-invalid @enderror" name="series">
                         <option value="">-</option>
                         @foreach ($series as $serie)
-                            <option value="{{ $serie->id }}" @if (isset($game) && $game->series?->id === $serie->id) selected @endif>{{ $serie->name }}</option>
+                            <option value="{{ $serie->id }}" @if (isset($game) && $game->gameSeries?->id === $serie->id) selected @endif>{{ $serie->name }}</option>
                         @endforeach
                     </select>
                     <div class="form-text"><a href="{{ route('admin.games.series.index') }}">Edit series</a></div>

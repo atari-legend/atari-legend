@@ -330,14 +330,14 @@ class GameController extends Controller
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
-            'section_id'       => $vs->game->getKey(),
-            'section_name'     => $vs->game->game_name,
+            'section_id'       => $vs->atari->getKey(),
+            'section_name'     => $vs->atari->game_name,
             'sub_section'      => 'Vs',
             'sub_section_id'   => $vs->amiga_id,
-            'sub_section_name' => $vs->game->game_name,
+            'sub_section_name' => $vs->atari->game_name,
         ]);
 
-        return redirect()->route('admin.games.games.edit', $vs->game);
+        return redirect()->route('admin.games.games.edit', $vs->atari);
     }
 
     private function validateGame(Request $request, ?int $gameId)

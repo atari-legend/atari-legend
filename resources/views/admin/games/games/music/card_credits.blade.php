@@ -11,14 +11,14 @@
 
         @if ($game->individuals->isNotEmpty())
             <ul class="list-inline">
-                @foreach ($game->individuals->sortBy('pivot.role.name') as $individual)
+                @foreach ($game->individuals->sortBy('pivot.individualRole.name') as $individual)
                     <li class="list-inline-item me-4">
                         {{ $individual->ind_name }}
                         @if ($individual->aka_list->isNotEmpty())
                             <small>aka. {{ $individual->aka_list->join(', ') }}</small>
                         @endif
-                        @if ($individual->pivot->role !== null)
-                            <span class="text-muted">[{{ $individual->pivot->role->name }}]</span>
+                        @if ($individual->pivot->individualRole !== null)
+                            <span class="text-muted">[{{ $individual->pivot->individualRole->name }}]</span>
                         @endif
                     </li>
                 @endforeach

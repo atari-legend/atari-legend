@@ -42,7 +42,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($game->individuals->sortBy('pivot.role.name') as $individual)
+                @foreach($game->individuals->sortBy('pivot.individualRole.name') as $individual)
                     <tr>
                         <td>
                             <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individual) }}">
@@ -52,14 +52,14 @@
                                 <small class="text-muted">aka. {{ $individual->aka_list->join(', ') }}</small>
                             @endif
                         </td>
-                        <td>{{ $individual->pivot->role->name ?? '-' }}</td>
+                        <td>{{ $individual->pivot->individualRole->name ?? '-' }}</td>
                         <td>
                             <form action="{{ route('admin.games.game-credits.destroy', ['game' => $game, 'individual' => $individual]) }}"
                                 method="POST"
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf
                                 @method('DELETE')
-                                <input type="hidden" name="role" value="{{ $individual->pivot->role->id ?? '' }}">
+                                <input type="hidden" name="role" value="{{ $individual->pivot->individualRole->id ?? '' }}">
                                 <button title="Delete credit '{{ $individual->ind_name }}'" class="btn btn-sm">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>

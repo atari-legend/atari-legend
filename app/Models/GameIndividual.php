@@ -9,8 +9,8 @@ class GameIndividual extends Pivot
     protected $table = 'game_individual';
     public $incrementing = true;
 
-    public function role()
+    public function individualRole()
     {
-        return $this->belongsTo(IndividualRole::class, 'individual_role_id');
+        return $this->belongsTo(IndividualRole::class);
     }
 }

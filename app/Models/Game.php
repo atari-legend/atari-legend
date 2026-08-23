@@ -197,9 +197,9 @@ class Game extends Model
         return $this->hasMany(GameFact::class);
     }
 
-    public function series()
+    public function gameSeries()
     {
-        return $this->belongsTo(GameSeries::class, 'game_series_id');
+        return $this->belongsTo(GameSeries::class);
     }
 
     public function infoSubmissions()
