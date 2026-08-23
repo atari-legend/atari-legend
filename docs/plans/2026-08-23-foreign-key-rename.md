@@ -432,6 +432,22 @@ derives. They are invisible to any search for the token.
 That kills one of the escape routes: **running Phase C before Phase A does not
 avoid the problem**, because those two break regardless of when Phase A runs.
 
+**The same trap exists outside the `Release` group.** Checked across all six
+renamed columns rather than stopping at `release_id`: 23 relations depend on
+one, and **three** pass no argument at all — `Media::release()`,
+`Release::medias()`, and `Game::progressSystem()`, which is
+`belongsTo(ProgressSystem::class)` and derives `progress_system_id`. Renaming
+that column to `game_progress_system_id` breaks it with nothing in the diff to
+show for it. Being a `belongsTo`, it can be fixed either by adding an argument
+or by renaming the method to `gameProgressSystem()`.
+
+Two false positives came out of that scan, and the cause is worth recording
+because it will bite the next tool as well: `Comment::articles()` and
+`Individual::individuals()` call **`belongstoMany`** — lowercase `t`. PHP method
+names are case-insensitive so both work, but case-sensitive tooling does not see
+them, and they were reported as argument-free when they are not. Worth fixing on
+sight.
+
 Two ways out, then, not three:
 
 1. **Rename `Release` → `GameRelease`** before Phase C. Everything converges:
