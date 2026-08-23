@@ -59,6 +59,6 @@ class GameIndividualsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Individual::select('individuals.*')
-            ->leftJoin('individual_text', 'individuals.id', '=', 'individual_text.ind_id');
+            ->leftJoin('individual_text', 'individuals.id', '=', 'individual_text.individual_id');
     }
 }

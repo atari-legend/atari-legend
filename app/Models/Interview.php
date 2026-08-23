@@ -15,7 +15,7 @@ class Interview extends Model implements Feedable
     protected $table = 'interview_main';
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'ind_id', 'draft'];
+    protected $fillable = ['user_id', 'individual_id', 'draft'];
 
     public function user()
     {
@@ -24,7 +24,7 @@ class Interview extends Model implements Feedable
 
     public function individual()
     {
-        return $this->belongsTo(Individual::class, 'ind_id');
+        return $this->belongsTo(Individual::class);
     }
 
     public function texts()

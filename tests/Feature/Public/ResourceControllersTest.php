@@ -154,7 +154,7 @@ class ResourceControllersTest extends TestCase
 
         $individual = Individual::factory()->create();
         $text = IndividualText::forceCreate([
-            'ind_id'     => $individual->getKey(),
+            'individual_id'     => $individual->getKey(),
             'ind_imgext' => 'png',
         ]);
         $this->storePng($text->path, 800, 800);
@@ -175,7 +175,7 @@ class ResourceControllersTest extends TestCase
 
         $individual = Individual::factory()->create();
         $text = IndividualText::forceCreate([
-            'ind_id'     => $individual->getKey(),
+            'individual_id'     => $individual->getKey(),
             'ind_imgext' => 'png',
         ]);
         $this->storePng($text->path, 120, 90);
@@ -260,7 +260,7 @@ class ResourceControllersTest extends TestCase
     {
         $individual = Individual::factory()->create();
         IndividualText::forceCreate([
-            'ind_id'     => $individual->getKey(),
+            'individual_id'     => $individual->getKey(),
             'ind_imgext' => 'png',
         ]);
         // Do not store file on disk

@@ -17,7 +17,7 @@ class Individual extends Model
     public function text()
     {
         // FIXME: The DB structure actually allows many
-        return $this->hasOne(IndividualText::class, 'ind_id');
+        return $this->hasOne(IndividualText::class);
     }
 
     public function games()
@@ -29,7 +29,7 @@ class Individual extends Model
 
     public function interviews()
     {
-        return $this->hasMany(Interview::class, 'ind_id');
+        return $this->hasMany(Interview::class);
     }
 
     /**
@@ -38,7 +38,7 @@ class Individual extends Model
      */
     public function nicknames()
     {
-        return $this->belongsToMany(Individual::class, 'individual_nicks', 'ind_id', 'nick_id');
+        return $this->belongsToMany(Individual::class, 'individual_nicks', 'individual_id', 'nick_id');
     }
 
     /**
@@ -47,12 +47,12 @@ class Individual extends Model
      */
     public function individuals()
     {
-        return $this->belongsToMany(Individual::class, 'individual_nicks', 'nick_id', 'ind_id');
+        return $this->belongsToMany(Individual::class, 'individual_nicks', 'nick_id', 'individual_id');
     }
 
     public function crews()
     {
-        return $this->belongsToMany(Crew::class, 'crew_individual', 'ind_id', 'crew_id');
+        return $this->belongsToMany(Crew::class, 'crew_individual');
     }
 
     public function getAvatarAttribute()

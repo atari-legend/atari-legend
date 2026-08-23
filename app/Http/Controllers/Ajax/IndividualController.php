@@ -31,6 +31,12 @@ class IndividualController extends Controller
                 }
 
                 return [
+                    // A wire name, deliberately not the column: the schema
+                    // says individuals.id and individual_id, and seven Blade
+                    // data-autocomplete-id attributes plus autocomplete.js
+                    // say ind_id. Renaming it here without moving all of them
+                    // assigns undefined into the hidden field, which submits
+                    // happily with nothing in the log. Move all eight or none.
                     'ind_name' => $ind_name,
                     'ind_id'   => $individual->getKey(),
                 ];

@@ -32,7 +32,7 @@ class Crew extends Model
 
     public function individuals()
     {
-        return $this->belongsToMany(Individual::class, 'crew_individual', 'crew_id', 'ind_id');
+        return $this->belongsToMany(Individual::class, 'crew_individual');
     }
 
     public function parentCrews()

@@ -119,7 +119,7 @@ class AdminStatisticsHelper
             ],
             'People & companies' => [
                 'Individuals'            => DB::table('individuals')->count(),
-                'Individuals with bio'   => self::countWithText('individual_text', 'ind_profile', 'ind_id'),
+                'Individuals with bio'   => self::countWithText('individual_text', 'ind_profile', 'individual_id'),
                 'Nicknames'              => DB::table('individual_nicks')->count(),
                 'Crews'                  => DB::table('crew')->count(),
                 'Sub-crews'              => DB::table('sub_crew')->count(),
@@ -180,7 +180,7 @@ class AdminStatisticsHelper
                 self::coverageRow('With media', DB::table('media')->distinct('game_release_id')->count(), $releases),
             ],
             'Other' => [
-                self::coverageRow('Individuals with a bio', self::countWithText('individual_text', 'ind_profile', 'ind_id'), $individuals),
+                self::coverageRow('Individuals with a bio', self::countWithText('individual_text', 'ind_profile', 'individual_id'), $individuals),
                 self::coverageRow('Companies with a profile', self::countWithText('pub_dev_text', 'pub_dev_profile', 'pub_dev_id'), $companies),
                 self::coverageRow('Menu disks with a dump', DB::table('menu_disks')->whereNotNull('menu_disk_dump_id')->count(), $menuDisks),
                 self::coverageRow('Menu disks with a screenshot', DB::table('menu_disk_screenshots')->distinct('menu_disk_id')->count(), $menuDisks),

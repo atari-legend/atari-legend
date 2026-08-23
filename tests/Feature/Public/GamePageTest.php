@@ -123,10 +123,10 @@ class GamePageTest extends TestCase
 
         $withPortrait = Individual::factory()->create();
         $withPortrait->text()->create(['ind_profile' => 'A coder', 'ind_imgext' => 'jpg']);
-        Interview::factory()->create(['ind_id' => $withPortrait->getKey()]);
+        Interview::factory()->create(['individual_id' => $withPortrait->getKey()]);
 
         $withoutPortrait = Individual::factory()->withBio()->create();
-        Interview::factory()->create(['ind_id' => $withoutPortrait->getKey()]);
+        Interview::factory()->create(['individual_id' => $withoutPortrait->getKey()]);
 
         $game->individuals()->attach($withPortrait, ['individual_role_id' => $roleId]);
         $game->individuals()->attach($withPortrait, ['individual_role_id' => $otherRoleId]);

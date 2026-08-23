@@ -22,7 +22,7 @@ class InterviewFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'ind_id'  => IndividualFactory::new(),
+            'individual_id'  => IndividualFactory::new(),
             'draft'   => false,
         ];
     }

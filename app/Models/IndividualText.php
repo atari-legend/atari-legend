@@ -14,11 +14,11 @@ class IndividualText extends Model
 
     public function getFileAttribute()
     {
-        // ind_id, not getKey(): this model's key is ind_text_id, but the
-        // avatar is stored under the individual's id -- see
+        // individual_id, not getKey(): this model's key is ind_text_id, but
+        // the avatar is stored under the individual's id -- see
         // GameIndividualController::update(), which names the file with
         // $individual->getKey().
-        return Helper::filename($this->ind_id, $this->ind_imgext);
+        return Helper::filename($this->individual_id, $this->ind_imgext);
     }
 
     public function getImageUrlAttribute()
