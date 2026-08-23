@@ -123,17 +123,19 @@ class GameReleaseControllerTest extends AdminTestCase
         $this->assertSame('Ocean', GameRelease::sole()->publisher->pub_dev_name);
     }
 
-    public function test_locations_crews_and_languages_are_attached(): void
+    public function test_locations_crews_languages_and_distributors_are_attached(): void
     {
         $game = Game::factory()->create();
         $location = Location::factory()->create(['name' => 'France']);
         $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
         $language = Language::factory()->create(['id' => 'fr', 'name' => 'French']);
+        $distributor = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Erbe']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
-            'locations' => [$location->getKey()],
-            'crews'     => [$crew->getKey()],
-            'languages' => [$language->id],
+            'locations'    => [$location->getKey()],
+            'crews'        => [$crew->getKey()],
+            'languages'    => [$language->id],
+            'distributors' => [$distributor->getKey()],
         ]))->assertRedirect();
 
         $release = GameRelease::sole();
@@ -141,6 +143,7 @@ class GameReleaseControllerTest extends AdminTestCase
         $this->assertSame(['France'], $release->locations->pluck('name')->all());
         $this->assertSame(['The Replicants'], $release->crews->pluck('crew_name')->all());
         $this->assertSame(['fr'], $release->languages->pluck('id')->all());
+        $this->assertSame([$distributor->getKey()], $release->distributors->pluck('id')->all());
     }
 
     public function test_update_rewrites_the_release(): void

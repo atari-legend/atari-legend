@@ -196,6 +196,14 @@ test.describe('Admin games', () => {
       await page.selectOption('select[name="genres[]"]', { label: FIXTURE.genre.name });
       await page.getByRole('button', { name: 'Save' }).first().click();
 
+      // Assert the save came back, not just that it was made: these selects
+      // write game.game_progress_system_id and game.game_series_id, and a
+      // dropped key leaves the page rendering happily with an empty field.
+      await expect(page.locator('select[name="progress"]'))
+        .toHaveValue(String(FIXTURE.progressSystem.id));
+      await expect(page.locator('select[name="series"]'))
+        .toHaveValue(String(FIXTURE.series.id));
+
       await page.fill('input[name="players"]', '2');
       await page.getByRole('button', { name: 'Save' }).nth(1).click();
 
