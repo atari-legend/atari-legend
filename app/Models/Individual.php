@@ -47,7 +47,7 @@ class Individual extends Model
      */
     public function individuals()
     {
-        return $this->belongstoMany(Individual::class, 'individual_nicks', 'nick_id', 'ind_id');
+        return $this->belongsToMany(Individual::class, 'individual_nicks', 'nick_id', 'ind_id');
     }
 
     public function crews()
