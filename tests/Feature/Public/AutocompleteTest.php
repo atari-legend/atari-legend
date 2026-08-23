@@ -317,7 +317,7 @@ class AutocompleteTest extends TestCase
         $this->game('Xenon');
 
         $results = $this->getJson(route('ajax.games', ['q' => 'Xenon']))->assertOk()->json();
-        
+
         $this->assertArrayHasKey('game_id', $results[0], 'The wire format must expose the game_id key');
         $this->assertNotNull($results[0]['game_id'], 'The game_id must not be null');
         $this->assertIsScalar($results[0]['game_id'], 'The game_id must be a scalar');
@@ -326,7 +326,7 @@ class AutocompleteTest extends TestCase
             ->getJson(route('admin.ajax.games', ['q' => 'Xenon']))
             ->assertOk()
             ->json();
-            
+
         $this->assertArrayHasKey('game_id', $adminResults[0], 'The wire format must expose the game_id key');
         $this->assertNotNull($adminResults[0]['game_id'], 'The game_id must not be null');
         $this->assertIsScalar($adminResults[0]['game_id'], 'The game_id must be a scalar');

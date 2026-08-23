@@ -47,12 +47,12 @@ return new class extends Migration
             ],
         ])->each(function ($data, $like) {
             DB::table('game')->where('slug', 'like', $like)->orderBy('game_id')->chunk(100, function ($rows) use ($data) {
-                    foreach ($rows as $game) {
+                foreach ($rows as $game) {
                     $slug = preg_replace($data['pattern'], $data['replacement'], $game->slug);
 
                     DB::update('update game set slug = ? where game_id = ?', [$slug, $game->game_id]);
-                    }
-                });
+                }
+            });
         });
     }
 

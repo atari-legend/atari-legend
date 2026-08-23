@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('slug', 255)->index();
         });
 
-                $games = DB::table('game')
+        $games = DB::table('game')
             ->select('game.game_id', 'game.game_name', 'pub_dev.pub_dev_name', 'individuals.ind_name')
             ->leftJoin('game_developer', 'game.game_id', '=', 'game_developer.game_id')
             ->leftJoin('pub_dev', 'game_developer.dev_pub_id', '=', 'pub_dev.pub_dev_id')
