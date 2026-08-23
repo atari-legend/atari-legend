@@ -10,23 +10,61 @@ does not repeat what that document already establishes about deploy ordering,
 behaviour claim below was measured against this repository and a local MariaDB
 10.11.18 on 2026-08-23; the commands are named so they can be re-run.
 
-## Decisions needed before any of this starts
+## Decisions taken
 
-Four questions are open, and three of them change what the phases contain. They
-are scattered across the sections below, so they are collected here with a
-recommendation each. Nothing should be implemented until they are answered.
+All settled with nicolas on 2026-08-23. Recorded here because three of them
+changed what the phases contain.
 
-| # | Question | Recommendation | Blocks |
-|---|---|---|---|
-| 1 | Does "FK = table + `_id`" mean the **singularised** table name? Applied literally it gives `users_id`, `individuals_id`, `magazines_id`. | Yes, singularised. | All of Phase C |
-| 2 | The `*_main` tables: apply the rule (`article_id` → `article_main_id`, 16 keys), rename the tables instead, or exempt them? | Rename the tables, as its own phase. Option (a) is *safe* — checked, it adds no silent sites — so this is a naming judgement, not a risk trade. | 16 of the renames |
-| 3 | Phase B: your instruction ("update the column names, not just rename the methods") conflicts with the table rule, because those columns are **already** table-correct. | Leave the columns, rename the methods — the code bends to the schema, per "the database matters more than the code". | Phase B entirely |
-| 4 | Rename the model `Release` → `GameRelease`? | Yes, and treat it as a prerequisite. Without it the campaign *adds* ~10 explicit arguments instead of removing them, and eight Phase A deletions become defects one phase later. | Phase C, and 8 of Phase A's 76 |
+| # | Question | Decision |
+|---|---|---|
+| 1 | Does "FK = table + `_id`" mean the singularised table name? | **Yes, singularised.** `users` → `user_id`, not `users_id`. |
+| 2 | The `*_main` tables (16 keys) | **Out of scope — deferred.** See below; the tables are to be merged, so renaming their foreign keys now is work thrown away. |
+| 3 | Phase B: columns or methods? | **Rename the methods, leave the columns.** They are already table-correct; the code bends to the schema. |
+| 4 | Rename `Release` → `GameRelease`? | **Yes, as a prerequisite to Phase C.** |
 
-Question 4 is the one to answer first: it is the only one that changes whether
-the campaign still achieves what it set out to do.
+### Why the `*_main` group is deferred rather than decided
 
-## The short version
+The immediate reason is nicolas's: `article_main` and `article_text` should not
+be two tables at all. *"There's no need to have separate tables for the content,
+it could be a single table that contains all the columns of the two."* Renaming
+`article_id` → `article_main_id` across 16 foreign keys, only to merge the
+tables afterwards, is work done twice and discarded once.
+
+There was also a cost I had understated when this was first put to nicolas. I
+called applying the rule here "safe", which was true but only about silent
+writes — I had not checked the code side. **21 relationship key positions**
+depend on `article_id`, `interview_id`, `review_id` or `screenshot_id`, and
+every one of them is currently Eloquent's default, so all 21 hit the same
+Phase A/C conflict as the `Release` group. Applying the rule would have meant
+either four further model renames (`Article` → `ArticleMain`, and so on, baking
+"main" into class names that are currently clean) or permanently adding 21
+explicit arguments.
+
+### Reconnaissance for that merge, since it is now on the horizon
+
+Not a plan — just the measurements someone will want on day one, taken while
+the question was live:
+
+| Pair | Parent rows | Child rows | Distinct parents in child | Merges? |
+|---|---|---|---|---|
+| `article_main` / `article_text` | 5 | 5 | 5 | **strict 1:1** |
+| `interview_main` / `interview_text` | 80 | 80 | 80 | **strict 1:1** |
+| `individuals` / `individual_text` | 5,405 | 4,528 | — | 1:0..1 — merges with nullable columns |
+| `pub_dev` / `pub_dev_text` | 1,387 | 1,185 | — | 1:0..1 — merges with nullable columns |
+| `review_main` / `review_score` | 89 | 126 | — | **no — genuinely 1:many** |
+
+So the two nicolas named are the clean cases, and both are strictly 1:1 despite
+`Article::texts()` and `Interview::texts()` being declared `hasMany`. The
+`individuals` and `pub_dev` pairs merge too, at the cost of nullable columns for
+the ~15% of rows with no text. `review_score` is not the same shape and must not
+be swept in with them.
+
+Worth noting for whoever picks that up: the primary-key campaign found the
+`article_main` / `article_text` pair impossible to test properly *because* their
+ids move in lockstep — see "What the suites cannot see" in that plan. Merging
+them removes that blind spot permanently, which is a second argument for it.
+
+## The short version## The short version
 
 The primary-key campaign framed itself as "rename 34 columns". Framing this one
 the same way is the mistake to avoid. **Most of the divergence from Laravel's
