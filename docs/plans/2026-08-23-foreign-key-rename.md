@@ -93,8 +93,28 @@ Two cautions, both learned from the primary-key campaign:
   alone unless the derived name is verified to match.
 - **`withPivot()` is unaffected.** It names the pivot's own columns, not keys.
 
-Acceptance: `artisan test` and Playwright both green, and no line of generated
-SQL changes. This is a pure no-op and should be reviewed as one.
+**"No SQL changes" is a claim to verify, not to assume** — raised by OpenCode
+while reviewing this plan, and the caution above is not enough on its own. The
+derive-the-pivot-name path is *live* in this codebase: `Crew::menuSets()` passes
+`null` for the table and `MenuSet::crews()` passes `null, null`, so both already
+depend on Laravel guessing `crew_menu_set`. One argument deleted a position too
+far turns `game_release_crew` into `crew_release`, and nothing fails until that
+relation is exercised.
+
+So Phase A gets a mechanism rather than a warning. The audit script takes a
+`pivots` argument and prints the resolved pivot table for all 51
+`belongsToMany` relations; snapshot before the edit, snapshot after, and diff:
+
+```
+docker compose run --rm --no-deps php php \
+  docs/plans/2026-08-23-foreign-key-rename-audit.php pivots > pivots.before
+# ... delete the arguments ...
+diff pivots.before pivots.after     # must be empty
+```
+
+Acceptance: that diff empty, `artisan test` and Playwright both green, and no
+line of generated SQL changed. This is a pure no-op and should be reviewed as
+one.
 
 ## Phase B — the nine that are a method name, not a column
 
@@ -440,19 +460,52 @@ constraints agreed with nicolas up front: **no test is to be written to test
 renaming.** Anything added must be a functional test of a feature that a rename
 would break, and must earn its place with the renames deleted.
 
-What this plan already knows it needs, from the analysis above:
+**The one silent site is already covered.** An earlier draft of this plan said
+nothing guarded the interview write end to end. That was wrong, and OpenCode
+caught it: `tests/Feature/Admin/Interviews/InterviewsControllerTest.php:59-70`
+posts `individual` to the real route and then asserts
 
-- **A write test for creating an interview with an individual**, asserting the
-  association by id. This is the one silent site in the campaign and nothing
-  currently guards it end to end.
+```php
+$this->assertSame($individual->getKey(), $interview->ind_id);
+```
+
+which is exactly the by-id write assertion the risk section asks for. Line 70 is
+a line to *update* during the `ind_id` rename, not a gap to fill. Worth being
+precise about why it works, because it is the campaign's only real net: in the
+test environment `preventSilentlyDiscardingAttributes()` is on, so a stale
+`'ind_id'` key against a moved `$fillable` throws rather than being dropped —
+and if `$fillable` were left alone instead, the column would be gone and
+MariaDB would raise 1054. Both halves of the mistake are caught. Only production
+is blind, which is the argument for the guard change proposed above.
+
+What is genuinely missing:
+
+- **Nobody posts `distributors`.** `GameReleaseController:191` validates it and
+  `:255-259` detaches and re-saves it, and no test in the suite sends the field
+  — while `locations`, its sibling three lines away, is covered at
+  `GameReleaseControllerTest:134`. Worse, that file's docblock at line 19 lists
+  distributors among the lists it covers. A docblock that overstates coverage is
+  more dangerous than no docblock, because it stops the next person looking.
+  `game_release_distributor` carries **two** columns in this campaign
+  (`game_release_id` and `pub_dev_id`), so it is the single pivot most in need
+  of a write test.
 - **A test that calls `Screenshot::reviewScreenshots()`**, which today has no
   caller at all — the argument cannot be fixed safely while the method is
   unproven.
 - **A test of a game's AKA names** rendering, to cover the `hasOne` →
   `belongsTo` change on `GameAka::game()`.
-- Whatever the audit shows is missing around company/publisher assignment on a
-  release, and individual credits, which are the two widest `pub_dev_id` and
-  `ind_id` read paths.
+- **The statistics figures**, narrowly. `Tops.php` and
+  `AdminStatisticsHelper::topPublishers()/topDevelopers()` join `pub_dev` in raw
+  SQL and nothing asserts their output. The exposure is *not* a missed SQL
+  error: `<x-cards.tops />` renders on `games/index.blade.php` and
+  `tests/e2e/admin/others.spec.js:36-47` loads `/admin/others/statistics` and
+  asserts charts draw, so a stale column name surfaces as a failing spec — the
+  primary-key campaign's precedent is Playwright catching that same Tops card
+  return a 500. Every `dev_pub_id` reference is table-qualified already
+  (`Tops.php:29`, `AdminStatisticsHelper:342`), and the one unqualified site,
+  `GameCreditsController:106`, is a single-table query with no join. What is
+  uncovered is a silently *wrong figure*, which `tests/e2e/README.md:350`
+  already records as a known gap.
 
 The previous campaign's harness change 1 — distinct id ranges per table — is
 already in place and is load-bearing here for the same reason: a foreign key
@@ -477,7 +530,8 @@ one does, and it is repairable only if somebody looks.
 The relationship audit is ~40 lines and should live in the repository rather
 than in a scratch file, because Phase A's progress is measured by it and Phase
 C's PRs are verified against it. Suggested home:
-`artisan al:audit-relationship-keys`, printing the three counts and the
+`artisan al:audit-relationship-keys`, printing the three counts, the pivot-table
+snapshot and the
 divergence table. That also makes it a candidate arch test later — "the number
 of divergent relations must not increase" is the same shape as
 `QueryConventionsTest` and `MigrationModelsTest`, both of which came out of the

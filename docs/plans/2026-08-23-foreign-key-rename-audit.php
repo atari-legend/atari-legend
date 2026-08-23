@@ -17,6 +17,15 @@
  *
  *   docker compose run --rm --no-deps php \
  *     php /var/www/html/docs/plans/2026-08-23-foreign-key-rename-audit.php
+ *
+ * Pass `pivots` to print the pivot table Eloquent resolves for every
+ * belongsToMany instead. Phase A deletes key arguments but must keep pivot
+ * table arguments, and an over-deletion is invisible until the relation is
+ * exercised -- Crew::menuSets() and MenuSet::crews() already pass null and
+ * rely on the derived name, so the derive path is live in this codebase.
+ * Snapshot before editing, snapshot after, diff. Raised by OpenCode.
+ *
+ *   ... 2026-08-23-foreign-key-rename-audit.php pivots > /tmp/pivots.before
  */
 
 require __DIR__ . '/../../vendor/autoload.php';
@@ -49,6 +58,40 @@ function passesKeyArgument(ReflectionMethod $method, bool $isBelongsToMany): boo
 
     // belongsToMany's second argument is the pivot table, not a key.
     return $isBelongsToMany ? $argc >= 2 : $argc >= 1;
+}
+
+if (($argv[1] ?? null) === 'pivots') {
+    foreach (glob(base_path('app/Models/*.php')) as $file) {
+        $class = 'App\\Models\\' . basename($file, '.php');
+
+        if (! class_exists($class)) {
+            continue;
+        }
+
+        try {
+            $model = new $class;
+        } catch (Throwable) {
+            continue;
+        }
+
+        foreach ((new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->class !== $class || $method->getNumberOfParameters() > 0) {
+                continue;
+            }
+
+            try {
+                $relation = $model->{$method->name}();
+            } catch (Throwable) {
+                continue;
+            }
+
+            if ($relation instanceof BelongsToMany) {
+                printf("%-42s %s\n", class_basename($class) . '::' . $method->name . '()', $relation->getTable());
+            }
+        }
+    }
+
+    exit;
 }
 
 $redundant = [];
