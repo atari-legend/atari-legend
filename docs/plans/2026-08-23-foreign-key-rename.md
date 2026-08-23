@@ -200,14 +200,21 @@ happens to pick the majority name.
 
 ### Order
 
-Ascending by blast radius, one column family per PR:
+Ascending by **silent** risk, not by table count — an earlier draft ordered by
+blast radius and OpenCode was right that this is the better axis. One column
+family per PR:
 
 1. `comments_id` → `comment_id` — one table, one relation pair, no `$fillable`.
 2. `game_genre_id` → `genre_id`, `dev_pub_id` → `pub_dev_id` — one table each.
-3. `ind_id` → `individual_id` — four tables, and the one genuinely dangerous
-   write in the campaign (see below). Do this one alone.
-4. `game_release_id` → `release_id` — nine tables, but eight of the nine are
-   pivots written through `attach()`/`sync()`, which is the safe path.
+3. `game_release_id` → `release_id` — nine tables, but every one of them loud:
+   eight are `NOT NULL` pivots and the ninth, `menu_disk_contents`, is written
+   through a relationship save (below).
+4. `ind_id` → `individual_id` — only four tables, but it carries the campaign's
+   single silent write. It goes **last**, not because it is the biggest but
+   because it is the one that can be got wrong quietly. By the time it runs the
+   recipe has been exercised twice, the checklist template has been proven, and
+   the decision about the production `$fillable` guard has already been taken.
+   Do it alone.
 
 ### Worked example: every site the `ind_id` rename touches
 
@@ -427,14 +434,32 @@ rather than assumed:
 - **Direct assignment is loud everywhere.** `$model->old_column = x; save()`
   puts the unknown column into the `INSERT` and MariaDB rejects it with 1054.
   Mass assignment is the only path that discards silently.
-- **Pivot writes are safe.** `attach()` and `sync()` take their key names from
-  the relationship definition, so they move with it by construction. Eight of
-  the nine `game_release_id` columns and all four `ind_id` columns except one
-  are pivots. Note that `game_developer.dev_pub_id` and
-  `game_genre_cross.game_genre_id` are **nullable**, not `NOT NULL` as their
-  pivot shape suggests — so it is the write path that makes them safe, not the
-  column definition, and the safety argument has to be the one above rather
-  than "the constraint would catch it".
+- **Every write that goes through a relationship is safe.** `attach()`,
+  `sync()`, `save()` and `saveMany()` called on a relation, and `associate()`,
+  all take the key name from the relationship object — so it moves with the
+  relationship definition by construction, and no array key can go stale.
+  `game_developer.dev_pub_id` and `game_genre_cross.game_genre_id` are
+  **nullable**, not `NOT NULL` as their pivot shape suggests, so it is genuinely
+  the write path that makes them safe and not the column definition.
+
+That last point is what closes the analysis, because it is exhaustive. The only
+mechanism that can drop a foreign key silently is **a bare array key in
+`create()`, `new Model([...])`, `fill()` or `update([...])`, against a model
+whose `$fillable` names the column.** Checked against every nullable non-pivot
+candidate:
+
+| Column | How it is written | Verdict |
+|---|---|---|
+| `interview_main.ind_id` | `new Interview([...])`, `$fillable` names it | **the one silent site** |
+| `individual_text.ind_id` | `$individual->text()->save($text)` | safe — relationship save |
+| `pub_dev_text.pub_dev_id` | `$company->text()->save($text)` | safe — relationship save |
+| `menu_disk_contents.game_release_id` | `$release->menuDiskContents()->save($content)` | safe — relationship save |
+| `game_release.pub_dev_id` | not in `$fillable` | safe |
+
+`MenuDiskContent::create()` at `MenuDisksContentController:84` and
+`MenuImport:900` is worth looking at directly, because it is the shape that
+looks dangerous and is not: both build the row *without* the release and then
+link it through the relation.
 
 Which reduces the entire silent class to a single sentence: **mass assignment
 into a nullable foreign key column, in production.** There are five non-pivot
@@ -635,7 +660,11 @@ What is genuinely missing:
   more dangerous than no docblock, because it stops the next person looking.
   `game_release_distributor` carries **two** columns in this campaign
   (`game_release_id` and `pub_dev_id`), so it is the single pivot most in need
-  of a write test.
+  of a write test. Frame it as covering an untested feature rather than as
+  guarding a rename: `:258` links them with `saveMany()` through the relation,
+  so like every other relationship write it is safe by construction. The test
+  is worth writing because nothing exercises the field at all, not because the
+  rename endangers it.
 - **A test that calls `Screenshot::reviewScreenshots()`**, which today has no
   caller at all — the argument cannot be fixed safely while the method is
   unproven.
