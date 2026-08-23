@@ -584,6 +584,33 @@ them is tidiness rather than a regression fix. Do it anyway: an index named
 that has not been called `game_cat_id` for years. That name is the empirical
 proof that this drift is real and that nobody goes back for it.
 
+### And PHPUnit is blind to half of it
+
+The raw `RENAME KEY` / `DROP FOREIGN KEY` block has to be guarded
+`!== 'sqlite'`, so on the driver PHPUnit runs it simply does not execute. The
+question is whether the suite would still catch a later migration walking into
+the 1091 trap. Measured on SQLite, same shapes:
+
+| A later migration does… | SQLite (PHPUnit) | MariaDB (deploy) |
+|---|---|---|
+| `dropForeign(['individual_id'])` | **succeeds** | **fails, 1091** |
+| `dropIndex(['individual_id'])` | fails, no such index | fails, 1091 |
+
+So the two halves behave differently, and it is the more dangerous half that is
+invisible. SQLite's foreign keys are unnamed and inline, and Laravel implements
+`dropForeign` there by rebuilding the table — so it does not care what the
+constraint is called and passes regardless. The index half is caught, because
+SQLite's index name drifts exactly like MariaDB's (`zc_ind_id_index` survives
+the column rename).
+
+**A future `dropForeign` on a renamed column is therefore green in CI and broken
+on deploy.** That is precisely the class the primary-key campaign's harness
+change 3 exists for — the MariaDB `migrate:fresh` + `migrate:rollback --step=1`
+job — and it is the argument for keeping that gate rather than quietly letting
+it rot once this campaign ends. It is also the second reason to rename the
+constraints properly now rather than leaving the drift: the cheapest fix is the
+one that stops the trap existing.
+
 Three further notes:
 
 - The `ON DELETE` clause must be copied from `SHOW CREATE TABLE`, not assumed.
