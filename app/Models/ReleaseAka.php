@@ -13,11 +13,11 @@ class ReleaseAka extends Model
 
     public function language()
     {
-        return $this->belongsTo(Language::class, 'language_id');
+        return $this->belongsTo(Language::class);
     }
 
     public function release()
     {
-        return $this->belongsTo(Release::class, 'game_release_id');
+        return $this->belongsTo(GameRelease::class, 'game_release_id');
     }
 }

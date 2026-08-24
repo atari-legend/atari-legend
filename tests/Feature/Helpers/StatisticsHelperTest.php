@@ -4,12 +4,12 @@ namespace Tests\Feature\Helpers;
 
 use App\Helpers\StatisticsHelper;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Genre;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\MenuDisk;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\Website;
@@ -41,7 +41,7 @@ class StatisticsHelperTest extends TestCase
     public function test_simple_counts_follow_the_tables(): void
     {
         Game::factory()->count(3)->create();
-        Release::factory()->count(2)->create();
+        GameRelease::factory()->count(2)->create();
         PublisherDeveloper::factory()->create();
         User::factory()->count(4)->create();
         Website::factory()->create();
@@ -92,8 +92,8 @@ class StatisticsHelperTest extends TestCase
 
     public function test_games_with_a_company_come_from_their_releases(): void
     {
-        Release::factory()->publishedBy('Ocean')->create();
-        Release::factory()->create();
+        GameRelease::factory()->publishedBy('Ocean')->create();
+        GameRelease::factory()->create();
 
         $this->assertSame(1, StatisticsHelper::getStatistics()['Games with companies assigned']);
     }

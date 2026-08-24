@@ -8,7 +8,7 @@
             <ul>
                 @foreach ($individual->games->sortBy('game_name') as $game)
                     <li><a href="{{ route('admin.games.game-credits.index', $game) }}">{{ $game->game_name }}</a>
-                        <span class="text-muted">{{ $game->pivot->role?->name }}</span></li>
+                        <span class="text-muted">{{ $game->pivot->individualRole?->name }}</span></li>
                 @endforeach
             </ul>
         @else

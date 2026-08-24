@@ -14,7 +14,7 @@ class GameSubmitInfo extends Model
 
     public function game()
     {
-        return $this->belongsTo(Game::class, 'game_id');
+        return $this->belongsTo(Game::class);
     }
 
     public function screenshots()
@@ -25,6 +25,6 @@ class GameSubmitInfo extends Model
     public function user()
     {
         // No third argument: the owner key on User is now `id`, the default.
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 }

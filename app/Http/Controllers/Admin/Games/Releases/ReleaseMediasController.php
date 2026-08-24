@@ -7,17 +7,17 @@ use App\Helpers\ReleaseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Media;
 use App\Models\MediaScanType;
 use App\Models\MediaType;
-use App\Models\Release;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ReleaseMediasController extends Controller
 {
-    public function index(Game $game, Release $release)
+    public function index(Game $game, GameRelease $release)
     {
         $mediaTypes = MediaType::orderBy('name')->get();
         $mediaScanTypes = MediaScanType::orderBy('name')->get();
@@ -45,7 +45,7 @@ class ReleaseMediasController extends Controller
             ]);
     }
 
-    public function update(Game $game, Release $release, Media $media, Request $request)
+    public function update(Game $game, GameRelease $release, Media $media, Request $request)
     {
         if ($request->delete) {
             $this->deleteMedia($media);
@@ -77,7 +77,7 @@ class ReleaseMediasController extends Controller
         ]);
     }
 
-    public function store(Game $game, Release $release)
+    public function store(Game $game, GameRelease $release)
     {
         $floppyType = MediaType::where('name', 'like', '%floppy%')->first();
         $media = new Media();

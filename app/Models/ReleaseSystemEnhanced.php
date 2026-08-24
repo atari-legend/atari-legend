@@ -12,11 +12,11 @@ class ReleaseSystemEnhanced extends Model
 
     public function system()
     {
-        return $this->belongsTo(System::class, 'system_id');
+        return $this->belongsTo(System::class);
     }
 
     public function enhancement()
     {
-        return $this->belongsTo(Enhancement::class, 'enhancement_id');
+        return $this->belongsTo(Enhancement::class);
     }
 }

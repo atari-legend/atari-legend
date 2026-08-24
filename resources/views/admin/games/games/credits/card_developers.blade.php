@@ -42,21 +42,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($game->developers->sortBy('pivot.role.name') as $developer)
+                @foreach($game->developers->sortBy('pivot.developerRole.name') as $developer)
                     <tr>
                         <td>
                             <a class="d-inline-block" href="{{ route('admin.games.companies.edit', $developer) }}">
                                 {{ $developer->pub_dev_name }}
                             </a>
                         </td>
-                        <td>{{ $developer->pivot->role->name ?? '-' }}</td>
+                        <td>{{ $developer->pivot->developerRole->name ?? '-' }}</td>
                         <td>
                             <form action="{{ route('admin.games.game-developers.destroy', ['game' => $game, 'developer' => $developer]) }}"
                                 method="POST"
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf
                                 @method('DELETE')
-                                <input type="hidden" name="role" value="{{ $developer->pivot->role->id ?? '' }}">
+                                <input type="hidden" name="role" value="{{ $developer->pivot->developerRole->id ?? '' }}">
                                 <button title="Delete developer '{{ $developer->pub_dev_name }}'" class="btn btn-sm">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>

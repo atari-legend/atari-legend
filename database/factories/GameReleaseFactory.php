@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseAka;
 use App\Models\ReleaseMemoryEnhanced;
 use App\Models\ReleaseSystemEnhanced;
@@ -11,11 +11,11 @@ use App\Models\ReleaseTOSIncompatibility;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Release>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\GameRelease>
  */
-class ReleaseFactory extends Factory
+class GameReleaseFactory extends Factory
 {
-    protected $model = Release::class;
+    protected $model = GameRelease::class;
 
     /**
      * A release with no publisher, no crews and no system detail: the emptiest
@@ -28,7 +28,7 @@ class ReleaseFactory extends Factory
             'game_id'        => Game::factory(),
             'name'           => 'Original',
             'date'           => fake()->dateTimeBetween('1985-01-01', '1995-12-31')->format('Y-m-d'),
-            'license'        => Release::LICENCE_COMMERCIAL,
+            'license'        => GameRelease::LICENCE_COMMERCIAL,
             'type'           => null,
             'pub_dev_id'     => null,
             'hd_installable' => false,
@@ -57,7 +57,7 @@ class ReleaseFactory extends Factory
 
     public function crackedBy(?string $name = null): static
     {
-        return $this->afterCreating(function (Release $release) use ($name) {
+        return $this->afterCreating(function (GameRelease $release) use ($name) {
             $release->crews()->attach(
                 CrewFactory::new()->create($name === null ? [] : ['crew_name' => $name])
             );
@@ -70,7 +70,7 @@ class ReleaseFactory extends Factory
      */
     public function inLanguages(string ...$ids): static
     {
-        return $this->afterCreating(function (Release $release) use ($ids) {
+        return $this->afterCreating(function (GameRelease $release) use ($ids) {
             foreach ($ids as $id) {
                 $release->languages()->attach(
                     LanguageFactory::new()->create(['id' => $id, 'name' => $id])
@@ -81,7 +81,7 @@ class ReleaseFactory extends Factory
 
     public function inResolutions(string ...$names): static
     {
-        return $this->afterCreating(function (Release $release) use ($names) {
+        return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->resolutions()->attach(ResolutionFactory::new()->create(['name' => $name]));
             }
@@ -90,14 +90,14 @@ class ReleaseFactory extends Factory
 
     public function withTrainer(string $name = 'Infinite lives'): static
     {
-        return $this->afterCreating(function (Release $release) use ($name) {
+        return $this->afterCreating(function (GameRelease $release) use ($name) {
             $release->trainers()->attach(TrainerFactory::new()->create(['name' => $name]));
         });
     }
 
     public function releasedIn(string ...$names): static
     {
-        return $this->afterCreating(function (Release $release) use ($names) {
+        return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->locations()->attach(LocationFactory::new()->create(['name' => $name]));
             }
@@ -106,7 +106,7 @@ class ReleaseFactory extends Factory
 
     public function distributedBy(string ...$names): static
     {
-        return $this->afterCreating(function (Release $release) use ($names) {
+        return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->distributors()->attach(
                     PublisherDeveloperFactory::new()->create(['pub_dev_name' => $name])
@@ -117,7 +117,7 @@ class ReleaseFactory extends Factory
 
     public function alsoKnownAs(string $name, ?string $languageId = null): static
     {
-        return $this->afterCreating(function (Release $release) use ($name, $languageId) {
+        return $this->afterCreating(function (GameRelease $release) use ($name, $languageId) {
             ReleaseAka::create([
                 'game_release_id' => $release->getKey(),
                 'name'            => $name,
@@ -135,7 +135,7 @@ class ReleaseFactory extends Factory
 
     public function requiringMemory(string ...$names): static
     {
-        return $this->afterCreating(function (Release $release) use ($names) {
+        return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->memoryMinimums()->attach(MemoryFactory::new()->create(['name' => $name]));
             }
@@ -144,7 +144,7 @@ class ReleaseFactory extends Factory
 
     public function incompatibleWithMemory(string ...$names): static
     {
-        return $this->afterCreating(function (Release $release) use ($names) {
+        return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->memoryIncompatibles()->attach(MemoryFactory::new()->create(['name' => $name]));
             }
@@ -153,7 +153,7 @@ class ReleaseFactory extends Factory
 
     public function enhancedForSystem(string $system, ?string $enhancement = null): static
     {
-        return $this->afterCreating(function (Release $release) use ($system, $enhancement) {
+        return $this->afterCreating(function (GameRelease $release) use ($system, $enhancement) {
             ReleaseSystemEnhanced::create([
                 'game_release_id' => $release->getKey(),
                 'system_id'       => SystemFactory::new()->create(['name' => $system])->id,
@@ -166,11 +166,11 @@ class ReleaseFactory extends Factory
 
     public function enhancedForMemory(string $memory, ?string $enhancement = null): static
     {
-        return $this->afterCreating(function (Release $release) use ($memory, $enhancement) {
+        return $this->afterCreating(function (GameRelease $release) use ($memory, $enhancement) {
             ReleaseMemoryEnhanced::create([
-                'release_id'     => $release->getKey(),
-                'memory_id'      => MemoryFactory::new()->create(['name' => $memory])->id,
-                'enhancement_id' => $enhancement === null
+                'game_release_id' => $release->getKey(),
+                'memory_id'       => MemoryFactory::new()->create(['name' => $memory])->id,
+                'enhancement_id'  => $enhancement === null
                     ? null
                     : EnhancementFactory::new()->create(['name' => $enhancement])->id,
             ]);
@@ -179,7 +179,7 @@ class ReleaseFactory extends Factory
 
     public function incompatibleWithSystems(string ...$names): static
     {
-        return $this->afterCreating(function (Release $release) use ($names) {
+        return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->systemIncompatibles()->attach(SystemFactory::new()->create(['name' => $name]));
             }
@@ -188,7 +188,7 @@ class ReleaseFactory extends Factory
 
     public function incompatibleWithEmulators(string ...$names): static
     {
-        return $this->afterCreating(function (Release $release) use ($names) {
+        return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->emulatorIncompatibles()->attach(EmulatorFactory::new()->create(['name' => $name]));
             }
@@ -197,11 +197,11 @@ class ReleaseFactory extends Factory
 
     public function incompatibleWithTos(string $version, ?string $languageId = null): static
     {
-        return $this->afterCreating(function (Release $release) use ($version, $languageId) {
+        return $this->afterCreating(function (GameRelease $release) use ($version, $languageId) {
             ReleaseTOSIncompatibility::create([
-                'release_id'  => $release->getKey(),
-                'tos_id'      => TOSFactory::new()->create(['name' => $version])->id,
-                'language_id' => $languageId === null
+                'game_release_id' => $release->getKey(),
+                'tos_id'          => TOSFactory::new()->create(['name' => $version])->id,
+                'language_id'     => $languageId === null
                     ? null
                     : LanguageFactory::new()->create(['id' => $languageId, 'name' => $languageId])->id,
             ]);
@@ -214,7 +214,7 @@ class ReleaseFactory extends Factory
      */
     public function copyProtectedBy(string $name, ?string $notes = null): static
     {
-        return $this->afterCreating(function (Release $release) use ($name, $notes) {
+        return $this->afterCreating(function (GameRelease $release) use ($name, $notes) {
             $release->copyProtections()->attach(
                 CopyProtectionFactory::new()->create(['name' => $name]),
                 ['notes' => $notes]
@@ -224,7 +224,7 @@ class ReleaseFactory extends Factory
 
     public function diskProtectedBy(string $name, ?string $notes = null): static
     {
-        return $this->afterCreating(function (Release $release) use ($name, $notes) {
+        return $this->afterCreating(function (GameRelease $release) use ($name, $notes) {
             $release->diskProtections()->attach(
                 DiskProtectionFactory::new()->create(['name' => $name]),
                 ['notes' => $notes]
@@ -238,7 +238,7 @@ class ReleaseFactory extends Factory
      */
     public function diskProtectedByUnknownScheme(): static
     {
-        return $this->afterCreating(function (Release $release) {
+        return $this->afterCreating(function (GameRelease $release) {
             $release->diskProtections()->attach(
                 DiskProtectionFactory::new()->unknownScheme()->create(),
                 ['notes' => null]

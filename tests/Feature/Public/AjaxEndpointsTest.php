@@ -5,11 +5,11 @@ namespace Tests\Feature\Public;
 use App\Models\Crew;
 use App\Models\Engine;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -254,7 +254,7 @@ class AjaxEndpointsTest extends TestCase
     public function test_the_release_year_endpoint_filters_on_the_year_typed_so_far(): void
     {
         foreach (['1988-05-02', '1989-11-30', '1992-01-01'] as $date) {
-            Release::factory()->create(['date' => $date]);
+            GameRelease::factory()->create(['date' => $date]);
         }
 
         $years = $this->getJson(route('ajax.release-years', ['q' => '198']))->assertOk()->json();
@@ -272,7 +272,7 @@ class AjaxEndpointsTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('injectionPayloads')]
     public function test_the_release_year_endpoint_treats_the_query_as_data(string $payload): void
     {
-        Release::factory()->create(['date' => '1988-05-02']);
+        GameRelease::factory()->create(['date' => '1988-05-02']);
 
         $this->getJson(route('ajax.release-years', ['q' => $payload]))
             ->assertOk()

@@ -18,6 +18,6 @@ class WebsiteCategory extends Model
 
     public function websites()
     {
-        return $this->belongsToMany(Website::class, 'website_category_cross', 'website_category_id', 'website_id');
+        return $this->belongsToMany(Website::class, 'website_category_cross');
     }
 }

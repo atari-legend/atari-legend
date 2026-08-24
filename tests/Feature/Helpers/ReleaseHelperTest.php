@@ -4,7 +4,7 @@ namespace Tests\Feature\Helpers;
 
 use App\Helpers\ReleaseHelper;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,7 +18,7 @@ class ReleaseHelperTest extends TestCase
 
     public function test_a_lone_release_has_no_siblings(): void
     {
-        $this->assertSame([], ReleaseHelper::siblingReleasesCrumbs(Release::factory()->create()));
+        $this->assertSame([], ReleaseHelper::siblingReleasesCrumbs(GameRelease::factory()->create()));
     }
 
     /**
@@ -33,9 +33,9 @@ class ReleaseHelperTest extends TestCase
     {
         $game = Game::factory()->create();
 
-        Release::factory()->create(['game_id' => $game->getKey(), 'date' => '1988-01-01', 'name' => 'Original']);
-        $second = Release::factory()->create(['game_id' => $game->getKey(), 'date' => '1990-01-01', 'name' => 'Budget']);
-        Release::factory()->create(['game_id' => $game->getKey(), 'date' => '1992-01-01', 'name' => 'Compilation']);
+        GameRelease::factory()->create(['game_id' => $game->getKey(), 'date' => '1988-01-01', 'name' => 'Original']);
+        $second = GameRelease::factory()->create(['game_id' => $game->getKey(), 'date' => '1990-01-01', 'name' => 'Budget']);
+        GameRelease::factory()->create(['game_id' => $game->getKey(), 'date' => '1992-01-01', 'name' => 'Compilation']);
 
         $crumbs = ReleaseHelper::siblingReleasesCrumbs($second->fresh());
 
@@ -50,8 +50,8 @@ class ReleaseHelperTest extends TestCase
     {
         $game = Game::factory()->create();
 
-        Release::factory()->create(['game_id' => $game->getKey(), 'date' => '1988-01-01', 'name' => 'Original']);
-        $current = Release::factory()->create(['game_id' => $game->getKey(), 'date' => '1990-01-01', 'name' => 'Budget']);
+        GameRelease::factory()->create(['game_id' => $game->getKey(), 'date' => '1988-01-01', 'name' => 'Original']);
+        $current = GameRelease::factory()->create(['game_id' => $game->getKey(), 'date' => '1990-01-01', 'name' => 'Budget']);
 
         $labels = $this->labels(ReleaseHelper::siblingReleasesCrumbs($current->fresh()));
 
@@ -62,8 +62,8 @@ class ReleaseHelperTest extends TestCase
     public function test_crumbs_link_to_the_route_they_were_given(): void
     {
         $game = Game::factory()->create();
-        Release::factory()->create(['game_id' => $game->getKey()]);
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        GameRelease::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         $crumbs = ReleaseHelper::siblingReleasesCrumbs($release->fresh(), 'games.releases.show');
 
@@ -78,8 +78,8 @@ class ReleaseHelperTest extends TestCase
     {
         $game = Game::factory()->create();
 
-        Release::factory()->undated()->create(['game_id' => $game->getKey(), 'name' => 'Unknown']);
-        $release = Release::factory()->create(['game_id' => $game->getKey(), 'date' => '1988-01-01']);
+        GameRelease::factory()->undated()->create(['game_id' => $game->getKey(), 'name' => 'Unknown']);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey(), 'date' => '1988-01-01']);
 
         $crumbs = ReleaseHelper::siblingReleasesCrumbs($release->fresh());
 
@@ -93,14 +93,14 @@ class ReleaseHelperTest extends TestCase
     public function test_the_label_names_publisher_and_locations(): void
     {
         $game = Game::factory()->create();
-        Release::factory()->create(['game_id' => $game->getKey()]);
+        GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
-        $sibling = Release::factory()
+        $sibling = GameRelease::factory()
             ->publishedBy('Ocean')
             ->releasedIn('France')
             ->create(['game_id' => $game->getKey(), 'date' => '1988-01-01', 'name' => 'Original']);
 
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         $crumbs = ReleaseHelper::siblingReleasesCrumbs($release->fresh());
 
@@ -113,8 +113,8 @@ class ReleaseHelperTest extends TestCase
 
     public function test_releases_of_another_game_are_not_siblings(): void
     {
-        $release = Release::factory()->create();
-        Release::factory()->count(3)->create();
+        $release = GameRelease::factory()->create();
+        GameRelease::factory()->count(3)->create();
 
         $this->assertSame([], ReleaseHelper::siblingReleasesCrumbs($release->fresh()));
     }

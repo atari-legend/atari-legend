@@ -6,6 +6,7 @@ use App\Helpers\ChangelogHelper;
 use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Individual;
 use App\Models\IndividualText;
 use App\Models\Menu;
@@ -15,7 +16,6 @@ use App\Models\MenuDiskDump;
 use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
-use App\Models\Release;
 use ErrorException;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
@@ -63,7 +63,7 @@ class ImportStonishData extends Command
         }
 
         $this->info('Deleting existing release data...');
-        $this->withProgressBar(Release::has('menuDiskContents')->get(), function ($release) {
+        $this->withProgressBar(GameRelease::has('menuDiskContents')->get(), function ($release) {
             if ($this->stop) {
                 exit(1);
             }
@@ -146,7 +146,7 @@ class ImportStonishData extends Command
                     if ($game !== null) {
                         // Find if there is already a release of this game on the same
                         // disk
-                        $release = Release::whereHas('menuDiskContents', function (Builder $query) use ($disk) {
+                        $release = GameRelease::whereHas('menuDiskContents', function (Builder $query) use ($disk) {
                             $query->where('menu_disk_id', '=', $disk->id);
                         })
                             ->where('game_id', '=', $game->game_id)
@@ -157,7 +157,7 @@ class ImportStonishData extends Command
                         // or a game that is not in the menu (for example Sewer Doc Disks)
                         if (! $release && $content->type === null || trim($content->type) === '') {
                             // Create a new release
-                            $release = new Release();
+                            $release = new GameRelease();
                             $release->type = 'Unofficial';
                             $release->game_id = $game->game_id;
                             if ($menu->date) {

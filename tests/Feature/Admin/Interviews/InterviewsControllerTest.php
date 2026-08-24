@@ -18,7 +18,7 @@ use Tests\Feature\Admin\AdminTestCase;
  *
  * Like articles, an interview is two rows - the interview and its text. Unlike
  * articles, the subject cannot be changed after creation: update() does not
- * touch ind_id.
+ * touch individual_id.
  */
 class InterviewsControllerTest extends AdminTestCase
 {
@@ -37,7 +37,7 @@ class InterviewsControllerTest extends AdminTestCase
     public function test_index_lists_the_interviews(): void
     {
         $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
-        Interview::factory()->create(['ind_id' => $individual->getKey()]);
+        Interview::factory()->create(['individual_id' => $individual->getKey()]);
 
         $this->get(route('admin.interviews.interviews.index'))
             ->assertOk()
@@ -47,7 +47,7 @@ class InterviewsControllerTest extends AdminTestCase
     public function test_create_and_edit_forms_load(): void
     {
         $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
-        $interview = Interview::factory()->create(['ind_id' => $individual->getKey()]);
+        $interview = Interview::factory()->create(['individual_id' => $individual->getKey()]);
 
         $this->get(route('admin.interviews.interviews.create'))->assertOk();
 
@@ -67,7 +67,7 @@ class InterviewsControllerTest extends AdminTestCase
         $interview = Interview::sole();
         $text = $interview->texts->first();
 
-        $this->assertSame($individual->getKey(), $interview->ind_id);
+        $this->assertSame($individual->getKey(), $interview->individual_id);
         $this->assertSame('The interview itself.', $text->interview_text);
         $this->assertSame('A short introduction.', $text->interview_intro);
         $this->assertSame(
@@ -159,7 +159,7 @@ class InterviewsControllerTest extends AdminTestCase
     public function test_destroy_removes_the_interview(): void
     {
         $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
-        $interview = Interview::factory()->create(['ind_id' => $individual->getKey()]);
+        $interview = Interview::factory()->create(['individual_id' => $individual->getKey()]);
 
         $this->delete(route('admin.interviews.interviews.destroy', $interview))
             ->assertRedirect(route('admin.interviews.interviews.index'));

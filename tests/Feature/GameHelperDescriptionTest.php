@@ -5,9 +5,9 @@ namespace Tests\Feature;
 use App\Helpers\GameHelper;
 use App\Models\Game;
 use App\Models\GameAka;
+use App\Models\GameRelease;
 use App\Models\Genre;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
 use App\Models\ReleaseScan;
 use App\Models\Review;
 use App\Models\Screenshot;
@@ -66,7 +66,7 @@ class GameHelperDescriptionTest extends TestCase
         $aka2->aka_name = 'AKA 2';
         $game->akas()->save($aka2);
 
-        $release1 = new Release();
+        $release1 = new GameRelease();
         $release1->date = '1988-03-02';
         $release1->publisher()->associate($publisher1);
         $game->releases()->save($release1);
@@ -76,7 +76,7 @@ class GameHelperDescriptionTest extends TestCase
         $scan1->type = 'Other';
         $release1->boxscans()->save($scan1);
 
-        $release2 = new Release();
+        $release2 = new GameRelease();
         $release2->date = '1989-06-12';
         $release2->publisher()->associate($publisher2);
         $game->releases()->save($release2);
@@ -105,7 +105,7 @@ class GameHelperDescriptionTest extends TestCase
 
         $game->save();
 
-        $release1 = new Release();
+        $release1 = new GameRelease();
         $release1->date = '1988-03-02';
         $game->releases()->save($release1);
 
@@ -114,7 +114,7 @@ class GameHelperDescriptionTest extends TestCase
         $scan1->type = 'Other';
         $release1->boxscans()->save($scan1);
 
-        $release2 = new Release();
+        $release2 = new GameRelease();
         $game->releases()->save($release2);
 
         $this->assertEquals(

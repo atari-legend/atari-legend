@@ -18,6 +18,6 @@ class GameAka extends Model
 
     public function game()
     {
-        return $this->hasOne(Game::class, 'id', 'game_id');
+        return $this->belongsTo(Game::class);
     }
 }

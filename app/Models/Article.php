@@ -19,19 +19,19 @@ class Article extends Model implements Feedable
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function texts()
     {
-        return $this->hasMany(ArticleText::class, 'article_id');
+        return $this->hasMany(ArticleText::class);
     }
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_article', 'article_id', 'screenshot_id')
-            // The pivot's own key, so this follows the rename; the
-            // belongsToMany arguments above are foreign keys and do not.
+        return $this->belongsToMany(Screenshot::class, 'screenshot_article')
+            // withPivot names a column on the pivot itself, and this is the
+            // pivot's own primary key, so it followed the `id` rename.
             ->withPivot('id')
             ->using(ScreenshotArticle::class);
     }
@@ -43,7 +43,7 @@ class Article extends Model implements Feedable
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'article_user_comments', 'article_id', 'comments_id');
+        return $this->belongsToMany(Comment::class, 'article_user_comments');
     }
 
     public function toFeedItem(): FeedItem

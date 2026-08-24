@@ -4,12 +4,12 @@ namespace Tests\Feature\Public;
 
 use App\Http\Controllers\MenuSetController;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
-use App\Models\Release;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -186,7 +186,7 @@ class MenuSetPagesTest extends TestCase
         $disk = $set->menus->first()->disks->first();
 
         $game = Game::factory()->named('Xenon')->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         MenuDiskContent::forceCreate([
             'menu_disk_id'    => $disk->getKey(),

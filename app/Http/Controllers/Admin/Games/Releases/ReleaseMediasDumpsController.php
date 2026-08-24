@@ -8,8 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Dump;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Media;
-use App\Models\Release;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +18,7 @@ use ZipArchive;
 
 class ReleaseMediasDumpsController extends Controller
 {
-    public function store(Game $game, Release $release, Media $media, Request $request)
+    public function store(Game $game, GameRelease $release, Media $media, Request $request)
     {
         $request->validate(['file' => 'required|array']);
 
@@ -99,7 +99,7 @@ class ReleaseMediasDumpsController extends Controller
         }
     }
 
-    public function destroy(Game $game, Release $release, Media $media, Dump $dump)
+    public function destroy(Game $game, GameRelease $release, Media $media, Dump $dump)
     {
         Storage::disk('public')->delete($dump->path);
         $dump->delete();
@@ -120,7 +120,7 @@ class ReleaseMediasDumpsController extends Controller
         ]);
     }
 
-    public function update(Game $game, Release $release, Media $media, Dump $dump, Request $request)
+    public function update(Game $game, GameRelease $release, Media $media, Dump $dump, Request $request)
     {
         $dump->info = $request->info;
         $dump->save();

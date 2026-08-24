@@ -21,9 +21,9 @@ class InterviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'ind_id'  => IndividualFactory::new(),
-            'draft'   => false,
+            'user_id'        => User::factory(),
+            'individual_id'  => IndividualFactory::new(),
+            'draft'          => false,
         ];
     }
 

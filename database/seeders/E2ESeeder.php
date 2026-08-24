@@ -365,7 +365,7 @@ class E2ESeeder extends Seeder
 
         $this->insert('game_developer', [
             'game_id'    => self::GAME_ID,
-            'dev_pub_id' => self::COMPANY_ID,
+            'pub_dev_id' => self::COMPANY_ID,
         ], []);
 
         $this->insert('game_genre_cross', [
@@ -431,12 +431,12 @@ class E2ESeeder extends Seeder
         $this->insert('individuals', ['id' => self::INDIVIDUAL_ID], [
             'ind_name' => self::INTERVIEW_INDIVIDUAL,
         ]);
-        $this->insert('individual_text', ['ind_id' => self::INDIVIDUAL_ID], ['ind_imgext' => 'png']);
+        $this->insert('individual_text', ['individual_id' => self::INDIVIDUAL_ID], ['ind_imgext' => 'png']);
         $this->seedImage('images/individual_screenshots/' . self::INDIVIDUAL_ID . '.png');
 
         $this->insert('interview_main', ['id' => self::INTERVIEW_ID], [
-            'user_id' => self::USER_ADMIN_ID,
-            'ind_id'  => self::INDIVIDUAL_ID,
+            'user_id'        => self::USER_ADMIN_ID,
+            'individual_id'  => self::INDIVIDUAL_ID,
         ]);
         // The chapters and the text carry the two halves of the interview
         // BBCode: [hotspotUrl=#1] in the chapter list is the link, [hotspot=1]

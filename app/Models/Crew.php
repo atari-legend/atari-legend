@@ -22,17 +22,17 @@ class Crew extends Model
 
     public function menuSets()
     {
-        return $this->belongsToMany(MenuSet::class, null, 'crew_id');
+        return $this->belongsToMany(MenuSet::class);
     }
 
     public function releases()
     {
-        return $this->belongsToMany(Release::class, 'game_release_crew', 'crew_id', 'game_release_id');
+        return $this->belongsToMany(GameRelease::class, 'game_release_crew');
     }
 
     public function individuals()
     {
-        return $this->belongsToMany(Individual::class, 'crew_individual', 'crew_id', 'ind_id');
+        return $this->belongsToMany(Individual::class, 'crew_individual');
     }
 
     public function parentCrews()

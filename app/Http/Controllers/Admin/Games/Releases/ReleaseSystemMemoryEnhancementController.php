@@ -6,13 +6,13 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\ReleaseMemoryEnhanced;
 use Illuminate\Http\Request;
 
 class ReleaseSystemMemoryEnhancementController extends Controller
 {
-    public function destroy(Game $game, Release $release, ReleaseMemoryEnhanced $enhancement)
+    public function destroy(Game $game, GameRelease $release, ReleaseMemoryEnhanced $enhancement)
     {
         $enhancement->delete();
 
@@ -32,7 +32,7 @@ class ReleaseSystemMemoryEnhancementController extends Controller
         ]);
     }
 
-    public function store(Request $request, Game $game, Release $release)
+    public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
             'memory_enhancement' => 'nullable|numeric|exists:enhancement,id',
@@ -42,7 +42,7 @@ class ReleaseSystemMemoryEnhancementController extends Controller
         $enhancement = ReleaseMemoryEnhanced::create([
             'enhancement_id'  => $request->memory_enhancement,
             'memory_id'       => $request->memory,
-            'release_id'      => $release->getKey(),
+            'game_release_id' => $release->getKey(),
         ]);
 
         ChangelogHelper::insert([

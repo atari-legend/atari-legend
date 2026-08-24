@@ -4,12 +4,12 @@ namespace Tests\Feature\Admin;
 
 use App\Livewire\Admin\MenuImport;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
-use App\Models\Release;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -150,7 +150,7 @@ class MenuImportTest extends TestCase
 
         // Content landed on the existing disk, linked to a new release.
         $this->assertEquals(1, MenuDiskContent::where('menu_disk_id', $disk->id)->count());
-        $this->assertEquals(1, Release::where('game_id', $game->getKey())->count());
+        $this->assertEquals(1, GameRelease::where('game_id', $game->getKey())->count());
     }
 
     public function testCreatesNewMenuAndDiskWhenNoMatch(): void
@@ -217,7 +217,7 @@ class MenuImportTest extends TestCase
             ->set('menus', $menus)
             ->call('runImport');
 
-        $release = Release::where('game_id', $game->getKey())->firstOrFail();
+        $release = GameRelease::where('game_id', $game->getKey())->firstOrFail();
         $linked = MenuDiskContent::where('game_release_id', $release->id)->get();
 
         // Both the new_release row and the extra attach to the same release.
@@ -334,8 +334,8 @@ class MenuImportTest extends TestCase
 
         $this->assertEquals(1, MenuDisk::count());
         $this->assertEquals('B', MenuDisk::first()->part);
-        $this->assertEquals(1, Release::where('game_id', $kept->getKey())->count());
-        $this->assertEquals(0, Release::where('game_id', $dropped->getKey())->count());
+        $this->assertEquals(1, GameRelease::where('game_id', $kept->getKey())->count());
+        $this->assertEquals(0, GameRelease::where('game_id', $dropped->getKey())->count());
     }
 
     public function testRemovingTheLastDiskOfAMenuDropsTheMenu(): void
@@ -423,7 +423,7 @@ class MenuImportTest extends TestCase
 
         $orders = MenuDiskContent::orderBy('order')->pluck('order')->all();
         $this->assertEquals([1, 2], $orders);
-        $this->assertEquals(0, Release::where('game_id', $dropped->getKey())->count());
+        $this->assertEquals(0, GameRelease::where('game_id', $dropped->getKey())->count());
     }
 
     public function testRemoveContentNormalisesOddSheetNumbering(): void

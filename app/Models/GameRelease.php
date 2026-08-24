@@ -6,22 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Release extends Model
+class GameRelease extends Model
 {
     use HasFactory;
 
     const LICENCE_COMMERCIAL = 'Commercial';
     const LICENSE_NON_COMMERCIAL = 'Non-Commercial';
     const LICENSES = [
-        Release::LICENCE_COMMERCIAL,
-        Release::LICENSE_NON_COMMERCIAL,
+        GameRelease::LICENCE_COMMERCIAL,
+        GameRelease::LICENSE_NON_COMMERCIAL,
     ];
 
     const TYPE_UNOFFICIAL = 'Unofficial';
     const TYPES = [
         'Re-release', 'Budget', 'Budget re-release',
         'Playable demo', 'Non-playable demo', 'Slideshow',
-        Release::TYPE_UNOFFICIAL, 'Data disk', 'Review copy',
+        GameRelease::TYPE_UNOFFICIAL, 'Data disk', 'Review copy',
     ];
 
     const STATUSES = ['Unfinished', 'Development', 'Unreleased'];
@@ -72,7 +72,7 @@ class Release extends Model
 
     public function game()
     {
-        return $this->belongsTo(Game::class, 'game_id');
+        return $this->belongsTo(Game::class);
     }
 
     public function publisher()
@@ -82,12 +82,12 @@ class Release extends Model
 
     public function crews()
     {
-        return $this->belongsToMany(Crew::class, 'game_release_crew', 'game_release_id', 'crew_id');
+        return $this->belongsToMany(Crew::class, 'game_release_crew');
     }
 
     public function boxscans()
     {
-        return $this->hasMany(ReleaseScan::class, 'game_release_id');
+        return $this->hasMany(ReleaseScan::class);
     }
 
     public function distributors()
@@ -97,76 +97,76 @@ class Release extends Model
 
     public function locations()
     {
-        return $this->belongsToMany(Location::class, 'game_release_location', 'game_release_id', 'location_id');
+        return $this->belongsToMany(Location::class, 'game_release_location');
     }
 
     public function resolutions()
     {
-        return $this->belongsToMany(Resolution::class, 'game_release_resolution', 'game_release_id', 'resolution_id');
+        return $this->belongsToMany(Resolution::class, 'game_release_resolution');
     }
 
     public function systemEnhanced()
     {
-        return $this->hasMany(ReleaseSystemEnhanced::class, 'game_release_id');
+        return $this->hasMany(ReleaseSystemEnhanced::class);
     }
 
     public function systemIncompatibles()
     {
-        return $this->belongsToMany(System::class, 'game_release_system_incompatible', 'game_release_id', 'system_id');
+        return $this->belongsToMany(System::class, 'game_release_system_incompatible');
     }
 
     public function memoryEnhanced()
     {
-        return $this->hasMany(ReleaseMemoryEnhanced::class, 'release_id');
+        return $this->hasMany(ReleaseMemoryEnhanced::class);
     }
 
     public function memoryMinimums()
     {
-        return $this->belongsToMany(Memory::class, 'game_release_memory_minimum', 'release_id', 'memory_id');
+        return $this->belongsToMany(Memory::class, 'game_release_memory_minimum');
     }
 
     public function memoryIncompatibles()
     {
-        return $this->belongsToMany(Memory::class, 'game_release_memory_incompatible', 'release_id', 'memory_id');
+        return $this->belongsToMany(Memory::class, 'game_release_memory_incompatible');
     }
 
     public function emulatorIncompatibles()
     {
-        return $this->belongsToMany(Emulator::class, 'game_release_emulator_incompatibility', 'release_id', 'emulator_id');
+        return $this->belongsToMany(Emulator::class, 'game_release_emulator_incompatibility');
     }
 
     public function tosIncompatibles()
     {
-        return $this->hasMany(ReleaseTOSIncompatibility::class, 'release_id');
+        return $this->hasMany(ReleaseTOSIncompatibility::class);
     }
 
     public function akas()
     {
-        return $this->hasMany(ReleaseAka::class, 'game_release_id');
+        return $this->hasMany(ReleaseAka::class);
     }
 
     public function trainers()
     {
-        return $this->belongsToMany(Trainer::class, 'game_release_trainer_option', 'release_id', 'trainer_option_id');
+        return $this->belongsToMany(Trainer::class, 'game_release_trainer_option', 'game_release_id', 'trainer_option_id');
     }
 
     public function copyProtections()
     {
         return $this
-            ->belongsToMany(CopyProtection::class, 'game_release_copy_protection', 'release_id', 'copy_protection_id')
+            ->belongsToMany(CopyProtection::class, 'game_release_copy_protection')
             ->withPivot('notes');
     }
 
     public function diskProtections()
     {
         return $this
-            ->belongsToMany(DiskProtection::class, 'game_release_disk_protection', 'release_id', 'disk_protection_id')
+            ->belongsToMany(DiskProtection::class, 'game_release_disk_protection')
             ->withPivot('notes');
     }
 
     public function languages()
     {
-        return $this->belongsToMany(Language::class, 'game_release_language', 'release_id', 'language_id');
+        return $this->belongsToMany(Language::class, 'game_release_language');
     }
 
     public function medias()
@@ -176,7 +176,7 @@ class Release extends Model
 
     public function menuDiskContents()
     {
-        return $this->hasMany(MenuDiskContent::class, 'game_release_id');
+        return $this->hasMany(MenuDiskContent::class);
     }
 
     public function getMenuAttribute(): ?string

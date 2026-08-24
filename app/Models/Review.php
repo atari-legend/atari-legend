@@ -26,19 +26,19 @@ class Review extends Model implements Feedable
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function games()
     {
-        return $this->belongsToMany(Game::class, 'review_game', 'review_id', 'game_id');
+        return $this->belongsToMany(Game::class, 'review_game');
     }
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_review', 'review_id', 'screenshot_id')
-            // The pivot's own key, so this follows the rename; the
-            // belongsToMany arguments above are foreign keys and do not.
+        return $this->belongsToMany(Screenshot::class, 'screenshot_review')
+            // withPivot names a column on the pivot itself, and this is the
+            // pivot's own primary key, so it followed the `id` rename.
             ->withPivot('id')
             ->using(ScreenshotReview::class);
     }
@@ -56,12 +56,12 @@ class Review extends Model implements Feedable
 
     public function score()
     {
-        return $this->hasOne(ReviewScore::class, 'review_id');
+        return $this->hasOne(ReviewScore::class);
     }
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'review_user_comments', 'review_id', 'comment_id');
+        return $this->belongsToMany(Comment::class, 'review_user_comments');
     }
 
     public function toFeedItem(): FeedItem

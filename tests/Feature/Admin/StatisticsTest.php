@@ -160,9 +160,9 @@ class StatisticsTest extends TestCase
         ]);
 
         DB::table('individual_text')->insert([
-            ['ind_id' => 1, 'ind_profile' => 'Member in Dune', 'ind_email' => null],
-            ['ind_id' => 2, 'ind_profile' => null, 'ind_email' => 'bob@example.org'],
-            ['ind_id' => 3, 'ind_profile' => null, 'ind_email' => null],
+            ['individual_id' => 1, 'ind_profile' => 'Member in Dune', 'ind_email' => null],
+            ['individual_id' => 2, 'ind_profile' => null, 'ind_email' => 'bob@example.org'],
+            ['individual_id' => 3, 'ind_profile' => null, 'ind_email' => null],
         ]);
 
         $bios = collect(AdminStatisticsHelper::coverage()['Other'])

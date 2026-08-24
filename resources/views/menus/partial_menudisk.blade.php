@@ -99,14 +99,14 @@
                 <span class="text-muted">Condition:</span> {{ Str::lower($disk->menuDiskCondition->name ?? 'unknown') }}
             </div>
             <div class="col text-center">
-                @if ($disk->donatedBy !== null)
+                @if ($disk->donatedByIndividual !== null)
                     <span class="text-muted">Donated by:</span>
-                    @if ($disk->donatedBy->games->isNotEmpty())
-                        <a href="{{ route('games.search', ['individual_id' => $disk->donatedBy->getKey()]) }}">
-                            {{ $disk->donatedBy->public_nick }}
+                    @if ($disk->donatedByIndividual->games->isNotEmpty())
+                        <a href="{{ route('games.search', ['individual_id' => $disk->donatedByIndividual->getKey()]) }}">
+                            {{ $disk->donatedByIndividual->public_nick }}
                         </a>
                     @else
-                        {{ $disk->donatedBy->public_nick }}
+                        {{ $disk->donatedByIndividual->public_nick }}
                     @endif
                 @endif
             </div>

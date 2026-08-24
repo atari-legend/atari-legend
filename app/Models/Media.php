@@ -29,6 +29,10 @@ class Media extends Model
 
     public function release()
     {
-        return $this->belongsTo(Release::class);
+        // belongsTo derives its key from the *method* name, so this one wants
+        // release_id whatever the related class is called, and the column is
+        // game_release_id. Renaming the method to gameRelease() would close
+        // that, and is declined on pricing: ->release is 77 lines repo-wide.
+        return $this->belongsTo(GameRelease::class, 'game_release_id');
     }
 }

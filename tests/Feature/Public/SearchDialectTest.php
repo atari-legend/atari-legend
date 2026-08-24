@@ -4,12 +4,12 @@ namespace Tests\Feature\Public;
 
 use App\Http\Controllers\MenuSetController;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
-use App\Models\Release;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -114,7 +114,7 @@ class SearchDialectTest extends TestCase
         $game = $this->game('Xenon');
 
         foreach (['1988-06-01', '1989-01-15'] as $date) {
-            $release = new Release();
+            $release = new GameRelease();
             $release->game_id = $game->getKey();
             $release->date = $date;
             $release->save();

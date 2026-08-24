@@ -22,12 +22,12 @@ class PublisherDeveloper extends Model
 
     public function games()
     {
-        return $this->belongsToMany(Game::class, 'game_developer', 'dev_pub_id', 'game_id');
+        return $this->belongsToMany(Game::class, 'game_developer', 'pub_dev_id', 'game_id');
     }
 
     public function releases()
     {
-        return $this->hasMany(Release::class, 'pub_dev_id');
+        return $this->hasMany(GameRelease::class, 'pub_dev_id');
     }
 
     public function getLogoAttribute()

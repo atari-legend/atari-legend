@@ -39,18 +39,18 @@ class NormaliseBlankProfilesTest extends TestCase
         $this->individuals(6);
 
         DB::table('individual_text')->insert([
-            ['ind_id' => 1, 'ind_profile' => 'Member in Dune'],
-            ['ind_id' => 2, 'ind_profile' => "\t\t\t\t\t\t\t\t"],
-            ['ind_id' => 3, 'ind_profile' => ''],
-            ['ind_id' => 4, 'ind_profile' => "  \r\n  "],
-            ['ind_id' => 5, 'ind_profile' => null],
+            ['individual_id' => 1, 'ind_profile' => 'Member in Dune'],
+            ['individual_id' => 2, 'ind_profile' => "\t\t\t\t\t\t\t\t"],
+            ['individual_id' => 3, 'ind_profile' => ''],
+            ['individual_id' => 4, 'ind_profile' => "  \r\n  "],
+            ['individual_id' => 5, 'ind_profile' => null],
             // Whitespace around real content is left alone
-            ['ind_id' => 6, 'ind_profile' => "\tCoder in DHS\n"],
+            ['individual_id' => 6, 'ind_profile' => "\tCoder in DHS\n"],
         ]);
 
         $this->migrate();
 
-        $profiles = DB::table('individual_text')->orderBy('ind_id')->pluck('ind_profile', 'ind_id');
+        $profiles = DB::table('individual_text')->orderBy('individual_id')->pluck('ind_profile', 'individual_id');
 
         $this->assertSame('Member in Dune', $profiles[1]);
         $this->assertNull($profiles[2]);
@@ -65,14 +65,14 @@ class NormaliseBlankProfilesTest extends TestCase
         $this->individuals(2);
 
         DB::table('individual_text')->insert([
-            ['ind_id' => 1, 'ind_email' => '', 'ind_imgext' => ''],
-            ['ind_id' => 2, 'ind_email' => 'someone@example.org', 'ind_imgext' => 'png'],
+            ['individual_id' => 1, 'ind_email' => '', 'ind_imgext' => ''],
+            ['individual_id' => 2, 'ind_email' => 'someone@example.org', 'ind_imgext' => 'png'],
         ]);
 
         $this->migrate();
 
-        $blank = DB::table('individual_text')->where('ind_id', 1)->first();
-        $set = DB::table('individual_text')->where('ind_id', 2)->first();
+        $blank = DB::table('individual_text')->where('individual_id', 1)->first();
+        $set = DB::table('individual_text')->where('individual_id', 2)->first();
 
         $this->assertNull($blank->ind_email);
         $this->assertNull($blank->ind_imgext);
@@ -107,14 +107,14 @@ class NormaliseBlankProfilesTest extends TestCase
         $this->individuals(2);
 
         DB::table('individual_text')->insert([
-            ['ind_id' => 1, 'ind_profile' => 'Member in Dune'],
-            ['ind_id' => 2, 'ind_profile' => "\t\t"],
+            ['individual_id' => 1, 'ind_profile' => 'Member in Dune'],
+            ['individual_id' => 2, 'ind_profile' => "\t\t"],
         ]);
 
         $this->migrate();
         $this->migrate();
 
-        $profiles = DB::table('individual_text')->orderBy('ind_id')->pluck('ind_profile', 'ind_id');
+        $profiles = DB::table('individual_text')->orderBy('individual_id')->pluck('ind_profile', 'individual_id');
 
         $this->assertSame('Member in Dune', $profiles[1]);
         $this->assertNull($profiles[2]);

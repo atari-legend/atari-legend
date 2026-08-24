@@ -7,9 +7,9 @@ use App\Models\CopyProtection;
 use App\Models\DiskProtection;
 use App\Models\Emulator;
 use App\Models\Enhancement;
+use App\Models\GameRelease;
 use App\Models\Language;
 use App\Models\Memory;
-use App\Models\Release;
 use App\Models\ReleaseMemoryEnhanced;
 use App\Models\ReleaseSystemEnhanced;
 use App\Models\ReleaseTOSIncompatibility;
@@ -35,7 +35,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_the_system_panel_loads(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->inResolutions('Low')
             ->incompatibleWithSystems('Falcon')
             ->copyProtectedBy('Code wheel')
@@ -50,7 +50,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_resolutions_systems_and_emulators_are_attached(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $resolution = Resolution::factory()->create(['name' => 'Low']);
         $system = System::factory()->create(['name' => 'Falcon']);
         $emulator = Emulator::factory()->create(['name' => 'Hatari']);
@@ -75,7 +75,7 @@ class ReleaseSystemTest extends AdminTestCase
      */
     public function test_the_hd_installable_flag_is_set_and_cleared(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system.update', [$release->game, $release]), [
             'hd' => 'true',
@@ -91,7 +91,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_saving_an_empty_panel_detaches_the_lists(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->inResolutions('Low')
             ->incompatibleWithSystems('Falcon')
             ->incompatibleWithEmulators('Hatari')
@@ -109,7 +109,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_the_system_lists_must_be_posted_as_lists(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system.update', [$release->game, $release]), [
             'resolutions' => Resolution::factory()->create()->getKey(),
@@ -123,7 +123,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_an_unknown_resolution_is_a_404(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system.update', [$release->game, $release]), [
             'resolutions' => [9999],
@@ -134,7 +134,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_a_system_enhancement_is_added_and_removed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $system = System::factory()->create(['name' => 'STE']);
         $enhancement = Enhancement::factory()->create(['name' => 'Sound']);
 
@@ -163,7 +163,7 @@ class ReleaseSystemTest extends AdminTestCase
      */
     public function test_a_system_enhancement_needs_only_a_known_system(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system-enhancement.store', [$release->game, $release]), [
             'enhancement' => Enhancement::factory()->create()->getKey(),
@@ -179,7 +179,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_removing_one_system_enhancement_leaves_the_other(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->enhancedForSystem('STE')
             ->enhancedForSystem('Falcon')
             ->create();
@@ -199,7 +199,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_an_incompatible_tos_is_added_and_removed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $tos = TOS::factory()->create(['name' => '1.62']);
         $language = Language::factory()->create(['id' => 'de', 'name' => 'German']);
 
@@ -210,7 +210,7 @@ class ReleaseSystemTest extends AdminTestCase
 
         $row = ReleaseTOSIncompatibility::sole();
 
-        $this->assertSame($release->getKey(), $row->release_id);
+        $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('1.62', $row->tos->name);
         $this->assertSame('de', $row->language_id);
         $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
@@ -224,7 +224,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_an_incompatible_tos_needs_a_known_version_and_language(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system-tos-incompatibility.store', [$release->game, $release]))
             ->assertSessionHasErrors('tos');
@@ -240,7 +240,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_removing_one_incompatible_tos_leaves_the_other(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->incompatibleWithTos('1.00')
             ->incompatibleWithTos('1.62')
             ->create();
@@ -261,7 +261,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_minimum_and_incompatible_memories_are_saved(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $half = Memory::factory()->create(['name' => '512 KB']);
         $four = Memory::factory()->create(['name' => '4 MB']);
 
@@ -283,7 +283,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_saving_an_empty_memory_panel_detaches_both_lists(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->requiringMemory('512 KB')
             ->incompatibleWithMemory('4 MB')
             ->create();
@@ -299,7 +299,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_the_memory_lists_must_be_posted_as_lists(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->put(route('admin.games.releases.system-memory.update', [$release->game, $release]), [
             'minimum_memory'      => Memory::factory()->create()->getKey(),
@@ -314,7 +314,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_a_memory_enhancement_is_added_and_removed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $memory = Memory::factory()->create(['name' => '1 MB']);
         $enhancement = Enhancement::factory()->create(['name' => 'Extra levels']);
 
@@ -325,7 +325,7 @@ class ReleaseSystemTest extends AdminTestCase
 
         $row = ReleaseMemoryEnhanced::sole();
 
-        $this->assertSame($release->getKey(), $row->release_id);
+        $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('1 MB', $row->memory->name);
         $this->assertSame('Extra levels', $row->enhancement->name);
         $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
@@ -340,7 +340,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_a_memory_enhancement_needs_a_known_memory(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system-memory-enhancement.store', [$release->game, $release]))
             ->assertSessionHasErrors('memory');
@@ -355,7 +355,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_removing_one_memory_enhancement_leaves_the_other(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->enhancedForMemory('1 MB')
             ->enhancedForMemory('4 MB')
             ->create();
@@ -380,7 +380,7 @@ class ReleaseSystemTest extends AdminTestCase
      */
     public function test_a_copy_protection_is_added_with_its_notes_and_removed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $protection = CopyProtection::factory()->create(['name' => 'Code wheel']);
 
         $this->post(route('admin.games.releases.system-copy-protection.store', [$release->game, $release]), [
@@ -404,7 +404,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_a_copy_protection_must_be_a_known_one(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system-copy-protection.store', [$release->game, $release]))
             ->assertSessionHasErrors('copy_protection');
@@ -423,7 +423,7 @@ class ReleaseSystemTest extends AdminTestCase
      */
     public function test_removing_one_copy_protection_leaves_the_other(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->copyProtectedBy('Code wheel')
             ->copyProtectedBy('Manual lookup')
             ->create();
@@ -441,7 +441,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_a_disk_protection_is_added_with_its_notes_and_removed(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $protection = DiskProtection::factory()->create(['name' => 'Rob Northen Copylock']);
 
         $this->post(route('admin.games.releases.system-disk-protection.store', [$release->game, $release]), [
@@ -465,7 +465,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_a_disk_protection_must_be_a_known_one(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.system-disk-protection.store', [$release->game, $release]))
             ->assertSessionHasErrors('disk_protection');
@@ -476,7 +476,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_removing_one_disk_protection_leaves_the_other(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->diskProtectedBy('Rob Northen Copylock')
             ->diskProtectedBy('Long track')
             ->create();
@@ -498,8 +498,8 @@ class ReleaseSystemTest extends AdminTestCase
     {
         $protection = CopyProtection::factory()->create(['name' => 'Code wheel']);
 
-        $release = Release::factory()->create();
-        $other = Release::factory()->create();
+        $release = GameRelease::factory()->create();
+        $other = GameRelease::factory()->create();
 
         $release->copyProtections()->attach($protection, ['notes' => null]);
         $other->copyProtections()->attach($protection, ['notes' => null]);
@@ -514,7 +514,7 @@ class ReleaseSystemTest extends AdminTestCase
 
     public function test_non_admins_are_turned_away(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->assertNonAdminIsTurnedAway(
             route('admin.games.releases.system.index', [$release->game, $release])

@@ -111,7 +111,7 @@ class GameSeriesController extends Controller
 
     public function removeGame(GameSeries $series, Game $game)
     {
-        $game->series()->dissociate();
+        $game->gameSeries()->dissociate();
         $game->save();
 
         ChangelogHelper::insert([
@@ -131,7 +131,7 @@ class GameSeriesController extends Controller
     {
         $game = Game::find($request->game);
 
-        $game->series()->associate($series);
+        $game->gameSeries()->associate($series);
         $game->save();
 
         ChangelogHelper::insert([

@@ -75,46 +75,46 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'user_id');
+        return $this->hasMany(Review::class);
     }
 
     public function interviews()
     {
-        return $this->hasMany(Interview::class, 'user_id');
+        return $this->hasMany(Interview::class);
     }
 
     public function news()
     {
-        return $this->hasMany(News::class, 'user_id');
+        return $this->hasMany(News::class);
     }
 
     public function articles()
     {
-        return $this->hasMany(Article::class, 'user_id');
+        return $this->hasMany(Article::class);
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'user_id');
+        return $this->hasMany(Comment::class);
     }
 
     public function changelogs()
     {
-        return $this->hasMany(Changelog::class, 'user_id');
+        return $this->hasMany(Changelog::class);
     }
 
     public function newsSubmissions()
     {
-        return $this->hasMany(NewsSubmission::class, 'user_id');
+        return $this->hasMany(NewsSubmission::class);
     }
 
     public function websiteSubmissions()
     {
-        return $this->hasMany(WebsiteValidate::class, 'user_id');
+        return $this->hasMany(WebsiteValidate::class);
     }
 
     public function gameSubmissions()
     {
-        return $this->hasMany(GameSubmitInfo::class, 'user_id');
+        return $this->hasMany(GameSubmitInfo::class);
     }
 }

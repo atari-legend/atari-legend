@@ -5,12 +5,12 @@ namespace Tests\Feature\Public;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\GameSubmitInfo;
 use App\Models\GameVote;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\User;
@@ -81,7 +81,7 @@ class GamePageTest extends TestCase
     public function test_box_scans_are_listed_front_first(): void
     {
         $game = Game::factory()->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         foreach (['Box back', 'Box front', 'Poster'] as $type) {
             DB::table('game_release_scan')->insert([
@@ -123,10 +123,10 @@ class GamePageTest extends TestCase
 
         $withPortrait = Individual::factory()->create();
         $withPortrait->text()->create(['ind_profile' => 'A coder', 'ind_imgext' => 'jpg']);
-        Interview::factory()->create(['ind_id' => $withPortrait->getKey()]);
+        Interview::factory()->create(['individual_id' => $withPortrait->getKey()]);
 
         $withoutPortrait = Individual::factory()->withBio()->create();
-        Interview::factory()->create(['ind_id' => $withoutPortrait->getKey()]);
+        Interview::factory()->create(['individual_id' => $withoutPortrait->getKey()]);
 
         $game->individuals()->attach($withPortrait, ['individual_role_id' => $roleId]);
         $game->individuals()->attach($withPortrait, ['individual_role_id' => $otherRoleId]);

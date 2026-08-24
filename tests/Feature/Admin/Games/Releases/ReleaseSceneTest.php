@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin\Games\Releases;
 
 use App\Models\Changelog;
-use App\Models\Release;
+use App\Models\GameRelease;
 use App\Models\Trainer;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -18,7 +18,7 @@ class ReleaseSceneTest extends AdminTestCase
 {
     public function test_the_scene_panel_loads(): void
     {
-        $release = Release::factory()->withTrainer('Infinite lives')->create();
+        $release = GameRelease::factory()->withTrainer('Infinite lives')->create();
 
         $this->get(route('admin.games.releases.scene.index', [$release->game, $release]))
             ->assertOk()
@@ -27,7 +27,7 @@ class ReleaseSceneTest extends AdminTestCase
 
     public function test_trainer_options_are_attached(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $lives = Trainer::factory()->create(['name' => 'Infinite lives']);
         $ammo = Trainer::factory()->create(['name' => 'Infinite ammo']);
 
@@ -49,7 +49,7 @@ class ReleaseSceneTest extends AdminTestCase
      */
     public function test_saving_an_empty_list_removes_the_trainers(): void
     {
-        $release = Release::factory()->withTrainer('Infinite lives')->create();
+        $release = GameRelease::factory()->withTrainer('Infinite lives')->create();
 
         $this->post(route('admin.games.releases.scene.update', [$release->game, $release]))
             ->assertRedirect();
@@ -62,7 +62,7 @@ class ReleaseSceneTest extends AdminTestCase
      */
     public function test_saving_the_same_trainer_twice_leaves_one_row(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $trainer = Trainer::factory()->create(['name' => 'Infinite lives']);
 
         $this->post(route('admin.games.releases.scene.update', [$release->game, $release]), [
@@ -78,7 +78,7 @@ class ReleaseSceneTest extends AdminTestCase
 
     public function test_the_trainers_must_be_posted_as_a_list(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $trainer = Trainer::factory()->create();
 
         $this->post(route('admin.games.releases.scene.update', [$release->game, $release]), [
@@ -91,7 +91,7 @@ class ReleaseSceneTest extends AdminTestCase
 
     public function test_an_unknown_trainer_is_a_404(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.games.releases.scene.update', [$release->game, $release]), [
             'trainers' => [9999],
@@ -102,7 +102,7 @@ class ReleaseSceneTest extends AdminTestCase
 
     public function test_non_admins_are_turned_away(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->assertNonAdminIsTurnedAway(
             route('admin.games.releases.scene.index', [$release->game, $release])

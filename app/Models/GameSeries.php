@@ -12,6 +12,6 @@ class GameSeries extends Model
 
     public function games()
     {
-        return $this->hasMany(Game::class, 'game_series_id');
+        return $this->hasMany(Game::class);
     }
 }

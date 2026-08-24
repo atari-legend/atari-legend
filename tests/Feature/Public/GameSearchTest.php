@@ -5,10 +5,10 @@ namespace Tests\Feature\Public;
 use App\Models\Changelog;
 use App\Models\Engine;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
 use App\Models\Review;
 use App\Models\Sndh;
 use Carbon\Carbon;
@@ -113,7 +113,7 @@ class GameSearchTest extends TestCase
 
     public function test_games_can_be_found_by_publisher(): void
     {
-        $release = Release::factory()->publishedBy('Ocean')->create();
+        $release = GameRelease::factory()->publishedBy('Ocean')->create();
         $game = $release->game;
         $game->update(['game_name' => 'Published game']);
 
@@ -152,10 +152,10 @@ class GameSearchTest extends TestCase
 
     public function test_games_can_be_found_by_release_year(): void
     {
-        $release = Release::factory()->create(['date' => '1988-06-01']);
+        $release = GameRelease::factory()->create(['date' => '1988-06-01']);
         $release->game->update(['game_name' => 'From 1988']);
 
-        Release::factory()->create(['date' => '1992-01-01']);
+        GameRelease::factory()->create(['date' => '1992-01-01']);
 
         $this->assertSame(['From 1988'], $this->names(['year' => '1988']));
         $this->assertSame(['From 1988'], $this->names(['year_id' => '1988']));
@@ -224,7 +224,7 @@ class GameSearchTest extends TestCase
 
     public function test_games_can_be_filtered_on_having_a_box_scan(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $release->game->update(['game_name' => 'Scanned']);
         DB::table('game_release_scan')->insert([
             'game_release_id' => $release->getKey(),

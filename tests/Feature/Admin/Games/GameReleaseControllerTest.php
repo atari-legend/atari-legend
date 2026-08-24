@@ -5,10 +5,10 @@ namespace Tests\Feature\Admin\Games;
 use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Language;
 use App\Models\Location;
 use App\Models\PublisherDeveloper;
-use App\Models\Release;
 use App\Models\ReleaseAka;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -27,7 +27,7 @@ class GameReleaseControllerTest extends AdminTestCase
             'name'    => 'Original',
             'year'    => 1988,
             'type'    => null,
-            'license' => Release::LICENCE_COMMERCIAL,
+            'license' => GameRelease::LICENCE_COMMERCIAL,
             'status'  => null,
             'notes'   => null,
         ], $overrides);
@@ -36,7 +36,7 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_the_release_list_and_forms_load(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $release = Release::factory()->publishedBy('Bitmap Brothers')->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->publishedBy('Bitmap Brothers')->create(['game_id' => $game->getKey()]);
 
         $this->get(route('admin.games.releases.index', $game))->assertOk()->assertSee('Xenon');
         $this->get(route('admin.games.releases.create', $game))->assertOk();
@@ -48,13 +48,13 @@ class GameReleaseControllerTest extends AdminTestCase
         $game = Game::factory()->named('Xenon')->create();
 
         $this->post(route('admin.games.releases.store', $game), $this->payload())
-            ->assertRedirect(route('admin.games.releases.show', [$game, Release::sole()]));
+            ->assertRedirect(route('admin.games.releases.show', [$game, GameRelease::sole()]));
 
-        $release = Release::sole();
+        $release = GameRelease::sole();
 
         $this->assertSame($game->getKey(), $release->game_id);
         $this->assertSame('Original', $release->name);
-        $this->assertSame(Release::LICENCE_COMMERCIAL, $release->license);
+        $this->assertSame(GameRelease::LICENCE_COMMERCIAL, $release->license);
         $this->assertChangelog(Changelog::INSERT, 'Game Release', 'Xenon');
     }
 
@@ -67,7 +67,7 @@ class GameReleaseControllerTest extends AdminTestCase
 
         $this->post(route('admin.games.releases.store', $game), $this->payload(['year' => 1992]));
 
-        $this->assertSame('1992-01-01', Release::sole()->date->format('Y-m-d'));
+        $this->assertSame('1992-01-01', GameRelease::sole()->date->format('Y-m-d'));
     }
 
     public function test_a_release_can_have_no_year(): void
@@ -76,8 +76,8 @@ class GameReleaseControllerTest extends AdminTestCase
 
         $this->post(route('admin.games.releases.store', $game), $this->payload(['year' => null]));
 
-        $this->assertNull(Release::sole()->date);
-        $this->assertSame('[no date]', Release::sole()->year);
+        $this->assertNull(GameRelease::sole()->date);
+        $this->assertSame('[no date]', GameRelease::sole()->year);
     }
 
     /**
@@ -95,7 +95,7 @@ class GameReleaseControllerTest extends AdminTestCase
             'year' => (int) date('Y') + 1,
         ]))->assertSessionHasErrors('year');
 
-        $this->assertSame(0, Release::query()->count());
+        $this->assertSame(0, GameRelease::query()->count());
     }
 
     public function test_type_license_and_status_come_from_closed_lists(): void
@@ -108,7 +108,7 @@ class GameReleaseControllerTest extends AdminTestCase
             'status'  => 'Rumoured',
         ]))->assertSessionHasErrors(['type', 'license', 'status']);
 
-        $this->assertSame(0, Release::query()->count());
+        $this->assertSame(0, GameRelease::query()->count());
     }
 
     public function test_a_publisher_can_be_set(): void
@@ -120,33 +120,36 @@ class GameReleaseControllerTest extends AdminTestCase
             'publisher' => $publisher->getKey(),
         ]))->assertRedirect();
 
-        $this->assertSame('Ocean', Release::sole()->publisher->pub_dev_name);
+        $this->assertSame('Ocean', GameRelease::sole()->publisher->pub_dev_name);
     }
 
-    public function test_locations_crews_and_languages_are_attached(): void
+    public function test_locations_crews_languages_and_distributors_are_attached(): void
     {
         $game = Game::factory()->create();
         $location = Location::factory()->create(['name' => 'France']);
         $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
         $language = Language::factory()->create(['id' => 'fr', 'name' => 'French']);
+        $distributor = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Erbe']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
-            'locations' => [$location->getKey()],
-            'crews'     => [$crew->getKey()],
-            'languages' => [$language->id],
+            'locations'    => [$location->getKey()],
+            'crews'        => [$crew->getKey()],
+            'languages'    => [$language->id],
+            'distributors' => [$distributor->getKey()],
         ]))->assertRedirect();
 
-        $release = Release::sole();
+        $release = GameRelease::sole();
 
         $this->assertSame(['France'], $release->locations->pluck('name')->all());
         $this->assertSame(['The Replicants'], $release->crews->pluck('crew_name')->all());
         $this->assertSame(['fr'], $release->languages->pluck('id')->all());
+        $this->assertSame([$distributor->getKey()], $release->distributors->pluck('id')->all());
     }
 
     public function test_update_rewrites_the_release(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         $this->put(route('admin.games.releases.update', [$game, $release]), $this->payload([
             'name'  => 'Budget re-release',
@@ -169,7 +172,7 @@ class GameReleaseControllerTest extends AdminTestCase
      */
     public function test_the_publisher_can_be_removed(): void
     {
-        $release = Release::factory()->publishedBy('Ocean')->create();
+        $release = GameRelease::factory()->publishedBy('Ocean')->create();
 
         $this->put(
             route('admin.games.releases.update', [$release->game, $release]),
@@ -181,7 +184,7 @@ class GameReleaseControllerTest extends AdminTestCase
 
     public function test_the_publisher_can_be_swapped(): void
     {
-        $release = Release::factory()->publishedBy('Ocean')->create();
+        $release = GameRelease::factory()->publishedBy('Ocean')->create();
         $other = PublisherDeveloper::factory()->create(['pub_dev_name' => 'US Gold']);
 
         $this->put(
@@ -194,7 +197,7 @@ class GameReleaseControllerTest extends AdminTestCase
 
     public function test_an_unknown_publisher_is_a_404(): void
     {
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->put(
             route('admin.games.releases.update', [$release->game, $release]),
@@ -207,7 +210,7 @@ class GameReleaseControllerTest extends AdminTestCase
      */
     public function test_clearing_the_crews_removes_them(): void
     {
-        $release = Release::factory()->crackedBy('The Replicants')->create();
+        $release = GameRelease::factory()->crackedBy('The Replicants')->create();
 
         $this->put(
             route('admin.games.releases.update', [$release->game, $release]),
@@ -220,19 +223,19 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_destroy_removes_the_release(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         $this->delete(route('admin.games.releases.destroy', [$game, $release]))
             ->assertRedirect(route('admin.games.releases.index', $game));
 
-        $this->assertSame(0, Release::query()->count());
+        $this->assertSame(0, GameRelease::query()->count());
         $this->assertChangelog(Changelog::DELETE, 'Game Release', 'Xenon');
     }
 
     public function test_an_alternative_title_can_be_added_and_removed(): void
     {
         $game = Game::factory()->named('Bubble Bobble')->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
         $language = Language::factory()->create(['id' => 'ja', 'name' => 'Japanese']);
 
         $this->post(route('admin.games.releases.aka.store', [$game, $release]), [
@@ -254,7 +257,7 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_non_admins_are_turned_away(): void
     {
         $game = Game::factory()->create();
-        $release = Release::factory()->create(['game_id' => $game->getKey()]);
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
 
         $this->assertNonAdminIsTurnedAway(route('admin.games.releases.index', $game));
         $this->assertNonAdminIsTurnedAway(route('admin.games.releases.show', [$game, $release]));

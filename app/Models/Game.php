@@ -16,7 +16,7 @@ class Game extends Model
     const MULTIPLAYER_HARDWARE = ['Cartridge', 'Midi-Link'];
 
     protected $fillable = [
-        'game_name', 'slug', 'port_id', 'progress_system_id', 'game_series_id',
+        'game_name', 'slug', 'port_id', 'game_progress_system_id', 'game_series_id',
         'number_players_on_same_machine', 'number_players_multiple_machines',
         'multiplayer_type', 'multiplayer_hardware',
     ];
@@ -94,24 +94,24 @@ class Game extends Model
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_game', 'game_id', 'screenshot_id');
+        return $this->belongsToMany(Screenshot::class, 'screenshot_game');
     }
 
     public function developers()
     {
-        return $this->belongsToMany(PublisherDeveloper::class, 'game_developer', 'game_id', 'dev_pub_id')
+        return $this->belongsToMany(PublisherDeveloper::class, 'game_developer', 'game_id', 'pub_dev_id')
             ->withPivot('developer_role_id')
             ->using(GameDeveloper::class);
     }
 
     public function sndhs()
     {
-        return $this->belongsToMany(Sndh::class, 'game_sndh', 'game_id', 'sndh_id');
+        return $this->belongsToMany(Sndh::class, 'game_sndh');
     }
 
     public function reviews()
     {
-        return $this->belongsToMany(Review::class, 'review_game', 'game_id', 'review_id');
+        return $this->belongsToMany(Review::class, 'review_game');
     }
 
     public function genres()
@@ -122,29 +122,29 @@ class Game extends Model
     public function releases()
     {
         // No third argument: game's own key is now `id`, the default.
-        return $this->hasMany(Release::class, 'game_id');
+        return $this->hasMany(GameRelease::class);
     }
 
     public function individuals()
     {
-        return $this->belongsToMany(Individual::class, 'game_individual', 'game_id', 'individual_id')
+        return $this->belongsToMany(Individual::class, 'game_individual')
             ->withPivot('individual_role_id')
             ->using(GameIndividual::class);
     }
 
     public function programmingLanguages()
     {
-        return $this->belongsToMany(ProgrammingLanguage::class, 'game_programming_language', 'game_id');
+        return $this->belongsToMany(ProgrammingLanguage::class, 'game_programming_language');
     }
 
     public function engines()
     {
-        return $this->belongsToMany(Engine::class, 'game_engine', 'game_id');
+        return $this->belongsToMany(Engine::class, 'game_engine');
     }
 
     public function akas()
     {
-        return $this->hasMany(GameAka::class, 'game_id');
+        return $this->hasMany(GameAka::class);
     }
 
     public function port()
@@ -152,19 +152,19 @@ class Game extends Model
         return $this->belongsTo(Port::class);
     }
 
-    public function progressSystem()
+    public function gameProgressSystem()
     {
         return $this->belongsTo(ProgressSystem::class);
     }
 
     public function soundHardwares()
     {
-        return $this->belongsToMany(SoundHardware::class, 'game_sound_hardware', 'game_id');
+        return $this->belongsToMany(SoundHardware::class, 'game_sound_hardware');
     }
 
     public function controls()
     {
-        return $this->belongsToMany(Control::class, 'game_control', 'game_id');
+        return $this->belongsToMany(Control::class, 'game_control');
     }
 
     public function vs()
@@ -174,7 +174,7 @@ class Game extends Model
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'game_user_comments', 'game_id', 'comment_id');
+        return $this->belongsToMany(Comment::class, 'game_user_comments');
     }
 
     public function similarGames()
@@ -194,37 +194,37 @@ class Game extends Model
 
     public function facts()
     {
-        return $this->hasMany(GameFact::class, 'game_id');
+        return $this->hasMany(GameFact::class);
     }
 
-    public function series()
+    public function gameSeries()
     {
-        return $this->belongsTo(GameSeries::class, 'game_series_id');
+        return $this->belongsTo(GameSeries::class);
     }
 
     public function infoSubmissions()
     {
-        return $this->hasMany(GameSubmitInfo::class, 'game_id');
+        return $this->hasMany(GameSubmitInfo::class);
     }
 
     public function menuDiskContents()
     {
-        return $this->hasMany(MenuDiskContent::class, 'game_id');
+        return $this->hasMany(MenuDiskContent::class);
     }
 
     public function videos()
     {
-        return $this->hasMany(GameVideo::class, 'game_id');
+        return $this->hasMany(GameVideo::class);
     }
 
     public function votes()
     {
-        return $this->hasMany(GameVote::class, 'game_id');
+        return $this->hasMany(GameVote::class);
     }
 
     public function magazineIndices()
     {
-        return $this->hasMany(MagazineIndex::class, 'game_id');
+        return $this->hasMany(MagazineIndex::class);
     }
 
     public function getNonMenuReleasesAttribute()

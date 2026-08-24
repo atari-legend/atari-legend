@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\GameHelper;
 use App\Helpers\JsonLd;
 use App\Helpers\ReleaseDescriptionHelper;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Support\Str;
 
 class GameReleaseController extends Controller
@@ -17,7 +17,7 @@ class GameReleaseController extends Controller
         4 => 'fas fa-cloud-download-alt',
     ];
 
-    public function show(Release $release)
+    public function show(GameRelease $release)
     {
         if ($release->menuDiskContents->isNotEmpty()) {
             // Release on menus should not be visible as standalone pages

@@ -4,11 +4,11 @@ namespace Tests\Feature\Helpers;
 
 use App\Helpers\ReleaseDescriptionHelper;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
-use App\Models\Release;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -31,7 +31,7 @@ class ReleaseDescriptionHelperTest extends TestCase
      * The fragments come back as separate strings; joining them makes the
      * assertions read like the sentence a visitor sees.
      */
-    private function describe(Release $release): string
+    private function describe(GameRelease $release): string
     {
         return join(' ', ReleaseDescriptionHelper::descriptions($release->fresh()));
     }
@@ -42,13 +42,13 @@ class ReleaseDescriptionHelperTest extends TestCase
      * to recognise it, because `game.slug` is unique and several tests build
      * more than one release.
      */
-    private function release(array $attributes = [], ?string $gameName = null): Release
+    private function release(array $attributes = [], ?string $gameName = null): GameRelease
     {
         $game = $gameName === null
             ? Game::factory()->create()
             : Game::factory()->named($gameName)->create();
 
-        return Release::factory()->create(array_merge([
+        return GameRelease::factory()->create(array_merge([
             'game_id' => $game->getKey(),
             'name'    => null,
             'date'    => null,
@@ -105,7 +105,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_locations_are_listed(): void
     {
-        $release = Release::factory()->releasedIn('France', 'Germany')->create();
+        $release = GameRelease::factory()->releasedIn('France', 'Germany')->create();
 
         $this->assertStringContainsString(
             'It was released in [b]France[/b], [b]Germany[/b].',
@@ -115,7 +115,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_a_publisher_is_named_with_a_link(): void
     {
-        $release = Release::factory()->publishedBy('Ocean')->create();
+        $release = GameRelease::factory()->publishedBy('Ocean')->create();
         $publisher = $release->publisher;
 
         $this->assertStringContainsString(
@@ -130,7 +130,7 @@ class ReleaseDescriptionHelperTest extends TestCase
      */
     public function test_a_location_and_a_publisher_share_one_sentence(): void
     {
-        $release = Release::factory()->releasedIn('France')->publishedBy('Ocean')->create();
+        $release = GameRelease::factory()->releasedIn('France')->publishedBy('Ocean')->create();
 
         $this->assertStringContainsString(
             'It was released in [b]France[/b], published by',
@@ -141,7 +141,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_distributors_are_listed_after_the_publisher(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->publishedBy('Ocean')
             ->distributedBy('Erbe', 'Proein')
             ->create();
@@ -155,7 +155,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_a_distributor_without_a_publisher_opens_the_clause(): void
     {
-        $release = Release::factory()->distributedBy('Erbe')->create();
+        $release = GameRelease::factory()->distributedBy('Erbe')->create();
 
         $this->assertStringContainsString('It was distributed by [b]Erbe[/b].', $this->describe($release));
     }
@@ -164,7 +164,7 @@ class ReleaseDescriptionHelperTest extends TestCase
     {
         $this->assertStringContainsString(
             'Its license is [b]commercial[/b].',
-            $this->describe($this->release(['license' => Release::LICENCE_COMMERCIAL]))
+            $this->describe($this->release(['license' => GameRelease::LICENCE_COMMERCIAL]))
         );
     }
 
@@ -178,7 +178,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_alternative_titles_are_listed_with_their_language(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->alsoKnownAs('Xenon II', 'fr')
             ->alsoKnownAs('Xenon Zwei')
             ->create();
@@ -191,14 +191,14 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_the_cracking_crew_is_named(): void
     {
-        $release = Release::factory()->crackedBy('The Replicants')->create();
+        $release = GameRelease::factory()->crackedBy('The Replicants')->create();
 
         $this->assertStringContainsString('It was cracked by [b]The Replicants[/b]', $this->describe($release));
     }
 
     public function test_languages_are_listed(): void
     {
-        $release = Release::factory()->inLanguages('en')->create();
+        $release = GameRelease::factory()->inLanguages('en')->create();
 
         $this->assertStringContainsString(
             'The following languages are supported: [b]en[/b].',
@@ -213,12 +213,12 @@ class ReleaseDescriptionHelperTest extends TestCase
     {
         $this->assertStringContainsString(
             'It supports the following resolution: [b]Low[/b].',
-            $this->describe(Release::factory()->inResolutions('Low')->create())
+            $this->describe(GameRelease::factory()->inResolutions('Low')->create())
         );
 
         $this->assertStringContainsString(
             'It supports the following resolutions: [b]Low[/b], [b]Medium[/b].',
-            $this->describe(Release::factory()->inResolutions('Low', 'Medium')->create())
+            $this->describe(GameRelease::factory()->inResolutions('Low', 'Medium')->create())
         );
     }
 
@@ -226,18 +226,18 @@ class ReleaseDescriptionHelperTest extends TestCase
     {
         $this->assertStringContainsString(
             'It can be installed on a hard-drive.',
-            $this->describe(Release::factory()->hdInstallable()->create())
+            $this->describe(GameRelease::factory()->hdInstallable()->create())
         );
 
         $this->assertStringNotContainsString(
             'hard-drive',
-            $this->describe(Release::factory()->create())
+            $this->describe(GameRelease::factory()->create())
         );
     }
 
     public function test_system_and_memory_enhancements_are_joined_with_and(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->enhancedForSystem('STE', 'Graphics')
             ->enhancedForMemory('1 MB')
             ->create();
@@ -250,7 +250,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_a_system_enhancement_alone_needs_no_and(): void
     {
-        $release = Release::factory()->enhancedForSystem('Falcon')->create();
+        $release = GameRelease::factory()->enhancedForSystem('Falcon')->create();
 
         $this->assertStringContainsString('It is enhanced for [b]Falcon[/b].', $this->describe($release));
         $this->assertStringNotContainsString('[b]Falcon[/b] and', $this->describe($release));
@@ -258,7 +258,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_minimum_and_incompatible_memory_are_joined_with_and(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->requiringMemory('512 KB')
             ->incompatibleWithMemory('4 MB')
             ->create();
@@ -274,14 +274,14 @@ class ReleaseDescriptionHelperTest extends TestCase
      */
     public function test_incompatible_memory_alone_opens_the_sentence(): void
     {
-        $release = Release::factory()->incompatibleWithMemory('4 MB')->create();
+        $release = GameRelease::factory()->incompatibleWithMemory('4 MB')->create();
 
         $this->assertStringContainsString('It is incompatible with [b]4 MB[/b].', $this->describe($release));
     }
 
     public function test_incompatibilities_are_listed_across_systems_emulators_and_tos(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->incompatibleWithSystems('Falcon')
             ->incompatibleWithEmulators('Hatari')
             ->incompatibleWithTos('2.06')
@@ -295,7 +295,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_an_incompatible_tos_can_name_a_language(): void
     {
-        $release = Release::factory()->incompatibleWithTos('1.04', 'de')->create();
+        $release = GameRelease::factory()->incompatibleWithTos('1.04', 'de')->create();
 
         $this->assertStringContainsString(
             'It is incompatible with TOS [b]1.04 (de)[/b].',
@@ -305,7 +305,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_copy_protection_notes_are_appended(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->copyProtectedBy('Manual lookup', 'page 12')
             ->create();
 
@@ -317,7 +317,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_empty_protection_notes_are_left_out(): void
     {
-        $release = Release::factory()->copyProtectedBy('Code wheel', '')->create();
+        $release = GameRelease::factory()->copyProtectedBy('Code wheel', '')->create();
 
         $this->assertStringContainsString(
             'copy protected via [b]Code wheel[/b].',
@@ -327,7 +327,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_copy_and_disk_protection_share_one_sentence(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->copyProtectedBy('Manual lookup')
             ->diskProtectedBy('Macrodos')
             ->create();
@@ -341,7 +341,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_disk_protection_alone_opens_the_sentence(): void
     {
-        $release = Release::factory()->diskProtectedBy('Speedlock')->create();
+        $release = GameRelease::factory()->diskProtectedBy('Speedlock')->create();
 
         $this->assertStringContainsString(
             'The media is protected with [b]Speedlock[/b].',
@@ -355,7 +355,7 @@ class ReleaseDescriptionHelperTest extends TestCase
      */
     public function test_the_catch_all_disk_protection_is_described_as_unknown(): void
     {
-        $release = Release::factory()->diskProtectedByUnknownScheme()->create();
+        $release = GameRelease::factory()->diskProtectedByUnknownScheme()->create();
 
         $description = $this->describe($release);
 
@@ -367,13 +367,13 @@ class ReleaseDescriptionHelperTest extends TestCase
     {
         $this->assertStringContainsString(
             'The trainer [b]Infinite lives[/b] can be used.',
-            $this->describe(Release::factory()->withTrainer('Infinite lives')->create())
+            $this->describe(GameRelease::factory()->withTrainer('Infinite lives')->create())
         );
 
         $this->assertStringContainsString(
             'The trainers [b]Infinite lives[/b], [b]Level skip[/b] can be used.',
             $this->describe(
-                Release::factory()->withTrainer('Infinite lives')->withTrainer('Level skip')->create()
+                GameRelease::factory()->withTrainer('Infinite lives')->withTrainer('Level skip')->create()
             )
         );
     }
@@ -394,7 +394,7 @@ class ReleaseDescriptionHelperTest extends TestCase
 
     public function test_a_fully_described_release_reads_as_one_passage(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->publishedBy('Ocean')
             ->releasedIn('France')
             ->crackedBy('The Replicants')
@@ -425,7 +425,7 @@ class ReleaseDescriptionHelperTest extends TestCase
      */
     public function test_menu_descriptions_leave_out_the_opening_sentence(): void
     {
-        $release = Release::factory()
+        $release = GameRelease::factory()
             ->publishedBy('Ocean')
             ->inLanguages('en')
             ->withTrainer('Infinite lives')
@@ -450,7 +450,7 @@ class ReleaseDescriptionHelperTest extends TestCase
      * set id, disk id and the page of the set listing the disk falls on -
      * which MenuSetBBCodeTag turns into a URL with an anchor.
      */
-    private function putOnMenuDisk(Release $release, MenuDisk $disk): void
+    private function putOnMenuDisk(GameRelease $release, MenuDisk $disk): void
     {
         // forceCreate: game_release_id is outside MenuDiskContent::$fillable
         MenuDiskContent::forceCreate([
@@ -466,7 +466,7 @@ class ReleaseDescriptionHelperTest extends TestCase
         $menu = Menu::factory()->create(['menu_set_id' => $set->getKey(), 'number' => 76, 'version' => null]);
         $disk = MenuDisk::factory()->create(['menu_id' => $menu->getKey(), 'part' => 'A']);
 
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $this->putOnMenuDisk($release, $disk);
 
         $this->assertStringContainsString(
@@ -493,7 +493,7 @@ class ReleaseDescriptionHelperTest extends TestCase
             'part' => 'A',
         ]));
 
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $this->putOnMenuDisk($release, $disks->last());
 
         $this->assertStringContainsString(
@@ -513,7 +513,7 @@ class ReleaseDescriptionHelperTest extends TestCase
         $menu = Menu::factory()->create(['menu_set_id' => $set->getKey(), 'number' => 1, 'version' => null]);
         $disk = MenuDisk::factory()->create(['menu_id' => $menu->getKey(), 'part' => 'A']);
 
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
         $this->putOnMenuDisk($release, $disk);
         $this->putOnMenuDisk($release, $disk);
 

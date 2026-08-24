@@ -15,36 +15,35 @@ class Interview extends Model implements Feedable
     protected $table = 'interview_main';
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'ind_id', 'draft'];
+    protected $fillable = ['user_id', 'individual_id', 'draft'];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function individual()
     {
-        return $this->belongsTo(Individual::class, 'ind_id');
+        return $this->belongsTo(Individual::class);
     }
 
     public function texts()
     {
-        return $this->hasMany(InterviewText::class, 'interview_id');
+        return $this->hasMany(InterviewText::class);
     }
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_interview', 'interview_id', 'screenshot_id')
+        return $this->belongsToMany(Screenshot::class, 'screenshot_interview')
             // withPivot names a column on the pivot itself, and this is the
-            // pivot's own key, so it follows the rename. The interview_id and
-            // screenshot_id arguments above are foreign keys and do not.
+            // pivot's own primary key, so it followed the `id` rename.
             ->withPivot('id')
             ->using(ScreenshotInterview::class);
     }
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'interview_user_comments', 'interview_id', 'comment_id');
+        return $this->belongsToMany(Comment::class, 'interview_user_comments');
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\MenuSetController;
 use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Individual;
 use App\Models\Menu;
 use App\Models\MenuDisk;
@@ -15,7 +16,6 @@ use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
-use App\Models\Release;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
@@ -294,7 +294,7 @@ class MenuAdminTest extends AdminTestCase
             'donated'   => $donor->getKey(),
         ])->assertRedirect();
 
-        $this->assertSame('Someone', MenuDisk::sole()->donatedBy->ind_name);
+        $this->assertSame('Someone', MenuDisk::sole()->donatedByIndividual->ind_name);
     }
 
     public function test_a_disk_can_be_edited_and_deleted(): void
@@ -376,7 +376,7 @@ class MenuAdminTest extends AdminTestCase
     public function test_an_existing_release_can_be_put_on_a_disk(): void
     {
         $disk = $this->disk();
-        $release = Release::factory()->create();
+        $release = GameRelease::factory()->create();
 
         $this->post(route('admin.menus.disks.content.store', $disk), [
             'disk'    => $disk->getKey(),

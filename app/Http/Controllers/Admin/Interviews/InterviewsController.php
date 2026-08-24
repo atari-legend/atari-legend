@@ -58,9 +58,9 @@ class InterviewsController extends Controller
         ));
 
         $interview = new Interview([
-            'user_id' => $request->author,
-            'ind_id'  => $request->individual,
-            'draft'   => $request->draft ? true : false,
+            'user_id'       => $request->author,
+            'individual_id' => $request->individual,
+            'draft'         => $request->draft ? true : false,
         ]);
         $interview->save();
 

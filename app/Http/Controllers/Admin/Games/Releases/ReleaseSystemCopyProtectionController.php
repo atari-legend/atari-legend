@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\CopyProtection;
 use App\Models\Game;
-use App\Models\Release;
+use App\Models\GameRelease;
 use Illuminate\Http\Request;
 
 class ReleaseSystemCopyProtectionController extends Controller
 {
-    public function destroy(Game $game, Release $release, CopyProtection $protection)
+    public function destroy(Game $game, GameRelease $release, CopyProtection $protection)
     {
         $release->copyProtections()->detach($protection);
 
@@ -32,7 +32,7 @@ class ReleaseSystemCopyProtectionController extends Controller
         ]);
     }
 
-    public function store(Request $request, Game $game, Release $release)
+    public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
             'copy_protection' => 'required|numeric|exists:copy_protection,id',

@@ -7,6 +7,7 @@ use App\Helpers\MenuImportParser;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\GameAka;
+use App\Models\GameRelease;
 use App\Models\Individual;
 use App\Models\Menu;
 use App\Models\MenuDisk;
@@ -14,7 +15,6 @@ use App\Models\MenuDiskCondition;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
-use App\Models\Release;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -895,7 +895,7 @@ class MenuImport extends Component
      * MenuDisksContentController::store(). Returns the Release it created/used
      * (for new_release rows) so extras can be attached to it.
      */
-    private function commitContent(array $content, MenuDisk $disk, ?Release $extraRelease = null): ?Release
+    private function commitContent(array $content, MenuDisk $disk, ?GameRelease $extraRelease = null): ?GameRelease
     {
         $model = MenuDiskContent::create([
             'order'        => $content['order'],
@@ -909,8 +909,8 @@ class MenuImport extends Component
 
         switch ($content['link_mode']) {
             case 'new_release':
-                $release = Release::create([
-                    'type'    => Release::TYPE_UNOFFICIAL,
+                $release = GameRelease::create([
+                    'type'    => GameRelease::TYPE_UNOFFICIAL,
                     'game_id' => $content['game_id'],
                 ]);
                 $release->menuDiskContents()->save($model);

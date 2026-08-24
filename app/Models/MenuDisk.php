@@ -38,12 +38,12 @@ class MenuDisk extends Model
         return $this->belongsTo(MenuDiskCondition::class);
     }
 
-    public function donatedBy()
+    public function donatedByIndividual()
     {
-        // No third argument: the owner key on Individual is now `id`, which is
-        // the default. This is one of the four explicit local keys the plan
-        // lists under Phase B step 3.
-        return $this->belongsTo(Individual::class, 'donated_by_individual_id');
+        // The method name is what belongsTo derives the key from, so this
+        // name -- not `donatedBy` -- is what makes donated_by_individual_id
+        // the default. The owner key on Individual is `id`, also the default.
+        return $this->belongsTo(Individual::class);
     }
 
     public function getLabelAttribute()

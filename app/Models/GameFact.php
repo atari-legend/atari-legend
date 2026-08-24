@@ -12,11 +12,11 @@ class GameFact extends Model
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_game_fact', 'game_fact_id', 'screenshot_id');
+        return $this->belongsToMany(Screenshot::class, 'screenshot_game_fact');
     }
 
     public function game()
     {
-        return $this->belongsTo(Game::class, 'game_id');
+        return $this->belongsTo(Game::class);
     }
 }
