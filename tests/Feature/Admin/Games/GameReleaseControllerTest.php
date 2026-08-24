@@ -5,10 +5,10 @@ namespace Tests\Feature\Admin\Games;
 use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Language;
 use App\Models\Location;
 use App\Models\PublisherDeveloper;
-use App\Models\GameRelease;
 use App\Models\ReleaseAka;
 use Tests\Feature\Admin\AdminTestCase;
 

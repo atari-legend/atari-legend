@@ -3,12 +3,12 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\GameVote;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
-use App\Models\GameRelease;
 use App\Models\Screenshot;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

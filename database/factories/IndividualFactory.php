@@ -30,9 +30,9 @@ class IndividualFactory extends Factory
         return $this->afterCreating(function (Individual $individual) use ($profile) {
             IndividualText::forceCreate([
                 'individual_id'      => $individual->getKey(),
-                'ind_profile' => $profile,
-                'ind_imgext'  => null,
-                'ind_email'   => null,
+                'ind_profile'        => $profile,
+                'ind_imgext'         => null,
+                'ind_email'          => null,
             ]);
         });
     }

@@ -435,7 +435,7 @@ class E2ESeeder extends Seeder
         $this->seedImage('images/individual_screenshots/' . self::INDIVIDUAL_ID . '.png');
 
         $this->insert('interview_main', ['id' => self::INTERVIEW_ID], [
-            'user_id' => self::USER_ADMIN_ID,
+            'user_id'        => self::USER_ADMIN_ID,
             'individual_id'  => self::INDIVIDUAL_ID,
         ]);
         // The chapters and the text carry the two halves of the interview

@@ -48,13 +48,13 @@ class RelationshipKeyAudit
             // names. None of the three reads a table name, which is where
             // every surprise in this campaign came from.
             if ($relation instanceof BelongsTo) {
-                $actual     = $relation->getForeignKeyName();
+                $actual = $relation->getForeignKeyName();
                 $convention = Str::snake($method->name) . '_' . $related->getKeyName();
             } elseif ($relation instanceof HasOne || $relation instanceof HasMany) {
-                $actual     = $relation->getForeignKeyName();
+                $actual = $relation->getForeignKeyName();
                 $convention = $model->getForeignKey();
             } elseif ($relation instanceof BelongsToMany) {
-                $actual     = $relation->getForeignPivotKeyName() . '|' . $relation->getRelatedPivotKeyName();
+                $actual = $relation->getForeignPivotKeyName() . '|' . $relation->getRelatedPivotKeyName();
                 $convention = $model->getForeignKey() . '|' . $related->getForeignKey();
             } else {
                 return null;              // morph relations have no key to converge on

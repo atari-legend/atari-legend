@@ -4,11 +4,11 @@ namespace Tests\Feature\Admin\Games\Releases;
 
 use App\Models\Changelog;
 use App\Models\Dump;
+use App\Models\GameRelease;
 use App\Models\Media;
 use App\Models\MediaScan;
 use App\Models\MediaScanType;
 use App\Models\MediaType;
-use App\Models\GameRelease;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
 use ZipArchive;
@@ -57,7 +57,7 @@ class ReleaseMediaTest extends AdminTestCase
         $release = GameRelease::factory()->create();
         $media = Media::factory()->create([
             'game_release_id' => $release->getKey(),
-            'label'      => 'Disk A',
+            'label'           => 'Disk A',
         ]);
         Dump::factory()->create(['media_id' => $media->getKey(), 'format' => 'STX']);
 

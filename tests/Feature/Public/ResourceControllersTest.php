@@ -3,9 +3,9 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Individual;
 use App\Models\IndividualText;
-use App\Models\GameRelease;
 use App\Models\ReleaseScan;
 use App\Models\Screenshot;
 use App\Models\Sndh;
@@ -155,7 +155,7 @@ class ResourceControllersTest extends TestCase
         $individual = Individual::factory()->create();
         $text = IndividualText::forceCreate([
             'individual_id'     => $individual->getKey(),
-            'ind_imgext' => 'png',
+            'ind_imgext'        => 'png',
         ]);
         $this->storePng($text->path, 800, 800);
 
@@ -176,7 +176,7 @@ class ResourceControllersTest extends TestCase
         $individual = Individual::factory()->create();
         $text = IndividualText::forceCreate([
             'individual_id'     => $individual->getKey(),
-            'ind_imgext' => 'png',
+            'ind_imgext'        => 'png',
         ]);
         $this->storePng($text->path, 120, 90);
 
@@ -261,7 +261,7 @@ class ResourceControllersTest extends TestCase
         $individual = Individual::factory()->create();
         IndividualText::forceCreate([
             'individual_id'     => $individual->getKey(),
-            'ind_imgext' => 'png',
+            'ind_imgext'        => 'png',
         ]);
         // Do not store file on disk
 

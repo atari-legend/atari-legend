@@ -4,11 +4,11 @@ namespace Tests\Feature\Helpers;
 
 use App\Helpers\ReleaseDescriptionHelper;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
-use App\Models\GameRelease;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -81,7 +81,7 @@ function splitArguments(string $args): array
 }
 
 $rewritten = 0;
-$byHand    = [];
+$byHand = [];
 
 foreach (glob(base_path('app/Models/*.php')) as $file) {
     $class = 'App\\Models\\' . basename($file, '.php');
@@ -96,7 +96,7 @@ foreach (glob(base_path('app/Models/*.php')) as $file) {
         continue;
     }
 
-    $source  = file_get_contents($file);
+    $source = file_get_contents($file);
     $changed = false;
 
     foreach ((new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
@@ -174,10 +174,10 @@ foreach (glob(base_path('app/Models/*.php')) as $file) {
             continue;
         }
 
-        $open   = $m[0][1] + strlen($m[0][0]) - 1;
-        $depth  = 0;
-        $quote  = null;
-        $close  = null;
+        $open = $m[0][1] + strlen($m[0][0]) - 1;
+        $depth = 0;
+        $quote = null;
+        $close = null;
 
         for ($i = $open, $len = strlen($body); $i < $len; $i++) {
             $char = $body[$i];
@@ -215,10 +215,10 @@ foreach (glob(base_path('app/Models/*.php')) as $file) {
         $keep = count($args);
 
         while ($keep > 1) {
-            $i        = $keep - 1;
-            $actual   = $args[$i];
+            $i = $keep - 1;
+            $actual = $args[$i];
             $expected = $defaults[$i - 1] ?? null;
-            $isNull   = strtolower($actual) === 'null';
+            $isNull = strtolower($actual) === 'null';
 
             if (! ($isNull || ($expected !== null && $actual === "'{$expected}'"))) {
                 break;
@@ -238,7 +238,7 @@ foreach (glob(base_path('app/Models/*.php')) as $file) {
             continue;
         }
 
-        $count  = 0;
+        $count = 0;
         $source = str_replace($call, $replacement, $source, $count);
 
         if ($count !== 1) {

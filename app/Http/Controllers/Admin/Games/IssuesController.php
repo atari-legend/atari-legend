@@ -6,8 +6,8 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\Genre;
 use App\Models\GameRelease;
+use App\Models\Genre;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 

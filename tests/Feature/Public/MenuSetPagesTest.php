@@ -4,12 +4,12 @@ namespace Tests\Feature\Public;
 
 use App\Http\Controllers\MenuSetController;
 use App\Models\Game;
+use App\Models\GameRelease;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
-use App\Models\GameRelease;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
