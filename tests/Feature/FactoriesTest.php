@@ -250,8 +250,8 @@ class FactoriesTest extends TestCase
             ->create();
 
         $this->assertSame('Xenon', $review->games->first()->game_name);
-        $this->assertSame(5, $review->score->review_graphics);
-        $this->assertSame(3, $review->score->review_sound);
+        $this->assertSame(5, $review->review_graphics);
+        $this->assertSame(3, $review->review_sound);
     }
 
     /**

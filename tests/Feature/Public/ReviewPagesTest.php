@@ -190,7 +190,7 @@ class ReviewPagesTest extends TestCase
         $this->assertSame(Review::REVIEW_UNPUBLISHED, $review->review_edit);
         $this->assertSame('A fine shoot-em-up.', $review->review_text);
         $this->assertSame($user->getKey(), $review->user_id);
-        $this->assertSame(5, $review->score->review_graphics);
+        $this->assertSame(5, $review->review_graphics);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());
     }
 
@@ -202,10 +202,10 @@ class ReviewPagesTest extends TestCase
             ->post(route('reviews.submit'), ['game' => $game->getKey(), 'text' => 'Short.'])
             ->assertRedirect();
 
-        $score = Review::sole()->score;
+        $review = Review::sole();
 
-        $this->assertSame(0, $score->review_graphics);
-        $this->assertSame(0, $score->review_overall);
+        $this->assertSame(0, $review->review_graphics);
+        $this->assertSame(0, $review->review_overall);
     }
 
     /**

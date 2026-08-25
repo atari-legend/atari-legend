@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScore;
 use App\Models\ScreenshotReviewComment;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
@@ -58,11 +57,15 @@ class ReviewsController extends Controller
             ['game' => 'required|exists:game,id']));
 
         $review = new Review([
-            'user_id'     => $request->author,
-            'draft'       => $request->draft ? true : false,
-            'review_edit' => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'review_text' => $request->text,
-            'review_date' => Carbon::parse($request->date)->timestamp,
+            'user_id'         => $request->author,
+            'draft'           => $request->draft ? true : false,
+            'review_edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'review_text'     => $request->text,
+            'review_date'     => Carbon::parse($request->date)->timestamp,
+            'review_graphics' => $request->graphics ?? 0,
+            'review_sound'    => $request->sound ?? 0,
+            'review_gameplay' => $request->gameplay ?? 0,
+            'review_overall'  => $request->overall ?? 0,
         ]);
 
         $game = Game::findOrFail($request->game);
@@ -70,13 +73,6 @@ class ReviewsController extends Controller
 
         $user = User::findOrFail($request->author);
         $user->reviews()->save($review);
-
-        $score = new ReviewScore();
-        $score->review_graphics = $request->graphics ?? 0;
-        $score->review_sound = $request->sound ?? 0;
-        $score->review_gameplay = $request->gameplay ?? 0;
-        $score->review_overall = $request->overall ?? 0;
-        $review->score()->save($score);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
@@ -100,19 +96,16 @@ class ReviewsController extends Controller
         $request->validate($this->getValidationRules());
 
         $review->update([
-            'user_id'     => $request->author,
-            'draft'       => $request->draft ? true : false,
-            'review_edit' => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'review_text' => $request->text,
-            'review_date' => Carbon::parse($request->date)->timestamp,
+            'user_id'         => $request->author,
+            'draft'           => $request->draft ? true : false,
+            'review_edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'review_text'     => $request->text,
+            'review_date'     => Carbon::parse($request->date)->timestamp,
+            'review_graphics' => $request->graphics ?? 0,
+            'review_sound'    => $request->sound ?? 0,
+            'review_gameplay' => $request->gameplay ?? 0,
+            'review_overall'  => $request->overall ?? 0,
         ]);
-
-        $score = $review->score ?? new ReviewScore();
-        $score->review_graphics = $request->graphics ?? 0;
-        $score->review_sound = $request->sound ?? 0;
-        $score->review_gameplay = $request->gameplay ?? 0;
-        $score->review_overall = $request->overall ?? 0;
-        $review->score()->save($score);
 
         collect($request->all())
             ->filter(fn ($v, $k) => Str::startsWith($k, 'screenshot_comment_'))

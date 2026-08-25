@@ -18,7 +18,10 @@ class Review extends Model implements Feedable
     protected $table = 'review_main';
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'draft', 'review_text', 'review_date', 'review_edit'];
+    protected $fillable = [
+        'user_id', 'draft', 'review_text', 'review_date', 'review_edit',
+        'review_graphics', 'review_sound', 'review_gameplay', 'review_overall',
+    ];
 
     protected $casts = [
         'review_date' => 'datetime:timestamp',
@@ -52,11 +55,6 @@ class Review extends Model implements Feedable
     public function getScreenshotComment(int $screenshotId)
     {
         return $this->screenshots->firstWhere('id', '=', $screenshotId);
-    }
-
-    public function score()
-    {
-        return $this->hasOne(ReviewScore::class);
     }
 
     public function comments()

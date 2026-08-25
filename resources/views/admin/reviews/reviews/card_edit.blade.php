@@ -128,7 +128,7 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="graphics" class="form-label">Graphics</label>
-                            <input type="number" value="{{ old('graphics', isset($review) ? $review->score?->review_graphics : 0) }}" min="0" max="10" class="form-control @error('graphics') is-invalid @enderror" id="graphics" name="graphics" required placeholder="From 0 (worse) to 10 (best)">
+                            <input type="number" value="{{ old('graphics', isset($review) ? $review->review_graphics : 0) }}" min="0" max="10" class="form-control @error('graphics') is-invalid @enderror" id="graphics" name="graphics" required placeholder="From 0 (worse) to 10 (best)">
                             @error('graphics')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -137,7 +137,7 @@
                         </div>
                         <div class="col">
                             <label for="sound" class="form-label">Sound</label>
-                            <input type="number" value="{{ old('sound', isset($review) ? $review->score?->review_sound : 0) }}" min="0" max="10" class="form-control @error('sound') is-invalid @enderror" id="sound" name="sound" required placeholder="From 0 (worse) to 10 (best)">
+                            <input type="number" value="{{ old('sound', isset($review) ? $review->review_sound : 0) }}" min="0" max="10" class="form-control @error('sound') is-invalid @enderror" id="sound" name="sound" required placeholder="From 0 (worse) to 10 (best)">
                             @error('sound')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -148,7 +148,7 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="gameplay" class="form-label">Gameplay</label>
-                            <input type="number" value="{{ old('gameplay', isset($review) ? $review->score?->review_gameplay : 0) }}" min="0" max="10" class="form-control @error('gameplay') is-invalid @enderror" id="gameplay" name="gameplay" required placeholder="From 0 (worse) to 10 (best)">
+                            <input type="number" value="{{ old('gameplay', isset($review) ? $review->review_gameplay : 0) }}" min="0" max="10" class="form-control @error('gameplay') is-invalid @enderror" id="gameplay" name="gameplay" required placeholder="From 0 (worse) to 10 (best)">
                             @error('gameplay')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -157,7 +157,7 @@
                         </div>
                         <div class="col">
                             <label for="overall" class="form-label">Overall</label>
-                            <input type="number" value="{{ old('overall', isset($review) ? $review->score?->review_overall : 0) }}" min="0" max="10" class="form-control @error('overall') is-invalid @enderror" id="overall" name="overall" required placeholder="From 0 (worse) to 10 (best)">
+                            <input type="number" value="{{ old('overall', isset($review) ? $review->review_overall : 0) }}" min="0" max="10" class="form-control @error('overall') is-invalid @enderror" id="overall" name="overall" required placeholder="From 0 (worse) to 10 (best)">
                             @error('overall')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
