@@ -65,7 +65,7 @@ class GameScreenshotsController extends Controller
         Storage::disk('public')->delete($screenshot->getPath('game'));
 
         // And the row itself, which nothing points at now. Detaching the pivot
-        // and unlinking the file used to be the whole of it, so screenshot_main
+        // and unlinking the file used to be the whole of it, so screenshots
         // kept an id per screenshot anyone had ever removed - rows with no file
         // behind them and no game in front of them.
         $screenshot->delete();

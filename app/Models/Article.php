@@ -12,7 +12,6 @@ class Article extends Model implements Feedable
 {
     use HasFactory;
 
-    protected $table = 'article_main';
     public $timestamps = false;
 
     protected $fillable = [

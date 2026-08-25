@@ -34,7 +34,7 @@ class AdminStatisticsHelper
     const YEAR_MAX = 2030;
 
     /**
-     * The shared `draft` flag on review_main, interview_main and article_main.
+     * The shared `draft` flag on reviews, interviews and articles.
      */
     const PUBLISHED = 0;
     const DRAFT = 1;
@@ -49,7 +49,7 @@ class AdminStatisticsHelper
         return [
             'Games'       => DB::table('game')->count(),
             'Releases'    => DB::table('game_release')->count(),
-            'Screenshots' => DB::table('screenshot_main')->count(),
+            'Screenshots' => DB::table('screenshots')->count(),
             'Individuals' => DB::table('individuals')->count(),
             'Companies'   => DB::table('pub_dev')->count(),
             'Users'       => DB::table('users')->count(),
@@ -101,12 +101,12 @@ class AdminStatisticsHelper
                 'Game / music links' => DB::table('game_sndh')->count(),
             ],
             'Content' => [
-                'Reviews'                => DB::table('review_main')->where('draft', self::PUBLISHED)->count(),
-                'Reviews (draft)'        => DB::table('review_main')->where('draft', self::DRAFT)->count(),
-                'Interviews'             => DB::table('interview_main')->where('draft', self::PUBLISHED)->count(),
-                'Interviews (draft)'     => DB::table('interview_main')->where('draft', self::DRAFT)->count(),
-                'Articles'               => DB::table('article_main')->where('draft', self::PUBLISHED)->count(),
-                'Articles (draft)'       => DB::table('article_main')->where('draft', self::DRAFT)->count(),
+                'Reviews'                => DB::table('reviews')->where('draft', self::PUBLISHED)->count(),
+                'Reviews (draft)'        => DB::table('reviews')->where('draft', self::DRAFT)->count(),
+                'Interviews'             => DB::table('interviews')->where('draft', self::PUBLISHED)->count(),
+                'Interviews (draft)'     => DB::table('interviews')->where('draft', self::DRAFT)->count(),
+                'Articles'               => DB::table('articles')->where('draft', self::PUBLISHED)->count(),
+                'Articles (draft)'       => DB::table('articles')->where('draft', self::DRAFT)->count(),
                 'News items'             => DB::table('news')->count(),
                 'Did you know?'          => DB::table('trivia')->count(),
                 'Quotes'                 => DB::table('trivia_quotes')->count(),
@@ -420,9 +420,9 @@ class AdminStatisticsHelper
     {
         $sources = [
             'News'       => DB::table('news')->pluck('news_date'),
-            'Reviews'    => DB::table('review_main')->pluck('review_date'),
-            'Interviews' => DB::table('interview_main')->pluck('interview_date'),
-            'Articles'   => DB::table('article_main')->pluck('article_date'),
+            'Reviews'    => DB::table('reviews')->pluck('review_date'),
+            'Interviews' => DB::table('interviews')->pluck('interview_date'),
+            'Articles'   => DB::table('articles')->pluck('article_date'),
         ];
 
         $years = [];

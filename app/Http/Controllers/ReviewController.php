@@ -28,7 +28,7 @@ class ReviewController extends Controller
         if ($request->filled('author')) {
             $reviews->whereHas('user', function (Builder $query) use ($request) {
                 // Inside whereHas the query runs against `users`, so this is
-                // User's own key rather than review_main's foreign key.
+                // User's own key rather than reviews's foreign key.
                 $query->where('users.id', $request->input('author'));
             });
         }

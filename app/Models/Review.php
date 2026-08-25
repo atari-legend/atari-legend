@@ -15,7 +15,6 @@ class Review extends Model implements Feedable
     const REVIEW_UNPUBLISHED = 1;
     const REVIEW_PUBLISHED = 0;
 
-    protected $table = 'review_main';
     public $timestamps = false;
 
     protected $fillable = [

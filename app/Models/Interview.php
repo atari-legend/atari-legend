@@ -12,7 +12,6 @@ class Interview extends Model implements Feedable
 {
     use HasFactory;
 
-    protected $table = 'interview_main';
     public $timestamps = false;
 
     protected $fillable = [

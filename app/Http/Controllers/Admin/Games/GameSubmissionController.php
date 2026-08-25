@@ -97,7 +97,7 @@ class GameSubmissionController extends Controller
     public function destroy(GameSubmitInfo $submission)
     {
         // The screenshot rows go with the files. Deleting only the file left an
-        // orphan in screenshot_main per submission anyone had ever thrown away.
+        // orphan in screenshots per submission anyone had ever thrown away.
         foreach ($submission->screenshots as $screenshot) {
             Storage::disk('public')->delete($screenshot->getPath('game_submission'));
             $submission->screenshots()->detach($screenshot);

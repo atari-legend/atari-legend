@@ -298,7 +298,7 @@ class E2ESeeder extends Seeder
             'license' => 'Commercial',
         ]);
 
-        $this->insert('screenshot_main', ['id' => self::SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshots', ['id' => self::SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('screenshot_game', [
             'game_id'       => self::GAME_ID,
             'screenshot_id' => self::SCREENSHOT_ID,
@@ -391,7 +391,7 @@ class E2ESeeder extends Seeder
         $this->insert('article_type', ['id' => self::ARTICLE_TYPE_ID], [
             'article_type' => self::ARTICLE_TYPE_NAME,
         ]);
-        $this->insert('article_main', ['id' => self::ARTICLE_ID], [
+        $this->insert('articles', ['id' => self::ARTICLE_ID], [
             'user_id'         => self::USER_ADMIN_ID,
             'article_type_id' => self::ARTICLE_TYPE_ID,
             'article_title'   => self::ARTICLE_TITLE,
@@ -401,7 +401,7 @@ class E2ESeeder extends Seeder
         ]);
 
         // Same chain as the interview screenshot below, one table along.
-        $this->insert('screenshot_main', ['id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshots', ['id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('screenshot_article', ['id' => 1], [
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
@@ -412,7 +412,7 @@ class E2ESeeder extends Seeder
         ]);
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
-        $this->insert('review_main', ['id' => self::REVIEW_ID], [
+        $this->insert('reviews', ['id' => self::REVIEW_ID], [
             'user_id'     => self::USER_ADMIN_ID,
             'review_text' => 'Great game!',
             'review_date' => now()->timestamp,
@@ -436,7 +436,7 @@ class E2ESeeder extends Seeder
         // in the text is what it jumps to. Nothing else in the fixture renders
         // either, so without this pair Helper::bbCode() could stop emitting the
         // anchor entirely and every interview test would still pass.
-        $this->insert('interview_main', ['id' => self::INTERVIEW_ID], [
+        $this->insert('interviews', ['id' => self::INTERVIEW_ID], [
             'user_id'            => self::USER_ADMIN_ID,
             'individual_id'      => self::INDIVIDUAL_ID,
             'interview_intro'    => 'Playwright test interview intro.',
@@ -451,7 +451,7 @@ class E2ESeeder extends Seeder
         // $screenshot->pivot->comment->comment_text without guarding it, so a
         // screenshot seeded without its comment would 500 the public page
         // rather than render an empty caption.
-        $this->insert('screenshot_main', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshots', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('screenshot_interview', ['id' => 1], [
             'interview_id'  => self::INTERVIEW_ID,
             'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
@@ -632,7 +632,7 @@ class E2ESeeder extends Seeder
 
     private function seedOthers(): void
     {
-        $this->insert('screenshot_main', ['id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
+        $this->insert('screenshots', ['id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('spotlight', ['id' => self::SPOTLIGHT_ID], [
             'screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID,
             'spotlight'     => 'Playwright test spotlight.',

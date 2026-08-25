@@ -151,7 +151,7 @@ test.describe('Game info submissions', () => {
     await page.goto(`/games/${game.slug}`);
 
     // No attachment this time: the upload is the test above, and a screenshot
-    // here would leave an orphan screenshot_main row behind for nothing - see
+    // here would leave an orphan screenshots row behind for nothing - see
     // follow-up 11 in the README.
     const form = page.locator(`form[action$="/${game.slug}/submitInfo"]`);
     await form.locator('textarea[name="info"]').fill(info);

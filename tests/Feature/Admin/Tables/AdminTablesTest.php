@@ -443,7 +443,7 @@ class AdminTablesTest extends AdminTestCase
 
     /**
      * The interviews table left joins individuals and selects
-     * interview_main.* alongside individuals.ind_name. An interview with no
+     * interviews.* alongside individuals.ind_name. An interview with no
      * subject is the row that used to null out the primary key of every row
      * in a join like this one, by hydrating the model from the joined table's
      * id -- silently, with no exception and nothing in the log. So this

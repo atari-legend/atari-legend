@@ -28,7 +28,7 @@ class Game extends Model
      * would be more than one DELETE. Alternative titles, cross-links, comments
      * and votes all come out cleanly and are handled by
      * GameController@destroy, so they are not listed here. Screenshots are: the
-     * pivot has no foreign key, the screenshot_main row it points at has no
+     * pivot has no foreign key, the screenshots row it points at has no
      * foreign key, and there is a file on disk.
      *
      * Genres, engines, controls, sound hardware and programming languages never

@@ -56,7 +56,7 @@ class ArticlesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Article::query()->select('article_main.*');
+        return Article::query()->select('articles.*');
     }
 
     public function filters(): array

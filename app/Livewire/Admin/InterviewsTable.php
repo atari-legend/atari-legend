@@ -58,8 +58,8 @@ class InterviewsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Interview::select('interview_main.*', 'individuals.ind_name')
-            ->leftJoin('individuals', 'individuals.id', '=', 'interview_main.individual_id');
+        return Interview::select('interviews.*', 'individuals.ind_name')
+            ->leftJoin('individuals', 'individuals.id', '=', 'interviews.individual_id');
     }
 
     public function filters(): array
@@ -75,7 +75,7 @@ class InterviewsTable extends DataTableComponent
         return [
             'author' => SelectFilter::make('Author')
                 ->options($authors)
-                ->filter(fn ($query, $term) => $query->where('interview_main.user_id', '=', $term)),
+                ->filter(fn ($query, $term) => $query->where('interviews.user_id', '=', $term)),
             'draft'  => SelectFilter::make('Draft')
                 ->options(['' => 'Any', true => 'Yes', false => 'No'])
                 ->filter(fn ($query, $term) => $query->where('draft', '=', $term)),

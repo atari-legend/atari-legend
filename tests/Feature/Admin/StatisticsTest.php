@@ -113,7 +113,7 @@ class StatisticsTest extends TestCase
         $this->game(3, 'Rick Dangerous');
         $this->game(4, 'Turrican');
 
-        DB::table('screenshot_main')->insert(['id' => 1, 'imgext' => 'png']);
+        DB::table('screenshots')->insert(['id' => 1, 'imgext' => 'png']);
         DB::table('screenshot_game')->insert(['game_id' => 1, 'screenshot_id' => 1]);
 
         $games = collect(AdminStatisticsHelper::coverage()['Games'])
@@ -131,7 +131,7 @@ class StatisticsTest extends TestCase
     {
         $this->game(1, 'Xenon');
 
-        DB::table('screenshot_main')->insert([
+        DB::table('screenshots')->insert([
             ['id' => 1, 'imgext' => 'png'],
             ['id' => 2, 'imgext' => 'png'],
         ]);
