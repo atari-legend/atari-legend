@@ -85,7 +85,7 @@ class BlankProfileTest extends TestCase
         ]);
 
         $this->assertNull(
-            PublisherDeveloper::where('pub_dev_name', 'Ocean')->firstOrFail()->text->pub_dev_profile
+            PublisherDeveloper::where('pub_dev_name', 'Ocean')->firstOrFail()->pub_dev_profile
         );
     }
 
@@ -98,7 +98,7 @@ class BlankProfileTest extends TestCase
 
         $this->assertSame(
             'Founded in 1983',
-            PublisherDeveloper::where('pub_dev_name', 'Infogrames')->firstOrFail()->text->pub_dev_profile
+            PublisherDeveloper::where('pub_dev_name', 'Infogrames')->firstOrFail()->pub_dev_profile
         );
     }
 }

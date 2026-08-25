@@ -33,10 +33,10 @@
                                     <i title="View developer logo" class="far fa-image ms-1"></i>
                                 </a>
                             @endif
-                            @if ($developer->text?->pub_dev_profile !== null && trim($developer->text?->pub_dev_profile) !== '')
+                            @if ($developer->pub_dev_profile !== null && trim($developer->pub_dev_profile) !== '')
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->getKey() }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->getKey() }}"><i class="fas fa-info-circle text-muted"></i></a>
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->getKey() }}">
-                                    {!! Helper::bbCode(nl2br(e($developer->text->pub_dev_profile), false)) !!}
+                                    {!! Helper::bbCode(nl2br(e($developer->pub_dev_profile), false)) !!}
                                 </p>
                             @endif
                             <br>

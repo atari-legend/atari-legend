@@ -261,11 +261,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_companies_table_filters_on_having_a_logo(): void
     {
-        $withLogo = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
-        $withLogo->text()->create(['pub_dev_profile' => null, 'pub_dev_imgext' => 'png']);
-
-        $withoutLogo = PublisherDeveloper::factory()->create(['pub_dev_name' => 'US Gold']);
-        $withoutLogo->text()->create(['pub_dev_profile' => null, 'pub_dev_imgext' => null]);
+        PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean', 'pub_dev_imgext' => 'png']);
+        PublisherDeveloper::factory()->create(['pub_dev_name' => 'US Gold', 'pub_dev_imgext' => null]);
 
         Livewire::test(GameCompaniesTable::class)->assertSeeInOrder(['Ocean', 'US Gold']);
 

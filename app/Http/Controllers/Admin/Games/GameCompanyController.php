@@ -6,7 +6,6 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\PublisherDeveloper;
-use App\Models\PublisherDeveloperText;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -75,11 +74,10 @@ class GameCompanyController extends Controller
 
         // A blank field is stored as NULL rather than an empty string, so that
         // "has a profile" stays a question the database can answer
-        $text = new PublisherDeveloperText([
+        $company->update([
             'pub_dev_profile' => $request->filled('profile') ? $request->profile : null,
             'pub_dev_imgext'  => $ext,
         ]);
-        $company->text()->save($text);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
@@ -104,7 +102,7 @@ class GameCompanyController extends Controller
         // the same trap as GameIndividualController::update(): writing null
         // here dropped the logo on any later edit, and destroyLogo() reads the
         // same column to find the file.
-        $ext = $company->text?->pub_dev_imgext;
+        $ext = $company->pub_dev_imgext;
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $logo->storeAs('images/company_logos/', $company->getKey() . '.' . $logo->extension(), 'public');
@@ -122,20 +120,10 @@ class GameCompanyController extends Controller
         }
 
         $company->update([
-            'pub_dev_name' => $request->name,
-        ]);
-
-        $attrs = [
+            'pub_dev_name'    => $request->name,
             'pub_dev_profile' => $request->filled('profile') ? $request->profile : null,
             'pub_dev_imgext'  => $ext,
-        ];
-
-        if ($company->text) {
-            $company->text->update($attrs);
-        } else {
-            $text = new PublisherDeveloperText($attrs);
-            $company->text()->save($text);
-        }
+        ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
@@ -171,9 +159,9 @@ class GameCompanyController extends Controller
     public function destroyLogo(PublisherDeveloper $company)
     {
         if ($company->logo) {
-            Storage::disk('public')->delete('images/company_logos/' . $company->getKey() . '.' . $company->text->pub_dev_imgext);
-            $company->text->pub_dev_imgext = null;
-            $company->text->save();
+            Storage::disk('public')->delete($company->path);
+            $company->pub_dev_imgext = null;
+            $company->save();
 
             ChangelogHelper::insert([
                 'action'           => Changelog::DELETE,

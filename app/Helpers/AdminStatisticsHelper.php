@@ -125,7 +125,7 @@ class AdminStatisticsHelper
                 'Sub-crews'              => DB::table('sub_crew')->count(),
                 'Crew members'           => DB::table('crew_individual')->count(),
                 'Companies'              => DB::table('pub_dev')->count(),
-                'Companies with profile' => self::countWithText('pub_dev_text', 'pub_dev_profile', 'pub_dev_id'),
+                'Companies with profile' => self::countWithText('pub_dev', 'pub_dev_profile', 'id'),
             ],
             'Community' => [
                 'Registered users'  => DB::table('users')->count(),
@@ -181,7 +181,7 @@ class AdminStatisticsHelper
             ],
             'Other' => [
                 self::coverageRow('Individuals with a bio', self::countWithText('individuals', 'ind_profile', 'id'), $individuals),
-                self::coverageRow('Companies with a profile', self::countWithText('pub_dev_text', 'pub_dev_profile', 'pub_dev_id'), $companies),
+                self::coverageRow('Companies with a profile', self::countWithText('pub_dev', 'pub_dev_profile', 'id'), $companies),
                 self::coverageRow('Menu disks with a dump', DB::table('menu_disks')->whereNotNull('menu_disk_dump_id')->count(), $menuDisks),
                 self::coverageRow('Menu disks with a screenshot', DB::table('menu_disk_screenshots')->distinct('menu_disk_id')->count(), $menuDisks),
                 self::coverageRow('SNDH files linked to a game', DB::table('game_sndh')->distinct('sndh_id')->count(), $sndhs),
@@ -506,11 +506,11 @@ class AdminStatisticsHelper
     /**
      * Count the owners whose text column actually holds something.
      *
-     * individual_text and pub_dev_text have a row for nearly every individual
-     * and company, so the row itself says nothing about whether a bio was ever
-     * written. Blank values are NULL rather than an empty string, thanks to the
+     * A row exists for every individual and company, so the row itself says
+     * nothing about whether a bio was ever written - only a non-NULL profile
+     * does. Blank values are NULL rather than an empty string, thanks to the
      * 2026_08_09_100000_normalise_blank_profiles migration and the admin
-     * controllers that write these tables.
+     * controllers that write these columns.
      *
      * @param  string  $table
      * @param  string  $column

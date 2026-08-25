@@ -30,7 +30,6 @@ use App\Models\MenuSoftware;
 use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\PublisherDeveloper;
-use App\Models\PublisherDeveloperText;
 use App\Models\ReleaseScan;
 use App\Models\Resolution;
 use App\Models\Review;
@@ -354,13 +353,6 @@ class FactoriesTest extends TestCase
             $this->assertSame($game->slug, Str::slug($game->slug), "Slug '{$game->slug}' is not slug-safe.");
             $this->assertNotSame('', $game->slug);
         }
-    }
-
-    public function test_unused_model_is_not_created_by_accident(): void
-    {
-        Individual::factory()->create();
-
-        $this->assertSame(0, PublisherDeveloperText::query()->count());
     }
 
 }

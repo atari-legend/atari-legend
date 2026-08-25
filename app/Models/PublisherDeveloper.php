@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,13 +13,7 @@ class PublisherDeveloper extends Model
     protected $table = 'pub_dev';
     public $timestamps = false;
 
-    protected $fillable = ['pub_dev_name'];
-
-    public function text()
-    {
-        // FIXME: The DB structure actually allows many
-        return $this->hasOne(PublisherDeveloperText::class, 'pub_dev_id');
-    }
+    protected $fillable = ['pub_dev_name', 'pub_dev_profile', 'pub_dev_imgext'];
 
     public function games()
     {
@@ -30,10 +25,20 @@ class PublisherDeveloper extends Model
         return $this->hasMany(GameRelease::class, 'pub_dev_id');
     }
 
+    public function getFileAttribute()
+    {
+        return Helper::filename($this->getKey(), $this->pub_dev_imgext);
+    }
+
+    public function getPathAttribute()
+    {
+        return 'images/company_logos/' . $this->file;
+    }
+
     public function getLogoAttribute()
     {
-        if ($this->text?->file) {
-            return asset("storage/images/company_logos/{$this->text->file}");
+        if ($this->file) {
+            return asset('storage/' . $this->path);
         } else {
             return null;
         }

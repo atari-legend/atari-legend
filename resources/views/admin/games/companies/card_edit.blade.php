@@ -63,7 +63,7 @@
             <div class="mb-3">
                 <label for="profile" class="form-label">Profile</label>
                 <textarea class="form-control sceditor" id="profile" name="profile"
-                    rows="10">{{ old('profile', $company->text?->pub_dev_profile ?? '') }}</textarea>
+                    rows="10">{{ old('profile', $company->pub_dev_profile ?? '') }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

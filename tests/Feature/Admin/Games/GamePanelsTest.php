@@ -141,7 +141,7 @@ class GamePanelsTest extends AdminTestCase
         $company = PublisherDeveloper::sole();
 
         $this->assertSame('Ocean', $company->pub_dev_name);
-        $this->assertSame('A Manchester publisher.', $company->text->pub_dev_profile);
+        $this->assertSame('A Manchester publisher.', $company->pub_dev_profile);
         $this->assertChangelog(Changelog::INSERT, 'Company', 'Ocean');
     }
 
