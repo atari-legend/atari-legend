@@ -7,7 +7,12 @@ tables for the content, it could be a single table that contains all the columns
 of the two."* Renaming those keys before the merge is work done twice and
 discarded once. This plan is that merge.
 
-**Status: proposed, decisions taken.** Every figure below was measured against
+**Status: executed 2026-08-25**, as six commits on `refactor/main-text-table-merge`,
+one per phase, in the order below. Every figure in this plan was re-measured
+during implementation and all of them held. What the implementation learned that
+the plan did not say is recorded in "What executing it added", at the end.
+
+**Status when it was written: proposed, decisions taken.** Every figure below was measured against
 this repository and the local MariaDB 10.11.18 on 2026-08-24, and the commands
 are named so they can be re-run. The migration template in "The migration, and
 what it was tested against" was executed for real — `up`, `rollback`, `up` again
@@ -1106,3 +1111,98 @@ Named gates: `tests/Feature/Admin/Games/GamePanelsTest.php:144`,
   campaign with no data risk and a large diff, and there is no reason to bundle
   it here.
 - **`screenshot_main` gains nothing but a name.** Nothing to merge it with.
+
+## What executing it added
+
+Six things the plan did not say, found by running it. Each is in the commit for
+its phase; they are collected here so the next campaign does not rediscover them.
+
+**A failed `down()` leaves its recreated table behind.** MariaDB does not roll
+DDL back, so when Phase 2's `down()` was deliberately given the template's
+`NOT NULL` columns to prove the hazard, `Schema::create('interview_text')`
+had already run when the `insertUsing` aborted. The migration stayed marked as
+applied and an empty `interview_text` was left in the schema. Recovery is a
+manual `DROP TABLE` before retrying. The plan's nullability warning is correct;
+this is what its failure actually costs.
+
+**A rollback destroys the evidence Phase 5's hazard needs.** Its `down()` writes
+one row per individual, which collapses the fourteen duplicates. So the
+no-`LIMIT` failure cannot be reproduced by `up` / `rollback` / `up` — after one
+round trip the broken version passes. Proving it needs a database reloaded from
+a pre-campaign dump. It was proved:
+`SQLSTATE[21000]: Cardinality violation: 1242 Subquery returns more than 1 row`,
+raised after the three columns were added and with the guard having passed,
+exactly as described.
+
+**And reloading a dump over a live database is not enough.** `mysqldump` output
+does not drop tables that are absent from it, so restoring the pre-campaign dump
+onto a database where Phase 4 had already run left `articles` *and*
+`article_main` both present, and the next `migrate` died on
+`1050 Table 'articles' already exists`. `DROP DATABASE` then restore is the only
+version of "restore the dump" that works here. Worth knowing before an incident,
+since this is the recovery path the plan recommends taking a dump for.
+
+**A relation named as a string is invisible to the greps this plan specifies.**
+`grep -rn '\->text'` does not find `whereHas('text', ...)`, and Phase 5 had
+three such sites: `Cards\Interview` — which is what puts the "Who is it?" card
+on the home page, so the miss was a 500 on `/` — and both halves of
+`GameCompaniesTable`'s logo filter in Phase 6. Grep for `'text'` inside
+`whereHas|has|with|load|doesntHave` as well as for the arrow form.
+
+**Rappasoft's `builder()` needs an explicit `select()`.** Phase 1 removed
+`ArticlesTable`'s join and with it its `select('article_main.*', ...)`, leaving a
+bare `Article::query()`. That throws `MissingAttributeException` for `id` when
+the table renders. `Article::query()->select('articles.*')` is the form, which is
+what `UsersTable` already did.
+
+**Phase 6's logo filter got slightly wider, on purpose.** It was
+`whereHas('text', fn ($q) => $q->whereNull('pub_dev_imgext'))`, so the 202
+companies with no `pub_dev_text` row at all matched *neither* "Yes" nor "No" and
+silently vanished from both. Post-merge `whereNull('pub_dev_imgext')` puts them
+in "No", which is the true answer. Commented at the call site rather than
+preserved.
+
+### The two E2E fixture rows that could not survive
+
+Both were deliberate coverage, and neither could stay:
+
+**The subject-less interview.** `E2ESeeder` carried an interview with no
+individual *and* no text row, to give the admin table a left join with no match.
+It was invisible to the public list only because that list *inner* joined
+`interview_text`. Post-merge it renders, and `interviews/card_list.blade.php`
+dereferences `->individual` four times with no guard, so `/interviews` 500s.
+Guarding a view for a state production cannot reach — all 81 interviews have a
+subject and the foreign key cascades — was the wrong trade, so the coverage moved
+to `AdminTablesTest::test_the_interviews_table_keeps_its_own_key_when_the_subject_is_missing`,
+which asserts the edit link's id. That is strictly stronger than the row it
+replaces: it names the regression, where the fixture only proved a 200. Confirmed
+to fail with `Missing required parameter [interview]` against a restored
+unqualified `select()`.
+
+**Nothing else in `E2ESeeder` needed a new row**, including for Phase 3: the
+fixture review has never had a score row, so nullable columns reproduce its
+behaviour exactly.
+
+### Gates, as actually run
+
+Per phase: `artisan test`, the full Playwright suite (319, unchanged throughout),
+`al:audit-relationship-keys`, and `up` / `rollback` / `up` on the dev MariaDB
+with production data. PHPUnit went 1011 → 1011 → 1011 → 1011 → 1006 → 1005.
+Phases 1 and 2 each hold flat because each deleted one case and added one; the
+net loss of six is four `NormaliseBlankProfilesTest` cases and one merged
+avatar-404 in Phase 5, and one factory guard in Phase 6. Every deletion is named
+in its commit, and every one lost its *subject* rather than its assertion. The
+audit went 158/132 clean → 153/128, divergent 26 → 25 in Phase 6 only, exactly
+as predicted.
+
+Two whole-campaign rehearsals were run against a database reloaded from a
+pre-campaign dump, which is the shape production will be in:
+
+- **The deploy.** One `artisan migrate --force` ran all six, and they share one
+  batch — batch 42, six rows.
+- **The revert.** A bare `artisan migrate:rollback` undid all six in reverse
+  filename order and restored the pre-campaign schema exactly: 5 article_text,
+  81 interview_text, 126 review_score, 5,405 individual_text, 1,387 pub_dev_text.
+  Phase 4's `down()` renamed the tables back before Phase 1's recreated
+  `article_text` against `article_main`, which is the ordering the plan calls
+  load-bearing. It is.
