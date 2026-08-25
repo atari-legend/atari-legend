@@ -462,7 +462,6 @@ class E2ESeeder extends Seeder
         ]);
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 
-
         $this->insert('news', ['id' => self::NEWS_ID], [
             'news_headline' => self::NEWS_HEADLINE,
             'news_text'     => 'Playwright test news post.',

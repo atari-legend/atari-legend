@@ -79,7 +79,7 @@ return new class extends Migration
             DB::table('individuals')->update([
                 $column => DB::raw(
                     "(SELECT t.`{$column}` FROM `individual_text` t "
-                    . "WHERE t.`individual_id` = `individuals`.`id` ORDER BY t.`id` LIMIT 1)"
+                    . 'WHERE t.`individual_id` = `individuals`.`id` ORDER BY t.`id` LIMIT 1)'
                 ),
             ]);
         }

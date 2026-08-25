@@ -354,5 +354,4 @@ class FactoriesTest extends TestCase
             $this->assertNotSame('', $game->slug);
         }
     }
-
 }
