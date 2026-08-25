@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Admin\Tables;
 
+use App\Livewire\Admin\ArticlesTable;
 use App\Livewire\Admin\CommentsTable;
 use App\Livewire\Admin\CrewsTable;
 use App\Livewire\Admin\Games\GameCompaniesTable;
 use App\Livewire\Admin\Games\GameIndividualsTable;
 use App\Livewire\Admin\Games\GameSeriesTable;
 use App\Livewire\Admin\Games\GameSubmissionsTable;
+use App\Livewire\Admin\InterviewsTable;
 use App\Livewire\Admin\LinkCategoriesTable;
 use App\Livewire\Admin\LinksTable;
 use App\Livewire\Admin\MagazineIssuesTable;
@@ -16,11 +18,13 @@ use App\Livewire\Admin\NewsSubmissionsTable;
 use App\Livewire\Admin\SoftwareTable;
 use App\Livewire\Admin\SpotlightsTable;
 use App\Livewire\Admin\UsersTable;
+use App\Models\Article;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\GameSeries;
 use App\Models\GameSubmitInfo;
 use App\Models\Individual;
+use App\Models\Interview;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\MenuSoftware;
@@ -32,6 +36,7 @@ use App\Models\Spotlight;
 use App\Models\User;
 use App\Models\Website;
 use App\Models\WebsiteCategory;
+use Carbon\Carbon;
 use Livewire\Livewire;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -256,11 +261,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_companies_table_filters_on_having_a_logo(): void
     {
-        $withLogo = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
-        $withLogo->text()->create(['pub_dev_profile' => null, 'pub_dev_imgext' => 'png']);
-
-        $withoutLogo = PublisherDeveloper::factory()->create(['pub_dev_name' => 'US Gold']);
-        $withoutLogo->text()->create(['pub_dev_profile' => null, 'pub_dev_imgext' => null]);
+        PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean', 'pub_dev_imgext' => 'png']);
+        PublisherDeveloper::factory()->create(['pub_dev_name' => 'US Gold', 'pub_dev_imgext' => null]);
 
         Livewire::test(GameCompaniesTable::class)->assertSeeInOrder(['Ocean', 'US Gold']);
 
@@ -413,6 +415,51 @@ class AdminTablesTest extends AdminTestCase
             ->set('search', 'Zero')
             ->assertSee('Zero day release')
             ->assertDontSee('A new dump');
+    }
+
+    /**
+     * The only assertion in this file about a *rendered date*, and it is here
+     * for a reason. article_date is an integer timestamp with a
+     * `datetime:timestamp` cast, and the column used to be read off a join,
+     * where it arrived raw and was passed through Carbon::createFromTimestamp().
+     * Handing that method a Carbon does not throw on Carbon 3 -- it stringifies
+     * the date and sums the digits, rendering "Jan 1, 1970" in every row. So a
+     * regression here is silent everywhere else: the page is still a 200, the
+     * markup is still well formed, and only the date is wrong.
+     */
+    public function test_the_articles_table_renders_the_date(): void
+    {
+        Article::factory()->titled('Coding the blitter')->create([
+            'article_date' => Carbon::parse('2018-01-21')->timestamp,
+        ]);
+
+        Livewire::test(ArticlesTable::class)
+            ->assertSee('Coding the blitter')
+            ->assertSee('Jan 21, 2018');
+    }
+
+    /**
+     * The interviews table left joins individuals and selects
+     * interviews.* alongside individuals.ind_name. An interview with no
+     * subject is the row that used to null out the primary key of every row
+     * in a join like this one, by hydrating the model from the joined table's
+     * id -- silently, with no exception and nothing in the log. So this
+     * asserts the edit link, which is built from getKey(), rather than the
+     * rendered name.
+     *
+     * The E2E fixture used to carry a subject-less interview for the same
+     * reason. It cannot any more: before interview_text was merged in, the
+     * public list inner joined it and never saw such a row, and now it would
+     * render one and fail on the missing name. This assertion is the better
+     * home for it -- it names the id it expects, where the fixture only
+     * proved the page was a 200.
+     */
+    public function test_the_interviews_table_keeps_its_own_key_when_the_subject_is_missing(): void
+    {
+        $interview = Interview::factory()->create(['individual_id' => null]);
+
+        Livewire::test(InterviewsTable::class)
+            ->assertSee(route('admin.interviews.interviews.edit', $interview->getKey()), escape: false);
     }
 
     /**

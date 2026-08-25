@@ -6,7 +6,6 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Interview;
-use App\Models\InterviewText;
 use App\Models\Screenshot;
 use App\Models\ScreenshotInterview;
 use App\Models\ScreenshotInterviewComment;
@@ -58,20 +57,15 @@ class InterviewsController extends Controller
         ));
 
         $interview = new Interview([
-            'user_id'       => $request->author,
-            'individual_id' => $request->individual,
-            'draft'         => $request->draft ? true : false,
-        ]);
-        $interview->save();
-
-        $text = new InterviewText([
-            'interview_id'       => $interview->getKey(),
+            'user_id'            => $request->author,
+            'individual_id'      => $request->individual,
+            'draft'              => $request->draft ? true : false,
             'interview_text'     => $request->text,
             'interview_intro'    => $request->intro,
             'interview_chapters' => $request->chapters,
             'interview_date'     => Carbon::parse($request->date)->timestamp,
         ]);
-        $text->save();
+        $interview->save();
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
@@ -95,16 +89,13 @@ class InterviewsController extends Controller
         $request->validate($this->getValidationRules());
 
         $interview->update([
-            'user_id' => $request->author,
-            'draft'   => $request->draft ? true : false,
+            'user_id'            => $request->author,
+            'draft'              => $request->draft ? true : false,
+            'interview_text'     => $request->text,
+            'interview_intro'    => $request->intro,
+            'interview_chapters' => $request->chapters,
+            'interview_date'     => Carbon::parse($request->date)->timestamp,
         ]);
-
-        $text = $interview->texts->first() ?? new InterviewText(['interview_id' => $interview->getKey()]);
-        $text->interview_text = $request->text;
-        $text->interview_intro = $request->intro;
-        $text->interview_chapters = $request->chapters;
-        $text->interview_date = Carbon::parse($request->date)->timestamp;
-        $text->save();
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,

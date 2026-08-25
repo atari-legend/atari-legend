@@ -5,7 +5,6 @@ namespace Tests\Feature\Public;
 use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\Individual;
-use App\Models\IndividualText;
 use App\Models\ReleaseScan;
 use App\Models\Screenshot;
 use App\Models\Sndh;
@@ -152,12 +151,8 @@ class ResourceControllersTest extends TestCase
     {
         $this->requireWebp();
 
-        $individual = Individual::factory()->create();
-        $text = IndividualText::forceCreate([
-            'individual_id'     => $individual->getKey(),
-            'ind_imgext'        => 'png',
-        ]);
-        $this->storePng($text->path, 800, 800);
+        $individual = Individual::factory()->create(['ind_imgext' => 'png']);
+        $this->storePng($individual->path, 800, 800);
 
         $response = $this->get(route('individuals.avatar', $individual))
             ->assertOk()
@@ -173,12 +168,8 @@ class ResourceControllersTest extends TestCase
     {
         $this->requireWebp();
 
-        $individual = Individual::factory()->create();
-        $text = IndividualText::forceCreate([
-            'individual_id'     => $individual->getKey(),
-            'ind_imgext'        => 'png',
-        ]);
-        $this->storePng($text->path, 120, 90);
+        $individual = Individual::factory()->create(['ind_imgext' => 'png']);
+        $this->storePng($individual->path, 120, 90);
 
         $response = $this->get(route('individuals.avatar', $individual))->assertOk();
 
@@ -186,19 +177,16 @@ class ResourceControllersTest extends TestCase
     }
 
     /**
-     * Most individuals have an `individual_text` row with no picture in it,
-     * which is what the empty extension means.
+     * Most individuals have no picture, which is what a NULL extension means.
+     *
+     * This used to be two cases - "no picture" and "no text row at all" - and
+     * they were distinguishable only while the extension lived on a separate
+     * row that might not exist. Merged into individuals, both are one NULL
+     * column and one test.
      */
     public function test_an_individual_with_no_picture_is_a_404(): void
     {
         $individual = Individual::factory()->withBio()->create();
-
-        $this->get(route('individuals.avatar', $individual))->assertNotFound();
-    }
-
-    public function test_an_individual_with_no_text_row_is_a_404(): void
-    {
-        $individual = Individual::factory()->create();
 
         $this->get(route('individuals.avatar', $individual))->assertNotFound();
     }
@@ -258,11 +246,7 @@ class ResourceControllersTest extends TestCase
 
     public function test_an_avatar_missing_from_disk_is_a_404(): void
     {
-        $individual = Individual::factory()->create();
-        IndividualText::forceCreate([
-            'individual_id'     => $individual->getKey(),
-            'ind_imgext'        => 'png',
-        ]);
+        $individual = Individual::factory()->create(['ind_imgext' => 'png']);
         // Do not store file on disk
 
         $this->get(route('individuals.avatar', $individual))->assertNotFound();

@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Review;
-use App\Models\ReviewScore;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -59,14 +58,11 @@ class ReviewFactory extends Factory
 
     public function scored(int $graphics = 4, int $sound = 4, int $gameplay = 4, int $overall = 4): static
     {
-        return $this->afterCreating(function (Review $review) use ($graphics, $sound, $gameplay, $overall) {
-            $score = new ReviewScore();
-            $score->review_graphics = $graphics;
-            $score->review_sound = $sound;
-            $score->review_gameplay = $gameplay;
-            $score->review_overall = $overall;
-
-            $review->score()->save($score);
-        });
+        return $this->state(fn () => [
+            'review_graphics' => $graphics,
+            'review_sound'    => $sound,
+            'review_gameplay' => $gameplay,
+            'review_overall'  => $overall,
+        ]);
     }
 }

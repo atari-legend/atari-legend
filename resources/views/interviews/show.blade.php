@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Interview with '.$interview->individual->ind_name)
 
-@if ($interview->individual?->text?->file !== null)
+@if ($interview->individual?->file !== null)
     @section('image', route('individuals.avatar', $interview->individual))
 @endif
 

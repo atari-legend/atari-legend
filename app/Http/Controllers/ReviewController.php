@@ -9,7 +9,6 @@ use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScore;
 use App\Models\ScreenshotReviewComment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +28,7 @@ class ReviewController extends Controller
         if ($request->filled('author')) {
             $reviews->whereHas('user', function (Builder $query) use ($request) {
                 // Inside whereHas the query runs against `users`, so this is
-                // User's own key rather than review_main's foreign key.
+                // User's own key rather than reviews's foreign key.
                 $query->where('users.id', $request->input('author'));
             });
         }
@@ -99,17 +98,17 @@ class ReviewController extends Controller
         $review->review_text = $request->text;
         $review->review_date = time();
         $review->review_edit = Review::REVIEW_UNPUBLISHED;
+        // Set before the first save, not after it: the scores are columns on
+        // the review now, so filling them here is one insert where the old
+        // score row needed a second write. A submitted review with no scores
+        // still reads as zeros rather than as "unscored".
+        $review->review_graphics = $request->graphics ?? 0;
+        $review->review_sound = $request->sound ?? 0;
+        $review->review_gameplay = $request->gameplay ?? 0;
+        $review->review_overall = $request->overall ?? 0;
 
         $request->user()->reviews()->save($review);
         $game->reviews()->save($review);
-
-        $score = new ReviewScore();
-        $score->review_graphics = $request->graphics ?? 0;
-        $score->review_sound = $request->sound ?? 0;
-        $score->review_gameplay = $request->gameplay ?? 0;
-        $score->review_overall = $request->overall ?? 0;
-
-        $review->score()->save($score);
 
         // Process screenshots comments. Screenshots were ordered by screenshot_id
         // so we should iterate over the same ordered list of game screenshots to

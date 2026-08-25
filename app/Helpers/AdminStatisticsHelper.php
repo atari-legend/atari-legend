@@ -34,7 +34,7 @@ class AdminStatisticsHelper
     const YEAR_MAX = 2030;
 
     /**
-     * The shared `draft` flag on review_main, interview_main and article_main.
+     * The shared `draft` flag on reviews, interviews and articles.
      */
     const PUBLISHED = 0;
     const DRAFT = 1;
@@ -49,7 +49,7 @@ class AdminStatisticsHelper
         return [
             'Games'       => DB::table('game')->count(),
             'Releases'    => DB::table('game_release')->count(),
-            'Screenshots' => DB::table('screenshot_main')->count(),
+            'Screenshots' => DB::table('screenshots')->count(),
             'Individuals' => DB::table('individuals')->count(),
             'Companies'   => DB::table('pub_dev')->count(),
             'Users'       => DB::table('users')->count(),
@@ -101,12 +101,12 @@ class AdminStatisticsHelper
                 'Game / music links' => DB::table('game_sndh')->count(),
             ],
             'Content' => [
-                'Reviews'                => DB::table('review_main')->where('draft', self::PUBLISHED)->count(),
-                'Reviews (draft)'        => DB::table('review_main')->where('draft', self::DRAFT)->count(),
-                'Interviews'             => DB::table('interview_main')->where('draft', self::PUBLISHED)->count(),
-                'Interviews (draft)'     => DB::table('interview_main')->where('draft', self::DRAFT)->count(),
-                'Articles'               => DB::table('article_main')->where('draft', self::PUBLISHED)->count(),
-                'Articles (draft)'       => DB::table('article_main')->where('draft', self::DRAFT)->count(),
+                'Reviews'                => DB::table('reviews')->where('draft', self::PUBLISHED)->count(),
+                'Reviews (draft)'        => DB::table('reviews')->where('draft', self::DRAFT)->count(),
+                'Interviews'             => DB::table('interviews')->where('draft', self::PUBLISHED)->count(),
+                'Interviews (draft)'     => DB::table('interviews')->where('draft', self::DRAFT)->count(),
+                'Articles'               => DB::table('articles')->where('draft', self::PUBLISHED)->count(),
+                'Articles (draft)'       => DB::table('articles')->where('draft', self::DRAFT)->count(),
                 'News items'             => DB::table('news')->count(),
                 'Did you know?'          => DB::table('trivia')->count(),
                 'Quotes'                 => DB::table('trivia_quotes')->count(),
@@ -119,13 +119,13 @@ class AdminStatisticsHelper
             ],
             'People & companies' => [
                 'Individuals'            => DB::table('individuals')->count(),
-                'Individuals with bio'   => self::countWithText('individual_text', 'ind_profile', 'individual_id'),
+                'Individuals with bio'   => self::countWithText('individuals', 'ind_profile', 'id'),
                 'Nicknames'              => DB::table('individual_nicks')->count(),
                 'Crews'                  => DB::table('crew')->count(),
                 'Sub-crews'              => DB::table('sub_crew')->count(),
                 'Crew members'           => DB::table('crew_individual')->count(),
                 'Companies'              => DB::table('pub_dev')->count(),
-                'Companies with profile' => self::countWithText('pub_dev_text', 'pub_dev_profile', 'pub_dev_id'),
+                'Companies with profile' => self::countWithText('pub_dev', 'pub_dev_profile', 'id'),
             ],
             'Community' => [
                 'Registered users'  => DB::table('users')->count(),
@@ -180,8 +180,8 @@ class AdminStatisticsHelper
                 self::coverageRow('With media', DB::table('media')->distinct('game_release_id')->count(), $releases),
             ],
             'Other' => [
-                self::coverageRow('Individuals with a bio', self::countWithText('individual_text', 'ind_profile', 'individual_id'), $individuals),
-                self::coverageRow('Companies with a profile', self::countWithText('pub_dev_text', 'pub_dev_profile', 'pub_dev_id'), $companies),
+                self::coverageRow('Individuals with a bio', self::countWithText('individuals', 'ind_profile', 'id'), $individuals),
+                self::coverageRow('Companies with a profile', self::countWithText('pub_dev', 'pub_dev_profile', 'id'), $companies),
                 self::coverageRow('Menu disks with a dump', DB::table('menu_disks')->whereNotNull('menu_disk_dump_id')->count(), $menuDisks),
                 self::coverageRow('Menu disks with a screenshot', DB::table('menu_disk_screenshots')->distinct('menu_disk_id')->count(), $menuDisks),
                 self::coverageRow('SNDH files linked to a game', DB::table('game_sndh')->distinct('sndh_id')->count(), $sndhs),
@@ -420,9 +420,9 @@ class AdminStatisticsHelper
     {
         $sources = [
             'News'       => DB::table('news')->pluck('news_date'),
-            'Reviews'    => DB::table('review_main')->pluck('review_date'),
-            'Interviews' => DB::table('interview_text')->pluck('interview_date'),
-            'Articles'   => DB::table('article_text')->pluck('article_date'),
+            'Reviews'    => DB::table('reviews')->pluck('review_date'),
+            'Interviews' => DB::table('interviews')->pluck('interview_date'),
+            'Articles'   => DB::table('articles')->pluck('article_date'),
         ];
 
         $years = [];
@@ -506,11 +506,11 @@ class AdminStatisticsHelper
     /**
      * Count the owners whose text column actually holds something.
      *
-     * individual_text and pub_dev_text have a row for nearly every individual
-     * and company, so the row itself says nothing about whether a bio was ever
-     * written. Blank values are NULL rather than an empty string, thanks to the
+     * A row exists for every individual and company, so the row itself says
+     * nothing about whether a bio was ever written - only a non-NULL profile
+     * does. Blank values are NULL rather than an empty string, thanks to the
      * 2026_08_09_100000_normalise_blank_profiles migration and the admin
-     * controllers that write these tables.
+     * controllers that write these columns.
      *
      * @param  string  $table
      * @param  string  $column

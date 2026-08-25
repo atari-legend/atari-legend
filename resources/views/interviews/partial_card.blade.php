@@ -1,6 +1,6 @@
 <div class="card-body p-0">
     @isset ($interview)
-        @if (isset($interview->individual->text->file))
+        @if (isset($interview->individual->file))
             <figure>
                 <img class="w-100" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->ind_name }}">
                 <figcaption class="py-2 px-3">
@@ -12,9 +12,9 @@
         @endif
         <div class="p-2">
             <p class="card-text">
-                {!! Helper::bbCode(Helper::extractTag(e($interview->texts()->first()->interview_intro), "frontpage")) !!}
+                {!! Helper::bbCode(Helper::extractTag(e($interview->interview_intro), "frontpage")) !!}
             </p>
-            <p class="card-subtitle text-muted">{{ $interview->texts()->first()->interview_date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
+            <p class="card-subtitle text-muted">{{ $interview->interview_date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
             <a class="d-block text-end" href="{{ route('interviews.show', ['interview' => $interview->getKey()]) }}">
                 Read interview of {{ $interview->individual->ind_name }} <i class="fas fa-chevron-right"></i>
             </a>

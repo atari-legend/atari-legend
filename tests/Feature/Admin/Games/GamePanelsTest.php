@@ -48,8 +48,8 @@ class GamePanelsTest extends AdminTestCase
         $individual = Individual::sole();
 
         $this->assertSame('Jochen Hippel', $individual->ind_name);
-        $this->assertSame('Musician.', $individual->text->ind_profile);
-        $this->assertSame('jochen@example.org', $individual->text->ind_email);
+        $this->assertSame('Musician.', $individual->ind_profile);
+        $this->assertSame('jochen@example.org', $individual->ind_email);
     }
 
     /**
@@ -65,10 +65,10 @@ class GamePanelsTest extends AdminTestCase
             'email'   => '',
         ])->assertRedirect();
 
-        $text = Individual::sole()->text;
+        $individual = Individual::sole();
 
-        $this->assertNull($text->ind_profile);
-        $this->assertNull($text->ind_email);
+        $this->assertNull($individual->ind_profile);
+        $this->assertNull($individual->ind_email);
     }
 
     public function test_an_individual_needs_a_name_and_a_valid_email(): void
@@ -95,12 +95,12 @@ class GamePanelsTest extends AdminTestCase
 
         $individual = Individual::sole();
 
-        $this->assertSame('png', $individual->text->ind_imgext);
+        $this->assertSame('png', $individual->ind_imgext);
         Storage::disk('public')->assertExists('images/individual_screenshots/' . $individual->getKey() . '.png');
 
         $this->delete(route('admin.games.individuals.avatar.destroy', $individual))->assertRedirect();
 
-        $this->assertNull($individual->fresh()->text->ind_imgext);
+        $this->assertNull($individual->fresh()->ind_imgext);
     }
 
     /**
@@ -141,7 +141,7 @@ class GamePanelsTest extends AdminTestCase
         $company = PublisherDeveloper::sole();
 
         $this->assertSame('Ocean', $company->pub_dev_name);
-        $this->assertSame('A Manchester publisher.', $company->text->pub_dev_profile);
+        $this->assertSame('A Manchester publisher.', $company->pub_dev_profile);
         $this->assertChangelog(Changelog::INSERT, 'Company', 'Ocean');
     }
 

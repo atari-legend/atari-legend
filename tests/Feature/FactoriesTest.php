@@ -30,7 +30,6 @@ use App\Models\MenuSoftware;
 use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\PublisherDeveloper;
-use App\Models\PublisherDeveloperText;
 use App\Models\ReleaseScan;
 use App\Models\Resolution;
 use App\Models\Review;
@@ -250,25 +249,25 @@ class FactoriesTest extends TestCase
             ->create();
 
         $this->assertSame('Xenon', $review->games->first()->game_name);
-        $this->assertSame(5, $review->score->review_graphics);
-        $this->assertSame(3, $review->score->review_sound);
+        $this->assertSame(5, $review->review_graphics);
+        $this->assertSame(3, $review->review_sound);
     }
 
     /**
-     * Interviews and articles keep their body in a separate text row that every
-     * view reads through `texts->first()`, so the factory must always make one.
+     * Every view assumes an article and an interview carry a body, so the
+     * factories always fill one in.
      */
-    public function test_interviews_and_articles_come_with_their_text_row(): void
+    public function test_interviews_and_articles_come_with_their_text(): void
     {
-        $this->assertNotNull(Interview::factory()->create()->texts->first()->interview_text);
-        $this->assertNotNull(Article::factory()->create()->texts->first()->article_title);
+        $this->assertNotNull(Interview::factory()->create()->interview_text);
+        $this->assertNotNull(Article::factory()->create()->article_title);
     }
 
     public function test_article_can_be_given_a_title(): void
     {
         $article = Article::factory()->titled('Coding the blitter')->create();
 
-        $this->assertSame('Coding the blitter', $article->texts->first()->article_title);
+        $this->assertSame('Coding the blitter', $article->article_title);
     }
 
     /**
@@ -291,10 +290,10 @@ class FactoriesTest extends TestCase
 
     public function test_individual_bio_is_optional(): void
     {
-        $this->assertNull(Individual::factory()->create()->text);
+        $this->assertNull(Individual::factory()->create()->ind_profile);
         $this->assertSame(
             'Member of Dune.',
-            Individual::factory()->withBio()->create()->text->ind_profile
+            Individual::factory()->withBio()->create()->ind_profile
         );
     }
 
@@ -354,21 +353,5 @@ class FactoriesTest extends TestCase
             $this->assertSame($game->slug, Str::slug($game->slug), "Slug '{$game->slug}' is not slug-safe.");
             $this->assertNotSame('', $game->slug);
         }
-    }
-
-    public function test_unused_model_is_not_created_by_accident(): void
-    {
-        Individual::factory()->create();
-
-        $this->assertSame(0, PublisherDeveloperText::query()->count());
-    }
-
-    /**
-     * Prove that the harness change provides distinct id ranges for related tables.
-     */
-    public function test_related_models_have_distinct_ids_to_prevent_collision(): void
-    {
-        $article = Article::factory()->create();
-        $this->assertNotSame($article->getKey(), $article->texts->first()->getKey(), 'Article and ArticleText should have ids in different ranges');
     }
 }

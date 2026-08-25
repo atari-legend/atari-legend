@@ -30,7 +30,7 @@ class StatisticsHelper
             'Magazines'                     => DB::table('magazines')->count(),
             'Magazine issues'               => DB::table('magazine_issues')->count(),
             'Registered users'              => DB::table('users')->count(),
-            'Articles'                      => DB::table('article_main')->count(),
+            'Articles'                      => DB::table('articles')->count(),
             'Links'                         => DB::table('website')->count(),
             'Games with music assigned'     => DB::table('game_sndh')->distinct('game_id')->count(),
             'Music files'                   => DB::table('sndhs')->count(),

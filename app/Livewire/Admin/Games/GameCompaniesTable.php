@@ -58,9 +58,13 @@ class GameCompaniesTable extends DataTableComponent
                     'false' => 'No',
                 ])
                 ->filter(
+                    // A company with no logo is now one NULL column rather
+                    // than a missing row, so the 202 companies that never had
+                    // a pub_dev_text row at all finally answer "No" instead of
+                    // dropping out of both halves of this filter.
                     fn (Builder $query, string $term) => $term === 'true'
-                        ? $query->whereHas('text', fn (Builder $subQuery) => $subQuery->whereNotNull('pub_dev_imgext'))
-                        : $query->whereHas('text', fn (Builder $subQuery) => $subQuery->whereNull('pub_dev_imgext'))
+                        ? $query->whereNotNull('pub_dev_imgext')
+                        : $query->whereNull('pub_dev_imgext')
                 ),
         ];
     }

@@ -5,7 +5,6 @@ namespace Tests\Feature\Admin\Interviews;
 use App\Models\Changelog;
 use App\Models\Individual;
 use App\Models\Interview;
-use App\Models\InterviewText;
 use App\Models\Screenshot;
 use App\Models\ScreenshotInterview;
 use Carbon\Carbon;
@@ -16,7 +15,7 @@ use Tests\Feature\Admin\AdminTestCase;
 /**
  * The admin Interviews section.
  *
- * Like articles, an interview is two rows - the interview and its text. Unlike
+ * An interview carries its own text, intro, chapters and date. Unlike
  * articles, the subject cannot be changed after creation: update() does not
  * touch individual_id.
  */
@@ -56,7 +55,7 @@ class InterviewsControllerTest extends AdminTestCase
             ->assertSee('Jochen Hippel');
     }
 
-    public function test_store_creates_the_interview_and_its_text(): void
+    public function test_store_creates_the_interview(): void
     {
         $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
 
@@ -65,14 +64,13 @@ class InterviewsControllerTest extends AdminTestCase
         ]))->assertRedirect(route('admin.interviews.interviews.index'));
 
         $interview = Interview::sole();
-        $text = $interview->texts->first();
 
         $this->assertSame($individual->getKey(), $interview->individual_id);
-        $this->assertSame('The interview itself.', $text->interview_text);
-        $this->assertSame('A short introduction.', $text->interview_intro);
+        $this->assertSame('The interview itself.', $interview->interview_text);
+        $this->assertSame('A short introduction.', $interview->interview_intro);
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
-            $text->getRawOriginal('interview_date')
+            $interview->getRawOriginal('interview_date')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Interviews', 'Jochen Hippel');
@@ -124,27 +122,11 @@ class InterviewsControllerTest extends AdminTestCase
             'chapters' => '[hotspotUrl=#1]The early days[/hotspotUrl]',
         ]))->assertRedirect(route('admin.interviews.interviews.index'));
 
-        $text = $interview->fresh()->texts->first();
+        $interview->refresh();
 
-        $this->assertSame('Rewritten.', $text->interview_text);
-        $this->assertSame('[hotspotUrl=#1]The early days[/hotspotUrl]', $text->interview_chapters);
+        $this->assertSame('Rewritten.', $interview->interview_text);
+        $this->assertSame('[hotspotUrl=#1]The early days[/hotspotUrl]', $interview->interview_chapters);
         $this->assertChangelog(Changelog::UPDATE, 'Interviews', $interview->individual->ind_name);
-    }
-
-    /**
-     * An interview whose text row is missing gets one on the next save, rather
-     * than failing.
-     */
-    public function test_update_creates_the_text_row_if_it_is_missing(): void
-    {
-        $interview = Interview::factory()->create();
-        $interview->texts()->delete();
-
-        $this->put(route('admin.interviews.interviews.update', $interview->fresh()), $this->payload([
-            'text' => 'Recovered.',
-        ]))->assertRedirect();
-
-        $this->assertSame('Recovered.', $interview->fresh()->texts->first()->interview_text);
     }
 
     public function test_update_can_toggle_the_draft_flag(): void
@@ -165,7 +147,6 @@ class InterviewsControllerTest extends AdminTestCase
             ->assertRedirect(route('admin.interviews.interviews.index'));
 
         $this->assertSame(0, Interview::query()->count());
-        $this->assertSame(0, InterviewText::query()->count());
         $this->assertChangelog(Changelog::DELETE, 'Interviews', 'Jochen Hippel');
     }
 

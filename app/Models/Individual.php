@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,13 +13,7 @@ class Individual extends Model
     protected $table = 'individuals';
     public $timestamps = false;
 
-    protected $fillable = ['ind_name'];
-
-    public function text()
-    {
-        // FIXME: The DB structure actually allows many
-        return $this->hasOne(IndividualText::class);
-    }
+    protected $fillable = ['ind_name', 'ind_profile', 'ind_imgext', 'ind_email'];
 
     public function games()
     {
@@ -55,10 +50,25 @@ class Individual extends Model
         return $this->belongsToMany(Crew::class, 'crew_individual');
     }
 
+    public function getFileAttribute()
+    {
+        return Helper::filename($this->getKey(), $this->ind_imgext);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return asset('storage/' . $this->path);
+    }
+
+    public function getPathAttribute()
+    {
+        return 'images/individual_screenshots/' . $this->file;
+    }
+
     public function getAvatarAttribute()
     {
-        if ($this->text?->file) {
-            return asset('storage/images/individual_screenshots/' . $this->text->file);
+        if ($this->file) {
+            return asset('storage/' . $this->path);
         } else {
             return null;
         }

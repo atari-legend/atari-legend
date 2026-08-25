@@ -28,10 +28,8 @@ class Interview extends Component
         // Only select interviews for which we have a picture
         // of the individual
         $interview = ModelsInterview::whereHas('individual', function (Builder $queryIndividual) {
-            return $queryIndividual->whereHas('text', function (Builder $queryText) {
-                return $queryText->whereNotNull('ind_imgext')
-                    ->where('ind_imgext', '!=', '');
-            });
+            return $queryIndividual->whereNotNull('ind_imgext')
+                ->where('ind_imgext', '!=', '');
         })
             ->inRandomOrder()
             ->first();

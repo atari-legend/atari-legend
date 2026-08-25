@@ -58,7 +58,6 @@ class RelationshipKeyConventionsTest extends TestCase
         'Game::developers()'                => 'table pub_dev, model PublisherDeveloper',
         'GameRelease::publisher()'          => 'table pub_dev, model PublisherDeveloper',
         'GameRelease::distributors()'       => 'table pub_dev, model PublisherDeveloper',
-        'PublisherDeveloper::text()'        => 'table pub_dev, model PublisherDeveloper',
         'PublisherDeveloper::games()'       => 'table pub_dev, model PublisherDeveloper',
         'PublisherDeveloper::releases()'    => 'table pub_dev, model PublisherDeveloper',
         'Game::genres()'                    => 'table game_genre, model Genre',

@@ -244,7 +244,7 @@ becomes an ordinary spec.
 
 `SELECT * FROM website_validate WHERE website_name LIKE 'E2E %'` is therefore
 the only number that should move. Anything else growing across runs is a spec
-that failed to clean up - including `screenshot_main`, which used to gain two
+that failed to clean up - including `screenshots`, which used to gain two
 rows a run until follow-up 11 was fixed and is now a useful canary.
 
 ## Adding a section
@@ -411,7 +411,7 @@ today, and what it does not:
    A-Z browse and the empty state as well.
 10. **Creating a review is not atomic, and any page listing reviews can catch
     it half-done.** `ReviewsController::store()` and `ReviewController::submit()`
-    both insert the `review_main` row and attach `review_game` as two separate
+    both insert the `reviews` row and attach `review_game` as two separate
     statements outside a transaction, and
     `resources/views/components/cards/reviews.blade.php` dereferences
     `$review->games[0]` unguarded. A request that renders the "In-Depth Reviews"
@@ -419,7 +419,7 @@ today, and what it does not:
     an unrelated page, for a visitor who did nothing but load it while somebody
     else was submitting. Wrapping both controllers in a transaction is the fix;
     guarding the card with `$review->games->first()` would also stop it 500ing.
-11. **Fixed: deleting a screenshot never deleted its `screenshot_main` row.**
+11. **Fixed: deleting a screenshot never deleted its `screenshots` row.**
     `GameScreenshotsController::destroy()` detached the pivot and unlinked the
     file; `GameSubmissionController::destroy()` unlinked the file and deleted the
     submission. Neither removed the row, so the table accumulated ids with

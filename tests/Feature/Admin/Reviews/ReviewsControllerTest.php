@@ -5,7 +5,6 @@ namespace Tests\Feature\Admin\Reviews;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScore;
 use App\Models\Screenshot;
 use App\Models\ScreenshotReviewComment;
 use App\Models\User;
@@ -79,10 +78,10 @@ class ReviewsControllerTest extends AdminTestCase
         $this->assertSame('Xenon', $review->games->first()->game_name);
         $this->assertSame(Review::REVIEW_PUBLISHED, $review->review_edit);
 
-        $this->assertSame(5, $review->score->review_graphics);
-        $this->assertSame(4, $review->score->review_sound);
-        $this->assertSame(3, $review->score->review_gameplay);
-        $this->assertSame(4, $review->score->review_overall);
+        $this->assertSame(5, $review->review_graphics);
+        $this->assertSame(4, $review->review_sound);
+        $this->assertSame(3, $review->review_gameplay);
+        $this->assertSame(4, $review->review_overall);
 
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
@@ -153,25 +152,25 @@ class ReviewsControllerTest extends AdminTestCase
         $review->refresh();
 
         $this->assertSame('Revisited: it holds up.', $review->review_text);
-        $this->assertSame(2, $review->score->review_graphics);
+        $this->assertSame(2, $review->review_graphics);
         $this->assertChangelog(Changelog::UPDATE, 'Reviews', 'Xenon');
     }
 
     /**
-     * A review whose score row never existed gets one on the next save.
+     * An unscored review is a supported state - the columns are nullable and
+     * the public page guards them - and the next save fills it in.
      */
-    public function test_update_creates_the_score_row_if_it_is_missing(): void
+    public function test_update_fills_in_scores_that_were_never_set(): void
     {
         $review = Review::factory()
             ->forGame(Game::factory()->named('Xenon')->create()->getKey())
             ->create();
 
-        $this->assertNull($review->score);
+        $this->assertNull($review->review_graphics);
 
         $this->put(route('admin.reviews.reviews.update', $review->fresh()), $this->payload());
 
-        $this->assertSame(5, $review->fresh()->score->review_graphics);
-        $this->assertSame(1, ReviewScore::query()->count());
+        $this->assertSame(5, $review->fresh()->review_graphics);
     }
 
     public function test_save_and_stay_returns_to_the_edit_screen(): void

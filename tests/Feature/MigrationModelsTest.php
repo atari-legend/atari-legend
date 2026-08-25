@@ -9,8 +9,8 @@ use Tests\TestCase;
  * A migration that drives an Eloquent model is written against the schema of
  * the day it ran, but resolves the model as it is *today*. Rename a primary
  * key and `migrate:fresh` starts failing inside a migration from 2020 that
- * has not changed in years - `ArticleText::each()` chunks by the model's key,
- * so it looks for `article_text.id` before that column exists.
+ * has not changed in years - `GameFact::each()` chunks by the model's key, so
+ * it looks for `game_fact.id` before that column exists.
  *
  * `artisan test` cannot see this class of breakage on its own: several of
  * these migrations are guarded by `!== 'sqlite'`, so PHPUnit skips them
