@@ -147,22 +147,17 @@ class StatisticsTest extends TestCase
     }
 
     /**
-     * Nearly every individual has an individual_text row, so the row itself must
-     * not be taken to mean a bio was written.
+     * An individual row says nothing about whether a bio was ever written:
+     * only a non-NULL ind_profile does. Bob has an email and no bio, Carol
+     * has neither, Dave was never given either column.
      */
     public function test_coverage_ignores_individuals_without_a_bio(): void
     {
         DB::table('individuals')->insert([
-            ['id' => 1, 'ind_name' => 'Alice'],
-            ['id' => 2, 'ind_name' => 'Bob'],
-            ['id' => 3, 'ind_name' => 'Carol'],
-            ['id' => 4, 'ind_name' => 'Dave'],
-        ]);
-
-        DB::table('individual_text')->insert([
-            ['individual_id' => 1, 'ind_profile' => 'Member in Dune', 'ind_email' => null],
-            ['individual_id' => 2, 'ind_profile' => null, 'ind_email' => 'bob@example.org'],
-            ['individual_id' => 3, 'ind_profile' => null, 'ind_email' => null],
+            ['id' => 1, 'ind_name' => 'Alice', 'ind_profile' => 'Member in Dune', 'ind_email' => null],
+            ['id' => 2, 'ind_name' => 'Bob', 'ind_profile' => null, 'ind_email' => 'bob@example.org'],
+            ['id' => 3, 'ind_name' => 'Carol', 'ind_profile' => null, 'ind_email' => null],
+            ['id' => 4, 'ind_name' => 'Dave', 'ind_profile' => null, 'ind_email' => null],
         ]);
 
         $bios = collect(AdminStatisticsHelper::coverage()['Other'])

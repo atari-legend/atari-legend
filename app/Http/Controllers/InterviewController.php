@@ -31,7 +31,7 @@ class InterviewController extends Controller
             ->add('headline', 'Interview of ' . $interview->individual->ind_name)
             ->add('author', Helper::user($interview->user))
             ->add('datePublished', $interview->interview_date->format('Y-m-d'));
-        if ($interview->individual?->text?->file !== null) {
+        if ($interview->individual?->file !== null) {
             $jsonLd->add('image', route('individuals.avatar', $interview->individual));
         }
 

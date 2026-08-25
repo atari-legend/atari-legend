@@ -19,7 +19,7 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (screenshot_game, review_game, individual_text, game_user_comments,
+ * all (screenshot_game, review_game, game_user_comments,
  * website_category_cross), the factories are random where the specs need fixed
  * names and slugs, and $fillable on the legacy models is thin enough that
  * Model::create() would silently drop columns we depend on.
@@ -426,9 +426,9 @@ class E2ESeeder extends Seeder
         // individual has a picture, and the card then reads the interview's
         // text, so seed the whole chain.
         $this->insert('individuals', ['id' => self::INDIVIDUAL_ID], [
-            'ind_name' => self::INTERVIEW_INDIVIDUAL,
+            'ind_name'   => self::INTERVIEW_INDIVIDUAL,
+            'ind_imgext' => 'png',
         ]);
-        $this->insert('individual_text', ['individual_id' => self::INDIVIDUAL_ID], ['ind_imgext' => 'png']);
         $this->seedImage('images/individual_screenshots/' . self::INDIVIDUAL_ID . '.png');
 
         // The chapters and the text carry the two halves of the interview

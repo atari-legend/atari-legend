@@ -31,10 +31,10 @@ class BlankProfileTest extends TestCase
             'email'   => '',
         ]);
 
-        $text = Individual::where('ind_name', 'Alice')->firstOrFail()->text;
+        $individual = Individual::where('ind_name', 'Alice')->firstOrFail();
 
-        $this->assertNull($text->ind_profile);
-        $this->assertNull($text->ind_email);
+        $this->assertNull($individual->ind_profile);
+        $this->assertNull($individual->ind_email);
     }
 
     public function test_whitespace_only_individual_profile_is_stored_as_null(): void
@@ -44,7 +44,7 @@ class BlankProfileTest extends TestCase
             'profile' => "\t\t\t\t",
         ]);
 
-        $this->assertNull(Individual::where('ind_name', 'Bob')->firstOrFail()->text->ind_profile);
+        $this->assertNull(Individual::where('ind_name', 'Bob')->firstOrFail()->ind_profile);
     }
 
     public function test_a_real_individual_profile_is_kept(): void
@@ -56,7 +56,7 @@ class BlankProfileTest extends TestCase
 
         $this->assertSame(
             'Member in Dune',
-            Individual::where('ind_name', 'Carol')->firstOrFail()->text->ind_profile
+            Individual::where('ind_name', 'Carol')->firstOrFail()->ind_profile
         );
     }
 
@@ -74,7 +74,7 @@ class BlankProfileTest extends TestCase
             'profile' => '',
         ]);
 
-        $this->assertNull($individual->fresh()->text->ind_profile);
+        $this->assertNull($individual->fresh()->ind_profile);
     }
 
     public function test_blank_company_profile_is_stored_as_null(): void

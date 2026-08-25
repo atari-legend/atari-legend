@@ -48,7 +48,7 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                            id="email" value="{{ old('email', $individual->text?->ind_email ?? '') }}">
+                            id="email" value="{{ old('email', $individual->ind_email ?? '') }}">
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -90,7 +90,7 @@
             <div class="mb-3">
                 <label for="profile" class="form-label">Profile</label>
                 <textarea class="form-control sceditor" id="profile" name="profile"
-                    rows="10">{{ old('profile', $individual->text?->ind_profile ?? '') }}</textarea>
+                    rows="10">{{ old('profile', $individual->ind_profile ?? '') }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

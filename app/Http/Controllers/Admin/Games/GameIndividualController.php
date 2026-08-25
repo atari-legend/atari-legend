@@ -6,7 +6,6 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Individual;
-use App\Models\IndividualText;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -102,12 +101,11 @@ class GameIndividualController extends Controller
 
         // A blank field is stored as NULL rather than an empty string, so that
         // "has a bio" stays a question the database can answer
-        $text = new IndividualText([
+        $individual->update([
             'ind_profile' => $request->filled('profile') ? $request->profile : null,
             'ind_email'   => $request->filled('email') ? $request->email : null,
             'ind_imgext'  => $ext,
         ]);
-        $individual->text()->save($text);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
@@ -134,7 +132,7 @@ class GameIndividualController extends Controller
         // dropped the avatar on any later edit, and destroyAvatar() builds its
         // path out of the same column - so the file was then stranded on disk
         // with nothing in the admin able to reach it.
-        $ext = $individual->text?->ind_imgext;
+        $ext = $individual->ind_imgext;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $avatar->storeAs('images/individual_screenshots/', $individual->getKey() . '.' . $avatar->extension(), 'public');
@@ -152,21 +150,11 @@ class GameIndividualController extends Controller
         }
 
         $individual->update([
-            'ind_name'        => $request->name,
-        ]);
-
-        $attrs = [
+            'ind_name'    => $request->name,
             'ind_profile' => $request->filled('profile') ? $request->profile : null,
             'ind_email'   => $request->filled('email') ? $request->email : null,
             'ind_imgext'  => $ext,
-        ];
-
-        if ($individual->text) {
-            $individual->text->update($attrs);
-        } else {
-            $text = new IndividualText($attrs);
-            $individual->text()->save($text);
-        }
+        ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
@@ -202,9 +190,9 @@ class GameIndividualController extends Controller
     public function destroyAvatar(Individual $individual)
     {
         if ($individual->avatar) {
-            Storage::disk('public')->delete('images/individual_screenshots/' . $individual->getKey() . '.' . $individual->text->ind_imgext);
-            $individual->text->ind_imgext = null;
-            $individual->text->save();
+            Storage::disk('public')->delete($individual->path);
+            $individual->ind_imgext = null;
+            $individual->save();
 
             ChangelogHelper::insert([
                 'action'           => Changelog::DELETE,

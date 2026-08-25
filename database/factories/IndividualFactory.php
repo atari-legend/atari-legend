@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Individual;
-use App\Models\IndividualText;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,20 +20,13 @@ class IndividualFactory extends Factory
     }
 
     /**
-     * Nearly every individual has an `individual_text` row even with nothing in
-     * it, so the bio is a state rather than part of the definition - see
-     * AdminStatisticsHelper::coverage(), which counts only non-empty profiles.
+     * Most individuals have no bio at all, so it is a state rather than part
+     * of the definition - see AdminStatisticsHelper::coverage(), which counts
+     * only non-empty profiles.
      */
     public function withBio(string $profile = 'Member of Dune.'): static
     {
-        return $this->afterCreating(function (Individual $individual) use ($profile) {
-            IndividualText::forceCreate([
-                'individual_id'      => $individual->getKey(),
-                'ind_profile'        => $profile,
-                'ind_imgext'         => null,
-                'ind_email'          => null,
-            ]);
-        });
+        return $this->state(fn () => ['ind_profile' => $profile]);
     }
 
     public function nicknamed(string ...$nicks): static

@@ -10,8 +10,8 @@ class IndividualResourcesController extends Controller
 {
     public function avatar(Individual $individual)
     {
-        if ($individual->text?->file && Storage::disk('public')->exists($individual->text->path)) {
-            $image = ImageManagerStatic::make(Storage::disk('public')->get($individual->text->path));
+        if ($individual->file && Storage::disk('public')->exists($individual->path)) {
+            $image = ImageManagerStatic::make(Storage::disk('public')->get($individual->path));
 
             return response()->stream(function () use ($image) {
                 echo $image->resize(500, null, function ($constraint) {

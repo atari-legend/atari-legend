@@ -291,10 +291,10 @@ class FactoriesTest extends TestCase
 
     public function test_individual_bio_is_optional(): void
     {
-        $this->assertNull(Individual::factory()->create()->text);
+        $this->assertNull(Individual::factory()->create()->ind_profile);
         $this->assertSame(
             'Member of Dune.',
-            Individual::factory()->withBio()->create()->text->ind_profile
+            Individual::factory()->withBio()->create()->ind_profile
         );
     }
 

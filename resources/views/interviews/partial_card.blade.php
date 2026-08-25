@@ -1,6 +1,6 @@
 <div class="card-body p-0">
     @isset ($interview)
-        @if (isset($interview->individual->text->file))
+        @if (isset($interview->individual->file))
             <figure>
                 <img class="w-100" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->ind_name }}">
                 <figcaption class="py-2 px-3">

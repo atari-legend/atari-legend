@@ -121,8 +121,7 @@ class GamePageTest extends TestCase
         $roleId = DB::table('individual_role')->insertGetId(['name' => 'Coder']);
         $otherRoleId = DB::table('individual_role')->insertGetId(['name' => 'Graphics']);
 
-        $withPortrait = Individual::factory()->create();
-        $withPortrait->text()->create(['ind_profile' => 'A coder', 'ind_imgext' => 'jpg']);
+        $withPortrait = Individual::factory()->create(['ind_profile' => 'A coder', 'ind_imgext' => 'jpg']);
         Interview::factory()->create(['individual_id' => $withPortrait->getKey()]);
 
         $withoutPortrait = Individual::factory()->withBio()->create();

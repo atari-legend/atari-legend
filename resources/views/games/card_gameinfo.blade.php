@@ -65,11 +65,11 @@
                                 </a>
                             @endcontributor
                             {{-- We have to use trim() here because the profile column in the database contains 'empty' profiles full of spaces --}}
-                            @if ($individuals->first()->text !== null && $individuals->first()->text->ind_profile !== null && trim($individuals->first()->text->ind_profile) !== '')
+                            @if ($individuals->first()->ind_profile !== null && trim($individuals->first()->ind_profile) !== '')
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
-                            @if ($individuals->first()->text !== null && $individuals->first()->text->file !== null)
-                                <a class="lightbox-link d-inline-block" href="{{ $individuals->first()->text->image_url }}">
+                            @if ($individuals->first()->file !== null)
+                                <a class="lightbox-link d-inline-block" href="{{ $individuals->first()->image_url }}">
                                     <i class="far fa-image"></i>
                                 </a>
                             @endif
@@ -88,9 +88,9 @@
                             @foreach ($individuals->whereNotNull('pivot.individualRole.name')->sortBy('pivot.individualRole.name') as $individual)
                                 <small class="text-muted">{{ $individual->pivot->individualRole->name }}@if (!$loop->last),@endif</small>
                             @endforeach
-                            @if ($individuals->first()->text !== null && $individuals->first()->text->ind_profile !== null && $individuals->first()->text->ind_profile !== '')
+                            @if ($individuals->first()->ind_profile !== null && $individuals->first()->ind_profile !== '')
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}">
-                                    {!! Helper::bbCode(nl2br(e($individuals->first()->text->ind_profile), false)) !!}
+                                    {!! Helper::bbCode(nl2br(e($individuals->first()->ind_profile), false)) !!}
                                 </p>
                             @endif
                         </div>

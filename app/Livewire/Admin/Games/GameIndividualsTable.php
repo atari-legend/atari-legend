@@ -36,7 +36,7 @@ class GameIndividualsTable extends DataTableComponent
                 ),
             Column::make('Avatar')
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->orderBy('individual_text.ind_imgext', $direction);
+                    return $query->orderBy('ind_imgext', $direction);
                 })
                 ->label(
                     fn ($row) => $row->avatar
@@ -58,7 +58,6 @@ class GameIndividualsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Individual::select('individuals.*')
-            ->leftJoin('individual_text', 'individuals.id', '=', 'individual_text.individual_id');
+        return Individual::query()->select('individuals.*');
     }
 }
