@@ -31,13 +31,10 @@ class ContentPagesTest extends TestCase
 
     private function article(string $title, string $date = '2026-01-01', ?User $author = null): Article
     {
-        $article = Article::factory()->titled($title)->create([
-            'user_id' => ($author ?? User::factory()->create())->getKey(),
+        return Article::factory()->titled($title)->create([
+            'user_id'      => ($author ?? User::factory()->create())->getKey(),
+            'article_date' => Carbon::parse($date)->timestamp,
         ]);
-
-        $article->texts()->first()->update(['article_date' => Carbon::parse($date)->timestamp]);
-
-        return $article->fresh();
     }
 
     private function interview(string $date = '2026-01-01'): Interview
@@ -59,7 +56,7 @@ class ContentPagesTest extends TestCase
 
         $this->assertSame(
             ['Newer', 'Older'],
-            $articles->map(fn ($article) => $article->texts->first()->article_title)->all()
+            $articles->map(fn ($article) => $article->article_title)->all()
         );
     }
 
@@ -87,7 +84,7 @@ class ContentPagesTest extends TestCase
 
         $this->assertSame(
             ['Another one'],
-            $others->map(fn ($other) => $other->texts->first()->article_title)->all()
+            $others->map(fn ($other) => $other->article_title)->all()
         );
     }
 

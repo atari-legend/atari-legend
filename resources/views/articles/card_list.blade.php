@@ -21,7 +21,7 @@
                         </a>
                     </h3>
                     <p class="card-subtitle text-muted">
-                        {{ $article->texts->first()->article_date->format('F j, Y') }} by {{ Helper::user($article->user) }}
+                        {{ $article->article_date->format('F j, Y') }} by {{ Helper::user($article->user) }}
                         <span class="badge bg-secondary ms-2">{{ $article->type->article_type ?? ''}}</span>
                     </p>
                 </div>
@@ -33,7 +33,7 @@
                         </a>
                     @endif
 
-                    {!! Helper::bbCode(e($article->texts->first()->article_intro)) !!}<br>
+                    {!! Helper::bbCode(e($article->article_intro)) !!}<br>
                     <a class="d-block text-end mt-2" href="{{ route('articles.show', ['article' => $article]) }}">
                         Read {{ $article->article_title }} <i class="fas fa-chevron-right"></i>
                     </a>

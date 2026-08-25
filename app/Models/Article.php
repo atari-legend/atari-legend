@@ -15,16 +15,18 @@ class Article extends Model implements Feedable
     protected $table = 'article_main';
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'article_type_id', 'draft'];
+    protected $fillable = [
+        'user_id', 'article_type_id', 'draft',
+        'article_title', 'article_text', 'article_date', 'article_intro',
+    ];
+
+    protected $casts = [
+        'article_date' => 'datetime:timestamp',
+    ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function texts()
-    {
-        return $this->hasMany(ArticleText::class);
     }
 
     public function screenshots()
@@ -51,8 +53,8 @@ class Article extends Model implements Feedable
         return FeedItem::create([
             'id'         => $this->getKey(),
             'title'      => 'Article: ' . $this->article_title,
-            'summary'    => Helper::bbCode($this->texts->first()->article_intro),
-            'updated'    => $this->texts->first()->article_date,
+            'summary'    => Helper::bbCode($this->article_intro),
+            'updated'    => $this->article_date,
             'link'       => route('articles.show', $this),
             'authorName' => Helper::user($this->user),
         ]);

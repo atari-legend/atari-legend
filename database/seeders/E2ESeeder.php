@@ -19,7 +19,7 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (screenshot_game, article_text, review_game, interview_text,
+ * all (screenshot_game, review_game, interview_text,
  * individual_text, game_user_comments, website_category_cross), the factories
  * are random where the specs need fixed names and slugs, and $fillable on the
  * legacy models is thin enough that Model::create() would silently drop
@@ -395,12 +395,10 @@ class E2ESeeder extends Seeder
         $this->insert('article_main', ['id' => self::ARTICLE_ID], [
             'user_id'         => self::USER_ADMIN_ID,
             'article_type_id' => self::ARTICLE_TYPE_ID,
-        ]);
-        $this->insert('article_text', ['article_id' => self::ARTICLE_ID], [
-            'article_title' => self::ARTICLE_TITLE,
-            'article_intro' => 'Playwright test article intro.',
-            'article_text'  => 'Playwright test article content.',
-            'article_date'  => now()->timestamp,
+            'article_title'   => self::ARTICLE_TITLE,
+            'article_intro'   => 'Playwright test article intro.',
+            'article_text'    => 'Playwright test article content.',
+            'article_date'    => now()->timestamp,
         ]);
 
         // Same chain as the interview screenshot below, one table along.

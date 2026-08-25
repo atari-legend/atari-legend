@@ -5,7 +5,6 @@ namespace App\Livewire\Admin;
 use App\Helpers\Helper;
 use App\Models\Article;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -39,9 +38,7 @@ class ArticlesTable extends DataTableComponent
                 ->sortable(),
             Column::make('Date')
                 ->label(
-                    fn ($row) => $row->article_date
-                        ? Carbon::createFromTimestamp($row->article_date)->toFormattedDateString()
-                        : '-'
+                    fn ($row) => $row->article_date?->toFormattedDateString() ?? '-'
                 )
                 ->sortable(
                     fn (Builder $query, $direction) => $query->orderBy('article_date', $direction)
@@ -59,8 +56,7 @@ class ArticlesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Article::select('article_main.*', 'article_text.article_title', 'article_text.article_date')
-            ->leftJoin('article_text', 'article_text.article_id', '=', 'article_main.id');
+        return Article::query()->select('article_main.*');
     }
 
     public function filters(): array

@@ -255,20 +255,20 @@ class FactoriesTest extends TestCase
     }
 
     /**
-     * Interviews and articles keep their body in a separate text row that every
-     * view reads through `texts->first()`, so the factory must always make one.
+     * Every view assumes an article and an interview carry a body, so the
+     * factories always fill one in.
      */
-    public function test_interviews_and_articles_come_with_their_text_row(): void
+    public function test_interviews_and_articles_come_with_their_text(): void
     {
         $this->assertNotNull(Interview::factory()->create()->texts->first()->interview_text);
-        $this->assertNotNull(Article::factory()->create()->texts->first()->article_title);
+        $this->assertNotNull(Article::factory()->create()->article_title);
     }
 
     public function test_article_can_be_given_a_title(): void
     {
         $article = Article::factory()->titled('Coding the blitter')->create();
 
-        $this->assertSame('Coding the blitter', $article->texts->first()->article_title);
+        $this->assertSame('Coding the blitter', $article->article_title);
     }
 
     /**
@@ -363,12 +363,4 @@ class FactoriesTest extends TestCase
         $this->assertSame(0, PublisherDeveloperText::query()->count());
     }
 
-    /**
-     * Prove that the harness change provides distinct id ranges for related tables.
-     */
-    public function test_related_models_have_distinct_ids_to_prevent_collision(): void
-    {
-        $article = Article::factory()->create();
-        $this->assertNotSame($article->getKey(), $article->texts->first()->getKey(), 'Article and ArticleText should have ids in different ranges');
-    }
 }

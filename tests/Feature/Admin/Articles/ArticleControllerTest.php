@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin\Articles;
 
 use App\Models\Article;
-use App\Models\ArticleText;
 use App\Models\ArticleType;
 use App\Models\Changelog;
 use App\Models\Screenshot;
@@ -17,9 +16,8 @@ use Tests\Feature\Admin\AdminTestCase;
 /**
  * The admin Articles section.
  *
- * An article is two rows: the article itself and an article_text holding the
- * title, body and date. Keeping those in step is most of what this covers,
- * along with the screenshots hanging off it and their captions.
+ * An article is one row carrying its own title, body and date, plus the
+ * screenshots hanging off it and their captions.
  */
 class ArticleControllerTest extends AdminTestCase
 {
@@ -63,21 +61,20 @@ class ArticleControllerTest extends AdminTestCase
             ->assertSee('Coding the blitter');
     }
 
-    public function test_store_creates_the_article_and_its_text(): void
+    public function test_store_creates_the_article(): void
     {
         $this->post(route('admin.articles.articles.store'), $this->payload())
             ->assertRedirect(route('admin.articles.articles.index'));
 
         $article = Article::sole();
-        $text = $article->texts->first();
 
         $this->assertSame($this->admin->getKey(), $article->user_id);
-        $this->assertSame('Coding the blitter', $text->article_title);
-        $this->assertSame('A short introduction.', $text->article_intro);
-        $this->assertSame('The body of the article.', $text->article_text);
+        $this->assertSame('Coding the blitter', $article->article_title);
+        $this->assertSame('A short introduction.', $article->article_intro);
+        $this->assertSame('The body of the article.', $article->article_text);
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
-            $text->getRawOriginal('article_date')
+            $article->getRawOriginal('article_date')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Articles', 'Coding the blitter');
@@ -110,7 +107,7 @@ class ArticleControllerTest extends AdminTestCase
         $this->assertSame(0, Article::query()->count());
     }
 
-    public function test_update_changes_both_rows(): void
+    public function test_update_changes_the_article(): void
     {
         $article = Article::factory()->titled('Old title')->create();
         $type = ArticleType::factory()->create();
@@ -124,8 +121,8 @@ class ArticleControllerTest extends AdminTestCase
         $article->refresh();
 
         $this->assertSame($type->getKey(), $article->article_type_id);
-        $this->assertSame('New title', $article->texts->first()->article_title);
-        $this->assertSame('Rewritten.', $article->texts->first()->article_text);
+        $this->assertSame('New title', $article->article_title);
+        $this->assertSame('Rewritten.', $article->article_text);
     }
 
     /**
@@ -147,7 +144,7 @@ class ArticleControllerTest extends AdminTestCase
         $this->assertSame('New title', $entry->sub_section_name);
     }
 
-    public function test_destroy_removes_the_article_its_text_and_its_images(): void
+    public function test_destroy_removes_the_article_and_its_images(): void
     {
         Storage::fake('public');
 
@@ -160,7 +157,6 @@ class ArticleControllerTest extends AdminTestCase
             ->assertRedirect(route('admin.articles.articles.index'));
 
         $this->assertSame(0, Article::query()->count());
-        $this->assertSame(0, ArticleText::query()->count());
         $this->assertSame(0, Screenshot::query()->count());
         Storage::disk('public')->assertMissing($screenshot->getPath('article'));
 

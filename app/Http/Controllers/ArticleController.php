@@ -14,9 +14,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::select('article_main.*', 'article_text.article_title')
-            ->join('article_text', 'article_text.article_id', '=', 'article_main.id')
-            ->orderByDesc('article_text.article_date')
+        $articles = Article::orderByDesc('article_date')
             ->paginate(5);
 
         return view('articles.index')
@@ -35,16 +33,14 @@ class ArticleController extends Controller
                 ->get();
         }
 
-        $articles = Article::select('article_main.*', 'article_text.article_title')
-            ->join('article_text', 'article_text.article_id', '=', 'article_main.id')
-            ->orderByDesc('article_text.article_date')
+        $articles = Article::orderByDesc('article_date')
             ->limit(5)
             ->get();
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', $article->texts->first()->article_title)
+            ->add('headline', $article->article_title)
             ->add('author', Helper::user($article->user))
-            ->add('datePublished', $article->texts->first()->article_date->format('Y-m-d'));
+            ->add('datePublished', $article->article_date->format('Y-m-d'));
         if ($article->screenshots->isNotEmpty()) {
             $jsonLd->add('image', $article->screenshots->first()->getUrl('article'));
         }
@@ -71,10 +67,10 @@ class ArticleController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Articles',
             'section_id'       => $article->getKey(),
-            'section_name'     => $article->texts()->first()->article_title,
+            'section_name'     => $article->article_title,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $comment->getKey(),
-            'sub_section_name' => $article->texts()->first()->article_title,
+            'sub_section_name' => $article->article_title,
         ]);
 
         return back();
