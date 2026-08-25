@@ -49,10 +49,9 @@ class FeedHelperTest extends TestCase
 
     private function interview(string $date): Interview
     {
-        $interview = Interview::factory()->create();
-        $interview->texts()->first()->update(['interview_date' => Carbon::parse($date)->timestamp]);
-
-        return $interview;
+        return Interview::factory()->create([
+            'interview_date' => Carbon::parse($date)->timestamp,
+        ]);
     }
 
     private function article(string $title, string $date): Article

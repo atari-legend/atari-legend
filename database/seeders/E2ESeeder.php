@@ -19,11 +19,10 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (screenshot_game, review_game, interview_text,
- * individual_text, game_user_comments, website_category_cross), the factories
- * are random where the specs need fixed names and slugs, and $fillable on the
- * legacy models is thin enough that Model::create() would silently drop
- * columns we depend on.
+ * all (screenshot_game, review_game, individual_text, game_user_comments,
+ * website_category_cross), the factories are random where the specs need fixed
+ * names and slugs, and $fillable on the legacy models is thin enough that
+ * Model::create() would silently drop columns we depend on.
  */
 class E2ESeeder extends Seeder
 {
@@ -432,16 +431,14 @@ class E2ESeeder extends Seeder
         $this->insert('individual_text', ['individual_id' => self::INDIVIDUAL_ID], ['ind_imgext' => 'png']);
         $this->seedImage('images/individual_screenshots/' . self::INDIVIDUAL_ID . '.png');
 
-        $this->insert('interview_main', ['id' => self::INTERVIEW_ID], [
-            'user_id'        => self::USER_ADMIN_ID,
-            'individual_id'  => self::INDIVIDUAL_ID,
-        ]);
         // The chapters and the text carry the two halves of the interview
         // BBCode: [hotspotUrl=#1] in the chapter list is the link, [hotspot=1]
         // in the text is what it jumps to. Nothing else in the fixture renders
         // either, so without this pair Helper::bbCode() could stop emitting the
         // anchor entirely and every interview test would still pass.
-        $this->insert('interview_text', ['interview_id' => self::INTERVIEW_ID], [
+        $this->insert('interview_main', ['id' => self::INTERVIEW_ID], [
+            'user_id'            => self::USER_ADMIN_ID,
+            'individual_id'      => self::INDIVIDUAL_ID,
             'interview_intro'    => 'Playwright test interview intro.',
             'interview_text'     => '[hotspot=1]' . self::INTERVIEW_CHAPTER . '[/hotspot] '
                 . 'Playwright test interview content.',
@@ -465,11 +462,6 @@ class E2ESeeder extends Seeder
         ]);
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 
-        // Interview 2 deliberately has neither an individual nor a text row.
-        // The admin table joins those, and a row with no match is what used to
-        // null out its primary key - keep a row of that shape so the
-        // regression stays covered.
-        $this->insert('interview_main', ['id' => 2], ['user_id' => self::USER_ADMIN_ID]);
 
         $this->insert('news', ['id' => self::NEWS_ID], [
             'news_headline' => self::NEWS_HEADLINE,

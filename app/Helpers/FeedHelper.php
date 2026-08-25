@@ -18,9 +18,7 @@ class FeedHelper
             ->limit(20)
             ->get();
 
-        $interviews = Interview::select('interview_main.*')
-            ->join('interview_text', 'interview_text.interview_id', '=', 'interview_main.id')
-            ->orderByDesc('interview_text.interview_date')
+        $interviews = Interview::orderByDesc('interview_date')
             ->limit(20)
             ->get();
 

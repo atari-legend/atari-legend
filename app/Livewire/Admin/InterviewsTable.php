@@ -40,9 +40,7 @@ class InterviewsTable extends DataTableComponent
                 ),
             Column::make('Date')
                 ->label(
-                    fn ($row) => $row->texts->first()?->interview_date
-                        ? $row->texts->first()->interview_date->toFormattedDateString()
-                        : '-'
+                    fn ($row) => $row->interview_date?->toFormattedDateString() ?? '-'
                 )
                 ->sortable(
                     fn (Builder $query, $direction) => $query->orderBy('interview_date', $direction)
@@ -60,8 +58,7 @@ class InterviewsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Interview::select('interview_main.*', 'individuals.ind_name', 'interview_text.interview_date')
-            ->leftJoin('interview_text', 'interview_text.interview_id', '=', 'interview_main.id')
+        return Interview::select('interview_main.*', 'individuals.ind_name')
             ->leftJoin('individuals', 'individuals.id', '=', 'interview_main.individual_id');
     }
 

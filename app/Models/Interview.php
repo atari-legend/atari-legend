@@ -15,7 +15,14 @@ class Interview extends Model implements Feedable
     protected $table = 'interview_main';
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'individual_id', 'draft'];
+    protected $fillable = [
+        'user_id', 'individual_id', 'draft',
+        'interview_text', 'interview_date', 'interview_intro', 'interview_chapters',
+    ];
+
+    protected $casts = [
+        'interview_date' => 'datetime:timestamp',
+    ];
 
     public function user()
     {
@@ -25,11 +32,6 @@ class Interview extends Model implements Feedable
     public function individual()
     {
         return $this->belongsTo(Individual::class);
-    }
-
-    public function texts()
-    {
-        return $this->hasMany(InterviewText::class);
     }
 
     public function screenshots()
@@ -59,8 +61,8 @@ class Interview extends Model implements Feedable
         return FeedItem::create([
             'id'         => $this->getKey(),
             'title'      => 'Interview: ' . $this->individual->ind_name,
-            'summary'    => Helper::bbCode($this->texts->first()->interview_intro),
-            'updated'    => $this->texts->first()->interview_date,
+            'summary'    => Helper::bbCode($this->interview_intro),
+            'updated'    => $this->interview_date,
             'link'       => route('interviews.show', $this),
             'authorName' => Helper::user($this->user),
         ]);

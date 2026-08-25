@@ -25,7 +25,7 @@
                             {{ $interview->individual->ind_name }}
                         </a>
                     </h3>
-                    <p class="card-subtitle text-muted">{{ $interview->texts->first()->interview_date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
+                    <p class="card-subtitle text-muted">{{ $interview->interview_date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
                 </div>
 
                 <div class="clearfix">
@@ -37,7 +37,7 @@
                         <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
                     @endif
 
-                    {!! Helper::bbCode(e($interview->texts->first()->interview_intro)) !!}<br>
+                    {!! Helper::bbCode(e($interview->interview_intro)) !!}<br>
                     <a class="d-block text-end mt-2" href="{{ route('interviews.show', ['interview' => $interview]) }}">
                         Read the interview of {{ $interview->individual->ind_name }} <i class="fas fa-chevron-right"></i>
                     </a>

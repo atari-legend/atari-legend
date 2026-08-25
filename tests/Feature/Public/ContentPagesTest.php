@@ -39,10 +39,9 @@ class ContentPagesTest extends TestCase
 
     private function interview(string $date = '2026-01-01'): Interview
     {
-        $interview = Interview::factory()->create();
-        $interview->texts()->first()->update(['interview_date' => Carbon::parse($date)->timestamp]);
-
-        return $interview->fresh();
+        return Interview::factory()->create([
+            'interview_date' => Carbon::parse($date)->timestamp,
+        ]);
     }
 
     // Articles

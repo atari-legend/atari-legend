@@ -421,7 +421,7 @@ class AdminStatisticsHelper
         $sources = [
             'News'       => DB::table('news')->pluck('news_date'),
             'Reviews'    => DB::table('review_main')->pluck('review_date'),
-            'Interviews' => DB::table('interview_text')->pluck('interview_date'),
+            'Interviews' => DB::table('interview_main')->pluck('interview_date'),
             'Articles'   => DB::table('article_main')->pluck('article_date'),
         ];
 

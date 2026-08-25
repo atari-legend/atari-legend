@@ -14,11 +14,11 @@
 
     <div class="card-body p-2 bg-darklight">
         <h3 class="fs-5 text-audiowide">Written by {{ Helper::user($interview->user) }}</h3>
-        <span class="text-muted">{{ $interview->texts->first()->interview_date->format('F j, Y') }}</span>
+        <span class="text-muted">{{ $interview->interview_date->format('F j, Y') }}</span>
     </div>
     <div class="card-body p-2 bg-darklight">
-        @if (isset($interview->texts()->first()->interview_chapters))
-            <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->texts()->first()->interview_chapters), false)) !!}</p>
+        @if (isset($interview->interview_chapters))
+            <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->interview_chapters), false)) !!}</p>
         @endif
 
         <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
@@ -39,6 +39,6 @@
             @endforeach
         </div>
 
-        <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->texts()->first()->interview_text), false)) !!}</p>
+        <p class="card-text">{!! Helper::bbCode(nl2br(e($interview->interview_text), false)) !!}</p>
     </div>
 </div>

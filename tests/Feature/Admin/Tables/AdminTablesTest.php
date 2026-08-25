@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin\Tables;
 
 use App\Livewire\Admin\ArticlesTable;
 use App\Livewire\Admin\CommentsTable;
+use App\Livewire\Admin\InterviewsTable;
 use App\Livewire\Admin\CrewsTable;
 use App\Livewire\Admin\Games\GameCompaniesTable;
 use App\Livewire\Admin\Games\GameIndividualsTable;
@@ -19,6 +20,7 @@ use App\Livewire\Admin\SpotlightsTable;
 use App\Livewire\Admin\UsersTable;
 use App\Models\Article;
 use App\Models\Crew;
+use App\Models\Interview;
 use App\Models\Game;
 use App\Models\GameSeries;
 use App\Models\GameSubmitInfo;
@@ -437,6 +439,30 @@ class AdminTablesTest extends AdminTestCase
         Livewire::test(ArticlesTable::class)
             ->assertSee('Coding the blitter')
             ->assertSee('Jan 21, 2018');
+    }
+
+    /**
+     * The interviews table left joins individuals and selects
+     * interview_main.* alongside individuals.ind_name. An interview with no
+     * subject is the row that used to null out the primary key of every row
+     * in a join like this one, by hydrating the model from the joined table's
+     * id -- silently, with no exception and nothing in the log. So this
+     * asserts the edit link, which is built from getKey(), rather than the
+     * rendered name.
+     *
+     * The E2E fixture used to carry a subject-less interview for the same
+     * reason. It cannot any more: before interview_text was merged in, the
+     * public list inner joined it and never saw such a row, and now it would
+     * render one and fail on the missing name. This assertion is the better
+     * home for it -- it names the id it expects, where the fixture only
+     * proved the page was a 200.
+     */
+    public function test_the_interviews_table_keeps_its_own_key_when_the_subject_is_missing(): void
+    {
+        $interview = Interview::factory()->create(['individual_id' => null]);
+
+        Livewire::test(InterviewsTable::class)
+            ->assertSee(route('admin.interviews.interviews.edit', $interview->getKey()), escape: false);
     }
 
     /**
