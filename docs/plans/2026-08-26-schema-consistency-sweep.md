@@ -22,6 +22,14 @@ Every figure below was measured against the dev MariaDB 10.11 on 2026-08-27,
 with the query named so it can be re-run. Decisions were settled with nicolas on
 2026-08-26 and 2026-08-27.
 
+**Executed 2026-08-28.** Three corrections were made in the doing, and are
+recorded where they belong rather than folded silently into the text: Phase 1
+turned out to exist only on the production lineage and broke `migrate:fresh` as
+first written (see the correction under its "The migrations"); Phase 5's claim
+about test coverage was wrong (see the correction under its "The attributes and
+the endpoints"); and the user count has drifted from 875 to 766 since the
+census, which changes no decision in Phase 3b.
+
 | Phase | Scope | Migration? | Risk |
 |---|---|---|---|
 | 1 — indexes | 15 indexes duplicating a primary key, 2 duplicate indexes on `users.userid`, 2 tables with no primary key | Yes | None — metadata only |
@@ -157,6 +165,43 @@ Three, metadata-only, guarded `!== 'sqlite'` (never `=== 'mysql'`).
 Rehearsed on a structure-only copy of the dev database on 2026-08-27: every
 statement runs clean, including `users.user_id`, a unique index on `id` with ten
 inbound foreign keys. InnoDB uses the primary key for all ten.
+
+#### Correction, 2026-08-28: this phase only exists on one lineage
+
+Every figure in this plan was measured against the production-lineage dev
+database, and this phase is the one place where that is not enough. A database
+built by `migrate:fresh` has **none** of what Phase 1 removes: no redundant
+indexes, no `userid_2` or `userid_3`, and `PRIMARY KEY (id)` already on
+`news_image` and `trivia`. The historical `create_*` migrations never declared
+any of it.
+
+So "drop by the literal index name" is right about `dropIndex(['id'])` deriving
+a name that does not exist, and still fails on the other lineage:
+
+```
+SQLSTATE[42000]: 1091 Can't DROP INDEX `comments_id`; check that it exists
+```
+
+`migrate:fresh` was broken by the first draft of this phase, which the
+verification's own step 4 caught. As executed, each of the three migrations
+reads `information_schema` and acts on what is there, using this section's own
+census as the criterion — any secondary index on exactly the primary key's
+columns, whatever it is called. That is the same conclusion the foreign-key
+campaign reached about names not agreeing between environments.
+
+Every `down()` in the phase is empty, deliberately. What the phase removes is
+redundant with the primary key by definition, no index name is read at runtime,
+and re-creating it would restore the divergence between the two lineages rather
+than a capability. Rolling back and migrating again still round-trips, because
+`up()` acts on what it finds and finds nothing the second time.
+
+**Phases 2, 3a and 3b are unaffected.** The 27 non-`id` primary keys and every
+constraint rule in Phase 3b are identical on both lineages; the only Phase 2
+statements that needed the same treatment are its five index drops.
+
+The standing rule this leaves behind: **measure a schema change against both a
+production-lineage database and a `migrate:fresh` build.** A census taken on one
+is a statement about one.
 
 ### Acceptance
 
@@ -654,6 +699,21 @@ with no `data-autocomplete-id` contract and is out of scope.
 with a whole-array `assertSame(['ind_name' => …, 'ind_id' => …])`. It is the
 only PHPUnit assertion on either wire key; `Admin/Ajax/GameController::games()`
 has no PHPUnit coverage, and its only gate is the Playwright admin-write specs.
+
+**Correction, 2026-08-28: that is wrong on both counts.**
+`tests/Feature/Public/AutocompleteTest.php` pins both keys in three more places,
+and two of them are on `admin.ajax.games`, so that endpoint does have PHPUnit
+coverage. The three that move with the endpoints are the `admin.ajax.games`
+assertion in `test_the_admin_autocomplete_names_the_developers`, the
+`$adminResults` half of `test_the_wire_format_pins_the_primary_keys`, and the
+`ind_id` case in `test_the_remaining_endpoints_pin_their_primary_keys`.
+
+The `game_id` assertions in the *same file* against the public `ajax.games`
+route stay as they are, because the public endpoint is out of scope. That
+leaves `test_the_wire_format_pins_the_primary_keys` asserting `game_id` for the
+public endpoint and `id` for the admin one — an asymmetry this plan did not
+discuss, which is the intended end state and now carries a comment in the test
+saying so.
 
 `data-autocomplete-key`, the name half of the wire format, is out of scope, so
 the format after this phase is `{id, ind_name}`.

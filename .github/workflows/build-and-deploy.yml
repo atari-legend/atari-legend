@@ -121,7 +121,7 @@ jobs:
           # migrate:fresh that is broken on MariaDB. This job is what sees that.
           php artisan migrate:fresh --force
           # --step=1, not a bare rollback. After migrate:fresh every migration
-          # is in one batch, so a bare rollback tries to reverse all 262 of
+          # is in one batch, so a bare rollback tries to reverse all 329 of
           # them and dies around the 32nd on down() methods written years ago
           # and never run since. What actually needs to work is reversing the
           # newest migration, which is what a bad deploy would do.
