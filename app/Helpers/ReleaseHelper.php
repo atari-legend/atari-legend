@@ -32,7 +32,7 @@ class ReleaseHelper
             ->toArray();
     }
 
-    public static function boxScans(Release $release): Collection
+    public static function boxScans(GameRelease $release): Collection
     {
         return $release->boxscans
             ->filter(function ($boxscan) {
