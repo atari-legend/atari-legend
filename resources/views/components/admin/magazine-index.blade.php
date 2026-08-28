@@ -42,7 +42,7 @@
                             <div class="input-group">
                                 <input class="autocomplete form-control" name="game_name" type="search" required
                                     data-autocomplete-endpoint="{{ route('admin.ajax.games') }}" data-autocomplete-key="game_name"
-                                    data-autocomplete-id="game_id" data-autocomplete-companion="{{ $i->id }}_game_id"
+                                    data-autocomplete-id="id" data-autocomplete-companion="{{ $i->id }}_game_id"
                                     data-autocomplete-max="20"
                                     value="{{ $i->game?->game_name }}" placeholder="Type a game name..." autocomplete="off">
                                 <button type="button" class="btn btn-outline-secondary"
@@ -75,7 +75,7 @@
                             <div class="input-group">
                                 <input class="autocomplete form-control" name="{{ $i->id }}_individual_name"
                                     type="search" required data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                                    data-autocomplete-key="ind_name" data-autocomplete-id="ind_id"
+                                    data-autocomplete-key="ind_name" data-autocomplete-id="id"
                                     data-autocomplete-companion="{{ $i->id }}_individual_id"
                                     value="{{ $i->individual?->ind_name }}" placeholder="Type an individual name..."
                                     autocomplete="off">

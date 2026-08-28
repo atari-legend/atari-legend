@@ -24,7 +24,7 @@
                         <input class="autocomplete form-control @error('game') is-invalid @enderror"
                             name="game_name" id="game_name" type="search" required
                             data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
-                            data-autocomplete-key="game_name" data-autocomplete-id="game_id"
+                            data-autocomplete-key="game_name" data-autocomplete-id="id"
                             data-autocomplete-companion="game"
                             value="{{ old('game_name') }}"
                             placeholder="Type a game name..." autocomplete="off">

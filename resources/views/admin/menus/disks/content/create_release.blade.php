@@ -25,7 +25,7 @@
         name="game_name" id="game_name" type="search"
         data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
         data-autocomplete-max="20"
-        data-autocomplete-key="game_name" data-autocomplete-id="game_id"
+        data-autocomplete-key="game_name" data-autocomplete-id="id"
         data-autocomplete-companion="game" value="{{ old('game_name') }}"
         placeholder="Type a game name..." autocomplete="off">
     <input type="hidden" name="game" value="{{ old('game') }}">

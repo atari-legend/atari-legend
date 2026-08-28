@@ -265,7 +265,7 @@ class AutocompleteTest extends TestCase
             ->json();
 
         $this->assertSame('Xenon [The Bitmap Brothers]', $results[0]['game_name']);
-        $this->assertSame($game->getKey(), $results[0]['game_id']);
+        $this->assertSame($game->getKey(), $results[0]['id']);
     }
 
     /**
@@ -311,6 +311,12 @@ class AutocompleteTest extends TestCase
     /**
      * Pin the autocomplete wire format so that a schema rename does not silently
      * break the frontend by changing the keys.
+     *
+     * The two endpoints deliberately name their key differently, and that is
+     * the end state, not a slip. The admin box feeds a hidden field through a
+     * `data-autocomplete-id` attribute, so it emits `id`, the wire name every
+     * such endpoint shares. The public box has no companion field - its
+     * consumer follows `url` - so it keeps the `game_id` it has always sent.
      */
     public function test_the_wire_format_pins_the_primary_keys(): void
     {
@@ -327,14 +333,15 @@ class AutocompleteTest extends TestCase
             ->assertOk()
             ->json();
 
-        $this->assertArrayHasKey('game_id', $adminResults[0], 'The wire format must expose the game_id key');
-        $this->assertNotNull($adminResults[0]['game_id'], 'The game_id must not be null');
-        $this->assertIsScalar($adminResults[0]['game_id'], 'The game_id must be a scalar');
+        $this->assertArrayHasKey('id', $adminResults[0], 'The wire format must expose the id key');
+        $this->assertNotNull($adminResults[0]['id'], 'The id must not be null');
+        $this->assertIsScalar($adminResults[0]['id'], 'The id must be a scalar');
     }
 
     /**
-     * The other four endpoints that serialise models straight to JSON, so their
-     * keys *are* the column names.
+     * The other four endpoints, which all name their key `id` - three because
+     * they serialise models straight to JSON, individuals because it spells the
+     * wire name out in an array literal.
      *
      * autocomplete.js:83 looks the id up by the `data-autocomplete-id` attribute
      * on the field. Rename the column without moving the Blade attribute and the
@@ -356,7 +363,7 @@ class AutocompleteTest extends TestCase
         $cases = [
             ['id', $this->getJson(route('ajax.crews', ['q' => 'Replicants']))],
             ['id', $this->getJson(route('ajax.companies', ['q' => 'Ocean']))],
-            ['ind_id', $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))],
+            ['id', $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))],
             ['id', $this->actingAs($admin)->getJson(route('admin.ajax.users', ['q' => 'pinned-admin']))],
         ];
 

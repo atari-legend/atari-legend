@@ -92,7 +92,7 @@
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
                         data-autocomplete-key="ind_name"
-                        data-autocomplete-id="ind_id" data-autocomplete-companion="individual_select"
+                        data-autocomplete-id="id" data-autocomplete-companion="individual_select"
                         id="individual" name="individual" autocomplete="off">
                     <input type="hidden" name="individual_select">
                     <select class="form-select d-none" id="individual_id" name="individual_id">

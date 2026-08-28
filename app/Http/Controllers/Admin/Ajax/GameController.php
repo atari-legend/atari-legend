@@ -51,7 +51,7 @@ class GameController extends Controller
                 return [
                     'game_name'  => $aka->aka_name,
                     'developers' => $developers,
-                    'game_id'    => $aka->game->getKey(),
+                    'id'         => $aka->game->getKey(),
                 ];
             })
             ->take(GameController::MAX)
@@ -67,7 +67,7 @@ class GameController extends Controller
                 return [
                     'game_name'  => $game->game_name,
                     'developers' => $developers,
-                    'game_id'    => $game->getKey(),
+                    'id'         => $game->getKey(),
                 ];
             })
             ->take(GameController::MAX)
@@ -100,7 +100,7 @@ class GameController extends Controller
             ->map(function ($data) {
                 return [
                     'game_name' => $data['game_name'] . $data['developers'],
-                    'game_id'   => $data['game_id'],
+                    'id'        => $data['id'],
                 ];
             })
             ->take(GameController::MAX)

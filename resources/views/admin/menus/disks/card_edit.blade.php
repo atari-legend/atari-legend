@@ -50,7 +50,7 @@
                 <input class="autocomplete form-control @error('donated') is-invalid @enderror"
                     name="individual_name" id="individual_name" type="search"
                     data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                    data-autocomplete-key="ind_name" data-autocomplete-id="ind_id"
+                    data-autocomplete-key="ind_name" data-autocomplete-id="id"
                     data-autocomplete-companion="donated" value="{{ old('individual_name', isset($disk) ? $disk->donatedByIndividual?->ind_name : '') }}"
                     placeholder="Type an individual name..." autocomplete="off">
                 <input type="hidden" name="donated" value="{{ old('donated', isset($disk) ? $disk->donatedByIndividual?->getKey() : '') }}">

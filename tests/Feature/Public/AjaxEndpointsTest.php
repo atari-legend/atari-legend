@@ -171,7 +171,7 @@ class AjaxEndpointsTest extends TestCase
 
         $results = $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))->assertOk()->json();
 
-        $this->assertSame(['ind_name' => 'Jochen Hippel', 'ind_id' => $individual->getKey()], $results[0]);
+        $this->assertSame(['ind_name' => 'Jochen Hippel', 'id' => $individual->getKey()], $results[0]);
     }
 
     /**

@@ -9,7 +9,7 @@
             <div class="col">
                 <input class="autocomplete form-control @error('game_name') is-invalid @enderror" name="game_name"
                     id="game_name" type="search" data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
-                    data-autocomplete-key="game_name" data-autocomplete-id="game_id" data-autocomplete-companion="game"
+                    data-autocomplete-key="game_name" data-autocomplete-id="id" data-autocomplete-companion="game"
                     value="{{ old('game_name') }}" placeholder="Type a game name..." autocomplete="off" required>
                 <input type="hidden" name="game" value="{{ old('game') }}">
 
