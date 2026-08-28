@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Admin\Other;
 
+use App\Livewire\Admin\UsersTable;
+use App\Models\Article;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
@@ -15,6 +17,7 @@ use App\Models\Website;
 use App\Models\WebsiteCategory;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -293,6 +296,94 @@ class RemainingSectionsTest extends AdminTestCase
             ->assertRedirect(route('admin.users.users.index'));
 
         $this->assertSame(0, User::whereKey($user->getKey())->count());
+    }
+
+    /**
+     * Deleting an account does not take the person's work with it: the policy
+     * is that a user can be deleted and what they wrote stays. `articles`
+     * SET NULLs and `comments` has no constraint at all, so both rows outlive
+     * the author, and Helper::user() renders the gap as 'Former user'.
+     */
+    public function test_deleting_a_user_leaves_their_article_and_comment_standing(): void
+    {
+        $author = User::factory()->create(['userid' => 'Stimpy']);
+        $article = Article::factory()->titled('Coding the blitter')->create([
+            'user_id' => $author->getKey(),
+        ]);
+        $game = Game::factory()->named('Xenon')->create();
+
+        $this->actingAs($author)->post(route('games.comment', $game), ['comment' => 'Still holds up.']);
+        $this->actingAs($this->admin);
+
+        $this->delete(route('admin.users.users.destroy', $author))
+            ->assertRedirect(route('admin.users.users.index'));
+
+        $this->assertSame(0, User::whereKey($author->getKey())->count());
+
+        $this->get(route('articles.show', $article))
+            ->assertOk()
+            ->assertSee('Coding the blitter')
+            ->assertSee('Written by Former user')
+            ->assertDontSee('Stimpy');
+
+        $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSee('Still holds up.')
+            ->assertSee('Former user')
+            ->assertDontSee('Stimpy');
+    }
+
+    /**
+     * `game_submitinfo` is one of the three foreign keys pointing at `users`
+     * that is ON DELETE RESTRICT. Without the guard on the model this delete
+     * reaches the database and comes back as a raw 1451 error page, so the
+     * refusal has to be a flashed message and a redirect - not a 403, and not
+     * a 404: the request is well formed and the user is there.
+     */
+    public function test_a_user_holding_a_game_submission_cannot_be_deleted(): void
+    {
+        $game = Game::factory()->create();
+        $blocked = User::factory()->create(['userid' => 'Ren']);
+
+        $this->actingAs($blocked)
+            ->post(route('games.submitInfo', $game), ['info' => 'The publisher is wrong.']);
+        $this->actingAs($this->admin);
+
+        $this->delete(route('admin.users.users.destroy', $blocked))
+            ->assertRedirect(route('admin.users.users.index'))
+            ->assertSessionHas(
+                'alert-danger',
+                "'Ren' cannot be deleted while they still hold a game submission or a dump."
+            );
+
+        $this->assertSame(1, User::whereKey($blocked->getKey())->count());
+
+        // A refused write leaves no trace
+        $this->assertSame(0, Changelog::where('section', 'Users')->count());
+    }
+
+    /**
+     * Matched on the button labels rather than the form action: the blocked
+     * row still renders a form pointing at the destroy URL, so a URL check
+     * could not tell the two rows apart. The quotes are literal template text
+     * rather than escaped output, hence $escape = false. The disabled button
+     * says 'Cannot delete user', with a small d, so it cannot satisfy the
+     * assertion for the live one.
+     */
+    public function test_the_delete_button_is_only_offered_for_a_user_who_can_be_deleted(): void
+    {
+        $game = Game::factory()->create();
+        $blocked = User::factory()->create(['userid' => 'Ren']);
+        User::factory()->create(['userid' => 'Stimpy']);
+
+        $this->actingAs($blocked)
+            ->post(route('games.submitInfo', $game), ['info' => 'The publisher is wrong.']);
+        $this->actingAs($this->admin);
+
+        Livewire::test(UsersTable::class)
+            ->assertSee("Delete user 'Stimpy'", false)
+            ->assertDontSee("Delete user 'Ren'", false)
+            ->assertSee("Cannot delete user 'Ren'", false);
     }
 
     public function test_a_comment_can_be_edited_and_deleted(): void

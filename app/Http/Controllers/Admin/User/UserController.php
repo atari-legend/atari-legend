@@ -75,8 +75,22 @@ class UserController extends Controller
         return redirect()->route('admin.users.users.index');
     }
 
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
+        // The hidden button in the users table is an affordance, not a
+        // boundary: a hand-crafted request has to be refused here, or it
+        // reaches a foreign-key error page. It is not an authorisation failure
+        // and the user is not missing, so this is a refused write rather than
+        // a 403 or a 404, the same way Games/GameController::destroy() does it.
+        if (! $user->is_deletable) {
+            $request->session()->flash(
+                'alert-danger',
+                "'{$user->userid}' cannot be deleted while they still hold a game submission or a dump."
+            );
+
+            return redirect()->route('admin.users.users.index');
+        }
+
         $user->delete();
 
         ChangelogHelper::insert([

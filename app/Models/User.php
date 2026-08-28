@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -116,5 +117,54 @@ class User extends Authenticatable implements MustVerifyEmail
     public function gameSubmissions()
     {
         return $this->hasMany(GameSubmitInfo::class);
+    }
+
+    public function dumps()
+    {
+        return $this->hasMany(Dump::class);
+    }
+
+    /**
+     * A user can only be deleted while nothing holds a RESTRICT on them.
+     *
+     * Exactly three relations block, and they are the three whose foreign key
+     * is ON DELETE RESTRICT: game_submitinfo, dump and dump_user_info. Without
+     * this guard, deleting one of the 114 accounts holding such a row reaches
+     * the admin as a raw 1451 error page, and takes an unattended
+     * user:delete-unverified run down with it.
+     *
+     * Nothing else blocks, deliberately, and the distinction is what makes the
+     * guard usable rather than an obstacle. Articles, interviews, news,
+     * reviews, website and website_validate are SET NULL: the content survives
+     * and the author blanks. game_votes is SET NULL too, so the vote survives
+     * as an anonymous one. comments, change_log, menu_disk_dumps,
+     * news_submission, bug_report, users_reset and users_login_attempts either
+     * SET NULL or dangle harmlessly, and the frontend renders a dangling
+     * user_id as a missing author. Making any of those block would put 150
+     * comment-holders permanently beyond deletion, which is the opposite of
+     * the policy: a person who asks to be removed can be.
+     *
+     * This lives on the model rather than in the controller because two
+     * callers need it -- the admin screen and DeleteUnverifiedUsers, which has
+     * to skip a blocked account rather than throw out of its loop.
+     *
+     * users.inactive is not consulted. It is a login gate that User::isActive()
+     * combines with email_verified_at, and it says nothing about a person's
+     * contributions, which stay attributed while an account is merely
+     * inactive.
+     */
+    public function getIsDeletableAttribute(): bool
+    {
+        if ($this->gameSubmissions()->exists()) {
+            return false;
+        }
+
+        if ($this->dumps()->exists()) {
+            return false;
+        }
+
+        // dump_user_info has no model and no reader anywhere in the
+        // application -- only the RESTRICT that makes it matter here.
+        return ! DB::table('dump_user_info')->where('user_id', $this->getKey())->exists();
     }
 }

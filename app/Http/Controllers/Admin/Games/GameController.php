@@ -141,11 +141,11 @@ class GameController extends Controller
         $name = $game->game_name;
 
         DB::transaction(function () use ($game) {
-            // Everything with a foreign key to `game` cascades. These three are
-            // what the database will not do:
+            // Everything with a foreign key to `game` cascades, and since the
+            // schema consistency sweep that includes game_aka and game_vs,
+            // which used to be swept by hand here because they had no foreign
+            // key at all. One case is left that the database will not do:
             //
-            //   game_aka - no foreign key at all; would be orphaned
-            //   game_vs  - no foreign key at all; would be orphaned
             //   comments - game_user_comments cascades, but the comments row it
             //              points at does not, and Comment::getType() throws on
             //              a comment that belongs to nothing, which would take
@@ -155,8 +155,6 @@ class GameController extends Controller
             // reach them are gone the moment it goes.
             $commentIds = $game->comments->modelKeys();
 
-            $game->akas()->delete();
-            $game->vs()->delete();
             $game->delete();
 
             Comment::destroy($commentIds);

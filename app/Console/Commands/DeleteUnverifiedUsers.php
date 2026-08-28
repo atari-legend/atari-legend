@@ -56,6 +56,20 @@ class DeleteUnverifiedUsers extends Command
                 . $minDate->toDateTimeString());
 
             $users->each(function ($user) {
+                // A blocked account is skipped and reported rather than
+                // attempted. Three foreign keys pointing at users are ON DELETE
+                // RESTRICT, and a $user->delete() that hits one throws out of
+                // this closure and abandons the rest of the run -- which is
+                // unattended, so nobody would see it fail. This is why the
+                // guard is an attribute on the model and not a check in the
+                // admin controller.
+                if (! $user->is_deletable) {
+                    $this->warn("Skipping '" . $user->userid . "' " . $user->email
+                        . ': still holds a game submission or a dump');
+
+                    return;
+                }
+
                 $this->comment("Deleting '" . $user->userid . "' " . $user->email . ' (Join date: '
                     . Carbon::createFromTimestamp($user->join_date)->toDateTimeString() . ')');
 

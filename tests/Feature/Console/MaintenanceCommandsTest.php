@@ -73,6 +73,30 @@ class MaintenanceCommandsTest extends TestCase
         $this->assertSame(1, User::where('userid', 'Verified')->count());
     }
 
+    /**
+     * Three of the foreign keys pointing at `users` are ON DELETE RESTRICT, and
+     * a delete that hits one used to throw out of `$users->each()` and abandon
+     * the rest of an unattended run. The blocked account is now named and
+     * stepped over, and the accounts behind it still go - which is why it is
+     * the older of the two here: the command works through them by join date.
+     */
+    public function test_an_account_that_cannot_be_deleted_is_skipped_and_the_run_goes_on(): void
+    {
+        $blocked = $this->unverifiedUser('Uploader', '2020-01-01');
+        Dump::factory()->create(['user_id' => $blocked->getKey()]);
+
+        $this->unverifiedUser('Bot', '2020-06-01');
+
+        $this->artisan('user:delete-unverified', ['--delete' => true])
+            ->expectsOutputToContain(
+                "Skipping 'Uploader' " . $blocked->email . ': still holds a game submission or a dump'
+            )
+            ->assertExitCode(0);
+
+        $this->assertSame(1, User::where('userid', 'Uploader')->count());
+        $this->assertSame(0, User::where('userid', 'Bot')->count());
+    }
+
     public function test_nothing_to_delete_says_nothing(): void
     {
         $this->artisan('user:delete-unverified')

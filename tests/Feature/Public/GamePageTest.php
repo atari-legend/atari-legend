@@ -159,6 +159,45 @@ class GamePageTest extends TestCase
     }
 
     /**
+     * `game_votes.user_id` is ON DELETE SET NULL rather than CASCADE, so
+     * deleting an account anonymises its votes instead of destroying them and
+     * the score it contributed to survives. Voting is sparse - most games
+     * carry a single voter - so a CASCADE here blanks whole pages.
+     *
+     * Deleting the voter through the admin screen rather than nulling the
+     * column by hand, because the constraint is the thing under test.
+     */
+    public function test_a_deleted_voters_vote_is_anonymised_and_still_counts(): void
+    {
+        $game = Game::factory()->named('Xenon')->create();
+        $voter = User::factory()->create();
+
+        // The stored score is 0-4 and the page shows it out of five, so this
+        // one lands on 2.50 rather than 2
+        GameVote::factory()->scored(2)->create([
+            'game_id' => $game->getKey(),
+            'user_id' => $voter->getKey(),
+        ]);
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->delete(route('admin.users.users.destroy', $voter))
+            ->assertRedirect(route('admin.users.users.index'));
+
+        $this->assertDatabaseHas('game_votes', [
+            'game_id' => $game->getKey(),
+            'user_id' => null,
+        ]);
+
+        $response = $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSee('2.50')
+            ->assertSee('1 vote');
+
+        $this->assertSame(1, $response->viewData('voteCount'));
+        $this->assertNotNull($response->viewData('score'));
+    }
+
+    /**
      * A visitor's own vote is only looked up once they are signed in.
      */
     public function test_the_visitors_own_vote_is_only_loaded_when_signed_in(): void
