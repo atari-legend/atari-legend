@@ -136,7 +136,6 @@ class AdminStatisticsHelper
                 'Comments'          => DB::table('comments')->count(),
                 'Votes'             => DB::table('game_votes')->count(),
                 'News submissions'  => DB::table('news_submission')->count(),
-                'Bug reports'       => DB::table('bug_report')->count(),
             ],
         ];
     }

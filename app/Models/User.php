@@ -136,12 +136,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * guard usable rather than an obstacle. Articles, interviews, news,
      * reviews, website and website_validate are SET NULL: the content survives
      * and the author blanks. game_votes is SET NULL too, so the vote survives
-     * as an anonymous one. comments, change_log, menu_disk_dumps,
-     * news_submission and bug_report either SET NULL or dangle harmlessly, and
-     * the frontend renders a dangling user_id as a missing author. Making any
-     * of those block would put 150 comment-holders permanently beyond
-     * deletion, which is the opposite of the policy: a person who asks to be
-     * removed can be.
+     * as an anonymous one. comments, change_log, menu_disk_dumps and
+     * news_submission either SET NULL or dangle harmlessly, and the frontend
+     * renders a dangling user_id as a missing author. Making any of those
+     * block would put 150 comment-holders permanently beyond deletion, which
+     * is the opposite of the policy: a person who asks to be removed can be.
      *
      * This lives on the model rather than in the controller because two
      * callers need it -- the admin screen and DeleteUnverifiedUsers, which has
