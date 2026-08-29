@@ -462,8 +462,8 @@ class AuthTest extends TestCase
     }
 
     /**
-     * A reset rewrites the legacy credentials: a fresh salt, a matching hash,
-     * and the older MD5 password blanked out.
+     * A reset rewrites the legacy credentials: a fresh salt and a matching
+     * hash.
      */
     public function test_a_valid_token_changes_the_password(): void
     {
@@ -483,7 +483,6 @@ class AuthTest extends TestCase
             UserHelper::hashPassword('the-new-password', $user->salt),
             $user->sha512_password
         );
-        $this->assertNull($user->password);
     }
 
     public function test_the_new_password_works_at_the_login_form(): void

@@ -6,7 +6,6 @@ use App\Helpers\UserHelper;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -268,7 +267,6 @@ class E2ESeeder extends Seeder
                 [
                     'email'             => $email,
                     'email_verified_at' => $verified ? now() : null,
-                    'password'          => Hash::make('password'),
                     'salt'              => $salt,
                     'sha512_password'   => $sha512Password,
                     'permission'        => $permission,
@@ -277,7 +275,6 @@ class E2ESeeder extends Seeder
                     'last_visit'        => (string) now()->timestamp,
                     'remember_token'    => Str::random(10),
                     'karma'             => 0,
-                    'show_email'        => false,
                 ]
             );
         }

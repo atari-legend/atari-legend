@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -12,11 +11,6 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
-
     /**
      * Define the model's default state.
      *
@@ -33,7 +27,6 @@ class UserFactory extends Factory
             'userid'            => fake()->unique()->userName(),
             'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password'          => static::$password ??= Hash::make('password'),
             // Legacy credentials, only set once a user changes their password
             'sha512_password'   => null,
             'salt'              => null,
@@ -44,14 +37,12 @@ class UserFactory extends Factory
             // them. `OnlineUsers` compares these numerically.
             'join_date'         => (string) now()->timestamp,
             'last_visit'        => (string) now()->timestamp,
-            'session'           => null,
             'avatar_ext'        => null,
             'user_website'      => null,
             'user_fb'           => null,
             'user_twitter'      => null,
             'user_af'           => null,
             'karma'             => 0,
-            'show_email'        => false,
         ];
     }
 

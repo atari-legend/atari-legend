@@ -28,7 +28,6 @@ class WebsiteFactory extends Factory
             'website_count'  => 0,
             'rate_number'    => 1,
             'rate_score'     => 5,
-            'user_ip'        => null,
             'inactive'       => false,
             'description'    => fake()->sentence(),
         ];

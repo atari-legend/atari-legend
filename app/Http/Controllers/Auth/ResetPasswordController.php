@@ -42,7 +42,5 @@ class ResetPasswordController extends Controller
 
         $user->sha512_password = $hashedPassword;
         $user->salt = $salt;
-        // Empty old MD5 password
-        $user->password = null;
     }
 }
