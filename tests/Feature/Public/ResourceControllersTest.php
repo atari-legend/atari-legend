@@ -24,11 +24,8 @@ use Tests\TestCase;
  * and its stored extension, so the fixtures below are written to exactly those
  * paths - a file one directory out is the same as no file at all.
  *
- * The four `.webp` routes re-encode what they read, which needs GD built with
- * WebP. The php.dockerfile in the development environment builds it without,
- * so those assertions skip there and run in CI, which installs the full
- * extension. The cover art route is not affected: it answers in the format it
- * read.
+ * The four `.webp` routes re-encode what they read; the cover art route does
+ * not, and answers in the format it read.
  */
 class ResourceControllersTest extends TestCase
 {
@@ -47,13 +44,6 @@ class ResourceControllersTest extends TestCase
         parent::setUp();
 
         Storage::fake('public');
-    }
-
-    private function requireWebp(): void
-    {
-        if (! function_exists('imagewebp')) {
-            $this->markTestSkipped('GD was built without WebP support, so the image cannot be re-encoded.');
-        }
     }
 
     /**
@@ -88,8 +78,6 @@ class ResourceControllersTest extends TestCase
 
     public function test_a_box_scan_is_served_as_a_webp_of_at_most_five_hundred_pixels(): void
     {
-        $this->requireWebp();
-
         $release = GameRelease::factory()->create();
         $scan = ReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
@@ -110,8 +98,6 @@ class ResourceControllersTest extends TestCase
      */
     public function test_a_box_scan_is_cached_for_a_year(): void
     {
-        $this->requireWebp();
-
         $release = GameRelease::factory()->create();
         $scan = ReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
@@ -149,8 +135,6 @@ class ResourceControllersTest extends TestCase
 
     public function test_an_avatar_is_served_as_a_webp(): void
     {
-        $this->requireWebp();
-
         $individual = Individual::factory()->create(['ind_imgext' => 'png']);
         $this->storePng($individual->path, 800, 800);
 
@@ -166,8 +150,6 @@ class ResourceControllersTest extends TestCase
      */
     public function test_a_small_avatar_is_not_blown_up(): void
     {
-        $this->requireWebp();
-
         $individual = Individual::factory()->create(['ind_imgext' => 'png']);
         $this->storePng($individual->path, 120, 90);
 
@@ -193,8 +175,6 @@ class ResourceControllersTest extends TestCase
 
     public function test_a_spotlight_screenshot_is_served_as_a_webp(): void
     {
-        $this->requireWebp();
-
         $spotlight = Spotlight::factory()->create();
         $this->storePng($spotlight->screenshot->getPath('spotlight'), 640, 480);
 
@@ -213,8 +193,6 @@ class ResourceControllersTest extends TestCase
 
     public function test_a_link_screenshot_is_served_as_a_webp(): void
     {
-        $this->requireWebp();
-
         $website = Website::factory()->create(['website_imgext' => 'png']);
         $this->storePng($website->path, 1024, 768);
 

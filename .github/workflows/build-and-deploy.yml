@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      # Pinned to the same image the docker-compose development environment
-      # uses, so CI cannot disagree with it on server behaviour.
+      # Pinned to the same image the Sail development environment uses (see
+      # compose.yaml), so CI cannot disagree with it on server behaviour.
       db:
         image: mariadb:10.11
         env:

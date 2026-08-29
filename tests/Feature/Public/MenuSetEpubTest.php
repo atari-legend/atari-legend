@@ -16,11 +16,6 @@ use ZipArchive;
  * An EPUB is a ZIP with a prescribed layout, and the whole book - cover image
  * included - is built on the fly from the database, so these open the file that
  * comes back and read what is in it rather than trusting the content type.
- *
- * The cover is drawn with imagettftext(), which needs GD built with FreeType.
- * The php.dockerfile in the development environment builds it without, so these
- * skip there rather than reporting a failure that is about the container and
- * not the code; CI installs the full extension and runs them.
  */
 class MenuSetEpubTest extends TestCase
 {
@@ -30,15 +25,6 @@ class MenuSetEpubTest extends TestCase
      * Books written out for inspection, removed once the test is done.
      */
     private array $files = [];
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        if (! function_exists('imagettftext')) {
-            $this->markTestSkipped('GD was built without FreeType, so the EPUB cover cannot be drawn.');
-        }
-    }
 
     protected function tearDown(): void
     {

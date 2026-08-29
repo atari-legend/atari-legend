@@ -83,7 +83,7 @@ artisan filepond:discard       # Clean abandoned uploads
 ## Environment Variables
 
 ```env
-AL_HXCFE=                 # HxC Floppy Emulator path
+AL_HXCFE=                 # HxC Floppy Emulator path (optional; defaults to resources/bin/hxcfe)
 STONISH_ROOT=             # Stonish menu data path
 MATOMO_ID=                # Analytics tracking ID
 CAPTCHA_SECRET=           # hCaptcha secret
@@ -92,14 +92,22 @@ CAPTCHA_SITEKEY=          # hCaptcha site key
 
 ## Build & Deploy
 
-The project is using Docker Compose. Use `docker compose run --rm` to execute
-tools such as `npm`, `artisan`.
+The project runs on Laravel Sail (`compose.yaml`). Prefix every tool with
+`./vendor/bin/sail`; nothing is expected to work against host PHP.
 
 ```bash
-npm run dev      # Development with hot reload
-npm run build    # Production build
-php artisan test # Run PHPUnit tests
+./vendor/bin/sail up -d          # Start the stack (site on http://localhost)
+./vendor/bin/sail npm run dev    # Development with hot reload
+./vendor/bin/sail npm run build  # Production build
+./vendor/bin/sail artisan test   # Run PHPUnit tests
+./vendor/bin/sail mariadb        # SQL shell on the development database
 ```
+
+The stack is the stock Sail image. Four things in `compose.yaml` are pinned
+rather than left to Sail's defaults, each commented there: the 8.4 runtime,
+`mariadb:10.11`, `PHP_CLI_SERVER_WORKERS`, and a phpMyAdmin service on
+`http://localhost:8081`. Mailpit catches outgoing mail at
+`http://localhost:8025`.
 
 ## Tests
 

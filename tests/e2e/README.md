@@ -264,30 +264,40 @@ rows a run until follow-up 11 was fixed and is now a useful canary.
 
 The app has to be served against the E2E database, and the fixture has to be
 seeded into it first. CI does this with host `php` and MariaDB as a service; the
-recipe below does it through Docker Compose, which is how this project is
-normally driven.
+recipe below does it through Sail, which is how this project is normally driven.
 
 ```bash
-# One-off: an empty database for the fixture.
-docker compose exec db mariadb -uroot -patarilegend \
+# One-off: an empty database for the fixture. `sail mariadb` opens a shell but
+# forwards no arguments, so this one goes through compose directly.
+docker compose exec mariadb mariadb -uroot -patarilegend \
   -e 'CREATE DATABASE IF NOT EXISTS atarilegend_e2e;'
 
 cd /path/to/atari-legend
-E2E="-e DB_CONNECTION=mariadb -e DB_HOST=db -e DB_DATABASE=atarilegend_e2e \
+
+# The `sail` script exports these; plain `docker compose` does not, and Sail's
+# entrypoint gosus to $WWWUSER - so without them it tries to switch to a user
+# named after the first word of the command and dies.
+export WWWUSER=$(id -u) WWWGROUP=$(id -g)
+
+E2E="-e DB_CONNECTION=mariadb -e DB_HOST=mariadb -e DB_DATABASE=atarilegend_e2e \
      -e DB_USERNAME=root -e DB_PASSWORD=atarilegend -e APP_ENV=testing \
      -e APP_KEY=base64:AckfSECXIvnK5r28GVIWUAxmbBSjTsmF/0rZh1cyWXk="
 
-docker compose run --rm $E2E artisan migrate:fresh --force
-docker compose run --rm $E2E artisan db:seed --class=E2ESeeder --force
-docker compose run --rm npm run build      # @vite needs public/build/manifest.json
+docker compose run --rm $E2E laravel.test php artisan migrate:fresh --force
+docker compose run --rm $E2E laravel.test php artisan db:seed --class=E2ESeeder --force
+./vendor/bin/sail npm run build            # @vite needs public/build/manifest.json
 
 docker compose run -d --name al-e2e-serve -p 8123:8000 $E2E \
   -e APP_URL=http://127.0.0.1:8123 -e PHP_CLI_SERVER_WORKERS=16 \
-  --entrypoint php site -S 0.0.0.0:8000 -t public tests/e2e/support/server.php
+  laravel.test php -S 0.0.0.0:8000 -t public tests/e2e/support/server.php
 
-cd site && PLAYWRIGHT_TEST_BASE_URL=http://127.0.0.1:8123 npx playwright test
+PLAYWRIGHT_TEST_BASE_URL=http://127.0.0.1:8123 npx playwright test
 docker rm -f al-e2e-serve
 ```
+
+`docker compose run` rather than `sail` for the three that need `-e` overrides:
+the `sail` wrapper has no way to pass them through. `laravel.test` is the
+application container, and the only PHP image in the stack.
 
 Any subset runs on its own, which is the point of no project depending on
 another:
@@ -300,13 +310,8 @@ npx playwright test --project=admin-write --no-deps       # skip even the login,
 npx playwright test --project=public --project=public-write   # the isolation claim
 ```
 
-Three things that will bite otherwise:
+Two things that will bite otherwise:
 
-- **Serve from the `site` service, not `artisan`.** Both can run the router, but
-  they are different images: `site` is `httpd.dockerfile`, which is what actually
-  serves this application and builds GD with JPEG, WebP and FreeType. `artisan`
-  is `php.dockerfile`, an Alpine image shared with the legacy CPANEL whose GD is
-  PNG-only, so every route that re-encodes an image 500s under it.
 - **`APP_ENV=testing` makes Laravel read `.env.testing` *instead of* `.env`**, and
   that file sets only `DB_CONNECTION=sqlite`. Every other `DB_*` value has to be
   passed explicitly, `APP_KEY` included, or the app quietly points somewhere

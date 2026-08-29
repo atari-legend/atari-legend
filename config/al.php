@@ -19,5 +19,11 @@ return [
         // asserting on somebody else's uptime.
         'mp3_base_url' => env('AL_SNDH_MP3_BASE_URL', 'http://sndhrecord.atari.org/mp3/'),
     ],
-    'hxcfe' => env('AL_HXCFE', '/hxcfe'),
+    // Folder holding the HxC Floppy Emulator binary and its .so files.
+    // DumpHelper appends '/hxcfe' to this and runs the binary with the folder as
+    // its working directory, which the RPATH of '.' on the binary requires - so
+    // the layout has to stay flat. Not in the repository, like the unice68 and
+    // icecat binaries beside it; resources/bin is simply where this project
+    // keeps the native tools it shells out to.
+    'hxcfe' => env('AL_HXCFE', base_path('resources/bin/hxcfe')),
 ];

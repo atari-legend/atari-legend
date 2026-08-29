@@ -152,18 +152,9 @@ class MenuSetPagesTest extends TestCase
 
     /**
      * The scrolltext EPUB is generated on the fly and downloaded.
-     *
-     * The cover is drawn with imagettftext(), which needs GD built with
-     * FreeType. The php.dockerfile in the development environment installs GD
-     * without it, so this skips there rather than reporting a failure that is
-     * about the container and not the code.
      */
     public function test_the_scrolltext_epub_is_downloadable(): void
     {
-        if (! function_exists('imagettftext')) {
-            $this->markTestSkipped('GD was built without FreeType, so the EPUB cover cannot be drawn.');
-        }
-
         $set = MenuSet::factory()->create(['name' => 'Automation']);
         $menu = Menu::factory()->create(['menu_set_id' => $set->getKey(), 'number' => 1]);
         MenuDisk::factory()->withScrolltext('Greetings to all our friends')->create([
