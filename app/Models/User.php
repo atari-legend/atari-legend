@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -127,11 +126,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * A user can only be deleted while nothing holds a RESTRICT on them.
      *
-     * Exactly three relations block, and they are the three whose foreign key
-     * is ON DELETE RESTRICT: game_submitinfo, dump and dump_user_info. Without
-     * this guard, deleting one of the 114 accounts holding such a row reaches
-     * the admin as a raw 1451 error page, and takes an unattended
-     * user:delete-unverified run down with it.
+     * Exactly two relations block, and they are the two whose foreign key is
+     * ON DELETE RESTRICT: game_submitinfo and dump. Without this guard,
+     * deleting one of the 114 accounts holding such a row reaches the admin as
+     * a raw 1451 error page, and takes an unattended user:delete-unverified
+     * run down with it.
      *
      * Nothing else blocks, deliberately, and the distinction is what makes the
      * guard usable rather than an obstacle. Articles, interviews, news,
@@ -159,12 +158,6 @@ class User extends Authenticatable implements MustVerifyEmail
             return false;
         }
 
-        if ($this->dumps()->exists()) {
-            return false;
-        }
-
-        // dump_user_info has no model and no reader anywhere in the
-        // application -- only the RESTRICT that makes it matter here.
-        return ! DB::table('dump_user_info')->where('user_id', $this->getKey())->exists();
+        return ! $this->dumps()->exists();
     }
 }
