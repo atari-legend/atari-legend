@@ -16,6 +16,69 @@ passes.
 Every figure was measured against the dev MariaDB 10.11 on 2026-08-28, with the
 query named next to it. Decisions were settled with nicolas on 2026-08-28.
 
+**Executed 2026-08-29**, all five units, in plan order. One correction was made
+in the doing and is recorded under "The `down()` DDL" below; two acceptance
+criteria named things that do not exist and are corrected there too. Nothing
+else departed from the text: the schema is at 119 tables on both lineages, and
+the full PHPUnit suite passes.
+
+### The `down()` DDL
+
+The plan says each `down()` recreates its tables "from the DDL in
+`database/migrations/2020_10_17_161643_create_*_table.php`". That DDL is stale
+for three of the thirteen, because later migrations changed the tables it
+describes, and a `down()` written from it would have restored a schema the
+application no longer expects. Every `down()` was written from
+`SHOW CREATE TABLE` against dev instead, and each was verified by rolling the
+unit back and diffing the result against what was there before the drop.
+
+What the 2020 files get wrong:
+
+- `bug_report` and `bug_report_type` name their primary keys `bug_report_id`
+  and `bug_report_type_id`. The schema consistency sweep renamed both to `id`
+  on 2026-08-28, in migrations dated after the create files. The `down()`
+  recreates them as `id`.
+- `bug_report` had no foreign keys in 2020. It has two `ON DELETE SET NULL`
+  today, added by `2026_08_28_120000_user_side_foreign_keys.php`, and the
+  `down()` recreates both. `bug_report_text` is also `mediumtext` live against
+  the create file's `text()`.
+- `dump_user_info`'s foreign key migration says
+  `->references('user_id')->on('users')`, stale since `users.user_id` became
+  `users.id`. The `down()` references `id`, and also carries the table comment
+  the create file omits.
+
+`news_search_wordlist` needed a second departure of a different kind. The 2020
+file creates `news_word_id` first and then adds the index and AUTO_INCREMENT by
+raw `ALTER`; live, the column sits second, is `mediumint(8) unsigned`, and its
+index is already there. The `down()` declares the column in its live position
+with its live type and issues one `ALTER` for the AUTO_INCREMENT, still guarded
+against SQLite, which cannot express AUTO_INCREMENT on a column that is not the
+primary key. This is the same wall the original migration hit, and its `FIXME`
+is inherited rather than resolved.
+
+### Two acceptance criteria that named nothing
+
+Unit 2's acceptance says `php artisan users:delete-unverified`. The command is
+`user:delete-unverified`, singular; it was run under that name and exited 0.
+`CLAUDE.md` carried the same typo and is corrected in the same commit.
+
+Unit 3's acceptance asks that "the news list and a news detail page render".
+There is no public news detail route -- `route:list --path=news` shows
+`news.index` and `news.submit` and nothing else, the list being the whole of the
+public section. The list was checked and returns 200.
+
+### Figures that moved
+
+`php artisan test` is 1010 passed with nothing skipped, not the "992 passed, 18
+skipped" the plan measured at 66aabc0. The 18 skips went with the move to Sail
+(7edd972), which is a commit newer than the measurement, not a change this plan
+made. The count is 1010 before and after all five units; unit 5 removes one
+assertion, taking 3594 to 3593.
+
+The reachability script re-run at the end reports 116 tables, one of them still
+the `notifications` that no lineage has, so 115 of the 119 are reachable -- the
+same 115 as before, since none of the thirteen dropped tables had a model.
+
 | Unit | Scope | Rows destroyed | Code changes |
 |---|---|---|---|
 | 1 — the empty tables | 7 tables | 0 | `User`, one import |

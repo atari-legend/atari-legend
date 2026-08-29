@@ -76,7 +76,7 @@ artisan menus:check-dumps      # Validate menu dump files exist
 artisan links:check            # Check external links for dead URLs
 artisan sndh:fetch             # Download SNDH archives
 artisan sndh:generate-json     # Generate SNDH JSON index
-artisan users:delete-unverified # Clean up unverified accounts
+artisan user:delete-unverified # Clean up unverified accounts
 artisan filepond:discard       # Clean abandoned uploads
 ```
 
