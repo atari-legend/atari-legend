@@ -25,9 +25,9 @@ class LinksTable extends DataTableComponent
                 ->title(fn ($row) => $row->website_name)
                 ->location(fn ($row) => route('admin.links.links.edit', $row))
                 ->searchable(
-                    fn (Builder $query, string $term) => $query->where('website.website_name', 'like', "%{$term}%")
-                        ->orWhere('website.website_url', 'like', "%{$term}%")
-                        ->orWhere('website.description', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('websites.website_name', 'like', "%{$term}%")
+                        ->orWhere('websites.website_url', 'like', "%{$term}%")
+                        ->orWhere('websites.description', 'like', "%{$term}%")
                 )
                 ->sortable(fn (Builder $query, string $direction) => $query->orderBy('website_name', $direction)),
             Column::make('URL', 'website_url')
@@ -49,7 +49,7 @@ class LinksTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Website::with('categories')->select('website.*');
+        return Website::with('categories')->select('websites.*');
     }
 
     public function filters(): array
@@ -64,11 +64,11 @@ class LinksTable extends DataTableComponent
             'category' => SelectFilter::make('Category')
                 ->options($categories)
                 ->filter(function (Builder $query, string $value) {
-                    $query->whereHas('categories', fn ($q) => $q->where('website_category.id', $value));
+                    $query->whereHas('categories', fn ($q) => $q->where('website_categories.id', $value));
                 }),
             'inactive' => SelectFilter::make('Status')
                 ->options(['' => 'Any', '0' => 'Active', '1' => 'Inactive'])
-                ->filter(fn (Builder $query, string $value) => $query->where('website.inactive', $value)),
+                ->filter(fn (Builder $query, string $value) => $query->where('websites.inactive', $value)),
         ];
     }
 }

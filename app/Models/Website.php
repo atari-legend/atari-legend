@@ -10,7 +10,6 @@ class Website extends Model
 {
     use HasFactory;
 
-    protected $table = 'website';
     public $timestamps = false;
 
     protected $fillable = [

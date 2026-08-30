@@ -607,10 +607,10 @@ class E2ESeeder extends Seeder
 
     private function seedLinks(): void
     {
-        $this->insert('website_category', ['id' => self::WEBSITE_CATEGORY_ID], [
+        $this->insert('website_categories', ['id' => self::WEBSITE_CATEGORY_ID], [
             'website_category_name' => self::WEBSITE_CATEGORY_NAME,
         ]);
-        $this->insert('website', ['id' => self::WEBSITE_ID], [
+        $this->insert('websites', ['id' => self::WEBSITE_ID], [
             'website_name'   => self::WEBSITE_NAME,
             'website_url'    => 'https://example.com/',
             'website_date'   => now()->timestamp,

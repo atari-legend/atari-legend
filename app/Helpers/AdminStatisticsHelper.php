@@ -114,8 +114,8 @@ class AdminStatisticsHelper
                 'Magazines'              => DB::table('magazines')->count(),
                 'Magazine issues'        => DB::table('magazine_issues')->count(),
                 'Magazine index entries' => DB::table('magazine_indices')->count(),
-                'Links'                  => DB::table('website')->count(),
-                'Links pending review'   => DB::table('website_validate')->count(),
+                'Links'                  => DB::table('websites')->count(),
+                'Links pending review'   => DB::table('website_validates')->count(),
             ],
             'People & companies' => [
                 'Individuals'            => DB::table('individuals')->count(),

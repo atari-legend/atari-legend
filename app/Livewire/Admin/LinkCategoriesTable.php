@@ -37,6 +37,6 @@ class LinkCategoriesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return WebsiteCategory::select('website_category.*')->withCount('websites');
+        return WebsiteCategory::select('website_categories.*')->withCount('websites');
     }
 }

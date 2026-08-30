@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class LinkCategoryController extends Controller
 {
     const VALIDATION_RULES = [
-        'name' => 'required|max:128|unique:website_category,website_category_name',
+        'name' => 'required|max:128|unique:website_categories,website_category_name',
     ];
 
     public function index()
@@ -75,7 +75,7 @@ class LinkCategoryController extends Controller
     public function update(Request $request, WebsiteCategory $category)
     {
         $request->validate([
-            'name' => 'required|max:128|unique:website_category,website_category_name,' . $category->getKey() . ',id',
+            'name' => 'required|max:128|unique:website_categories,website_category_name,' . $category->getKey() . ',id',
         ]);
 
         $oldName = $category->website_category_name;

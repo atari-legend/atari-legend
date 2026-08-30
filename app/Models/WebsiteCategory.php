@@ -9,7 +9,6 @@ class WebsiteCategory extends Model
 {
     use HasFactory;
 
-    protected $table = 'website_category';
     public $timestamps = false;
 
     protected $fillable = [

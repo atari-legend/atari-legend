@@ -17,14 +17,14 @@ class LinkController extends Controller
             ? WebsiteCategory::find($request->category)
             : null;
 
-        $categories = WebsiteCategory::select('website_category.*')
+        $categories = WebsiteCategory::select('website_categories.*')
             ->orderBy('website_category_name')
             ->get();
 
-        $websites = Website::select('website.*');
+        $websites = Website::select('websites.*');
 
         if ($category !== null) {
-            $websites->join('website_category_cross', 'website_category_cross.website_id', '=', 'website.id')
+            $websites->join('website_category_cross', 'website_category_cross.website_id', '=', 'websites.id')
                 ->where('website_category_cross.website_category_id', $category->getKey());
         }
 

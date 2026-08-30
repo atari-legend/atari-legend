@@ -19,7 +19,7 @@ class LinkController extends Controller
         'description'  => 'nullable',
         'inactive'     => 'nullable|boolean',
         'categories'   => 'nullable|array',
-        'categories.*' => 'exists:website_category,id',
+        'categories.*' => 'exists:website_categories,id',
         'image'        => 'nullable|image',
     ];
 
