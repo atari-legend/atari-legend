@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Games;
 
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -45,7 +45,7 @@ class GameCompaniesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PublisherDeveloper::select('pub_dev.*');
+        return PubDev::select('pub_devs.*');
     }
 
     public function filters(): array

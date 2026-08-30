@@ -39,7 +39,7 @@ storage/app/public/       # Public file storage (symlinked from public/storage)
 - **Music:** `sndh`, `sndh_archive`, `game_music`
 - **Menus:** `menu_sets`, `menus`, `menu_disks`, `menu_disk_dumps`, `menu_disk_contents`
 - **Content:** `news`, `reviews`, `interviews`, `articles`
-- **Reference:** `individuals`, `pub_dev`, `crew`, `genre`, `engine`
+- **Reference:** `individuals`, `pub_devs`, `crews`, `game_genres`, `engines`
 - **Users:** `users`, `game_vote`, `comments`
 
 ### Key Relationships

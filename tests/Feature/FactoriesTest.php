@@ -29,7 +29,7 @@ use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\News;
 use App\Models\NewsSubmission;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\GameReleaseScan;
 use App\Models\Resolution;
 use App\Models\Review;
@@ -78,7 +78,7 @@ class FactoriesTest extends TestCase
             'game'                => [Game::class],
             'release'             => [GameRelease::class],
             'screenshot'          => [Screenshot::class],
-            'publisher/developer' => [PublisherDeveloper::class],
+            'publisher/developer' => [PubDev::class],
             'individual'          => [Individual::class],
             'crew'                => [Crew::class],
             'genre'               => [GameGenre::class],
@@ -310,7 +310,7 @@ class FactoriesTest extends TestCase
      */
     public function test_non_fillable_attributes_still_reach_the_database(): void
     {
-        $publisher = PublisherDeveloper::factory()->create();
+        $publisher = PubDev::factory()->create();
 
         // pub_dev_id is not fillable on Release
         $release = GameRelease::factory()->create(['pub_dev_id' => $publisher->getKey()]);

@@ -8,7 +8,7 @@ use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\Language;
 use App\Models\Location;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\GameReleaseAka;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -114,7 +114,7 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_a_publisher_can_be_set(): void
     {
         $game = Game::factory()->create();
-        $publisher = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
+        $publisher = PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
             'publisher' => $publisher->getKey(),
@@ -129,7 +129,7 @@ class GameReleaseControllerTest extends AdminTestCase
         $location = Location::factory()->create(['name' => 'France']);
         $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
         $language = Language::factory()->create(['id' => 'fr', 'name' => 'French']);
-        $distributor = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Erbe']);
+        $distributor = PubDev::factory()->create(['pub_dev_name' => 'Erbe']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
             'locations'    => [$location->getKey()],
@@ -185,7 +185,7 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_the_publisher_can_be_swapped(): void
     {
         $release = GameRelease::factory()->publishedBy('Ocean')->create();
-        $other = PublisherDeveloper::factory()->create(['pub_dev_name' => 'US Gold']);
+        $other = PubDev::factory()->create(['pub_dev_name' => 'US Gold']);
 
         $this->put(
             route('admin.games.releases.update', [$release->game, $release]),

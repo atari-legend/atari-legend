@@ -7,7 +7,7 @@ use App\Models\Game;
 use App\Models\GameFact;
 use App\Models\GameVideo;
 use App\Models\Individual;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\Screenshot;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -27,12 +27,12 @@ class GamePanelsTest extends AdminTestCase
 {
     private function individualRole(string $name = 'Coder'): int
     {
-        return DB::table('individual_role')->insertGetId(['name' => $name]);
+        return DB::table('individual_roles')->insertGetId(['name' => $name]);
     }
 
     private function developerRole(string $name = 'Developer'): int
     {
-        return DB::table('developer_role')->insertGetId(['name' => $name]);
+        return DB::table('developer_roles')->insertGetId(['name' => $name]);
     }
 
     // Individuals
@@ -136,9 +136,9 @@ class GamePanelsTest extends AdminTestCase
         $this->post(route('admin.games.companies.store'), [
             'name'    => 'Ocean',
             'profile' => 'A Manchester publisher.',
-        ])->assertRedirect(route('admin.games.companies.edit', PublisherDeveloper::sole()));
+        ])->assertRedirect(route('admin.games.companies.edit', PubDev::sole()));
 
-        $company = PublisherDeveloper::sole();
+        $company = PubDev::sole();
 
         $this->assertSame('Ocean', $company->pub_dev_name);
         $this->assertSame('A Manchester publisher.', $company->pub_dev_profile);
@@ -147,12 +147,12 @@ class GamePanelsTest extends AdminTestCase
 
     public function test_company_names_are_unique(): void
     {
-        PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
+        PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
 
         $this->post(route('admin.games.companies.store'), ['name' => 'Ocean'])
             ->assertSessionHasErrors('name');
 
-        $this->assertSame(1, PublisherDeveloper::query()->count());
+        $this->assertSame(1, PubDev::query()->count());
     }
 
     /**
@@ -160,7 +160,7 @@ class GamePanelsTest extends AdminTestCase
      */
     public function test_a_company_may_keep_its_own_name(): void
     {
-        $company = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
+        $company = PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
 
         $this->put(route('admin.games.companies.update', $company), ['name' => 'Ocean'])
             ->assertRedirect();
@@ -228,7 +228,7 @@ class GamePanelsTest extends AdminTestCase
     public function test_a_developer_can_be_credited_and_uncredited(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $developer = PublisherDeveloper::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']);
+        $developer = PubDev::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']);
         $role = $this->developerRole();
 
         $this->post(route('admin.games.game-developers.store', $game), [

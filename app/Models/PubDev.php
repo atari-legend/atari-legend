@@ -6,23 +6,22 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PublisherDeveloper extends Model
+class PubDev extends Model
 {
     use HasFactory;
 
-    protected $table = 'pub_dev';
     public $timestamps = false;
 
     protected $fillable = ['pub_dev_name', 'pub_dev_profile', 'pub_dev_imgext'];
 
     public function games()
     {
-        return $this->belongsToMany(Game::class, 'game_developer', 'pub_dev_id', 'game_id');
+        return $this->belongsToMany(Game::class, 'game_developer');
     }
 
     public function releases()
     {
-        return $this->hasMany(GameRelease::class, 'pub_dev_id');
+        return $this->hasMany(GameRelease::class);
     }
 
     public function getFileAttribute()

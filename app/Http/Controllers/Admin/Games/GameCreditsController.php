@@ -9,7 +9,7 @@ use App\Models\DeveloperRole;
 use App\Models\Game;
 use App\Models\Individual;
 use App\Models\IndividualRole;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,10 +18,10 @@ class GameCreditsController extends Controller
 {
     public function index(Game $game)
     {
-        $roles = IndividualRole::select('individual_role.*')
+        $roles = IndividualRole::select('individual_roles.*')
             ->orderBy('name')
             ->get();
-        $developerRoles = DeveloperRole::select('developer_role.*')
+        $developerRoles = DeveloperRole::select('developer_roles.*')
             ->orderBy('name')
             ->get();
 
@@ -81,7 +81,7 @@ class GameCreditsController extends Controller
 
     public function storeDeveloper(Request $request, Game $game)
     {
-        $developer = PublisherDeveloper::find($request->developer);
+        $developer = PubDev::find($request->developer);
         if ($developer !== null) {
             $developer->games()->attach($game, ['developer_role_id' => $request->role]);
 
@@ -99,7 +99,7 @@ class GameCreditsController extends Controller
         return redirect()->route('admin.games.game-credits.index', $game);
     }
 
-    public function destroyDeveloper(Request $request, Game $game, PublisherDeveloper $developer)
+    public function destroyDeveloper(Request $request, Game $game, PubDev $developer)
     {
         DB::table('game_developer')
             ->where('game_id', $game->getKey())

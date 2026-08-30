@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
     public function companies(Request $request)
     {
-        $companies = PublisherDeveloper::select('pub_dev.*')
+        $companies = PubDev::select('pub_devs.*')
             ->orderBy('pub_dev_name')
             ->limit(10);
 

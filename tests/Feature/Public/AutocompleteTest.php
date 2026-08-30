@@ -6,7 +6,7 @@ use App\Models\Crew;
 use App\Models\Game;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -255,8 +255,8 @@ class AutocompleteTest extends TestCase
     {
         $game = $this->game('Xenon');
         $game->developers()->attach(
-            PublisherDeveloper::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']),
-            ['developer_role_id' => DB::table('developer_role')->insertGetId(['name' => 'Developer'])]
+            PubDev::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']),
+            ['developer_role_id' => DB::table('developer_roles')->insertGetId(['name' => 'Developer'])]
         );
 
         $results = $this->actingAs(User::factory()->admin()->create())
@@ -355,7 +355,7 @@ class AutocompleteTest extends TestCase
     public function test_the_remaining_endpoints_pin_their_primary_keys(): void
     {
         Crew::factory()->create(['crew_name' => 'The Replicants']);
-        PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
+        PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
         Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
 
         $admin = User::factory()->admin()->create(['userid' => 'pinned-admin']);

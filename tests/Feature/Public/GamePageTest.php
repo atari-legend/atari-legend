@@ -10,7 +10,7 @@ use App\Models\GameSubmitInfo;
 use App\Models\GameVote;
 use App\Models\Individual;
 use App\Models\Interview;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\User;
@@ -101,8 +101,8 @@ class GamePageTest extends TestCase
     {
         $game = Game::factory()->create();
         $game->developers()->attach(
-            PublisherDeveloper::factory()->create(),
-            ['developer_role_id' => DB::table('developer_role')->insertGetId(['name' => 'Developer'])]
+            PubDev::factory()->create(),
+            ['developer_role_id' => DB::table('developer_roles')->insertGetId(['name' => 'Developer'])]
         );
 
         $this->assertCount(
@@ -118,8 +118,8 @@ class GamePageTest extends TestCase
     public function test_interviews_need_a_portrait_and_are_listed_once(): void
     {
         $game = Game::factory()->create();
-        $roleId = DB::table('individual_role')->insertGetId(['name' => 'Coder']);
-        $otherRoleId = DB::table('individual_role')->insertGetId(['name' => 'Graphics']);
+        $roleId = DB::table('individual_roles')->insertGetId(['name' => 'Coder']);
+        $otherRoleId = DB::table('individual_roles')->insertGetId(['name' => 'Graphics']);
 
         $withPortrait = Individual::factory()->create(['ind_profile' => 'A coder', 'ind_imgext' => 'jpg']);
         Interview::factory()->create(['individual_id' => $withPortrait->getKey()]);

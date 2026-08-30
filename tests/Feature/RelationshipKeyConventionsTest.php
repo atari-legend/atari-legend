@@ -55,11 +55,7 @@ class RelationshipKeyConventionsTest extends TestCase
         'ScreenshotReview::comment()'       => 'declared on a Pivot: no derivable default exists',
 
         // TABLE, NOT MODEL
-        'Game::developers()'                => 'table pub_dev, model PublisherDeveloper',
-        'GameRelease::publisher()'          => 'table pub_dev, model PublisherDeveloper',
-        'GameRelease::distributors()'       => 'table pub_dev, model PublisherDeveloper',
-        'PublisherDeveloper::games()'       => 'table pub_dev, model PublisherDeveloper',
-        'PublisherDeveloper::releases()'    => 'table pub_dev, model PublisherDeveloper',
+        'GameRelease::publisher()'          => 'pub_dev_id is right; belongsTo derives publisher_id from the method name',
         'GameSubmitInfo::screenshots()'     => 'column game_submitinfo_id is named for game_submitinfo, now game_submit_infos',
         'Game::vs()'                        => 'atari_id says what game_id would not',
 

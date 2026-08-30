@@ -328,7 +328,7 @@ class E2ESeeder extends Seeder
         ]);
 
         $this->insert('game_series', ['id' => self::GAME_SERIES_ID], ['name' => self::SERIES_NAME]);
-        $this->insert('pub_dev', ['id' => self::COMPANY_ID], ['pub_dev_name' => self::COMPANY_NAME]);
+        $this->insert('pub_devs', ['id' => self::COMPANY_ID], ['pub_dev_name' => self::COMPANY_NAME]);
 
         $this->insert('sndhs', ['id' => self::SNDH_ID], [
             'sndh_archive_id' => self::SNDH_ARCHIVE_ID,
@@ -602,7 +602,7 @@ class E2ESeeder extends Seeder
             'updated_at'   => $now,
         ]);
 
-        $this->insert('crew', ['id' => self::CREW_ID], ['crew_name' => self::CREW_NAME]);
+        $this->insert('crews', ['id' => self::CREW_ID], ['crew_name' => self::CREW_NAME]);
     }
 
     private function seedLinks(): void

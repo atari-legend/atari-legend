@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Individual;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -85,7 +85,7 @@ class BlankProfileTest extends TestCase
         ]);
 
         $this->assertNull(
-            PublisherDeveloper::where('pub_dev_name', 'Ocean')->firstOrFail()->pub_dev_profile
+            PubDev::where('pub_dev_name', 'Ocean')->firstOrFail()->pub_dev_profile
         );
     }
 
@@ -98,7 +98,7 @@ class BlankProfileTest extends TestCase
 
         $this->assertSame(
             'Founded in 1983',
-            PublisherDeveloper::where('pub_dev_name', 'Infogrames')->firstOrFail()->pub_dev_profile
+            PubDev::where('pub_dev_name', 'Infogrames')->firstOrFail()->pub_dev_profile
         );
     }
 }

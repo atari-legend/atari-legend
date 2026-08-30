@@ -49,7 +49,7 @@ class GameReleaseFactory extends Factory
     public function publishedBy(?string $name = null): static
     {
         return $this->state(fn () => [
-            'pub_dev_id' => PublisherDeveloperFactory::new()->state(
+            'pub_dev_id' => PubDevFactory::new()->state(
                 $name === null ? [] : ['pub_dev_name' => $name]
             ),
         ]);
@@ -109,7 +109,7 @@ class GameReleaseFactory extends Factory
         return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->distributors()->attach(
-                    PublisherDeveloperFactory::new()->create(['pub_dev_name' => $name])
+                    PubDevFactory::new()->create(['pub_dev_name' => $name])
                 );
             }
         });

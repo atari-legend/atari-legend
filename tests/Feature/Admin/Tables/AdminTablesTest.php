@@ -30,7 +30,7 @@ use App\Models\MagazineIssue;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\NewsSubmission;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\Screenshot;
 use App\Models\Spotlight;
 use App\Models\User;
@@ -261,8 +261,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_companies_table_filters_on_having_a_logo(): void
     {
-        PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean', 'pub_dev_imgext' => 'png']);
-        PublisherDeveloper::factory()->create(['pub_dev_name' => 'US Gold', 'pub_dev_imgext' => null]);
+        PubDev::factory()->create(['pub_dev_name' => 'Ocean', 'pub_dev_imgext' => 'png']);
+        PubDev::factory()->create(['pub_dev_name' => 'US Gold', 'pub_dev_imgext' => null]);
 
         Livewire::test(GameCompaniesTable::class)->assertSeeInOrder(['Ocean', 'US Gold']);
 
@@ -470,7 +470,7 @@ class AdminTablesTest extends AdminTestCase
     {
         $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
         $individual = Individual::factory()->create(['ind_name' => 'Someone']);
-        $company = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Ocean']);
+        $company = PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
         $link = Website::factory()->create(['website_name' => 'Hatari']);
 
         Livewire::test(CrewsTable::class)

@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Helpers\GameHelper;
 use App\Models\Game;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -26,12 +26,12 @@ class GameHelperDevelopersTest extends TestCase
         $game->slug = 'test';
         $game->save();
 
-        $dev1 = new PublisherDeveloper();
+        $dev1 = new PubDev();
         $dev1->pub_dev_name = 'Dev 1';
         $dev1->save();
         $game->developers()->save($dev1);
 
-        $dev2 = new PublisherDeveloper();
+        $dev2 = new PubDev();
         $dev2->pub_dev_name = 'Dev 2';
         $dev2->save();
         $game->developers()->save($dev2);

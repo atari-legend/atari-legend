@@ -76,7 +76,7 @@ class GameRelease extends Model
 
     public function publisher()
     {
-        return $this->belongsTo(PublisherDeveloper::class, 'pub_dev_id');
+        return $this->belongsTo(PubDev::class, 'pub_dev_id');
     }
 
     public function crews()
@@ -91,7 +91,7 @@ class GameRelease extends Model
 
     public function distributors()
     {
-        return $this->belongsToMany(PublisherDeveloper::class, 'game_release_distributor', 'game_release_id', 'pub_dev_id');
+        return $this->belongsToMany(PubDev::class, 'game_release_distributor');
     }
 
     public function locations()

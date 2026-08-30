@@ -24,7 +24,7 @@ use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\News;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\Review;
 use App\Models\Spotlight;
 use App\Models\User;
@@ -104,7 +104,7 @@ class AdminRenderTest extends AdminTestCase
             'article'      => Article::factory()->create(),
             'category'     => WebsiteCategory::factory()->create(),
             'comment'      => Comment::factory()->onGame($game)->create(),
-            'company'      => PublisherDeveloper::factory()->create(),
+            'company'      => PubDev::factory()->create(),
             'condition'    => MenuDiskCondition::query()->firstOrFail(),
             'content'      => $content,
             'content_type' => MenuSoftwareContentType::query()->firstOrFail(),

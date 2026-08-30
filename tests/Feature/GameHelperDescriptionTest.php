@@ -7,7 +7,7 @@ use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\GameRelease;
 use App\Models\GameGenre;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\GameReleaseScan;
 use App\Models\Review;
 use App\Models\Screenshot;
@@ -34,19 +34,19 @@ class GameHelperDescriptionTest extends TestCase
         $genre2->name = 'Genre 2';
         $game->genres()->save($genre2);
 
-        $developer1 = new PublisherDeveloper();
+        $developer1 = new PubDev();
         $developer1->pub_dev_name = 'Dev 1';
         $game->developers()->save($developer1);
 
-        $developer2 = new PublisherDeveloper();
+        $developer2 = new PubDev();
         $developer2->pub_dev_name = 'Dev 2';
         $game->developers()->save($developer2);
 
-        $publisher1 = new PublisherDeveloper();
+        $publisher1 = new PubDev();
         $publisher1->pub_dev_name = 'Pub 1';
         $publisher1->save();
 
-        $publisher2 = new PublisherDeveloper();
+        $publisher2 = new PubDev();
         $publisher2->pub_dev_name = 'Pub 2';
         $publisher2->save();
 

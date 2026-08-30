@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Games;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +34,7 @@ class GameCompanyController extends Controller
             ]);
     }
 
-    public function edit(PublisherDeveloper $company)
+    public function edit(PubDev $company)
     {
         return view('admin.games.companies.edit')
             ->with([
@@ -49,10 +49,10 @@ class GameCompanyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')],
+            'name' => ['required', Rule::unique('pub_devs', 'pub_dev_name')],
         ]);
 
-        $company = new PublisherDeveloper(['pub_dev_name' => $request->name]);
+        $company = new PubDev(['pub_dev_name' => $request->name]);
         $company->save();
 
         $ext = null;
@@ -92,10 +92,10 @@ class GameCompanyController extends Controller
         return redirect()->route('admin.games.companies.edit', $company);
     }
 
-    public function update(Request $request, PublisherDeveloper $company)
+    public function update(Request $request, PubDev $company)
     {
         $request->validate([
-            'name' => ['required', Rule::unique('pub_dev', 'pub_dev_name')->ignore($company->getKey(), 'id')],
+            'name' => ['required', Rule::unique('pub_devs', 'pub_dev_name')->ignore($company->getKey(), 'id')],
         ]);
 
         // Keep the logo already on file when the form comes back without one -
@@ -138,7 +138,7 @@ class GameCompanyController extends Controller
         return redirect()->route('admin.games.companies.index');
     }
 
-    public function destroy(PublisherDeveloper $company)
+    public function destroy(PubDev $company)
     {
         $this->destroyLogo($company);
         $company->delete();
@@ -156,7 +156,7 @@ class GameCompanyController extends Controller
         return redirect()->route('admin.games.companies.index');
     }
 
-    public function destroyLogo(PublisherDeveloper $company)
+    public function destroyLogo(PubDev $company)
     {
         if ($company->logo) {
             Storage::disk('public')->delete($company->path);

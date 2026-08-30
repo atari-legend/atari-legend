@@ -18,7 +18,7 @@ use App\Models\Language;
 use App\Models\MagazineIndex;
 use App\Models\MenuDisk;
 use App\Models\ProgrammingLanguage;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\Sndh;
@@ -256,11 +256,11 @@ class GameControllerTest extends AdminTestCase
             'facts'       => $game->facts()->create(['game_fact' => 'Written in a fortnight.']),
             'individuals' => $game->individuals()->attach(
                 Individual::factory()->create(),
-                ['individual_role_id' => DB::table('individual_role')->insertGetId(['name' => 'Coder'])]
+                ['individual_role_id' => DB::table('individual_roles')->insertGetId(['name' => 'Coder'])]
             ),
             'developers' => $game->developers()->attach(
-                PublisherDeveloper::factory()->create(),
-                ['developer_role_id' => DB::table('developer_role')->insertGetId(['name' => 'Developer'])]
+                PubDev::factory()->create(),
+                ['developer_role_id' => DB::table('developer_roles')->insertGetId(['name' => 'Developer'])]
             ),
             'sndhs'   => $game->sndhs()->attach(Sndh::factory()->create()),
             'videos'  => $game->videos()->create([

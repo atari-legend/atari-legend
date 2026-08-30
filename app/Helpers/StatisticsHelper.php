@@ -18,7 +18,7 @@ class StatisticsHelper
             'Releases'                      => DB::table('game_releases')->count(),
             'Screenshots'                   => DB::table('screenshot_game')->count(),
             'Games with screenshots'        => DB::table('screenshot_game')->distinct('game_id')->count(),
-            'Companies'                     => DB::table('pub_dev')->count(),
+            'Companies'                     => DB::table('pub_devs')->count(),
             'Games with companies assigned' => DB::table('game_releases')->whereNotNull('pub_dev_id')->distinct('game_id')->count(),
             'Games with developer assigned' => DB::table('game_developer')->distinct('game_id')->count(),
             'Games with magazine review'    => DB::table('magazine_indices')->distinct('game_id')->count(),

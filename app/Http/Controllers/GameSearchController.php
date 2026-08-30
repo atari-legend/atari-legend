@@ -8,7 +8,7 @@ use App\Models\Game;
 use App\Models\GameGenre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -76,7 +76,7 @@ class GameSearchController extends Controller
 
         if ($request->filled('developer_id')) {
             $games->whereHas('developers', function (Builder $query) use ($request) {
-                $query->where('pub_dev.id', $request->input('developer_id'));
+                $query->where('pub_devs.id', $request->input('developer_id'));
             });
             $searchPossible = true;
             $softwareSearchPossible = false;
@@ -95,7 +95,7 @@ class GameSearchController extends Controller
         if ($request->filled('publisher_id')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereHas('publisher', function (Builder $query2) use ($request) {
-                    $query2->where('pub_dev.id', $request->input('publisher_id'));
+                    $query2->where('pub_devs.id', $request->input('publisher_id'));
                 });
             });
             $searchPossible = true;
@@ -292,7 +292,7 @@ class GameSearchController extends Controller
      */
     public function getSearchReferenceData()
     {
-        $companies = PublisherDeveloper::all()
+        $companies = PubDev::all()
             ->sortBy('pub_dev_name');
 
         // `substr()` rather than `YEAR()` as the latter is MySQL-only, and the

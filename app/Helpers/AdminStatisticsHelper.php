@@ -51,7 +51,7 @@ class AdminStatisticsHelper
             'Releases'    => DB::table('game_releases')->count(),
             'Screenshots' => DB::table('screenshots')->count(),
             'Individuals' => DB::table('individuals')->count(),
-            'Companies'   => DB::table('pub_dev')->count(),
+            'Companies'   => DB::table('pub_devs')->count(),
             'Users'       => DB::table('users')->count(),
         ];
     }
@@ -121,11 +121,11 @@ class AdminStatisticsHelper
                 'Individuals'            => DB::table('individuals')->count(),
                 'Individuals with bio'   => self::countWithText('individuals', 'ind_profile', 'id'),
                 'Nicknames'              => DB::table('individual_nicks')->count(),
-                'Crews'                  => DB::table('crew')->count(),
+                'Crews'                  => DB::table('crews')->count(),
                 'Sub-crews'              => DB::table('sub_crew')->count(),
                 'Crew members'           => DB::table('crew_individual')->count(),
-                'Companies'              => DB::table('pub_dev')->count(),
-                'Companies with profile' => self::countWithText('pub_dev', 'pub_dev_profile', 'id'),
+                'Companies'              => DB::table('pub_devs')->count(),
+                'Companies with profile' => self::countWithText('pub_devs', 'pub_dev_profile', 'id'),
             ],
             'Community' => [
                 'Registered users'  => DB::table('users')->count(),
@@ -150,7 +150,7 @@ class AdminStatisticsHelper
         $games = DB::table('games')->count();
         $releases = DB::table('game_releases')->count();
         $individuals = DB::table('individuals')->count();
-        $companies = DB::table('pub_dev')->count();
+        $companies = DB::table('pub_devs')->count();
         $menuDisks = DB::table('menu_disks')->count();
         $sndhs = DB::table('sndhs')->count();
 
@@ -180,7 +180,7 @@ class AdminStatisticsHelper
             ],
             'Other' => [
                 self::coverageRow('Individuals with a bio', self::countWithText('individuals', 'ind_profile', 'id'), $individuals),
-                self::coverageRow('Companies with a profile', self::countWithText('pub_dev', 'pub_dev_profile', 'id'), $companies),
+                self::coverageRow('Companies with a profile', self::countWithText('pub_devs', 'pub_dev_profile', 'id'), $companies),
                 self::coverageRow('Menu disks with a dump', DB::table('menu_disks')->whereNotNull('menu_disk_dump_id')->count(), $menuDisks),
                 self::coverageRow('Menu disks with a screenshot', DB::table('menu_disk_screenshots')->distinct('menu_disk_id')->count(), $menuDisks),
                 self::coverageRow('SNDH files linked to a game', DB::table('game_sndh')->distinct('sndh_id')->count(), $sndhs),
@@ -319,9 +319,9 @@ class AdminStatisticsHelper
     public static function topPublishers($limit = 15)
     {
         $rows = DB::table('game_releases')
-            ->join('pub_dev', 'pub_dev.id', '=', 'game_releases.pub_dev_id')
-            ->select('pub_dev.pub_dev_name', DB::raw('count(*) as total'))
-            ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
+            ->join('pub_devs', 'pub_devs.id', '=', 'game_releases.pub_dev_id')
+            ->select('pub_devs.pub_dev_name', DB::raw('count(*) as total'))
+            ->groupBy('pub_devs.id', 'pub_devs.pub_dev_name')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();
@@ -338,9 +338,9 @@ class AdminStatisticsHelper
     public static function topDevelopers($limit = 15)
     {
         $rows = DB::table('game_developer')
-            ->join('pub_dev', 'pub_dev.id', '=', 'game_developer.pub_dev_id')
-            ->select('pub_dev.pub_dev_name', DB::raw('count(distinct game_developer.game_id) as total'))
-            ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
+            ->join('pub_devs', 'pub_devs.id', '=', 'game_developer.pub_dev_id')
+            ->select('pub_devs.pub_dev_name', DB::raw('count(distinct game_developer.game_id) as total'))
+            ->groupBy('pub_devs.id', 'pub_devs.pub_dev_name')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();

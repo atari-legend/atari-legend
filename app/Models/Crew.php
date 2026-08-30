@@ -10,7 +10,6 @@ class Crew extends Model
 {
     use HasFactory;
 
-    protected $table = 'crew';
     public $timestamps = false;
 
     protected $fillable = ['crew_name', 'crew_history'];

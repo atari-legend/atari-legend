@@ -9,7 +9,7 @@ use App\Models\GameRelease;
 use App\Models\GameGenre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -54,7 +54,7 @@ class AjaxEndpointsTest extends TestCase
     private function create(string $route, string $name): void
     {
         match ($route) {
-            'ajax.companies'   => PublisherDeveloper::factory()->create(['pub_dev_name' => $name]),
+            'ajax.companies'   => PubDev::factory()->create(['pub_dev_name' => $name]),
             'ajax.crews'       => Crew::factory()->create(['crew_name' => $name]),
             'ajax.engines'     => Engine::forceCreate(['name' => $name]),
             'ajax.genres'      => GameGenre::forceCreate(['name' => $name]),
@@ -119,7 +119,7 @@ class AjaxEndpointsTest extends TestCase
 
     public function test_a_company_carries_its_id(): void
     {
-        $company = PublisherDeveloper::factory()->create(['pub_dev_name' => 'Psygnosis']);
+        $company = PubDev::factory()->create(['pub_dev_name' => 'Psygnosis']);
 
         $results = $this->getJson(route('ajax.companies', ['q' => 'Psy']))->assertOk()->json();
 
@@ -213,7 +213,7 @@ class AjaxEndpointsTest extends TestCase
 
         foreach (['Coder', 'Music'] as $role) {
             $individual->games()->attach($game, [
-                'individual_role_id' => DB::table('individual_role')->insertGetId(['name' => $role]),
+                'individual_role_id' => DB::table('individual_roles')->insertGetId(['name' => $role]),
             ]);
         }
 
@@ -229,7 +229,7 @@ class AjaxEndpointsTest extends TestCase
     public function test_a_long_list_of_games_is_cut_short(): void
     {
         $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
-        $roleId = DB::table('individual_role')->insertGetId(['name' => 'Music']);
+        $roleId = DB::table('individual_roles')->insertGetId(['name' => 'Music']);
 
         foreach (range(1, 10) as $i) {
             $individual->games()->attach(

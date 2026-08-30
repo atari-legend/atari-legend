@@ -8,7 +8,7 @@ use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\GameGenre;
 use App\Models\Individual;
-use App\Models\PublisherDeveloper;
+use App\Models\PubDev;
 use App\Models\Review;
 use App\Models\Sndh;
 use Carbon\Carbon;
@@ -40,7 +40,7 @@ class GameSearchTest extends TestCase
 
     private function developerRoleId(): int
     {
-        return DB::table('developer_role')->insertGetId(['name' => 'Developer']);
+        return DB::table('developer_roles')->insertGetId(['name' => 'Developer']);
     }
 
     public function test_the_landing_page_counts_the_games(): void
@@ -102,7 +102,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_found_by_developer(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $developer = PublisherDeveloper::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']);
+        $developer = PubDev::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']);
         $game->developers()->attach($developer, ['developer_role_id' => $this->developerRoleId()]);
 
         Game::factory()->named('Something else')->create();
@@ -167,7 +167,7 @@ class GameSearchTest extends TestCase
      */
     public function test_an_individual_search_covers_their_nicknames(): void
     {
-        $roleId = DB::table('individual_role')->insertGetId(['name' => 'Coder']);
+        $roleId = DB::table('individual_roles')->insertGetId(['name' => 'Coder']);
 
         $individual = Individual::factory()->nicknamed('Mr X')->create();
         $nickname = $individual->nicknames->first();
