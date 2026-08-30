@@ -10,7 +10,6 @@ class Individual extends Model
 {
     use HasFactory;
 
-    protected $table = 'individuals';
     public $timestamps = false;
 
     protected $fillable = ['ind_name', 'ind_profile', 'ind_imgext', 'ind_email'];

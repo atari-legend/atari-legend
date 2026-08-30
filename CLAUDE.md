@@ -38,7 +38,7 @@ storage/app/public/       # Public file storage (symlinked from public/storage)
 - **Media:** `dump`, `media`, `media_scan`, `screenshot_main`, `game_release_scan`
 - **Music:** `sndh`, `sndh_archive`, `game_music`
 - **Menus:** `menu_sets`, `menus`, `menu_disks`, `menu_disk_dumps`, `menu_disk_contents`
-- **Content:** `news`, `review_main`, `interview_main`, `article_main`
+- **Content:** `news`, `reviews`, `interviews`, `articles`
 - **Reference:** `individuals`, `pub_dev`, `crew`, `genre`, `engine`
 - **Users:** `users`, `game_vote`, `comments`
 

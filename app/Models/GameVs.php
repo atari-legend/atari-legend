@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameVs extends Model
 {
-    protected $table = 'game_vs';
     public $timestamps = false;
     protected $fillable = ['atari_id', 'amiga_id', 'lemon64_slug'];
 

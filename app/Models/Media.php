@@ -9,7 +9,6 @@ class Media extends Model
 {
     use HasFactory;
 
-    protected $table = 'media';
     public $timestamps = false;
 
     public function type()

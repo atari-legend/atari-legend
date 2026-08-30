@@ -15,7 +15,6 @@ class Comment extends Model
     const TYPE_INTERVIEW = 'interview';
     const TYPE_ARTICLE = 'article';
 
-    protected $table = 'comments';
     public $timestamps = false;
 
     protected $fillable = [
