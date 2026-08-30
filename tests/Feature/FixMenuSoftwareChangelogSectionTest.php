@@ -6,6 +6,7 @@ use App\Models\Changelog;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 /**
@@ -18,16 +19,28 @@ class FixMenuSoftwareChangelogSectionTest extends TestCase
 
     private function migrate(): void
     {
-        $migration = require database_path(
-            'migrations/2026_08_10_120000_fix_menu_software_changelog_section.php'
-        );
+        // The migration names change_log, which is what the table was called
+        // on the day it was written. The pluralisation campaign renamed it to
+        // changelogs, and a historical migration is never rewritten: on a real
+        // migrate this one runs long before the rename, against the schema of
+        // its day. Only this test runs it out of order, against the finished
+        // schema, so only this test has to put the old name back.
+        Schema::rename('changelogs', 'change_log');
 
-        $migration->up();
+        try {
+            $migration = require database_path(
+                'migrations/2026_08_10_120000_fix_menu_software_changelog_section.php'
+            );
+
+            $migration->up();
+        } finally {
+            Schema::rename('change_log', 'changelogs');
+        }
     }
 
     private function entry(string $section, string $name): void
     {
-        DB::table('change_log')->insert([
+        DB::table('changelogs')->insert([
             'action'           => Changelog::INSERT,
             'section'          => $section,
             'section_id'       => 1,
@@ -47,8 +60,8 @@ class FixMenuSoftwareChangelogSectionTest extends TestCase
 
         $this->migrate();
 
-        $this->assertSame(0, DB::table('change_log')->where('section', 'Menu Softwre')->count());
-        $this->assertSame(2, DB::table('change_log')->where('section', 'Menu Software')->count());
+        $this->assertSame(0, DB::table('changelogs')->where('section', 'Menu Softwre')->count());
+        $this->assertSame(2, DB::table('changelogs')->where('section', 'Menu Software')->count());
     }
 
     /**
@@ -62,7 +75,7 @@ class FixMenuSoftwareChangelogSectionTest extends TestCase
 
         $this->migrate();
 
-        $this->assertSame(2, DB::table('change_log')->where('section', 'Menu Software')->count());
+        $this->assertSame(2, DB::table('changelogs')->where('section', 'Menu Software')->count());
     }
 
     public function test_other_sections_are_not_touched(): void
@@ -72,8 +85,8 @@ class FixMenuSoftwareChangelogSectionTest extends TestCase
 
         $this->migrate();
 
-        $this->assertSame(1, DB::table('change_log')->where('section', 'Games')->count());
-        $this->assertSame(1, DB::table('change_log')->where('section', 'Menus')->count());
+        $this->assertSame(1, DB::table('changelogs')->where('section', 'Games')->count());
+        $this->assertSame(1, DB::table('changelogs')->where('section', 'Menus')->count());
     }
 
     /**
@@ -86,7 +99,7 @@ class FixMenuSoftwareChangelogSectionTest extends TestCase
 
         $this->migrate();
 
-        $row = DB::table('change_log')->sole();
+        $row = DB::table('changelogs')->sole();
 
         $this->assertSame('Xtracker', $row->section_name);
         $this->assertSame('Software', $row->sub_section);
@@ -100,6 +113,6 @@ class FixMenuSoftwareChangelogSectionTest extends TestCase
         $this->migrate();
         $this->migrate();
 
-        $this->assertSame(1, DB::table('change_log')->where('section', 'Menu Software')->count());
+        $this->assertSame(1, DB::table('changelogs')->where('section', 'Menu Software')->count());
     }
 }

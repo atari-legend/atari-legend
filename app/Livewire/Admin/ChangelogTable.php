@@ -34,7 +34,7 @@ class ChangelogTable extends DataTableComponent
                 ->label(fn ($row) => Helper::user($row->user))
                 ->sortable(function (Builder $query, $direction) {
                     // Left join so entries without a user (user_id -1) are kept
-                    return $query->leftJoin('users', 'change_log.user_id', '=', 'users.id')
+                    return $query->leftJoin('users', 'changelogs.user_id', '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
             Column::make('Section', 'section')
@@ -65,7 +65,7 @@ class ChangelogTable extends DataTableComponent
     {
         // Qualify the select: sorting on User joins `users`, which now also has an `id`
         return Changelog::query()
-            ->select('change_log.*')
+            ->select('changelogs.*')
             ->with('user');
     }
 
@@ -75,7 +75,7 @@ class ChangelogTable extends DataTableComponent
             'from' => DateFilter::make('Date from', 'from')
                 ->filter(
                     fn (Builder $query, string $value) => $query->where(
-                        'change_log.timestamp',
+                        'changelogs.timestamp',
                         '>=',
                         Carbon::parse($value)->startOfDay()->timestamp
                     )
@@ -83,7 +83,7 @@ class ChangelogTable extends DataTableComponent
             'to' => DateFilter::make('Date to', 'to')
                 ->filter(
                     fn (Builder $query, string $value) => $query->where(
-                        'change_log.timestamp',
+                        'changelogs.timestamp',
                         '<=',
                         Carbon::parse($value)->endOfDay()->timestamp
                     )
@@ -91,35 +91,35 @@ class ChangelogTable extends DataTableComponent
             'action' => SelectFilter::make('Action')
                 ->options($this->distinctOptions('action'))
                 ->filter(
-                    fn (Builder $query, string $term) => $query->where('change_log.action', '=', $term)
+                    fn (Builder $query, string $term) => $query->where('changelogs.action', '=', $term)
                 ),
             'section' => SelectFilter::make('Section')
                 ->options($this->distinctOptions('section'))
                 ->filter(
-                    fn (Builder $query, string $term) => $query->where('change_log.section', '=', $term)
+                    fn (Builder $query, string $term) => $query->where('changelogs.section', '=', $term)
                 ),
             'sub_section' => SelectFilter::make('Sub-section', 'sub_section')
                 ->options($this->subSectionOptions())
                 ->filter(
-                    fn (Builder $query, string $term) => $query->where('change_log.sub_section', '=', $term)
+                    fn (Builder $query, string $term) => $query->where('changelogs.sub_section', '=', $term)
                 ),
             'user' => SelectFilter::make('User')
                 ->options($this->userOptions())
                 ->filter(
-                    fn (Builder $query, string $term) => $query->where('change_log.user_id', '=', $term)
+                    fn (Builder $query, string $term) => $query->where('changelogs.user_id', '=', $term)
                 ),
         ];
     }
 
     /**
-     * Distinct values of a change_log column, as filter options.
+     * Distinct values of a changelogs column, as filter options.
      *
      * @param  string  $column  Column to list the values of
      * @return array<string, string> Options, keyed by value
      */
     private function distinctOptions(string $column): array
     {
-        $values = DB::table('change_log')
+        $values = DB::table('changelogs')
             ->distinct()
             ->where($column, '!=', '')
             ->orderBy($column)
@@ -140,7 +140,7 @@ class ChangelogTable extends DataTableComponent
         // calls filters() again, which would recurse.
         $section = $this->filterComponents['section'] ?? null;
 
-        $values = DB::table('change_log')
+        $values = DB::table('changelogs')
             ->distinct()
             ->where('sub_section', '!=', '')
             ->when($section, fn ($query) => $query->where('section', '=', $section))

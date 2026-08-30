@@ -13,7 +13,6 @@ class Changelog extends Model implements Feedable
     const UPDATE = 'Update';
     const DELETE = 'Delete';
 
-    protected $table = 'change_log';
     public $timestamps = false;
 
     protected $fillable = [

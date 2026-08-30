@@ -273,7 +273,7 @@ class GameSearchController extends Controller
 
         $updates = [];
         for ($month = 1; $month <= 12; $month++) {
-            $updates[$from->getTimestamp()] = DB::table('change_log')
+            $updates[$from->getTimestamp()] = DB::table('changelogs')
                 ->whereBetween('timestamp', [$from->getTimestamp(), $to->getTimestamp()])
                 ->count();
 

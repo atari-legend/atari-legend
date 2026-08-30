@@ -18,7 +18,7 @@ class ChangelogController extends Controller
         $changes = $this->getChanges($section, $subsection)
             ->paginate(50);
 
-        $sections = DB::table('change_log')
+        $sections = DB::table('changelogs')
             ->select(['section', 'sub_section'])
             ->groupBy(['section', 'sub_section'])
             ->orderBy('section', 'asc')

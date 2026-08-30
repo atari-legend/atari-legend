@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 class AdminStatisticsHelper
 {
     /**
-     * Legacy values found in change_log.action, mapped onto the current constants.
+     * Legacy values found in changelogs.action, mapped onto the current constants.
      */
     const ACTION_ALIASES = [
         'Add'         => Changelog::INSERT,
@@ -135,7 +135,7 @@ class AdminStatisticsHelper
                 'Administrators'    => DB::table('users')->where('permission', User::PERMISSION_ADMIN)->count(),
                 'Comments'          => DB::table('comments')->count(),
                 'Votes'             => DB::table('game_votes')->count(),
-                'News submissions'  => DB::table('news_submission')->count(),
+                'News submissions'  => DB::table('news_submissions')->count(),
             ],
         ];
     }
@@ -209,7 +209,7 @@ class AdminStatisticsHelper
         $actions = [Changelog::INSERT, Changelog::UPDATE, Changelog::DELETE];
         $series = array_fill_keys($actions, $buckets);
 
-        $changes = DB::table('change_log')
+        $changes = DB::table('changelogs')
             ->select('timestamp', 'action')
             ->where('timestamp', '>=', $from->getTimestamp())
             ->get();
@@ -238,7 +238,7 @@ class AdminStatisticsHelper
      */
     public static function changesByYear()
     {
-        return self::bucketByYear(DB::table('change_log')->pluck('timestamp'));
+        return self::bucketByYear(DB::table('changelogs')->pluck('timestamp'));
     }
 
     /**
@@ -249,7 +249,7 @@ class AdminStatisticsHelper
      */
     public static function changesBySection($limit = 15)
     {
-        $sections = DB::table('change_log')
+        $sections = DB::table('changelogs')
             ->select('section', DB::raw('count(*) as total'))
             ->groupBy('section')
             ->orderByDesc('total')
@@ -268,8 +268,8 @@ class AdminStatisticsHelper
      */
     public static function topContributors($limit = 15)
     {
-        $rows = DB::table('change_log')
-            ->join('users', 'users.id', '=', 'change_log.user_id')
+        $rows = DB::table('changelogs')
+            ->join('users', 'users.id', '=', 'changelogs.user_id')
             ->select('users.userid', DB::raw('count(*) as total'))
             ->groupBy('users.id', 'users.userid')
             ->orderByDesc('total')
@@ -598,7 +598,7 @@ class AdminStatisticsHelper
             }
 
             // date() rather than Carbon here: this runs over every row of
-            // change_log, where building a Carbon instance per row costs ~700ms.
+            // changelogs, where building a Carbon instance per row costs ~700ms.
             $year = $epoch
                 ? (int) date('Y', (int) $date)
                 : (int) Carbon::parse($date)->year;

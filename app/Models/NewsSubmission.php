@@ -9,7 +9,6 @@ class NewsSubmission extends Model
 {
     use HasFactory;
 
-    protected $table = 'news_submission';
     public $timestamps = false;
 
     protected $casts = [
