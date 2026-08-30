@@ -13,6 +13,134 @@ the three previous campaigns and does not repeat what they establish about
 deploy ordering, `RENAME TABLE` on MariaDB, or the strictness guards in
 `AppServiceProvider`.
 
+**Executed 2026-08-30**, all eight units, in plan order, one commit each. Four
+things departed from the text and each is recorded in place below: the two open
+decisions the plan declined to settle were settled the rule-consistent way
+(`trainer_options` and `pub_devs`, not `trainers` and `publisher_developers`),
+which leaves nothing in Out of scope; Unit 7's premise was wrong about how a
+`Pivot` subclass derives its table and the unit lost its migration and gained
+two override deletions; and one test that re-runs a historical migration out of
+order had to move. The end state is better than the plan's: **fifty-four of the
+fifty-six overrides are deleted, not fifty-two**, and forty-three tables moved,
+not forty-six. The schema is at 119 tables on both lineages, and the full
+PHPUnit suite passes at 1010.
+
+### The two open decisions, settled
+
+Units 3 and 4 each named a target that drops or replaces a word, and the plan
+deliberately left both to the reader. Both were settled with nicolas on
+2026-08-30, and both went the way Unit 2's rule points:
+
+| Table | Plan proposed | Executed | Model |
+|---|---|---|---|
+| `trainer_option` | `trainers` | `trainer_options` | `Trainer` → `TrainerOption` |
+| `pub_dev` | `publisher_developers` | `pub_devs` | `PublisherDeveloper` → `PubDev` |
+
+The consequence is that **"The three foreign keys that stop matching the rule"
+under Out of scope is down to one**. `trainer_option_id` and the three
+`pub_dev_id` columns keep matching, because their parents kept their words;
+only `game_submitinfo_id` on `screenshot_game_submitinfo` is left, and it is
+left for the reason Unit 2 gives. Six `TABLE, NOT MODEL` entries in
+`RelationshipKeyConventionsTest::DECLINED` were deleted rather than reworded,
+and five relations shed key arguments the audit now derives:
+`GameRelease::trainers()`, `Game::developers()`, `GameRelease::distributors()`,
+`PubDev::games()` and `PubDev::releases()`.
+
+One of Unit 4's five did not close, and the plan was wrong to expect it to.
+`GameRelease::publisher()` is a `belongsTo`, and a `belongsTo` derives its key
+from the **method** name, not the related class — so the convention is
+`publisher_id` whatever the model is called. Its entry stays, with that as the
+reason.
+
+### Unit 7 had the mechanism backwards
+
+The unit renamed `screenshot_article`, `screenshot_interview` and
+`screenshot_review` to their plurals in order to delete three overrides. It
+does the opposite. All three models extend `Pivot`, and **a `Pivot` subclass
+does not derive its table with `pluralStudly`**: `AsPivot::getTable()` is
+`Str::snake(Str::singular(class_basename($this)))`
+(`vendor/laravel/framework/src/Illuminate/Database/Eloquent/Relations/Concerns/AsPivot.php:167`).
+`ScreenshotArticle` derives `screenshot_article`, so renaming the table to the
+plural makes the override *permanent*. Four tests failed on `no such table:
+screenshot_article` and the migration was withdrawn.
+
+The corrected unit renames nothing and carries no migration. All five pivot
+tables already hold exactly the name their class derives, so **all five
+overrides are redundant and all five are deleted** — including
+`GameDeveloper` and `GameIndividual`, which "The two pivots that stay" and the
+end-state paragraph both expected to keep theirs forever. That section and Out
+of scope's "The two kept pivot overrides" are superseded: the reasoning in them
+about `joiningTable()` deriving `game_individual` was the tell, since it is the
+same singular convention seen from the relation's side.
+
+Two consequences elsewhere in this document. **The end state is fifty-four of
+fifty-six**, and the only survivors are `GameReleaseMemoryEnhanced` and
+`GameReleaseSystemEnhanced`. And **the derivation check under Verification is
+wrong as written** — it compares every model against `pluralStudly`, which no
+`Pivot` subclass has ever used, so it reports the five pivots as findings. The
+check has to branch:
+
+```
+$derived = $m instanceof Illuminate\Database\Eloquent\Relations\Pivot
+    ? Str::snake(Str::singular($base))
+    : Str::snake(Str::pluralStudly($base));
+```
+
+Run that way it prints exactly the two kept models and nothing else.
+
+### One test runs a historical migration out of order
+
+`FixMenuSoftwareChangelogSectionTest` requires
+`2026_08_10_120000_fix_menu_software_changelog_section.php` by path and calls
+`up()` on it, so Unit 8's `change_log` → `changelogs` broke it. The rule that
+historical migrations are not touched still holds and the migration is right as
+written: on a real `migrate` it runs months before the rename, against the
+schema of its day. The test is what moved — it renames the table back for the
+duration of the call and restores it in a `finally`. It is the only place in
+the campaign where a historical migration is executed outside its ordering, and
+worth knowing about before the next rename campaign.
+
+### The rename helper was extracted
+
+The plan has each of seven migrations repeat
+`2026_08_25_100300_rename_main_tables`'s private `rename()`. That is eighty
+lines seven times, so it became `Database\Support\TableRenamer`
+(`database/support/`, registered in `composer.json`'s psr-4 map). It adds two
+rules the original did not need, both found by running it:
+
+- **only a Laravel-derived name is rewritten**, matched as
+  `{table}_{columns}_{index|unique|foreign|primary}`. A blind prefix swap is
+  safe for `article_main` and not for `game`, which carries legacy indexes
+  named for their *column* — `game_progress_system_id`, `game_series_id`,
+  `port_id`. Those are left, exactly as the merge campaign left its four, and
+  MariaDB renames its own `*_ibfk_*` constraints with the table anyway;
+- **a rewritten name over 64 characters is skipped**, that being MariaDB's
+  identifier limit. It happens once, on
+  `game_release_tos_version_incompatibility_game_release_id_foreign`, whose
+  pluralised form is 66. Nothing reachable is lost: Laravel would derive that
+  same 66-character name for a later `dropForeign()`, so no `dropForeign()` on
+  that column can work either way.
+
+### Smaller notes
+
+- **Forty-three tables moved, not forty-six**, Unit 7's three having stayed.
+  The 119-table count is unchanged, as the plan says it must be, and the
+  foreign-key count held at 142 through every unit.
+- **The seven migrations the plan predicted are six**, for the same reason;
+  `ls database/migrations | tail -6` is the check, not `tail -7`. They are
+  numbered `2026_08_30_1000NN` in unit order, Unit 1 carrying none.
+- A reference shape the plan's own commands do not find: a table name qualifying
+  a column *inside* raw SQL, where there is no leading quote to anchor on.
+  `Tops.php:53`'s `selectRaw('count(game_id) as game_count, game_genre.name,
+  game_genre.id')` is the one that got through, and it surfaced as three failing
+  tests rather than as a grep hit. The same file's `selectRaw` for companies had
+  the identical shape and was caught only because `pub_dev` was swept with a
+  bare `pub_dev\.` pattern as well. A
+  `(selectRaw|DB::raw|whereRaw|orderByRaw|havingRaw|groupByRaw)` sweep for a
+  bare `table.` finds both, and belongs in "How the inventory was obtained".
+- `migrate:fresh` plus `E2ESeeder` on the e2e database lands on the pluralised
+  schema at 119 tables with no old name present, as required.
+
 **The delivery unit is one commit per unit, based on `development`, not one
 pull request.** Every unit except the first carries one migration, so reversing
 a deployed unit is `migrate:rollback --step=1`, and reverting the commit removes
