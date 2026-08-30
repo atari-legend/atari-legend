@@ -126,12 +126,12 @@ class GameConfigurationTest extends AdminTestCase
 
     public function test_an_entry_can_be_deleted(): void
     {
-        $id = DB::table('media_scan_type')->insertGetId(['name' => 'Label']);
+        $id = DB::table('media_scan_types')->insertGetId(['name' => 'Label']);
 
         $this->delete(route('admin.games.configuration.destroy', ['type' => 'media-scan-type', 'id' => $id]))
             ->assertRedirect(route('admin.games.configuration.show', 'media-scan-type'));
 
-        $this->assertSame(0, DB::table('media_scan_type')->count());
+        $this->assertSame(0, DB::table('media_scan_types')->count());
 
         // The name is read before the row goes, so the log still says what went
         $this->assertChangelog(Changelog::DELETE, 'Games Config', 'Label');

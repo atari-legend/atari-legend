@@ -9,6 +9,5 @@ class MediaType extends Model
 {
     use HasFactory;
 
-    protected $table = 'media_type';
     public $timestamps = false;
 }

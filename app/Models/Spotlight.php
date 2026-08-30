@@ -9,7 +9,6 @@ class Spotlight extends Model
 {
     use HasFactory;
 
-    protected $table = 'spotlight';
     public $timestamps = false;
 
     protected $fillable = ['spotlight', 'link'];

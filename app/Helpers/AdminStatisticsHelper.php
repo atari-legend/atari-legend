@@ -82,8 +82,8 @@ class AdminStatisticsHelper
                 'Article screenshots'   => DB::table('screenshot_article')->count(),
                 'Release scans'         => DB::table('game_release_scans')->count(),
                 'Media'                 => DB::table('media')->count(),
-                'Media scans'           => DB::table('media_scan')->count(),
-                'Dumps'                 => DB::table('dump')->count(),
+                'Media scans'           => DB::table('media_scans')->count(),
+                'Dumps'                 => DB::table('dumps')->count(),
             ],
             'Menus' => [
                 'Menu sets'       => DB::table('menu_sets')->count(),
@@ -110,7 +110,7 @@ class AdminStatisticsHelper
                 'News items'             => DB::table('news')->count(),
                 'Did you know?'          => DB::table('trivia')->count(),
                 'Quotes'                 => DB::table('trivia_quotes')->count(),
-                'Spotlights'             => DB::table('spotlight')->count(),
+                'Spotlights'             => DB::table('spotlights')->count(),
                 'Magazines'              => DB::table('magazines')->count(),
                 'Magazine issues'        => DB::table('magazine_issues')->count(),
                 'Magazine index entries' => DB::table('magazine_indices')->count(),
@@ -375,7 +375,7 @@ class AdminStatisticsHelper
      */
     public static function dumpsByFormat()
     {
-        return self::toChartData(self::groupByColumn('dump', 'format'));
+        return self::toChartData(self::groupByColumn('dumps', 'format'));
     }
 
     /**

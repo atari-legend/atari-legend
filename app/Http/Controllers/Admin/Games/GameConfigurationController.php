@@ -34,8 +34,8 @@ class GameConfigurationController extends Controller
         'resolution'           => 'resolutions',
         'system'               => 'systems',
         'emulator'             => 'emulators',
-        'media-type'           => 'media_type',
-        'media-scan-type'      => 'media_scan_type',
+        'media-type'           => 'media_types',
+        'media-scan-type'      => 'media_scan_types',
     ];
 
     /** Categories of configuration types. */

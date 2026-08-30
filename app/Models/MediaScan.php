@@ -10,7 +10,6 @@ class MediaScan extends Model
 {
     use HasFactory;
 
-    protected $table = 'media_scan';
     public $timestamps = false;
 
     protected $fillable = ['imgext'];

@@ -403,7 +403,7 @@ class E2ESeeder extends Seeder
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
         ]);
-        $this->insert('article_comments', ['id' => 1], [
+        $this->insert('screenshot_article_comments', ['id' => 1], [
             'screenshot_article_id' => 1,
             'comment_text'          => self::ARTICLE_SCREENSHOT_CAPTION,
         ]);
@@ -453,7 +453,7 @@ class E2ESeeder extends Seeder
             'interview_id'  => self::INTERVIEW_ID,
             'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
         ]);
-        $this->insert('interview_comments', ['id' => 1], [
+        $this->insert('screenshot_interview_comments', ['id' => 1], [
             'screenshot_interview_id' => 1,
             'comment_text'            => self::INTERVIEW_SCREENSHOT_CAPTION,
         ]);
@@ -629,7 +629,7 @@ class E2ESeeder extends Seeder
     private function seedOthers(): void
     {
         $this->insert('screenshots', ['id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('spotlight', ['id' => self::SPOTLIGHT_ID], [
+        $this->insert('spotlights', ['id' => self::SPOTLIGHT_ID], [
             'screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID,
             'spotlight'     => 'Playwright test spotlight.',
             'link'          => 'https://example.com/',

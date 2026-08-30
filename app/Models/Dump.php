@@ -14,7 +14,6 @@ class Dump extends Model
 
     const TRACKPICTURES_DIRECTORY = 'images/dump_trackpictures';
 
-    protected $table = 'dump';
     public $timestamps = false;
 
     protected $casts = [

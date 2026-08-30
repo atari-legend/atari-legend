@@ -35,7 +35,7 @@ storage/app/public/       # Public file storage (symlinked from public/storage)
 200+ tables organized into:
 
 - **Games:** `games`, `game_releases`, `game_akas`, `game_genre_cross`, `game_individual`
-- **Media:** `dump`, `media`, `media_scan`, `screenshot_main`, `game_release_scan`
+- **Media:** `dumps`, `media`, `media_scans`, `screenshots`, `game_release_scans`
 - **Music:** `sndh`, `sndh_archive`, `game_music`
 - **Menus:** `menu_sets`, `menus`, `menu_disks`, `menu_disk_dumps`, `menu_disk_contents`
 - **Content:** `news`, `reviews`, `interviews`, `articles`
@@ -155,7 +155,7 @@ Each follows a consistent pattern:
 - Separate routes: `POST .../image`, `PUT .../image`, `DELETE .../image/{image}`
 - Controller methods: `storeImage()`, `updateImage()`, `destroyImage()`
 - Images stored in `Screenshot` model with pivot tables (`screenshot_article`, `screenshot_interview`)
-- Descriptions stored in comment tables (`article_comments`, `interview_comments`)
+- Descriptions stored in comment tables (`screenshot_article_comments`, `screenshot_interview_comments`)
 
 **Save Buttons**:
 - Green "Save" with `name="stay" value="true"` - stays on edit screen
