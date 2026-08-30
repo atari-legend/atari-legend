@@ -9,6 +9,5 @@ class Emulator extends Model
 {
     use HasFactory;
 
-    protected $table = 'emulator';
     public $timestamps = false;
 }

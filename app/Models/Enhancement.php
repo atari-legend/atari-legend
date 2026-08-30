@@ -9,6 +9,5 @@ class Enhancement extends Model
 {
     use HasFactory;
 
-    protected $table = 'enhancement';
     public $timestamps = false;
 }

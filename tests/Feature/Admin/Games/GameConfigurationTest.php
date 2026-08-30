@@ -88,7 +88,7 @@ class GameConfigurationTest extends AdminTestCase
             'description' => 'An interpreted language.',
         ])->assertRedirect();
 
-        $this->assertSame('An interpreted language.', DB::table('engine')->sole()->description);
+        $this->assertSame('An interpreted language.', DB::table('engines')->sole()->description);
 
         $this->post(route('admin.games.configuration.store', 'genre'), [
             'name'        => 'Shoot-em-up',
@@ -100,13 +100,13 @@ class GameConfigurationTest extends AdminTestCase
 
     public function test_an_entry_can_be_renamed(): void
     {
-        $id = DB::table('resolution')->insertGetId(['name' => 'Lo']);
+        $id = DB::table('resolutions')->insertGetId(['name' => 'Lo']);
 
         $this->put(route('admin.games.configuration.update', ['type' => 'resolution', 'id' => $id]), [
             'name' => 'Low',
         ])->assertRedirect(route('admin.games.configuration.show', 'resolution'));
 
-        $this->assertSame('Low', DB::table('resolution')->where('id', $id)->value('name'));
+        $this->assertSame('Low', DB::table('resolutions')->where('id', $id)->value('name'));
 
         $this->assertChangelog(Changelog::UPDATE, 'Games Config', 'Low');
         $this->assertSame('Resolution', Changelog::sole()->sub_section);
@@ -114,14 +114,14 @@ class GameConfigurationTest extends AdminTestCase
 
     public function test_a_description_can_be_edited(): void
     {
-        $id = DB::table('engine')->insertGetId(['name' => 'STOS', 'description' => 'Basic.']);
+        $id = DB::table('engines')->insertGetId(['name' => 'STOS', 'description' => 'Basic.']);
 
         $this->put(route('admin.games.configuration.update', ['type' => 'engine', 'id' => $id]), [
             'name'        => 'STOS',
             'description' => 'The game creator.',
         ])->assertRedirect();
 
-        $this->assertSame('The game creator.', DB::table('engine')->where('id', $id)->value('description'));
+        $this->assertSame('The game creator.', DB::table('engines')->where('id', $id)->value('description'));
     }
 
     public function test_an_entry_can_be_deleted(): void

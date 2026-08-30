@@ -35,8 +35,8 @@ class ReleaseSystemMemoryEnhancementController extends Controller
     public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
-            'memory_enhancement' => 'nullable|numeric|exists:enhancement,id',
-            'memory'             => 'required|numeric|exists:memory,id',
+            'memory_enhancement' => 'nullable|numeric|exists:enhancements,id',
+            'memory'             => 'required|numeric|exists:memories,id',
         ]);
 
         $enhancement = GameReleaseMemoryEnhanced::create([

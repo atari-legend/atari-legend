@@ -9,6 +9,5 @@ class CopyProtection extends Model
 {
     use HasFactory;
 
-    protected $table = 'copy_protection';
     public $timestamps = false;
 }

@@ -9,6 +9,5 @@ class Memory extends Model
 {
     use HasFactory;
 
-    protected $table = 'memory';
     public $timestamps = false;
 }

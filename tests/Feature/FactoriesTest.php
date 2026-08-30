@@ -35,7 +35,7 @@ use App\Models\Resolution;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\Spotlight;
-use App\Models\Trainer;
+use App\Models\TrainerOption;
 use App\Models\Trivia;
 use App\Models\User;
 use App\Models\Website;
@@ -85,7 +85,7 @@ class FactoriesTest extends TestCase
             'language'            => [Language::class],
             'resolution'          => [Resolution::class],
             'memory'              => [Memory::class],
-            'trainer'             => [Trainer::class],
+            'trainer'             => [TrainerOption::class],
             'copy protection'     => [CopyProtection::class],
             'review'              => [Review::class],
             'interview'           => [Interview::class],

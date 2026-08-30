@@ -36,7 +36,7 @@ class ReleaseSystemTosController extends Controller
     {
         $request->validate([
             'tos'      => 'required|numeric|exists:tos,id',
-            'language' => 'nullable|alpha|exists:language,id',
+            'language' => 'nullable|alpha|exists:languages,id',
         ]);
 
         $incompatibility = GameReleaseTosVersionIncompatibility::create([

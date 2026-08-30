@@ -60,7 +60,6 @@ class RelationshipKeyConventionsTest extends TestCase
         'GameRelease::distributors()'       => 'table pub_dev, model PublisherDeveloper',
         'PublisherDeveloper::games()'       => 'table pub_dev, model PublisherDeveloper',
         'PublisherDeveloper::releases()'    => 'table pub_dev, model PublisherDeveloper',
-        'GameRelease::trainers()'           => 'table trainer_option, model Trainer',
         'GameSubmitInfo::screenshots()'     => 'column game_submitinfo_id is named for game_submitinfo, now game_submit_infos',
         'Game::vs()'                        => 'atari_id says what game_id would not',
 

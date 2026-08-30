@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\Trainer;
+use App\Models\TrainerOption;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Trainer>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TrainerOption>
  */
-class TrainerFactory extends Factory
+class TrainerOptionFactory extends Factory
 {
-    protected $model = Trainer::class;
+    protected $model = TrainerOption::class;
 
     public function definition(): array
     {

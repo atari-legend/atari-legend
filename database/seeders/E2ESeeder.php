@@ -385,7 +385,7 @@ class E2ESeeder extends Seeder
         // The type is the badge on /articles. article_type ships empty and the
         // article's column was null, so the badge rendered as nothing at all -
         // indistinguishable from a badge that had stopped working.
-        $this->insert('article_type', ['id' => self::ARTICLE_TYPE_ID], [
+        $this->insert('article_types', ['id' => self::ARTICLE_TYPE_ID], [
             'article_type' => self::ARTICLE_TYPE_NAME,
         ]);
         $this->insert('articles', ['id' => self::ARTICLE_ID], [
@@ -644,14 +644,14 @@ class E2ESeeder extends Seeder
 
     private function seedReferenceData(): void
     {
-        $this->insert('port', ['id' => self::PORT_ID], ['name' => self::PORT_NAME]);
+        $this->insert('ports', ['id' => self::PORT_ID], ['name' => self::PORT_NAME]);
         $this->insert('game_progress_systems', ['id' => self::PROGRESS_SYSTEM_ID], ['name' => self::PROGRESS_SYSTEM_NAME]);
         $this->insert('game_genres', ['id' => self::GENRE_ID], ['name' => self::GENRE_NAME]);
-        $this->insert('programming_language', ['id' => self::PROGRAMMING_LANGUAGE_ID], ['name' => self::PROGRAMMING_LANGUAGE_NAME]);
-        $this->insert('engine', ['id' => self::ENGINE_ID], ['name' => self::ENGINE_NAME]);
-        $this->insert('control', ['id' => self::CONTROL_ID], ['name' => self::CONTROL_NAME]);
+        $this->insert('programming_languages', ['id' => self::PROGRAMMING_LANGUAGE_ID], ['name' => self::PROGRAMMING_LANGUAGE_NAME]);
+        $this->insert('engines', ['id' => self::ENGINE_ID], ['name' => self::ENGINE_NAME]);
+        $this->insert('controls', ['id' => self::CONTROL_ID], ['name' => self::CONTROL_NAME]);
         $this->insert('sound_hardware', ['id' => self::SOUND_HARDWARE_ID], ['name' => self::SOUND_HARDWARE_NAME]);
-        $this->insert('copy_protection', ['id' => self::COPY_PROTECTION_ID], ['name' => self::COPY_PROTECTION_NAME]);
+        $this->insert('copy_protections', ['id' => self::COPY_PROTECTION_ID], ['name' => self::COPY_PROTECTION_NAME]);
     }
 
     /**

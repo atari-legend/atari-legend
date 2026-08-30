@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsImage extends Model
 {
-    protected $table = 'news_image';
     public $timestamps = false;
 
     protected $fillable = ['news_image_ext'];

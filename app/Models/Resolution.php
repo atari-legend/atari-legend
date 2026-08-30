@@ -9,6 +9,5 @@ class Resolution extends Model
 {
     use HasFactory;
 
-    protected $table = 'resolution';
     public $timestamps = false;
 }

@@ -35,7 +35,7 @@ class ReleaseSystemDiskProtectionController extends Controller
     public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
-            'disk_protection' => 'required|numeric|exists:disk_protection,id',
+            'disk_protection' => 'required|numeric|exists:disk_protections,id',
         ]);
 
         $protection = DiskProtection::findOrFail($request->disk_protection);

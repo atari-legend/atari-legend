@@ -91,7 +91,7 @@ class GameReleaseFactory extends Factory
     public function withTrainer(string $name = 'Infinite lives'): static
     {
         return $this->afterCreating(function (GameRelease $release) use ($name) {
-            $release->trainers()->attach(TrainerFactory::new()->create(['name' => $name]));
+            $release->trainers()->attach(TrainerOptionFactory::new()->create(['name' => $name]));
         });
     }
 

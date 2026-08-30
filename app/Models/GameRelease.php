@@ -146,7 +146,7 @@ class GameRelease extends Model
 
     public function trainers()
     {
-        return $this->belongsToMany(Trainer::class, 'game_release_trainer_option', 'game_release_id', 'trainer_option_id');
+        return $this->belongsToMany(TrainerOption::class, 'game_release_trainer_option');
     }
 
     public function copyProtections()

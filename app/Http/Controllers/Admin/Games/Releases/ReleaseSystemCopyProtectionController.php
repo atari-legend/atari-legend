@@ -35,7 +35,7 @@ class ReleaseSystemCopyProtectionController extends Controller
     public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
-            'copy_protection' => 'required|numeric|exists:copy_protection,id',
+            'copy_protection' => 'required|numeric|exists:copy_protections,id',
         ]);
 
         $protection = CopyProtection::findOrFail($request->copy_protection);

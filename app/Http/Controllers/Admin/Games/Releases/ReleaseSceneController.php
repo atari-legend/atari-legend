@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\Trainer;
+use App\Models\TrainerOption;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class ReleaseSceneController extends Controller
 {
     public function index(Game $game, GameRelease $release)
     {
-        $trainers = Trainer::orderBy('name')->get();
+        $trainers = TrainerOption::orderBy('name')->get();
 
         return view('admin.games.games.releases.scene.index')
             ->with([
@@ -52,7 +52,7 @@ class ReleaseSceneController extends Controller
             if ($request->trainers) {
                 $release->trainers()->saveMany(
                     collect($request->trainers)
-                        ->map(fn ($id) => Trainer::findOrFail($id))
+                        ->map(fn ($id) => TrainerOption::findOrFail($id))
                         ->all()
                 );
             }

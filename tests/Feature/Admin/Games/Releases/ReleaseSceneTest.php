@@ -4,7 +4,7 @@ namespace Tests\Feature\Admin\Games\Releases;
 
 use App\Models\Changelog;
 use App\Models\GameRelease;
-use App\Models\Trainer;
+use App\Models\TrainerOption;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -28,8 +28,8 @@ class ReleaseSceneTest extends AdminTestCase
     public function test_trainer_options_are_attached(): void
     {
         $release = GameRelease::factory()->create();
-        $lives = Trainer::factory()->create(['name' => 'Infinite lives']);
-        $ammo = Trainer::factory()->create(['name' => 'Infinite ammo']);
+        $lives = TrainerOption::factory()->create(['name' => 'Infinite lives']);
+        $ammo = TrainerOption::factory()->create(['name' => 'Infinite ammo']);
 
         $this->post(route('admin.games.releases.scene.update', [$release->game, $release]), [
             'trainers' => [$lives->getKey(), $ammo->getKey()],
@@ -63,7 +63,7 @@ class ReleaseSceneTest extends AdminTestCase
     public function test_saving_the_same_trainer_twice_leaves_one_row(): void
     {
         $release = GameRelease::factory()->create();
-        $trainer = Trainer::factory()->create(['name' => 'Infinite lives']);
+        $trainer = TrainerOption::factory()->create(['name' => 'Infinite lives']);
 
         $this->post(route('admin.games.releases.scene.update', [$release->game, $release]), [
             'trainers' => [$trainer->getKey()],
@@ -79,7 +79,7 @@ class ReleaseSceneTest extends AdminTestCase
     public function test_the_trainers_must_be_posted_as_a_list(): void
     {
         $release = GameRelease::factory()->create();
-        $trainer = Trainer::factory()->create();
+        $trainer = TrainerOption::factory()->create();
 
         $this->post(route('admin.games.releases.scene.update', [$release->game, $release]), [
             'trainers' => $trainer->getKey(),

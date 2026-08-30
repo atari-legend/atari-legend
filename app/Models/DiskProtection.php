@@ -9,6 +9,5 @@ class DiskProtection extends Model
 {
     use HasFactory;
 
-    protected $table = 'disk_protection';
     public $timestamps = false;
 }

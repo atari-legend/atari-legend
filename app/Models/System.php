@@ -9,6 +9,5 @@ class System extends Model
 {
     use HasFactory;
 
-    protected $table = 'system';
     public $timestamps = false;
 }

@@ -35,8 +35,8 @@ class ReleaseSystemEnhancementController extends Controller
     public function store(Request $request, Game $game, GameRelease $release)
     {
         $request->validate([
-            'enhancement' => 'nullable|numeric|exists:enhancement,id',
-            'system'      => 'required|numeric|exists:system,id',
+            'enhancement' => 'nullable|numeric|exists:enhancements,id',
+            'system'      => 'required|numeric|exists:systems,id',
         ]);
 
         $enhancement = GameReleaseSystemEnhanced::create([

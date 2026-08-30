@@ -9,7 +9,6 @@ class Language extends Model
 {
     use HasFactory;
 
-    protected $table = 'language';
     protected $keyType = 'string';
     // The key is an ISO code the data ships with, not a generated integer.
     // Without this, inserting a language would overwrite the code in memory
