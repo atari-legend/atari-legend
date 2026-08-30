@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ScreenshotReview extends Pivot
 {
-    protected $table = 'screenshot_review';
     public $timestamps = false;
 
     public function comment()
