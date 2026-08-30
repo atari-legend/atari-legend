@@ -60,9 +60,8 @@ class RelationshipKeyConventionsTest extends TestCase
         'GameRelease::distributors()'       => 'table pub_dev, model PublisherDeveloper',
         'PublisherDeveloper::games()'       => 'table pub_dev, model PublisherDeveloper',
         'PublisherDeveloper::releases()'    => 'table pub_dev, model PublisherDeveloper',
-        'Game::genres()'                    => 'table game_genre, model Genre',
         'GameRelease::trainers()'           => 'table trainer_option, model Trainer',
-        'GameSubmitInfo::screenshots()'     => 'table game_submitinfo, model GameSubmitInfo',
+        'GameSubmitInfo::screenshots()'     => 'column game_submitinfo_id is named for game_submitinfo, now game_submit_infos',
         'Game::vs()'                        => 'atari_id says what game_id would not',
 
         // DECLINED ON PRICING
@@ -71,7 +70,7 @@ class RelationshipKeyConventionsTest extends TestCase
         'MediaScan::type()'                 => 'media_scan_type_id is the better column name; ->type is 97 lines',
         'Media::release()'                  => 'gameRelease() would close it; ->release is 77 lines',
         'MenuDiskContent::release()'        => 'gameRelease() would close it; ->release is 77 lines',
-        'ReleaseAka::release()'             => 'gameRelease() would close it; ->release is 77 lines',
+        'GameReleaseAka::release()'         => 'gameRelease() would close it; ->release is 77 lines',
         'News::image()'                     => 'newsImage() would close it; ->image is ambiguous, deferred',
     ];
 

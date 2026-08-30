@@ -10,7 +10,7 @@ use App\Models\Crew;
 use App\Models\Dump;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\Genre;
+use App\Models\GameGenre;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\Language;
@@ -30,7 +30,7 @@ use App\Models\MenuSoftware;
 use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\PublisherDeveloper;
-use App\Models\ReleaseScan;
+use App\Models\GameReleaseScan;
 use App\Models\Resolution;
 use App\Models\Review;
 use App\Models\Screenshot;
@@ -81,7 +81,7 @@ class FactoriesTest extends TestCase
             'publisher/developer' => [PublisherDeveloper::class],
             'individual'          => [Individual::class],
             'crew'                => [Crew::class],
-            'genre'               => [Genre::class],
+            'genre'               => [GameGenre::class],
             'language'            => [Language::class],
             'resolution'          => [Resolution::class],
             'memory'              => [Memory::class],
@@ -102,7 +102,7 @@ class FactoriesTest extends TestCase
             'magazine issue'      => [MagazineIssue::class],
             'magazine index'      => [MagazineIndex::class],
             'magazine index type' => [MagazineIndexType::class],
-            'release scan'        => [ReleaseScan::class],
+            'release scan'        => [GameReleaseScan::class],
             'media'               => [Media::class],
             'media scan'          => [MediaScan::class],
             'media scan type'     => [MediaScanType::class],
@@ -145,8 +145,8 @@ class FactoriesTest extends TestCase
      */
     public function test_scan_factories_carry_their_type(): void
     {
-        $scan = ReleaseScan::factory()->ofType(ReleaseScan::TYPE_BOX_BACK)->create();
-        $this->assertSame(ReleaseScan::TYPE_BOX_BACK, $scan->type);
+        $scan = GameReleaseScan::factory()->ofType(GameReleaseScan::TYPE_BOX_BACK)->create();
+        $this->assertSame(GameReleaseScan::TYPE_BOX_BACK, $scan->type);
 
         $mediaScan = MediaScan::factory()->create();
         $this->assertNotNull($mediaScan->type);

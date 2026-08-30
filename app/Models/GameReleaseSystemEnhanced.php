@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReleaseSystemEnhanced extends Model
+class GameReleaseSystemEnhanced extends Model
 {
     protected $table = 'game_release_system_enhanced';
     public $timestamps = false;

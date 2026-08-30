@@ -85,7 +85,7 @@ class GameSeriesControllerTest extends AdminTestCase
             ->assertRedirect(route('admin.games.series.edit', $series));
 
         $this->assertNull($game->fresh()->game_series_id);
-        $this->assertDatabaseHas('game', ['id' => $game->getKey()]);
+        $this->assertDatabaseHas('games', ['id' => $game->getKey()]);
         $this->assertChangelog(Changelog::DELETE, 'Game series', 'Xenon series');
     }
 

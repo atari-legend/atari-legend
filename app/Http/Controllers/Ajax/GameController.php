@@ -15,11 +15,11 @@ class GameController extends Controller
     {
         $q = $request->q;
 
-        $games = DB::table('game')
+        $games = DB::table('games')
             ->select('game_name', 'id as game_id')
             ->limit(GameController::MAX);
 
-        $akas = DB::table('game_aka')
+        $akas = DB::table('game_akas')
             ->select('aka_name as game_name', 'game_id')
             ->limit(GameController::MAX);
 

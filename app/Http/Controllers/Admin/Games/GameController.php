@@ -12,11 +12,11 @@ use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\GameSeries;
 use App\Models\GameVs;
-use App\Models\Genre;
+use App\Models\GameGenre;
 use App\Models\Language;
 use App\Models\Port;
 use App\Models\ProgrammingLanguage;
-use App\Models\ProgressSystem;
+use App\Models\GameProgressSystem;
 use App\Models\SoundHardware;
 use App\Rules\Slug;
 use App\View\Components\Admin\Crumb;
@@ -184,7 +184,7 @@ class GameController extends Controller
         $game->genres()->detach();
         collect($request->genres)
             ->map(function ($id) {
-                return Genre::find($id);
+                return GameGenre::find($id);
             })
             ->each(function ($genre) use ($game) {
                 $game->genres()->attach($genre);
@@ -347,18 +347,18 @@ class GameController extends Controller
             'languages' => 'nullable|array',
             'engines'   => 'nullable|array',
             'controls'  => 'nullable|array',
-            'slug'      => [new Slug, Rule::unique('game')->ignore($gameId, 'id')],
+            'slug'      => [new Slug, Rule::unique('games')->ignore($gameId, 'id')],
         ]);
     }
 
     private function getReferenceData(): array
     {
-        $genres = Genre::all()->sortBy('name');
+        $genres = GameGenre::all()->sortBy('name');
         $ports = Port::all()->sortBy('name');
         $programmingLanguages = ProgrammingLanguage::all()->sortBy('name');
         $engines = Engine::all()->sortBy('name');
         $controls = Control::all()->sortBy('name');
-        $progressSystems = ProgressSystem::all()->sortBy('name');
+        $progressSystems = GameProgressSystem::all()->sortBy('name');
         $series = GameSeries::all()->sortBy('name');
         $languages = Language::all()->sortBy('name');
         $soundHardwares = SoundHardware::all()->sortBy('name');

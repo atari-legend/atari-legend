@@ -10,7 +10,6 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $table = 'game';
 
     const MULTIPLAYER_TYPES = ['Simultaneous', 'Turn by turn'];
     const MULTIPLAYER_HARDWARE = ['Cartridge', 'Midi-Link'];
@@ -116,7 +115,7 @@ class Game extends Model
 
     public function genres()
     {
-        return $this->belongsToMany(Genre::class, 'game_genre_cross', 'game_id', 'game_genre_id');
+        return $this->belongsToMany(GameGenre::class, 'game_genre_cross');
     }
 
     public function releases()
@@ -154,7 +153,7 @@ class Game extends Model
 
     public function gameProgressSystem()
     {
-        return $this->belongsTo(ProgressSystem::class);
+        return $this->belongsTo(GameProgressSystem::class);
     }
 
     public function soundHardwares()

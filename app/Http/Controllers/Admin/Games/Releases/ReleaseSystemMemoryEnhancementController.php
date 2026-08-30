@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\ReleaseMemoryEnhanced;
+use App\Models\GameReleaseMemoryEnhanced;
 use Illuminate\Http\Request;
 
 class ReleaseSystemMemoryEnhancementController extends Controller
 {
-    public function destroy(Game $game, GameRelease $release, ReleaseMemoryEnhanced $enhancement)
+    public function destroy(Game $game, GameRelease $release, GameReleaseMemoryEnhanced $enhancement)
     {
         $enhancement->delete();
 
@@ -39,7 +39,7 @@ class ReleaseSystemMemoryEnhancementController extends Controller
             'memory'             => 'required|numeric|exists:memory,id',
         ]);
 
-        $enhancement = ReleaseMemoryEnhanced::create([
+        $enhancement = GameReleaseMemoryEnhanced::create([
             'enhancement_id'  => $request->memory_enhancement,
             'memory_id'       => $request->memory,
             'game_release_id' => $release->getKey(),

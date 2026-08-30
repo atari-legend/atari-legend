@@ -6,9 +6,9 @@ use App\Helpers\GameHelper;
 use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\GameRelease;
-use App\Models\Genre;
+use App\Models\GameGenre;
 use App\Models\PublisherDeveloper;
-use App\Models\ReleaseScan;
+use App\Models\GameReleaseScan;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,11 +26,11 @@ class GameHelperDescriptionTest extends TestCase
 
         $game->save();
 
-        $genre1 = new Genre();
+        $genre1 = new GameGenre();
         $genre1->name = 'Genre 1';
         $game->genres()->save($genre1);
 
-        $genre2 = new Genre();
+        $genre2 = new GameGenre();
         $genre2->name = 'Genre 2';
         $game->genres()->save($genre2);
 
@@ -71,7 +71,7 @@ class GameHelperDescriptionTest extends TestCase
         $release1->publisher()->associate($publisher1);
         $game->releases()->save($release1);
 
-        $scan1 = new ReleaseScan();
+        $scan1 = new GameReleaseScan();
         $scan1->imgext = 'png';
         $scan1->type = 'Other';
         $release1->boxscans()->save($scan1);
@@ -81,11 +81,11 @@ class GameHelperDescriptionTest extends TestCase
         $release2->publisher()->associate($publisher2);
         $game->releases()->save($release2);
 
-        $scan2 = new ReleaseScan();
+        $scan2 = new GameReleaseScan();
         $scan2->imgext = 'png';
         $scan2->type = 'Other';
         $release2->boxscans()->save($scan2);
-        $scan3 = new ReleaseScan();
+        $scan3 = new GameReleaseScan();
         $scan3->imgext = 'png';
         $scan3->type = 'Other';
         $release2->boxscans()->save($scan3);
@@ -109,7 +109,7 @@ class GameHelperDescriptionTest extends TestCase
         $release1->date = '1988-03-02';
         $game->releases()->save($release1);
 
-        $scan1 = new ReleaseScan();
+        $scan1 = new GameReleaseScan();
         $scan1->imgext = 'png';
         $scan1->type = 'Other';
         $release1->boxscans()->save($scan1);

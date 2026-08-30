@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\Genre;
+use App\Models\GameGenre;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Genre>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\GameGenre>
  */
-class GenreFactory extends Factory
+class GameGenreFactory extends Factory
 {
-    protected $model = Genre::class;
+    protected $model = GameGenre::class;
 
     public function definition(): array
     {

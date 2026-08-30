@@ -58,10 +58,10 @@ class GameConfigurationTest extends AdminTestCase
 
         $this->assertSame(
             ['Shoot-em-up'],
-            DB::table('game_genre')->pluck('name')->all()
+            DB::table('game_genres')->pluck('name')->all()
         );
 
-        $id = (int) DB::table('game_genre')->where('name', 'Shoot-em-up')->value('id');
+        $id = (int) DB::table('game_genres')->where('name', 'Shoot-em-up')->value('id');
         $this->assertChangelog(Changelog::INSERT, 'Games Config', 'Shoot-em-up');
         $this->assertSame('Genre', Changelog::sole()->sub_section);
         $this->assertSame($id, (int) Changelog::sole()->section_id);
@@ -73,7 +73,7 @@ class GameConfigurationTest extends AdminTestCase
         $this->post(route('admin.games.configuration.store', 'genre'), ['name' => ''])
             ->assertSessionHasErrors('name');
 
-        $this->assertSame(0, DB::table('game_genre')->count());
+        $this->assertSame(0, DB::table('game_genres')->count());
         $this->assertNoChangelog();
     }
 
@@ -95,7 +95,7 @@ class GameConfigurationTest extends AdminTestCase
             'description' => 'Ignored, game_genre has no description column.',
         ])->assertRedirect();
 
-        $this->assertSame('Shoot-em-up', DB::table('game_genre')->sole()->name);
+        $this->assertSame('Shoot-em-up', DB::table('game_genres')->sole()->name);
     }
 
     public function test_an_entry_can_be_renamed(): void

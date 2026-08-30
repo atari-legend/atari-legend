@@ -6,7 +6,7 @@ use App\Models\Crew;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\Genre;
+use App\Models\GameGenre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
 use App\Models\PublisherDeveloper;
@@ -57,7 +57,7 @@ class AjaxEndpointsTest extends TestCase
             'ajax.companies'   => PublisherDeveloper::factory()->create(['pub_dev_name' => $name]),
             'ajax.crews'       => Crew::factory()->create(['crew_name' => $name]),
             'ajax.engines'     => Engine::forceCreate(['name' => $name]),
-            'ajax.genres'      => Genre::forceCreate(['name' => $name]),
+            'ajax.genres'      => GameGenre::forceCreate(['name' => $name]),
             'ajax.software'    => MenuSoftware::factory()->named($name)->create(),
             'ajax.individuals' => Individual::factory()->create(['ind_name' => $name]),
         };
@@ -143,7 +143,7 @@ class AjaxEndpointsTest extends TestCase
     public function test_an_engine_and_a_genre_come_back_as_a_name_alone(): void
     {
         Engine::forceCreate(['name' => 'AGOS']);
-        Genre::forceCreate(['name' => 'Shoot-em-up']);
+        GameGenre::forceCreate(['name' => 'Shoot-em-up']);
 
         $this->assertSame(
             ['name' => 'AGOS'],

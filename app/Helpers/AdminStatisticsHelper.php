@@ -47,8 +47,8 @@ class AdminStatisticsHelper
     public static function headlines()
     {
         return [
-            'Games'       => DB::table('game')->count(),
-            'Releases'    => DB::table('game_release')->count(),
+            'Games'       => DB::table('games')->count(),
+            'Releases'    => DB::table('game_releases')->count(),
             'Screenshots' => DB::table('screenshots')->count(),
             'Individuals' => DB::table('individuals')->count(),
             'Companies'   => DB::table('pub_dev')->count(),
@@ -65,14 +65,14 @@ class AdminStatisticsHelper
     {
         return [
             'Games & releases' => [
-                'Games'              => DB::table('game')->count(),
-                'Releases'           => DB::table('game_release')->count(),
-                'Alternative titles' => DB::table('game_aka')->count(),
-                'Game facts'         => DB::table('game_fact')->count(),
+                'Games'              => DB::table('games')->count(),
+                'Releases'           => DB::table('game_releases')->count(),
+                'Alternative titles' => DB::table('game_akas')->count(),
+                'Game facts'         => DB::table('game_facts')->count(),
                 'Series'             => DB::table('game_series')->count(),
                 'Videos'             => DB::table('game_videos')->count(),
                 'Similar game links' => DB::table('game_similar')->count(),
-                'Game submissions'   => DB::table('game_submitinfo')->count(),
+                'Game submissions'   => DB::table('game_submit_infos')->count(),
             ],
             'Media' => [
                 'Game screenshots'      => DB::table('screenshot_game')->count(),
@@ -80,7 +80,7 @@ class AdminStatisticsHelper
                 'Review screenshots'    => DB::table('screenshot_review')->count(),
                 'Interview screenshots' => DB::table('screenshot_interview')->count(),
                 'Article screenshots'   => DB::table('screenshot_article')->count(),
-                'Release scans'         => DB::table('game_release_scan')->count(),
+                'Release scans'         => DB::table('game_release_scans')->count(),
                 'Media'                 => DB::table('media')->count(),
                 'Media scans'           => DB::table('media_scan')->count(),
                 'Dumps'                 => DB::table('dump')->count(),
@@ -147,8 +147,8 @@ class AdminStatisticsHelper
      */
     public static function coverage()
     {
-        $games = DB::table('game')->count();
-        $releases = DB::table('game_release')->count();
+        $games = DB::table('games')->count();
+        $releases = DB::table('game_releases')->count();
         $individuals = DB::table('individuals')->count();
         $companies = DB::table('pub_dev')->count();
         $menuDisks = DB::table('menu_disks')->count();
@@ -156,24 +156,24 @@ class AdminStatisticsHelper
 
         return [
             'Games' => [
-                self::coverageRow('With a release', DB::table('game_release')->distinct('game_id')->count(), $games),
+                self::coverageRow('With a release', DB::table('game_releases')->distinct('game_id')->count(), $games),
                 self::coverageRow('With screenshots', DB::table('screenshot_game')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a genre', DB::table('game_genre_cross')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a developer', DB::table('game_developer')->distinct('game_id')->count(), $games),
-                self::coverageRow('With a publisher', DB::table('game_release')->whereNotNull('pub_dev_id')->distinct('game_id')->count(), $games),
+                self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('pub_dev_id')->distinct('game_id')->count(), $games),
                 self::coverageRow('With creators', DB::table('game_individual')->distinct('game_id')->count(), $games),
                 self::coverageRow('With music', DB::table('game_sndh')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a review', DB::table('review_game')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a magazine index entry', DB::table('magazine_indices')->whereNotNull('game_id')->distinct('game_id')->count(), $games),
-                self::coverageRow('With an alternative title', DB::table('game_aka')->distinct('game_id')->count(), $games),
+                self::coverageRow('With an alternative title', DB::table('game_akas')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a video', DB::table('game_videos')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a cross-reference', DB::table('game_vs')->distinct('atari_id')->count(), $games),
             ],
             'Releases' => [
-                self::coverageRow('With a date', DB::table('game_release')->whereNotNull('date')->count(), $releases),
-                self::coverageRow('With a publisher', DB::table('game_release')->whereNotNull('pub_dev_id')->count(), $releases),
-                self::coverageRow('With a licence', DB::table('game_release')->whereNotNull('license')->count(), $releases),
-                self::coverageRow('With scans', DB::table('game_release_scan')->distinct('game_release_id')->count(), $releases),
+                self::coverageRow('With a date', DB::table('game_releases')->whereNotNull('date')->count(), $releases),
+                self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('pub_dev_id')->count(), $releases),
+                self::coverageRow('With a licence', DB::table('game_releases')->whereNotNull('license')->count(), $releases),
+                self::coverageRow('With scans', DB::table('game_release_scans')->distinct('game_release_id')->count(), $releases),
                 self::coverageRow('With a language', DB::table('game_release_language')->distinct('game_release_id')->count(), $releases),
                 self::coverageRow('With a location', DB::table('game_release_location')->distinct('game_release_id')->count(), $releases),
                 self::coverageRow('With media', DB::table('media')->distinct('game_release_id')->count(), $releases),
@@ -286,10 +286,10 @@ class AdminStatisticsHelper
      */
     public static function releasesByYear()
     {
-        $dates = DB::table('game_release')->whereNotNull('date')->pluck('date');
+        $dates = DB::table('game_releases')->whereNotNull('date')->pluck('date');
 
         return self::bucketByYear($dates, false) + [
-            'undated' => DB::table('game_release')->whereNull('date')->count(),
+            'undated' => DB::table('game_releases')->whereNull('date')->count(),
         ];
     }
 
@@ -301,9 +301,9 @@ class AdminStatisticsHelper
     public static function gamesByGenre()
     {
         $rows = DB::table('game_genre_cross')
-            ->join('game_genre', 'game_genre.id', '=', 'game_genre_cross.game_genre_id')
-            ->select('game_genre.name', DB::raw('count(*) as total'))
-            ->groupBy('game_genre.id', 'game_genre.name')
+            ->join('game_genres', 'game_genres.id', '=', 'game_genre_cross.game_genre_id')
+            ->select('game_genres.name', DB::raw('count(*) as total'))
+            ->groupBy('game_genres.id', 'game_genres.name')
             ->orderByDesc('total')
             ->get();
 
@@ -318,8 +318,8 @@ class AdminStatisticsHelper
      */
     public static function topPublishers($limit = 15)
     {
-        $rows = DB::table('game_release')
-            ->join('pub_dev', 'pub_dev.id', '=', 'game_release.pub_dev_id')
+        $rows = DB::table('game_releases')
+            ->join('pub_dev', 'pub_dev.id', '=', 'game_releases.pub_dev_id')
             ->select('pub_dev.pub_dev_name', DB::raw('count(*) as total'))
             ->groupBy('pub_dev.id', 'pub_dev.pub_dev_name')
             ->orderByDesc('total')
@@ -355,7 +355,7 @@ class AdminStatisticsHelper
      */
     public static function releasesByLicence()
     {
-        return self::toChartData(self::groupByColumn('game_release', 'license'));
+        return self::toChartData(self::groupByColumn('game_releases', 'license'));
     }
 
     /**
@@ -365,7 +365,7 @@ class AdminStatisticsHelper
      */
     public static function releasesByType()
     {
-        return self::toChartData(self::groupByColumn('game_release', 'type'));
+        return self::toChartData(self::groupByColumn('game_releases', 'type'));
     }
 
     /**

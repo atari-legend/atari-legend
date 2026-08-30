@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\ReleaseTOSIncompatibility;
+use App\Models\GameReleaseTosVersionIncompatibility;
 use Illuminate\Http\Request;
 
 class ReleaseSystemTosController extends Controller
 {
-    public function destroy(Game $game, GameRelease $release, ReleaseTOSIncompatibility $incompatibility)
+    public function destroy(Game $game, GameRelease $release, GameReleaseTosVersionIncompatibility $incompatibility)
     {
         $incompatibility->delete();
 
@@ -39,7 +39,7 @@ class ReleaseSystemTosController extends Controller
             'language' => 'nullable|alpha|exists:language,id',
         ]);
 
-        $incompatibility = ReleaseTOSIncompatibility::create([
+        $incompatibility = GameReleaseTosVersionIncompatibility::create([
             'tos_id'          => $request->tos,
             'language_id'     => $request->language,
             'game_release_id' => $release->getKey(),

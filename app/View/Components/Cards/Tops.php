@@ -36,7 +36,7 @@ class Tops extends Component
             ->get();
 
         $publishers = DB::table('pub_dev')
-            ->join('game_release', 'game_release.pub_dev_id', '=', 'pub_dev.id')
+            ->join('game_releases', 'game_releases.pub_dev_id', '=', 'pub_dev.id')
             ->selectRaw('count(pub_dev.id) as release_count, pub_dev_name, pub_dev.id')
             ->where('pub_dev.pub_dev_name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
             // game_release still has a `pub_dev_id` foreign key while pub_dev's
@@ -48,10 +48,10 @@ class Tops extends Component
             ->limit(5)
             ->get();
 
-        $genres = DB::table('game_genre')
-            ->join('game_genre_cross', 'game_genre_cross.game_genre_id', '=', 'game_genre.id')
-            ->selectRaw('count(game_id) as game_count, game_genre.name, game_genre.id')
-            ->groupBy('game_genre.id', 'game_genre.name')
+        $genres = DB::table('game_genres')
+            ->join('game_genre_cross', 'game_genre_cross.game_genre_id', '=', 'game_genres.id')
+            ->selectRaw('count(game_id) as game_count, game_genres.name, game_genres.id')
+            ->groupBy('game_genres.id', 'game_genres.name')
             ->orderBy('game_count', 'desc')
             ->orderBy('name')
             ->limit(5)

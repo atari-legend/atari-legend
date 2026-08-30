@@ -14,15 +14,15 @@ class StatisticsHelper
     public static function getStatistics()
     {
         return [
-            'Games'                         => DB::table('game')->count(),
-            'Releases'                      => DB::table('game_release')->count(),
+            'Games'                         => DB::table('games')->count(),
+            'Releases'                      => DB::table('game_releases')->count(),
             'Screenshots'                   => DB::table('screenshot_game')->count(),
             'Games with screenshots'        => DB::table('screenshot_game')->distinct('game_id')->count(),
             'Companies'                     => DB::table('pub_dev')->count(),
-            'Games with companies assigned' => DB::table('game_release')->whereNotNull('pub_dev_id')->distinct('game_id')->count(),
+            'Games with companies assigned' => DB::table('game_releases')->whereNotNull('pub_dev_id')->distinct('game_id')->count(),
             'Games with developer assigned' => DB::table('game_developer')->distinct('game_id')->count(),
             'Games with magazine review'    => DB::table('magazine_indices')->distinct('game_id')->count(),
-            'Releases with box scans'       => DB::table('game_release_scan')->distinct('game_release_id')->count(),
+            'Releases with box scans'       => DB::table('game_release_scans')->distinct('game_release_id')->count(),
             'Games with genre assigned'     => DB::table('game_genre_cross')->distinct('game_id')->count(),
             'Games reviewed'                => DB::table('review_game')->distinct('game_id')->count(),
             'Menu sets'                     => DB::table('menu_sets')->count(),

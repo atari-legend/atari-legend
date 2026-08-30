@@ -9,7 +9,6 @@ class GameSubmitInfo extends Model
     const SUBMISSION_NEW = '2';
     const SUBMISSION_REVIEWED = '1';
 
-    protected $table = 'game_submitinfo';
     public $timestamps = false;
 
     public function game()

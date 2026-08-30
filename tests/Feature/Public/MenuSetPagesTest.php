@@ -140,7 +140,7 @@ class MenuSetPagesTest extends TestCase
     public function test_the_menu_search_finds_games_by_alternative_title(): void
     {
         $game = Game::factory()->named('Bubble Bobble')->create();
-        \Illuminate\Support\Facades\DB::table('game_aka')->insert([
+        \Illuminate\Support\Facades\DB::table('game_akas')->insert([
             'game_id'  => $game->getKey(),
             'aka_name' => 'Baburu Boburu',
         ]);

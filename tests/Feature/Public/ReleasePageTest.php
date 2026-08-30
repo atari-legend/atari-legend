@@ -61,7 +61,7 @@ class ReleasePageTest extends TestCase
         $release = GameRelease::factory()->create();
 
         foreach (['Box front', 'Poster'] as $type) {
-            DB::table('game_release_scan')->insert([
+            DB::table('game_release_scans')->insert([
                 'game_release_id' => $release->getKey(),
                 'type'            => $type,
                 'imgext'          => 'jpg',

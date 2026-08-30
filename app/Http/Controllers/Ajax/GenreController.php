@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
-use App\Models\Genre;
+use App\Models\GameGenre;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller
 {
     public function genres(Request $request)
     {
-        $genres = Genre::select('name')
+        $genres = GameGenre::select('name')
             ->orderBy('name')
             ->limit(10);
 

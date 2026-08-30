@@ -6,16 +6,15 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ReleaseScan extends Model
+class GameReleaseScan extends Model
 {
     use HasFactory;
 
     const TYPE_OTHER = 'Other';
     const TYPE_BOX_FRONT = 'Box front';
     const TYPE_BOX_BACK = 'Box back';
-    const TYPES = [ReleaseScan::TYPE_BOX_FRONT, ReleaseScan::TYPE_BOX_BACK, 'Goodie', ReleaseScan::TYPE_OTHER];
+    const TYPES = [GameReleaseScan::TYPE_BOX_FRONT, GameReleaseScan::TYPE_BOX_BACK, 'Goodie', GameReleaseScan::TYPE_OTHER];
 
-    protected $table = 'game_release_scan';
     public $timestamps = false;
     protected $fillable = ['game_release_id', 'imgext', 'type'];
 

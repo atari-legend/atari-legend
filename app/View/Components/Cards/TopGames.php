@@ -29,9 +29,9 @@ class TopGames extends Component
             ->selectRaw('game_id, avg(score) as avgScore, count(score) as numVotes')
             ->groupBy('game_id');
 
-        $games = Game::select('game.*')
+        $games = Game::select('games.*')
             ->addSelect('votes.avgScore', 'votes.numVotes')
-            ->joinSub($votes, 'votes', 'votes.game_id', '=', 'game.id')
+            ->joinSub($votes, 'votes', 'votes.game_id', '=', 'games.id')
             ->orderByDesc('avgScore')
             ->orderByDesc('numVotes')
             ->orderBy('game_name')

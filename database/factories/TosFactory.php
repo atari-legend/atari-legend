@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\TOS;
+use App\Models\Tos;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TOS>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tos>
  */
-class TOSFactory extends Factory
+class TosFactory extends Factory
 {
-    protected $model = TOS::class;
+    protected $model = Tos::class;
 
     public function definition(): array
     {

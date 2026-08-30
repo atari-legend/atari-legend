@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\ReleaseScan;
+use App\Models\GameReleaseScan;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -40,7 +40,7 @@ class ReleaseScansController extends Controller
             ]);
     }
 
-    public function update(Game $game, GameRelease $release, ReleaseScan $scan, Request $request)
+    public function update(Game $game, GameRelease $release, GameReleaseScan $scan, Request $request)
     {
         $scan->type = $request->type;
         $scan->notes = $request->notes;
@@ -62,7 +62,7 @@ class ReleaseScansController extends Controller
         ]);
     }
 
-    public function destroy(Game $game, GameRelease $release, ReleaseScan $scan, Request $request)
+    public function destroy(Game $game, GameRelease $release, GameReleaseScan $scan, Request $request)
     {
         $scan->delete();
         Storage::disk('public')->delete($scan->path);
@@ -100,14 +100,14 @@ class ReleaseScansController extends Controller
             $name = Str::lower(File::name($fullpath));
 
             // Infer the type from the filename
-            $type = ReleaseScan::TYPE_OTHER;
+            $type = GameReleaseScan::TYPE_OTHER;
             if (Str::contains($name, 'front')) {
-                $type = ReleaseScan::TYPE_BOX_FRONT;
+                $type = GameReleaseScan::TYPE_BOX_FRONT;
             } elseif (Str::contains($name, 'back')) {
-                $type = ReleaseScan::TYPE_BOX_BACK;
+                $type = GameReleaseScan::TYPE_BOX_BACK;
             }
 
-            $scan = ReleaseScan::create([
+            $scan = GameReleaseScan::create([
                 'game_release_id' => $release->getKey(),
                 'imgext'          => $ext,
                 'type'            => $type,

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Helpers\GameHelper;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\ReleaseScan;
+use App\Models\GameReleaseScan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -29,7 +29,7 @@ class GameHelperHasBoxscanTest extends TestCase
         $release = new GameRelease();
         $game->releases()->save($release);
 
-        $scan = new ReleaseScan();
+        $scan = new GameReleaseScan();
         $scan->imgext = 'png';
         $scan->type = 'Other';
         $release->boxscans()->save($scan);

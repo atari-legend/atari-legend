@@ -34,7 +34,7 @@ storage/app/public/       # Public file storage (symlinked from public/storage)
 
 200+ tables organized into:
 
-- **Games:** `game`, `game_release`, `game_aka`, `game_genre_cross`, `game_individual`
+- **Games:** `games`, `game_releases`, `game_akas`, `game_genre_cross`, `game_individual`
 - **Media:** `dump`, `media`, `media_scan`, `screenshot_main`, `game_release_scan`
 - **Music:** `sndh`, `sndh_archive`, `game_music`
 - **Menus:** `menu_sets`, `menus`, `menu_disks`, `menu_disk_dumps`, `menu_disk_contents`

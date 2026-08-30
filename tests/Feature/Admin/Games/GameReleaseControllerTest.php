@@ -9,7 +9,7 @@ use App\Models\GameRelease;
 use App\Models\Language;
 use App\Models\Location;
 use App\Models\PublisherDeveloper;
-use App\Models\ReleaseAka;
+use App\Models\GameReleaseAka;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -243,7 +243,7 @@ class GameReleaseControllerTest extends AdminTestCase
             'language' => $language->id,
         ])->assertRedirect(route('admin.games.releases.show', [$game, $release]));
 
-        $aka = ReleaseAka::sole();
+        $aka = GameReleaseAka::sole();
 
         $this->assertSame('Baburu Boburu', $aka->name);
         $this->assertSame('ja', $aka->language_id);
@@ -251,7 +251,7 @@ class GameReleaseControllerTest extends AdminTestCase
         $this->delete(route('admin.games.releases.aka.destroy', [$game, $release, $aka]))
             ->assertRedirect(route('admin.games.releases.show', [$game, $release]));
 
-        $this->assertSame(0, ReleaseAka::query()->count());
+        $this->assertSame(0, GameReleaseAka::query()->count());
     }
 
     public function test_non_admins_are_turned_away(): void

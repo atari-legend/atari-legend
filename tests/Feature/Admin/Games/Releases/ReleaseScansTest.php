@@ -4,7 +4,7 @@ namespace Tests\Feature\Admin\Games\Releases;
 
 use App\Models\Changelog;
 use App\Models\GameRelease;
-use App\Models\ReleaseScan;
+use App\Models\GameReleaseScan;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -31,11 +31,11 @@ class ReleaseScansTest extends AdminTestCase
     public function test_the_scans_panel_loads(): void
     {
         $release = GameRelease::factory()->create();
-        ReleaseScan::factory()->create(['game_release_id' => $release->getKey()]);
+        GameReleaseScan::factory()->create(['game_release_id' => $release->getKey()]);
 
         $this->get(route('admin.games.releases.scans.index', [$release->game, $release]))
             ->assertOk()
-            ->assertSee(ReleaseScan::TYPE_BOX_FRONT);
+            ->assertSee(GameReleaseScan::TYPE_BOX_FRONT);
     }
 
     public function test_a_scan_is_uploaded_and_stored_against_the_release(): void
@@ -46,11 +46,11 @@ class ReleaseScansTest extends AdminTestCase
             'file' => [$this->filepondServerId('goodie.png', 'image')],
         ])->assertRedirect(route('admin.games.releases.scans.index', [$release->game, $release]));
 
-        $scan = ReleaseScan::sole();
+        $scan = GameReleaseScan::sole();
 
         $this->assertSame($release->getKey(), $scan->game_release_id);
         $this->assertSame('png', $scan->imgext);
-        $this->assertSame(ReleaseScan::TYPE_OTHER, $scan->type);
+        $this->assertSame(GameReleaseScan::TYPE_OTHER, $scan->type);
 
         Storage::disk('public')->assertExists($scan->path);
         $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
@@ -73,8 +73,8 @@ class ReleaseScansTest extends AdminTestCase
         ])->assertRedirect();
 
         $this->assertEqualsCanonicalizing(
-            [ReleaseScan::TYPE_BOX_FRONT, ReleaseScan::TYPE_BOX_BACK, ReleaseScan::TYPE_OTHER],
-            ReleaseScan::query()->pluck('type')->all()
+            [GameReleaseScan::TYPE_BOX_FRONT, GameReleaseScan::TYPE_BOX_BACK, GameReleaseScan::TYPE_OTHER],
+            GameReleaseScan::query()->pluck('type')->all()
         );
     }
 
@@ -106,24 +106,24 @@ class ReleaseScansTest extends AdminTestCase
             'file' => [null],
         ])->assertRedirect();
 
-        $this->assertSame(0, ReleaseScan::query()->count());
+        $this->assertSame(0, GameReleaseScan::query()->count());
         $this->assertNoChangelog();
     }
 
     public function test_a_scans_type_and_notes_can_be_corrected(): void
     {
         $release = GameRelease::factory()->create();
-        $scan = ReleaseScan::factory()->ofType(ReleaseScan::TYPE_OTHER)
+        $scan = GameReleaseScan::factory()->ofType(GameReleaseScan::TYPE_OTHER)
             ->create(['game_release_id' => $release->getKey()]);
 
         $this->put(route('admin.games.releases.scans.update', [$release->game, $release, $scan]), [
-            'type'  => ReleaseScan::TYPE_BOX_BACK,
+            'type'  => GameReleaseScan::TYPE_BOX_BACK,
             'notes' => 'Scanned from the budget box.',
         ])->assertRedirect(route('admin.games.releases.scans.index', [$release->game, $release]));
 
         $scan->refresh();
 
-        $this->assertSame(ReleaseScan::TYPE_BOX_BACK, $scan->type);
+        $this->assertSame(GameReleaseScan::TYPE_BOX_BACK, $scan->type);
         $this->assertSame('Scanned from the budget box.', $scan->notes);
         $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->game_name);
     }
@@ -131,8 +131,8 @@ class ReleaseScansTest extends AdminTestCase
     public function test_a_scan_is_deleted_with_its_image(): void
     {
         $release = GameRelease::factory()->create();
-        $scan = ReleaseScan::factory()->create(['game_release_id' => $release->getKey()]);
-        $other = ReleaseScan::factory()->ofType(ReleaseScan::TYPE_BOX_BACK)
+        $scan = GameReleaseScan::factory()->create(['game_release_id' => $release->getKey()]);
+        $other = GameReleaseScan::factory()->ofType(GameReleaseScan::TYPE_BOX_BACK)
             ->create(['game_release_id' => $release->getKey()]);
 
         Storage::disk('public')->put($scan->path, 'image');
@@ -141,7 +141,7 @@ class ReleaseScansTest extends AdminTestCase
         $this->delete(route('admin.games.releases.scans.destroy', [$release->game, $release, $scan]))
             ->assertRedirect(route('admin.games.releases.scans.index', [$release->game, $release]));
 
-        $this->assertSame([$other->getKey()], ReleaseScan::query()->pluck('id')->all());
+        $this->assertSame([$other->getKey()], GameReleaseScan::query()->pluck('id')->all());
 
         Storage::disk('public')->assertMissing($scan->path);
         Storage::disk('public')->assertExists($other->path);

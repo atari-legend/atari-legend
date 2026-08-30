@@ -37,7 +37,7 @@ class GameSubmissionTest extends AdminTestCase
         string $text = 'The musician is Jochen Hippel.',
         string $done = GameSubmitInfo::SUBMISSION_NEW
     ): GameSubmitInfo {
-        $id = DB::table('game_submitinfo')->insertGetId([
+        $id = DB::table('game_submit_infos')->insertGetId([
             'game_id'     => $game->getKey(),
             'user_id'     => $this->visitor->getKey(),
             'timestamp'   => (string) mktime(12, 0, 0, 6, 1, 2020),

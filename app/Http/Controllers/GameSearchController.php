@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Models\Engine;
 use App\Models\Game;
-use App\Models\Genre;
+use App\Models\GameGenre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
 use App\Models\PublisherDeveloper;
@@ -20,7 +20,7 @@ class GameSearchController extends Controller
 
     public function index()
     {
-        $gamesCount = DB::table('game')->count();
+        $gamesCount = DB::table('games')->count();
 
         $referenceData = $this->getSearchReferenceData();
 
@@ -34,7 +34,7 @@ class GameSearchController extends Controller
 
     public function search(Request $request)
     {
-        $games = Game::select('game.*');
+        $games = Game::select('games.*');
         $software = MenuSoftware::select('menu_software.*');
 
         // Boolean to check if a search on software can be made
@@ -211,7 +211,7 @@ class GameSearchController extends Controller
         if (! $searchPossible) {
             // Force no game results when there were no search
             // constraints
-            $games->where('game.id', '<', 0);
+            $games->where('games.id', '<', 0);
         }
 
         $games = $games
@@ -298,7 +298,7 @@ class GameSearchController extends Controller
         // `substr()` rather than `YEAR()` as the latter is MySQL-only, and the
         // test suite runs against SQLite. Dates are `YYYY-MM-DD` on both
         // engines, so the first four characters are the year.
-        $years = DB::table('game_release')
+        $years = DB::table('game_releases')
             ->selectRaw('substr(date, 1, 4) as year')
             ->distinct()
             ->whereNotNull('date')
@@ -306,7 +306,7 @@ class GameSearchController extends Controller
             ->orderBy('year')
             ->get();
 
-        $genres = Genre::all()
+        $genres = GameGenre::all()
             ->sortBy('name');
 
         $individuals = Individual::all()

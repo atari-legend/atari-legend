@@ -16,7 +16,7 @@ use App\Models\Language;
 use App\Models\Memory;
 use App\Models\Resolution;
 use App\Models\System;
-use App\Models\TOS;
+use App\Models\Tos;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
@@ -28,7 +28,7 @@ class ReleaseSystemInfoController extends Controller
         $systems = System::orderBy('name')->get();
         $emulators = Emulator::orderBy('name')->get();
         $systemEnhancements = Enhancement::orderBy('name')->get();
-        $tosses = TOS::orderBy('name')->get();
+        $tosses = Tos::orderBy('name')->get();
         $languages = Language::orderBy('name')->get();
         $memories = Memory::orderBy('name')->get();
         $copyProtections = CopyProtection::orderBy('name')->get();

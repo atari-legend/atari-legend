@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReleaseTOSIncompatibility extends Model
+class GameReleaseTosVersionIncompatibility extends Model
 {
-    protected $table = 'game_release_tos_version_incompatibility';
     public $timestamps = false;
     protected $fillable = ['tos_id', 'language_id', 'game_release_id'];
 
     public function tos()
     {
-        return $this->belongsTo(TOS::class);
+        return $this->belongsTo(Tos::class);
     }
 
     public function language()

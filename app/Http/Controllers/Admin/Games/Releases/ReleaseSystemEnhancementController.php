@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\ReleaseSystemEnhanced;
+use App\Models\GameReleaseSystemEnhanced;
 use Illuminate\Http\Request;
 
 class ReleaseSystemEnhancementController extends Controller
 {
-    public function destroy(Game $game, GameRelease $release, ReleaseSystemEnhanced $enhancement)
+    public function destroy(Game $game, GameRelease $release, GameReleaseSystemEnhanced $enhancement)
     {
         $enhancement->delete();
 
@@ -39,7 +39,7 @@ class ReleaseSystemEnhancementController extends Controller
             'system'      => 'required|numeric|exists:system,id',
         ]);
 
-        $enhancement = ReleaseSystemEnhanced::create([
+        $enhancement = GameReleaseSystemEnhanced::create([
             'enhancement_id'  => $request->enhancement,
             'system_id'       => $request->system,
             'game_release_id' => $release->getKey(),

@@ -26,7 +26,6 @@ class GameRelease extends Model
 
     const STATUSES = ['Unfinished', 'Development', 'Unreleased'];
 
-    protected $table = 'game_release';
     public $timestamps = false;
 
     protected $casts = [
@@ -87,7 +86,7 @@ class GameRelease extends Model
 
     public function boxscans()
     {
-        return $this->hasMany(ReleaseScan::class);
+        return $this->hasMany(GameReleaseScan::class);
     }
 
     public function distributors()
@@ -107,7 +106,7 @@ class GameRelease extends Model
 
     public function systemEnhanced()
     {
-        return $this->hasMany(ReleaseSystemEnhanced::class);
+        return $this->hasMany(GameReleaseSystemEnhanced::class);
     }
 
     public function systemIncompatibles()
@@ -117,7 +116,7 @@ class GameRelease extends Model
 
     public function memoryEnhanced()
     {
-        return $this->hasMany(ReleaseMemoryEnhanced::class);
+        return $this->hasMany(GameReleaseMemoryEnhanced::class);
     }
 
     public function memoryMinimums()
@@ -137,12 +136,12 @@ class GameRelease extends Model
 
     public function tosIncompatibles()
     {
-        return $this->hasMany(ReleaseTOSIncompatibility::class);
+        return $this->hasMany(GameReleaseTosVersionIncompatibility::class);
     }
 
     public function akas()
     {
-        return $this->hasMany(ReleaseAka::class);
+        return $this->hasMany(GameReleaseAka::class);
     }
 
     public function trainers()

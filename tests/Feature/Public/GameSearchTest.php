@@ -6,7 +6,7 @@ use App\Models\Changelog;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\Genre;
+use App\Models\GameGenre;
 use App\Models\Individual;
 use App\Models\PublisherDeveloper;
 use App\Models\Review;
@@ -71,7 +71,7 @@ class GameSearchTest extends TestCase
     public function test_alternative_titles_are_searched(): void
     {
         $game = Game::factory()->named('Bubble Bobble')->create();
-        DB::table('game_aka')->insert([
+        DB::table('game_akas')->insert([
             'game_id'  => $game->getKey(),
             'aka_name' => 'Baburu Boburu',
         ]);
@@ -129,7 +129,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_found_by_genre(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $genre = Genre::factory()->create(['name' => 'Shoot-em-up']);
+        $genre = GameGenre::factory()->create(['name' => 'Shoot-em-up']);
         $game->genres()->attach($genre);
 
         Game::factory()->named('Other')->create();
@@ -226,7 +226,7 @@ class GameSearchTest extends TestCase
     {
         $release = GameRelease::factory()->create();
         $release->game->update(['game_name' => 'Scanned']);
-        DB::table('game_release_scan')->insert([
+        DB::table('game_release_scans')->insert([
             'game_release_id' => $release->getKey(),
             'type'            => 'Box front',
             'imgext'          => 'jpg',

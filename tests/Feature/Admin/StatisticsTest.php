@@ -31,7 +31,7 @@ class StatisticsTest extends TestCase
 
     private function game(int $id, string $name): void
     {
-        DB::table('game')->insert([
+        DB::table('games')->insert([
             'id'        => $id,
             'game_name' => $name,
             'slug'      => strtolower($name),
@@ -174,7 +174,7 @@ class StatisticsTest extends TestCase
     {
         $this->game(1, 'Xenon');
 
-        DB::table('game_release')->insert([
+        DB::table('game_releases')->insert([
             ['game_id' => 1, 'name' => 'Original', 'date' => '1988-01-01'],
             ['game_id' => 1, 'name' => 'Re-release', 'date' => '1990-01-01'],
             ['game_id' => 1, 'name' => 'Unknown', 'date' => null],

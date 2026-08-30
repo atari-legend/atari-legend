@@ -5,7 +5,7 @@ namespace Tests\Feature\Public;
 use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\Individual;
-use App\Models\ReleaseScan;
+use App\Models\GameReleaseScan;
 use App\Models\Screenshot;
 use App\Models\Sndh;
 use App\Models\Spotlight;
@@ -79,7 +79,7 @@ class ResourceControllersTest extends TestCase
     public function test_a_box_scan_is_served_as_a_webp_of_at_most_five_hundred_pixels(): void
     {
         $release = GameRelease::factory()->create();
-        $scan = ReleaseScan::factory()->create([
+        $scan = GameReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
             'imgext'          => 'png',
         ]);
@@ -99,7 +99,7 @@ class ResourceControllersTest extends TestCase
     public function test_a_box_scan_is_cached_for_a_year(): void
     {
         $release = GameRelease::factory()->create();
-        $scan = ReleaseScan::factory()->create([
+        $scan = GameReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
             'imgext'          => 'png',
         ]);
@@ -116,7 +116,7 @@ class ResourceControllersTest extends TestCase
      */
     public function test_a_box_scan_from_another_release_is_a_404(): void
     {
-        $scan = ReleaseScan::factory()->create(['imgext' => 'png']);
+        $scan = GameReleaseScan::factory()->create(['imgext' => 'png']);
         $this->storePng($scan->path, 100, 100);
 
         $this->get(route('games.releases.boxscan', [
@@ -210,7 +210,7 @@ class ResourceControllersTest extends TestCase
     public function test_a_box_scan_missing_from_disk_is_a_404(): void
     {
         $release = GameRelease::factory()->create();
-        $scan = ReleaseScan::factory()->create([
+        $scan = GameReleaseScan::factory()->create([
             'game_release_id' => $release->getKey(),
             'imgext'          => 'png',
         ]);

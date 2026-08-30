@@ -10,7 +10,7 @@ class ReleaseYearController extends Controller
 {
     public function releaseYears(Request $request)
     {
-        $years = DB::table('game_release')
+        $years = DB::table('game_releases')
             ->selectRaw('substr(date, 1, 4) as year')
             ->distinct()
             ->whereNotNull('date')

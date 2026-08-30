@@ -38,13 +38,13 @@ class GameSubmissionsTable extends DataTableComponent
                         })
                 )
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->join('game', 'game_submitinfo.game_id', '=', 'game.id')
-                        ->orderBy('game.game_name', $direction);
+                    return $query->join('games', 'game_submit_infos.game_id', '=', 'games.id')
+                        ->orderBy('games.game_name', $direction);
                 }),
             Column::make('User')
                 ->label(fn ($row) => Helper::user($row->user))
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->join('users', 'game_submitinfo.user_id', '=', 'users.id')
+                    return $query->join('users', 'game_submit_infos.user_id', '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
             Column::make('Date')
@@ -74,7 +74,7 @@ class GameSubmissionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return GameSubmitInfo::select('game_submitinfo.*');
+        return GameSubmitInfo::select('game_submit_infos.*');
     }
 
     public function filters(): array

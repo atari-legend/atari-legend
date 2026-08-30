@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReleaseAka extends Model
+class GameReleaseAka extends Model
 {
-    protected $table = 'game_release_aka';
     public $timestamps = false;
 
     protected $fillable = ['game_release_id', 'name', 'language_id'];

@@ -206,7 +206,7 @@ class E2ESeeder extends Seeder
         // database restored from a dump that would overwrite real content, so
         // stop at the first sign of one. The users above are keyed on userid
         // and are safe either way.
-        if (DB::table('game')->count() > 1) {
+        if (DB::table('games')->count() > 1) {
             $this->command?->warn('E2ESeeder: existing dataset detected, skipping sample data.');
 
             return;
@@ -282,14 +282,14 @@ class E2ESeeder extends Seeder
 
     private function seedGames(): void
     {
-        $this->insert('game', ['id' => self::GAME_ID], [
+        $this->insert('games', ['id' => self::GAME_ID], [
             'game_name' => self::GAME_NAME,
             'slug'      => self::GAME_SLUG,
         ]);
 
         // A release needs a date: the link on the game page is labelled with
         // the release year, and an empty label is not clickable.
-        $this->insert('game_release', ['id' => self::RELEASE_ID], [
+        $this->insert('game_releases', ['id' => self::RELEASE_ID], [
             'game_id' => self::GAME_ID,
             'date'    => '1989-01-01',
             'license' => 'Commercial',
@@ -302,19 +302,19 @@ class E2ESeeder extends Seeder
         ], []);
         $this->seedImage('images/game_screenshots/' . self::SCREENSHOT_ID . '.png');
 
-        $this->insert('game_release_scan', ['id' => self::RELEASE_SCAN_ID], [
+        $this->insert('game_release_scans', ['id' => self::RELEASE_SCAN_ID], [
             'game_release_id' => self::RELEASE_ID,
             'type'            => 'Box front',
             'imgext'          => 'png',
         ]);
         $this->seedImage('images/game_release_scans/' . self::RELEASE_SCAN_ID . '.png');
 
-        $this->insert('game_fact', ['id' => self::GAME_FACT_ID], [
+        $this->insert('game_facts', ['id' => self::GAME_FACT_ID], [
             'game_id'   => self::GAME_ID,
             'game_fact' => 'The Bitmap Brothers wrote this one.',
         ]);
 
-        $this->insert('game_submitinfo', ['id' => self::GAME_SUBMISSION_ID], [
+        $this->insert('game_submit_infos', ['id' => self::GAME_SUBMISSION_ID], [
             'game_id'     => self::GAME_ID,
             'user_id'     => self::USER_STANDARD_ID,
             'timestamp'   => (string) now()->timestamp,
@@ -322,7 +322,7 @@ class E2ESeeder extends Seeder
             'game_done'   => 'N',
         ]);
 
-        $this->insert('game_aka', ['id' => self::GAME_AKA_ID], [
+        $this->insert('game_akas', ['id' => self::GAME_AKA_ID], [
             'game_id'  => self::GAME_ID,
             'aka_name' => self::GAME_AKA_NAME,
         ]);
@@ -355,7 +355,7 @@ class E2ESeeder extends Seeder
      */
     private function seedGameLinks(): void
     {
-        DB::table('game_release')
+        DB::table('game_releases')
             ->where('id', self::RELEASE_ID)
             ->update(['pub_dev_id' => self::COMPANY_ID]);
 
@@ -645,8 +645,8 @@ class E2ESeeder extends Seeder
     private function seedReferenceData(): void
     {
         $this->insert('port', ['id' => self::PORT_ID], ['name' => self::PORT_NAME]);
-        $this->insert('game_progress_system', ['id' => self::PROGRESS_SYSTEM_ID], ['name' => self::PROGRESS_SYSTEM_NAME]);
-        $this->insert('game_genre', ['id' => self::GENRE_ID], ['name' => self::GENRE_NAME]);
+        $this->insert('game_progress_systems', ['id' => self::PROGRESS_SYSTEM_ID], ['name' => self::PROGRESS_SYSTEM_NAME]);
+        $this->insert('game_genres', ['id' => self::GENRE_ID], ['name' => self::GENRE_NAME]);
         $this->insert('programming_language', ['id' => self::PROGRAMMING_LANGUAGE_ID], ['name' => self::PROGRAMMING_LANGUAGE_NAME]);
         $this->insert('engine', ['id' => self::ENGINE_ID], ['name' => self::ENGINE_NAME]);
         $this->insert('control', ['id' => self::CONTROL_ID], ['name' => self::CONTROL_NAME]);

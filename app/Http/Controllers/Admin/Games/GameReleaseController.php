@@ -12,7 +12,7 @@ use App\Models\GameRelease;
 use App\Models\Language;
 use App\Models\Location;
 use App\Models\PublisherDeveloper;
-use App\Models\ReleaseAka;
+use App\Models\GameReleaseAka;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -141,7 +141,7 @@ class GameReleaseController extends Controller
 
     public function storeAka(Request $request, Game $game, GameRelease $release)
     {
-        $aka = ReleaseAka::create([
+        $aka = GameReleaseAka::create([
             'game_release_id' => $release->getKey(),
             'name'            => $request->aka,
             'language_id'     => $request->language,
@@ -160,7 +160,7 @@ class GameReleaseController extends Controller
         return redirect()->route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]);
     }
 
-    public function destroyAka(Game $game, GameRelease $release, ReleaseAka $aka)
+    public function destroyAka(Game $game, GameRelease $release, GameReleaseAka $aka)
     {
         $aka->delete();
 

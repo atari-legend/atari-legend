@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameAka extends Model
 {
-    protected $table = 'game_aka';
     public $timestamps = false;
 
     protected $fillable = ['game_id', 'aka_name', 'language_id'];

@@ -21,7 +21,7 @@
                         <img class="w-50 border border-dark mb-1" src="{{ $scan->url }}">
 
                         <select class="form-select mb-1" name="type">
-                            @foreach (\App\Models\ReleaseScan::TYPES as $type)
+                            @foreach (\App\Models\GameReleaseScan::TYPES as $type)
                                 <option value="{{ $type }}" @if ($scan->type === $type) selected @endif>
                                     {{ $type }}
                                 </option>

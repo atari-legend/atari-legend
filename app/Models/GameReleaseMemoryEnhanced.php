@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReleaseMemoryEnhanced extends Model
+class GameReleaseMemoryEnhanced extends Model
 {
     protected $table = 'game_release_memory_enhanced';
     public $timestamps = false;

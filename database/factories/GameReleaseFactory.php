@@ -4,10 +4,10 @@ namespace Database\Factories;
 
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\ReleaseAka;
-use App\Models\ReleaseMemoryEnhanced;
-use App\Models\ReleaseSystemEnhanced;
-use App\Models\ReleaseTOSIncompatibility;
+use App\Models\GameReleaseAka;
+use App\Models\GameReleaseMemoryEnhanced;
+use App\Models\GameReleaseSystemEnhanced;
+use App\Models\GameReleaseTosVersionIncompatibility;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -118,7 +118,7 @@ class GameReleaseFactory extends Factory
     public function alsoKnownAs(string $name, ?string $languageId = null): static
     {
         return $this->afterCreating(function (GameRelease $release) use ($name, $languageId) {
-            ReleaseAka::create([
+            GameReleaseAka::create([
                 'game_release_id' => $release->getKey(),
                 'name'            => $name,
                 'language_id'     => $languageId === null
@@ -154,7 +154,7 @@ class GameReleaseFactory extends Factory
     public function enhancedForSystem(string $system, ?string $enhancement = null): static
     {
         return $this->afterCreating(function (GameRelease $release) use ($system, $enhancement) {
-            ReleaseSystemEnhanced::create([
+            GameReleaseSystemEnhanced::create([
                 'game_release_id' => $release->getKey(),
                 'system_id'       => SystemFactory::new()->create(['name' => $system])->id,
                 'enhancement_id'  => $enhancement === null
@@ -167,7 +167,7 @@ class GameReleaseFactory extends Factory
     public function enhancedForMemory(string $memory, ?string $enhancement = null): static
     {
         return $this->afterCreating(function (GameRelease $release) use ($memory, $enhancement) {
-            ReleaseMemoryEnhanced::create([
+            GameReleaseMemoryEnhanced::create([
                 'game_release_id' => $release->getKey(),
                 'memory_id'       => MemoryFactory::new()->create(['name' => $memory])->id,
                 'enhancement_id'  => $enhancement === null
@@ -198,9 +198,9 @@ class GameReleaseFactory extends Factory
     public function incompatibleWithTos(string $version, ?string $languageId = null): static
     {
         return $this->afterCreating(function (GameRelease $release) use ($version, $languageId) {
-            ReleaseTOSIncompatibility::create([
+            GameReleaseTosVersionIncompatibility::create([
                 'game_release_id' => $release->getKey(),
-                'tos_id'          => TOSFactory::new()->create(['name' => $version])->id,
+                'tos_id'          => TosFactory::new()->create(['name' => $version])->id,
                 'language_id'     => $languageId === null
                     ? null
                     : LanguageFactory::new()->create(['id' => $languageId, 'name' => $languageId])->id,

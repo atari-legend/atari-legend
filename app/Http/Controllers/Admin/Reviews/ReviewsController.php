@@ -54,7 +54,7 @@ class ReviewsController extends Controller
     {
         $request->validate(array_merge(
             $this->getValidationRules(),
-            ['game' => 'required|exists:game,id']));
+            ['game' => 'required|exists:games,id']));
 
         $review = new Review([
             'user_id'         => $request->author,
