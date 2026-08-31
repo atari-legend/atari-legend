@@ -4,8 +4,8 @@ namespace Tests\Feature\Public;
 
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\Individual;
 use App\Models\GameReleaseScan;
+use App\Models\Individual;
 use App\Models\Screenshot;
 use App\Models\Sndh;
 use App\Models\Spotlight;

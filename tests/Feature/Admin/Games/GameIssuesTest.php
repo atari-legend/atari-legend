@@ -4,8 +4,8 @@ namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\GameRelease;
 use App\Models\GameGenre;
+use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
 use Tests\Feature\Admin\AdminTestCase;
 

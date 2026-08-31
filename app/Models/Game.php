@@ -10,7 +10,6 @@ class Game extends Model
 {
     use HasFactory;
 
-
     const MULTIPLAYER_TYPES = ['Simultaneous', 'Turn by turn'];
     const MULTIPLAYER_HARDWARE = ['Cartridge', 'Midi-Link'];
 

@@ -64,7 +64,7 @@ class TableRenamer
     /**
      * Rename every table in the map, old name => new name.
      *
-     * @param array<string, string> $tables
+     * @param  array<string, string>  $tables
      */
     public static function rename(array $tables): void
     {
@@ -77,7 +77,7 @@ class TableRenamer
      * Reverse a map, for a migration's down(): new name => old name, applied
      * in reverse order so the statements undo in the order they were made.
      *
-     * @param array<string, string> $tables
+     * @param  array<string, string>  $tables
      */
     public static function reverse(array $tables): void
     {

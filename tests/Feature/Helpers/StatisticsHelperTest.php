@@ -4,8 +4,8 @@ namespace Tests\Feature\Helpers;
 
 use App\Helpers\StatisticsHelper;
 use App\Models\Game;
-use App\Models\GameRelease;
 use App\Models\GameGenre;
+use App\Models\GameRelease;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\MenuDisk;

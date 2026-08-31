@@ -6,10 +6,10 @@ use App\Models\Changelog;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\GameRelease;
+use App\Models\GameReleaseAka;
 use App\Models\Language;
 use App\Models\Location;
 use App\Models\PubDev;
-use App\Models\GameReleaseAka;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
