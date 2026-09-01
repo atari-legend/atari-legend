@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+/**
+ * Rename websites.website_url to url.
+ *
+ * The link's address.
+ *
+ * Unit 6 of docs/plans/2026-08-31-column-name-consistency.md.
+ */
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('websites', fn (Blueprint $t) => $t->renameColumn('website_url', 'url'));
+    }
+
+    public function down(): void
+    {
+        Schema::table('websites', fn (Blueprint $t) => $t->renameColumn('url', 'website_url'));
+    }
+};

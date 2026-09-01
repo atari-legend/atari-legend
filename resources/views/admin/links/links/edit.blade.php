@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', isset($link) ? $link->website_name : 'Create link')
+@section('title', isset($link) ? $link->name : 'Create link')
 
 @section('content')
     <div class="row">

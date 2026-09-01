@@ -12,9 +12,9 @@
                 <li class="w-45 d-inline-block">
                     @if ($c->websites->count() > 0)
                         <a href="{{ route('links.index', ['category' => $c]) }}"
-                            class="{{ (isset($category) && $category->getKey() === $c->getKey()) ? 'fw-bold text-primary' : '' }}">{{ $c->website_category_name }}</a>
+                            class="{{ (isset($category) && $category->getKey() === $c->getKey()) ? 'fw-bold text-primary' : '' }}">{{ $c->name }}</a>
                     @else
-                        <span class="text-muted">{{ $c->website_category_name }}</span>
+                        <span class="text-muted">{{ $c->name }}</span>
                     @endif
                     <small class="text-muted">({{ $c->websites->count() }})</small>
                 </li>
@@ -28,7 +28,7 @@
                 <div class="col-md-4">
                     @if ($website->file)
                         <a class="lightbox-link" href="{{ asset('storage/'. $website->path) }}">
-                            <img class="w-100 cropped mb-2 mb-md-0" src="{{ route('websites.screenshot', $website) }}" alt="Screenshot of website {{ $website->website_name }}">
+                            <img class="w-100 cropped mb-2 mb-md-0" src="{{ route('websites.screenshot', $website) }}" alt="Screenshot of website {{ $website->name }}">
                         </a>
                     @endif
                 </div>
@@ -38,15 +38,15 @@
                     @endif
 
                     <h3 class="card-title fs-5 text-audiowide">
-                        <a href="{{ $website->website_url }}">{{ $website->website_name }}</a>
+                        <a href="{{ $website->url }}">{{ $website->name }}</a>
                         @contributor
                             <a href="{{ route('admin.links.links.edit', $website) }}">
                                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                             </a>
                         @endcontributor
                     </h3>
-                    <p class="card-subtitle text-muted">Added on {{ date('F j, Y', $website->website_date) }} by {{ Helper::user($website->user) }}</p>
-                    <div class="mb-2"><small><a href="{{ $website->website_url }}">{{ $website->website_url }}</a></small></div>
+                    <p class="card-subtitle text-muted">Added on {{ date('F j, Y', $website->date) }} by {{ Helper::user($website->user) }}</p>
+                    <div class="mb-2"><small><a href="{{ $website->url }}">{{ $website->url }}</a></small></div>
                     <p class="card-text">{{ $website->description }}</p>
                 </div>
             </div>

@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($link))
-                {{ $link->website_name }}
+                {{ $link->name }}
             @else
                 Create link
             @endif
@@ -21,7 +21,7 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" required class="form-control @error('name') is-invalid @enderror"
-                            name="name" id="name" value="{{ old('name', $link->website_name ?? '') }}">
+                            name="name" id="name" value="{{ old('name', $link->name ?? '') }}">
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -33,7 +33,7 @@
                     <div class="mb-3">
                         <label for="url" class="form-label">URL</label>
                         <input type="url" required class="form-control @error('url') is-invalid @enderror"
-                            name="url" id="url" value="{{ old('url', $link->website_url ?? '') }}"
+                            name="url" id="url" value="{{ old('url', $link->url ?? '') }}"
                             placeholder="https://...">
 
                         @error('url')
@@ -71,7 +71,7 @@
                                             id="cat_{{ $category->getKey() }}"
                                             @checked(in_array(strval($category->getKey()), $selectedCategories))>
                                         <label class="form-check-label" for="cat_{{ $category->getKey() }}">
-                                            {{ $category->website_category_name }}
+                                            {{ $category->name }}
                                         </label>
                                     </div>
                                 </div>

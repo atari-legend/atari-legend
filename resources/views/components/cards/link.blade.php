@@ -6,19 +6,19 @@
         @isset ($website)
             @if ($website->file !== null)
                 <figure>
-                    <img class="w-100 cropped" src="{{ route('websites.screenshot', $website) }}" alt="Screenshot of the website {{ $website->website_name }}">
+                    <img class="w-100 cropped" src="{{ route('websites.screenshot', $website) }}" alt="Screenshot of the website {{ $website->name }}">
                     <figcaption class="py-2 px-3">
                         <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
-                        <div class="figcaption-title"><a href="{{ $website->website_url }}">{{ $website->website_name }}</a></div>
+                        <div class="figcaption-title"><a href="{{ $website->url }}">{{ $website->name }}</a></div>
                         <div class="figcaption-subtitle mb-2"><strong>Random link</strong></div>
                     </figcaption>
                 </figure>
             @endif
             <div class="p-2">
                 <p class="card-text">{{ $website->description }}</p>
-                <p class="card-subtitle text-muted">{{ date('F j, Y', $website->website_date) }} by {{ Helper::user($website->user) }}</p>
-                <a class="d-block text-end" href="{{ $website->website_url }}">
-                    Visit {{ parse_url($website->website_url, PHP_URL_HOST) }} <i class="fas fa-chevron-right"></i>
+                <p class="card-subtitle text-muted">{{ date('F j, Y', $website->date) }} by {{ Helper::user($website->user) }}</p>
+                <a class="d-block text-end" href="{{ $website->url }}">
+                    Visit {{ parse_url($website->url, PHP_URL_HOST) }} <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endisset

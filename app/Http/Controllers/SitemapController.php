@@ -22,7 +22,7 @@ class SitemapController extends Controller
         $reviews = Review::where('review_edit', Review::REVIEW_PUBLISHED)
             ->orderBy('review_date')
             ->get();
-        $categories = WebsiteCategory::orderBy('website_category_name')->get();
+        $categories = WebsiteCategory::orderBy('name')->get();
 
         return response()->view('sitemap.general', [
             'interviews'        => $interviews,

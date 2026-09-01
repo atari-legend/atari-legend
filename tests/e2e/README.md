@@ -242,7 +242,7 @@ to delete one through. The row is named `E2E Link …`, renders nowhere, and is
 greppable. Give the admin a submissions screen - follow-up 12 - and this
 becomes an ordinary spec.
 
-`SELECT * FROM website_validate WHERE website_name LIKE 'E2E %'` is therefore
+`SELECT * FROM website_validates WHERE name LIKE 'E2E %'` is therefore
 the only number that should move. Anything else growing across runs is a spec
 that failed to clean up - including `screenshots`, which used to gain two
 rows a run until follow-up 11 was fixed and is now a useful canary.

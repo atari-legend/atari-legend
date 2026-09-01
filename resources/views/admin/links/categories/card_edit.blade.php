@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($category))
-                {{ $category->website_category_name }}
+                {{ $category->name }}
             @else
                 Create category
             @endif
@@ -25,7 +25,7 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" required class="form-control @error('name') is-invalid @enderror"
-                            name="name" id="name" value="{{ old('name', $category->website_category_name ?? '') }}">
+                            name="name" id="name" value="{{ old('name', $category->name ?? '') }}">
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">

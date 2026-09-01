@@ -294,12 +294,12 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_links_table_filters_by_category_and_status(): void
     {
-        $emulation = WebsiteCategory::factory()->create(['website_category_name' => 'Emulation']);
+        $emulation = WebsiteCategory::factory()->create(['name' => 'Emulation']);
 
-        $hatari = Website::factory()->create(['website_name' => 'Hatari']);
+        $hatari = Website::factory()->create(['name' => 'Hatari']);
         $hatari->categories()->attach($emulation);
 
-        Website::factory()->inactive()->create(['website_name' => 'Dead link']);
+        Website::factory()->inactive()->create(['name' => 'Dead link']);
 
         Livewire::test(LinksTable::class)->assertSeeInOrder(['Dead link', 'Hatari']);
 
@@ -321,17 +321,17 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_link_categories_table_counts_its_links(): void
     {
-        $category = WebsiteCategory::factory()->create(['website_category_name' => 'Emulation']);
+        $category = WebsiteCategory::factory()->create(['name' => 'Emulation']);
         Website::factory()->create()->categories()->attach($category);
 
-        WebsiteCategory::factory()->create(['website_category_name' => 'Archives']);
+        WebsiteCategory::factory()->create(['name' => 'Archives']);
 
         Livewire::test(LinkCategoriesTable::class)->assertSeeInOrder(['Archives', 'Emulation']);
 
         $rows = Livewire::test(LinkCategoriesTable::class)->instance()->builder()->get();
 
-        $this->assertSame(1, $rows->firstWhere('website_category_name', 'Emulation')->websites_count);
-        $this->assertSame(0, $rows->firstWhere('website_category_name', 'Archives')->websites_count);
+        $this->assertSame(1, $rows->firstWhere('name', 'Emulation')->websites_count);
+        $this->assertSame(0, $rows->firstWhere('name', 'Archives')->websites_count);
     }
 
     // Magazines
@@ -471,7 +471,7 @@ class AdminTablesTest extends AdminTestCase
         $crew = Crew::factory()->create(['name' => 'The Replicants']);
         $individual = Individual::factory()->create(['name' => 'Someone']);
         $company = PubDev::factory()->create(['name' => 'Ocean']);
-        $link = Website::factory()->create(['website_name' => 'Hatari']);
+        $link = Website::factory()->create(['name' => 'Hatari']);
 
         Livewire::test(CrewsTable::class)
             ->assertSee(route('admin.menus.crews.edit', $crew), escape: false);

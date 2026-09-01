@@ -12,7 +12,7 @@ class WebsiteCategory extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'website_category_name',
+        'name',
     ];
 
     public function websites()

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class LinkCategoryController extends Controller
 {
     const VALIDATION_RULES = [
-        'name' => 'required|max:128|unique:website_categories,website_category_name',
+        'name' => 'required|max:128|unique:website_categories,name',
     ];
 
     public function index()
@@ -45,7 +45,7 @@ class LinkCategoryController extends Controller
                 'breadcrumbs' => [
                     new Crumb(route('admin.links.links.index'), 'Links'),
                     new Crumb(route('admin.links.categories.index'), 'Categories'),
-                    new Crumb('', $category->website_category_name),
+                    new Crumb('', $category->name),
                 ],
                 'category' => $category,
             ]);
@@ -56,17 +56,17 @@ class LinkCategoryController extends Controller
         $request->validate(self::VALIDATION_RULES);
 
         $category = WebsiteCategory::create([
-            'website_category_name' => $request->name,
+            'name' => $request->name,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Links',
             'section_id'       => $category->getKey(),
-            'section_name'     => $category->website_category_name,
+            'section_name'     => $category->name,
             'sub_section'      => 'Category',
             'sub_section_id'   => $category->getKey(),
-            'sub_section_name' => $category->website_category_name,
+            'sub_section_name' => $category->name,
         ]);
 
         return redirect()->route('admin.links.categories.index');
@@ -75,12 +75,12 @@ class LinkCategoryController extends Controller
     public function update(Request $request, WebsiteCategory $category)
     {
         $request->validate([
-            'name' => 'required|max:128|unique:website_categories,website_category_name,' . $category->getKey() . ',id',
+            'name' => 'required|max:128|unique:website_categories,name,' . $category->getKey() . ',id',
         ]);
 
-        $oldName = $category->website_category_name;
+        $oldName = $category->name;
         $category->update([
-            'website_category_name' => $request->name,
+            'name' => $request->name,
         ]);
 
         ChangelogHelper::insert([
@@ -90,7 +90,7 @@ class LinkCategoryController extends Controller
             'section_name'     => $oldName,
             'sub_section'      => 'Category',
             'sub_section_id'   => $category->getKey(),
-            'sub_section_name' => $category->website_category_name,
+            'sub_section_name' => $category->name,
         ]);
 
         return redirect()->route('admin.links.categories.index');
@@ -98,7 +98,7 @@ class LinkCategoryController extends Controller
 
     public function destroy(WebsiteCategory $category)
     {
-        $name = $category->website_category_name;
+        $name = $category->name;
         $id = $category->getKey();
 
         $category->websites()->detach();

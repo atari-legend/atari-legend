@@ -48,14 +48,14 @@ class CheckLinks extends Command
         $current = 0;
 
         Website::all()
-            ->sortBy('website_name')
+            ->sortBy('name')
             ->each(function ($website) use (&$current, $total) {
                 $current++;
-                $this->info("Checking $current/$total: $website->website_name ($website->website_url)");
+                $this->info("Checking $current/$total: $website->name ($website->url)");
 
                 try {
                     $response = Http::timeout(intval($this->option('timeout')))
-                        ->get($website->website_url);
+                        ->get($website->url);
 
                     if ($response->failed()) {
                         $this->error("\tError: " . $response->status());

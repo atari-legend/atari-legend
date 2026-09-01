@@ -20,12 +20,12 @@ class WebsiteFactory extends Factory
     public function definition(): array
     {
         return [
-            'website_name'   => fake()->unique()->company(),
-            'website_url'    => fake()->url(),
-            'website_date'   => now()->timestamp,
+            'name'   => fake()->unique()->company(),
+            'url'    => fake()->url(),
+            'date'   => now()->timestamp,
             'user_id'        => User::factory(),
-            'website_imgext' => null,
-            'website_count'  => 0,
+            'imgext' => null,
+            'count'  => 0,
             'rate_number'    => 1,
             'rate_score'     => 5,
             'inactive'       => false,
@@ -43,7 +43,7 @@ class WebsiteFactory extends Factory
         return $this->afterCreating(function (Website $website) use ($name) {
             $website->categories()->attach(
                 WebsiteCategoryFactory::new()->create(
-                    $name === null ? [] : ['website_category_name' => $name]
+                    $name === null ? [] : ['name' => $name]
                 )
             );
         });

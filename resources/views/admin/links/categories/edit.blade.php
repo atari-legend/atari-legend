@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', isset($category) ? $category->website_category_name : 'Create category')
+@section('title', isset($category) ? $category->name : 'Create category')
 
 @section('content')
     <div class="row">

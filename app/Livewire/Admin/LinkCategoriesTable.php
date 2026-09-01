@@ -13,17 +13,17 @@ class LinkCategoriesTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('website_category_name');
+        $this->setDefaultSort('name');
     }
 
     public function columns(): array
     {
         return [
-            LinkColumn::make('Name', 'website_category_name')
-                ->title(fn ($row) => $row->website_category_name)
+            LinkColumn::make('Name', 'name')
+                ->title(fn ($row) => $row->name)
                 ->location(fn ($row) => route('admin.links.categories.edit', $row))
                 ->searchable(
-                    fn (Builder $query, string $term) => $query->where('website_category_name', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('name', 'like', "%{$term}%")
                 )
                 ->sortable(),
             Column::make('Links')

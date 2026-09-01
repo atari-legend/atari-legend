@@ -29,7 +29,7 @@ class SitemapTest extends TestCase
     {
         $interview = Interview::factory()->create();
         $review = Review::factory()->forGame()->create();
-        WebsiteCategory::factory()->create(['website_category_name' => 'Emulation']);
+        WebsiteCategory::factory()->create(['name' => 'Emulation']);
 
         $response = $this->get(route('sitemap.general'))->assertOk();
 

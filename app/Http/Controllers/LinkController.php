@@ -18,7 +18,7 @@ class LinkController extends Controller
             : null;
 
         $categories = WebsiteCategory::select('website_categories.*')
-            ->orderBy('website_category_name')
+            ->orderBy('name')
             ->get();
 
         $websites = Website::select('websites.*');
@@ -29,7 +29,7 @@ class LinkController extends Controller
         }
 
         $websites = $websites
-            ->orderBy('website_name')
+            ->orderBy('name')
             ->paginate(5);
 
         return view('links.index')
@@ -43,10 +43,10 @@ class LinkController extends Controller
     public function postLink(Request $request)
     {
         $submission = new WebsiteValidate();
-        $submission->website_name = $request->name;
-        $submission->website_url = $request->url;
-        $submission->website_description = $request->description;
-        $submission->website_date = time();
+        $submission->name = $request->name;
+        $submission->url = $request->url;
+        $submission->description = $request->description;
+        $submission->date = time();
 
         $request->user()->websiteSubmissions()->save($submission);
 
@@ -54,10 +54,10 @@ class LinkController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Links',
             'section_id'       => $submission->getKey(),
-            'section_name'     => $submission->website_name,
+            'section_name'     => $submission->name,
             'sub_section'      => 'Link submit',
             'sub_section_id'   => $submission->getKey(),
-            'sub_section_name' => $submission->website_name,
+            'sub_section_name' => $submission->name,
         ]);
 
         $request->session()->flash('alert-title', 'Link submitted');

@@ -13,10 +13,10 @@ class Website extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'website_name',
-        'website_url',
+        'name',
+        'url',
         'description',
-        'website_date',
+        'date',
         'user_id',
         'inactive',
     ];
@@ -33,7 +33,7 @@ class Website extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->getKey(), $this->website_imgext);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 
     public function getPathAttribute()

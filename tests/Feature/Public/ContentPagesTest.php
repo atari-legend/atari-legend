@@ -261,12 +261,12 @@ class ContentPagesTest extends TestCase
 
     public function test_links_are_listed_and_can_be_filtered_by_category(): void
     {
-        $emulation = WebsiteCategory::factory()->create(['website_category_name' => 'Emulation']);
+        $emulation = WebsiteCategory::factory()->create(['name' => 'Emulation']);
 
-        $inCategory = Website::factory()->create(['website_name' => 'Hatari']);
+        $inCategory = Website::factory()->create(['name' => 'Hatari']);
         $inCategory->categories()->attach($emulation);
 
-        Website::factory()->create(['website_name' => 'Something else']);
+        Website::factory()->create(['name' => 'Something else']);
 
         $all = $this->get(route('links.index'))->assertOk()->viewData('websites');
         $this->assertCount(2, $all);
@@ -275,7 +275,7 @@ class ContentPagesTest extends TestCase
             ->assertOk()
             ->viewData('websites');
 
-        $this->assertSame(['Hatari'], $filtered->pluck('website_name')->all());
+        $this->assertSame(['Hatari'], $filtered->pluck('name')->all());
     }
 
     /**
@@ -292,7 +292,7 @@ class ContentPagesTest extends TestCase
             ->assertRedirect()
             ->assertSessionHas('alert-title', 'Link submitted');
 
-        $this->assertSame('Atari Legend', WebsiteValidate::sole()->website_name);
+        $this->assertSame('Atari Legend', WebsiteValidate::sole()->name);
         $this->assertSame(0, Website::query()->count());
         $this->assertSame(1, Changelog::where('section', 'Links')->count());
     }

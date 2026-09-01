@@ -15,7 +15,7 @@ class WebsiteCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'website_category_name' => fake()->unique()->words(2, true),
+            'name' => fake()->unique()->words(2, true),
         ];
     }
 }

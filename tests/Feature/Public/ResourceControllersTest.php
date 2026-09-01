@@ -193,7 +193,7 @@ class ResourceControllersTest extends TestCase
 
     public function test_a_link_screenshot_is_served_as_a_webp(): void
     {
-        $website = Website::factory()->create(['website_imgext' => 'png']);
+        $website = Website::factory()->create(['imgext' => 'png']);
         $this->storePng($website->path, 1024, 768);
 
         $response = $this->get(route('websites.screenshot', $website))
@@ -240,7 +240,7 @@ class ResourceControllersTest extends TestCase
 
     public function test_a_link_screenshot_missing_from_disk_is_a_404(): void
     {
-        $website = Website::factory()->create(['website_imgext' => 'png']);
+        $website = Website::factory()->create(['imgext' => 'png']);
         // Do not store file on disk
 
         $this->get(route('websites.screenshot', $website))->assertNotFound();

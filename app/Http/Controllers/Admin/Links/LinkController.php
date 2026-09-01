@@ -35,7 +35,7 @@ class LinkController extends Controller
 
     public function create()
     {
-        $categories = WebsiteCategory::orderBy('website_category_name')->get();
+        $categories = WebsiteCategory::orderBy('name')->get();
 
         return view('admin.links.links.edit')
             ->with([
@@ -49,13 +49,13 @@ class LinkController extends Controller
 
     public function edit(Website $link)
     {
-        $categories = WebsiteCategory::orderBy('website_category_name')->get();
+        $categories = WebsiteCategory::orderBy('name')->get();
 
         return view('admin.links.links.edit')
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.links.links.index'), 'Links'),
-                    new Crumb('', $link->website_name),
+                    new Crumb('', $link->name),
                 ],
                 'link'       => $link,
                 'categories' => $categories,
@@ -67,10 +67,10 @@ class LinkController extends Controller
         $request->validate(self::VALIDATION_RULES);
 
         $link = Website::create([
-            'website_name' => $request->name,
-            'website_url'  => $request->url,
+            'name' => $request->name,
+            'url'  => $request->url,
             'description'  => $request->description,
-            'website_date' => time(),
+            'date' => time(),
             'user_id'      => $request->user()->getKey(),
             'inactive'     => $request->boolean('inactive'),
         ]);
@@ -83,10 +83,10 @@ class LinkController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Links',
             'section_id'       => $link->getKey(),
-            'section_name'     => $link->website_name,
+            'section_name'     => $link->name,
             'sub_section'      => 'Link',
             'sub_section_id'   => $link->getKey(),
-            'sub_section_name' => $link->website_name,
+            'sub_section_name' => $link->name,
         ]);
 
         if ($request->stay) {
@@ -101,8 +101,8 @@ class LinkController extends Controller
         $request->validate(self::VALIDATION_RULES);
 
         $link->update([
-            'website_name' => $request->name,
-            'website_url'  => $request->url,
+            'name' => $request->name,
+            'url'  => $request->url,
             'description'  => $request->description,
             'inactive'     => $request->boolean('inactive'),
         ]);
@@ -115,10 +115,10 @@ class LinkController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Links',
             'section_id'       => $link->getKey(),
-            'section_name'     => $link->website_name,
+            'section_name'     => $link->name,
             'sub_section'      => 'Link',
             'sub_section_id'   => $link->getKey(),
-            'sub_section_name' => $link->website_name,
+            'sub_section_name' => $link->name,
         ]);
 
         if ($request->stay) {
@@ -130,7 +130,7 @@ class LinkController extends Controller
 
     public function destroy(Website $link)
     {
-        $name = $link->website_name;
+        $name = $link->name;
         $id = $link->getKey();
 
         $this->deleteImageFile($link);
@@ -154,17 +154,17 @@ class LinkController extends Controller
     {
         if ($link->file) {
             $this->deleteImageFile($link);
-            $link->website_imgext = null;
+            $link->imgext = null;
             $link->save();
 
             ChangelogHelper::insert([
                 'action'           => Changelog::DELETE,
                 'section'          => 'Links',
                 'section_id'       => $link->getKey(),
-                'section_name'     => $link->website_name,
+                'section_name'     => $link->name,
                 'sub_section'      => 'Image',
                 'sub_section_id'   => $link->getKey(),
-                'sub_section_name' => $link->website_name,
+                'sub_section_name' => $link->name,
             ]);
         }
 
@@ -180,17 +180,17 @@ class LinkController extends Controller
             $image = $request->file('image');
             $image->storeAs('images/website_images', $link->getKey() . '.' . $image->extension(), 'public');
 
-            $link->website_imgext = $image->extension();
+            $link->imgext = $image->extension();
             $link->save();
 
             ChangelogHelper::insert([
                 'action'           => $action,
                 'section'          => 'Links',
                 'section_id'       => $link->getKey(),
-                'section_name'     => $link->website_name,
+                'section_name'     => $link->name,
                 'sub_section'      => 'Image',
                 'sub_section_id'   => $link->getKey(),
-                'sub_section_name' => $link->website_name,
+                'sub_section_name' => $link->name,
             ]);
         }
     }

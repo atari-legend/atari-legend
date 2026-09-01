@@ -163,8 +163,8 @@ class MaintenanceCommandsTest extends TestCase
         Http::fake(['*' => Http::response('Hello', 200)]);
 
         $website = Website::factory()->inactive()->create([
-            'website_name' => 'Hatari',
-            'website_url'  => 'https://hatari.example.org',
+            'name' => 'Hatari',
+            'url'  => 'https://hatari.example.org',
         ]);
 
         $this->artisan('links:check')
@@ -178,7 +178,7 @@ class MaintenanceCommandsTest extends TestCase
     {
         Http::fake(['*' => Http::response('Gone', 404)]);
 
-        $website = Website::factory()->create(['website_name' => 'Dead']);
+        $website = Website::factory()->create(['name' => 'Dead']);
 
         $this->artisan('links:check')
             ->expectsOutputToContain('Error: 404')
@@ -195,7 +195,7 @@ class MaintenanceCommandsTest extends TestCase
     {
         Http::fake(fn () => throw new \Illuminate\Http\Client\ConnectionException('Connection timed out'));
 
-        $reachable = Website::factory()->create(['website_name' => 'Unreachable']);
+        $reachable = Website::factory()->create(['name' => 'Unreachable']);
 
         $this->artisan('links:check')
             ->expectsOutputToContain('Connection timed out')

@@ -116,7 +116,7 @@ class RemainingSectionsTest extends AdminTestCase
 
     public function test_a_link_can_be_created_with_categories(): void
     {
-        $category = WebsiteCategory::factory()->create(['website_category_name' => 'Emulation']);
+        $category = WebsiteCategory::factory()->create(['name' => 'Emulation']);
 
         $this->post(route('admin.links.links.store'), [
             'name'        => 'Hatari',
@@ -127,8 +127,8 @@ class RemainingSectionsTest extends AdminTestCase
 
         $link = Website::sole();
 
-        $this->assertSame('Hatari', $link->website_name);
-        $this->assertSame(['Emulation'], $link->categories->pluck('website_category_name')->all());
+        $this->assertSame('Hatari', $link->name);
+        $this->assertSame(['Emulation'], $link->categories->pluck('name')->all());
         $this->assertChangelog(Changelog::INSERT, 'Links', 'Hatari');
     }
 
@@ -159,7 +159,7 @@ class RemainingSectionsTest extends AdminTestCase
      */
     public function test_a_link_can_be_hidden_and_shown(): void
     {
-        $link = Website::factory()->create(['website_name' => 'Hatari']);
+        $link = Website::factory()->create(['name' => 'Hatari']);
 
         $this->put(route('admin.links.links.update', $link), [
             'name'     => 'Hatari',
@@ -172,7 +172,7 @@ class RemainingSectionsTest extends AdminTestCase
 
     public function test_a_link_can_be_deleted(): void
     {
-        $link = Website::factory()->create(['website_name' => 'Hatari']);
+        $link = Website::factory()->create(['name' => 'Hatari']);
 
         $this->delete(route('admin.links.links.destroy', $link))
             ->assertRedirect(route('admin.links.links.index'));
@@ -187,11 +187,11 @@ class RemainingSectionsTest extends AdminTestCase
             ->assertRedirect(route('admin.links.categories.index'));
 
         $category = WebsiteCategory::sole();
-        $this->assertSame('Emulation', $category->website_category_name);
+        $this->assertSame('Emulation', $category->name);
 
         $this->put(route('admin.links.categories.update', $category), ['name' => 'Emulators'])
             ->assertRedirect();
-        $this->assertSame('Emulators', $category->fresh()->website_category_name);
+        $this->assertSame('Emulators', $category->fresh()->name);
 
         $this->delete(route('admin.links.categories.destroy', $category))->assertRedirect();
         $this->assertSame(0, WebsiteCategory::query()->count());
