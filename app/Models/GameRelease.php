@@ -197,7 +197,7 @@ class GameRelease extends Model
             $label .= ' as ' . $this->name;
         }
         if ($this->publisher) {
-            $label .= ' by ' . $this->publisher->pub_dev_name;
+            $label .= ' by ' . $this->publisher->name;
         }
         if ($this->menu) {
             $label .= ' on ' . $this->menu;

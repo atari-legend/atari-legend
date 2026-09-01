@@ -12,7 +12,7 @@
                         onclick="javascript:if (confirm('The nickname will be deleted')) this.parentElement.submit();">
                         <i class="fas fa-trash-alt text-danger"></i></a>
 
-                    {{ $nick->ind_name }}
+                    {{ $nick->name }}
                     @if ($nickDuplicates[$nick->getKey()]->count())
                         <span class="text-warning ms-2">
                             <i class="fa-solid fa-triangle-exclamation"></i>
@@ -20,7 +20,7 @@
                         </span>
                         @foreach ($nickDuplicates[$nick->getKey()] as $duplicate)
                             <a href="{{ route('admin.games.individuals.edit', $duplicate) }}">
-                                {{ $duplicate->ind_name}}
+                                {{ $duplicate->name}}
                                 @if ($duplicate->aka_list->count())({{ $duplicate->aka_list->join(', ') }})@endif
                             </a>@if (!$loop->last),@endif
                         @endforeach

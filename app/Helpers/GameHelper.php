@@ -29,7 +29,7 @@ class GameHelper
 
         // Developers
         if ($game->developers->isNotEmpty()) {
-            $desc .= 'developed by ' . $game->developers->implode('pub_dev_name', ', ') . ' ';
+            $desc .= 'developed by ' . $game->developers->implode('name', ', ') . ' ';
         }
 
         $extraInfo = [];
@@ -52,7 +52,7 @@ class GameHelper
                     $year = $release->date->year;
                 }
                 if ($release->publisher !== null) {
-                    $year = $year . ' (by ' . $release->publisher->pub_dev_name . ')';
+                    $year = $year . ' (by ' . $release->publisher->name . ')';
                 }
 
                 if ($year !== 'n/a') {
@@ -116,7 +116,7 @@ class GameHelper
     public static function developers(Game $game)
     {
         return $game->developers->map(function ($developer) {
-            return $developer->pub_dev_name;
+            return $developer->name;
         })
             ->join(', ');
     }

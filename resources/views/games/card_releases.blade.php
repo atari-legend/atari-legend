@@ -28,7 +28,7 @@
                         @if ($release->name !== null && trim($release->name) !== '')
                             <span class="ms-2">{{ $release->name }}</span>
                         @elseif ($release->publisher !== null)
-                            <span class="ms-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->pub_dev_name }}</span>
+                            <span class="ms-2 text-muted"><span class="text-muted">by</span> {{ $release->publisher->name }}</span>
                         @endif
 
                         @if ($release->type === \App\Models\GameRelease::TYPE_UNOFFICIAL && $release->license !== \App\Models\GameRelease::LICENSE_NON_COMMERCIAL)

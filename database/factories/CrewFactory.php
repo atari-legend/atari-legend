@@ -15,9 +15,9 @@ class CrewFactory extends Factory
     public function definition(): array
     {
         return [
-            'crew_name'    => fake()->unique()->lastName() . ' Crew',
-            'crew_logo'    => null,
-            'crew_history' => null,
+            'name'    => fake()->unique()->lastName() . ' Crew',
+            'logo'    => null,
+            'history' => null,
         ];
     }
 }

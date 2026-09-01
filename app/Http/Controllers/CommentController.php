@@ -68,7 +68,7 @@ class CommentController extends Controller
                 break;
             case 'interview':
                 $section = 'Interviews';
-                $sectionName = Interview::find($id)->individual->ind_name;
+                $sectionName = Interview::find($id)->individual->name;
                 break;
             case 'article':
                 $section = 'Articles';

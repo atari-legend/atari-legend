@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', "Companies - ".(isset($company) ? $company->pub_dev_name : 'Create new company'))
+@section('title', "Companies - ".(isset($company) ? $company->name : 'Create new company'))
 
 @section('content')
     <div class="row">

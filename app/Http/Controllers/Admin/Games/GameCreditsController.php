@@ -51,7 +51,7 @@ class GameCreditsController extends Controller
                 'section_name'     => $game->name,
                 'sub_section'      => 'Creator',
                 'sub_section_id'   => $individual->getKey(),
-                'sub_section_name' => $individual->ind_name,
+                'sub_section_name' => $individual->name,
             ]);
         }
 
@@ -73,7 +73,7 @@ class GameCreditsController extends Controller
             'section_name'     => $game->name,
             'sub_section'      => 'Creator',
             'sub_section_id'   => $individual->getKey(),
-            'sub_section_name' => $individual->ind_name,
+            'sub_section_name' => $individual->name,
         ]);
 
         return redirect()->route('admin.games.game-credits.index', $game);
@@ -92,7 +92,7 @@ class GameCreditsController extends Controller
                 'section_name'     => $game->name,
                 'sub_section'      => 'Developer',
                 'sub_section_id'   => $developer->getKey(),
-                'sub_section_name' => $developer->pub_dev_name,
+                'sub_section_name' => $developer->name,
             ]);
         }
 
@@ -114,7 +114,7 @@ class GameCreditsController extends Controller
             'section_name'     => $game->name,
             'sub_section'      => 'Developer',
             'sub_section_id'   => $developer->getKey(),
-            'sub_section_name' => $developer->pub_dev_name,
+            'sub_section_name' => $developer->name,
         ]);
 
         return redirect()->route('admin.games.game-credits.index', $game);

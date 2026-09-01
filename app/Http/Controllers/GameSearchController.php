@@ -68,7 +68,7 @@ class GameSearchController extends Controller
 
         if ($request->filled('developer')) {
             $games->whereHas('developers', function (Builder $query) use ($request) {
-                $query->where('pub_dev_name', 'like', '%' . $request->input('developer') . '%');
+                $query->where('name', 'like', '%' . $request->input('developer') . '%');
             });
             $searchPossible = true;
             $softwareSearchPossible = false;
@@ -85,7 +85,7 @@ class GameSearchController extends Controller
         if ($request->filled('publisher')) {
             $games->whereHas('releases', function (Builder $query) use ($request) {
                 $query->whereHas('publisher', function (Builder $query2) use ($request) {
-                    $query2->where('pub_dev_name', 'like', '%' . $request->input('publisher') . '%');
+                    $query2->where('name', 'like', '%' . $request->input('publisher') . '%');
                 });
             });
             $searchPossible = true;
@@ -293,7 +293,7 @@ class GameSearchController extends Controller
     public function getSearchReferenceData()
     {
         $companies = PubDev::all()
-            ->sortBy('pub_dev_name');
+            ->sortBy('name');
 
         // `substr()` rather than `YEAR()` as the latter is MySQL-only, and the
         // test suite runs against SQLite. Dates are `YYYY-MM-DD` on both
@@ -310,7 +310,7 @@ class GameSearchController extends Controller
             ->sortBy('name');
 
         $individuals = Individual::all()
-            ->sortBy('ind_name');
+            ->sortBy('name');
 
         $engines = Engine::all()
             ->sortBy('name');

@@ -31,10 +31,10 @@ class BlankProfileTest extends TestCase
             'email'   => '',
         ]);
 
-        $individual = Individual::where('ind_name', 'Alice')->firstOrFail();
+        $individual = Individual::where('name', 'Alice')->firstOrFail();
 
-        $this->assertNull($individual->ind_profile);
-        $this->assertNull($individual->ind_email);
+        $this->assertNull($individual->profile);
+        $this->assertNull($individual->email);
     }
 
     public function test_whitespace_only_individual_profile_is_stored_as_null(): void
@@ -44,7 +44,7 @@ class BlankProfileTest extends TestCase
             'profile' => "\t\t\t\t",
         ]);
 
-        $this->assertNull(Individual::where('ind_name', 'Bob')->firstOrFail()->ind_profile);
+        $this->assertNull(Individual::where('name', 'Bob')->firstOrFail()->profile);
     }
 
     public function test_a_real_individual_profile_is_kept(): void
@@ -56,7 +56,7 @@ class BlankProfileTest extends TestCase
 
         $this->assertSame(
             'Member in Dune',
-            Individual::where('ind_name', 'Carol')->firstOrFail()->ind_profile
+            Individual::where('name', 'Carol')->firstOrFail()->profile
         );
     }
 
@@ -67,14 +67,14 @@ class BlankProfileTest extends TestCase
             'profile' => 'Member in Dune',
         ]);
 
-        $individual = Individual::where('ind_name', 'Dave')->firstOrFail();
+        $individual = Individual::where('name', 'Dave')->firstOrFail();
 
         $this->put(route('admin.games.individuals.update', $individual), [
             'name'    => 'Dave',
             'profile' => '',
         ]);
 
-        $this->assertNull($individual->fresh()->ind_profile);
+        $this->assertNull($individual->fresh()->profile);
     }
 
     public function test_blank_company_profile_is_stored_as_null(): void
@@ -85,7 +85,7 @@ class BlankProfileTest extends TestCase
         ]);
 
         $this->assertNull(
-            PubDev::where('pub_dev_name', 'Ocean')->firstOrFail()->pub_dev_profile
+            PubDev::where('name', 'Ocean')->firstOrFail()->profile
         );
     }
 
@@ -98,7 +98,7 @@ class BlankProfileTest extends TestCase
 
         $this->assertSame(
             'Founded in 1983',
-            PubDev::where('pub_dev_name', 'Infogrames')->firstOrFail()->pub_dev_profile
+            PubDev::where('name', 'Infogrames')->firstOrFail()->profile
         );
     }
 }

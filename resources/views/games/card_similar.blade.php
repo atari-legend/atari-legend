@@ -15,7 +15,7 @@
                         </div>
                     @endif
                     @if ($similar->developers->isNotEmpty())
-                        <div class="figcaption-subtitle mb-2"><strong>{{ $similar->developers->first()->pub_dev_name }}</strong></div>
+                        <div class="figcaption-subtitle mb-2"><strong>{{ $similar->developers->first()->name }}</strong></div>
                     @endif
                 </figcaption>
             </figure>

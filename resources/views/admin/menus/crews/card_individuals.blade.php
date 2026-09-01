@@ -11,7 +11,7 @@
                     <input class="autocomplete form-control @error('individual') is-invalid @enderror"
                         name="individual_name" id="individual_name" type="search" required
                         data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                        data-autocomplete-key="ind_name" data-autocomplete-id="id"
+                        data-autocomplete-key="name" data-autocomplete-id="id"
                         data-autocomplete-companion="individual" value="{{ old('individual_name') }}"
                         placeholder="Type an individual name..." autocomplete="off">
                     <input type="hidden" name="individual" value="{{ old('individual') }}">
@@ -39,7 +39,7 @@
                     @foreach ($crew->individuals as $individual)
                         <tr>
                             <td>
-                                <a href="{{ route('admin.games.individuals.edit', $individual) }}">{{ $individual->ind_name }}</a>
+                                <a href="{{ route('admin.games.individuals.edit', $individual) }}">{{ $individual->name }}</a>
                                 @if ($individual->aka_list->isNotEmpty())
                                     <span class="text-muted ms-1">(aka. {{ $individual->aka_list->join(', ') }})</span>
                                 @endif
@@ -50,7 +50,7 @@
                                     onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                     @csrf
                                     @method('DELETE')
-                                    <button title="Delete individual '{{ $individual->ind_name }}'" class="btn btn-sm">
+                                    <button title="Delete individual '{{ $individual->name }}'" class="btn btn-sm">
                                         <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                     </button>
                                 </form>

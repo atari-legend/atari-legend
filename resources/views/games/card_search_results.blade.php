@@ -22,13 +22,13 @@
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control @isset ($publisher_id) d-none @endif"
                         data-autocomplete-endpoint="{{ route('ajax.companies') }}"
-                        data-autocomplete-key="pub_dev_name"
+                        data-autocomplete-key="name"
                         value="{{ old('publisher', $publisher) }}"
                         id="publisher" name="publisher" autocomplete="off">
                     <select class="form-select @if (!isset($publisher_id)) d-none @endif" id="publisher_id" name="publisher_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->getKey() }}" @if (isset($publisher_id) && (int) $publisher_id === $company->getKey()) selected @endif>{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}" @if (isset($publisher_id) && (int) $publisher_id === $company->getKey()) selected @endif>{{ $company->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -41,13 +41,13 @@
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control @isset ($developer_id) d-none @endif"
                         data-autocomplete-endpoint="{{ route('ajax.companies') }}"
-                        data-autocomplete-key="pub_dev_name"
+                        data-autocomplete-key="name"
                         value="{{ old('developer', $developer) }}"
                         id="developer" name="developer" autocomplete="off">
                     <select class="form-select @if (!isset($developer_id)) d-none @endif" id="developer_id" name="developer_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->getKey() }}" @if (isset($developer_id) && (int) $developer_id === $company->getKey()) selected @endif>{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}" @if (isset($developer_id) && (int) $developer_id === $company->getKey()) selected @endif>{{ $company->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -98,7 +98,7 @@
                     @if ($game->developers->isNotEmpty())
                         <span class="text-muted">by</span>
                         @forelse ($game->developers as $developer)
-                            <a href="{{ route('games.search', ['developer' => $developer->pub_dev_name]) }}">{{ $developer->pub_dev_name }}</a>@if (!$loop->last), @endif
+                            <a href="{{ route('games.search', ['developer' => $developer->name]) }}">{{ $developer->name }}</a>@if (!$loop->last), @endif
                         @endforeach
                     @else
                         <span class="text-muted">n/a</span>

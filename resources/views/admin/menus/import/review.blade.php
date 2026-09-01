@@ -150,7 +150,7 @@
                                         <input class="autocomplete form-control @if ($disk['donated_by'] && empty($disk['donated_by_id'])) is-invalid @endif"
                                             type="search"
                                             data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                                            data-autocomplete-key="ind_name" data-autocomplete-id="id"
+                                            data-autocomplete-key="name" data-autocomplete-id="id"
                                             data-autocomplete-companion="{{ $individualCompanion }}"
                                             data-search-method="setDonatedBy" data-search-args="[{{ $mi }}, {{ $di }}]"
                                             value="{{ $disk['donated_by'] }}"

@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', "Interview - ".(isset($interview) ? $interview->individual->ind_name : 'Create interview'))
+@section('title', "Interview - ".(isset($interview) ? $interview->individual->name : 'Create interview'))
 
 @section('content')
     <div class="row">

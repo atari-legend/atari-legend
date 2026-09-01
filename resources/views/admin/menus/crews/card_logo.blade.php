@@ -26,7 +26,7 @@
             </div>
             <div class="col-3">
                 <button type="submit" class="btn btn-success w-100">
-                    @if ($crew->crew_logo) Replace @else Add @endif
+                    @if ($crew->logo) Replace @else Add @endif
                 </button>
             </div>
         </div>

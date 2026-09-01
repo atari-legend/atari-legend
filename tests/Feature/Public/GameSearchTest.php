@@ -102,7 +102,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_found_by_developer(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $developer = PubDev::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']);
+        $developer = PubDev::factory()->create(['name' => 'The Bitmap Brothers']);
         $game->developers()->attach($developer, ['developer_role_id' => $this->developerRoleId()]);
 
         Game::factory()->named('Something else')->create();

@@ -7,7 +7,7 @@
             disabled
             title="Please unlink from all menu sets first"
         @else
-            title="Delete crew '{{ $row->crew_name }}'"
+            title="Delete crew '{{ $row->name }}'"
         @endif
         class="btn">
         <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>

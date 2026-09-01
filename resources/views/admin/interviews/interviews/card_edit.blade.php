@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($interview))
-                {{ $interview->individual->ind_name }}
+                {{ $interview->individual->name }}
             @else
                 Create interview
             @endif
@@ -24,7 +24,7 @@
                         <input class="autocomplete form-control @error('individual') is-invalid @enderror"
                             name="individual_name" id="individual_name" type="search" required
                             data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                            data-autocomplete-key="ind_name" data-autocomplete-id="id"
+                            data-autocomplete-key="name" data-autocomplete-id="id"
                             data-autocomplete-companion="individual"
                             value="{{ old('individual_name') }}"
                             placeholder="Type an individual name..." autocomplete="off">

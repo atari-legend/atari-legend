@@ -175,7 +175,7 @@ class MenuSetController extends Controller
     {
         $book = new EPub(EPub::BOOK_VERSION_EPUB3);
         $book->setTitle('Scrolltexts of ' . $set->name);
-        $book->setAuthor($set->crews()->pluck('crew_name')->join(', '), '');
+        $book->setAuthor($set->crews()->pluck('name')->join(', '), '');
         $book->setPublisher('Atari Legend', URL::to('/'));
         $book->setSourceURL(route('menus.show', $set));
         $book->addCSSFile('epub.css', 'epub.css', file_get_contents(base_path('resources/css/epub.css')));
@@ -253,7 +253,7 @@ class MenuSetController extends Controller
             320 + $i * $lineHeight,
             $grey,
             $font,
-            'by: ' . $set->crews->pluck('crew_name')->join(', ')
+            'by: ' . $set->crews->pluck('name')->join(', ')
         );
 
         // Print generic text at the bottom

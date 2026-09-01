@@ -10,7 +10,7 @@
                     <input class="autocomplete form-control @error('subcrew') is-invalid @enderror"
                         name="subcrew_name" id="subcrew_name" type="search" required
                         data-autocomplete-endpoint="{{ route('ajax.crews') }}"
-                        data-autocomplete-key="crew_name" data-autocomplete-id="id"
+                        data-autocomplete-key="name" data-autocomplete-id="id"
                         data-autocomplete-companion="subcrew" value="{{ old('subcrew_name') }}"
                         placeholder="Type a crew name..." autocomplete="off">
                     <input type="hidden" name="subcrew" value="{{ old('subcrew') }}">
@@ -39,7 +39,7 @@
                         <tr>
                             <td>
                                 <a href="{{ route('admin.menus.crews.edit', $subCrew) }}">
-                                    {{ $subCrew->crew_name }}
+                                    {{ $subCrew->name }}
                                 </a>
                             </td>
                             <td>
@@ -48,7 +48,7 @@
                                     onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                     @csrf
                                     @method('DELETE')
-                                    <button title="Delete sub-crew '{{ $subCrew->crew_name }}'" class="btn btn-sm">
+                                    <button title="Delete sub-crew '{{ $subCrew->name }}'" class="btn btn-sm">
                                         <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                     </button>
                                 </form>
@@ -72,7 +72,7 @@
                         <tr>
                             <td>
                                 <a href="{{ route('admin.menus.crews.edit', $parentCrew) }}">
-                                    {{ $parentCrew->crew_name }}
+                                    {{ $parentCrew->name }}
                                 </a>
                             </td>
                             <td>
@@ -81,7 +81,7 @@
                                     onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                     @csrf
                                     @method('DELETE')
-                                    <button title="Delete parent crew '{{ $parentCrew->crew_name }}'" class="btn btn-sm">
+                                    <button title="Delete parent crew '{{ $parentCrew->name }}'" class="btn btn-sm">
                                         <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                     </button>
                                 </form>

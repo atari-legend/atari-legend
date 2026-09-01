@@ -32,7 +32,7 @@ class InterviewsController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.interviews.interviews.index'), 'Interviews'),
-                    new Crumb('', $interview->individual->ind_name),
+                    new Crumb('', $interview->individual->name),
                 ],
                 'interview' => $interview,
             ]);
@@ -71,10 +71,10 @@ class InterviewsController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Interviews',
             'section_id'       => $interview->getKey(),
-            'section_name'     => $interview->individual->ind_name,
+            'section_name'     => $interview->individual->name,
             'sub_section'      => 'Interview',
             'sub_section_id'   => $interview->getKey(),
-            'sub_section_name' => $interview->individual->ind_name,
+            'sub_section_name' => $interview->individual->name,
         ]);
 
         if ($request->stay) {
@@ -101,10 +101,10 @@ class InterviewsController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Interviews',
             'section_id'       => $interview->getKey(),
-            'section_name'     => $interview->individual->ind_name,
+            'section_name'     => $interview->individual->name,
             'sub_section'      => 'Interview',
             'sub_section_id'   => $interview->getKey(),
-            'sub_section_name' => $interview->individual->ind_name,
+            'sub_section_name' => $interview->individual->name,
         ]);
 
         if ($request->stay) {
@@ -116,7 +116,7 @@ class InterviewsController extends Controller
 
     public function destroy(Interview $interview)
     {
-        $interviewIndividualName = $interview->individual->ind_name;
+        $interviewIndividualName = $interview->individual->name;
 
         $interview->delete();
 
@@ -153,7 +153,7 @@ class InterviewsController extends Controller
                     'action'           => Changelog::INSERT,
                     'section'          => 'Interviews',
                     'section_id'       => $interview->getKey(),
-                    'section_name'     => $interview->individual->ind_name,
+                    'section_name'     => $interview->individual->name,
                     'sub_section'      => 'Screenshots',
                     'sub_section_id'   => $screenshot->getKey(),
                     'sub_section_name' => $screenshot->file,
@@ -173,7 +173,7 @@ class InterviewsController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Interviews',
             'section_id'       => $interview->getKey(),
-            'section_name'     => $interview->individual->ind_name,
+            'section_name'     => $interview->individual->name,
             'sub_section'      => 'Screenshots',
             'sub_section_id'   => $image->getKey(),
             'sub_section_name' => $image->file,
@@ -207,10 +207,10 @@ class InterviewsController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Interviews',
             'section_id'       => $interview->getKey(),
-            'section_name'     => $interview->individual->ind_name,
+            'section_name'     => $interview->individual->name,
             'sub_section'      => 'Screenshots',
             'sub_section_id'   => $interview->getKey(),
-            'sub_section_name' => $interview->individual->ind_name,
+            'sub_section_name' => $interview->individual->name,
         ]);
 
         return redirect()->route('admin.interviews.interviews.edit', $interview);

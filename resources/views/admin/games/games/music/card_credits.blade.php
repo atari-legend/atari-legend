@@ -13,7 +13,7 @@
             <ul class="list-inline">
                 @foreach ($game->individuals->sortBy('pivot.individualRole.name') as $individual)
                     <li class="list-inline-item me-4">
-                        {{ $individual->ind_name }}
+                        {{ $individual->name }}
                         @if ($individual->aka_list->isNotEmpty())
                             <small>aka. {{ $individual->aka_list->join(', ') }}</small>
                         @endif

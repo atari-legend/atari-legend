@@ -54,7 +54,7 @@ test.describe('Admin games reference data', () => {
 
     // The avatar rides on the individual's own form rather than on a route of
     // its own: update() stores the file and writes the extension it sniffed
-    // into individuals.ind_imgext, and Individual::getAvatarAttribute()
+    // into individuals.imgext, and Individual::getAvatarAttribute()
     // builds the URL back out of it. So the assertion is on the src, which is
     // the only place the round trip is visible.
     await page.goto(edit);

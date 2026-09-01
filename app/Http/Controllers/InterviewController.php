@@ -28,7 +28,7 @@ class InterviewController extends Controller
             ->get();
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', 'Interview of ' . $interview->individual->ind_name)
+            ->add('headline', 'Interview of ' . $interview->individual->name)
             ->add('author', Helper::user($interview->user))
             ->add('datePublished', $interview->interview_date->format('Y-m-d'));
         if ($interview->individual?->file !== null) {
@@ -56,10 +56,10 @@ class InterviewController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Interviews',
             'section_id'       => $interview->getKey(),
-            'section_name'     => $interview->individual->ind_name,
+            'section_name'     => $interview->individual->name,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $interview->individual->getKey(),
-            'sub_section_name' => $interview->individual->ind_name,
+            'sub_section_name' => $interview->individual->name,
         ]);
 
         return back();

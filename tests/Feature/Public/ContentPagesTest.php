@@ -130,7 +130,7 @@ class ContentPagesTest extends TestCase
 
         $this->get(route('interviews.show', $interview))
             ->assertOk()
-            ->assertSee($interview->individual->ind_name);
+            ->assertSee($interview->individual->name);
     }
 
     public function test_an_interview_page_carries_structured_data(): void
@@ -139,7 +139,7 @@ class ContentPagesTest extends TestCase
 
         $jsonLd = $this->get(route('interviews.show', $interview))->assertOk()->viewData('jsonLd')->json();
 
-        $this->assertStringContainsString('Interview of ' . $interview->individual->ind_name, $jsonLd);
+        $this->assertStringContainsString('Interview of ' . $interview->individual->name, $jsonLd);
     }
 
     public function test_a_signed_in_visitor_can_comment_on_an_interview(): void

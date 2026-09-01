@@ -42,7 +42,7 @@
                                 <ul class="list-unstyled">
                                     @foreach ($game->individuals->sortBy('pivot.individualRole.name') as $individual)
                                         <li>
-                                            {{ $individual->ind_name }}
+                                            {{ $individual->name }}
                                             @if ($individual->aka_list->isNotEmpty())
                                                 <small>aka. {{ $individual->aka_list->join(', ') }}</small>
                                             @endif

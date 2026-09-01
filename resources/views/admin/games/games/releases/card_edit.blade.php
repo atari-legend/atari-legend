@@ -51,7 +51,7 @@
                         @foreach ($companies as $publisher)
                             <option value="{{ $publisher->getKey() }}"
                                 @if (old('publisher', isset($release) ? $release->publisher?->getKey() : null) === $publisher->getKey()) selected @endif>
-                                {{ $publisher->pub_dev_name }}
+                                {{ $publisher->name }}
                             </option>
                         @endforeach
                     </select>
@@ -168,7 +168,7 @@
                         style="height: 10rem;" id="locations" name="crews[]">
                         @foreach ($crews as $crew)
                             <option value="{{ $crew->getKey() }}" @if (isset($release) && $release->crews?->contains($crew)) selected @endif>
-                                {{ $crew->crew_name }}
+                                {{ $crew->name }}
                             </option>
                         @endforeach
                     </select>
@@ -186,7 +186,7 @@
                         style="height: 10rem;" id="locations" name="distributors[]">
                         @foreach ($companies as $distributor)
                             <option value="{{ $distributor->getKey() }}" @if (isset($release) && $release->distributors?->contains($distributor)) selected @endif>
-                                {{ $distributor->pub_dev_name }}
+                                {{ $distributor->name }}
                             </option>
                         @endforeach
                     </select>

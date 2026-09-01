@@ -40,7 +40,7 @@ class GameCompanyController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.companies.index'), 'Companies'),
-                    new Crumb(route('admin.games.companies.edit', $company), $company->pub_dev_name),
+                    new Crumb(route('admin.games.companies.edit', $company), $company->name),
                 ],
                 'company'  => $company,
             ]);
@@ -49,10 +49,10 @@ class GameCompanyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', Rule::unique('pub_devs', 'pub_dev_name')],
+            'name' => ['required', Rule::unique('pub_devs', 'name')],
         ]);
 
-        $company = new PubDev(['pub_dev_name' => $request->name]);
+        $company = new PubDev(['name' => $request->name]);
         $company->save();
 
         $ext = null;
@@ -65,28 +65,28 @@ class GameCompanyController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Company',
                 'section_id'       => $company->getKey(),
-                'section_name'     => $company->pub_dev_name,
+                'section_name'     => $company->name,
                 'sub_section'      => 'Logo',
                 'sub_section_id'   => $company->getKey(),
-                'sub_section_name' => $company->pub_dev_name,
+                'sub_section_name' => $company->name,
             ]);
         }
 
         // A blank field is stored as NULL rather than an empty string, so that
         // "has a profile" stays a question the database can answer
         $company->update([
-            'pub_dev_profile' => $request->filled('profile') ? $request->profile : null,
-            'pub_dev_imgext'  => $ext,
+            'profile' => $request->filled('profile') ? $request->profile : null,
+            'imgext'  => $ext,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Company',
             'section_id'       => $company->getKey(),
-            'section_name'     => $company->pub_dev_name,
+            'section_name'     => $company->name,
             'sub_section'      => 'Company',
             'sub_section_id'   => $company->getKey(),
-            'sub_section_name' => $company->pub_dev_name,
+            'sub_section_name' => $company->name,
         ]);
 
         return redirect()->route('admin.games.companies.edit', $company);
@@ -95,14 +95,14 @@ class GameCompanyController extends Controller
     public function update(Request $request, PubDev $company)
     {
         $request->validate([
-            'name' => ['required', Rule::unique('pub_devs', 'pub_dev_name')->ignore($company->getKey(), 'id')],
+            'name' => ['required', Rule::unique('pub_devs', 'name')->ignore($company->getKey(), 'id')],
         ]);
 
         // Keep the logo already on file when the form comes back without one -
         // the same trap as GameIndividualController::update(): writing null
         // here dropped the logo on any later edit, and destroyLogo() reads the
         // same column to find the file.
-        $ext = $company->pub_dev_imgext;
+        $ext = $company->imgext;
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $logo->storeAs('images/company_logos/', $company->getKey() . '.' . $logo->extension(), 'public');
@@ -112,27 +112,27 @@ class GameCompanyController extends Controller
                 'action'           => Changelog::UPDATE,
                 'section'          => 'Company',
                 'section_id'       => $company->getKey(),
-                'section_name'     => $company->pub_dev_name,
+                'section_name'     => $company->name,
                 'sub_section'      => 'Logo',
                 'sub_section_id'   => $company->getKey(),
-                'sub_section_name' => $company->pub_dev_name,
+                'sub_section_name' => $company->name,
             ]);
         }
 
         $company->update([
-            'pub_dev_name'    => $request->name,
-            'pub_dev_profile' => $request->filled('profile') ? $request->profile : null,
-            'pub_dev_imgext'  => $ext,
+            'name'    => $request->name,
+            'profile' => $request->filled('profile') ? $request->profile : null,
+            'imgext'  => $ext,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Company',
             'section_id'       => $company->getKey(),
-            'section_name'     => $company->pub_dev_name,
+            'section_name'     => $company->name,
             'sub_section'      => 'Company',
             'sub_section_id'   => $company->getKey(),
-            'sub_section_name' => $company->pub_dev_name,
+            'sub_section_name' => $company->name,
         ]);
 
         return redirect()->route('admin.games.companies.index');
@@ -147,10 +147,10 @@ class GameCompanyController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Company',
             'section_id'       => $company->getKey(),
-            'section_name'     => $company->pub_dev_name,
+            'section_name'     => $company->name,
             'sub_section'      => 'Company',
             'sub_section_id'   => $company->getKey(),
-            'sub_section_name' => $company->pub_dev_name,
+            'sub_section_name' => $company->name,
         ]);
 
         return redirect()->route('admin.games.companies.index');
@@ -160,17 +160,17 @@ class GameCompanyController extends Controller
     {
         if ($company->logo) {
             Storage::disk('public')->delete($company->path);
-            $company->pub_dev_imgext = null;
+            $company->imgext = null;
             $company->save();
 
             ChangelogHelper::insert([
                 'action'           => Changelog::DELETE,
                 'section'          => 'Company',
                 'section_id'       => $company->getKey(),
-                'section_name'     => $company->pub_dev_name,
+                'section_name'     => $company->name,
                 'sub_section'      => 'Logo',
                 'sub_section_id'   => $company->getKey(),
-                'sub_section_name' => $company->pub_dev_name,
+                'sub_section_name' => $company->name,
             ]);
         }
 

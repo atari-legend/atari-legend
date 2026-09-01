@@ -76,7 +76,7 @@ test.describe('Menu sets', () => {
 test.describe('Menu autocompletes', () => {
   const endpoints = [
     { name: 'software', term: FIXTURE.menuSoftware.name, key: 'name' },
-    { name: 'crews', term: FIXTURE.crew.name, key: 'crew_name' },
+    { name: 'crews', term: FIXTURE.crew.name, key: 'name' },
   ];
 
   for (const endpoint of endpoints) {

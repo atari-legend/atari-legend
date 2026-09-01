@@ -35,7 +35,7 @@ class MenuCrewController extends Controller
                 'breadcrumbs' => [
                     new Crumb('', 'Menus'),
                     new Crumb(route('admin.menus.crews.index'), 'Crews'),
-                    new Crumb(route('admin.menus.crews.edit', $crew), $crew->crew_name),
+                    new Crumb(route('admin.menus.crews.edit', $crew), $crew->name),
                 ],
                 'crew' => $crew,
             ]);
@@ -58,18 +58,18 @@ class MenuCrewController extends Controller
         $request->validate(MenuCrewController::VALIDATION_RULES);
 
         $crew = Crew::create([
-            'crew_name'    => $request->name,
-            'crew_history' => $request->history,
+            'name'    => $request->name,
+            'history' => $request->history,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Crew',
             'section_id'       => $crew->getKey(),
-            'section_name'     => $crew->crew_name,
+            'section_name'     => $crew->name,
             'sub_section'      => 'Crew',
             'sub_section_id'   => $crew->getKey(),
-            'sub_section_name' => $crew->crew_name,
+            'sub_section_name' => $crew->name,
         ]);
 
         return redirect()->route('admin.menus.crews.edit', $crew);
@@ -79,11 +79,11 @@ class MenuCrewController extends Controller
     {
         $request->validate(MenuCrewController::VALIDATION_RULES);
 
-        $oldName = $crew->crew_name;
+        $oldName = $crew->name;
 
         $crew->update([
-            'crew_name'    => $request->name,
-            'crew_history' => $request->history,
+            'name'    => $request->name,
+            'history' => $request->history,
         ]);
 
         ChangelogHelper::insert([
@@ -93,7 +93,7 @@ class MenuCrewController extends Controller
             'section_name'     => $oldName,
             'sub_section'      => 'Crew',
             'sub_section_id'   => $crew->getKey(),
-            'sub_section_name' => $crew->crew_name,
+            'sub_section_name' => $crew->name,
         ]);
 
         $request->session()->flash('alert-success', 'Saved');
@@ -109,10 +109,10 @@ class MenuCrewController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Crew',
             'section_id'       => $crew->getKey(),
-            'section_name'     => $crew->crew_name,
+            'section_name'     => $crew->name,
             'sub_section'      => 'Crew',
             'sub_section_id'   => $crew->getKey(),
-            'sub_section_name' => $crew->crew_name,
+            'sub_section_name' => $crew->name,
         ]);
 
         return redirect()->route('admin.menus.crews.index');
@@ -128,10 +128,10 @@ class MenuCrewController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Crew',
                 'section_id'       => $crew->getKey(),
-                'section_name'     => $crew->crew_name,
+                'section_name'     => $crew->name,
                 'sub_section'      => 'Member',
                 'sub_section_id'   => $individual->getKey(),
-                'sub_section_name' => $individual->ind_name,
+                'sub_section_name' => $individual->name,
             ]);
         }
 
@@ -146,10 +146,10 @@ class MenuCrewController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Crew',
             'section_id'       => $crew->getKey(),
-            'section_name'     => $crew->crew_name,
+            'section_name'     => $crew->name,
             'sub_section'      => 'Member',
             'sub_section_id'   => $individual->getKey(),
-            'sub_section_name' => $individual->ind_name,
+            'sub_section_name' => $individual->name,
         ]);
 
         return redirect()->route('admin.menus.crews.edit', $crew);
@@ -165,10 +165,10 @@ class MenuCrewController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Crew',
                 'section_id'       => $crew->getKey(),
-                'section_name'     => $crew->crew_name,
+                'section_name'     => $crew->name,
                 'sub_section'      => 'Sub Crew',
                 'sub_section_id'   => $subCrew->getKey(),
-                'sub_section_name' => $subCrew->crew_name,
+                'sub_section_name' => $subCrew->name,
             ]);
         }
 
@@ -183,10 +183,10 @@ class MenuCrewController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Crew',
             'section_id'       => $crew->getKey(),
-            'section_name'     => $crew->crew_name,
+            'section_name'     => $crew->name,
             'sub_section'      => 'Sub Crew',
             'sub_section_id'   => $subCrew->getKey(),
-            'sub_section_name' => $subCrew->crew_name,
+            'sub_section_name' => $subCrew->name,
         ]);
 
         return redirect()->route('admin.menus.crews.edit', $crew);
@@ -200,10 +200,10 @@ class MenuCrewController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Crew',
             'section_id'       => $crew->getKey(),
-            'section_name'     => $crew->crew_name,
+            'section_name'     => $crew->name,
             'sub_section'      => 'Parent Crew',
             'sub_section_id'   => $parentCrew->getKey(),
-            'sub_section_name' => $parentCrew->crew_name,
+            'sub_section_name' => $parentCrew->name,
         ]);
 
         return redirect()->route('admin.menus.crews.edit', $crew);
@@ -214,7 +214,7 @@ class MenuCrewController extends Controller
         if ($request->hasFile('logo')) {
             $logoFile = $request->file('logo');
 
-            $crew->crew_logo = strtolower($logoFile->extension());
+            $crew->logo = strtolower($logoFile->extension());
             $crew->save();
 
             $logoFile->storeAs('images/crew_logos/', $crew->logo_file, 'public');
@@ -223,10 +223,10 @@ class MenuCrewController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Crew',
                 'section_id'       => $crew->getKey(),
-                'section_name'     => $crew->crew_name,
+                'section_name'     => $crew->name,
                 'sub_section'      => 'Logo',
                 'sub_section_id'   => $crew->getKey(),
-                'sub_section_name' => $crew->crew_logo,
+                'sub_section_name' => $crew->logo,
             ]);
         }
 
@@ -237,17 +237,17 @@ class MenuCrewController extends Controller
     {
         Storage::disk('public')->delete('images/crew_logos/' . $crew->logo_file);
 
-        $crew->crew_logo = null;
+        $crew->logo = null;
         $crew->save();
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,
             'section'          => 'Crew',
             'section_id'       => $crew->getKey(),
-            'section_name'     => $crew->crew_name,
+            'section_name'     => $crew->name,
             'sub_section'      => 'Logo',
             'sub_section_id'   => $crew->getKey(),
-            'sub_section_name' => $crew->crew_name,
+            'sub_section_name' => $crew->name,
         ]);
 
         return redirect()->route('admin.menus.crews.edit', $crew);

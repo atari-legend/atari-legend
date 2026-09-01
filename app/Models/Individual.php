@@ -12,7 +12,7 @@ class Individual extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['ind_name', 'ind_profile', 'ind_imgext', 'ind_email'];
+    protected $fillable = ['name', 'profile', 'imgext', 'email'];
 
     public function games()
     {
@@ -51,7 +51,7 @@ class Individual extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->getKey(), $this->ind_imgext);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 
     public function getImageUrlAttribute()
@@ -80,9 +80,9 @@ class Individual extends Model
     public function getPublicNickAttribute()
     {
         if ($this->nicknames->isNotEmpty()) {
-            return $this->nicknames->first()->ind_name;
+            return $this->nicknames->first()->name;
         } else {
-            return $this->ind_name;
+            return $this->name;
         }
     }
 
@@ -91,7 +91,7 @@ class Individual extends Model
      */
     public function getNickListAttribute()
     {
-        return $this->nicknames->pluck('ind_name');
+        return $this->nicknames->pluck('name');
     }
 
     /**
@@ -99,7 +99,7 @@ class Individual extends Model
      */
     public function getIndividualListAttribute()
     {
-        return $this->individuals->pluck('ind_name');
+        return $this->individuals->pluck('name');
     }
 
     public function getAkaListAttribute()

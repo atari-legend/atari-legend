@@ -15,7 +15,7 @@ class IndividualFactory extends Factory
     public function definition(): array
     {
         return [
-            'ind_name' => fake()->unique()->name(),
+            'name' => fake()->unique()->name(),
         ];
     }
 
@@ -26,7 +26,7 @@ class IndividualFactory extends Factory
      */
     public function withBio(string $profile = 'Member of Dune.'): static
     {
-        return $this->state(fn () => ['ind_profile' => $profile]);
+        return $this->state(fn () => ['profile' => $profile]);
     }
 
     public function nicknamed(string ...$nicks): static
@@ -34,7 +34,7 @@ class IndividualFactory extends Factory
         return $this->afterCreating(function (Individual $individual) use ($nicks) {
             foreach ($nicks as $nick) {
                 $individual->nicknames()->attach(
-                    Individual::factory()->create(['ind_name' => $nick])
+                    Individual::factory()->create(['name' => $nick])
                 );
             }
         });

@@ -101,7 +101,7 @@ class MenuImportComponentTest extends AdminTestCase
         $game = Game::factory()->named('Populous')->create();
         $software = MenuSoftware::factory()->named('Ultimate Ripper')->create();
         $condition = $this->intact();
-        $bob = Individual::factory()->create(['ind_name' => 'Bob']);
+        $bob = Individual::factory()->create(['name' => 'Bob']);
 
         $component = $this->review([
             [
@@ -274,7 +274,7 @@ class MenuImportComponentTest extends AdminTestCase
 
     public function test_donators_are_matched_by_name_and_through_the_autocomplete_decoration(): void
     {
-        $bob = Individual::factory()->create(['ind_name' => 'Bob']);
+        $bob = Individual::factory()->create(['name' => 'Bob']);
 
         $component = $this->review([
             ['new_menu' => 'x', 'new_disk' => 'x', 'disk_part' => 'A', 'disk_condition' => 'Intact', 'disk_donated_by' => 'Bob'],
@@ -517,7 +517,7 @@ class MenuImportComponentTest extends AdminTestCase
 
     public function test_the_donator_can_be_picked_typed_and_cleared(): void
     {
-        $bob = Individual::factory()->create(['ind_name' => 'Bob']);
+        $bob = Individual::factory()->create(['name' => 'Bob']);
 
         $component = $this->review([
             ['new_menu' => 'x', 'new_disk' => 'x', 'disk_condition' => 'Intact', 'disk_donated_by' => 'Nobody'],
@@ -566,8 +566,8 @@ class MenuImportComponentTest extends AdminTestCase
      */
     public function test_a_typed_donator_that_still_matches_the_linked_individual_leaves_it_alone(): void
     {
-        Individual::factory()->create(['ind_name' => 'Bob']);
-        $wanted = Individual::factory()->create(['ind_name' => 'Bob']);
+        Individual::factory()->create(['name' => 'Bob']);
+        $wanted = Individual::factory()->create(['name' => 'Bob']);
 
         $component = $this->review([
             ['new_menu' => 'x', 'new_disk' => 'x', 'disk_condition' => 'Intact'],
@@ -589,7 +589,7 @@ class MenuImportComponentTest extends AdminTestCase
         $docs = Game::factory()->named('Rick Dangerous')->create();
         $software = MenuSoftware::factory()->named('Ultimate Ripper')->create();
         $condition = $this->intact();
-        $bob = Individual::factory()->create(['ind_name' => 'Bob']);
+        $bob = Individual::factory()->create(['name' => 'Bob']);
 
         // The sheet has the first game under a name the site does not know.
         $component = $this->review([

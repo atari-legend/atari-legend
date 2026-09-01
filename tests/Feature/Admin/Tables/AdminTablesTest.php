@@ -233,8 +233,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_crews_table_sorts_and_searches(): void
     {
-        Crew::factory()->create(['crew_name' => 'Automation']);
-        Crew::factory()->create(['crew_name' => 'The Replicants']);
+        Crew::factory()->create(['name' => 'Automation']);
+        Crew::factory()->create(['name' => 'The Replicants']);
 
         Livewire::test(CrewsTable::class)->assertSeeInOrder(['Automation', 'The Replicants']);
 
@@ -248,8 +248,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_individuals_table_sorts_and_searches(): void
     {
-        Individual::factory()->create(['ind_name' => 'Alice Coder']);
-        Individual::factory()->create(['ind_name' => 'Bob Musician']);
+        Individual::factory()->create(['name' => 'Alice Coder']);
+        Individual::factory()->create(['name' => 'Bob Musician']);
 
         Livewire::test(GameIndividualsTable::class)->assertSeeInOrder(['Alice Coder', 'Bob Musician']);
 
@@ -261,8 +261,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_companies_table_filters_on_having_a_logo(): void
     {
-        PubDev::factory()->create(['pub_dev_name' => 'Ocean', 'pub_dev_imgext' => 'png']);
-        PubDev::factory()->create(['pub_dev_name' => 'US Gold', 'pub_dev_imgext' => null]);
+        PubDev::factory()->create(['name' => 'Ocean', 'imgext' => 'png']);
+        PubDev::factory()->create(['name' => 'US Gold', 'imgext' => null]);
 
         Livewire::test(GameCompaniesTable::class)->assertSeeInOrder(['Ocean', 'US Gold']);
 
@@ -440,7 +440,7 @@ class AdminTablesTest extends AdminTestCase
 
     /**
      * The interviews table left joins individuals and selects
-     * interviews.* alongside individuals.ind_name. An interview with no
+     * interviews.* alongside individuals.name. An interview with no
      * subject is the row that used to null out the primary key of every row
      * in a join like this one, by hydrating the model from the joined table's
      * id -- silently, with no exception and nothing in the log. So this
@@ -468,9 +468,9 @@ class AdminTablesTest extends AdminTestCase
      */
     public function test_every_table_links_its_rows_to_an_edit_screen(): void
     {
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
-        $individual = Individual::factory()->create(['ind_name' => 'Someone']);
-        $company = PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
+        $individual = Individual::factory()->create(['name' => 'Someone']);
+        $company = PubDev::factory()->create(['name' => 'Ocean']);
         $link = Website::factory()->create(['website_name' => 'Hatari']);
 
         Livewire::test(CrewsTable::class)

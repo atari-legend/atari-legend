@@ -193,7 +193,7 @@ class MenuSetEpubTest extends TestCase
     public function test_the_book_is_titled_after_the_set_and_credited_to_its_crews(): void
     {
         $set = $this->set();
-        $set->crews()->attach(Crew::factory()->create(['crew_name' => 'The Automation Crew']));
+        $set->crews()->attach(Crew::factory()->create(['name' => 'The Automation Crew']));
         $this->disk($set, 1, 'Greetings');
 
         $text = $this->text($this->book($set));

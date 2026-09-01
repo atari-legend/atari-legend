@@ -35,7 +35,7 @@ class InterviewsControllerTest extends AdminTestCase
 
     public function test_index_lists_the_interviews(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
         Interview::factory()->create(['individual_id' => $individual->getKey()]);
 
         $this->get(route('admin.interviews.interviews.index'))
@@ -45,7 +45,7 @@ class InterviewsControllerTest extends AdminTestCase
 
     public function test_create_and_edit_forms_load(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
         $interview = Interview::factory()->create(['individual_id' => $individual->getKey()]);
 
         $this->get(route('admin.interviews.interviews.create'))->assertOk();
@@ -57,7 +57,7 @@ class InterviewsControllerTest extends AdminTestCase
 
     public function test_store_creates_the_interview(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
 
         $this->post(route('admin.interviews.interviews.store'), $this->payload([
             'individual' => $individual->getKey(),
@@ -126,7 +126,7 @@ class InterviewsControllerTest extends AdminTestCase
 
         $this->assertSame('Rewritten.', $interview->interview_text);
         $this->assertSame('[hotspotUrl=#1]The early days[/hotspotUrl]', $interview->interview_chapters);
-        $this->assertChangelog(Changelog::UPDATE, 'Interviews', $interview->individual->ind_name);
+        $this->assertChangelog(Changelog::UPDATE, 'Interviews', $interview->individual->name);
     }
 
     public function test_update_can_toggle_the_draft_flag(): void
@@ -140,7 +140,7 @@ class InterviewsControllerTest extends AdminTestCase
 
     public function test_destroy_removes_the_interview(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
         $interview = Interview::factory()->create(['individual_id' => $individual->getKey()]);
 
         $this->delete(route('admin.interviews.interviews.destroy', $interview))

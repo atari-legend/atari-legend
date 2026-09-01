@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
-            <span class="text-uppercase d-lg-none">{{ $interview->individual->ind_name }}</span>
+            <span class="text-uppercase d-lg-none">{{ $interview->individual->name }}</span>
             <span class="text-uppercase d-none d-lg-inline">Interview</span>
 
             @contributor

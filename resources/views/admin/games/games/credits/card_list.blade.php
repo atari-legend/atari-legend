@@ -8,7 +8,7 @@
                 <input class="autocomplete form-control @error('individual') is-invalid @enderror"
                     name="individual_name" id="individual_name" type="search"
                     data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                    data-autocomplete-key="ind_name" data-autocomplete-id="id"
+                    data-autocomplete-key="name" data-autocomplete-id="id"
                     data-autocomplete-companion="individual" value="{{ old('individual_name') }}"
                     placeholder="Type an individual name..." autocomplete="off" required>
                 <input type="hidden" name="individual" value="{{ old('individual') }}">
@@ -46,7 +46,7 @@
                     <tr>
                         <td>
                             <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individual) }}">
-                                {{ $individual->ind_name }}
+                                {{ $individual->name }}
                             </a>
                             @if ($individual->aka_list->isNotEmpty())
                                 <small class="text-muted">aka. {{ $individual->aka_list->join(', ') }}</small>
@@ -60,7 +60,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="role" value="{{ $individual->pivot->individualRole->id ?? '' }}">
-                                <button title="Delete credit '{{ $individual->ind_name }}'" class="btn btn-sm">
+                                <button title="Delete credit '{{ $individual->name }}'" class="btn btn-sm">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
                             </form>

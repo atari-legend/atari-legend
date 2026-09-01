@@ -12,7 +12,7 @@ class PubDev extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['pub_dev_name', 'pub_dev_profile', 'pub_dev_imgext'];
+    protected $fillable = ['name', 'profile', 'imgext'];
 
     public function games()
     {
@@ -26,7 +26,7 @@ class PubDev extends Model
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->getKey(), $this->pub_dev_imgext);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 
     public function getPathAttribute()

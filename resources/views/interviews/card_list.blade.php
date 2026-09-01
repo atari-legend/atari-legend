@@ -22,7 +22,7 @@
                 <div class="clearfix mb-2">
                     <h3 class="fs-5 text-audiowide">
                         <a href="{{ route('interviews.show', ['interview' => $interview]) }}">
-                            {{ $interview->individual->ind_name }}
+                            {{ $interview->individual->name }}
                         </a>
                     </h3>
                     <p class="card-subtitle text-muted">{{ $interview->interview_date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
@@ -31,7 +31,7 @@
                 <div class="clearfix">
                     @if ($interview->individual->file !== null)
                         <a class="lightbox-link" href="{{ $interview->individual->image_url }}">
-                            <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->ind_name }}">
+                            <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->name }}">
                         </a>
                     @else
                         <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ asset('images/unknown.jpg') }}" alt="Placeholder image as there is no picture for the interviewee">
@@ -39,7 +39,7 @@
 
                     {!! Helper::bbCode(e($interview->interview_intro)) !!}<br>
                     <a class="d-block text-end mt-2" href="{{ route('interviews.show', ['interview' => $interview]) }}">
-                        Read the interview of {{ $interview->individual->ind_name }} <i class="fas fa-chevron-right"></i>
+                        Read the interview of {{ $interview->individual->name }} <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
             </div>

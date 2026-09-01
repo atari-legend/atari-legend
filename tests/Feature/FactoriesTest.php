@@ -215,8 +215,8 @@ class FactoriesTest extends TestCase
             ->withTrainer('Infinite lives')
             ->create();
 
-        $this->assertSame('Ocean', $release->publisher->pub_dev_name);
-        $this->assertSame(['The Replicants'], $release->crews->pluck('crew_name')->all());
+        $this->assertSame('Ocean', $release->publisher->name);
+        $this->assertSame(['The Replicants'], $release->crews->pluck('name')->all());
         $this->assertSame(['en', 'fr'], $release->languages->pluck('id')->sort()->values()->all());
         $this->assertSame(['Low'], $release->resolutions->pluck('name')->all());
         $this->assertSame(['Infinite lives'], $release->trainers->pluck('name')->all());
@@ -290,10 +290,10 @@ class FactoriesTest extends TestCase
 
     public function test_individual_bio_is_optional(): void
     {
-        $this->assertNull(Individual::factory()->create()->ind_profile);
+        $this->assertNull(Individual::factory()->create()->profile);
         $this->assertSame(
             'Member of Dune.',
-            Individual::factory()->withBio()->create()->ind_profile
+            Individual::factory()->withBio()->create()->profile
         );
     }
 

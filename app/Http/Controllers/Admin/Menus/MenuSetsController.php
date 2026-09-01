@@ -52,7 +52,7 @@ class MenuSetsController extends Controller
                     new Crumb(route('admin.menus.sets.index'), 'Sets'),
                     new Crumb('', 'Create'),
                 ],
-                'crews'       => Crew::orderBy('crew_name')->get(),
+                'crews'       => Crew::orderBy('name')->get(),
             ]);
     }
 
@@ -96,7 +96,7 @@ class MenuSetsController extends Controller
                     new Crumb(route('admin.menus.sets.edit', $set), $set->name),
                 ],
                 'set'         => $set,
-                'crews'       => Crew::orderBy('crew_name')->get(),
+                'crews'       => Crew::orderBy('name')->get(),
             ]);
     }
 

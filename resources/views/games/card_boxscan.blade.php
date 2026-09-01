@@ -26,7 +26,7 @@
                                             <div class="fs-5 p-1">
                                             Release: {{ Helper::releaseName($boxscan['release']) }}
                                             @if ($boxscan['release']->publisher !== null)
-                                                by {{ $boxscan['release']->publisher->pub_dev_name }}
+                                                by {{ $boxscan['release']->publisher->name }}
                                             @endif
                                             </div>
                                         </div>

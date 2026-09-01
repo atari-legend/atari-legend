@@ -27,12 +27,12 @@ class GameHelperDevelopersTest extends TestCase
         $game->save();
 
         $dev1 = new PubDev();
-        $dev1->pub_dev_name = 'Dev 1';
+        $dev1->name = 'Dev 1';
         $dev1->save();
         $game->developers()->save($dev1);
 
         $dev2 = new PubDev();
-        $dev2->pub_dev_name = 'Dev 2';
+        $dev2->name = 'Dev 2';
         $dev2->save();
         $game->developers()->save($dev2);
 

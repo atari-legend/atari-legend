@@ -12,11 +12,11 @@ class Crew extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['crew_name', 'crew_history'];
+    protected $fillable = ['name', 'history'];
 
     public function getLogoFileAttribute()
     {
-        return Helper::filename($this->getKey(), $this->crew_logo);
+        return Helper::filename($this->getKey(), $this->logo);
     }
 
     public function menuSets()

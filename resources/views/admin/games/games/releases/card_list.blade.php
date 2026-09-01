@@ -28,7 +28,7 @@
                         </td>
                         <td>{{ $release->name ?? '-' }}</td>
                         <td>
-                            {{ $release->publisher?->pub_dev_name ?? '-' }}
+                            {{ $release->publisher?->name ?? '-' }}
                         </td>
                         <td>
                             @foreach ($release->locations as $location)

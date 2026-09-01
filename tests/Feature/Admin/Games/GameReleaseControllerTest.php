@@ -114,22 +114,22 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_a_publisher_can_be_set(): void
     {
         $game = Game::factory()->create();
-        $publisher = PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
+        $publisher = PubDev::factory()->create(['name' => 'Ocean']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
             'publisher' => $publisher->getKey(),
         ]))->assertRedirect();
 
-        $this->assertSame('Ocean', GameRelease::sole()->publisher->pub_dev_name);
+        $this->assertSame('Ocean', GameRelease::sole()->publisher->name);
     }
 
     public function test_locations_crews_languages_and_distributors_are_attached(): void
     {
         $game = Game::factory()->create();
         $location = Location::factory()->create(['name' => 'France']);
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
         $language = Language::factory()->create(['id' => 'fr', 'name' => 'French']);
-        $distributor = PubDev::factory()->create(['pub_dev_name' => 'Erbe']);
+        $distributor = PubDev::factory()->create(['name' => 'Erbe']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
             'locations'    => [$location->getKey()],
@@ -141,7 +141,7 @@ class GameReleaseControllerTest extends AdminTestCase
         $release = GameRelease::sole();
 
         $this->assertSame(['France'], $release->locations->pluck('name')->all());
-        $this->assertSame(['The Replicants'], $release->crews->pluck('crew_name')->all());
+        $this->assertSame(['The Replicants'], $release->crews->pluck('name')->all());
         $this->assertSame(['fr'], $release->languages->pluck('id')->all());
         $this->assertSame([$distributor->getKey()], $release->distributors->pluck('id')->all());
     }
@@ -185,14 +185,14 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_the_publisher_can_be_swapped(): void
     {
         $release = GameRelease::factory()->publishedBy('Ocean')->create();
-        $other = PubDev::factory()->create(['pub_dev_name' => 'US Gold']);
+        $other = PubDev::factory()->create(['name' => 'US Gold']);
 
         $this->put(
             route('admin.games.releases.update', [$release->game, $release]),
             $this->payload(['publisher' => $other->getKey()])
         )->assertRedirect();
 
-        $this->assertSame('US Gold', $release->fresh()->publisher->pub_dev_name);
+        $this->assertSame('US Gold', $release->fresh()->publisher->name);
     }
 
     public function test_an_unknown_publisher_is_a_404(): void

@@ -135,7 +135,7 @@ class ResourceControllersTest extends TestCase
 
     public function test_an_avatar_is_served_as_a_webp(): void
     {
-        $individual = Individual::factory()->create(['ind_imgext' => 'png']);
+        $individual = Individual::factory()->create(['imgext' => 'png']);
         $this->storePng($individual->path, 800, 800);
 
         $response = $this->get(route('individuals.avatar', $individual))
@@ -150,7 +150,7 @@ class ResourceControllersTest extends TestCase
      */
     public function test_a_small_avatar_is_not_blown_up(): void
     {
-        $individual = Individual::factory()->create(['ind_imgext' => 'png']);
+        $individual = Individual::factory()->create(['imgext' => 'png']);
         $this->storePng($individual->path, 120, 90);
 
         $response = $this->get(route('individuals.avatar', $individual))->assertOk();
@@ -224,7 +224,7 @@ class ResourceControllersTest extends TestCase
 
     public function test_an_avatar_missing_from_disk_is_a_404(): void
     {
-        $individual = Individual::factory()->create(['ind_imgext' => 'png']);
+        $individual = Individual::factory()->create(['imgext' => 'png']);
         // Do not store file on disk
 
         $this->get(route('individuals.avatar', $individual))->assertNotFound();

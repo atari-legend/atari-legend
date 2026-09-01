@@ -55,12 +55,12 @@
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ route('ajax.companies') }}"
-                        data-autocomplete-key="pub_dev_name"
+                        data-autocomplete-key="name"
                         id="publisher" name="publisher" autocomplete="off">
                     <select class="form-select d-none" id="publisher_id" name="publisher_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->getKey() }}">{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}">{{ $company->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -73,12 +73,12 @@
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ route('ajax.companies') }}"
-                        data-autocomplete-key="pub_dev_name"
+                        data-autocomplete-key="name"
                         id="developer" name="developer" autocomplete="off">
                     <select class="form-select d-none" id="developer_id" name="developer_id">
                         <option value="">-</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->getKey() }}">{{ $company->pub_dev_name }}</option>
+                            <option value="{{ $company->getKey() }}">{{ $company->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -91,7 +91,7 @@
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                        data-autocomplete-key="ind_name"
+                        data-autocomplete-key="name"
                         data-autocomplete-id="id" data-autocomplete-companion="individual_select"
                         id="individual" name="individual" autocomplete="off">
                     <input type="hidden" name="individual_select">
@@ -99,7 +99,7 @@
                         <option value="">-</option>
                         @foreach ($individuals as $individual)
                             <option value="{{ $individual->getKey() }}">
-                                {{ $individual->ind_name }}
+                                {{ $individual->name }}
                             </option>
                         @endforeach
                     </select>

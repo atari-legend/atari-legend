@@ -59,7 +59,7 @@ class Interview extends Model implements Feedable
     {
         return FeedItem::create([
             'id'         => $this->getKey(),
-            'title'      => 'Interview: ' . $this->individual->ind_name,
+            'title'      => 'Interview: ' . $this->individual->name,
             'summary'    => Helper::bbCode($this->interview_intro),
             'updated'    => $this->interview_date,
             'link'       => route('interviews.show', $this),

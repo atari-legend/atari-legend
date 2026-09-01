@@ -357,7 +357,7 @@ class MenuImport extends Component
 
         // Try the name as-is first (so a real name that happens to contain
         // brackets still wins).
-        $id = Individual::where('ind_name', $name)->value('id');
+        $id = Individual::where('name', $name)->value('id');
         if ($id) {
             return $id;
         }
@@ -368,7 +368,7 @@ class MenuImport extends Component
         // back to matching the undecorated name.
         $stripped = trim(preg_replace('/\s*(?:\(aka:.*|\[[^\]]*\])\s*$/', '', $name));
         if ($stripped !== '' && $stripped !== $name) {
-            return Individual::where('ind_name', $stripped)->value('id');
+            return Individual::where('name', $stripped)->value('id');
         }
 
         return null;
@@ -483,7 +483,7 @@ class MenuImport extends Component
         $individual = $individualId ? Individual::find($individualId) : null;
 
         $this->menus[$mi]['disks'][$di]['donated_by_id'] = $individual?->getKey();
-        $this->menus[$mi]['disks'][$di]['donated_by'] = $individual?->ind_name;
+        $this->menus[$mi]['disks'][$di]['donated_by'] = $individual?->name;
     }
 
     /** Free-typed donator name (no autocomplete selection) — must resolve. */

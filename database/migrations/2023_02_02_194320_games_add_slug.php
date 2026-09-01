@@ -46,7 +46,7 @@ return new class extends Migration
 
             // If duplicates, append the first developer
             if (DB::table('game')->where('slug', '=', $slug)->count()) {
-                $devName = $gameRows->whereNotNull('pub_dev_name')->first()?->pub_dev_name;
+                $devName = $gameRows->whereNotNull('pub_dev_name')->first()?->name;
                 if ($devName) {
                     $slug .= '-' . Str::slug($devName);
                 }
@@ -54,7 +54,7 @@ return new class extends Migration
 
             // If duplicates, append the first individual
             if (DB::table('game')->where('slug', '=', $slug)->count()) {
-                $indName = $gameRows->whereNotNull('ind_name')->first()?->ind_name;
+                $indName = $gameRows->whereNotNull('ind_name')->first()?->name;
                 if ($indName) {
                     $slug .= '-' . Str::slug($indName);
                 }

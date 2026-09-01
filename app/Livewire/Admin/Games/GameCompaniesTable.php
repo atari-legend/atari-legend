@@ -14,20 +14,20 @@ class GameCompaniesTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('pub_dev_name');
+        $this->setDefaultSort('name');
     }
 
     public function columns(): array
     {
         return [
             LinkColumn::make('Name')
-                ->title(fn ($row) => $row->pub_dev_name)
+                ->title(fn ($row) => $row->name)
                 ->location(fn ($row) => route('admin.games.companies.edit', $row))
                 ->searchable(
-                    fn (Builder $query, string $term) => $query->where('pub_dev_name', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('name', 'like', "%{$term}%")
                 )
                 ->sortable(
-                    fn (Builder $query, string $direction) => $query->orderBy('pub_dev_name', $direction)
+                    fn (Builder $query, string $direction) => $query->orderBy('name', $direction)
                 ),
             Column::make('Logo')
                 ->label(
@@ -63,8 +63,8 @@ class GameCompaniesTable extends DataTableComponent
                     // a pub_dev_text row at all finally answer "No" instead of
                     // dropping out of both halves of this filter.
                     fn (Builder $query, string $term) => $term === 'true'
-                        ? $query->whereNotNull('pub_dev_imgext')
-                        : $query->whereNull('pub_dev_imgext')
+                        ? $query->whereNotNull('imgext')
+                        : $query->whereNull('imgext')
                 ),
         ];
     }

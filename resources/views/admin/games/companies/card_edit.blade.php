@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($company))
-                {{ $company->pub_dev_name }}
+                {{ $company->name }}
             @else
                 Create new company
             @endif
@@ -21,7 +21,7 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" required class="form-control @error('name') is-invalid @enderror" name="name"
-                            id="name" value="{{ old('name', $company->pub_dev_name ?? '') }}">
+                            id="name" value="{{ old('name', $company->name ?? '') }}">
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -63,7 +63,7 @@
             <div class="mb-3">
                 <label for="profile" class="form-label">Profile</label>
                 <textarea class="form-control sceditor" id="profile" name="profile"
-                    rows="10">{{ old('profile', $company->pub_dev_profile ?? '') }}</textarea>
+                    rows="10">{{ old('profile', $company->profile ?? '') }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

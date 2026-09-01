@@ -37,7 +37,7 @@ class MenuDisksController extends Controller
                     new Crumb('', 'Create disk'),
                 ],
                 'conditions'  => MenuDiskCondition::orderBy('name')->get(),
-                'individuals' => Individual::orderBy('ind_name')->get(),
+                'individuals' => Individual::orderBy('name')->get(),
                 'menu'        => $menu,
             ]);
     }
@@ -81,7 +81,7 @@ class MenuDisksController extends Controller
                     new Crumb(route('admin.menus.disks.edit', $disk), $disk->label),
                 ],
                 'conditions'  => MenuDiskCondition::orderBy('name')->get(),
-                'individuals' => Individual::orderBy('ind_name')->get(),
+                'individuals' => Individual::orderBy('name')->get(),
                 'menu'        => $disk->menu,
                 'disk'        => $disk,
             ]);

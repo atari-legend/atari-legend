@@ -25,18 +25,18 @@ class InterviewsTable extends DataTableComponent
         return [
             LinkColumn::make('Individual')
                 ->title(
-                    fn ($row) => $row->ind_name
+                    fn ($row) => $row->name
                 )
                 ->location(
                     fn ($row) => route('admin.interviews.interviews.edit', $row->getKey())
                 )
                 ->searchable(
-                    fn ($query, $term) => $query->where('ind_name', 'like', "%{$term}%")
+                    fn ($query, $term) => $query->where('individuals.name', 'like', "%{$term}%")
                         ->orWhere('interview_text', 'like', "%{$term}%")
                         ->orWhere('interview_intro', 'like', "%{$term}%")
                 )
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('ind_name', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('individuals.name', $direction)
                 ),
             Column::make('Date')
                 ->label(
@@ -58,7 +58,7 @@ class InterviewsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Interview::select('interviews.*', 'individuals.ind_name')
+        return Interview::select('interviews.*', 'individuals.name')
             ->leftJoin('individuals', 'individuals.id', '=', 'interviews.individual_id');
     }
 

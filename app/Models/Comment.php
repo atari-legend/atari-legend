@@ -81,7 +81,7 @@ class Comment extends Model
             case self::TYPE_ARTICLE:
                 return $this->articles->first()->article_title;
             case self::TYPE_INTERVIEW:
-                return $this->interviews->first()->individual->ind_name;
+                return $this->interviews->first()->individual->name;
             case self::TYPE_REVIEW:
                 return $this->reviews->first()->games->first()->name;
             default:

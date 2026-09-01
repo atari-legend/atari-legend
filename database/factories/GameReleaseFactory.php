@@ -50,7 +50,7 @@ class GameReleaseFactory extends Factory
     {
         return $this->state(fn () => [
             'pub_dev_id' => PubDevFactory::new()->state(
-                $name === null ? [] : ['pub_dev_name' => $name]
+                $name === null ? [] : ['name' => $name]
             ),
         ]);
     }
@@ -59,7 +59,7 @@ class GameReleaseFactory extends Factory
     {
         return $this->afterCreating(function (GameRelease $release) use ($name) {
             $release->crews()->attach(
-                CrewFactory::new()->create($name === null ? [] : ['crew_name' => $name])
+                CrewFactory::new()->create($name === null ? [] : ['name' => $name])
             );
         });
     }
@@ -109,7 +109,7 @@ class GameReleaseFactory extends Factory
         return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->distributors()->attach(
-                    PubDevFactory::new()->create(['pub_dev_name' => $name])
+                    PubDevFactory::new()->create(['name' => $name])
                 );
             }
         });

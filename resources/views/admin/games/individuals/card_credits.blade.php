@@ -20,7 +20,7 @@
 
             <ul>
                 @foreach ($individual->interviews as $interview)
-                    <li><a href="{{ route('interviews.show', $interview) }}">{{ $individual->ind_name }}</a></li>
+                    <li><a href="{{ route('interviews.show', $interview) }}">{{ $individual->name }}</a></li>
                 @endforeach
             </ul>
         @else
@@ -30,8 +30,8 @@
         <h3 class="fs-5">Crews membership</h3>
         @if ($individual->crews->isNotEmpty())
             <ul>
-                @foreach ($individual->crews->sortBy('crew_name') as $crew)
-                    <li><a href="{{ route('admin.menus.crews.edit', $crew) }}">{{ $crew->crew_name }}</a></li>
+                @foreach ($individual->crews->sortBy('name') as $crew)
+                    <li><a href="{{ route('admin.menus.crews.edit', $crew) }}">{{ $crew->name }}</a></li>
                 @endforeach
             </ul>
         @else

@@ -15,7 +15,7 @@ class PubDevFactory extends Factory
     public function definition(): array
     {
         return [
-            'pub_dev_name' => fake()->unique()->company(),
+            'name' => fake()->unique()->company(),
         ];
     }
 }

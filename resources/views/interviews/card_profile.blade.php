@@ -4,8 +4,8 @@
     </div>
 
     <div class="card-body p-2">
-        @if (isset($interview->individual->ind_profile) && trim($interview->individual->ind_profile) !== '')
-            <p class="card-text">{!! Helper::bbCode(e($interview->individual->ind_profile)) !!}</p>
+        @if (isset($interview->individual->profile) && trim($interview->individual->profile) !== '')
+            <p class="card-text">{!! Helper::bbCode(e($interview->individual->profile)) !!}</p>
         @else
             <p class="card-text text-center text-muted">There is currently no profile available in our database</p>
         @endif

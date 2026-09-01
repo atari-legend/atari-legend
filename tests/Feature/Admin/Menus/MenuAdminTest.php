@@ -70,7 +70,7 @@ class MenuAdminTest extends AdminTestCase
 
     public function test_a_set_can_be_created_with_its_crews(): void
     {
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->post(route('admin.menus.sets.store'), [
             'name'  => 'Automation',
@@ -82,7 +82,7 @@ class MenuAdminTest extends AdminTestCase
 
         $this->assertSame('Automation', $set->name);
         $this->assertSame('asc', $set->menus_sort);
-        $this->assertSame(['The Replicants'], $set->crews->pluck('crew_name')->all());
+        $this->assertSame(['The Replicants'], $set->crews->pluck('name')->all());
         $this->assertChangelog(Changelog::INSERT, 'Menus', 'Automation');
     }
 
@@ -285,7 +285,7 @@ class MenuAdminTest extends AdminTestCase
     public function test_a_disk_can_record_who_donated_it(): void
     {
         $menu = $this->menu();
-        $donor = Individual::factory()->create(['ind_name' => 'Someone']);
+        $donor = Individual::factory()->create(['name' => 'Someone']);
 
         $this->post(route('admin.menus.disks.store'), [
             'menu'      => $menu->getKey(),
@@ -294,7 +294,7 @@ class MenuAdminTest extends AdminTestCase
             'donated'   => $donor->getKey(),
         ])->assertRedirect();
 
-        $this->assertSame('Someone', MenuDisk::sole()->donatedByIndividual->ind_name);
+        $this->assertSame('Someone', MenuDisk::sole()->donatedByIndividual->name);
     }
 
     public function test_a_disk_can_be_edited_and_deleted(): void
@@ -454,15 +454,15 @@ class MenuAdminTest extends AdminTestCase
             ->assertRedirect();
 
         $crew = Crew::sole();
-        $this->assertSame('The Replicants', $crew->crew_name);
+        $this->assertSame('The Replicants', $crew->name);
 
-        $individual = Individual::factory()->create(['ind_name' => 'Someone']);
+        $individual = Individual::factory()->create(['name' => 'Someone']);
 
         $this->post(route('admin.menus.crews.addIndividual', $crew), [
             'individual' => $individual->getKey(),
         ])->assertRedirect();
 
-        $this->assertSame(['Someone'], $crew->fresh()->individuals->pluck('ind_name')->all());
+        $this->assertSame(['Someone'], $crew->fresh()->individuals->pluck('name')->all());
 
         $this->delete(route('admin.menus.crews.removeIndividual', [$crew, $individual]))
             ->assertRedirect();
@@ -479,13 +479,13 @@ class MenuAdminTest extends AdminTestCase
 
     public function test_sub_crews_can_be_linked_and_unlinked(): void
     {
-        $parent = Crew::factory()->create(['crew_name' => 'The Replicants']);
-        $child = Crew::factory()->create(['crew_name' => 'Replicants Junior']);
+        $parent = Crew::factory()->create(['name' => 'The Replicants']);
+        $child = Crew::factory()->create(['name' => 'Replicants Junior']);
 
         $this->post(route('admin.menus.crews.addSubCrew', $parent), ['subcrew' => $child->getKey()])
             ->assertRedirect();
 
-        $this->assertSame(['Replicants Junior'], $parent->fresh()->subCrews->pluck('crew_name')->all());
+        $this->assertSame(['Replicants Junior'], $parent->fresh()->subCrews->pluck('name')->all());
 
         $this->delete(route('admin.menus.crews.removeSubCrew', [$parent, $child]))->assertRedirect();
 

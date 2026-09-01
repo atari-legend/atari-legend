@@ -22,7 +22,7 @@
                 <div class="col-8">
                     @foreach ($game->developers as $developer)
                         <div>
-                            <a href="{{ route('games.search', ['developer_id' => $developer->getKey()]) }}">{{ $developer->pub_dev_name }}</a>
+                            <a href="{{ route('games.search', ['developer_id' => $developer->getKey()]) }}">{{ $developer->name }}</a>
                             @contributor
                                 <a class="d-inline-block" href="{{ route('admin.games.companies.edit', $developer) }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -33,10 +33,10 @@
                                     <i title="View developer logo" class="far fa-image ms-1"></i>
                                 </a>
                             @endif
-                            @if ($developer->pub_dev_profile !== null && trim($developer->pub_dev_profile) !== '')
+                            @if ($developer->profile !== null && trim($developer->profile) !== '')
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-developer-{{ $developer->getKey() }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-developer-{{ $developer->getKey() }}"><i class="fas fa-info-circle text-muted"></i></a>
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-developer-{{ $developer->getKey() }}">
-                                    {!! Helper::bbCode(nl2br(e($developer->pub_dev_profile), false)) !!}
+                                    {!! Helper::bbCode(nl2br(e($developer->profile), false)) !!}
                                 </p>
                             @endif
                             <br>
@@ -56,16 +56,16 @@
                 </div>
                 <div class="col-8">
                     {{-- Group by role to avoid repeating individuals with multiple roles --}}
-                    @foreach ($game->individuals->groupBy('ind_name') as $individuals)
+                    @foreach ($game->individuals->groupBy('name') as $individuals)
                         <div class="mb-1">
-                            <a href="{{ route('games.search', ['individual_id' => $individuals->first()->getKey()]) }}">{{ $individuals->first()->ind_name }}</a>
+                            <a href="{{ route('games.search', ['individual_id' => $individuals->first()->getKey()]) }}">{{ $individuals->first()->name }}</a>
                             @contributor
                                 <a class="d-inline-block" href="{{ route('admin.games.individuals.edit', $individuals->first()) }}">
                                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                                 </a>
                             @endcontributor
                             {{-- We have to use trim() here because the profile column in the database contains 'empty' profiles full of spaces --}}
-                            @if ($individuals->first()->ind_profile !== null && trim($individuals->first()->ind_profile) !== '')
+                            @if ($individuals->first()->profile !== null && trim($individuals->first()->profile) !== '')
                                 <a href="javascript:;" class="ms-1" data-bs-target="#profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}"><i class="fas fa-info-circle text-muted"></i></a>
                             @endif
                             @if ($individuals->first()->file !== null)
@@ -88,9 +88,9 @@
                             @foreach ($individuals->whereNotNull('pivot.individualRole.name')->sortBy('pivot.individualRole.name') as $individual)
                                 <small class="text-muted">{{ $individual->pivot->individualRole->name }}@if (!$loop->last),@endif</small>
                             @endforeach
-                            @if ($individuals->first()->ind_profile !== null && $individuals->first()->ind_profile !== '')
+                            @if ($individuals->first()->profile !== null && $individuals->first()->profile !== '')
                                 <p class="collapse mt-2 p-2 bg-black text-muted border border-secondary" id="profile-individual-{{ $loop->index }}-{{ $individuals->first()->getKey() }}">
-                                    {!! Helper::bbCode(nl2br(e($individuals->first()->ind_profile), false)) !!}
+                                    {!! Helper::bbCode(nl2br(e($individuals->first()->profile), false)) !!}
                                 </p>
                             @endif
                         </div>

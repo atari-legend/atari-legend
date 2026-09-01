@@ -8,7 +8,7 @@
                 <input class="autocomplete form-control @error('developer_name') is-invalid @enderror"
                     name="developer_name" id="developer_name" type="search"
                     data-autocomplete-endpoint="{{ route('ajax.companies') }}"
-                    data-autocomplete-key="pub_dev_name" data-autocomplete-id="id"
+                    data-autocomplete-key="name" data-autocomplete-id="id"
                     data-autocomplete-companion="developer" value="{{ old('developer_name') }}"
                     placeholder="Type a company name..." autocomplete="off" required>
                 <input type="hidden" name="developer" value="{{ old('developer') }}">
@@ -46,7 +46,7 @@
                     <tr>
                         <td>
                             <a class="d-inline-block" href="{{ route('admin.games.companies.edit', $developer) }}">
-                                {{ $developer->pub_dev_name }}
+                                {{ $developer->name }}
                             </a>
                         </td>
                         <td>{{ $developer->pivot->developerRole->name ?? '-' }}</td>
@@ -57,7 +57,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="role" value="{{ $developer->pivot->developerRole->id ?? '' }}">
-                                <button title="Delete developer '{{ $developer->pub_dev_name }}'" class="btn btn-sm">
+                                <button title="Delete developer '{{ $developer->name }}'" class="btn btn-sm">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
                             </form>

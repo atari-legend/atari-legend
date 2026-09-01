@@ -3,7 +3,7 @@
 <div class="cover">
     <h1>{{ $set->name }}</h1>
 
-    <h2>by {{ $set->crews->pluck('crew_name')->join(', ') }}</h2>
+    <h2>by {{ $set->crews->pluck('name')->join(', ') }}</h2>
 
     <p>
         This eBook contains information and scrolltexts from the

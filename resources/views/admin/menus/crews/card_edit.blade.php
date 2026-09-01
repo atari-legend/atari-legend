@@ -2,7 +2,7 @@
     <div class="card-body">
         <h2 class="card-title fs-4">
             @if (isset($crew))
-                Edit <em>{{ $crew->crew_name }}</em>
+                Edit <em>{{ $crew->name }}</em>
             @else
                 Add a new crew
             @endif
@@ -18,7 +18,7 @@
                 <label for="name" class="form-label">Name</label>
                 <input type="text" class="form-control @error('name') is-invalid @enderror"
                     id="name" name="name" placeholder="e.g.: The Replicants" required
-                    value="{{ old('name', $crew->crew_name ?? '') }}">
+                    value="{{ old('name', $crew->name ?? '') }}">
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
@@ -30,7 +30,7 @@
             <div class="mb-3">
                 <label for="history" class="form-label">History</label>
                 <textarea class="form-control @error('history') is-invalid @enderror"
-                    id="history" name="history" rows="3">{{ old('history', $crew->crew_history ?? '') }}</textarea>
+                    id="history" name="history" rows="3">{{ old('history', $crew->history ?? '') }}</textarea>
 
                 @error('history')
                     <span class="invalid-feedback" role="alert">

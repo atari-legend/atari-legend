@@ -21,7 +21,7 @@ class MenuCrewTest extends AdminTestCase
 {
     public function test_the_crew_list_shows_the_crews(): void
     {
-        Crew::factory()->create(['crew_name' => 'The Replicants']);
+        Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->get(route('admin.menus.crews.index'))
             ->assertOk()
@@ -38,10 +38,10 @@ class MenuCrewTest extends AdminTestCase
     public function test_the_edit_form_shows_the_crew_and_its_people(): void
     {
         $crew = Crew::factory()->create([
-            'crew_name'    => 'The Replicants',
-            'crew_history' => 'Cracking since 1988.',
+            'name'    => 'The Replicants',
+            'history' => 'Cracking since 1988.',
         ]);
-        $individual = Individual::factory()->create(['ind_name' => 'Someone']);
+        $individual = Individual::factory()->create(['name' => 'Someone']);
 
         $this->post(route('admin.menus.crews.addIndividual', $crew), [
             'individual' => $individual->getKey(),
@@ -56,7 +56,7 @@ class MenuCrewTest extends AdminTestCase
 
     public function test_a_crew_can_be_renamed_and_given_a_history(): void
     {
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->put(route('admin.menus.crews.update', $crew), [
             'name'    => 'Replicants',
@@ -65,8 +65,8 @@ class MenuCrewTest extends AdminTestCase
 
         $crew->refresh();
 
-        $this->assertSame('Replicants', $crew->crew_name);
-        $this->assertSame('Cracking since 1988.', $crew->crew_history);
+        $this->assertSame('Replicants', $crew->name);
+        $this->assertSame('Cracking since 1988.', $crew->history);
 
         $this->assertChangelog(Changelog::UPDATE, 'Crew', 'The Replicants');
         $this->assertSame($crew->getKey(), Changelog::where('action', Changelog::UPDATE)->sole()->section_id);
@@ -74,18 +74,18 @@ class MenuCrewTest extends AdminTestCase
 
     public function test_a_crew_cannot_be_renamed_to_nothing(): void
     {
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->put(route('admin.menus.crews.update', $crew), ['name' => ''])
             ->assertSessionHasErrors('name');
 
-        $this->assertSame('The Replicants', $crew->fresh()->crew_name);
+        $this->assertSame('The Replicants', $crew->fresh()->name);
         $this->assertNoChangelog();
     }
 
     public function test_a_crew_can_be_deleted(): void
     {
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->delete(route('admin.menus.crews.destroy', $crew))
             ->assertRedirect(route('admin.menus.crews.index'));
@@ -101,16 +101,16 @@ class MenuCrewTest extends AdminTestCase
      */
     public function test_a_crew_can_be_detached_from_its_parent_without_being_deleted(): void
     {
-        $parent = Crew::factory()->create(['crew_name' => 'The Replicants']);
-        $child = Crew::factory()->create(['crew_name' => 'Replicants Junior']);
-        $grandChild = Crew::factory()->create(['crew_name' => 'Replicants Minor']);
+        $parent = Crew::factory()->create(['name' => 'The Replicants']);
+        $child = Crew::factory()->create(['name' => 'Replicants Junior']);
+        $grandChild = Crew::factory()->create(['name' => 'Replicants Minor']);
 
         $this->post(route('admin.menus.crews.addSubCrew', $parent), ['subcrew' => $child->getKey()])
             ->assertRedirect();
         $this->post(route('admin.menus.crews.addSubCrew', $child), ['subcrew' => $grandChild->getKey()])
             ->assertRedirect();
 
-        $this->assertSame(['The Replicants'], $child->fresh()->parentCrews->pluck('crew_name')->all());
+        $this->assertSame(['The Replicants'], $child->fresh()->parentCrews->pluck('name')->all());
 
         $this->delete(route('admin.menus.crews.removeParentCrew', ['crew' => $child, 'parentCrew' => $parent]))
             ->assertRedirect(route('admin.menus.crews.edit', $child));
@@ -118,15 +118,15 @@ class MenuCrewTest extends AdminTestCase
         $this->assertCount(0, $child->fresh()->parentCrews);
         $this->assertCount(0, $parent->fresh()->subCrews);
         $this->assertSame(3, Crew::query()->count());
-        $this->assertSame(['Replicants Minor'], $child->fresh()->subCrews->pluck('crew_name')->all());
+        $this->assertSame(['Replicants Minor'], $child->fresh()->subCrews->pluck('name')->all());
 
         $this->assertChangelog(Changelog::DELETE, 'Crew', 'Replicants Junior');
     }
 
     public function test_the_edit_form_lists_the_crews_this_one_is_part_of(): void
     {
-        $parent = Crew::factory()->create(['crew_name' => 'The Replicants']);
-        $child = Crew::factory()->create(['crew_name' => 'Replicants Junior']);
+        $parent = Crew::factory()->create(['name' => 'The Replicants']);
+        $child = Crew::factory()->create(['name' => 'Replicants Junior']);
 
         $this->post(route('admin.menus.crews.addSubCrew', $parent), ['subcrew' => $child->getKey()])
             ->assertRedirect();
@@ -143,7 +143,7 @@ class MenuCrewTest extends AdminTestCase
      */
     public function test_adding_a_member_or_a_sub_crew_that_does_not_exist_does_nothing(): void
     {
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->post(route('admin.menus.crews.addIndividual', $crew), ['individual' => 12345])
             ->assertRedirect(route('admin.menus.crews.edit', $crew));
@@ -159,7 +159,7 @@ class MenuCrewTest extends AdminTestCase
     {
         Storage::fake('public');
 
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->post(route('admin.menus.crews.storeLogo', $crew), [
             'logo' => UploadedFile::fake()->image('replicants.png'),
@@ -167,7 +167,7 @@ class MenuCrewTest extends AdminTestCase
 
         $crew->refresh();
 
-        $this->assertSame('png', $crew->crew_logo);
+        $this->assertSame('png', $crew->logo);
         Storage::disk('public')->assertExists('images/crew_logos/' . $crew->getKey() . '.png');
         $this->assertChangelog(Changelog::INSERT, 'Crew', 'The Replicants');
 
@@ -176,7 +176,7 @@ class MenuCrewTest extends AdminTestCase
 
         $crew->refresh();
 
-        $this->assertNull($crew->crew_logo);
+        $this->assertNull($crew->logo);
         $this->assertNull($crew->logo_file);
         Storage::disk('public')->assertMissing('images/crew_logos/' . $crew->getKey() . '.png');
         $this->assertChangelog(Changelog::DELETE, 'Crew', 'The Replicants');
@@ -186,12 +186,12 @@ class MenuCrewTest extends AdminTestCase
     {
         Storage::fake('public');
 
-        $crew = Crew::factory()->create(['crew_name' => 'The Replicants']);
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
 
         $this->post(route('admin.menus.crews.storeLogo', $crew), [])
             ->assertRedirect(route('admin.menus.crews.edit', $crew));
 
-        $this->assertNull($crew->fresh()->crew_logo);
+        $this->assertNull($crew->fresh()->logo);
         $this->assertNoChangelog();
     }
 

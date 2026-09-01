@@ -13,27 +13,27 @@ class CrewsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('crew_name');
+        $this->setDefaultSort('name');
     }
 
     public function columns(): array
     {
         return [
-            LinkColumn::make('Name', 'crew_name')
-                ->title(fn ($row) => $row->crew_name)
+            LinkColumn::make('Name', 'name')
+                ->title(fn ($row) => $row->name)
                 ->location(fn ($row) => route('admin.menus.crews.edit', $row))
                 ->searchable(
-                    fn ($query, $term) => $query->where('crew_name', 'like', '%' . $term . '%')
+                    fn ($query, $term) => $query->where('name', 'like', '%' . $term . '%')
                 )
-                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('crew_name')),
+                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('name')),
             Column::make('Logo')
                 ->label(
-                    fn ($row) => $row->crew_logo !== null && trim($row->crew_logo) !== ''
-                        ? '<img style="max-height: 2rem; max-width: 5rem;" src="' . asset('storage/images/crew_logos/' . $row->getKey() . '.' . trim($row->crew_logo)) . '">'
+                    fn ($row) => $row->logo !== null && trim($row->logo) !== ''
+                        ? '<img style="max-height: 2rem; max-width: 5rem;" src="' . asset('storage/images/crew_logos/' . $row->getKey() . '.' . trim($row->logo)) . '">'
                         : ''
                 )
                 ->html()
-                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('crew_logo', $direction)),
+                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('logo', $direction)),
             Column::make('Genealogy')
                 ->label(function ($row) {
                     $output = [];
@@ -41,7 +41,7 @@ class CrewsTable extends DataTableComponent
                         $output[] = $row->subCrews->count() . 'sub-crews';
                     }
                     if ($row->parentCrews->isNotEmpty()) {
-                        $output[] = '<span class="text-muted">Part of:</span> ' . $row->parentCrews->pluck('crew_name')->join(', ');
+                        $output[] = '<span class="text-muted">Part of:</span> ' . $row->parentCrews->pluck('name')->join(', ');
                     }
 
                     return collect($output)->join('<br>');

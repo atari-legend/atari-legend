@@ -27,24 +27,24 @@ class Tops extends Component
     {
         $developers = DB::table('pub_devs')
             ->join('game_developer', 'game_developer.pub_dev_id', '=', 'pub_devs.id')
-            ->selectRaw('count(game_id) as game_count, pub_dev_name, pub_devs.id')
-            ->where('pub_devs.pub_dev_name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
-            ->groupBy('pub_devs.id', 'pub_devs.pub_dev_name')
+            ->selectRaw('count(game_id) as game_count, pub_devs.name, pub_devs.id')
+            ->where('pub_devs.name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
+            ->groupBy('pub_devs.id', 'pub_devs.name')
             ->orderBy('game_count', 'desc')
-            ->orderBy('pub_dev_name')
+            ->orderBy('pub_devs.name')
             ->limit(5)
             ->get();
 
         $publishers = DB::table('pub_devs')
             ->join('game_releases', 'game_releases.pub_dev_id', '=', 'pub_devs.id')
-            ->selectRaw('count(pub_devs.id) as release_count, pub_dev_name, pub_devs.id')
-            ->where('pub_devs.pub_dev_name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
+            ->selectRaw('count(pub_devs.id) as release_count, pub_devs.name, pub_devs.id')
+            ->where('pub_devs.name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
             // game_releases still has a `pub_dev_id` foreign key while pub_devs'
             // own key is now `id`, so both sides stay qualified: only MySQL
             // resolves a bare name against the select list.
-            ->groupBy('pub_devs.id', 'pub_devs.pub_dev_name')
+            ->groupBy('pub_devs.id', 'pub_devs.name')
             ->orderBy('release_count', 'desc')
-            ->orderBy('pub_dev_name')
+            ->orderBy('pub_devs.name')
             ->limit(5)
             ->get();
 
@@ -59,10 +59,10 @@ class Tops extends Component
 
         $individuals = DB::table('individuals')
             ->join('game_individual', 'game_individual.individual_id', '=', 'individuals.id')
-            ->selectRaw('count(game_id) as game_count, individuals.ind_name, individuals.id')
-            ->groupBy('individuals.id', 'individuals.ind_name')
+            ->selectRaw('count(game_id) as game_count, individuals.name, individuals.id')
+            ->groupBy('individuals.id', 'individuals.name')
             ->orderBy('game_count', 'desc')
-            ->orderBy('ind_name')
+            ->orderBy('individuals.name')
             ->limit(5)
             ->get();
 

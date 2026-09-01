@@ -47,9 +47,9 @@ class GamePanelsTest extends AdminTestCase
 
         $individual = Individual::sole();
 
-        $this->assertSame('Jochen Hippel', $individual->ind_name);
-        $this->assertSame('Musician.', $individual->ind_profile);
-        $this->assertSame('jochen@example.org', $individual->ind_email);
+        $this->assertSame('Jochen Hippel', $individual->name);
+        $this->assertSame('Musician.', $individual->profile);
+        $this->assertSame('jochen@example.org', $individual->email);
     }
 
     /**
@@ -67,8 +67,8 @@ class GamePanelsTest extends AdminTestCase
 
         $individual = Individual::sole();
 
-        $this->assertNull($individual->ind_profile);
-        $this->assertNull($individual->ind_email);
+        $this->assertNull($individual->profile);
+        $this->assertNull($individual->email);
     }
 
     public function test_an_individual_needs_a_name_and_a_valid_email(): void
@@ -95,12 +95,12 @@ class GamePanelsTest extends AdminTestCase
 
         $individual = Individual::sole();
 
-        $this->assertSame('png', $individual->ind_imgext);
+        $this->assertSame('png', $individual->imgext);
         Storage::disk('public')->assertExists('images/individual_screenshots/' . $individual->getKey() . '.png');
 
         $this->delete(route('admin.games.individuals.avatar.destroy', $individual))->assertRedirect();
 
-        $this->assertNull($individual->fresh()->ind_imgext);
+        $this->assertNull($individual->fresh()->imgext);
     }
 
     /**
@@ -110,13 +110,13 @@ class GamePanelsTest extends AdminTestCase
      */
     public function test_nicknames_can_be_added_and_removed(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
 
         $this->post(route('admin.games.individuals.nickname.store', $individual), [
             'nickname' => 'Mad Max',
         ])->assertRedirect(route('admin.games.individuals.edit', $individual));
 
-        $this->assertSame(['Mad Max'], $individual->fresh()->nicknames->pluck('ind_name')->all());
+        $this->assertSame(['Mad Max'], $individual->fresh()->nicknames->pluck('name')->all());
 
         $nickname = $individual->fresh()->nicknames->first();
 
@@ -140,14 +140,14 @@ class GamePanelsTest extends AdminTestCase
 
         $company = PubDev::sole();
 
-        $this->assertSame('Ocean', $company->pub_dev_name);
-        $this->assertSame('A Manchester publisher.', $company->pub_dev_profile);
+        $this->assertSame('Ocean', $company->name);
+        $this->assertSame('A Manchester publisher.', $company->profile);
         $this->assertChangelog(Changelog::INSERT, 'Company', 'Ocean');
     }
 
     public function test_company_names_are_unique(): void
     {
-        PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
+        PubDev::factory()->create(['name' => 'Ocean']);
 
         $this->post(route('admin.games.companies.store'), ['name' => 'Ocean'])
             ->assertSessionHasErrors('name');
@@ -160,12 +160,12 @@ class GamePanelsTest extends AdminTestCase
      */
     public function test_a_company_may_keep_its_own_name(): void
     {
-        $company = PubDev::factory()->create(['pub_dev_name' => 'Ocean']);
+        $company = PubDev::factory()->create(['name' => 'Ocean']);
 
         $this->put(route('admin.games.companies.update', $company), ['name' => 'Ocean'])
             ->assertRedirect();
 
-        $this->assertSame('Ocean', $company->fresh()->pub_dev_name);
+        $this->assertSame('Ocean', $company->fresh()->name);
     }
 
     // Credits
@@ -173,7 +173,7 @@ class GamePanelsTest extends AdminTestCase
     public function test_an_individual_can_be_credited_and_uncredited(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
         $role = $this->individualRole('Musician');
 
         $this->post(route('admin.games.game-credits.store', $game), [
@@ -181,7 +181,7 @@ class GamePanelsTest extends AdminTestCase
             'role'       => $role,
         ])->assertRedirect(route('admin.games.game-credits.index', $game));
 
-        $this->assertSame(['Jochen Hippel'], $game->fresh()->individuals->pluck('ind_name')->all());
+        $this->assertSame(['Jochen Hippel'], $game->fresh()->individuals->pluck('name')->all());
         $this->assertChangelog(Changelog::INSERT, 'Games', 'Xenon');
 
         $this->delete(route('admin.games.game-credits.destroy', [$game, $individual]), ['role' => $role])
@@ -228,7 +228,7 @@ class GamePanelsTest extends AdminTestCase
     public function test_a_developer_can_be_credited_and_uncredited(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $developer = PubDev::factory()->create(['pub_dev_name' => 'The Bitmap Brothers']);
+        $developer = PubDev::factory()->create(['name' => 'The Bitmap Brothers']);
         $role = $this->developerRole();
 
         $this->post(route('admin.games.game-developers.store', $game), [
@@ -238,7 +238,7 @@ class GamePanelsTest extends AdminTestCase
 
         $this->assertSame(
             ['The Bitmap Brothers'],
-            $game->fresh()->developers->pluck('pub_dev_name')->all()
+            $game->fresh()->developers->pluck('name')->all()
         );
 
         $this->delete(

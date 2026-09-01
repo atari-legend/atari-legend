@@ -75,9 +75,9 @@
                             <div class="input-group">
                                 <input class="autocomplete form-control" name="{{ $i->id }}_individual_name"
                                     type="search" required data-autocomplete-endpoint="{{ route('ajax.individuals') }}"
-                                    data-autocomplete-key="ind_name" data-autocomplete-id="id"
+                                    data-autocomplete-key="name" data-autocomplete-id="id"
                                     data-autocomplete-companion="{{ $i->id }}_individual_id"
-                                    value="{{ $i->individual?->ind_name }}" placeholder="Type an individual name..."
+                                    value="{{ $i->individual?->name }}" placeholder="Type an individual name..."
                                     autocomplete="off">
                                 <button type="button" class="btn btn-outline-secondary"
                                     wire:click="updateIndividual({{ $i->id }}, null)">

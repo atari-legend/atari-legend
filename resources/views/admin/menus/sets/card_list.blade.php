@@ -39,7 +39,7 @@
                     <tr>
                         <td><a href="{{ route('admin.menus.sets.edit', $set) }}">{{ $set->name }}</a></td>
                         <td>
-                            {{ $set->crews()->pluck('crew_name')->join(', ') }}
+                            {{ $set->crews()->pluck('name')->join(', ') }}
                         </td>
                         <td>{{ $set->menus()->count() }}</td>
                         <td>{{ $set->created_at ? $set->created_at->diffForHumans() : '-' }}</td>

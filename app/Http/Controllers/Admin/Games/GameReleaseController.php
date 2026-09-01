@@ -267,7 +267,7 @@ class GameReleaseController extends Controller
 
     private function getReferenceData(): array
     {
-        $companies = PubDev::orderBy('pub_dev_name')->get();
+        $companies = PubDev::orderBy('name')->get();
         $licenses = GameRelease::LICENSES;
         $types = GameRelease::TYPES;
         $statuses = GameRelease::STATUSES;
@@ -275,7 +275,7 @@ class GameReleaseController extends Controller
             ->orderBy('type', 'asc')
             ->orderBy('name', 'asc')
             ->get();
-        $crews = Crew::orderBy('crew_name')
+        $crews = Crew::orderBy('name')
             ->get();
         $languages = Language::orderBy('name')
             ->get();

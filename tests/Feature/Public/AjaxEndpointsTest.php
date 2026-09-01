@@ -38,12 +38,12 @@ class AjaxEndpointsTest extends TestCase
     public static function endpoints(): array
     {
         return [
-            'companies'   => ['ajax.companies', 'pub_dev_name'],
-            'crews'       => ['ajax.crews', 'crew_name'],
+            'companies'   => ['ajax.companies', 'name'],
+            'crews'       => ['ajax.crews', 'name'],
             'engines'     => ['ajax.engines', 'name'],
             'genres'      => ['ajax.genres', 'name'],
             'software'    => ['ajax.software', 'name'],
-            'individuals' => ['ajax.individuals', 'ind_name'],
+            'individuals' => ['ajax.individuals', 'name'],
         ];
     }
 
@@ -54,12 +54,12 @@ class AjaxEndpointsTest extends TestCase
     private function create(string $route, string $name): void
     {
         match ($route) {
-            'ajax.companies'   => PubDev::factory()->create(['pub_dev_name' => $name]),
-            'ajax.crews'       => Crew::factory()->create(['crew_name' => $name]),
+            'ajax.companies'   => PubDev::factory()->create(['name' => $name]),
+            'ajax.crews'       => Crew::factory()->create(['name' => $name]),
             'ajax.engines'     => Engine::forceCreate(['name' => $name]),
             'ajax.genres'      => GameGenre::forceCreate(['name' => $name]),
             'ajax.software'    => MenuSoftware::factory()->named($name)->create(),
-            'ajax.individuals' => Individual::factory()->create(['ind_name' => $name]),
+            'ajax.individuals' => Individual::factory()->create(['name' => $name]),
         };
     }
 
@@ -119,21 +119,21 @@ class AjaxEndpointsTest extends TestCase
 
     public function test_a_company_carries_its_id(): void
     {
-        $company = PubDev::factory()->create(['pub_dev_name' => 'Psygnosis']);
+        $company = PubDev::factory()->create(['name' => 'Psygnosis']);
 
         $results = $this->getJson(route('ajax.companies', ['q' => 'Psy']))->assertOk()->json();
 
-        $this->assertSame('Psygnosis', $results[0]['pub_dev_name']);
+        $this->assertSame('Psygnosis', $results[0]['name']);
         $this->assertSame($company->getKey(), $results[0]['id']);
     }
 
     public function test_a_crew_carries_its_id_and_nothing_else(): void
     {
-        $crew = Crew::factory()->create(['crew_name' => 'Automation']);
+        $crew = Crew::factory()->create(['name' => 'Automation']);
 
         $results = $this->getJson(route('ajax.crews', ['q' => 'Auto']))->assertOk()->json();
 
-        $this->assertSame(['crew_name' => 'Automation', 'id' => $crew->getKey()], $results[0]);
+        $this->assertSame(['name' => 'Automation', 'id' => $crew->getKey()], $results[0]);
     }
 
     /**
@@ -167,11 +167,11 @@ class AjaxEndpointsTest extends TestCase
 
     public function test_an_individual_carries_their_id(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
 
         $results = $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))->assertOk()->json();
 
-        $this->assertSame(['ind_name' => 'Jochen Hippel', 'id' => $individual->getKey()], $results[0]);
+        $this->assertSame(['name' => 'Jochen Hippel', 'id' => $individual->getKey()], $results[0]);
     }
 
     /**
@@ -181,11 +181,11 @@ class AjaxEndpointsTest extends TestCase
      */
     public function test_an_individual_is_labelled_with_their_nicknames(): void
     {
-        Individual::factory()->nicknamed('Mad Max')->create(['ind_name' => 'Jochen Hippel']);
+        Individual::factory()->nicknamed('Mad Max')->create(['name' => 'Jochen Hippel']);
 
         $results = $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))->assertOk()->json();
 
-        $this->assertSame('Jochen Hippel (aka: Mad Max)', $results[0]['ind_name']);
+        $this->assertSame('Jochen Hippel (aka: Mad Max)', $results[0]['name']);
     }
 
     /**
@@ -194,11 +194,11 @@ class AjaxEndpointsTest extends TestCase
      */
     public function test_a_nickname_is_labelled_with_the_individuals_behind_it(): void
     {
-        Individual::factory()->nicknamed('Mad Max')->create(['ind_name' => 'Jochen Hippel']);
+        Individual::factory()->nicknamed('Mad Max')->create(['name' => 'Jochen Hippel']);
 
         $results = $this->getJson(route('ajax.individuals', ['q' => 'Mad Max']))->assertOk()->json();
 
-        $this->assertSame('Mad Max (aka: Jochen Hippel)', $results[0]['ind_name']);
+        $this->assertSame('Mad Max (aka: Jochen Hippel)', $results[0]['name']);
     }
 
     /**
@@ -208,7 +208,7 @@ class AjaxEndpointsTest extends TestCase
      */
     public function test_an_individual_is_labelled_with_the_games_they_worked_on(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
         $game = Game::factory()->named('Xenon')->create();
 
         foreach (['Coder', 'Music'] as $role) {
@@ -219,7 +219,7 @@ class AjaxEndpointsTest extends TestCase
 
         $results = $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))->assertOk()->json();
 
-        $this->assertSame('Jochen Hippel [Xenon]', $results[0]['ind_name']);
+        $this->assertSame('Jochen Hippel [Xenon]', $results[0]['name']);
     }
 
     /**
@@ -228,7 +228,7 @@ class AjaxEndpointsTest extends TestCase
      */
     public function test_a_long_list_of_games_is_cut_short(): void
     {
-        $individual = Individual::factory()->create(['ind_name' => 'Jochen Hippel']);
+        $individual = Individual::factory()->create(['name' => 'Jochen Hippel']);
         $roleId = DB::table('individual_roles')->insertGetId(['name' => 'Music']);
 
         foreach (range(1, 10) as $i) {
@@ -238,7 +238,7 @@ class AjaxEndpointsTest extends TestCase
             );
         }
 
-        $label = $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))->assertOk()->json()[0]['ind_name'];
+        $label = $this->getJson(route('ajax.individuals', ['q' => 'Hippel']))->assertOk()->json()[0]['name'];
 
         $this->assertSame(
             'Jochen Hippel [Wonderful Game 1, Wonderful Game 2, Wonderful…]',

@@ -17,7 +17,7 @@
                                     {{-- Not getKey(): $developers comes from a DB::table() query in
                                          Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
                                     <a href="{{ route('games.search', ['developer_id' => $developer->id]) }}">
-                                        {{ $developer->pub_dev_name }}
+                                        {{ $developer->name }}
                                     </a>
                                 </td>
                                 <td>{{ $developer->game_count }} games</td>
@@ -38,7 +38,7 @@
                                     {{-- Not getKey(): $publishers comes from a DB::table() query in
                                          Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
                                     <a href="{{ route('games.search', ['publisher_id' => $publisher->id]) }}">
-                                        {{ $publisher->pub_dev_name }}
+                                        {{ $publisher->name }}
                                     </a>
                                 </td>
                                 <td>{{ $publisher->release_count }} games</td>
@@ -78,7 +78,7 @@
                                     {{-- Not getKey(): $individuals comes from a DB::table() query in
                                          Cards\Tops, so these rows are stdClass, not Eloquent models. --}}
                                     <a href="{{ route('games.search', ['individual_id' => $individual->id]) }}">
-                                        {{ $individual->ind_name }}
+                                        {{ $individual->name }}
                                     </a>
                                 </td>
                                 <td>{{ $individual->game_count }} games</td>

@@ -10,12 +10,12 @@ class CrewController extends Controller
 {
     public function crews(Request $request)
     {
-        $crews = Crew::select('crew_name', 'id')
-            ->orderBy('crew_name')
+        $crews = Crew::select('name', 'id')
+            ->orderBy('name')
             ->limit(10);
 
         if ($request->filled('q')) {
-            $crews = $crews->where('crew_name', 'like', '%' . $request->q . '%');
+            $crews = $crews->where('name', 'like', '%' . $request->q . '%');
         }
 
         return response()->json($crews->get());

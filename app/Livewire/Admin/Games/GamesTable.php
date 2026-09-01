@@ -40,7 +40,7 @@ class GamesTable extends DataTableComponent
                     fn ($row) => $row->non_menu_releases->count() . ' (Menus: ' . $row->menu_releases->count() . ')'
                 ),
             Column::make('Developers')
-                ->label(fn ($row) => $row->developers->pluck('pub_dev_name')->join(', ')),
+                ->label(fn ($row) => $row->developers->pluck('name')->join(', ')),
             Column::make('Created', 'created_at')
                 ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),

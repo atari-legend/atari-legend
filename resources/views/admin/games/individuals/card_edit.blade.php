@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($individual))
-                {{ $individual->ind_name }}
+                {{ $individual->name }}
             @else
                 Create new individual
             @endif
@@ -21,7 +21,7 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" required class="form-control @error('name') is-invalid @enderror" name="name"
-                            id="name" value="{{ old('name', $individual->ind_name ?? '') }}">
+                            id="name" value="{{ old('name', $individual->name ?? '') }}">
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -37,7 +37,7 @@
                                 </span>
                                 @foreach ($duplicates as $duplicate)
                                     <a href="{{ route('admin.games.individuals.edit', $duplicate) }}">
-                                        {{ $duplicate->ind_name}}
+                                        {{ $duplicate->name}}
                                         @if ($duplicate->aka_list->count())({{ $duplicate->aka_list->join(', ') }})@endif
                                     </a>@if (!$loop->last),@endif
                                 @endforeach
@@ -48,7 +48,7 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                            id="email" value="{{ old('email', $individual->ind_email ?? '') }}">
+                            id="email" value="{{ old('email', $individual->email ?? '') }}">
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -90,7 +90,7 @@
             <div class="mb-3">
                 <label for="profile" class="form-label">Profile</label>
                 <textarea class="form-control sceditor" id="profile" name="profile"
-                    rows="10">{{ old('profile', $individual->ind_profile ?? '') }}</textarea>
+                    rows="10">{{ old('profile', $individual->profile ?? '') }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

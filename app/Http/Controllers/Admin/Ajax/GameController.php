@@ -45,7 +45,7 @@ class GameController extends Controller
             ->map(function ($aka) {
                 $developers = '';
                 if ($aka->game?->developers?->isNotEmpty()) {
-                    $developers = ' [' . $aka->game->developers->pluck('pub_dev_name')->join(', ') . ']';
+                    $developers = ' [' . $aka->game->developers->pluck('name')->join(', ') . ']';
                 }
 
                 return [
@@ -61,7 +61,7 @@ class GameController extends Controller
             ->map(function ($game) {
                 $developers = '';
                 if ($game->developers->isNotEmpty()) {
-                    $developers = ' [' . $game->developers->pluck('pub_dev_name')->join(', ') . ']';
+                    $developers = ' [' . $game->developers->pluck('name')->join(', ') . ']';
                 }
 
                 return [

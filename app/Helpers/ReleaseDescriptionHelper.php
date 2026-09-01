@@ -121,7 +121,7 @@ class ReleaseDescriptionHelper
             if ($release->publisher !== null) {
                 $desc .= 'published by ' .
                     '[publisher=' . $release->publisher->getKey() . ']' .
-                    $release->publisher->pub_dev_name .
+                    $release->publisher->name .
                     '[/publisher]';
             }
             if ($release->distributors->isNotEmpty()) {
@@ -131,7 +131,7 @@ class ReleaseDescriptionHelper
 
                 $desc .= 'distributed by ' . $release
                     ->distributors
-                    ->pluck('pub_dev_name')
+                    ->pluck('name')
                     ->map(function ($s) {
                         return ReleaseDescriptionHelper::boldicize($s);
                     })
@@ -437,7 +437,7 @@ class ReleaseDescriptionHelper
 
         if ($release->crews->isNotEmpty()) {
             $desc = 'It was cracked by ';
-            $desc .= $release->crews->pluck('crew_name')
+            $desc .= $release->crews->pluck('name')
                 ->map(function ($s) {
                     return ReleaseDescriptionHelper::boldicize($s);
                 })

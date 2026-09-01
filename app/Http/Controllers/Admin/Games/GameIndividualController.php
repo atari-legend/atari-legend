@@ -43,7 +43,7 @@ class GameIndividualController extends Controller
         }
 
         // Find possible duplicates for the main name
-        $duplicates = Individual::where('ind_name', '=', $ind->ind_name)
+        $duplicates = Individual::where('name', '=', $ind->name)
             ->whereKeyNot($ind->getKey())
             ->get();
 
@@ -51,7 +51,7 @@ class GameIndividualController extends Controller
         $nickDuplicates = $ind->nicknames()
             ->get()
             ->mapWithKeys(function ($item) use ($ind) {
-                $i = Individual::where('ind_name', '=', $item->ind_name)
+                $i = Individual::where('name', '=', $item->name)
                     ->get()
                     ->filter(function ($item2) use ($ind) {
                         return ! $ind->nicknames->contains($item2);
@@ -64,7 +64,7 @@ class GameIndividualController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.individuals.index'), 'Individuals'),
-                    new Crumb(route('admin.games.individuals.edit', $ind), $ind->ind_name),
+                    new Crumb(route('admin.games.individuals.edit', $ind), $ind->name),
                 ],
                 'individual'      => $ind,
                 'duplicates'      => $duplicates,
@@ -79,7 +79,7 @@ class GameIndividualController extends Controller
             'email' => 'nullable|email',
         ]);
 
-        $individual = new Individual(['ind_name' => $request->name]);
+        $individual = new Individual(['name' => $request->name]);
         $individual->save();
 
         $ext = null;
@@ -92,29 +92,29 @@ class GameIndividualController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Individuals',
                 'section_id'       => $individual->getKey(),
-                'section_name'     => $individual->ind_name,
+                'section_name'     => $individual->name,
                 'sub_section'      => 'Image',
                 'sub_section_id'   => $individual->getKey(),
-                'sub_section_name' => $individual->ind_name,
+                'sub_section_name' => $individual->name,
             ]);
         }
 
         // A blank field is stored as NULL rather than an empty string, so that
         // "has a bio" stays a question the database can answer
         $individual->update([
-            'ind_profile' => $request->filled('profile') ? $request->profile : null,
-            'ind_email'   => $request->filled('email') ? $request->email : null,
-            'ind_imgext'  => $ext,
+            'profile' => $request->filled('profile') ? $request->profile : null,
+            'email'   => $request->filled('email') ? $request->email : null,
+            'imgext'  => $ext,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Individuals',
             'section_id'       => $individual->getKey(),
-            'section_name'     => $individual->ind_name,
+            'section_name'     => $individual->name,
             'sub_section'      => 'Individual',
             'sub_section_id'   => $individual->getKey(),
-            'sub_section_name' => $individual->ind_name,
+            'sub_section_name' => $individual->name,
         ]);
 
         return redirect()->route('admin.games.individuals.edit', $individual);
@@ -132,7 +132,7 @@ class GameIndividualController extends Controller
         // dropped the avatar on any later edit, and destroyAvatar() builds its
         // path out of the same column - so the file was then stranded on disk
         // with nothing in the admin able to reach it.
-        $ext = $individual->ind_imgext;
+        $ext = $individual->imgext;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $avatar->storeAs('images/individual_screenshots/', $individual->getKey() . '.' . $avatar->extension(), 'public');
@@ -142,28 +142,28 @@ class GameIndividualController extends Controller
                 'action'           => Changelog::UPDATE,
                 'section'          => 'Individuals',
                 'section_id'       => $individual->getKey(),
-                'section_name'     => $individual->ind_name,
+                'section_name'     => $individual->name,
                 'sub_section'      => 'Image',
                 'sub_section_id'   => $individual->getKey(),
-                'sub_section_name' => $individual->ind_name,
+                'sub_section_name' => $individual->name,
             ]);
         }
 
         $individual->update([
-            'ind_name'    => $request->name,
-            'ind_profile' => $request->filled('profile') ? $request->profile : null,
-            'ind_email'   => $request->filled('email') ? $request->email : null,
-            'ind_imgext'  => $ext,
+            'name'    => $request->name,
+            'profile' => $request->filled('profile') ? $request->profile : null,
+            'email'   => $request->filled('email') ? $request->email : null,
+            'imgext'  => $ext,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Individuals',
             'section_id'       => $individual->getKey(),
-            'section_name'     => $individual->ind_name,
+            'section_name'     => $individual->name,
             'sub_section'      => 'Individual',
             'sub_section_id'   => $individual->getKey(),
-            'sub_section_name' => $individual->ind_name,
+            'sub_section_name' => $individual->name,
         ]);
 
         return redirect()->route('admin.games.individuals.index');
@@ -178,10 +178,10 @@ class GameIndividualController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Individuals',
             'section_id'       => $individual->getKey(),
-            'section_name'     => $individual->ind_name,
+            'section_name'     => $individual->name,
             'sub_section'      => 'Individual',
             'sub_section_id'   => $individual->getKey(),
-            'sub_section_name' => $individual->ind_name,
+            'sub_section_name' => $individual->name,
         ]);
 
         return redirect()->route('admin.games.individuals.index');
@@ -191,17 +191,17 @@ class GameIndividualController extends Controller
     {
         if ($individual->avatar) {
             Storage::disk('public')->delete($individual->path);
-            $individual->ind_imgext = null;
+            $individual->imgext = null;
             $individual->save();
 
             ChangelogHelper::insert([
                 'action'           => Changelog::DELETE,
                 'section'          => 'Individuals',
                 'section_id'       => $individual->getKey(),
-                'section_name'     => $individual->ind_name,
+                'section_name'     => $individual->name,
                 'sub_section'      => 'Image',
                 'sub_section_id'   => $individual->getKey(),
-                'sub_section_name' => $individual->ind_name,
+                'sub_section_name' => $individual->name,
             ]);
         }
 
@@ -210,17 +210,17 @@ class GameIndividualController extends Controller
 
     public function storeNickname(Request $request, Individual $individual)
     {
-        $nickname = new Individual(['ind_name' => $request->nickname]);
+        $nickname = new Individual(['name' => $request->nickname]);
         $individual->nicknames()->save($nickname);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Individuals',
             'section_id'       => $individual->getKey(),
-            'section_name'     => $individual->ind_name,
+            'section_name'     => $individual->name,
             'sub_section'      => 'Nickname',
             'sub_section_id'   => $nickname->getKey(),
-            'sub_section_name' => $nickname->ind_name,
+            'sub_section_name' => $nickname->name,
         ]);
 
         return redirect()->route('admin.games.individuals.edit', $individual);
@@ -234,10 +234,10 @@ class GameIndividualController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Individuals',
             'section_id'       => $individual->getKey(),
-            'section_name'     => $individual->ind_name,
+            'section_name'     => $individual->name,
             'sub_section'      => 'Nickname',
             'sub_section_id'   => $nickname->getKey(),
-            'sub_section_name' => $nickname->ind_name,
+            'sub_section_name' => $nickname->name,
         ]);
 
         return redirect()->route('admin.games.individuals.edit', $individual);
