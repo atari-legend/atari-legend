@@ -11,5 +11,5 @@ class Trivia extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['trivia_text'];
+    protected $fillable = ['text'];
 }

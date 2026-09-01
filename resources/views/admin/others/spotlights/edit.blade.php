@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', "Spotlight - ".(isset($spotlight) ? Str::words($spotlight->spotlight, 3) : 'Create spotlight'))
+@section('title', "Spotlight - ".(isset($spotlight) ? Str::words($spotlight->text, 3) : 'Create spotlight'))
 
 @section('content')
     <div class="row">

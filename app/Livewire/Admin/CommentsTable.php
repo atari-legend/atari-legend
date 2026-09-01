@@ -51,10 +51,10 @@ class CommentsTable extends DataTableComponent
                 )
                 ->html(),
             LinkColumn::make('Content')
-                ->title(fn ($row) => Str::words($row->comment, 20))
+                ->title(fn ($row) => Str::words($row->text, 20))
                 ->location(fn ($row) => route('admin.users.comments.edit', $row))
                 ->searchable(
-                    fn ($query, $term) => $query->where('comment', 'like', '%' . $term . '%')
+                    fn ($query, $term) => $query->where('text', 'like', '%' . $term . '%')
                 ),
             Column::make('Actions')
                 ->label(

@@ -69,7 +69,7 @@
                             <option value="">-</option>
                             @foreach ($types as $t)
                                 <option value="{{ $t->getKey() }}" @selected($t->getKey() == old('type',
-                                    isset($article) ? $article->type?->getKey() : ''))>{{ $t->article_type }}
+                                    isset($article) ? $article->type?->getKey() : ''))>{{ $t->name }}
                                 </option>
                             @endforeach
                         </select>

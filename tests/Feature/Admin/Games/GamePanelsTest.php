@@ -300,12 +300,12 @@ class GamePanelsTest extends AdminTestCase
             ->assertRedirect(route('admin.games.game-facts.index', $game));
 
         $fact = GameFact::sole();
-        $this->assertSame('Composed in a week.', $fact->game_fact);
+        $this->assertSame('Composed in a week.', $fact->fact);
 
         $this->put(route('admin.games.game-facts.update', [$game, $fact]), ['content' => 'Composed in a day.'])
             ->assertRedirect();
 
-        $this->assertSame('Composed in a day.', $fact->fresh()->game_fact);
+        $this->assertSame('Composed in a day.', $fact->fresh()->fact);
 
         $this->delete(route('admin.games.game-facts.destroy', [$game, $fact]))->assertRedirect();
 

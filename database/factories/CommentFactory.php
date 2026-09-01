@@ -29,7 +29,7 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'comment'   => fake()->sentence(),
+            'text'      => fake()->sentence(),
             'user_id'   => User::factory(),
             'timestamp' => time(),
         ];

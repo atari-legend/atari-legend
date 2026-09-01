@@ -15,7 +15,7 @@ class TriviaFactory extends Factory
     public function definition(): array
     {
         return [
-            'trivia_text' => fake()->sentence(),
+            'text' => fake()->sentence(),
         ];
     }
 }

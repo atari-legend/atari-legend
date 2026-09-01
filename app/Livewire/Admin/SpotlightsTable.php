@@ -14,20 +14,20 @@ class SpotlightsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('spotlight');
+        $this->setDefaultSort('text');
     }
 
     public function columns(): array
     {
         return [
             LinkColumn::make('Spotlight')
-                ->title(fn ($row) => Str::words($row->spotlight, 15))
+                ->title(fn ($row) => Str::words($row->text, 15))
                 ->location(fn ($row) => route('admin.others.spotlights.edit', $row))
                 ->searchable(
-                    fn (Builder $query, string $term) => $query->where('spotlight', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('text', 'like', "%{$term}%")
                         ->orWhere('link', 'like', "%{$term}%")
                 )
-                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('spotlight', $direction)),
+                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('text', $direction)),
             Column::make('Link', 'link')
                 ->sortable(),
             Column::make('Actions')

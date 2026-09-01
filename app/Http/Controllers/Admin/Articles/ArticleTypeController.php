@@ -13,7 +13,7 @@ class ArticleTypeController extends Controller
 {
     public function index()
     {
-        $types = ArticleType::orderBy('article_type')
+        $types = ArticleType::orderBy('name')
             ->get();
 
         return view('admin.articles.types.index')
@@ -29,16 +29,16 @@ class ArticleTypeController extends Controller
     {
         $request->validate(['type' => 'required']);
 
-        $type = ArticleType::create(['article_type' => $request->type]);
+        $type = ArticleType::create(['name' => $request->type]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Article type',
             'section_id'       => $type->getKey(),
-            'section_name'     => $type->article_type,
+            'section_name'     => $type->name,
             'sub_section'      => 'Article type',
             'sub_section_id'   => $type->getKey(),
-            'sub_section_name' => $type->article_type,
+            'sub_section_name' => $type->name,
         ]);
 
         return redirect()->route('admin.articles.types.index');
@@ -47,16 +47,16 @@ class ArticleTypeController extends Controller
     public function update(Request $request, ArticleType $type)
     {
         $request->validate(['type' => 'required']);
-        $type->update(['article_type' => $request->type]);
+        $type->update(['name' => $request->type]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'Article type',
             'section_id'       => $type->getKey(),
-            'section_name'     => $type->article_type,
+            'section_name'     => $type->name,
             'sub_section'      => 'Article type',
             'sub_section_id'   => $type->getKey(),
-            'sub_section_name' => $type->article_type,
+            'sub_section_name' => $type->name,
         ]);
 
         return redirect()->route('admin.articles.types.index');
@@ -70,10 +70,10 @@ class ArticleTypeController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Article type',
             'section_id'       => $type->getKey(),
-            'section_name'     => $type->article_type,
+            'section_name'     => $type->name,
             'sub_section'      => 'Article type',
             'sub_section_id'   => $type->getKey(),
-            'sub_section_name' => $type->article_type,
+            'sub_section_name' => $type->name,
         ]);
 
         return redirect()->route('admin.articles.types.index');

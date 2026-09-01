@@ -192,11 +192,11 @@ class InterviewsController extends Controller
                 $comment = $screenshotInterview->comment;
                 if (! $comment && $value) {
                     $screenshotInterview->comment()->save(new ScreenshotInterviewComment([
-                        'comment_text' => $value,
+                        'text' => $value,
                     ]));
                 } elseif ($comment && $value) {
                     $comment->update([
-                        'comment_text' => $value,
+                        'text' => $value,
                     ]);
                 } elseif ($comment && ! $value) {
                     $comment->delete();

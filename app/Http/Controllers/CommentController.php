@@ -35,7 +35,7 @@ class CommentController extends Controller
             $comment = Comment::find($request->comment_id);
 
             if (Auth::user()->getKey() === $comment->user->getKey()) {
-                $comment->comment = $request->comment;
+                $comment->text = $request->comment;
                 $comment->timestamp = time();
                 $comment->save();
 

@@ -54,9 +54,9 @@ class SpotlightController extends Controller
             'link'      => 'required|url',
         ]);
 
-        $oldText = $spotlight->spotlight;
+        $oldText = $spotlight->text;
         $spotlight->update([
-            'spotlight' => $request->spotlight,
+            'text' => $request->spotlight,
             'link'      => $request->link,
         ]);
 
@@ -69,7 +69,7 @@ class SpotlightController extends Controller
             'section_name'     => Str::words($oldText, 15),
             'sub_section'      => 'Spotlight',
             'sub_section_id'   => $spotlight->getKey(),
-            'sub_section_name' => Str::words($spotlight->spotlight, 15),
+            'sub_section_name' => Str::words($spotlight->text, 15),
         ]);
 
         return redirect()->route('admin.others.spotlights.index');
@@ -83,7 +83,7 @@ class SpotlightController extends Controller
         ]);
 
         $spotlight = Spotlight::create([
-            'spotlight' => $request->spotlight,
+            'text' => $request->spotlight,
             'link'      => $request->link,
         ]);
 
@@ -93,10 +93,10 @@ class SpotlightController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Trivia',
             'section_id'       => $spotlight->getKey(),
-            'section_name'     => Str::words($spotlight->spotlight, 15),
+            'section_name'     => Str::words($spotlight->text, 15),
             'sub_section'      => 'Spotlight',
             'sub_section_id'   => $spotlight->getKey(),
-            'sub_section_name' => Str::words($spotlight->spotlight, 15),
+            'sub_section_name' => Str::words($spotlight->text, 15),
         ]);
 
         return redirect()->route('admin.others.spotlights.index');
@@ -111,10 +111,10 @@ class SpotlightController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Trivia',
             'section_id'       => $spotlight->getKey(),
-            'section_name'     => Str::words($spotlight->spotlight, 15),
+            'section_name'     => Str::words($spotlight->text, 15),
             'sub_section'      => 'Spotlight',
             'sub_section_id'   => $spotlight->getKey(),
-            'sub_section_name' => Str::words($spotlight->spotlight, 15),
+            'sub_section_name' => Str::words($spotlight->text, 15),
         ]);
 
         return redirect()->route('admin.others.spotlights.index');
@@ -130,10 +130,10 @@ class SpotlightController extends Controller
                 'action'           => Changelog::UPDATE,
                 'section'          => 'Trivia',
                 'section_id'       => $spotlight->getKey(),
-                'section_name'     => Str::words($spotlight->spotlight, 15),
+                'section_name'     => Str::words($spotlight->text, 15),
                 'sub_section'      => 'Spotlight',
                 'sub_section_id'   => $spotlight->getKey(),
-                'sub_section_name' => Str::words($spotlight->spotlight, 15),
+                'sub_section_name' => Str::words($spotlight->text, 15),
             ]);
         }
 

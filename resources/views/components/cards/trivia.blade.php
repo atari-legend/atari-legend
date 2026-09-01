@@ -14,7 +14,7 @@
     <div class="card-body p-2">
         @isset ($trivia)
             <p class="card-text">
-                {{ $trivia->trivia_text }}
+                {{ $trivia->text }}
             </p>
         @endisset
     </div>

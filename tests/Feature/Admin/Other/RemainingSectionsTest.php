@@ -205,12 +205,12 @@ class RemainingSectionsTest extends AdminTestCase
             ->assertRedirect(route('admin.others.trivias.index'));
 
         $trivia = Trivia::sole();
-        $this->assertSame('The ST shipped in 1985.', $trivia->trivia_text);
+        $this->assertSame('The ST shipped in 1985.', $trivia->text);
         $this->assertChangelog(Changelog::INSERT, 'Trivia', 'The ST shipped in 1985.');
 
         $this->put(route('admin.others.trivias.update', $trivia), ['text' => 'The ST shipped in 1985!'])
             ->assertRedirect();
-        $this->assertSame('The ST shipped in 1985!', $trivia->fresh()->trivia_text);
+        $this->assertSame('The ST shipped in 1985!', $trivia->fresh()->text);
 
         $this->delete(route('admin.others.trivias.destroy', $trivia))->assertRedirect();
         $this->assertSame(0, Trivia::query()->count());
@@ -230,7 +230,7 @@ class RemainingSectionsTest extends AdminTestCase
 
         $quote = TriviaQuote::sole();
 
-        $this->assertSame('Power without the price.', $quote->trivia_quote);
+        $this->assertSame('Power without the price.', $quote->quote);
 
         $this->delete(route('admin.others.quotes.destroy', $quote))->assertRedirect();
         $this->assertSame(0, TriviaQuote::query()->count());
@@ -248,7 +248,7 @@ class RemainingSectionsTest extends AdminTestCase
 
         $spotlight = Spotlight::sole();
 
-        $this->assertSame('A newly dumped menu disk.', $spotlight->spotlight);
+        $this->assertSame('A newly dumped menu disk.', $spotlight->text);
         $this->assertSame('https://www.atarilegend.com', $spotlight->link);
     }
 
@@ -400,7 +400,7 @@ class RemainingSectionsTest extends AdminTestCase
         $this->put(route('admin.users.comments.update', $comment), ['content' => 'Moderated.'])
             ->assertRedirect();
 
-        $this->assertSame('Moderated.', $comment->fresh()->comment);
+        $this->assertSame('Moderated.', $comment->fresh()->text);
 
         $this->delete(route('admin.users.comments.destroy', $comment))
             ->assertRedirect(route('admin.users.comments.index'));

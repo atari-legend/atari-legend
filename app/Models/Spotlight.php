@@ -11,7 +11,7 @@ class Spotlight extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['spotlight', 'link'];
+    protected $fillable = ['text', 'link'];
 
     public function screenshot()
     {

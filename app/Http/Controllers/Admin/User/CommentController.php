@@ -47,7 +47,7 @@ class CommentController extends Controller
 
     public function update(Request $request, Comment $comment)
     {
-        $comment->comment = $request->content;
+        $comment->text = $request->content;
         $comment->save();
 
         ChangelogHelper::insert([

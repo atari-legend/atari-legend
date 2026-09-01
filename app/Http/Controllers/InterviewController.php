@@ -46,7 +46,7 @@ class InterviewController extends Controller
     public function postComment(Interview $interview, Request $request)
     {
         $comment = new Comment();
-        $comment->comment = $request->comment;
+        $comment->text = $request->comment;
         $comment->timestamp = time();
 
         $request->user()->comments()->save($comment);

@@ -19,11 +19,11 @@
         <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
             @foreach ($article->screenshots as $screenshot)
                 <div class="bg-dark p-2">
-                    <a class="lightbox-link" href="{{ $screenshot->getUrl('article') }}" title="@isset($screenshot->pivot->comment) {{ $screenshot->pivot->comment->comment_text }} @endif">
-                        <img class="w-100 " src="{{ $screenshot->getUrl('article') }}" alt="@isset($screenshot->pivot->comment) {{ $screenshot->pivot->comment->comment_text }} @endif">
+                    <a class="lightbox-link" href="{{ $screenshot->getUrl('article') }}" title="@isset($screenshot->pivot->comment) {{ $screenshot->pivot->comment->text }} @endif">
+                        <img class="w-100 " src="{{ $screenshot->getUrl('article') }}" alt="@isset($screenshot->pivot->comment) {{ $screenshot->pivot->comment->text }} @endif">
                     </a>
                     @if (isset($screenshot->pivot->comment))
-                        <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->comment_text }}</p>
+                        <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->text }}</p>
                     @endif
                 </div>
             @endforeach

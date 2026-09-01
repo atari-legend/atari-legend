@@ -12,7 +12,7 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="input-group">
-                                    <textarea class="form-control" name="text" rows="3">{{ $trivia->trivia_text }}</textarea>
+                                    <textarea class="form-control" name="text" rows="3">{{ $trivia->text }}</textarea>
                                     <button class="btn btn-outline-success" type="submit">Update</button>
                                 </div>
                             </form>

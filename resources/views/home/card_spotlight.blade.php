@@ -17,7 +17,7 @@
                 <img class="w-100" src="{{ route('spotlights.screenshot', $spotlight) }}" alt="Spotlight image">
             @endisset
             <p class="card-text p-2">
-                {{ $spotlight->spotlight }}
+                {{ $spotlight->text }}
                 <a class="d-block text-end" href="{{ $spotlight->link }}">
                     Visit {{ parse_url($spotlight->link, PHP_URL_HOST) }} <i class="fas fa-chevron-right"></i>
                 </a>

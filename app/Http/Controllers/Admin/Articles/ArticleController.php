@@ -29,7 +29,7 @@ class ArticleController extends Controller
 
     public function edit(Article $article)
     {
-        $types = ArticleType::orderBy('article_type')
+        $types = ArticleType::orderBy('name')
             ->get();
 
         return view('admin.articles.articles.edit')
@@ -45,7 +45,7 @@ class ArticleController extends Controller
 
     public function create()
     {
-        $types = ArticleType::orderBy('article_type')
+        $types = ArticleType::orderBy('name')
             ->get();
 
         return view('admin.articles.articles.edit')
@@ -197,11 +197,11 @@ class ArticleController extends Controller
                 $comment = $screenshotArticle->comment;
                 if (! $comment && $value) {
                     $comment = $screenshotArticle->comment()->save(new ScreenshotArticleComment([
-                        'comment_text' => $value,
+                        'text' => $value,
                     ]));
                 } elseif ($comment && $value) {
                     $comment->update([
-                        'comment_text' => $value,
+                        'text' => $value,
                     ]);
                 } elseif ($comment && ! $value) {
                     $comment->delete();

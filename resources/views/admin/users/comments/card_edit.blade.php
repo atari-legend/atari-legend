@@ -19,7 +19,7 @@
 
             <div class="mb-3">
                 <label for="content" class="form-label">Content</label>
-                <textarea class="form-control sceditor" required id="content" name="content" rows="15">{{ old('content', stripslashes($comment->comment)) }}</textarea>
+                <textarea class="form-control sceditor" required id="content" name="content" rows="15">{{ old('content', stripslashes($comment->text)) }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

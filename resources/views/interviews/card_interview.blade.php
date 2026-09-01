@@ -29,11 +29,11 @@
                          is first saved, so an image that never got one has no comment
                          at all. Dereferencing it unguarded made that a 500 on a public
                          page. articles/card_article.blade.php has always guarded it. --}}
-                    <a class="lightbox-link" href="{{ $screenshot->getUrl('interview') }}" title="{{ $screenshot->pivot->comment?->comment_text }}">
-                        <img class="w-100 mb-2" src="{{ $screenshot->getUrl('interview') }}" alt="{{ $screenshot->pivot->comment?->comment_text }}">
+                    <a class="lightbox-link" href="{{ $screenshot->getUrl('interview') }}" title="{{ $screenshot->pivot->comment?->text }}">
+                        <img class="w-100 mb-2" src="{{ $screenshot->getUrl('interview') }}" alt="{{ $screenshot->pivot->comment?->text }}">
                     </a>
                     @isset($screenshot->pivot->comment)
-                        <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->comment_text }}</p>
+                        <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->text }}</p>
                     @endisset
                 </div>
             @endforeach

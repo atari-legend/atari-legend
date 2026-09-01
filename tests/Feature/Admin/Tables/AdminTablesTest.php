@@ -152,7 +152,7 @@ class AdminTablesTest extends AdminTestCase
         $submission = new GameSubmitInfo();
         $submission->game_id = Game::factory()->named($gameName)->create()->getKey();
         $submission->user_id = User::factory()->create()->getKey();
-        $submission->submit_text = 'Something is wrong with ' . $gameName;
+        $submission->text = 'Something is wrong with ' . $gameName;
         $submission->timestamp = time();
         $submission->game_done = $done;
         $submission->save();
@@ -406,8 +406,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_spotlights_table_sorts_and_searches(): void
     {
-        Spotlight::forceCreate(['spotlight' => 'A new dump', 'link' => 'https://example.org']);
-        Spotlight::forceCreate(['spotlight' => 'Zero day release', 'link' => 'https://example.org']);
+        Spotlight::forceCreate(['text' => 'A new dump', 'link' => 'https://example.org']);
+        Spotlight::forceCreate(['text' => 'Zero day release', 'link' => 'https://example.org']);
 
         Livewire::test(SpotlightsTable::class)->assertSeeInOrder(['A new dump', 'Zero day release']);
 

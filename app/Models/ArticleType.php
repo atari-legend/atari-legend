@@ -11,5 +11,5 @@ class ArticleType extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['article_type'];
+    protected $fillable = ['name'];
 }

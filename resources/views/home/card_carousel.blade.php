@@ -8,7 +8,7 @@
                             <img class="d-block w-100" src="{{ asset('images/'.$image) }}" alt="Large carousel image">
 
                             <div class="carousel-bg">
-                                <h2 class="text-uppercase">{{ $triviaQuote->trivia_quote }}</h2>
+                                <h2 class="text-uppercase">{{ $triviaQuote->quote }}</h2>
                                 <h3 class="text-primary mt-5">Your number 1 Atari ST resource on the net!</h3>
                                 <p>
                                     Atari Legend is a living and breathing webproject, designed by sceners.

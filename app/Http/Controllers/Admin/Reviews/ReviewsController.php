@@ -113,7 +113,7 @@ class ReviewsController extends Controller
                 $screenshotId = (int) str_replace('screenshot_comment_', '', $key);
                 $screenshot = $review->getScreenshotComment($screenshotId);
                 if ($screenshot?->pivot?->comment && $value !== null) {
-                    $screenshot->pivot->comment->comment_text = $value;
+                    $screenshot->pivot->comment->text = $value;
                     $screenshot->pivot->comment->save();
                 } elseif ($screenshot?->pivot && $value === null) {
                     // Screenshot comment exists but now should be removed
@@ -126,7 +126,7 @@ class ReviewsController extends Controller
                             'screenshot_id' => $screenshotId,
                         ]);
                     $comment = new ScreenshotReviewComment();
-                    $comment->comment_text = $value;
+                    $comment->text = $value;
                     $comment->screenshot_review_id = $id;
                     $comment->save();
                 }

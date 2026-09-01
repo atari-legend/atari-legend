@@ -105,7 +105,7 @@ class ContentPagesTest extends TestCase
             ->post(route('article.comment', $article), ['comment' => 'Useful.'])
             ->assertRedirect();
 
-        $this->assertSame('Useful.', Comment::sole()->comment);
+        $this->assertSame('Useful.', Comment::sole()->text);
         $this->assertSame(1, Changelog::where('section', 'Articles')->count());
     }
 
@@ -150,7 +150,7 @@ class ContentPagesTest extends TestCase
             ->post(route('interview.comment', $interview), ['comment' => 'Great read.'])
             ->assertRedirect();
 
-        $this->assertSame('Great read.', Comment::sole()->comment);
+        $this->assertSame('Great read.', Comment::sole()->text);
         $this->assertSame(1, Changelog::where('section', 'Interviews')->count());
     }
 
@@ -383,7 +383,7 @@ class ContentPagesTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertSame('Second take.', $comment->fresh()->comment);
+        $this->assertSame('Second take.', $comment->fresh()->text);
         $this->assertSame(1, Changelog::where('action', Changelog::UPDATE)->count());
     }
 
@@ -407,7 +407,7 @@ class ContentPagesTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertSame('Mine.', $comment->fresh()->comment);
+        $this->assertSame('Mine.', $comment->fresh()->text);
     }
 
     public function test_a_visitor_can_delete_their_own_comment(): void
@@ -467,7 +467,7 @@ class ContentPagesTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertSame('Second take.', Comment::sole()->comment);
+        $this->assertSame('Second take.', Comment::sole()->text);
         $this->assertSame(0, Changelog::query()->count());
     }
 

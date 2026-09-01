@@ -20,7 +20,7 @@
         </p>
 
         <div class="border p-2 bg-white">
-            <p>{!! Helper::bbCode(stripslashes(nl2br(e($submission->submit_text)))) !!}</p>
+            <p>{!! Helper::bbCode(stripslashes(nl2br(e($submission->text)))) !!}</p>
 
             <div>
                 @foreach ($submission->screenshots as $screenshot)

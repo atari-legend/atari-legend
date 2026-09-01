@@ -40,7 +40,7 @@
             </a>
         @endcontributor
 
-        {!! Helper::bbCode(stripslashes(nl2br(e($comment->comment), false))) !!}
+        {!! Helper::bbCode(stripslashes(nl2br(e($comment->text), false))) !!}
     </div>
 
     {{-- Comment edit form --}}
@@ -50,7 +50,7 @@
             <input type="hidden" name="comment_id" value="{{ $comment->getKey() }}">
             <input type="hidden" name="context" value="{{ $context ?? ''}}">
             <input type="hidden" name="id" value="{{ $id ?? ''}}">
-            <textarea class="form-control" rows="5" name="comment" required>{{ stripslashes($comment->comment) }}</textarea>
+            <textarea class="form-control" rows="5" name="comment" required>{{ stripslashes($comment->text) }}</textarea>
         </form>
     @endif
 

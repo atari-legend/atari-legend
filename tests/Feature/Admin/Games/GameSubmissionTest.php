@@ -41,7 +41,7 @@ class GameSubmissionTest extends AdminTestCase
             'game_id'     => $game->getKey(),
             'user_id'     => $this->visitor->getKey(),
             'timestamp'   => (string) mktime(12, 0, 0, 6, 1, 2020),
-            'submit_text' => $text,
+            'text' => $text,
             'game_done'   => $done,
         ]);
 
@@ -123,7 +123,7 @@ class GameSubmissionTest extends AdminTestCase
 
         $comment = Comment::sole();
 
-        $this->assertSame('Best soundtrack on the ST.', $comment->comment);
+        $this->assertSame('Best soundtrack on the ST.', $comment->text);
         $this->assertSame($this->visitor->getKey(), $comment->user_id);
         $this->assertSame($submission->timestamp, (string) $comment->timestamp);
         $this->assertSame([$game->getKey()], $comment->games->pluck('id')->all());

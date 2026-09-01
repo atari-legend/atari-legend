@@ -8,5 +8,5 @@ class ScreenshotInterviewComment extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['screenshot_interview_id', 'comment_text'];
+    protected $fillable = ['screenshot_interview_id', 'text'];
 }

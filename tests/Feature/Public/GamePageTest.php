@@ -240,7 +240,7 @@ class GamePageTest extends TestCase
 
         $comment = Comment::sole();
 
-        $this->assertSame('Still holds up.', $comment->comment);
+        $this->assertSame('Still holds up.', $comment->text);
         $this->assertSame(1, $game->comments()->count());
         $this->assertSame(1, Changelog::where('sub_section', 'Comment')->count());
     }
@@ -267,7 +267,7 @@ class GamePageTest extends TestCase
 
         $submission = GameSubmitInfo::sole();
 
-        $this->assertSame('The publisher is wrong.', $submission->submit_text);
+        $this->assertSame('The publisher is wrong.', $submission->text);
         $this->assertSame(GameSubmitInfo::SUBMISSION_NEW, $submission->game_done);
         $this->assertSame($user->getKey(), $submission->user_id);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());

@@ -18,7 +18,7 @@ class Comment extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'comment', 'user_id', 'timestamp',
+        'text', 'user_id', 'timestamp',
     ];
 
     public function user()

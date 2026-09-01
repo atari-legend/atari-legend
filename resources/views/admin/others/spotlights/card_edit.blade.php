@@ -21,7 +21,7 @@
                     <div class="mb-3">
                         <label for="spotlight" class="form-label">Spotlight</label>
                         <textarea required class="form-control @error('spotlight') is-invalid @enderror"
-                            rows="5" name="spotlight" id="spotlight">{{ old('spotlight', $spotlight->spotlight ?? '') }}</textarea>
+                            rows="5" name="spotlight" id="spotlight">{{ old('spotlight', $spotlight->text ?? '') }}</textarea>
 
                         @error('spotlight')
                             <span class="invalid-feedback" role="alert">

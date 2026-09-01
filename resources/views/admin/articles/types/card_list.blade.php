@@ -13,7 +13,7 @@
                                 @method('PUT')
 
                                 <div class="input-group">
-                                    <input type="text" id="type-{{ $type->getKey() }}" name="type" required class="form-control" value="{{ $type->article_type }}">
+                                    <input type="text" id="type-{{ $type->getKey() }}" name="type" required class="form-control" value="{{ $type->name }}">
                                     <button class="btn btn-outline-success" type="submit">Update</button>
                                 </div>
                             </form>
@@ -25,7 +25,7 @@
                                 @csrf
                                 @method('DELETE')
 
-                                <button title="Delete '{{ $type->article_type }}'" class="btn">
+                                <button title="Delete '{{ $type->name }}'" class="btn">
                                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                 </button>
                             </form>

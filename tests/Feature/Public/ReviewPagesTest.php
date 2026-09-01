@@ -226,7 +226,7 @@ class ReviewPagesTest extends TestCase
             ->assertRedirect();
 
         $this->assertSame(1, ScreenshotReviewComment::query()->count());
-        $this->assertSame('The second screen', ScreenshotReviewComment::sole()->comment_text);
+        $this->assertSame('The second screen', ScreenshotReviewComment::sole()->text);
 
         $this->assertSame(
             $screenshots[1]->getKey(),
@@ -252,7 +252,7 @@ class ReviewPagesTest extends TestCase
             ->post(route('review.comment', $review), ['comment' => 'Good write-up.'])
             ->assertRedirect();
 
-        $this->assertSame('Good write-up.', Comment::sole()->comment);
+        $this->assertSame('Good write-up.', Comment::sole()->text);
         $this->assertSame(1, $review->comments()->count());
         $this->assertSame(
             1,

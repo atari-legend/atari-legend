@@ -126,7 +126,7 @@ class ReviewController extends Controller
                             'screenshot_id' => $gameScreenshot->getKey(),
                         ]);
                     $comment = new ScreenshotReviewComment();
-                    $comment->comment_text = $screenshotComment;
+                    $comment->text = $screenshotComment;
                     $comment->screenshot_review_id = $id;
                     $comment->save();
                 }
@@ -155,7 +155,7 @@ class ReviewController extends Controller
     public function postComment(Review $review, Request $request)
     {
         $comment = new Comment();
-        $comment->comment = $request->comment;
+        $comment->text = $request->comment;
         $comment->timestamp = time();
 
         $request->user()->comments()->save($comment);

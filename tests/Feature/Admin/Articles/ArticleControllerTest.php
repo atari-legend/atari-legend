@@ -45,7 +45,7 @@ class ArticleControllerTest extends AdminTestCase
 
     public function test_create_form_offers_the_types(): void
     {
-        ArticleType::factory()->create(['article_type' => 'Hardware']);
+        ArticleType::factory()->create(['name' => 'Hardware']);
 
         $this->get(route('admin.articles.articles.create'))
             ->assertOk()
@@ -236,14 +236,14 @@ class ArticleControllerTest extends AdminTestCase
             'description-' . $pivot->getKey() => 'The blitter at work',
         ])->assertRedirect(route('admin.articles.articles.edit', $article));
 
-        $this->assertSame('The blitter at work', $pivot->fresh()->comment->comment_text);
+        $this->assertSame('The blitter at work', $pivot->fresh()->comment->text);
 
         // Changed
         $this->put(route('admin.articles.articles.image.update', $article), [
             'description-' . $pivot->getKey() => 'A better caption',
         ]);
 
-        $this->assertSame('A better caption', $pivot->fresh()->comment->comment_text);
+        $this->assertSame('A better caption', $pivot->fresh()->comment->text);
 
         // Removed
         $this->put(route('admin.articles.articles.image.update', $article), [

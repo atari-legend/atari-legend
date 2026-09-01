@@ -31,9 +31,9 @@ class TriviaController extends Controller
             'text' => 'required',
         ]);
 
-        $oldText = $trivia->trivia_text;
+        $oldText = $trivia->text;
 
-        $trivia->trivia_text = $request->text;
+        $trivia->text = $request->text;
         $trivia->save();
 
         ChangelogHelper::insert([
@@ -43,7 +43,7 @@ class TriviaController extends Controller
             'section_name'     => $oldText,
             'sub_section'      => 'DYK',
             'sub_section_id'   => $trivia->getKey(),
-            'sub_section_name' => $trivia->trivia_text,
+            'sub_section_name' => $trivia->text,
         ]);
 
         return redirect()->route('admin.others.trivias.index');
@@ -56,17 +56,17 @@ class TriviaController extends Controller
         ]);
 
         $trivia = Trivia::create([
-            'trivia_text' => $request->text,
+            'text' => $request->text,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Trivia',
             'section_id'       => $trivia->getKey(),
-            'section_name'     => $trivia->trivia_text,
+            'section_name'     => $trivia->text,
             'sub_section'      => 'DYK',
             'sub_section_id'   => $trivia->getKey(),
-            'sub_section_name' => $trivia->trivia_text,
+            'sub_section_name' => $trivia->text,
         ]);
 
         return redirect()->route('admin.others.trivias.index');
@@ -80,10 +80,10 @@ class TriviaController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Trivia',
             'section_id'       => $trivia->getKey(),
-            'section_name'     => $trivia->trivia_text,
+            'section_name'     => $trivia->text,
             'sub_section'      => 'DYK',
             'sub_section_id'   => $trivia->getKey(),
-            'sub_section_name' => $trivia->trivia_text,
+            'sub_section_name' => $trivia->text,
         ]);
 
         return redirect()->route('admin.others.trivias.index');

@@ -14,7 +14,7 @@
 
             <div class="mb-3">
                 <label for="content" class="form-label">Content</label>
-                <textarea class="form-control @error('content') is-invalid @enderror sceditor" requiredx id="content" name="content" rows="15">{{ old('content', isset($fact) ? $fact->game_fact : '') }}</textarea>
+                <textarea class="form-control @error('content') is-invalid @enderror sceditor" requiredx id="content" name="content" rows="15">{{ old('content', isset($fact) ? $fact->fact : '') }}</textarea>
 
                 @error('content')
                     <span class="invalid-feedback" role="alert">

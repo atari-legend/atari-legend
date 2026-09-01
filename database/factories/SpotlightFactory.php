@@ -21,7 +21,7 @@ class SpotlightFactory extends Factory
     {
         return [
             'screenshot_id' => ScreenshotFactory::new(),
-            'spotlight'     => fake()->sentence(),
+            'text'          => fake()->sentence(),
             'link'          => 'https://example.org/',
         ];
     }

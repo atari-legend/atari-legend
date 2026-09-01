@@ -22,7 +22,7 @@
                     </h3>
                     <p class="card-subtitle text-muted">
                         {{ $article->article_date->format('F j, Y') }} by {{ Helper::user($article->user) }}
-                        <span class="badge bg-secondary ms-2">{{ $article->type->article_type ?? ''}}</span>
+                        <span class="badge bg-secondary ms-2">{{ $article->type->name ?? ''}}</span>
                     </p>
                 </div>
 

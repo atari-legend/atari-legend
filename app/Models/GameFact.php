@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameFact extends Model
 {
-    protected $fillable = ['game_fact'];
+    protected $fillable = ['fact'];
     public $timestamps = false;
 
     public function screenshots()

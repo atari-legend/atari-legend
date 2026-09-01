@@ -57,7 +57,7 @@ class ArticleController extends Controller
     public function postComment(Article $article, Request $request)
     {
         $comment = new Comment();
-        $comment->comment = $request->comment;
+        $comment->text = $request->comment;
         $comment->timestamp = time();
 
         $request->user()->comments()->save($comment);

@@ -207,13 +207,13 @@ class ReviewsControllerTest extends AdminTestCase
             'screenshot_comment_' . $screenshot->getKey() => 'The first level',
         ]))->assertRedirect();
 
-        $this->assertSame('The first level', ScreenshotReviewComment::sole()->comment_text);
+        $this->assertSame('The first level', ScreenshotReviewComment::sole()->text);
 
         $this->put(route('admin.reviews.reviews.update', $review), $this->payload([
             'screenshot_comment_' . $screenshot->getKey() => 'A better caption',
         ]));
 
-        $this->assertSame('A better caption', ScreenshotReviewComment::sole()->comment_text);
+        $this->assertSame('A better caption', ScreenshotReviewComment::sole()->text);
 
         // A null value removes the pivot, and the caption with it
         $this->put(route('admin.reviews.reviews.update', $review), $this->payload([

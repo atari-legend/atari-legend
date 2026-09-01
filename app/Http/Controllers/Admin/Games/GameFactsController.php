@@ -63,7 +63,7 @@ class GameFactsController extends Controller
         ]);
 
         $fact->update([
-            'game_fact' => $request->content,
+            'fact' => $request->content,
         ]);
 
         if ($request->remove_file || $request->hasFile('file')) {
@@ -92,7 +92,7 @@ class GameFactsController extends Controller
         ]);
 
         $fact = new GameFact([
-            'game_fact' => $request->content,
+            'fact' => $request->content,
         ]);
         $game->facts()->save($fact);
 

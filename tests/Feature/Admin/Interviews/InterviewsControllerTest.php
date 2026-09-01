@@ -182,7 +182,7 @@ class InterviewsControllerTest extends AdminTestCase
             'description-' . $pivot->getKey() => 'At the keyboard',
         ])->assertRedirect(route('admin.interviews.interviews.edit', $interview));
 
-        $this->assertSame('At the keyboard', $pivot->fresh()->comment->comment_text);
+        $this->assertSame('At the keyboard', $pivot->fresh()->comment->text);
 
         $this->put(route('admin.interviews.interviews.image.update', $interview), [
             'description-' . $pivot->getKey() => '',

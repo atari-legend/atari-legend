@@ -15,7 +15,7 @@ class ArticleTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'article_type' => fake()->unique()->randomElement([
+            'name' => fake()->unique()->randomElement([
                 'Hardware', 'Coding', 'History', 'Interview special', 'Retrospective',
             ]),
         ];

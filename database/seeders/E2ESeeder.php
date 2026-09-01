@@ -311,14 +311,14 @@ class E2ESeeder extends Seeder
 
         $this->insert('game_facts', ['id' => self::GAME_FACT_ID], [
             'game_id'   => self::GAME_ID,
-            'game_fact' => 'The Bitmap Brothers wrote this one.',
+            'fact' => 'The Bitmap Brothers wrote this one.',
         ]);
 
         $this->insert('game_submit_infos', ['id' => self::GAME_SUBMISSION_ID], [
             'game_id'     => self::GAME_ID,
             'user_id'     => self::USER_STANDARD_ID,
             'timestamp'   => (string) now()->timestamp,
-            'submit_text' => 'Playwright test submission.',
+            'text' => 'Playwright test submission.',
             'game_done'   => 'N',
         ]);
 
@@ -386,7 +386,7 @@ class E2ESeeder extends Seeder
         // article's column was null, so the badge rendered as nothing at all -
         // indistinguishable from a badge that had stopped working.
         $this->insert('article_types', ['id' => self::ARTICLE_TYPE_ID], [
-            'article_type' => self::ARTICLE_TYPE_NAME,
+            'name' => self::ARTICLE_TYPE_NAME,
         ]);
         $this->insert('articles', ['id' => self::ARTICLE_ID], [
             'user_id'         => self::USER_ADMIN_ID,
@@ -405,7 +405,7 @@ class E2ESeeder extends Seeder
         ]);
         $this->insert('screenshot_article_comments', ['id' => 1], [
             'screenshot_article_id' => 1,
-            'comment_text'          => self::ARTICLE_SCREENSHOT_CAPTION,
+            'text'                  => self::ARTICLE_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
@@ -445,7 +445,7 @@ class E2ESeeder extends Seeder
 
         // A screenshot on the interview, and the caption row that goes with it.
         // interviews/card_interview.blade.php reads
-        // $screenshot->pivot->comment->comment_text without guarding it, so a
+        // $screenshot->pivot->comment->text without guarding it, so a
         // screenshot seeded without its comment would 500 the public page
         // rather than render an empty caption.
         $this->insert('screenshots', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
@@ -455,7 +455,7 @@ class E2ESeeder extends Seeder
         ]);
         $this->insert('screenshot_interview_comments', ['id' => 1], [
             'screenshot_interview_id' => 1,
-            'comment_text'            => self::INTERVIEW_SCREENSHOT_CAPTION,
+            'text'                    => self::INTERVIEW_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 
@@ -483,7 +483,7 @@ class E2ESeeder extends Seeder
         // 'Unknown comment type' without one, and the admin comment form
         // builds a route name out of it.
         $this->insert('comments', ['id' => self::COMMENT_ID], [
-            'comment'   => 'Playwright test comment.',
+            'text'      => 'Playwright test comment.',
             'timestamp' => (string) now()->timestamp,
             'user_id'   => self::USER_STANDARD_ID,
         ]);
@@ -631,7 +631,7 @@ class E2ESeeder extends Seeder
         $this->insert('screenshots', ['id' => self::SPOTLIGHT_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('spotlights', ['id' => self::SPOTLIGHT_ID], [
             'screenshot_id' => self::SPOTLIGHT_SCREENSHOT_ID,
-            'spotlight'     => 'Playwright test spotlight.',
+            'text'          => 'Playwright test spotlight.',
             'link'          => 'https://example.com/',
         ]);
         $this->seedImage('images/spotlight_screens/' . self::SPOTLIGHT_SCREENSHOT_ID . '.png');
@@ -639,7 +639,7 @@ class E2ESeeder extends Seeder
         // The 'Did you know?' card picks a trivia at random and renders its
         // heading either way, so an empty table looks exactly like a working
         // card. One row is the difference.
-        $this->insert('trivia', ['id' => self::TRIVIA_ID], ['trivia_text' => self::TRIVIA_TEXT]);
+        $this->insert('trivia', ['id' => self::TRIVIA_ID], ['text' => self::TRIVIA_TEXT]);
     }
 
     private function seedReferenceData(): void

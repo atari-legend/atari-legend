@@ -31,9 +31,9 @@ class QuoteController extends Controller
             'text' => 'required',
         ]);
 
-        $oldText = $quote->trivia_quote;
+        $oldText = $quote->quote;
 
-        $quote->trivia_quote = $request->text;
+        $quote->quote = $request->text;
         $quote->save();
 
         ChangelogHelper::insert([
@@ -43,7 +43,7 @@ class QuoteController extends Controller
             'section_name'     => $oldText,
             'sub_section'      => 'Quote',
             'sub_section_id'   => $quote->getKey(),
-            'sub_section_name' => $quote->trivia_quote,
+            'sub_section_name' => $quote->quote,
         ]);
 
         return redirect()->route('admin.others.quotes.index');
@@ -56,17 +56,17 @@ class QuoteController extends Controller
         ]);
 
         $quote = TriviaQuote::create([
-            'trivia_quote' => $request->text,
+            'quote' => $request->text,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Trivia',
             'section_id'       => $quote->getKey(),
-            'section_name'     => $quote->trivia_quote,
+            'section_name'     => $quote->quote,
             'sub_section'      => 'Quote',
             'sub_section_id'   => $quote->getKey(),
-            'sub_section_name' => $quote->trivia_quote,
+            'sub_section_name' => $quote->quote,
         ]);
 
         return redirect()->route('admin.others.quotes.index');
@@ -80,10 +80,10 @@ class QuoteController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Trivia',
             'section_id'       => $quote->getKey(),
-            'section_name'     => $quote->trivia_quote,
+            'section_name'     => $quote->quote,
             'sub_section'      => 'Quote',
             'sub_section_id'   => $quote->getKey(),
-            'sub_section_name' => $quote->trivia_quote,
+            'sub_section_name' => $quote->quote,
         ]);
 
         return redirect()->route('admin.others.quotes.index');

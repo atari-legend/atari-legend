@@ -35,7 +35,7 @@
                             <td>
                                 <label for="description-{{ $screenshot->pivot->getKey() }}" class="form-label">Description</label>
                                 <textarea class="form-control" id="{{ $screenshot->pivot->getKey() }}" form="update-images"
-                                    name="description-{{ $screenshot->pivot->getKey() }}">{{ old('description-'.$screenshot->pivot->getKey(), $screenshot->pivot->comment?->comment_text) }}</textarea>
+                                    name="description-{{ $screenshot->pivot->getKey() }}">{{ old('description-'.$screenshot->pivot->getKey(), $screenshot->pivot->comment?->text) }}</textarea>
                             </td>
                             <td class="text-center">
                                 <form action="{{ route('admin.interviews.interviews.image.destroy', ['interview' => $interview, 'image' => $screenshot]) }}"

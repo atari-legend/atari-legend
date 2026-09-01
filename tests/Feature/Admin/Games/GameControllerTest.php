@@ -253,7 +253,7 @@ class GameControllerTest extends AdminTestCase
         match ($relation) {
             'releases'    => GameRelease::factory()->create(['game_id' => $game->getKey()]),
             'screenshots' => $game->screenshots()->attach(Screenshot::factory()->create()),
-            'facts'       => $game->facts()->create(['game_fact' => 'Written in a fortnight.']),
+            'facts'       => $game->facts()->create(['fact' => 'Written in a fortnight.']),
             'individuals' => $game->individuals()->attach(
                 Individual::factory()->create(),
                 ['individual_role_id' => DB::table('individual_roles')->insertGetId(['name' => 'Coder'])]
@@ -278,7 +278,7 @@ class GameControllerTest extends AdminTestCase
                 'game_id'     => $game->getKey(),
                 'user_id'     => $this->admin->getKey(),
                 'timestamp'   => (string) mktime(12, 0, 0, 6, 1, 2020),
-                'submit_text' => 'The musician is Jochen Hippel.',
+                'text' => 'The musician is Jochen Hippel.',
                 'game_done'   => GameSubmitInfo::SUBMISSION_NEW,
             ]),
             'similarGames'        => $game->similarGames()->attach(Game::factory()->create()),
