@@ -32,7 +32,7 @@ return new class extends Migration
 
         foreach ($games as $gameId => $gameRows) {
             $firstRow = $gameRows->first();
-            $slug = $firstRow->name;
+            $slug = $firstRow->game_name;
 
             // Handle names like "Enforcer, The" -> "The Enforcer"
             foreach (['The', 'A', 'Das', 'Die', 'Der', 'Les', 'La', 'Le', "L'"] as $article) {
@@ -46,7 +46,7 @@ return new class extends Migration
 
             // If duplicates, append the first developer
             if (DB::table('game')->where('slug', '=', $slug)->count()) {
-                $devName = $gameRows->whereNotNull('pub_dev_name')->first()?->name;
+                $devName = $gameRows->whereNotNull('pub_dev_name')->first()?->pub_dev_name;
                 if ($devName) {
                     $slug .= '-' . Str::slug($devName);
                 }
@@ -54,7 +54,7 @@ return new class extends Migration
 
             // If duplicates, append the first individual
             if (DB::table('game')->where('slug', '=', $slug)->count()) {
-                $indName = $gameRows->whereNotNull('ind_name')->first()?->name;
+                $indName = $gameRows->whereNotNull('ind_name')->first()?->ind_name;
                 if ($indName) {
                     $slug .= '-' . Str::slug($indName);
                 }
