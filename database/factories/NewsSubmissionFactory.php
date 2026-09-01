@@ -23,11 +23,11 @@ class NewsSubmissionFactory extends Factory
     public function definition(): array
     {
         return [
-            'headline' => fake()->sentence(),
-            'text'     => fake()->paragraph(),
+            'headline'      => fake()->sentence(),
+            'text'          => fake()->paragraph(),
             'news_image_id' => 0,
             'user_id'       => User::factory(),
-            'date'     => time(),
+            'date'          => time(),
         ];
     }
 }

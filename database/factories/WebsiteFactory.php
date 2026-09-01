@@ -20,16 +20,16 @@ class WebsiteFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'   => fake()->unique()->company(),
-            'url'    => fake()->url(),
-            'date'   => now()->timestamp,
-            'user_id'        => User::factory(),
-            'imgext' => null,
-            'count'  => 0,
-            'rate_number'    => 1,
-            'rate_score'     => 5,
-            'inactive'       => false,
-            'description'    => fake()->sentence(),
+            'name'        => fake()->unique()->company(),
+            'url'         => fake()->url(),
+            'date'        => now()->timestamp,
+            'user_id'     => User::factory(),
+            'imgext'      => null,
+            'count'       => 0,
+            'rate_number' => 1,
+            'rate_score'  => 5,
+            'inactive'    => false,
+            'description' => fake()->sentence(),
         ];
     }
 

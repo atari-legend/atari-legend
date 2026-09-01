@@ -16,13 +16,13 @@ class InterviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'            => User::factory(),
-            'individual_id'      => IndividualFactory::new(),
-            'draft'              => false,
-            'text'     => fake()->paragraph(),
-            'date'     => now()->timestamp,
-            'intro'    => fake()->sentence(),
-            'chapters' => null,
+            'user_id'       => User::factory(),
+            'individual_id' => IndividualFactory::new(),
+            'draft'         => false,
+            'text'          => fake()->paragraph(),
+            'date'          => now()->timestamp,
+            'intro'         => fake()->sentence(),
+            'chapters'      => null,
         ];
     }
 

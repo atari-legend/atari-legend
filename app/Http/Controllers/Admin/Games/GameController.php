@@ -78,7 +78,7 @@ class GameController extends Controller
         $this->validateGame($request, null);
         $game = Game::create([
             'name' => $request->name,
-            'slug'      => $request->slug,
+            'slug' => $request->slug,
         ]);
 
         $this->updateBaseInfo($request, $game);

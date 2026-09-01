@@ -67,12 +67,12 @@ class LinkController extends Controller
         $request->validate(self::VALIDATION_RULES);
 
         $link = Website::create([
-            'name' => $request->name,
-            'url'  => $request->url,
-            'description'  => $request->description,
-            'date' => time(),
-            'user_id'      => $request->user()->getKey(),
-            'inactive'     => $request->boolean('inactive'),
+            'name'        => $request->name,
+            'url'         => $request->url,
+            'description' => $request->description,
+            'date'        => time(),
+            'user_id'     => $request->user()->getKey(),
+            'inactive'    => $request->boolean('inactive'),
         ]);
 
         $link->categories()->sync($request->input('categories', []));
@@ -101,10 +101,10 @@ class LinkController extends Controller
         $request->validate(self::VALIDATION_RULES);
 
         $link->update([
-            'name' => $request->name,
-            'url'  => $request->url,
-            'description'  => $request->description,
-            'inactive'     => $request->boolean('inactive'),
+            'name'        => $request->name,
+            'url'         => $request->url,
+            'description' => $request->description,
+            'inactive'    => $request->boolean('inactive'),
         ]);
 
         $link->categories()->sync($request->input('categories', []));

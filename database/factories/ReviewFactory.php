@@ -20,11 +20,11 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'     => User::factory(),
-            'text' => fake()->paragraph(),
-            'date' => now()->timestamp,
-            'edit' => Review::REVIEW_PUBLISHED,
-            'draft'       => false,
+            'user_id' => User::factory(),
+            'text'    => fake()->paragraph(),
+            'date'    => now()->timestamp,
+            'edit'    => Review::REVIEW_PUBLISHED,
+            'draft'   => false,
         ];
     }
 

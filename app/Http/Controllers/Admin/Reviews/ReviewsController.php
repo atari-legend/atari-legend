@@ -57,8 +57,8 @@ class ReviewsController extends Controller
             ['game' => 'required|exists:games,id']));
 
         $review = new Review([
-            'user_id'         => $request->author,
-            'draft'           => $request->draft ? true : false,
+            'user_id'  => $request->author,
+            'draft'    => $request->draft ? true : false,
             'edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
             'text'     => $request->text,
             'date'     => Carbon::parse($request->date)->timestamp,
@@ -96,8 +96,8 @@ class ReviewsController extends Controller
         $request->validate($this->getValidationRules());
 
         $review->update([
-            'user_id'         => $request->author,
-            'draft'           => $request->draft ? true : false,
+            'user_id'  => $request->author,
+            'draft'    => $request->draft ? true : false,
             'edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
             'text'     => $request->text,
             'date'     => Carbon::parse($request->date)->timestamp,

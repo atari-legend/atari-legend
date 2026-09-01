@@ -88,16 +88,16 @@ class AdminRenderTest extends AdminTestCase
 
         // forceCreate: neither model lists its foreign keys as fillable.
         $fact = GameFact::forceCreate([
-            'game_id'   => $game->getKey(),
-            'fact' => 'Written in a fortnight.',
+            'game_id' => $game->getKey(),
+            'fact'    => 'Written in a fortnight.',
         ]);
 
         $submission = GameSubmitInfo::forceCreate([
-            'game_id'     => $game->getKey(),
-            'user_id'     => User::factory()->create()->getKey(),
-            'timestamp'   => (string) now()->timestamp,
-            'text' => 'Please add this.',
-            'game_done'   => GameSubmitInfo::SUBMISSION_NEW,
+            'game_id'   => $game->getKey(),
+            'user_id'   => User::factory()->create()->getKey(),
+            'timestamp' => (string) now()->timestamp,
+            'text'      => 'Please add this.',
+            'game_done' => GameSubmitInfo::SUBMISSION_NEW,
         ]);
 
         return [

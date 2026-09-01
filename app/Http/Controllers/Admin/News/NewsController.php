@@ -61,7 +61,7 @@ class NewsController extends Controller
 
         $news->update([
             'headline' => $request->headline,
-            'user_id'       => User::find($request->author)->getKey(),
+            'user_id'  => User::find($request->author)->getKey(),
             'date'     => Carbon::parse($request->date)->timestamp,
             'text'     => $request->text,
         ]);
@@ -87,7 +87,7 @@ class NewsController extends Controller
 
         $news = News::create([
             'headline' => $request->headline,
-            'user_id'       => User::find($request->author)->getKey(),
+            'user_id'  => User::find($request->author)->getKey(),
             'date'     => Carbon::parse($request->date)->timestamp,
             'text'     => $request->text,
         ]);

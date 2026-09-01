@@ -385,13 +385,13 @@ class AdminTablesTest extends AdminTestCase
         NewsSubmission::forceCreate([
             'headline' => 'Older submission',
             'text'     => 'Text',
-            'user_id'       => User::factory()->create()->getKey(),
+            'user_id'  => User::factory()->create()->getKey(),
             'date'     => strtotime('2026-01-01'),
         ]);
         NewsSubmission::forceCreate([
             'headline' => 'Newer submission',
             'text'     => 'Text',
-            'user_id'       => User::factory()->create()->getKey(),
+            'user_id'  => User::factory()->create()->getKey(),
             'date'     => strtotime('2026-06-01'),
         ]);
 

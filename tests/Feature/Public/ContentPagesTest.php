@@ -32,8 +32,8 @@ class ContentPagesTest extends TestCase
     private function article(string $title, string $date = '2026-01-01', ?User $author = null): Article
     {
         return Article::factory()->titled($title)->create([
-            'user_id'      => ($author ?? User::factory()->create())->getKey(),
-            'date' => Carbon::parse($date)->timestamp,
+            'user_id' => ($author ?? User::factory()->create())->getKey(),
+            'date'    => Carbon::parse($date)->timestamp,
         ]);
     }
 

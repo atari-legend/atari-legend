@@ -66,10 +66,10 @@ class ArticleController extends Controller
             'user_id'         => $request->author,
             'article_type_id' => $request->type,
             'draft'           => $request->draft ? true : false,
-            'title'   => $request->title,
-            'date'    => Carbon::parse($request->date)->timestamp,
-            'text'    => $request->text,
-            'intro'   => $request->intro,
+            'title'           => $request->title,
+            'date'            => Carbon::parse($request->date)->timestamp,
+            'text'            => $request->text,
+            'intro'           => $request->intro,
         ]);
 
         ChangelogHelper::insert([
@@ -95,10 +95,10 @@ class ArticleController extends Controller
             'user_id'         => $request->author,
             'article_type_id' => $request->type,
             'draft'           => $request->draft ? true : false,
-            'title'   => $request->title,
-            'date'    => Carbon::parse($request->date)->timestamp,
-            'text'    => $request->text,
-            'intro'   => $request->intro,
+            'title'           => $request->title,
+            'date'            => Carbon::parse($request->date)->timestamp,
+            'text'            => $request->text,
+            'intro'           => $request->intro,
         ]);
 
         ChangelogHelper::insert([

@@ -72,8 +72,8 @@ class GameSearchTest extends TestCase
     {
         $game = Game::factory()->named('Bubble Bobble')->create();
         DB::table('game_akas')->insert([
-            'game_id'  => $game->getKey(),
-            'name' => 'Baburu Boburu',
+            'game_id' => $game->getKey(),
+            'name'    => 'Baburu Boburu',
         ]);
 
         $this->assertSame(['Bubble Bobble'], $this->names(['title' => 'Baburu']));

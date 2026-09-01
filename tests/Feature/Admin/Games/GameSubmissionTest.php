@@ -38,11 +38,11 @@ class GameSubmissionTest extends AdminTestCase
         string $done = GameSubmitInfo::SUBMISSION_NEW
     ): GameSubmitInfo {
         $id = DB::table('game_submit_infos')->insertGetId([
-            'game_id'     => $game->getKey(),
-            'user_id'     => $this->visitor->getKey(),
-            'timestamp'   => (string) mktime(12, 0, 0, 6, 1, 2020),
-            'text' => $text,
-            'game_done'   => $done,
+            'game_id'   => $game->getKey(),
+            'user_id'   => $this->visitor->getKey(),
+            'timestamp' => (string) mktime(12, 0, 0, 6, 1, 2020),
+            'text'      => $text,
+            'game_done' => $done,
         ]);
 
         return GameSubmitInfo::findOrFail($id);

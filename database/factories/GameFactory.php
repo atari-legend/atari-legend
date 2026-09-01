@@ -42,7 +42,7 @@ class GameFactory extends Factory
     {
         return $this->state(fn () => [
             'name' => $name,
-            'slug'      => Str::slug($name),
+            'slug' => Str::slug($name),
         ]);
     }
 

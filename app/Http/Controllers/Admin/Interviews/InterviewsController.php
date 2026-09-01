@@ -57,13 +57,13 @@ class InterviewsController extends Controller
         ));
 
         $interview = new Interview([
-            'user_id'            => $request->author,
-            'individual_id'      => $request->individual,
-            'draft'              => $request->draft ? true : false,
-            'text'     => $request->text,
-            'intro'    => $request->intro,
-            'chapters' => $request->chapters,
-            'date'     => Carbon::parse($request->date)->timestamp,
+            'user_id'       => $request->author,
+            'individual_id' => $request->individual,
+            'draft'         => $request->draft ? true : false,
+            'text'          => $request->text,
+            'intro'         => $request->intro,
+            'chapters'      => $request->chapters,
+            'date'          => Carbon::parse($request->date)->timestamp,
         ]);
         $interview->save();
 
@@ -89,8 +89,8 @@ class InterviewsController extends Controller
         $request->validate($this->getValidationRules());
 
         $interview->update([
-            'user_id'            => $request->author,
-            'draft'              => $request->draft ? true : false,
+            'user_id'  => $request->author,
+            'draft'    => $request->draft ? true : false,
             'text'     => $request->text,
             'intro'    => $request->intro,
             'chapters' => $request->chapters,

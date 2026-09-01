@@ -20,11 +20,11 @@ class NewsFactory extends Factory
     public function definition(): array
     {
         return [
-            'headline' => fake()->sentence(5),
-            'text'     => fake()->paragraph(),
+            'headline'      => fake()->sentence(5),
+            'text'          => fake()->paragraph(),
             'news_image_id' => null,
             'user_id'       => User::factory(),
-            'date'     => now()->timestamp,
+            'date'          => now()->timestamp,
         ];
     }
 }

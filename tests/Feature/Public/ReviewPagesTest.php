@@ -28,8 +28,8 @@ class ReviewPagesTest extends TestCase
             ->forGame(Game::factory()->named($gameName)->create()->getKey())
             ->scored()
             ->create([
-                'user_id'     => ($author ?? User::factory()->create())->getKey(),
-                'date' => strtotime($date),
+                'user_id' => ($author ?? User::factory()->create())->getKey(),
+                'date'    => strtotime($date),
             ]);
     }
 

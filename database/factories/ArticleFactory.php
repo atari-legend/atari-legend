@@ -19,10 +19,10 @@ class ArticleFactory extends Factory
             'user_id'         => User::factory(),
             'article_type_id' => ArticleTypeFactory::new(),
             'draft'           => false,
-            'title'   => fake()->sentence(4),
-            'text'    => fake()->paragraph(),
-            'date'    => now()->timestamp,
-            'intro'   => fake()->sentence(),
+            'title'           => fake()->sentence(4),
+            'text'            => fake()->paragraph(),
+            'date'            => now()->timestamp,
+            'intro'           => fake()->sentence(),
         ];
     }
 

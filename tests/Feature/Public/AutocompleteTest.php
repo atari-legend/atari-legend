@@ -32,8 +32,8 @@ class AutocompleteTest extends TestCase
     private function aka(Game $game, string $name): void
     {
         DB::table('game_akas')->insert([
-            'game_id'  => $game->getKey(),
-            'name' => $name,
+            'game_id' => $game->getKey(),
+            'name'    => $name,
         ]);
     }
 

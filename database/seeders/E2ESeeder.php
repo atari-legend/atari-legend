@@ -284,7 +284,7 @@ class E2ESeeder extends Seeder
     {
         $this->insert('games', ['id' => self::GAME_ID], [
             'name' => self::GAME_NAME,
-            'slug'      => self::GAME_SLUG,
+            'slug' => self::GAME_SLUG,
         ]);
 
         // A release needs a date: the link on the game page is labelled with
@@ -310,21 +310,21 @@ class E2ESeeder extends Seeder
         $this->seedImage('images/game_release_scans/' . self::RELEASE_SCAN_ID . '.png');
 
         $this->insert('game_facts', ['id' => self::GAME_FACT_ID], [
-            'game_id'   => self::GAME_ID,
-            'fact' => 'The Bitmap Brothers wrote this one.',
+            'game_id' => self::GAME_ID,
+            'fact'    => 'The Bitmap Brothers wrote this one.',
         ]);
 
         $this->insert('game_submit_infos', ['id' => self::GAME_SUBMISSION_ID], [
-            'game_id'     => self::GAME_ID,
-            'user_id'     => self::USER_STANDARD_ID,
-            'timestamp'   => (string) now()->timestamp,
-            'text' => 'Playwright test submission.',
-            'game_done'   => 'N',
+            'game_id'   => self::GAME_ID,
+            'user_id'   => self::USER_STANDARD_ID,
+            'timestamp' => (string) now()->timestamp,
+            'text'      => 'Playwright test submission.',
+            'game_done' => 'N',
         ]);
 
         $this->insert('game_akas', ['id' => self::GAME_AKA_ID], [
-            'game_id'  => self::GAME_ID,
-            'name' => self::GAME_AKA_NAME,
+            'game_id' => self::GAME_ID,
+            'name'    => self::GAME_AKA_NAME,
         ]);
 
         $this->insert('game_series', ['id' => self::GAME_SERIES_ID], ['name' => self::SERIES_NAME]);
@@ -391,10 +391,10 @@ class E2ESeeder extends Seeder
         $this->insert('articles', ['id' => self::ARTICLE_ID], [
             'user_id'         => self::USER_ADMIN_ID,
             'article_type_id' => self::ARTICLE_TYPE_ID,
-            'title'   => self::ARTICLE_TITLE,
-            'intro'   => 'Playwright test article intro.',
-            'text'    => 'Playwright test article content.',
-            'date'    => now()->timestamp,
+            'title'           => self::ARTICLE_TITLE,
+            'intro'           => 'Playwright test article intro.',
+            'text'            => 'Playwright test article content.',
+            'date'            => now()->timestamp,
         ]);
 
         // Same chain as the interview screenshot below, one table along.
@@ -410,9 +410,9 @@ class E2ESeeder extends Seeder
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
         $this->insert('reviews', ['id' => self::REVIEW_ID], [
-            'user_id'     => self::USER_ADMIN_ID,
-            'text' => 'Great game!',
-            'date' => now()->timestamp,
+            'user_id' => self::USER_ADMIN_ID,
+            'text'    => 'Great game!',
+            'date'    => now()->timestamp,
         ]);
         $this->insert('review_game', [
             'review_id' => self::REVIEW_ID,
@@ -434,10 +434,10 @@ class E2ESeeder extends Seeder
         // either, so without this pair Helper::bbCode() could stop emitting the
         // anchor entirely and every interview test would still pass.
         $this->insert('interviews', ['id' => self::INTERVIEW_ID], [
-            'user_id'            => self::USER_ADMIN_ID,
-            'individual_id'      => self::INDIVIDUAL_ID,
-            'intro'    => 'Playwright test interview intro.',
-            'text'     => '[hotspot=1]' . self::INTERVIEW_CHAPTER . '[/hotspot] '
+            'user_id'       => self::USER_ADMIN_ID,
+            'individual_id' => self::INDIVIDUAL_ID,
+            'intro'         => 'Playwright test interview intro.',
+            'text'          => '[hotspot=1]' . self::INTERVIEW_CHAPTER . '[/hotspot] '
                 . 'Playwright test interview content.',
             'chapters' => '[hotspotUrl=#1]' . self::INTERVIEW_CHAPTER . '[/hotspotUrl]',
             'date'     => now()->timestamp,
@@ -462,7 +462,7 @@ class E2ESeeder extends Seeder
         $this->insert('news', ['id' => self::NEWS_ID], [
             'headline' => self::NEWS_HEADLINE,
             'text'     => 'Playwright test news post.',
-            'user_id'       => self::USER_ADMIN_ID,
+            'user_id'  => self::USER_ADMIN_ID,
             'date'     => now()->timestamp,
         ]);
 
@@ -474,7 +474,7 @@ class E2ESeeder extends Seeder
             $this->insert('news', ['id' => self::NEWS_ID + $number], [
                 'headline' => self::NEWS_FILLER_HEADLINE . ' ' . $number,
                 'text'     => 'Playwright test filler news post.',
-                'user_id'       => self::USER_ADMIN_ID,
+                'user_id'  => self::USER_ADMIN_ID,
                 'date'     => now()->subDays($number)->timestamp,
             ]);
         }
@@ -611,13 +611,13 @@ class E2ESeeder extends Seeder
             'name' => self::WEBSITE_CATEGORY_NAME,
         ]);
         $this->insert('websites', ['id' => self::WEBSITE_ID], [
-            'name'   => self::WEBSITE_NAME,
-            'url'    => 'https://example.com/',
-            'date'   => now()->timestamp,
-            'user_id'        => self::USER_ADMIN_ID,
-            'imgext' => 'png',
-            'inactive'       => 0,
-            'description'    => 'Playwright test link.',
+            'name'        => self::WEBSITE_NAME,
+            'url'         => 'https://example.com/',
+            'date'        => now()->timestamp,
+            'user_id'     => self::USER_ADMIN_ID,
+            'imgext'      => 'png',
+            'inactive'    => 0,
+            'description' => 'Playwright test link.',
         ]);
         $this->insert('website_category_cross', [
             'website_id'          => self::WEBSITE_ID,

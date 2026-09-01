@@ -141,8 +141,8 @@ class MenuSetPagesTest extends TestCase
     {
         $game = Game::factory()->named('Bubble Bobble')->create();
         \Illuminate\Support\Facades\DB::table('game_akas')->insert([
-            'game_id'  => $game->getKey(),
-            'name' => 'Baburu Boburu',
+            'game_id' => $game->getKey(),
+            'name'    => 'Baburu Boburu',
         ]);
 
         $response = $this->get(route('menus.search', ['title' => 'Baburu']))->assertOk();

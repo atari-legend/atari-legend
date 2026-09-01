@@ -57,7 +57,7 @@ class SpotlightController extends Controller
         $oldText = $spotlight->text;
         $spotlight->update([
             'text' => $request->spotlight,
-            'link'      => $request->link,
+            'link' => $request->link,
         ]);
 
         $this->addOrUpdateImage($request, $spotlight);
@@ -84,7 +84,7 @@ class SpotlightController extends Controller
 
         $spotlight = Spotlight::create([
             'text' => $request->spotlight,
-            'link'      => $request->link,
+            'link' => $request->link,
         ]);
 
         $this->addOrUpdateImage($request, $spotlight);
