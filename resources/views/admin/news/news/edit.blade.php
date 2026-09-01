@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', "News - ".(isset($news) ? $news->news_headline : 'Create news'))
+@section('title', "News - ".(isset($news) ? $news->headline : 'Create news'))
 
 @section('content')
     <div class="row">

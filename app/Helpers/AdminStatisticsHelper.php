@@ -418,7 +418,7 @@ class AdminStatisticsHelper
     public static function contentByYear()
     {
         $sources = [
-            'News'       => DB::table('news')->pluck('news_date'),
+            'News'       => DB::table('news')->pluck('date'),
             'Reviews'    => DB::table('reviews')->pluck('review_date'),
             'Interviews' => DB::table('interviews')->pluck('interview_date'),
             'Articles'   => DB::table('articles')->pluck('article_date'),

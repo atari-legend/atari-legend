@@ -12,7 +12,7 @@ class NewsSubmission extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'news_date' => 'datetime:timestamp',
+        'date' => 'datetime:timestamp',
     ];
 
     public function user()

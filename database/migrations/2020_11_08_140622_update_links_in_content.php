@@ -47,7 +47,7 @@ class UpdateLinksInContent extends Migration
                             $text = preg_replace(
                                 $replacement['regexp'],
                                 $replacement['replacement'],
-                                $news->news_text
+                                $news->text
                             );
                             DB::table('news')->where('news_id', $news->news_id)->update(['news_text' => $text]);
                         }

@@ -35,8 +35,8 @@ class FeedHelperTest extends TestCase
     private function news(string $headline, string $date): News
     {
         return News::factory()->create([
-            'news_headline' => $headline,
-            'news_date'     => Carbon::parse($date)->timestamp,
+            'headline' => $headline,
+            'date'     => Carbon::parse($date)->timestamp,
         ]);
     }
 

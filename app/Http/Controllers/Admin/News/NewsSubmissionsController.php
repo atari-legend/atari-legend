@@ -24,20 +24,20 @@ class NewsSubmissionsController extends Controller
     public function approve(NewsSubmission $submission)
     {
         $news = News::create([
-            'news_headline' => $submission->news_headline,
+            'headline' => $submission->headline,
             'user_id'       => $submission->user_id,
-            'news_date'     => $submission->news_date->timestamp,
-            'news_text'     => $submission->news_text,
+            'date'     => $submission->date->timestamp,
+            'text'     => $submission->text,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::UPDATE,
             'section'          => 'News',
             'section_id'       => $news->getKey(),
-            'section_name'     => $news->news_headline,
+            'section_name'     => $news->headline,
             'sub_section'      => 'News item',
             'sub_section_id'   => $news->getKey(),
-            'sub_section_name' => $news->news_headline,
+            'sub_section_name' => $news->headline,
         ]);
 
         $this->destroy($submission);
@@ -53,10 +53,10 @@ class NewsSubmissionsController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'News',
             'section_id'       => $submission->getKey(),
-            'section_name'     => $submission->news_headline,
+            'section_name'     => $submission->headline,
             'sub_section'      => 'News submit',
             'sub_section_id'   => $submission->getKey(),
-            'sub_section_name' => $submission->news_headline,
+            'sub_section_name' => $submission->headline,
         ]);
 
         return redirect()->route('admin.news.submissions.index');

@@ -16,26 +16,26 @@ class NewsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('news_date', 'desc');
+        $this->setDefaultSort('date', 'desc');
     }
 
     public function columns(): array
     {
         return [
-            LinkColumn::make('Headline', 'news_headline')
-                ->title(fn ($row) => $row->news_headline)
+            LinkColumn::make('Headline', 'headline')
+                ->title(fn ($row) => $row->headline)
                 ->location(fn ($row) => route('admin.news.news.edit', $row))
                 ->searchable(
-                    fn (Builder $query, string $term) => $query->where('news_headline', 'like', "%{$term}%")
-                        ->orWhere('news_text', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('news.headline', 'like', "%{$term}%")
+                        ->orWhere('news.text', 'like', "%{$term}%")
                 )
                 ->sortable(),
-            Column::make('Date', 'news_date')
+            Column::make('Date', 'date')
                 ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Image')
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->orderBy('news_image_ext', $direction);
+                    return $query->orderBy('news_images.imgext', $direction);
                 })
                 ->label(
                     fn ($row) => $row->news_image

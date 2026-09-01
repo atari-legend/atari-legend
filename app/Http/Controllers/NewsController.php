@@ -13,7 +13,7 @@ class NewsController extends Controller
     public function index()
     {
         $news = News::select('news.*')
-            ->orderByDesc('news_date')
+            ->orderByDesc('date')
             ->paginate(6);
 
         return view('news.index')
@@ -25,9 +25,9 @@ class NewsController extends Controller
     public function postNews(Request $request)
     {
         $submission = new NewsSubmission();
-        $submission->news_headline = $request->title;
-        $submission->news_text = $request->text;
-        $submission->news_date = time();
+        $submission->headline = $request->title;
+        $submission->text = $request->text;
+        $submission->date = time();
 
         $request->user()->newsSubmissions()->save($submission);
 
@@ -35,10 +35,10 @@ class NewsController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'News',
             'section_id'       => $submission->getKey(),
-            'section_name'     => $submission->news_headline,
+            'section_name'     => $submission->headline,
             'sub_section'      => 'News submit',
             'sub_section_id'   => $submission->getKey(),
-            'sub_section_name' => $submission->news_headline,
+            'sub_section_name' => $submission->headline,
         ]);
 
         $request->session()->flash('alert-title', 'News submitted');

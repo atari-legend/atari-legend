@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $news = News::orderByDesc('news_date')
+        $news = News::orderByDesc('date')
             ->limit(6)
             ->get();
 

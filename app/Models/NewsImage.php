@@ -9,10 +9,10 @@ class NewsImage extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['news_image_ext'];
+    protected $fillable = ['imgext'];
 
     public function getFileAttribute()
     {
-        return Helper::filename($this->getKey(), $this->news_image_ext);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 }

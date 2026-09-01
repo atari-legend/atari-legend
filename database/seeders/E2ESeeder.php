@@ -460,10 +460,10 @@ class E2ESeeder extends Seeder
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 
         $this->insert('news', ['id' => self::NEWS_ID], [
-            'news_headline' => self::NEWS_HEADLINE,
-            'news_text'     => 'Playwright test news post.',
+            'headline' => self::NEWS_HEADLINE,
+            'text'     => 'Playwright test news post.',
             'user_id'       => self::USER_ADMIN_ID,
-            'news_date'     => now()->timestamp,
+            'date'     => now()->timestamp,
         ]);
 
         // Enough news to paginate. /news shows six at a time and orders by
@@ -472,10 +472,10 @@ class E2ESeeder extends Seeder
         // page two.
         for ($number = 1; $number <= self::NEWS_FILLER_COUNT; $number++) {
             $this->insert('news', ['id' => self::NEWS_ID + $number], [
-                'news_headline' => self::NEWS_FILLER_HEADLINE . ' ' . $number,
-                'news_text'     => 'Playwright test filler news post.',
+                'headline' => self::NEWS_FILLER_HEADLINE . ' ' . $number,
+                'text'     => 'Playwright test filler news post.',
                 'user_id'       => self::USER_ADMIN_ID,
-                'news_date'     => now()->subDays($number)->timestamp,
+                'date'     => now()->subDays($number)->timestamp,
             ]);
         }
 

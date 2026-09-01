@@ -160,15 +160,15 @@ class ContentPagesTest extends TestCase
     {
         foreach (range(1, 8) as $i) {
             News::factory()->create([
-                'news_headline' => 'Item ' . $i,
-                'news_date'     => Carbon::parse('2026-01-01')->addDays($i)->timestamp,
+                'headline' => 'Item ' . $i,
+                'date'     => Carbon::parse('2026-01-01')->addDays($i)->timestamp,
             ]);
         }
 
         $news = $this->get(route('news.index'))->assertOk()->viewData('news');
 
         $this->assertCount(6, $news);
-        $this->assertSame('Item 8', $news->first()->news_headline);
+        $this->assertSame('Item 8', $news->first()->headline);
     }
 
     /**
@@ -186,7 +186,7 @@ class ContentPagesTest extends TestCase
 
         $submission = NewsSubmission::sole();
 
-        $this->assertSame('New dump released', $submission->news_headline);
+        $this->assertSame('New dump released', $submission->headline);
         $this->assertSame($user->getKey(), $submission->user_id);
         $this->assertSame(0, News::query()->count());
         $this->assertSame(1, Changelog::where('sub_section', 'News submit')->count());
@@ -347,15 +347,15 @@ class ContentPagesTest extends TestCase
     {
         foreach (range(1, 8) as $i) {
             News::factory()->create([
-                'news_headline' => 'Item ' . $i,
-                'news_date'     => Carbon::parse('2026-01-01')->addDays($i)->timestamp,
+                'headline' => 'Item ' . $i,
+                'date'     => Carbon::parse('2026-01-01')->addDays($i)->timestamp,
             ]);
         }
 
         $news = $this->get(route('home.index'))->assertOk()->viewData('news');
 
         $this->assertCount(6, $news);
-        $this->assertSame('Item 8', $news->first()->news_headline);
+        $this->assertSame('Item 8', $news->first()->headline);
     }
 
     public function test_the_about_pages_render(): void

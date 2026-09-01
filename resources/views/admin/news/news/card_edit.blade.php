@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($news))
-                {{ $news->news_headline }}
+                {{ $news->headline }}
             @else
                 Create news
             @endif
@@ -21,7 +21,7 @@
                     <div class="mb-3">
                         <label for="headline" class="form-label">Headline</label>
                         <input type="text" required class="form-control @error('headline') is-invalid @enderror" name="headline"
-                            id="headline" value="{{ old('headline', $news->news_headline ?? '') }}">
+                            id="headline" value="{{ old('headline', $news->headline ?? '') }}">
 
                         @error('headline')
                             <span class="invalid-feedback" role="alert">
@@ -48,7 +48,7 @@
                     <div class="mb-3">
                         <label for="date" class="form-label">Date</label>
                         <input type="date" required class="form-control @error('date') is-invalid @enderror" name="date"
-                            id="date" value="{{ old('date', isset($news)  ? $news->news_date?->toDateString() : \Carbon\Carbon::now()->toDateString() ) }}">
+                            id="date" value="{{ old('date', isset($news)  ? $news->date?->toDateString() : \Carbon\Carbon::now()->toDateString() ) }}">
 
                         @error('date')
                             <span class="invalid-feedback" role="alert">
@@ -91,7 +91,7 @@
                 <label for="text" class="form-label">Text</label>
                 <textarea class="form-control sceditor" id="text" name="text" required
                     {{-- Legacy CPANEL was inserting <br /> for new lines, so we replace them with actual newlines --}}
-                    rows="10">{{ old('text', isset($news) ? Str::replace('<br />', "\n", $news->news_text) : '') }}</textarea>
+                    rows="10">{{ old('text', isset($news) ? Str::replace('<br />', "\n", $news->text) : '') }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

@@ -29,7 +29,7 @@ class NewsControllerTest extends AdminTestCase
 
     public function test_index_lists_the_news(): void
     {
-        News::factory()->create(['news_headline' => 'Automation 189 released']);
+        News::factory()->create(['headline' => 'Automation 189 released']);
 
         $this->get(route('admin.news.news.index'))
             ->assertOk()
@@ -43,7 +43,7 @@ class NewsControllerTest extends AdminTestCase
 
     public function test_edit_form_shows_the_item(): void
     {
-        $news = News::factory()->create(['news_headline' => 'Xenon reviewed']);
+        $news = News::factory()->create(['headline' => 'Xenon reviewed']);
 
         $this->get(route('admin.news.news.edit', $news))
             ->assertOk()
@@ -57,14 +57,14 @@ class NewsControllerTest extends AdminTestCase
 
         $news = News::sole();
 
-        $this->assertSame('Automation 189 released', $news->news_headline);
-        $this->assertSame('A new menu disk has been dumped.', $news->news_text);
+        $this->assertSame('Automation 189 released', $news->headline);
+        $this->assertSame('A new menu disk has been dumped.', $news->text);
         $this->assertSame($this->admin->getKey(), $news->user_id);
 
-        // news_date is a unix timestamp in an integer column
+        // date is a unix timestamp in an integer column
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
-            $news->getRawOriginal('news_date')
+            $news->getRawOriginal('date')
         );
     }
 
@@ -116,7 +116,7 @@ class NewsControllerTest extends AdminTestCase
 
     public function test_update_persists_the_changes(): void
     {
-        $news = News::factory()->create(['news_headline' => 'Old headline']);
+        $news = News::factory()->create(['headline' => 'Old headline']);
 
         $this->put(route('admin.news.news.update', $news), $this->payload([
             'headline' => 'New headline',
@@ -125,8 +125,8 @@ class NewsControllerTest extends AdminTestCase
 
         $news->refresh();
 
-        $this->assertSame('New headline', $news->news_headline);
-        $this->assertSame('Rewritten.', $news->news_text);
+        $this->assertSame('New headline', $news->headline);
+        $this->assertSame('Rewritten.', $news->text);
         $this->assertChangelog(Changelog::UPDATE, 'News', 'New headline');
     }
 
@@ -144,17 +144,17 @@ class NewsControllerTest extends AdminTestCase
 
     public function test_update_rejects_an_empty_headline(): void
     {
-        $news = News::factory()->create(['news_headline' => 'Untouched']);
+        $news = News::factory()->create(['headline' => 'Untouched']);
 
         $this->put(route('admin.news.news.update', $news), $this->payload(['headline' => '']))
             ->assertSessionHasErrors('headline');
 
-        $this->assertSame('Untouched', $news->fresh()->news_headline);
+        $this->assertSame('Untouched', $news->fresh()->headline);
     }
 
     public function test_destroy_removes_the_item(): void
     {
-        $news = News::factory()->create(['news_headline' => 'Retracted']);
+        $news = News::factory()->create(['headline' => 'Retracted']);
 
         $this->delete(route('admin.news.news.destroy', $news))
             ->assertRedirect(route('admin.news.news.index'));

@@ -383,16 +383,16 @@ class AdminTablesTest extends AdminTestCase
     public function test_the_news_submissions_table_lists_newest_first(): void
     {
         NewsSubmission::forceCreate([
-            'news_headline' => 'Older submission',
-            'news_text'     => 'Text',
+            'headline' => 'Older submission',
+            'text'     => 'Text',
             'user_id'       => User::factory()->create()->getKey(),
-            'news_date'     => strtotime('2026-01-01'),
+            'date'     => strtotime('2026-01-01'),
         ]);
         NewsSubmission::forceCreate([
-            'news_headline' => 'Newer submission',
-            'news_text'     => 'Text',
+            'headline' => 'Newer submission',
+            'text'     => 'Text',
             'user_id'       => User::factory()->create()->getKey(),
-            'news_date'     => strtotime('2026-06-01'),
+            'date'     => strtotime('2026-06-01'),
         ]);
 
         Livewire::test(NewsSubmissionsTable::class)

@@ -38,7 +38,7 @@ class NewsController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.news.news.index'), 'News'),
-                    new Crumb(route('admin.news.news.edit', $news), $news->news_headline),
+                    new Crumb(route('admin.news.news.edit', $news), $news->headline),
                 ],
                 'news'        => $news,
             ]);
@@ -60,10 +60,10 @@ class NewsController extends Controller
         $request->validate(NewsController::VALIDATION_RULES);
 
         $news->update([
-            'news_headline' => $request->headline,
+            'headline' => $request->headline,
             'user_id'       => User::find($request->author)->getKey(),
-            'news_date'     => Carbon::parse($request->date)->timestamp,
-            'news_text'     => $request->text,
+            'date'     => Carbon::parse($request->date)->timestamp,
+            'text'     => $request->text,
         ]);
 
         $this->addOrUpdateImage($request, $news);
@@ -72,10 +72,10 @@ class NewsController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'News',
             'section_id'       => $news->getKey(),
-            'section_name'     => $news->news_headline,
+            'section_name'     => $news->headline,
             'sub_section'      => 'News item',
             'sub_section_id'   => $news->getKey(),
-            'sub_section_name' => $news->news_headline,
+            'sub_section_name' => $news->headline,
         ]);
 
         return redirect()->route('admin.news.news.index');
@@ -86,10 +86,10 @@ class NewsController extends Controller
         $request->validate(NewsController::VALIDATION_RULES);
 
         $news = News::create([
-            'news_headline' => $request->headline,
+            'headline' => $request->headline,
             'user_id'       => User::find($request->author)->getKey(),
-            'news_date'     => Carbon::parse($request->date)->timestamp,
-            'news_text'     => $request->text,
+            'date'     => Carbon::parse($request->date)->timestamp,
+            'text'     => $request->text,
         ]);
 
         $this->addOrUpdateImage($request, $news);
@@ -98,10 +98,10 @@ class NewsController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'News',
             'section_id'       => $news->getKey(),
-            'section_name'     => $news->news_headline,
+            'section_name'     => $news->headline,
             'sub_section'      => 'News item',
             'sub_section_id'   => $news->getKey(),
-            'sub_section_name' => $news->news_headline,
+            'sub_section_name' => $news->headline,
         ]);
 
         return redirect()->route('admin.news.news.index');
@@ -116,10 +116,10 @@ class NewsController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'News',
             'section_id'       => $news->getKey(),
-            'section_name'     => $news->news_headline,
+            'section_name'     => $news->headline,
             'sub_section'      => 'News item',
             'sub_section_id'   => $news->getKey(),
-            'sub_section_name' => $news->news_headline,
+            'sub_section_name' => $news->headline,
         ]);
 
         return redirect()->route('admin.news.news.index');
@@ -140,10 +140,10 @@ class NewsController extends Controller
                 'action'           => Changelog::DELETE,
                 'section'          => 'News',
                 'section_id'       => $news->getKey(),
-                'section_name'     => $news->news_headline,
+                'section_name'     => $news->headline,
                 'sub_section'      => 'Image',
                 'sub_section_id'   => $news->getKey(),
-                'sub_section_name' => $news->news_headline,
+                'sub_section_name' => $news->headline,
             ]);
         }
 
@@ -168,16 +168,16 @@ class NewsController extends Controller
             $image = $request->file('image');
             $image->storeAs('images/news_images/', $newsImage->getKey() . '.' . $image->extension(), 'public');
 
-            $newsImage->update(['news_image_ext' => $image->extension()]);
+            $newsImage->update(['imgext' => $image->extension()]);
 
             ChangelogHelper::insert([
                 'action'           => $action,
                 'section'          => 'News',
                 'section_id'       => $news->getKey(),
-                'section_name'     => $news->news_headline,
+                'section_name'     => $news->headline,
                 'sub_section'      => 'Image',
                 'sub_section_id'   => $news->getKey(),
-                'sub_section_name' => $news->news_headline,
+                'sub_section_name' => $news->headline,
             ]);
         }
     }
