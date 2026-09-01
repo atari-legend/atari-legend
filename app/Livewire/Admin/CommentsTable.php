@@ -27,7 +27,7 @@ class CommentsTable extends DataTableComponent
             Column::make('User')
                 ->label(fn ($row) => Helper::user($row->user))
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->join('users', 'comments.user_id', '=', 'users.user_id')
+                    return $query->join('users', 'comments.user_id', '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
             Column::make('Date', 'timestamp')
