@@ -23,7 +23,7 @@ class ReviewController extends Controller
         $authors = User::has('reviews')
             ->get();
 
-        $reviews = Review::where('review_edit', Review::REVIEW_PUBLISHED);
+        $reviews = Review::where('edit', Review::REVIEW_PUBLISHED);
 
         if ($request->filled('author')) {
             $reviews->whereHas('user', function (Builder $query) use ($request) {
@@ -34,7 +34,7 @@ class ReviewController extends Controller
         }
 
         $reviews = $reviews
-            ->orderByDesc('review_date')
+            ->orderByDesc('date')
             ->paginate(5);
 
         return view('reviews.index')
@@ -57,7 +57,7 @@ class ReviewController extends Controller
         $jsonLd = (new JsonLd('Article', url()->current()))
             ->add('headline', 'Review of ' . $review->games->first()->name)
             ->add('author', Helper::user($review->user))
-            ->add('datePublished', $review->review_date->format('Y-m-d'));
+            ->add('datePublished', $review->date->format('Y-m-d'));
         if ($review->screenshots->isNotEmpty()) {
             $jsonLd->add('image', $review->screenshots->first()->getUrlRoute('game', $review->games->first()));
         }
@@ -95,17 +95,17 @@ class ReviewController extends Controller
         $game = Game::find($request->game);
 
         $review = new Review();
-        $review->review_text = $request->text;
-        $review->review_date = time();
-        $review->review_edit = Review::REVIEW_UNPUBLISHED;
+        $review->text = $request->text;
+        $review->date = time();
+        $review->edit = Review::REVIEW_UNPUBLISHED;
         // Set before the first save, not after it: the scores are columns on
         // the review now, so filling them here is one insert where the old
         // score row needed a second write. A submitted review with no scores
         // still reads as zeros rather than as "unscored".
-        $review->review_graphics = $request->graphics ?? 0;
-        $review->review_sound = $request->sound ?? 0;
-        $review->review_gameplay = $request->gameplay ?? 0;
-        $review->review_overall = $request->overall ?? 0;
+        $review->graphics = $request->graphics ?? 0;
+        $review->sound = $request->sound ?? 0;
+        $review->gameplay = $request->gameplay ?? 0;
+        $review->overall = $request->overall ?? 0;
 
         $request->user()->reviews()->save($review);
         $game->reviews()->save($review);
@@ -177,7 +177,7 @@ class ReviewController extends Controller
     private function getReviewsForUser(User $user)
     {
         return Review::where('user_id', $user->getKey())
-            ->where('review_edit', Review::REVIEW_PUBLISHED)
-            ->orderBy('review_date', 'desc');
+            ->where('edit', Review::REVIEW_PUBLISHED)
+            ->orderBy('date', 'desc');
     }
 }

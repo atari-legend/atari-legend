@@ -411,8 +411,8 @@ class E2ESeeder extends Seeder
 
         $this->insert('reviews', ['id' => self::REVIEW_ID], [
             'user_id'     => self::USER_ADMIN_ID,
-            'review_text' => 'Great game!',
-            'review_date' => now()->timestamp,
+            'text' => 'Great game!',
+            'date' => now()->timestamp,
         ]);
         $this->insert('review_game', [
             'review_id' => self::REVIEW_ID,

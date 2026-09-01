@@ -12,7 +12,7 @@
 
     <div class="card-body p-2 bg-darklight">
         <h3 class="fs-5 text-audiowide">Written by {{ Helper::user($review->user) }}</h3>
-        <span class="text-muted">{{ $review->review_date->format('F j, Y') }}</span>
+        <span class="text-muted">{{ $review->date->format('F j, Y') }}</span>
     </div>
     <div class="card-body p-2 bg-darklight">
 
@@ -28,19 +28,19 @@
         </div>
 
         <p class="card-text">
-            {!! Helper::bbCode(nl2br(e($review->review_text), false)) !!}
+            {!! Helper::bbCode(nl2br(e($review->text), false)) !!}
         </p>
         {{-- One column stands for four: every write path sets all four
              together, so a review either has the whole score or none of it. --}}
-        @isset ($review->review_graphics)
+        @isset ($review->graphics)
             <hr>
             <h5>Score</h5>
 
             <ul class="list-unstyled">
-                <li>Graphics: {{ $review->review_graphics }}</li>
-                <li>Sound: {{ $review->review_sound }}</li>
-                <li>Gameplay: {{ $review->review_gameplay }}</li>
-                <li>Overall: {{ $review->review_overall }}</li>
+                <li>Graphics: {{ $review->graphics }}</li>
+                <li>Sound: {{ $review->sound }}</li>
+                <li>Gameplay: {{ $review->gameplay }}</li>
+                <li>Overall: {{ $review->overall }}</li>
             </ul>
         @endisset
 

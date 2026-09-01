@@ -73,19 +73,19 @@ class ReviewsControllerTest extends AdminTestCase
 
         $review = Review::sole();
 
-        $this->assertSame('A fine shoot-em-up.', $review->review_text);
+        $this->assertSame('A fine shoot-em-up.', $review->text);
         $this->assertSame($this->admin->getKey(), $review->user_id);
         $this->assertSame('Xenon', $review->games->first()->name);
-        $this->assertSame(Review::REVIEW_PUBLISHED, $review->review_edit);
+        $this->assertSame(Review::REVIEW_PUBLISHED, $review->edit);
 
-        $this->assertSame(5, $review->review_graphics);
-        $this->assertSame(4, $review->review_sound);
-        $this->assertSame(3, $review->review_gameplay);
-        $this->assertSame(4, $review->review_overall);
+        $this->assertSame(5, $review->graphics);
+        $this->assertSame(4, $review->sound);
+        $this->assertSame(3, $review->gameplay);
+        $this->assertSame(4, $review->overall);
 
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
-            $review->getRawOriginal('review_date')
+            $review->getRawOriginal('date')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Reviews', 'Xenon');
@@ -104,7 +104,7 @@ class ReviewsControllerTest extends AdminTestCase
             'submission' => '1',
         ]))->assertRedirect(route('admin.reviews.reviews.index'));
 
-        $this->assertSame(Review::REVIEW_UNPUBLISHED, Review::sole()->review_edit);
+        $this->assertSame(Review::REVIEW_UNPUBLISHED, Review::sole()->edit);
     }
 
     public function test_store_requires_a_known_game(): void
@@ -151,8 +151,8 @@ class ReviewsControllerTest extends AdminTestCase
 
         $review->refresh();
 
-        $this->assertSame('Revisited: it holds up.', $review->review_text);
-        $this->assertSame(2, $review->review_graphics);
+        $this->assertSame('Revisited: it holds up.', $review->text);
+        $this->assertSame(2, $review->graphics);
         $this->assertChangelog(Changelog::UPDATE, 'Reviews', 'Xenon');
     }
 
@@ -166,11 +166,11 @@ class ReviewsControllerTest extends AdminTestCase
             ->forGame(Game::factory()->named('Xenon')->create()->getKey())
             ->create();
 
-        $this->assertNull($review->review_graphics);
+        $this->assertNull($review->graphics);
 
         $this->put(route('admin.reviews.reviews.update', $review->fresh()), $this->payload());
 
-        $this->assertSame(5, $review->fresh()->review_graphics);
+        $this->assertSame(5, $review->fresh()->graphics);
     }
 
     public function test_save_and_stay_returns_to_the_edit_screen(): void

@@ -59,7 +59,7 @@ class UpdateLinksInContent extends Migration
                             $text = preg_replace(
                                 $replacement['regexp'],
                                 $replacement['replacement'],
-                                $review->review_text
+                                $review->text
                             );
                             DB::table('review_main')->where('review_id', $review->review_id)->update(['review_text' => $text]);
                         }

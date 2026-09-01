@@ -20,7 +20,7 @@ class ReviewsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('review_date', 'desc');
+        $this->setDefaultSort('date', 'desc');
     }
 
     public function columns(): array
@@ -35,19 +35,19 @@ class ReviewsTable extends DataTableComponent
                 )
                 ->searchable(
                     fn ($query, $term) => $query->where('games.name', 'like', "%{$term}%")
-                        ->orWhere('review_text', 'like', "%{$term}%")
+                        ->orWhere('reviews.text', 'like', "%{$term}%")
                 )
                 ->sortable(
                     fn (Builder $query, $direction) => $query->orderBy('games.name', $direction)
                 ),
             Column::make('Date')
                 ->label(
-                    fn ($row) => $row->review_date
-                        ? $row->review_date->toFormattedDateString()
+                    fn ($row) => $row->date
+                        ? $row->date->toFormattedDateString()
                         : '-'
                 )
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('review_date', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('reviews.date', $direction)
                 ),
             Column::make('Author')
                 ->label(fn ($row) => Helper::user($row->user)),
@@ -63,7 +63,7 @@ class ReviewsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Review::select('reviews.*', 'games.name')
-            ->where('review_edit', '=', $this->submissions)
+            ->where('reviews.edit', '=', $this->submissions)
             ->leftJoin('review_game', 'review_game.review_id', '=', 'reviews.id')
             ->leftJoin('games', 'review_game.game_id', '=', 'games.id');
     }

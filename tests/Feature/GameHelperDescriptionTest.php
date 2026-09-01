@@ -54,9 +54,9 @@ class GameHelperDescriptionTest extends TestCase
         $screenshot1->imgext = 'png';
         $game->screenshots()->save($screenshot1);
 
-        $game->reviews()->save(new Review(['review_text' => '', 'review_date' => now()]));
-        $game->reviews()->save(new Review(['review_text' => '', 'review_date' => now()]));
-        $game->reviews()->save(new Review(['review_text' => '', 'review_date' => now()]));
+        $game->reviews()->save(new Review(['text' => '', 'date' => now()]));
+        $game->reviews()->save(new Review(['text' => '', 'date' => now()]));
+        $game->reviews()->save(new Review(['text' => '', 'date' => now()]));
 
         $aka1 = new GameAka();
         $aka1->name = 'AKA 1';

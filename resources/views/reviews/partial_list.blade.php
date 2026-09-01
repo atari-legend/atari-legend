@@ -5,7 +5,7 @@
                 {{ $review->games->first()->name}}
             </a>
         </h3>
-        <p class="card-subtitle text-muted">{{ $review->review_date->format('F j, Y') }} by {{ Helper::user($review->user) }}</p>
+        <p class="card-subtitle text-muted">{{ $review->date->format('F j, Y') }} by {{ Helper::user($review->user) }}</p>
     </div>
 
     <div class="clearfix">
@@ -18,7 +18,7 @@
             </a>
         @endif
 
-        {!! Helper::bbCode(Helper::extractTag(e($review->review_text), "frontpage")) !!}<br>
+        {!! Helper::bbCode(Helper::extractTag(e($review->text), "frontpage")) !!}<br>
         <a class="d-block text-end mt-2" href="{{ route('reviews.show', ['review' => $review]) }}">
             Read the review of {{ $review->games->first()->name }} <i class="fas fa-chevron-right"></i>
         </a>

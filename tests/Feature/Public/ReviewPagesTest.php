@@ -29,7 +29,7 @@ class ReviewPagesTest extends TestCase
             ->scored()
             ->create([
                 'user_id'     => ($author ?? User::factory()->create())->getKey(),
-                'review_date' => strtotime($date),
+                'date' => strtotime($date),
             ]);
     }
 
@@ -187,10 +187,10 @@ class ReviewPagesTest extends TestCase
 
         $review = Review::sole();
 
-        $this->assertSame(Review::REVIEW_UNPUBLISHED, $review->review_edit);
-        $this->assertSame('A fine shoot-em-up.', $review->review_text);
+        $this->assertSame(Review::REVIEW_UNPUBLISHED, $review->edit);
+        $this->assertSame('A fine shoot-em-up.', $review->text);
         $this->assertSame($user->getKey(), $review->user_id);
-        $this->assertSame(5, $review->review_graphics);
+        $this->assertSame(5, $review->graphics);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());
     }
 
@@ -204,8 +204,8 @@ class ReviewPagesTest extends TestCase
 
         $review = Review::sole();
 
-        $this->assertSame(0, $review->review_graphics);
-        $this->assertSame(0, $review->review_overall);
+        $this->assertSame(0, $review->graphics);
+        $this->assertSame(0, $review->overall);
     }
 
     /**

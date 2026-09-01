@@ -26,7 +26,7 @@ class Screenstar extends Component
     {
         $screenstar = null;
         $firstRelease = null;
-        $screenstar = Review::where('review_edit', Review::REVIEW_PUBLISHED)
+        $screenstar = Review::where('edit', Review::REVIEW_PUBLISHED)
             ->inRandomOrder()
             ->first();
 

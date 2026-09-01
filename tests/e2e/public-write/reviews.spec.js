@@ -142,7 +142,7 @@ test.describe('Review submissions', () => {
 
     // Approving a review is not a button of its own: an editor opens the
     // submission and turns the Submission switch off, which is what moves it
-    // from review_edit = REVIEW_UNPUBLISHED to REVIEW_PUBLISHED.
+    // from reviews.edit = REVIEW_UNPUBLISHED to REVIEW_PUBLISHED.
     await adminPage.goto('/admin/reviews/submissions');
     const row = await findRow(adminPage, game.name);
     await row.getByRole('link', { name: game.name }).click();

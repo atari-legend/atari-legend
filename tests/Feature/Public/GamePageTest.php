@@ -71,7 +71,7 @@ class GamePageTest extends TestCase
         $reviews = $this->get(route('games.show', $game))->assertOk()->viewData('reviews');
 
         $this->assertCount(1, $reviews);
-        $this->assertSame(Review::REVIEW_PUBLISHED, $reviews->first()->review_edit);
+        $this->assertSame(Review::REVIEW_PUBLISHED, $reviews->first()->edit);
     }
 
     /**

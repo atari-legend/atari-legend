@@ -13,8 +13,8 @@ class FeedHelper
     {
         $news = News::orderByDesc('date')->limit(20)->get();
 
-        $reviews = Review::where('review_edit', Review::REVIEW_PUBLISHED)
-            ->orderByDesc('review_date')
+        $reviews = Review::where('edit', Review::REVIEW_PUBLISHED)
+            ->orderByDesc('date')
             ->limit(20)
             ->get();
 

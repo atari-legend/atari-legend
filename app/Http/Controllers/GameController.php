@@ -62,7 +62,7 @@ class GameController extends Controller
 
         // Filter unpublished reviews
         $reviews = $game->reviews->reject(function ($review) {
-            return $review->review_edit !== Review::REVIEW_PUBLISHED;
+            return $review->edit !== Review::REVIEW_PUBLISHED;
         });
 
         // Similar games, only the ones with screenshots

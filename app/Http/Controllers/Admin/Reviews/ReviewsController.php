@@ -59,13 +59,13 @@ class ReviewsController extends Controller
         $review = new Review([
             'user_id'         => $request->author,
             'draft'           => $request->draft ? true : false,
-            'review_edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'review_text'     => $request->text,
-            'review_date'     => Carbon::parse($request->date)->timestamp,
-            'review_graphics' => $request->graphics ?? 0,
-            'review_sound'    => $request->sound ?? 0,
-            'review_gameplay' => $request->gameplay ?? 0,
-            'review_overall'  => $request->overall ?? 0,
+            'edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'text'     => $request->text,
+            'date'     => Carbon::parse($request->date)->timestamp,
+            'graphics' => $request->graphics ?? 0,
+            'sound'    => $request->sound ?? 0,
+            'gameplay' => $request->gameplay ?? 0,
+            'overall'  => $request->overall ?? 0,
         ]);
 
         $game = Game::findOrFail($request->game);
@@ -98,13 +98,13 @@ class ReviewsController extends Controller
         $review->update([
             'user_id'         => $request->author,
             'draft'           => $request->draft ? true : false,
-            'review_edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'review_text'     => $request->text,
-            'review_date'     => Carbon::parse($request->date)->timestamp,
-            'review_graphics' => $request->graphics ?? 0,
-            'review_sound'    => $request->sound ?? 0,
-            'review_gameplay' => $request->gameplay ?? 0,
-            'review_overall'  => $request->overall ?? 0,
+            'edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'text'     => $request->text,
+            'date'     => Carbon::parse($request->date)->timestamp,
+            'graphics' => $request->graphics ?? 0,
+            'sound'    => $request->sound ?? 0,
+            'gameplay' => $request->gameplay ?? 0,
+            'overall'  => $request->overall ?? 0,
         ]);
 
         collect($request->all())

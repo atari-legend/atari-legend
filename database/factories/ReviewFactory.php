@@ -14,16 +14,16 @@ class ReviewFactory extends Factory
     protected $model = Review::class;
 
     /**
-     * `review_date` is a unix timestamp in an integer column, the way the
+     * `reviews.date` is a unix timestamp in an integer column, the way the
      * legacy site wrote it, not a datetime.
      */
     public function definition(): array
     {
         return [
             'user_id'     => User::factory(),
-            'review_text' => fake()->paragraph(),
-            'review_date' => now()->timestamp,
-            'review_edit' => Review::REVIEW_PUBLISHED,
+            'text' => fake()->paragraph(),
+            'date' => now()->timestamp,
+            'edit' => Review::REVIEW_PUBLISHED,
             'draft'       => false,
         ];
     }
@@ -42,7 +42,7 @@ class ReviewFactory extends Factory
      */
     public function unpublished(): static
     {
-        return $this->state(fn () => ['review_edit' => Review::REVIEW_UNPUBLISHED]);
+        return $this->state(fn () => ['edit' => Review::REVIEW_UNPUBLISHED]);
     }
 
     /**
@@ -59,10 +59,10 @@ class ReviewFactory extends Factory
     public function scored(int $graphics = 4, int $sound = 4, int $gameplay = 4, int $overall = 4): static
     {
         return $this->state(fn () => [
-            'review_graphics' => $graphics,
-            'review_sound'    => $sound,
-            'review_gameplay' => $gameplay,
-            'review_overall'  => $overall,
+            'graphics' => $graphics,
+            'sound'    => $sound,
+            'gameplay' => $gameplay,
+            'overall'  => $overall,
         ]);
     }
 }

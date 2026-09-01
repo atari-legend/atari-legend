@@ -24,8 +24,8 @@ class Reviews extends Component
      */
     public function render()
     {
-        $reviews = Review::where('review_edit', Review::REVIEW_PUBLISHED)
-            ->orderByDesc('review_date')
+        $reviews = Review::where('edit', Review::REVIEW_PUBLISHED)
+            ->orderByDesc('date')
             ->limit(3)
             ->get();
 

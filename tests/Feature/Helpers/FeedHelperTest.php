@@ -44,7 +44,7 @@ class FeedHelperTest extends TestCase
     {
         return Review::factory()
             ->forGame(Game::factory()->named($gameName)->create()->getKey())
-            ->create(['review_date' => Carbon::parse($date)->timestamp]);
+            ->create(['date' => Carbon::parse($date)->timestamp]);
     }
 
     private function interview(string $date): Interview
@@ -103,7 +103,7 @@ class FeedHelperTest extends TestCase
         Review::factory()
             ->unpublished()
             ->forGame(Game::factory()->named('Unfinished')->create()->getKey())
-            ->create(['review_date' => Carbon::parse('2026-01-01')->timestamp]);
+            ->create(['date' => Carbon::parse('2026-01-01')->timestamp]);
 
         $this->review('Published', '2026-01-02');
 

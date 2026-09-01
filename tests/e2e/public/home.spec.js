@@ -55,7 +55,7 @@ test.describe('Home', () => {
 
     await expect(card.getByRole('link', { name: /^Read the review/ }))
       .toHaveAttribute('href', /\/reviews\/\d+$/);
-    // review_date is a cast, and the card formats it unguarded.
+    // reviews.date is a cast, and the card formats it unguarded.
     await expect(card).toContainText(/\w+ \d{1,2}, \d{4} by /);
   });
 
