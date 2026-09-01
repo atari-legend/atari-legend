@@ -44,8 +44,8 @@ class RelationshipKeyConventionsTest extends TestCase
         // SELF-REFERENTIAL
         'Crew::parentCrews()'               => 'sub_crew needs crew_id and parent_id',
         'Crew::subCrews()'                  => 'sub_crew needs parent_id and crew_id',
-        'Game::similarGames()'              => 'game_similar needs game_id and game_similar_cross',
-        'Game::similarGamesReverse()'       => 'game_similar needs game_similar_cross and game_id',
+        'Game::similarGames()'              => 'game_similar needs game_id and similar_game_id',
+        'Game::similarGamesReverse()'       => 'game_similar needs similar_game_id and game_id',
         'Individual::nicknames()'           => 'individual_nicks needs individual_id and nick_id',
         'Individual::individuals()'         => 'individual_nicks needs nick_id and individual_id',
 
@@ -56,7 +56,6 @@ class RelationshipKeyConventionsTest extends TestCase
 
         // TABLE, NOT MODEL
         'GameRelease::publisher()'          => 'pub_dev_id is right; belongsTo derives publisher_id from the method name',
-        'GameSubmitInfo::screenshots()'     => 'column game_submitinfo_id is named for game_submitinfo, now game_submit_infos',
         'Game::vs()'                        => 'atari_id says what game_id would not',
 
         // DECLINED ON PRICING

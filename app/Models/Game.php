@@ -177,12 +177,12 @@ class Game extends Model
 
     public function similarGames()
     {
-        return $this->belongsToMany(Game::class, 'game_similar', 'game_id', 'game_similar_cross');
+        return $this->belongsToMany(Game::class, 'game_similar', 'game_id', 'similar_game_id');
     }
 
     public function similarGamesReverse()
     {
-        return $this->belongsToMany(Game::class, 'game_similar', 'game_similar_cross', 'game_id');
+        return $this->belongsToMany(Game::class, 'game_similar', 'similar_game_id', 'game_id');
     }
 
     public function getAllSimilarGamesAttribute()
