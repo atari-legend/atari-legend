@@ -66,11 +66,11 @@ class InterviewsControllerTest extends AdminTestCase
         $interview = Interview::sole();
 
         $this->assertSame($individual->getKey(), $interview->individual_id);
-        $this->assertSame('The interview itself.', $interview->interview_text);
-        $this->assertSame('A short introduction.', $interview->interview_intro);
+        $this->assertSame('The interview itself.', $interview->text);
+        $this->assertSame('A short introduction.', $interview->intro);
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
-            $interview->getRawOriginal('interview_date')
+            $interview->getRawOriginal('date')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Interviews', 'Jochen Hippel');
@@ -124,8 +124,8 @@ class InterviewsControllerTest extends AdminTestCase
 
         $interview->refresh();
 
-        $this->assertSame('Rewritten.', $interview->interview_text);
-        $this->assertSame('[hotspotUrl=#1]The early days[/hotspotUrl]', $interview->interview_chapters);
+        $this->assertSame('Rewritten.', $interview->text);
+        $this->assertSame('[hotspotUrl=#1]The early days[/hotspotUrl]', $interview->chapters);
         $this->assertChangelog(Changelog::UPDATE, 'Interviews', $interview->individual->name);
     }
 

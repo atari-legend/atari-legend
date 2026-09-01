@@ -63,7 +63,7 @@
                         <label for="date" class="form-label">Date</label>
                         <input type="date" required class="form-control @error('date') is-invalid @enderror" name="date"
                             id="date"
-                            value="{{ old('date', isset($interview) ? $interview->interview_date?->toDateString() : \Carbon\Carbon::now()->toDateString()) }}">
+                            value="{{ old('date', isset($interview) ? $interview->date?->toDateString() : \Carbon\Carbon::now()->toDateString()) }}">
 
                         @error('date')
                             <span class="invalid-feedback" role="alert">
@@ -96,7 +96,7 @@
                     <div class="mb-3">
                         <label for="intro" class="form-label">Introduction</label>
                         <textarea class="form-control sceditor @error('intro') is-invalid @enderror" id="intro" name="intro"
-                            rows="5">{{ old('intro', isset($interview) ? Str::replace('<br />', "\n", $interview->interview_intro) : '') }}</textarea>
+                            rows="5">{{ old('intro', isset($interview) ? Str::replace('<br />', "\n", $interview->intro) : '') }}</textarea>
 
                         @error('intro')
                             <span class="invalid-feedback" role="alert">
@@ -112,7 +112,7 @@
                     <div class="mb-3">
                         <label for="chapters" class="form-label">Chapters</label>
                         <textarea class="form-control sceditor @error('chapters') is-invalid @enderror" id="chapters" name="chapters"
-                            rows="5">{{ old('chapters', isset($interview) ? Str::replace('<br />', "\n", $interview->interview_chapters) : '') }}</textarea>
+                            rows="5">{{ old('chapters', isset($interview) ? Str::replace('<br />', "\n", $interview->chapters) : '') }}</textarea>
                         <div class="form-text">
                             Use <code>[hotspotUrl=#1]Chapter title[/hotspotUrl]</code> to create links to sections in the interview text.
                         </div>
@@ -131,7 +131,7 @@
                     <div class="mb-3">
                         <label for="text" class="form-label">Interview Text</label>
                         <textarea class="form-control sceditor @error('text') is-invalid @enderror" id="text" name="text" required
-                            rows="30">{{ old('text', isset($interview) ? Str::replace('<br />', "\n", $interview->interview_text) : '') }}</textarea>
+                            rows="30">{{ old('text', isset($interview) ? Str::replace('<br />', "\n", $interview->text) : '') }}</textarea>
                         <div class="form-text">
                             Use <code>[hotspot=1]Question text[/hotspot]</code> to mark sections that correspond to chapter links.
                         </div>

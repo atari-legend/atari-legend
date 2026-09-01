@@ -14,7 +14,7 @@ class InterviewController extends Controller
 {
     public function index()
     {
-        $interviews = Interview::orderByDesc('interview_date')
+        $interviews = Interview::orderByDesc('date')
             ->paginate(5);
 
         return view('interviews.index')
@@ -23,14 +23,14 @@ class InterviewController extends Controller
 
     public function show(Interview $interview)
     {
-        $interviews = Interview::orderByDesc('interview_date')
+        $interviews = Interview::orderByDesc('date')
             ->limit(5)
             ->get();
 
         $jsonLd = (new JsonLd('Article', url()->current()))
             ->add('headline', 'Interview of ' . $interview->individual->name)
             ->add('author', Helper::user($interview->user))
-            ->add('datePublished', $interview->interview_date->format('Y-m-d'));
+            ->add('datePublished', $interview->date->format('Y-m-d'));
         if ($interview->individual?->file !== null) {
             $jsonLd->add('image', route('individuals.avatar', $interview->individual));
         }

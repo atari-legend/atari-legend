@@ -436,11 +436,11 @@ class E2ESeeder extends Seeder
         $this->insert('interviews', ['id' => self::INTERVIEW_ID], [
             'user_id'            => self::USER_ADMIN_ID,
             'individual_id'      => self::INDIVIDUAL_ID,
-            'interview_intro'    => 'Playwright test interview intro.',
-            'interview_text'     => '[hotspot=1]' . self::INTERVIEW_CHAPTER . '[/hotspot] '
+            'intro'    => 'Playwright test interview intro.',
+            'text'     => '[hotspot=1]' . self::INTERVIEW_CHAPTER . '[/hotspot] '
                 . 'Playwright test interview content.',
-            'interview_chapters' => '[hotspotUrl=#1]' . self::INTERVIEW_CHAPTER . '[/hotspotUrl]',
-            'interview_date'     => now()->timestamp,
+            'chapters' => '[hotspotUrl=#1]' . self::INTERVIEW_CHAPTER . '[/hotspotUrl]',
+            'date'     => now()->timestamp,
         ]);
 
         // A screenshot on the interview, and the caption row that goes with it.

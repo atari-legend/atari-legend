@@ -17,7 +17,7 @@ class InterviewsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('interview_date', 'desc');
+        $this->setDefaultSort('date', 'desc');
     }
 
     public function columns(): array
@@ -32,18 +32,18 @@ class InterviewsTable extends DataTableComponent
                 )
                 ->searchable(
                     fn ($query, $term) => $query->where('individuals.name', 'like', "%{$term}%")
-                        ->orWhere('interview_text', 'like', "%{$term}%")
-                        ->orWhere('interview_intro', 'like', "%{$term}%")
+                        ->orWhere('interviews.text', 'like', "%{$term}%")
+                        ->orWhere('interviews.intro', 'like', "%{$term}%")
                 )
                 ->sortable(
                     fn (Builder $query, $direction) => $query->orderBy('individuals.name', $direction)
                 ),
             Column::make('Date')
                 ->label(
-                    fn ($row) => $row->interview_date?->toFormattedDateString() ?? '-'
+                    fn ($row) => $row->date?->toFormattedDateString() ?? '-'
                 )
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('interview_date', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('interviews.date', $direction)
                 ),
             Column::make('Author')
                 ->label(fn ($row) => Helper::user($row->user)),

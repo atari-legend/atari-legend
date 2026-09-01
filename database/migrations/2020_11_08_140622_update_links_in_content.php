@@ -71,7 +71,7 @@ class UpdateLinksInContent extends Migration
                             $text = preg_replace(
                                 $replacement['regexp'],
                                 $replacement['replacement'],
-                                $interview->interview_text
+                                $interview->text
                             );
                             DB::table('interview_text')->where('interview_text_id', $interview->interview_text_id)->update(['interview_text' => $text]);
                         }
@@ -83,7 +83,7 @@ class UpdateLinksInContent extends Migration
                             $text = preg_replace(
                                 $replacement['regexp'],
                                 $replacement['replacement'],
-                                $interview->interview_intro
+                                $interview->intro
                             );
                             DB::table('interview_text')->where('interview_text_id', $interview->interview_text_id)->update(['interview_intro' => $text]);
                         }

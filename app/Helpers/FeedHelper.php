@@ -18,7 +18,7 @@ class FeedHelper
             ->limit(20)
             ->get();
 
-        $interviews = Interview::orderByDesc('interview_date')
+        $interviews = Interview::orderByDesc('date')
             ->limit(20)
             ->get();
 

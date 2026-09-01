@@ -762,7 +762,7 @@ test.describe('Admin crews', () => {
       const logoPath = new URL(await logo.getAttribute('src')).pathname;
       await expectResourceLoads(await page.request.get(logoPath), logoPath, { magic: 'PNG' });
 
-      // The Livewire table builds the same URL by hand, off logo rather
+      // The Livewire table builds the same URL by hand, off crews.logo rather
       // than through Crew::getLogoFileAttribute().
       await page.goto('/admin/menus/crews');
       await expect((await findRow(page, crew.name)).locator('img')).toHaveCount(1);

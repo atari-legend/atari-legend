@@ -40,7 +40,7 @@ class ContentPagesTest extends TestCase
     private function interview(string $date = '2026-01-01'): Interview
     {
         return Interview::factory()->create([
-            'interview_date' => Carbon::parse($date)->timestamp,
+            'date' => Carbon::parse($date)->timestamp,
         ]);
     }
 

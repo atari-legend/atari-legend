@@ -419,7 +419,7 @@ class AdminTablesTest extends AdminTestCase
 
     /**
      * The only assertion in this file about a *rendered date*, and it is here
-     * for a reason. date is an integer timestamp with a
+     * for a reason. articles.date is an integer timestamp with a
      * `datetime:timestamp` cast, and the column used to be read off a join,
      * where it arrived raw and was passed through Carbon::createFromTimestamp().
      * Handing that method a Carbon does not throw on Carbon 3 -- it stringifies
@@ -448,7 +448,7 @@ class AdminTablesTest extends AdminTestCase
      * rendered name.
      *
      * The E2E fixture used to carry a subject-less interview for the same
-     * reason. It cannot any more: before interview_text was merged in, the
+     * reason. It cannot any more: before interviews.text was merged in, the
      * public list inner joined it and never saw such a row, and now it would
      * render one and fail on the missing name. This assertion is the better
      * home for it -- it names the id it expects, where the fixture only

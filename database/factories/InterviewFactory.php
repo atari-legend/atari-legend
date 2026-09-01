@@ -19,10 +19,10 @@ class InterviewFactory extends Factory
             'user_id'            => User::factory(),
             'individual_id'      => IndividualFactory::new(),
             'draft'              => false,
-            'interview_text'     => fake()->paragraph(),
-            'interview_date'     => now()->timestamp,
-            'interview_intro'    => fake()->sentence(),
-            'interview_chapters' => null,
+            'text'     => fake()->paragraph(),
+            'date'     => now()->timestamp,
+            'intro'    => fake()->sentence(),
+            'chapters' => null,
         ];
     }
 
@@ -39,8 +39,8 @@ class InterviewFactory extends Factory
     public function withChapters(string $chapters, string $text): static
     {
         return $this->state(fn () => [
-            'interview_chapters' => $chapters,
-            'interview_text'     => $text,
+            'chapters' => $chapters,
+            'text'     => $text,
         ]);
     }
 }

@@ -60,10 +60,10 @@ class InterviewsController extends Controller
             'user_id'            => $request->author,
             'individual_id'      => $request->individual,
             'draft'              => $request->draft ? true : false,
-            'interview_text'     => $request->text,
-            'interview_intro'    => $request->intro,
-            'interview_chapters' => $request->chapters,
-            'interview_date'     => Carbon::parse($request->date)->timestamp,
+            'text'     => $request->text,
+            'intro'    => $request->intro,
+            'chapters' => $request->chapters,
+            'date'     => Carbon::parse($request->date)->timestamp,
         ]);
         $interview->save();
 
@@ -91,10 +91,10 @@ class InterviewsController extends Controller
         $interview->update([
             'user_id'            => $request->author,
             'draft'              => $request->draft ? true : false,
-            'interview_text'     => $request->text,
-            'interview_intro'    => $request->intro,
-            'interview_chapters' => $request->chapters,
-            'interview_date'     => Carbon::parse($request->date)->timestamp,
+            'text'     => $request->text,
+            'intro'    => $request->intro,
+            'chapters' => $request->chapters,
+            'date'     => Carbon::parse($request->date)->timestamp,
         ]);
 
         ChangelogHelper::insert([

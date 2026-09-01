@@ -259,7 +259,7 @@ class FactoriesTest extends TestCase
      */
     public function test_interviews_and_articles_come_with_their_text(): void
     {
-        $this->assertNotNull(Interview::factory()->create()->interview_text);
+        $this->assertNotNull(Interview::factory()->create()->text);
         $this->assertNotNull(Article::factory()->create()->title);
     }
 

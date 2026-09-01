@@ -61,7 +61,7 @@ class NewsControllerTest extends AdminTestCase
         $this->assertSame('A new menu disk has been dumped.', $news->text);
         $this->assertSame($this->admin->getKey(), $news->user_id);
 
-        // date is a unix timestamp in an integer column
+        // news.date is a unix timestamp in an integer column
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
             $news->getRawOriginal('date')

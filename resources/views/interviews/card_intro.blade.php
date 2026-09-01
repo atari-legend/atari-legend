@@ -11,7 +11,7 @@
            <img class="w-100" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->name }}">
         @endif
         <p class="card-text p-2">
-            {!! Helper::bbCode(e($interview->interview_intro)) !!}
+            {!! Helper::bbCode(e($interview->intro)) !!}
         </p>
     </div>
 </div>
