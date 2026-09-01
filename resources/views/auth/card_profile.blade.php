@@ -54,7 +54,7 @@
                 <label for="website" class="col-md-4 col-form-label text-md-end">{{ __('Website') }}</label>
 
                 <div class="col-md-6">
-                    <input id="website" type="url" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website', $user->user_website) }}" placeholder="e.g. https://example.org/">
+                    <input id="website" type="url" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website', $user->website) }}" placeholder="e.g. https://example.org/">
 
                     @error('website')
                         <span class="invalid-feedback" role="alert">
@@ -68,7 +68,7 @@
                 <label for="facebook" class="col-md-4 col-form-label text-md-end">{{ __('Facebook') }}</label>
 
                 <div class="col-md-6">
-                    <input id="facebook" type="url" class="form-control @error('facebook') is-invalid @enderror" name="facebook" value="{{ old('facebook', $user->user_fb) }}" placeholder="e.g. https://www.facebook.com/...">
+                    <input id="facebook" type="url" class="form-control @error('facebook') is-invalid @enderror" name="facebook" value="{{ old('facebook', $user->facebook) }}" placeholder="e.g. https://www.facebook.com/...">
 
                     @error('facebook')
                         <span class="invalid-feedback" role="alert">
@@ -82,7 +82,7 @@
                 <label for="twitter" class="col-md-4 col-form-label text-md-end">{{ __('Twitter') }}</label>
 
                 <div class="col-md-6">
-                    <input id="twitter" type="url" class="form-control @error('twitter') is-invalid @enderror" name="twitter" value="{{ old('twitter', $user->user_twitter) }}" placeholder="e.g. https://twitter.com/...">
+                    <input id="twitter" type="url" class="form-control @error('twitter') is-invalid @enderror" name="twitter" value="{{ old('twitter', $user->twitter) }}" placeholder="e.g. https://twitter.com/...">
 
                     @error('twitter')
                         <span class="invalid-feedback" role="alert">
@@ -96,7 +96,7 @@
                 <label for="af" class="col-md-4 col-form-label text-md-end">{{ __('Atari-Forum profile') }}</label>
 
                 <div class="col-md-6">
-                    <input id="af" type="url" class="form-control @error('af') is-invalid @enderror" name="af" value="{{ old('af', $user->user_af) }}" placeholder="e.g. https://www.atari-forum.com/memberlist.php?mode=viewprofile&u=...">
+                    <input id="af" type="url" class="form-control @error('af') is-invalid @enderror" name="af" value="{{ old('af', $user->atari_forum) }}" placeholder="e.g. https://www.atari-forum.com/memberlist.php?mode=viewprofile&u=...">
 
                     @error('af')
                         <span class="invalid-feedback" role="alert">

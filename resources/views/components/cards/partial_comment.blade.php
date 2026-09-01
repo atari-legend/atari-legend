@@ -56,17 +56,17 @@
 
     @if (isset($comment->user))
     <small class="text-muted float-start">
-        @if ($comment->user->user_twitter)
-            <a href="{{ $comment->user->user_twitter }}"><i title="Visit Twitter account of {{ $comment->user->userid }}" class="fab fa-twitter"></i></a>
+        @if ($comment->user->twitter)
+            <a href="{{ $comment->user->twitter }}"><i title="Visit Twitter account of {{ $comment->user->userid }}" class="fab fa-twitter"></i></a>
         @endif
-        @if ($comment->user->user_fb)
-            <a href="{{ $comment->user->user_fb }}"><i title="Visit Facebook page of {{ $comment->user->userid }}" class="fab fa-facebook-square"></i></a>
+        @if ($comment->user->facebook)
+            <a href="{{ $comment->user->facebook }}"><i title="Visit Facebook page of {{ $comment->user->userid }}" class="fab fa-facebook-square"></i></a>
         @endif
-        @if ($comment->user->user_af)
-            <a href="{{ $comment->user->user_af }}"><i title="Visit AtariForum account of {{ $comment->user->userid }}" class="fas fa-gamepad"></i></a>
+        @if ($comment->user->atari_forum)
+            <a href="{{ $comment->user->atari_forum }}"><i title="Visit AtariForum account of {{ $comment->user->userid }}" class="fas fa-gamepad"></i></a>
         @endif
-        @if ($comment->user->user_website)
-            <a href="{{ $comment->user->user_website }}"><i title="visit Website of {{ $comment->user->userid }}" class="fas fa-globe"></i></a>
+        @if ($comment->user->website)
+            <a href="{{ $comment->user->website }}"><i title="visit Website of {{ $comment->user->userid }}" class="fas fa-globe"></i></a>
         @endif
     </small>
     @endif

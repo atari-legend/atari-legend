@@ -83,10 +83,10 @@ class ProfileTest extends TestCase
         $user = $user->fresh();
 
         $this->assertSame('sysop@example.org', $user->email);
-        $this->assertSame('https://example.org/', $user->user_website);
-        $this->assertSame('https://www.facebook.com/sysop', $user->user_fb);
-        $this->assertSame('https://twitter.com/sysop', $user->user_twitter);
-        $this->assertSame('https://www.atari-forum.com/memberlist.php', $user->user_af);
+        $this->assertSame('https://example.org/', $user->website);
+        $this->assertSame('https://www.facebook.com/sysop', $user->facebook);
+        $this->assertSame('https://twitter.com/sysop', $user->twitter);
+        $this->assertSame('https://www.atari-forum.com/memberlist.php', $user->atari_forum);
     }
 
     /**
@@ -141,7 +141,7 @@ class ProfileTest extends TestCase
             ]))
             ->assertSessionHasErrors(['website', 'facebook', 'twitter', 'af']);
 
-        $this->assertNull($user->fresh()->user_website);
+        $this->assertNull($user->fresh()->website);
     }
 
     /**

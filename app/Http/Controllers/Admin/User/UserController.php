@@ -52,14 +52,14 @@ class UserController extends Controller
         }
 
         $user->update([
-            'email'        => $request->email,
-            'permission'   => $request->permission,
-            'avatar_ext'   => $ext,
-            'user_website' => $request->website,
-            'user_fb'      => $request->facebook,
-            'user_twitter' => $request->twitter,
-            'user_af'      => $request->af,
-            'inactive'     => $request->active ? '0' : '1',
+            'email'       => $request->email,
+            'permission'  => $request->permission,
+            'avatar_ext'  => $ext,
+            'website'     => $request->website,
+            'facebook'    => $request->facebook,
+            'twitter'     => $request->twitter,
+            'atari_forum' => $request->af,
+            'inactive'    => $request->active ? '0' : '1',
         ]);
 
         ChangelogHelper::insert([

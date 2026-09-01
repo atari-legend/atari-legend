@@ -38,10 +38,10 @@ class UserFactory extends Factory
             'join_date'         => (string) now()->timestamp,
             'last_visit'        => (string) now()->timestamp,
             'avatar_ext'        => null,
-            'user_website'      => null,
-            'user_fb'           => null,
-            'user_twitter'      => null,
-            'user_af'           => null,
+            'website'           => null,
+            'facebook'          => null,
+            'twitter'           => null,
+            'atari_forum'       => null,
             'karma'             => 0,
         ];
     }

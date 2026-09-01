@@ -26,11 +26,11 @@ class UserController extends Controller
 
         $user = User::find(Auth::user()->getKey());
         $user->fill([
-            'email'        => $request->email,
-            'user_website' => $request->website,
-            'user_fb'      => $request->facebook,
-            'user_twitter' => $request->twitter,
-            'user_af'      => $request->af,
+            'email'       => $request->email,
+            'website'     => $request->website,
+            'facebook'    => $request->facebook,
+            'twitter'     => $request->twitter,
+            'atari_forum' => $request->af,
         ]);
 
         if ($request->hasFile('avatar')) {

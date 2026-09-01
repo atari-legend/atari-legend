@@ -97,7 +97,7 @@ class AuthTest extends TestCase
 
         $this->assertSame('sysop', $user->userid);
         $this->assertSame('sysop@example.org', $user->email);
-        $this->assertSame('https://example.org/', $user->user_website);
+        $this->assertSame('https://example.org/', $user->website);
         $this->assertSame(User::PERMISSION_USER, $user->permission);
         $this->assertSame(User::ACTIVE, $user->inactive);
         $this->assertAuthenticatedAs($user);
@@ -117,10 +117,10 @@ class AuthTest extends TestCase
 
         $this->assertSame('sysop', $user->userid);
         $this->assertSame('sysop@example.org', $user->email);
-        $this->assertNull($user->user_website);
-        $this->assertNull($user->user_fb);
-        $this->assertNull($user->user_twitter);
-        $this->assertNull($user->user_af);
+        $this->assertNull($user->website);
+        $this->assertNull($user->facebook);
+        $this->assertNull($user->twitter);
+        $this->assertNull($user->atari_forum);
         $this->assertAuthenticatedAs($user);
     }
 

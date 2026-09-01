@@ -120,7 +120,7 @@
                         <label for="facebook" class="form-label"><i class="fab fa-fw fa-facebook-square"></i>
                             Facebook</label>
                         <input type="url" class="form-control @error('facebook') is-invalid @enderror" name="facebook"
-                            id="facebook" value="{{ old('facebook', $user->user_fb) }}">
+                            id="facebook" value="{{ old('facebook', $user->facebook) }}">
 
                         @error('facebook')
                             <span class="invalid-feedback" role="alert">
@@ -135,7 +135,7 @@
                         <label for="twitter" class="form-label"><i class="fab fa-fw fa-twitter-square"></i>
                             Twitter</label>
                         <input type="url" class="form-control @error('twitter') is-invalid @enderror" name="twitter"
-                            id="twitter" value="{{ old('twitter', $user->user_twitter) }}">
+                            id="twitter" value="{{ old('twitter', $user->twitter) }}">
 
                         @error('twitter')
                             <span class="invalid-feedback" role="alert">
@@ -152,7 +152,7 @@
                         <label for="af" class="form-label"><i class="fas fa-fw fa-comments"></i> Atari
                             Forum</label>
                         <input type="url" class="form-control @error('af') is-invalid @enderror" name="af"
-                            id="af" value="{{ old('af', $user->user_af) }}">
+                            id="af" value="{{ old('af', $user->atari_forum) }}">
 
                         @error('af')
                             <span class="invalid-feedback" role="alert">
@@ -166,7 +166,7 @@
                     <div class="mb-3">
                         <label for="website" class="form-label"><i class="fas fa-fw fa-globe"></i> Website</label>
                         <input type="url" class="form-control @error('website') is-invalid @enderror" name="website"
-                            id="website" value="{{ old('website', $user->user_website) }}">
+                            id="website" value="{{ old('website', $user->website) }}">
 
                         @error('website')
                             <span class="invalid-feedback" role="alert">
