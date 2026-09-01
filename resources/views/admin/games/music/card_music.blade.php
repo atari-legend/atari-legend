@@ -30,7 +30,7 @@
                     @if (count($sndhs) > 0)
                         <tr>
                             <td>
-                                <a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->game_name }}</a>
+                                <a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->name }}</a>
                                 <small class="text-muted ms-2">{{ $game->genres->pluck('name')->join(', ')}}</small>
                                 @if ($game->screenshots->isNotEmpty())
                                     <img src="{{ $game->screenshots->random()->getUrl('game') }}"
@@ -58,7 +58,7 @@
                                     <div>
                                         <input type="checkbox"
                                             id="{{ $game->getKey() }}:{{ $sndh->id }}"
-                                            @if (strtolower(trim($game->game_name)) === strtolower(trim($sndh->title))) checked @endif
+                                            @if (strtolower(trim($game->name)) === strtolower(trim($sndh->title))) checked @endif
                                             name="associations[]"
                                             value="{{ $game->getKey() }}:{{ $sndh->id }}"
                                             class="form-check-input">

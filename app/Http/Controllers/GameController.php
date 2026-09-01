@@ -119,7 +119,7 @@ class GameController extends Controller
             ->flatten(1);
 
         $jsonLd = (new JsonLd('VideoGame', url()->current()))
-            ->add('name', $game->game_name)
+            ->add('name', $game->name)
             ->add('description', GameHelper::description($game))
             ->add('applicationCategory', 'Game')
             ->add('operatingSystem', 'TOS')
@@ -178,10 +178,10 @@ class GameController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $comment->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return back();
@@ -212,10 +212,10 @@ class GameController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Submission',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         $request->session()->flash('alert-title', 'Info submitted');

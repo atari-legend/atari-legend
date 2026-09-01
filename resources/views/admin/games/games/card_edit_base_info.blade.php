@@ -12,7 +12,7 @@
                 <div class="col">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" required
-                        name="name" id="name" value="{{ old('name', $game->game_name ?? '') }}">
+                        name="name" id="name" value="{{ old('name', $game->name ?? '') }}">
 
                     @error('name')
                         <span class="invalid-feedback" role="alert">

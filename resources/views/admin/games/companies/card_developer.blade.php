@@ -5,8 +5,8 @@
 
         @if ($company->games->isNotEmpty())
             <ul>
-                @foreach ($company->games->sortBy('game_name') as $game)
-                    <li>{{ $game->game_name }}</li>
+                @foreach ($company->games->sortBy('name') as $game)
+                    <li>{{ $game->name }}</li>
                 @endforeach
             </ul>
         @else

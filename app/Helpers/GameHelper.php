@@ -18,7 +18,7 @@ class GameHelper
      */
     public static function description(Game $game)
     {
-        $desc = "$game->game_name is a ";
+        $desc = "$game->name is a ";
 
         // Genres
         if ($game->genres->isNotEmpty()) {
@@ -86,7 +86,7 @@ class GameHelper
         $desc .= '.';
 
         if ($game->akas->isNotEmpty()) {
-            $desc .= ' It is also known as: ' . $game->akas->implode('aka_name', ', ') . '.';
+            $desc .= ' It is also known as: ' . $game->akas->implode('name', ', ') . '.';
         }
 
         return $desc;

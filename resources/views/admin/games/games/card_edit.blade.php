@@ -1,6 +1,6 @@
 @isset($game)
     <p class="text-center text-muted">
-        Please use the navigation on the left to edit {{ $game->game_name }}.
+        Please use the navigation on the left to edit {{ $game->name }}.
     </p>
 @endif
 

@@ -28,17 +28,17 @@ class GameController extends Controller
             // The length ordering used to read CHAR_LENGTH('game_name'): the
             // quotes made it measure the literal string, the same number for
             // every row, so it sorted nothing.
-            $games = $games->where('game_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw('instr(game_name, ?)', [$request->q])
-                ->orderByRaw('length(game_name)')
-                ->orderBy('game_name');
-            $akas = $akas->where('aka_name', 'like', '%' . $request->q . '%')
-                ->orderByRaw('instr(aka_name, ?)', [$request->q])
-                ->orderByRaw('length(aka_name)')
-                ->orderBy('aka_name');
+            $games = $games->where('name', 'like', '%' . $request->q . '%')
+                ->orderByRaw('instr(name, ?)', [$request->q])
+                ->orderByRaw('length(name)')
+                ->orderBy('name');
+            $akas = $akas->where('name', 'like', '%' . $request->q . '%')
+                ->orderByRaw('instr(name, ?)', [$request->q])
+                ->orderByRaw('length(name)')
+                ->orderBy('name');
         } else {
-            $games = $games->orderBy('game_name');
-            $akas = $akas->orderBy('aka_name');
+            $games = $games->orderBy('name');
+            $akas = $akas->orderBy('name');
         }
 
         $akaData = $akas->get()
@@ -49,7 +49,7 @@ class GameController extends Controller
                 }
 
                 return [
-                    'game_name'  => $aka->aka_name,
+                    'name'  => $aka->name,
                     'developers' => $developers,
                     'id'         => $aka->game->getKey(),
                 ];
@@ -65,7 +65,7 @@ class GameController extends Controller
                 }
 
                 return [
-                    'game_name'  => $game->game_name,
+                    'name'  => $game->name,
                     'developers' => $developers,
                     'id'         => $game->getKey(),
                 ];
@@ -90,16 +90,16 @@ class GameController extends Controller
             $term = Str::lower($request->q);
 
             $data = $data->sortBy([
-                fn ($a, $b) => strpos(Str::lower($a['game_name']), $term) <=> strpos(Str::lower($b['game_name']), $term),
-                fn ($a, $b) => strlen($a['game_name']) <=> strlen($b['game_name']),
-                fn ($a, $b) => $a['game_name'] <=> $b['game_name'],
+                fn ($a, $b) => strpos(Str::lower($a['name']), $term) <=> strpos(Str::lower($b['name']), $term),
+                fn ($a, $b) => strlen($a['name']) <=> strlen($b['name']),
+                fn ($a, $b) => $a['name'] <=> $b['name'],
             ]);
         }
 
         $data = $data
             ->map(function ($data) {
                 return [
-                    'game_name' => $data['game_name'] . $data['developers'],
+                    'name' => $data['name'] . $data['developers'],
                     'id'        => $data['id'],
                 ];
             })

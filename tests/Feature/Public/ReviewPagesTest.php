@@ -42,7 +42,7 @@ class ReviewPagesTest extends TestCase
 
         $this->assertSame(
             ['Newer', 'Older'],
-            $reviews->map(fn ($review) => $review->games->first()->game_name)->all()
+            $reviews->map(fn ($review) => $review->games->first()->name)->all()
         );
     }
 
@@ -68,7 +68,7 @@ class ReviewPagesTest extends TestCase
             ->viewData('reviews');
 
         $this->assertCount(1, $reviews);
-        $this->assertSame('By Alice', $reviews->first()->games->first()->game_name);
+        $this->assertSame('By Alice', $reviews->first()->games->first()->name);
     }
 
     /**
@@ -124,7 +124,7 @@ class ReviewPagesTest extends TestCase
 
         $this->assertSame(
             ['Turrican'],
-            $others->map(fn ($other) => $other->games->first()->game_name)->all()
+            $others->map(fn ($other) => $other->games->first()->name)->all()
         );
     }
 

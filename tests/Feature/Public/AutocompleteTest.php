@@ -33,11 +33,11 @@ class AutocompleteTest extends TestCase
     {
         DB::table('game_akas')->insert([
             'game_id'  => $game->getKey(),
-            'aka_name' => $name,
+            'name' => $name,
         ]);
     }
 
-    private function names(array $results, string $key = 'game_name'): array
+    private function names(array $results, string $key = 'name'): array
     {
         return array_column($results, $key);
     }
@@ -264,7 +264,7 @@ class AutocompleteTest extends TestCase
             ->assertOk()
             ->json();
 
-        $this->assertSame('Xenon [The Bitmap Brothers]', $results[0]['game_name']);
+        $this->assertSame('Xenon [The Bitmap Brothers]', $results[0]['name']);
         $this->assertSame($game->getKey(), $results[0]['id']);
     }
 

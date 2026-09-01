@@ -29,9 +29,9 @@
                     @forelse ($disk->contents->sortBy('order')->take(5) as $content)
                         <li class="p-2">
                             @if ($content->release)
-                                <a class="d-inline-block" href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->game_name }} {{ $content->version }}</a>
+                                <a class="d-inline-block" href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->name }} {{ $content->version }}</a>
                             @elseif ($content->game)
-                                <a class="d-inline-block" href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }} {{ $content->version }}</a>
+                                <a class="d-inline-block" href="{{ route('games.show', $content->game) }}">{{ $content->game->name }} {{ $content->version }}</a>
                             @elseif ($content->menuSoftware)
                                 @if (isset($software) && $software->id === $content->menuSoftware->id)
                                     <b>{{ $content->menuSoftware->name }} {{ $content->version }}</b>

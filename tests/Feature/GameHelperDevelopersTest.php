@@ -22,7 +22,7 @@ class GameHelperDevelopersTest extends TestCase
     public function testDevelopers()
     {
         $game = new Game();
-        $game->game_name = 'Test';
+        $game->name = 'Test';
         $game->slug = 'test';
         $game->save();
 

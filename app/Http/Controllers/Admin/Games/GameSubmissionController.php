@@ -30,7 +30,7 @@ class GameSubmissionController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.submissions.index'), 'Games submissions'),
-                    new Crumb(route('admin.games.submissions.show', $submission), $submission->game->game_name),
+                    new Crumb(route('admin.games.submissions.show', $submission), $submission->game->name),
                 ],
                 'submission'        => $submission,
             ]);
@@ -47,10 +47,10 @@ class GameSubmissionController extends Controller
                     'action'           => Changelog::UPDATE,
                     'section'          => 'Games',
                     'section_id'       => $submission->game->getKey(),
-                    'section_name'     => $submission->game->game_name,
+                    'section_name'     => $submission->game->name,
                     'sub_section'      => 'Submission',
                     'sub_section_id'   => $submission->getKey(),
-                    'sub_section_name' => $submission->game->game_name,
+                    'sub_section_name' => $submission->game->name,
                 ]);
                 break;
             case 'review':
@@ -61,10 +61,10 @@ class GameSubmissionController extends Controller
                     'action'           => Changelog::UPDATE,
                     'section'          => 'Games',
                     'section_id'       => $submission->game->getKey(),
-                    'section_name'     => $submission->game->game_name,
+                    'section_name'     => $submission->game->name,
                     'sub_section'      => 'Submission',
                     'sub_section_id'   => $submission->getKey(),
-                    'sub_section_name' => $submission->game->game_name,
+                    'sub_section_name' => $submission->game->name,
                 ]);
                 break;
             case  'comment':
@@ -80,10 +80,10 @@ class GameSubmissionController extends Controller
                     'action'           => Changelog::INSERT,
                     'section'          => 'Games',
                     'section_id'       => $submission->game->getKey(),
-                    'section_name'     => $submission->game->game_name,
+                    'section_name'     => $submission->game->name,
                     'sub_section'      => 'Comment',
                     'sub_section_id'   => $comment->getKey(),
-                    'sub_section_name' => $submission->game->game_name,
+                    'sub_section_name' => $submission->game->name,
                 ]);
 
                 $this->destroy($submission);
@@ -109,10 +109,10 @@ class GameSubmissionController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
             'section_id'       => $submission->game->getKey(),
-            'section_name'     => $submission->game->game_name,
+            'section_name'     => $submission->game->name,
             'sub_section'      => 'Submission',
             'sub_section_id'   => $submission->getKey(),
-            'sub_section_name' => $submission->game->game_name,
+            'sub_section_name' => $submission->game->name,
         ]);
 
         return redirect()->route('admin.games.submissions.index');
@@ -130,7 +130,7 @@ class GameSubmissionController extends Controller
                 'action'           => Changelog::DELETE,
                 'section'          => 'Games',
                 'section_id'       => $submission->game->getKey(),
-                'section_name'     => $submission->game->game_name,
+                'section_name'     => $submission->game->name,
                 'sub_section'      => 'Submission',
                 'sub_section_id'   => $submission->getKey(),
                 'sub_section_name' => 'Screenshot',

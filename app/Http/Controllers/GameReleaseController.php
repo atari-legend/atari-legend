@@ -40,7 +40,7 @@ class GameReleaseController extends Controller
             });
 
         $jsonLd = (new JsonLd('VideoGame', url()->current()))
-            ->add('name', $release->game->game_name)
+            ->add('name', $release->game->name)
             ->add('description', GameHelper::description($release->game))
             ->add('applicationCategory', 'Game')
             ->add('operatingSystem', 'TOS')

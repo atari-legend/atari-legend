@@ -40,7 +40,7 @@ class ReleaseSceneTest extends AdminTestCase
             $release->fresh()->trainers->pluck('name')->all()
         );
 
-        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->name);
     }
 
     /**

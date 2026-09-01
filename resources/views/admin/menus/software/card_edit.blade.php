@@ -51,7 +51,7 @@
                     There {{ Str::plural('is', $games->count())}} {{ $games->count() }}
                     {{ Str::plural('game', $games->count()) }} with the same name:
                     @foreach ($games as $game)
-                        <a href="{{ route('admin.games.games.edit', $game)}}">{{ $game->game_name}}</a>
+                        <a href="{{ route('admin.games.games.edit', $game)}}">{{ $game->name}}</a>
                         @if (!$loop->last),@endif
                     @endforeach
                     .

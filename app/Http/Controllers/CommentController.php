@@ -60,11 +60,11 @@ class CommentController extends Controller
         switch ($context) {
             case 'game':
                 $section = 'Games';
-                $sectionName = Game::find($id)->game_name;
+                $sectionName = Game::find($id)->name;
                 break;
             case 'review':
                 $section = 'Reviews';
-                $sectionName = Review::find($id)->games->first()->game_name;
+                $sectionName = Review::find($id)->games->first()->name;
                 break;
             case 'interview':
                 $section = 'Interviews';

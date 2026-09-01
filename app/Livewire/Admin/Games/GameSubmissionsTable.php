@@ -27,19 +27,19 @@ class GameSubmissionsTable extends DataTableComponent
     {
         return [
             LinkColumn::make('Game')
-                ->title(fn ($row) => $row->game?->game_name)
+                ->title(fn ($row) => $row->game?->name)
                 ->location(fn ($row) => route('admin.games.submissions.show', $row))
                 ->searchable(
                     fn (Builder $query, string $term) => $query->whereHas('user', function (Builder $subQuery) use ($term) {
                         return $subQuery->where('userid', 'like', "%{$term}%");
                     })
                         ->orWhereHas('game', function (Builder $subQuery) use ($term) {
-                            return $subQuery->where('game_name', 'like', "%{$term}%");
+                            return $subQuery->where('name', 'like', "%{$term}%");
                         })
                 )
                 ->sortable(function (Builder $query, $direction) {
                     return $query->join('games', 'game_submit_infos.game_id', '=', 'games.id')
-                        ->orderBy('games.game_name', $direction);
+                        ->orderBy('games.name', $direction);
                 }),
             Column::make('User')
                 ->label(fn ($row) => Helper::user($row->user))

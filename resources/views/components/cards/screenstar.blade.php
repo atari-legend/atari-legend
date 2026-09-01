@@ -7,10 +7,10 @@
             @php ($game = $screenstar->games->first())
             @if ($game !== null && $game->screenshots->isNotEmpty())
                 <figure>
-                    <img class="w-100 pixelated" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->game_name }}">
+                    <img class="w-100 pixelated" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}">
                     <figcaption class="py-2 px-3">
                         <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
-                        <div class="figcaption-title"><a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->game_name }}</a></div>
+                        <div class="figcaption-title"><a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->name }}</a></div>
                         @if ($firstRelease !== null)
                             <div class="figcaption-note">
                                 <a href="{{ route('games.search', ['year' => $firstRelease->date->year]) }}">{{ $firstRelease->date->year }}</a>
@@ -26,7 +26,7 @@
                 </p>
                 <p class="card-subtitle text-muted">{{ $screenstar->review_date->format('F j, Y') }} by {{ Helper::user($screenstar->user) }}</p>
                 <a class="d-block text-end" href="{{ route('reviews.show', ['review' => $screenstar->getKey()]) }}">
-                    Read the review @isset ($game) of {{ $game->game_name }} @endisset <i class="fas fa-chevron-right"></i>
+                    Read the review @isset ($game) of {{ $game->name }} @endisset <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endisset

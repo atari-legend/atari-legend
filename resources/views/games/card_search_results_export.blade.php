@@ -24,7 +24,7 @@
                 data: [
                     @foreach ($games as $game)
                         {
-                            Name: @json($game->game_name),
+                            Name: @json($game->name),
                             Developer: @json(GameHelper::developers($game)),
                             Boxscan: @json(GameHelper::hasBoxscan($game)),
                             Screenshot: @json($game->screenshots->isNotEmpty()),

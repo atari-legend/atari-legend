@@ -6,7 +6,7 @@
         @if ($company->releases->isNotEmpty())
             <ul>
                 @foreach ($company->releases->sortBy('year') as $release)
-                    <li>{{ $release->game->game_name }} {{ $release->year }}</li>
+                    <li>{{ $release->game->name }} {{ $release->year }}</li>
                 @endforeach
             </ul>
         @else

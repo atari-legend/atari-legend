@@ -55,7 +55,7 @@ class ReviewController extends Controller
         }
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', 'Review of ' . $review->games->first()->game_name)
+            ->add('headline', 'Review of ' . $review->games->first()->name)
             ->add('author', Helper::user($review->user))
             ->add('datePublished', $review->review_date->format('Y-m-d'));
         if ($review->screenshots->isNotEmpty()) {
@@ -137,10 +137,10 @@ class ReviewController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Reviews',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Submission',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         $request->session()->flash('alert-title', 'Review submitted');
@@ -165,10 +165,10 @@ class ReviewController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Reviews',
             'section_id'       => $review->getKey(),
-            'section_name'     => $review->games->first()->game_name,
+            'section_name'     => $review->games->first()->name,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $comment->getKey(),
-            'sub_section_name' => $review->games->first()->game_name,
+            'sub_section_name' => $review->games->first()->name,
         ]);
 
         return back();

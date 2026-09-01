@@ -34,8 +34,8 @@
                     @if ($issue->indices->whereNotNull('game_id')->isNotEmpty())
                         <div class="mb-2">
                             <span class="text-muted">Game reviews:</span>
-                            @foreach ($issue->indices->whereNotNull('game_id')->take(5)->sortBy('game.game_name') as $index)
-                                <a href="{{ route('games.show', $index->game) }}">{{ $index->game->game_name }}</a>@if (!$loop->last),@endif
+                            @foreach ($issue->indices->whereNotNull('game_id')->take(5)->sortBy('game.name') as $index)
+                                <a href="{{ route('games.show', $index->game) }}">{{ $index->game->name }}</a>@if (!$loop->last),@endif
                             @endforeach
                             @if ($issue->indices->whereNotNull('game_id')->count() > 5)
                                 , &hellip;

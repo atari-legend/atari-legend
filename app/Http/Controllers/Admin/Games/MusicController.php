@@ -22,9 +22,9 @@ class MusicController extends Controller
             ->each(function ($game) use (&$matches) {
                 $query = Sndh::select('sndhs.*');
                 if (\Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite') {
-                    $query->where('title', 'like', '%' . $game->game_name . '%');
+                    $query->where('title', 'like', '%' . $game->name . '%');
                 } else {
-                    $query->whereRaw('MATCH(title) AGAINST(?)', [$game->game_name]);
+                    $query->whereRaw('MATCH(title) AGAINST(?)', [$game->name]);
                 }
                 $sndhs = $query->get();
                 array_push($matches, [
@@ -57,13 +57,13 @@ class MusicController extends Controller
                     'action'           => Changelog::INSERT,
                     'section'          => 'Games',
                     'section_id'       => $game->getKey(),
-                    'section_name'     => $game->game_name,
+                    'section_name'     => $game->name,
                     'sub_section'      => 'Music',
                     'sub_section_id'   => 0,
                     'sub_section_name' => $sndh->id,
                 ]);
 
-                $associations[] = $game->game_name . ' → ' . $sndh->id;
+                $associations[] = $game->name . ' → ' . $sndh->id;
             }
         }
 

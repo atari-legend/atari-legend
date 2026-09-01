@@ -9,7 +9,7 @@
         @endif
 
         @foreach ($gamesWithBadSlug->shuffle()->take(30) as $game)
-            <a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->game_name }}</a>
+            <a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->name }}</a>
             <span class="text-muted">({{ $game->slug }})</span>
             @if (!$loop->last)
                 <span class="me-2">,</span>

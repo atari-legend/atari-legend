@@ -8,12 +8,12 @@
                 The <em>{{ $game->gameSeries->name }}</em> series contains:
             </p>
             <ul class="list-unstyled ms-2">
-                @foreach ($game->gameSeries->games->sortBy('game_name') as $g)
+                @foreach ($game->gameSeries->games->sortBy('name') as $g)
                     <li>
                         @if ($g->getKey() === $game->getKey())
-                            <i class="fas fa-caret-right text-muted"></i> <strong class="text-muted">{{ $g->game_name }}</strong>
+                            <i class="fas fa-caret-right text-muted"></i> <strong class="text-muted">{{ $g->name }}</strong>
                         @else
-                            <a href="{{ route('games.show', ['game' => $g ]) }}">{{ $g->game_name }}</a>
+                            <a href="{{ route('games.show', ['game' => $g ]) }}">{{ $g->name }}</a>
                         @endif
                     </li>
                 @endforeach

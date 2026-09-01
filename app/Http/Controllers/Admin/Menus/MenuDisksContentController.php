@@ -45,7 +45,7 @@ class MenuDisksContentController extends Controller
                 'disk'         => $disk,
                 'type'         => $request->type,
                 'softwares'    => MenuSoftware::orderBy('name')->get(),
-                'games'        => Game::orderBy('game_name')->get(),
+                'games'        => Game::orderBy('name')->get(),
                 'diskReleases' => $diskReleases,
             ]);
     }

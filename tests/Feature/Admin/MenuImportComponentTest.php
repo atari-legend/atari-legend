@@ -189,7 +189,7 @@ class MenuImportComponentTest extends AdminTestCase
     {
         $populous = Game::factory()->named('Populous')->create();
         $rick = Game::factory()->named('Rick Dangerous')->create();
-        GameAka::create(['game_id' => $rick->getKey(), 'aka_name' => 'Rick Hazardous']);
+        GameAka::create(['game_id' => $rick->getKey(), 'name' => 'Rick Hazardous']);
         Game::factory()->named('Twin')->create();
         Game::factory()->named('Twin')->create(['slug' => 'twin-other']);
 

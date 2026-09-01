@@ -283,7 +283,7 @@ class E2ESeeder extends Seeder
     private function seedGames(): void
     {
         $this->insert('games', ['id' => self::GAME_ID], [
-            'game_name' => self::GAME_NAME,
+            'name' => self::GAME_NAME,
             'slug'      => self::GAME_SLUG,
         ]);
 
@@ -324,7 +324,7 @@ class E2ESeeder extends Seeder
 
         $this->insert('game_akas', ['id' => self::GAME_AKA_ID], [
             'game_id'  => self::GAME_ID,
-            'aka_name' => self::GAME_AKA_NAME,
+            'name' => self::GAME_AKA_NAME,
         ]);
 
         $this->insert('game_series', ['id' => self::GAME_SERIES_ID], ['name' => self::SERIES_NAME]);

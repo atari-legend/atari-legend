@@ -30,7 +30,7 @@ class SearchDialectTest extends TestCase
     private function game(string $name): Game
     {
         $game = new Game();
-        $game->game_name = $name;
+        $game->name = $name;
         $game->slug = Str::slug($name) ?: 'game-' . mt_rand();
         $game->save();
 
@@ -66,7 +66,7 @@ class SearchDialectTest extends TestCase
             ->assertSee('Xenon')
             ->assertDontSee('1943');
 
-        $this->assertSame(['Xenon'], $response->viewData('games')->pluck('game_name')->all());
+        $this->assertSame(['Xenon'], $response->viewData('games')->pluck('name')->all());
         $this->assertSame(['Xtracker'], $response->viewData('software')->pluck('name')->all());
     }
 
@@ -79,7 +79,7 @@ class SearchDialectTest extends TestCase
             ->assertSee('1943')
             ->assertDontSee('Xenon');
 
-        $this->assertSame(['1943'], $response->viewData('games')->pluck('game_name')->all());
+        $this->assertSame(['1943'], $response->viewData('games')->pluck('name')->all());
         $this->assertSame(['4-Mat Ripper'], $response->viewData('software')->pluck('name')->all());
     }
 
@@ -93,7 +93,7 @@ class SearchDialectTest extends TestCase
             ->assertDontSee('4-Mat Ripper');
 
         $this->assertSame(['Xtracker'], $response->viewData('software')->pluck('name')->all());
-        $this->assertSame(['Xenon'], $response->viewData('games')->pluck('game_name')->all());
+        $this->assertSame(['Xenon'], $response->viewData('games')->pluck('name')->all());
     }
 
     public function testMenuSearchByDigit()
@@ -106,7 +106,7 @@ class SearchDialectTest extends TestCase
             ->assertDontSee('Xtracker');
 
         $this->assertSame(['4-Mat Ripper'], $response->viewData('software')->pluck('name')->all());
-        $this->assertSame(['1943'], $response->viewData('games')->pluck('game_name')->all());
+        $this->assertSame(['1943'], $response->viewData('games')->pluck('name')->all());
     }
 
     public function testSearchFormListsReleaseYears()

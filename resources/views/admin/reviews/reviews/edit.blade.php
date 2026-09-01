@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', "Review - ".(isset($review) ? $review->games[0]->game_name : 'Create review'))
+@section('title', "Review - ".(isset($review) ? $review->games[0]->name : 'Create review'))
 
 @section('content')
     <div class="row">

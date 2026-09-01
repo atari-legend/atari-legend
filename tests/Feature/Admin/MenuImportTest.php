@@ -35,7 +35,7 @@ class MenuImportTest extends TestCase
     private function game(string $name): Game
     {
         $game = new Game();
-        $game->game_name = $name;
+        $game->name = $name;
         $game->slug = \Illuminate\Support\Str::slug($name);
         $game->save();
 
@@ -127,7 +127,7 @@ class MenuImportTest extends TestCase
                 'existing_disk_id'    => $disk->id,
                 'existing_disk_label' => $disk->label,
                 'contents'            => [$this->content([
-                    'game_id' => $game->getKey(), 'game_name' => $game->game_name, 'link_mode' => 'new_release',
+                    'game_id' => $game->getKey(), 'game_name' => $game->name, 'link_mode' => 'new_release',
                 ])],
             ])],
         ])];
@@ -165,7 +165,7 @@ class MenuImportTest extends TestCase
                 'part'         => 'B',
                 'condition_id' => $condition->id,
                 'contents'     => [$this->content([
-                    'game_id' => $game->getKey(), 'game_name' => $game->game_name, 'link_mode' => 'new_release',
+                    'game_id' => $game->getKey(), 'game_name' => $game->name, 'link_mode' => 'new_release',
                 ])],
             ])],
         ])];
@@ -201,11 +201,11 @@ class MenuImportTest extends TestCase
                 'existing_disk_label' => $disk->label,
                 'contents'            => [
                     $this->content([
-                        'order'     => 1, 'game_id' => $game->getKey(), 'game_name' => $game->game_name,
+                        'order'     => 1, 'game_id' => $game->getKey(), 'game_name' => $game->name,
                         'link_mode' => 'new_release',
                     ]),
                     $this->content([
-                        'order'   => 2, 'game_id' => $game->getKey(), 'game_name' => $game->game_name,
+                        'order'   => 2, 'game_id' => $game->getKey(), 'game_name' => $game->name,
                         'subtype' => 'Docs', 'link_mode' => 'extra',
                     ]),
                 ],
@@ -272,7 +272,7 @@ class MenuImportTest extends TestCase
             'disks'   => [$this->disk([
                 'part'     => null,
                 'contents' => [$this->content([
-                    'game_id' => $game->getKey(), 'game_name' => $game->game_name, 'link_mode' => 'new_release',
+                    'game_id' => $game->getKey(), 'game_name' => $game->name, 'link_mode' => 'new_release',
                 ])],
             ])],
         ])];
@@ -307,14 +307,14 @@ class MenuImportTest extends TestCase
                     'part'         => 'A',
                     'condition_id' => $condition->id,
                     'contents'     => [$this->content([
-                        'game_id' => $dropped->getKey(), 'game_name' => $dropped->game_name,
+                        'game_id' => $dropped->getKey(), 'game_name' => $dropped->name,
                     ])],
                 ]),
                 $this->disk([
                     'part'         => 'B',
                     'condition_id' => $condition->id,
                     'contents'     => [$this->content([
-                        'game_id' => $kept->getKey(), 'game_name' => $kept->game_name,
+                        'game_id' => $kept->getKey(), 'game_name' => $kept->name,
                     ])],
                 ]),
             ],
@@ -355,7 +355,7 @@ class MenuImportTest extends TestCase
                     'part'         => 'A',
                     'condition_id' => $condition->id,
                     'contents'     => [$this->content([
-                        'game_id' => $game->getKey(), 'game_name' => $game->game_name,
+                        'game_id' => $game->getKey(), 'game_name' => $game->name,
                     ])],
                 ])],
             ]),
@@ -403,9 +403,9 @@ class MenuImportTest extends TestCase
                 'disks'  => [$this->disk([
                     'condition_id' => $condition->id,
                     'contents'     => [
-                        $this->content(['order' => 1, 'game_id' => $first->getKey(), 'game_name' => $first->game_name]),
-                        $this->content(['order' => 2, 'game_id' => $dropped->getKey(), 'game_name' => $dropped->game_name]),
-                        $this->content(['order' => 3, 'game_id' => $last->getKey(), 'game_name' => $last->game_name]),
+                        $this->content(['order' => 1, 'game_id' => $first->getKey(), 'game_name' => $first->name]),
+                        $this->content(['order' => 2, 'game_id' => $dropped->getKey(), 'game_name' => $dropped->name]),
+                        $this->content(['order' => 3, 'game_id' => $last->getKey(), 'game_name' => $last->name]),
                     ],
                 ])],
             ])])

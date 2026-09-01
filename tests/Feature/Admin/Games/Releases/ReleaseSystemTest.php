@@ -66,7 +66,7 @@ class ReleaseSystemTest extends AdminTestCase
         $this->assertSame(['Low'], $release->resolutions->pluck('name')->all());
         $this->assertSame(['Falcon'], $release->systemIncompatibles->pluck('name')->all());
         $this->assertSame(['Hatari'], $release->emulatorIncompatibles->pluck('name')->all());
-        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->name);
     }
 
     /**
@@ -148,13 +148,13 @@ class ReleaseSystemTest extends AdminTestCase
         $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('STE', $row->system->name);
         $this->assertSame('Sound', $row->enhancement->name);
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
 
         $this->delete(route('admin.games.releases.system-enhancement.destroy', [$release->game, $release, $row]))
             ->assertRedirect(route('admin.games.releases.system.index', [$release->game, $release]));
 
         $this->assertSame(0, GameReleaseSystemEnhanced::query()->count());
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     /**
@@ -213,13 +213,13 @@ class ReleaseSystemTest extends AdminTestCase
         $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('1.62', $row->tos->name);
         $this->assertSame('de', $row->language_id);
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
 
         $this->delete(route('admin.games.releases.system-tos-incompatibility.destroy', [$release->game, $release, $row]))
             ->assertRedirect();
 
         $this->assertSame(0, GameReleaseTosVersionIncompatibility::query()->count());
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     public function test_an_incompatible_tos_needs_a_known_version_and_language(): void
@@ -328,14 +328,14 @@ class ReleaseSystemTest extends AdminTestCase
         $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('1 MB', $row->memory->name);
         $this->assertSame('Extra levels', $row->enhancement->name);
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
 
         $this->delete(route('admin.games.releases.system-memory-enhancement.destroy', [
             $release->game, $release, $row,
         ]))->assertRedirect();
 
         $this->assertSame(0, GameReleaseMemoryEnhanced::query()->count());
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     public function test_a_memory_enhancement_needs_a_known_memory(): void
@@ -392,14 +392,14 @@ class ReleaseSystemTest extends AdminTestCase
 
         $this->assertSame(['Code wheel'], $attached->pluck('name')->all());
         $this->assertSame('Page 12 of the manual', $attached->first()->pivot->notes);
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
 
         $this->delete(route('admin.games.releases.system-copy-protection.destroy', [
             $release->game, $release, $protection,
         ]))->assertRedirect();
 
         $this->assertCount(0, $release->fresh()->copyProtections);
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     public function test_a_copy_protection_must_be_a_known_one(): void
@@ -453,14 +453,14 @@ class ReleaseSystemTest extends AdminTestCase
 
         $this->assertSame(['Rob Northen Copylock'], $attached->pluck('name')->all());
         $this->assertSame('Track 79', $attached->first()->pivot->notes);
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
 
         $this->delete(route('admin.games.releases.system-disk-protection.destroy', [
             $release->game, $release, $protection,
         ]))->assertRedirect();
 
         $this->assertCount(0, $release->fresh()->diskProtections);
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     public function test_a_disk_protection_must_be_a_known_one(): void

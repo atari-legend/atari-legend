@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $game->game_name.' - Atari ST game')
+@section('title', $game->name.' - Atari ST game')
 @section('description', GameHelper::description($game))
 
 @if ($game->screenshots->isNotEmpty())
@@ -7,7 +7,7 @@
 @endif
 
 @section('content')
-    <h1 class="visually-hidden">{{ $game->game_name }}</h1>
+    <h1 class="visually-hidden">{{ $game->name }}</h1>
     <div class="row">
         <div class="col-12 col-sm-6 col-lg-3 lightbox-gallery">
             @include('games.card_gameinfo')

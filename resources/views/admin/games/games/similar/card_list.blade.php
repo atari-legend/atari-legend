@@ -9,7 +9,7 @@
             <div class="col">
                 <input class="autocomplete form-control @error('similar_name') is-invalid @enderror" name="similar_name"
                     id="similar_name" type="search" data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
-                    data-autocomplete-key="game_name" data-autocomplete-id="id"
+                    data-autocomplete-key="name" data-autocomplete-id="id"
                     data-autocomplete-companion="similar" value="{{ old('similar_name') }}"
                     placeholder="Type a game name..." autocomplete="off" required>
                 <input type="hidden" name="similar" value="{{ old('similar') }}">
@@ -36,7 +36,7 @@
                 <tbody>
                     @foreach ($game->allSimilarGames as $similar)
                         <tr>
-                            <td><a href="{{ route('admin.games.games.edit', $similar) }}">{{ $similar->game_name }}</a>
+                            <td><a href="{{ route('admin.games.games.edit', $similar) }}">{{ $similar->name }}</a>
                             </td>
                             <td>
                                 <form
@@ -45,7 +45,7 @@
                                     onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                     @csrf
                                     @method('DELETE')
-                                    <button title="Delete similar game '{{ $similar->game_name }}'" class="btn btn-sm">
+                                    <button title="Delete similar game '{{ $similar->name }}'" class="btn btn-sm">
                                         <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                     </button>
                                 </form>

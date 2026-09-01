@@ -13,20 +13,20 @@ class GamesTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('game_name');
+        $this->setDefaultSort('name');
     }
 
     public function columns(): array
     {
         return [
             LinkColumn::make('Name')
-                ->title(fn ($row) => $row->game_name)
+                ->title(fn ($row) => $row->name)
                 ->location(fn ($row) => route('admin.games.games.edit', $row))
                 ->searchable(
-                    fn (Builder $query, string $term) => $query->where('game_name', 'like', '%' . $term . '%')
+                    fn (Builder $query, string $term) => $query->where('name', 'like', '%' . $term . '%')
                 )
                 ->sortable(
-                    fn (Builder $query, string $direction) => $query->orderBy('game_name', $direction)
+                    fn (Builder $query, string $direction) => $query->orderBy('name', $direction)
                 ),
             Column::make('Screenshot')
                 ->label(

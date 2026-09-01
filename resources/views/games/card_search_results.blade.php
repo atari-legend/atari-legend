@@ -9,7 +9,7 @@
                 <div class="col position-relative">
                     <input type="text" class="autocomplete form-control"
                         data-autocomplete-endpoint="{{ route('ajax.games') }}"
-                        data-autocomplete-key="game_name" data-autocomplete-submit="true"
+                        data-autocomplete-key="name" data-autocomplete-submit="true"
                         value="{{ old('title', $title) }}"
                         id="title" name="title" autocomplete="off">
                 </div>
@@ -87,13 +87,13 @@
 
                     <a href="{{ route('games.show', ['game' => $game]) }}">
                         @if ($game->screenshots->isNotEmpty())
-                            <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->game_name }}">
+                            <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}">
                         @else
-                            <img class="w-100 mb-2 bg-black" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->game_name }}">
+                            <img class="w-100 mb-2 bg-black" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->name }}">
                         @endif
                     </a>
 
-                    <a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->game_name }}</a><br>
+                    <a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->name }}</a><br>
 
                     @if ($game->developers->isNotEmpty())
                         <span class="text-muted">by</span>

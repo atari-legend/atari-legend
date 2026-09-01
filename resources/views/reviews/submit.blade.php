@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Add a review for '.$game->first()->game_name.' (Atari ST)')
+@section('title', 'Add a review for '.$game->first()->name.' (Atari ST)')
 
 @section('content')
     <h1 class="visually-hidden">Submit review</h1>

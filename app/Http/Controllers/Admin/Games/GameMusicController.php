@@ -16,9 +16,9 @@ class GameMusicController extends Controller
     {
         $query = Sndh::select('sndhs.*');
         if (\Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite') {
-            $query->where('title', 'like', '%' . $game->game_name . '%');
+            $query->where('title', 'like', '%' . $game->name . '%');
         } else {
-            $query->whereRaw('MATCH(title) AGAINST(?)', [$game->game_name]);
+            $query->whereRaw('MATCH(title) AGAINST(?)', [$game->name]);
         }
         $sndhs = $query->whereNotIn('id', $game->sndhs->pluck('id'))->get();
 
@@ -26,7 +26,7 @@ class GameMusicController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                    new Crumb(route('admin.games.games.edit', $game), $game->name),
                     new Crumb(route('admin.games.game-music.index', $game), 'Music'),
                 ],
                 'game'        => $game,
@@ -44,7 +44,7 @@ class GameMusicController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Games',
                 'section_id'       => $game->getKey(),
-                'section_name'     => $game->game_name,
+                'section_name'     => $game->name,
                 'sub_section'      => 'Music',
                 'sub_section_id'   => 0,
                 'sub_section_name' => $sndh->id,
@@ -62,7 +62,7 @@ class GameMusicController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Music',
             'sub_section_id'   => 0,
             'sub_section_name' => $sndh->id,
@@ -82,7 +82,7 @@ class GameMusicController extends Controller
                     'action'           => Changelog::INSERT,
                     'section'          => 'Games',
                     'section_id'       => $game->getKey(),
-                    'section_name'     => $game->game_name,
+                    'section_name'     => $game->name,
                     'sub_section'      => 'Music',
                     'sub_section_id'   => 0,
                     'sub_section_name' => $sndh->id,

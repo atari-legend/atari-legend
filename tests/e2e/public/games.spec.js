@@ -265,7 +265,7 @@ test.describe('Games search autocomplete', () => {
       `/ajax/games.json?q=${encodeURIComponent(FIXTURE.game.name)}`
     );
 
-    const names = (await response.json()).map((row) => row.game_name);
+    const names = (await response.json()).map((row) => row.name);
     expect(names).toContain(FIXTURE.game.name);
   });
 
@@ -276,7 +276,7 @@ test.describe('Games search autocomplete', () => {
     // has to come first - which is only true if the ranking runs at all.
     const response = await page.request.get('/ajax/games.json?q=Xenon');
 
-    const names = (await response.json()).map((row) => row.game_name);
+    const names = (await response.json()).map((row) => row.name);
     expect(names).toContain(FIXTURE.game.akaName);
     expect(names.indexOf(FIXTURE.game.akaName)).toBeLessThan(names.indexOf(FIXTURE.game.name));
   });

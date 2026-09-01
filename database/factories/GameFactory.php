@@ -23,7 +23,7 @@ class GameFactory extends Factory
         $name = Str::title(fake()->unique()->words(3, true));
 
         return [
-            'game_name'                        => $name,
+            'name'                             => $name,
             'slug'                             => Str::slug($name),
             'game_series_id'                   => null,
             'port_id'                          => null,
@@ -41,7 +41,7 @@ class GameFactory extends Factory
     public function named(string $name): static
     {
         return $this->state(fn () => [
-            'game_name' => $name,
+            'name' => $name,
             'slug'      => Str::slug($name),
         ]);
     }

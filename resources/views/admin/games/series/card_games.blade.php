@@ -9,7 +9,7 @@
             <div class="col">
                 <input class="autocomplete form-control @error('game_name') is-invalid @enderror" name="game_name"
                     id="game_name" type="search" data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
-                    data-autocomplete-key="game_name" data-autocomplete-id="id" data-autocomplete-companion="game"
+                    data-autocomplete-key="name" data-autocomplete-id="id" data-autocomplete-companion="game"
                     value="{{ old('game_name') }}" placeholder="Type a game name..." autocomplete="off" required>
                 <input type="hidden" name="game" value="{{ old('game') }}">
 
@@ -35,9 +35,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($series->games->sortBy('game_name') as $game)
+                    @foreach ($series->games->sortBy('name') as $game)
                         <tr>
-                            <td><a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->game_name }}</a></td>
+                            <td><a href="{{ route('admin.games.games.edit', $game) }}">{{ $game->name }}</a></td>
                             <td>
                                 <form
                                     action="{{ route('admin.games.series.game.destroy', ['series' => $series, 'game' => $game]) }}"
@@ -45,7 +45,7 @@
                                     onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                     @csrf
                                     @method('DELETE')
-                                    <button title="Remove game '{{ $game->game_name }}'" class="btn btn-sm">
+                                    <button title="Remove game '{{ $game->name }}'" class="btn btn-sm">
                                         <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                                     </button>
                                 </form>

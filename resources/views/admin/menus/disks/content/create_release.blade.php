@@ -25,7 +25,7 @@
         name="game_name" id="game_name" type="search"
         data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
         data-autocomplete-max="20"
-        data-autocomplete-key="game_name" data-autocomplete-id="id"
+        data-autocomplete-key="name" data-autocomplete-id="id"
         data-autocomplete-companion="game" value="{{ old('game_name') }}"
         placeholder="Type a game name..." autocomplete="off">
     <input type="hidden" name="game" value="{{ old('game') }}">
@@ -44,7 +44,7 @@
         id="release" name="release">
         <option value="">-- Select --</option>
         @foreach ($diskReleases as $release)
-            <option value="{{ $release->id }}" @if((int) old('release') === $release->id) selected @endif>{{ $release->game->game_name }}</option>
+            <option value="{{ $release->id }}" @if((int) old('release') === $release->id) selected @endif>{{ $release->game->name }}</option>
         @endforeach
     </select>
 </div>

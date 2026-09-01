@@ -17,7 +17,7 @@ class GameSimilarController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                    new Crumb(route('admin.games.games.edit', $game), $game->name),
                     new Crumb(route('admin.games.game-similar.index', $game), 'Similar'),
                 ],
                 'game'        => $game,
@@ -34,10 +34,10 @@ class GameSimilarController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Games',
                 'section_id'       => $game->getKey(),
-                'section_name'     => $game->game_name,
+                'section_name'     => $game->name,
                 'sub_section'      => 'Similar',
                 'sub_section_id'   => $similar->getKey(),
-                'sub_section_name' => $similar->game_name,
+                'sub_section_name' => $similar->name,
             ]);
         }
 
@@ -63,10 +63,10 @@ class GameSimilarController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Similar',
             'sub_section_id'   => $similar->getKey(),
-            'sub_section_name' => $similar->game_name,
+            'sub_section_name' => $similar->name,
         ]);
 
         return redirect()->route('admin.games.game-similar.index', $game);

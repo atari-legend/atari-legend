@@ -134,7 +134,7 @@ class MenuSetController extends Controller
         $searchPossible = false;
 
         if ($request->filled('titleAZ')) {
-            Helper::whereTitleStartsWith($games, 'game_name', $request->input('titleAZ'));
+            Helper::whereTitleStartsWith($games, 'games.name', $request->input('titleAZ'));
             Helper::whereTitleStartsWith($software, 'name', $request->input('titleAZ'));
             $searchPossible = true;
         }
@@ -144,9 +144,9 @@ class MenuSetController extends Controller
             $searchPossible = true;
 
             $games->where(function (Builder $query) use ($request) {
-                $query->where('game_name', 'like', '%' . $request->input('title') . '%')
+                $query->where('games.name', 'like', '%' . $request->input('title') . '%')
                     ->orWhereHas('akas', function (Builder $subQuery) use ($request) {
-                        $subQuery->where('aka_name', 'like', '%' . $request->input('title') . '%');
+                        $subQuery->where('name', 'like', '%' . $request->input('title') . '%');
                     });
             });
         }
@@ -157,7 +157,7 @@ class MenuSetController extends Controller
             $games->where('games.id', '<', 0);
         }
 
-        $games->orderBy('game_name')
+        $games->orderBy('games.name')
             ->paginate(GameSearchController::PAGE_SIZE);
 
         $software->orderBy('name')

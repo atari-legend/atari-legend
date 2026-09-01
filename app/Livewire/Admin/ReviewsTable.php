@@ -28,17 +28,17 @@ class ReviewsTable extends DataTableComponent
         return [
             LinkColumn::make('Game')
                 ->title(
-                    fn ($row) => $row->game_name
+                    fn ($row) => $row->name
                 )
                 ->location(
                     fn ($row) => route('admin.reviews.reviews.edit', $row)
                 )
                 ->searchable(
-                    fn ($query, $term) => $query->where('game_name', 'like', "%{$term}%")
+                    fn ($query, $term) => $query->where('games.name', 'like', "%{$term}%")
                         ->orWhere('review_text', 'like', "%{$term}%")
                 )
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('game_name', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('games.name', $direction)
                 ),
             Column::make('Date')
                 ->label(
@@ -62,7 +62,7 @@ class ReviewsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Review::select('reviews.*', 'games.game_name')
+        return Review::select('reviews.*', 'games.name')
             ->where('review_edit', '=', $this->submissions)
             ->leftJoin('review_game', 'review_game.review_id', '=', 'reviews.id')
             ->leftJoin('games', 'review_game.game_id', '=', 'games.id');

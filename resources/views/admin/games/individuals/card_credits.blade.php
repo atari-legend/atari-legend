@@ -6,8 +6,8 @@
         <h3 class="fs-5">Games</h3>
         @if ($individual->games->isNotEmpty())
             <ul>
-                @foreach ($individual->games->sortBy('game_name') as $game)
-                    <li><a href="{{ route('admin.games.game-credits.index', $game) }}">{{ $game->game_name }}</a>
+                @foreach ($individual->games->sortBy('name') as $game)
+                    <li><a href="{{ route('admin.games.game-credits.index', $game) }}">{{ $game->name }}</a>
                         <span class="text-muted">{{ $game->pivot->individualRole?->name }}</span></li>
                 @endforeach
             </ul>

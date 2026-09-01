@@ -16,7 +16,7 @@ class IssuesController extends Controller
     public function index()
     {
         $gamesWithoutRelease = Game::doesntHave('releases')
-            ->orderBy('game_name')
+            ->orderBy('name')
             ->get();
         $gameWithoutGenre = Game::has('screenshots')
             ->doesntHave('genres')
@@ -24,10 +24,10 @@ class IssuesController extends Controller
             ->shuffle()
             ->first();
         $gamesWithoutScreenshot = Game::doesntHave('screenshots')
-            ->orderBy('game_name')
+            ->orderBy('name')
             ->get();
         $gamesWithBadSlug = Game::where('slug', 'like', '%-id-%')
-            ->orderBy('game_name')
+            ->orderBy('name')
             ->get();
         $releaseWithoutScans = GameRelease::where('license', '=', 'Commercial')
             ->whereDoesntHave('boxscans')
@@ -59,10 +59,10 @@ class IssuesController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Game',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.issues');

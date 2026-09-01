@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
-            <a href="{{ route('games.show', ['game' => $review->games->first()]) }}">{{ $review->games->first()->game_name }}</a>
+            <a href="{{ route('games.show', ['game' => $review->games->first()]) }}">{{ $review->games->first()->name }}</a>
             @contributor
                 <a href="{{ route('admin.reviews.reviews.edit', $review) }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>

@@ -12,7 +12,7 @@
             <a href="{{ route('admin.games.releases.scans.index', [
                 'game' => $release->game,
                 'release' => $release
-            ]) }}">{{ $release->game->game_name }}</a>
+            ]) }}">{{ $release->game->name }}</a>
             <span class="text-muted">({{$release->full_label}})</span>
             @if (!$loop->last)
                 <span class="me-2">,</span>

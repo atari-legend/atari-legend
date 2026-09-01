@@ -16,11 +16,11 @@ class GameAndSoftwareController extends Controller
         $q = $request->q;
 
         $games = DB::table('games')
-            ->select('game_name as name', 'id', DB::raw("'fa-gamepad' as icon"))
+            ->select('name', 'id', DB::raw("'fa-gamepad' as icon"))
             ->limit(GameAndSoftwareController::MAX);
 
         $akas = DB::table('game_akas')
-            ->select('aka_name as name', 'game_id as id', DB::raw("'fa-gamepad' as icon"))
+            ->select('name', 'game_id as id', DB::raw("'fa-gamepad' as icon"))
             ->limit(GameAndSoftwareController::MAX);
 
         $software = DB::table('menu_software')
@@ -36,21 +36,21 @@ class GameAndSoftwareController extends Controller
             // quotes made it measure the literal string, so it was the same
             // number for every row and sorted nothing. It now measures the
             // column, which is what the PHP sort below has always done.
-            $games = $games->where('game_name', 'like', '%' . $q . '%')
-                ->orderByRaw('instr(game_name, ?)', [$q])
-                ->orderByRaw('length(game_name)')
-                ->orderBy('game_name');
-            $akas = $akas->where('aka_name', 'like', '%' . $q . '%')
-                ->orderByRaw('instr(aka_name, ?)', [$q])
-                ->orderByRaw('length(aka_name)')
-                ->orderBy('aka_name');
+            $games = $games->where('name', 'like', '%' . $q . '%')
+                ->orderByRaw('instr(name, ?)', [$q])
+                ->orderByRaw('length(name)')
+                ->orderBy('name');
+            $akas = $akas->where('name', 'like', '%' . $q . '%')
+                ->orderByRaw('instr(name, ?)', [$q])
+                ->orderByRaw('length(name)')
+                ->orderBy('name');
             $software = $software->where('name', 'like', '%' . $q . '%')
                 ->orderByRaw('instr(name, ?)', [$q])
                 ->orderByRaw('length(name)')
                 ->orderBy('name');
         } else {
-            $games = $games->orderBy('game_name');
-            $akas = $akas->orderBy('aka_name');
+            $games = $games->orderBy('name');
+            $akas = $akas->orderBy('name');
             $software = $software->orderBy('name');
         }
 

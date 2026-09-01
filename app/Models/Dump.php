@@ -40,7 +40,7 @@ class Dump extends Model
     public function getDownloadFilenameAttribute()
     {
         $name = [
-            $this->media->release->game->game_name,
+            $this->media->release->game->name,
             '(' . $this->media->release->year . ')',
         ];
 

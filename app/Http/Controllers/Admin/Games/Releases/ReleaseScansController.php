@@ -23,7 +23,7 @@ class ReleaseScansController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $release->game), $release->game->game_name),
+                    new Crumb(route('admin.games.games.edit', $release->game), $release->game->name),
                     new Crumb(route('admin.games.releases.index', $release->game), 'Releases'),
                     new Crumb(
                         route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]),
@@ -50,7 +50,7 @@ class ReleaseScansController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Game Release',
             'section_id'       => $release->getKey(),
-            'section_name'     => $release->game->game_name,
+            'section_name'     => $release->game->name,
             'sub_section'      => 'Scan',
             'sub_section_id'   => $scan->getKey(),
             'sub_section_name' => $scan->type,
@@ -71,7 +71,7 @@ class ReleaseScansController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Game Release',
             'section_id'       => $release->getKey(),
-            'section_name'     => $release->game->game_name,
+            'section_name'     => $release->game->name,
             'sub_section'      => 'Scan',
             'sub_section_id'   => $scan->getKey(),
             'sub_section_name' => $scan->type,
@@ -120,7 +120,7 @@ class ReleaseScansController extends Controller
                 'action'           => Changelog::INSERT,
                 'section'          => 'Game Release',
                 'section_id'       => $release->getKey(),
-                'section_name'     => $release->game->game_name,
+                'section_name'     => $release->game->name,
                 'sub_section'      => 'Scan',
                 'sub_section_id'   => $scan->getKey(),
                 'sub_section_name' => $scan->type,

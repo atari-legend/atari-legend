@@ -8,7 +8,7 @@ class GameAka extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['game_id', 'aka_name', 'language_id'];
+    protected $fillable = ['game_id', 'name', 'language_id'];
 
     public function language()
     {

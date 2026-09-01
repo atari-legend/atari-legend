@@ -167,7 +167,7 @@ test.describe('Admin games autocompletes', () => {
     // can catch it, which is what the fixture's AKA is for.
     expect(Array.isArray(rows)).toBe(true);
 
-    const names = rows.map((row) => row.game_name);
+    const names = rows.map((row) => row.name);
     const aka = `${FIXTURE.game.akaName} [${FIXTURE.company.name}]`;
     const game = `${FIXTURE.game.name} [${FIXTURE.company.name}]`;
 

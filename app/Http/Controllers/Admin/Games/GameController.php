@@ -47,7 +47,7 @@ class GameController extends Controller
                     [
                         'breadcrumbs' => [
                             new Crumb(route('admin.games.games.index'), 'Games'),
-                            new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                            new Crumb(route('admin.games.games.edit', $game), $game->name),
                         ],
                         'game'                 => $game,
                     ]
@@ -77,7 +77,7 @@ class GameController extends Controller
     {
         $this->validateGame($request, null);
         $game = Game::create([
-            'game_name' => $request->name,
+            'name' => $request->name,
             'slug'      => $request->slug,
         ]);
 
@@ -87,10 +87,10 @@ class GameController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Game',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.games.edit', $game);
@@ -101,7 +101,7 @@ class GameController extends Controller
         $this->validateGame($request, $game->getKey());
 
         $game->update([
-            'game_name'          => $request->name,
+            'name'               => $request->name,
             'slug'               => $request->slug,
         ]);
 
@@ -111,10 +111,10 @@ class GameController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Game',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.games.edit', $game);
@@ -130,7 +130,7 @@ class GameController extends Controller
         if (! $game->is_deletable) {
             $request->session()->flash(
                 'alert-danger',
-                "'{$game->game_name}' cannot be deleted while anything still references it."
+                "'{$game->name}' cannot be deleted while anything still references it."
             );
 
             return redirect()->route('admin.games.games.index');
@@ -138,7 +138,7 @@ class GameController extends Controller
 
         // The changelog outlives the game, so read what names it first
         $key = $game->getKey();
-        $name = $game->game_name;
+        $name = $game->name;
 
         DB::transaction(function () use ($game) {
             // Everything with a foreign key to `game` cascades, and since the
@@ -247,10 +247,10 @@ class GameController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Game',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.games.edit', $game);
@@ -260,7 +260,7 @@ class GameController extends Controller
     {
         $aka = GameAka::create([
             'game_id'     => $game->getKey(),
-            'aka_name'    => $request->aka,
+            'name'        => $request->aka,
             'language_id' => $request->language,
         ]);
 
@@ -268,10 +268,10 @@ class GameController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'AKA',
             'sub_section_id'   => $aka->getKey(),
-            'sub_section_name' => $aka->aka_name,
+            'sub_section_name' => $aka->name,
         ]);
 
         return redirect()->route('admin.games.games.edit', $game);
@@ -285,10 +285,10 @@ class GameController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
             'section_id'       => $aka->game->getKey(),
-            'section_name'     => $aka->game->game_name,
+            'section_name'     => $aka->game->name,
             'sub_section'      => 'AKA',
             'sub_section_id'   => $aka->getKey(),
-            'sub_section_name' => $aka->aka_name,
+            'sub_section_name' => $aka->name,
         ]);
 
         return redirect()->route('admin.games.games.edit', $aka->game);
@@ -306,10 +306,10 @@ class GameController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Vs',
             'sub_section_id'   => $vs->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.games.edit', $game);
@@ -329,10 +329,10 @@ class GameController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
             'section_id'       => $vs->atari->getKey(),
-            'section_name'     => $vs->atari->game_name,
+            'section_name'     => $vs->atari->name,
             'sub_section'      => 'Vs',
             'sub_section_id'   => $vs->amiga_id,
-            'sub_section_name' => $vs->atari->game_name,
+            'sub_section_name' => $vs->atari->name,
         ]);
 
         return redirect()->route('admin.games.games.edit', $vs->atari);

@@ -21,7 +21,7 @@ class GameHelperDescriptionTest extends TestCase
     public function testEverything()
     {
         $game = new Game();
-        $game->game_name = 'Name of the game';
+        $game->name = 'Name of the game';
         $game->slug = 'slug';
 
         $game->save();
@@ -59,11 +59,11 @@ class GameHelperDescriptionTest extends TestCase
         $game->reviews()->save(new Review(['review_text' => '', 'review_date' => now()]));
 
         $aka1 = new GameAka();
-        $aka1->aka_name = 'AKA 1';
+        $aka1->name = 'AKA 1';
         $game->akas()->save($aka1);
 
         $aka2 = new GameAka();
-        $aka2->aka_name = 'AKA 2';
+        $aka2->name = 'AKA 2';
         $game->akas()->save($aka2);
 
         $release1 = new GameRelease();
@@ -100,7 +100,7 @@ class GameHelperDescriptionTest extends TestCase
     public function testSimple()
     {
         $game = new Game();
-        $game->game_name = 'Name of the game';
+        $game->name = 'Name of the game';
         $game->slug = 'slug';
 
         $game->save();

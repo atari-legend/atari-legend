@@ -332,7 +332,7 @@ class GamePanelsTest extends AdminTestCase
         $this->post(route('admin.games.game-similar.store', $game), ['similar' => $similar->getKey()])
             ->assertRedirect(route('admin.games.game-similar.index', $game));
 
-        $this->assertSame(['Xenon 2'], $game->fresh()->similarGames->pluck('game_name')->all());
+        $this->assertSame(['Xenon 2'], $game->fresh()->similarGames->pluck('name')->all());
 
         $this->delete(route('admin.games.game-similar.destroy', [$game, $similar]))->assertRedirect();
 

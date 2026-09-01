@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4 card-screenshots">
     <div class="card-header text-center">
         <h2 class="text-uppercase d-none d-lg-block">
-            {{ $game->game_name }}
+            {{ $game->name }}
             @contributor
                 <a href="{{ route('admin.games.games.edit', $game) }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -17,7 +17,7 @@
                     <div class="carousel-thumbnails flex-grow-1 overflow-hidden" style="flex-basis: 0;" data-bs-carousel="carousel-screenshots">
                         @foreach($game->screenshots as $screenshot)
                             <a href="#carousel-screenshots" data-bs-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif>
-                                <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $game) }}" alt="Thumbnail of other screenshot of {{ $game->game_name }}">
+                                <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $game) }}" alt="Thumbnail of other screenshot of {{ $game->name }}">
                             </a>
                         @endforeach
                     </div>
@@ -32,7 +32,7 @@
                         <div class="carousel-inner">
                             @foreach($game->screenshots as $screenshot)
                                 <div class="carousel-item @if ($loop->first) active @endif">
-                                    <img class="w-100 d-block pixelated" src="{{ $screenshot->getUrlRoute('game', $game) }}" alt="Large screenshot of {{ $game->game_name }}">
+                                    <img class="w-100 d-block pixelated" src="{{ $screenshot->getUrlRoute('game', $game) }}" alt="Large screenshot of {{ $game->name }}">
                                 </div>
                             @endforeach
                         </div>

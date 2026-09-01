@@ -27,7 +27,7 @@ class IndividualController extends Controller
                 }
 
                 if ($individual->games->isNotEmpty()) {
-                    $ind_name .= ' [' . Str::limit($individual->games->pluck('game_name')->unique()->join(', '), 45, '…') . ']';
+                    $ind_name .= ' [' . Str::limit($individual->games->pluck('name')->unique()->join(', '), 45, '…') . ']';
                 }
 
                 return [

@@ -84,7 +84,7 @@ class ReleaseMediaTest extends AdminTestCase
 
         $this->assertSame($release->getKey(), $media->game_release_id);
         $this->assertSame($floppy->getKey(), $media->media_type_id);
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
     }
 
     public function test_a_medias_type_and_label_can_be_changed(): void
@@ -102,7 +102,7 @@ class ReleaseMediaTest extends AdminTestCase
 
         $this->assertSame($cartridge->getKey(), $media->media_type_id);
         $this->assertSame('Disk B', $media->label);
-        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->name);
     }
 
     /**
@@ -157,7 +157,7 @@ class ReleaseMediaTest extends AdminTestCase
         Storage::disk('public')->assertMissing($dump->path);
         Storage::disk('public')->assertMissing($scan->path);
 
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     public function test_the_delete_route_is_not_allowed(): void
@@ -191,7 +191,7 @@ class ReleaseMediaTest extends AdminTestCase
         Storage::disk('public')->assertExists($dump->path);
         Storage::assertMissing('filepond/xenon.stx');
 
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
     }
 
     /**
@@ -275,7 +275,7 @@ class ReleaseMediaTest extends AdminTestCase
             ->assertRedirect(route('admin.games.releases.medias.index', [$release->game, $release]));
 
         $this->assertSame('Cracked by The Replicants.', $dump->fresh()->info);
-        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->name);
     }
 
     public function test_a_dump_is_deleted_with_its_zip(): void
@@ -297,7 +297,7 @@ class ReleaseMediaTest extends AdminTestCase
         Storage::disk('public')->assertMissing($dump->path);
         Storage::disk('public')->assertExists($survivor->path);
 
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     // Media scans
@@ -322,7 +322,7 @@ class ReleaseMediaTest extends AdminTestCase
         Storage::disk('public')->assertExists($scan->path);
         Storage::assertMissing('filepond/label.png');
 
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
     }
 
     /**
@@ -342,7 +342,7 @@ class ReleaseMediaTest extends AdminTestCase
             ->assertRedirect(route('admin.games.releases.medias.index', [$release->game, $release]));
 
         $this->assertSame('Disk label', $scan->fresh()->type->name);
-        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->name);
     }
 
     public function test_an_unknown_media_scan_type_is_a_404(): void
@@ -375,7 +375,7 @@ class ReleaseMediaTest extends AdminTestCase
         Storage::disk('public')->assertMissing($scan->path);
         Storage::disk('public')->assertExists($survivor->path);
 
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     public function test_non_admins_are_turned_away(): void

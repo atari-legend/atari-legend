@@ -72,7 +72,7 @@ class GameControllerTest extends AdminTestCase
 
         $game = Game::sole();
 
-        $this->assertSame('Xenon', $game->game_name);
+        $this->assertSame('Xenon', $game->name);
         $this->assertSame('xenon', $game->slug);
         $this->assertChangelog(Changelog::INSERT, 'Games', 'Xenon');
     }
@@ -113,7 +113,7 @@ class GameControllerTest extends AdminTestCase
         $this->put(route('admin.games.games.update', $game), $this->payload(['name' => 'Xenon renamed']))
             ->assertRedirect(route('admin.games.games.edit', $game));
 
-        $this->assertSame('Xenon renamed', $game->fresh()->game_name);
+        $this->assertSame('Xenon renamed', $game->fresh()->name);
         $this->assertSame('xenon', $game->fresh()->slug);
     }
 
@@ -204,7 +204,7 @@ class GameControllerTest extends AdminTestCase
 
         $aka = GameAka::sole();
 
-        $this->assertSame('Baburu Boburu', $aka->aka_name);
+        $this->assertSame('Baburu Boburu', $aka->name);
         $this->assertSame('ja', $aka->language_id);
         $this->assertChangelog(Changelog::INSERT, 'Games', 'Bubble Bobble');
 
@@ -283,7 +283,7 @@ class GameControllerTest extends AdminTestCase
             ]),
             'similarGames'        => $game->similarGames()->attach(Game::factory()->create()),
             'similarGamesReverse' => $game->similarGamesReverse()->attach(Game::factory()->create()),
-            'akas'                => GameAka::create(['game_id' => $game->getKey(), 'aka_name' => 'Xenon II']),
+            'akas'                => GameAka::create(['game_id' => $game->getKey(), 'name' => 'Xenon II']),
             'vs'                  => GameVs::create(['atari_id' => $game->getKey(), 'amiga_id' => 1234]),
             'comments'            => $game->comments()->attach(Comment::factory()->create()),
             'votes'               => GameVote::factory()->create([

@@ -8,7 +8,7 @@
         @csrf
         @method('DELETE')
         @if ($row->is_deletable)
-            <button type="submit" title="Delete game '{{ $row->game_name }}'" class="btn">
+            <button type="submit" title="Delete game '{{ $row->name }}'" class="btn">
                 <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
             </button>
         @else
@@ -25,7 +25,7 @@
             --}}
             <span class="d-inline-block" title="Cannot be deleted: something still references this game">
                 <button type="submit" class="btn" disabled
-                    aria-label="Cannot delete game '{{ $row->game_name }}': something still references it">
+                    aria-label="Cannot delete game '{{ $row->name }}': something still references it">
                     <i class="fas fa-trash fa-fw text-danger" aria-hidden="true"></i>
                 </button>
             </span>

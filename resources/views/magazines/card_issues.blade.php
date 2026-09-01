@@ -71,13 +71,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($issue->indices->sortBy(['page', 'game.game_name']) as $index)
+                                @foreach ($issue->indices->sortBy(['page', 'game.name']) as $index)
                                     <tr class="border-bottom border-secondary">
                                         <td>
                                             @if ($index->game || $index->menuSoftware || $index->individual)
                                                 @if ($index->game)
                                                     <a
-                                                        href="{{ route('games.show', $index->game) }}">{{ $index->game->game_name }}</a>
+                                                        href="{{ route('games.show', $index->game) }}">{{ $index->game->name }}</a>
                                                 @elseif ($index->menuSoftware)
                                                     <a
                                                         href="{{ route('menus.software', $index->menuSoftware) }}">{{ $index->menuSoftware->name }}</a>

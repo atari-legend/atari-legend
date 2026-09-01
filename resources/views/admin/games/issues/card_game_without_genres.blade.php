@@ -4,12 +4,12 @@
         @if ($gameWithoutGenre->screenshots->isNotEmpty())
             <div class="clearfix">
                 @foreach ($gameWithoutGenre->screenshots->take(4) as $screenshot)
-                    <img class="w-50 pixelated float-start" src="{{ $screenshot->getUrl('game') }}" alt="Screenshot of {{ $gameWithoutGenre->game_name }}">
+                    <img class="w-50 pixelated float-start" src="{{ $screenshot->getUrl('game') }}" alt="Screenshot of {{ $gameWithoutGenre->name }}">
                 @endforeach
             </div>
         @endif
         <h2 class="card-title px-2 my-3">
-            {{ $gameWithoutGenre->game_name }}
+            {{ $gameWithoutGenre->name }}
             <span class="text-muted fs-6">genres are…</span>
         </h2>
         <form class="px-2" method="post" action="{{ route('admin.games.issues.genres', ['game' => $gameWithoutGenre]) }}">

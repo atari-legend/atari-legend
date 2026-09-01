@@ -35,7 +35,7 @@ class GameSearchTest extends TestCase
 
     private function names(array $query): array
     {
-        return $this->search($query)->viewData('games')->pluck('game_name')->all();
+        return $this->search($query)->viewData('games')->pluck('name')->all();
     }
 
     private function developerRoleId(): int
@@ -73,7 +73,7 @@ class GameSearchTest extends TestCase
         $game = Game::factory()->named('Bubble Bobble')->create();
         DB::table('game_akas')->insert([
             'game_id'  => $game->getKey(),
-            'aka_name' => 'Baburu Boburu',
+            'name' => 'Baburu Boburu',
         ]);
 
         $this->assertSame(['Bubble Bobble'], $this->names(['title' => 'Baburu']));
@@ -115,7 +115,7 @@ class GameSearchTest extends TestCase
     {
         $release = GameRelease::factory()->publishedBy('Ocean')->create();
         $game = $release->game;
-        $game->update(['game_name' => 'Published game']);
+        $game->update(['name' => 'Published game']);
 
         Game::factory()->named('Unpublished game')->create();
 
@@ -153,7 +153,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_found_by_release_year(): void
     {
         $release = GameRelease::factory()->create(['date' => '1988-06-01']);
-        $release->game->update(['game_name' => 'From 1988']);
+        $release->game->update(['name' => 'From 1988']);
 
         GameRelease::factory()->create(['date' => '1992-01-01']);
 
@@ -215,7 +215,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_filtered_on_having_a_download(): void
     {
         $dump = \App\Models\Dump::factory()->create();
-        $dump->media->release->game->update(['game_name' => 'Dumped']);
+        $dump->media->release->game->update(['name' => 'Dumped']);
 
         Game::factory()->named('Not dumped')->create();
 
@@ -225,7 +225,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_filtered_on_having_a_box_scan(): void
     {
         $release = GameRelease::factory()->create();
-        $release->game->update(['game_name' => 'Scanned']);
+        $release->game->update(['name' => 'Scanned']);
         DB::table('game_release_scans')->insert([
             'game_release_id' => $release->getKey(),
             'type'            => 'Box front',

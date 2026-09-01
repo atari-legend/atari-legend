@@ -16,11 +16,11 @@ class GameController extends Controller
         $q = $request->q;
 
         $games = DB::table('games')
-            ->select('game_name', 'id as game_id')
+            ->select('name', 'id as game_id')
             ->limit(GameController::MAX);
 
         $akas = DB::table('game_akas')
-            ->select('aka_name as game_name', 'game_id')
+            ->select('name', 'game_id')
             ->limit(GameController::MAX);
 
         if ($q !== null) {
@@ -33,17 +33,17 @@ class GameController extends Controller
             // LOCATE() and CHAR_LENGTH() are MySQL-only. instr() takes
             // (haystack, needle), the reverse of LOCATE(). The term is bound
             // rather than pasted into the SQL, which it used to be.
-            $games = $games->where('game_name', 'like', '%' . $q . '%')
-                ->orderByRaw('instr(game_name, ?)', [$q])
-                ->orderByRaw('length(game_name)')
-                ->orderBy('game_name');
-            $akas = $akas->where('aka_name', 'like', '%' . $q . '%')
-                ->orderByRaw('instr(aka_name, ?)', [$q])
-                ->orderByRaw('length(aka_name)')
-                ->orderBy('aka_name');
+            $games = $games->where('name', 'like', '%' . $q . '%')
+                ->orderByRaw('instr(name, ?)', [$q])
+                ->orderByRaw('length(name)')
+                ->orderBy('name');
+            $akas = $akas->where('name', 'like', '%' . $q . '%')
+                ->orderByRaw('instr(name, ?)', [$q])
+                ->orderByRaw('length(name)')
+                ->orderBy('name');
         } else {
-            $games->orderBy('game_name');
-            $akas->orderBy('aka_name');
+            $games->orderBy('name');
+            $akas->orderBy('name');
         }
 
         // The SQL above orders each half; this orders the two halves against
@@ -58,9 +58,9 @@ class GameController extends Controller
             $term = Str::lower($q);
 
             $all = $all->sortBy([
-                fn ($a, $b) => strpos(Str::lower($a->game_name), $term) <=> strpos(Str::lower($b->game_name), $term),
-                fn ($a, $b) => strlen($a->game_name) <=> strlen($b->game_name),
-                fn ($a, $b) => $a->game_name <=> $b->game_name,
+                fn ($a, $b) => strpos(Str::lower($a->name), $term) <=> strpos(Str::lower($b->name), $term),
+                fn ($a, $b) => strlen($a->name) <=> strlen($b->name),
+                fn ($a, $b) => $a->name <=> $b->name,
             ]);
         }
 

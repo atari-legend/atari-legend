@@ -34,7 +34,7 @@ class TopGames extends Component
             ->joinSub($votes, 'votes', 'votes.game_id', '=', 'games.id')
             ->orderByDesc('avgScore')
             ->orderByDesc('numVotes')
-            ->orderBy('game_name')
+            ->orderBy('games.name')
             ->limit(10)
             ->get();
 

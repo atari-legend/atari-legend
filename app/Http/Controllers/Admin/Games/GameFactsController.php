@@ -20,7 +20,7 @@ class GameFactsController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                    new Crumb(route('admin.games.games.edit', $game), $game->name),
                     new Crumb(route('admin.games.game-facts.index', $game), 'Facts'),
                 ],
                 'game'        => $game,
@@ -33,7 +33,7 @@ class GameFactsController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                    new Crumb(route('admin.games.games.edit', $game), $game->name),
                     new Crumb(route('admin.games.game-facts.index', $game), 'Facts'),
                     new Crumb('', $fact->getKey()),
                 ],
@@ -48,7 +48,7 @@ class GameFactsController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                    new Crumb(route('admin.games.games.edit', $game), $game->name),
                     new Crumb(route('admin.games.game-facts.index', $game), 'Facts'),
                     new Crumb('', 'Add fact'),
                 ],
@@ -76,10 +76,10 @@ class GameFactsController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Games',
             'section_id'       => $fact->game->getKey(),
-            'section_name'     => $fact->game->game_name,
+            'section_name'     => $fact->game->name,
             'sub_section'      => 'Fact',
             'sub_section_id'   => $fact->getKey(),
-            'sub_section_name' => $fact->game->game_name,
+            'sub_section_name' => $fact->game->name,
         ]);
 
         return redirect()->route('admin.games.game-facts.index', ['game' => $fact->game]);
@@ -102,10 +102,10 @@ class GameFactsController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Fact',
             'sub_section_id'   => $fact->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.game-facts.index', ['game' => $game]);
@@ -121,10 +121,10 @@ class GameFactsController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Fact',
             'sub_section_id'   => $fact->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.game-facts.index', ['game' => $game]);

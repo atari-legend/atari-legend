@@ -121,7 +121,7 @@ class GameSeriesController extends Controller
             'section_name'     => $series->name,
             'sub_section'      => 'Game',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.series.edit', $series);
@@ -141,7 +141,7 @@ class GameSeriesController extends Controller
             'section_name'     => $series->name,
             'sub_section'      => 'Game',
             'sub_section_id'   => $game->getKey(),
-            'sub_section_name' => $game->game_name,
+            'sub_section_name' => $game->name,
         ]);
 
         return redirect()->route('admin.games.series.edit', $series);

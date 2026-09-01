@@ -29,7 +29,7 @@
         @endif
 
         @if (isset($showGame) && $showGame === true && $comment->games->isNotEmpty())
-            <span class="float-end"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->game_name }}</a></span>
+            <span class="float-end"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->name }}</a></span>
         @endif
     </div>
 

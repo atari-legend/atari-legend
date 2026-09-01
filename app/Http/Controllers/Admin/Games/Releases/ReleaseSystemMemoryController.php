@@ -36,10 +36,10 @@ class ReleaseSystemMemoryController extends Controller
                 'action'           => Changelog::UPDATE,
                 'section'          => 'Game Release',
                 'section_id'       => $release->getKey(),
-                'section_name'     => $release->game->game_name,
+                'section_name'     => $release->game->name,
                 'sub_section'      => 'Minimum Memory',
                 'sub_section_id'   => $release->getKey(),
-                'sub_section_name' => $release->game->game_name,
+                'sub_section_name' => $release->game->name,
             ]);
         }
 
@@ -60,10 +60,10 @@ class ReleaseSystemMemoryController extends Controller
                 'action'           => Changelog::UPDATE,
                 'section'          => 'Game Release',
                 'section_id'       => $release->getKey(),
-                'section_name'     => $release->game->game_name,
+                'section_name'     => $release->game->name,
                 'sub_section'      => 'Incompatible Memory',
                 'sub_section_id'   => $release->getKey(),
-                'sub_section_name' => $release->game->game_name,
+                'sub_section_name' => $release->game->name,
             ]);
         }
 

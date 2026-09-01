@@ -9,7 +9,7 @@
             {{ Carbon\Carbon::createFromTimestamp($submission->timestamp)->toDayDateTimeString() }}
             <br>
             <span class="text-muted">For</span> <a
-                href="{{ route('games.show', $submission->game) }}">{{ $submission->game->game_name }}</a>
+                href="{{ route('games.show', $submission->game) }}">{{ $submission->game->name }}</a>
             <br>
             <span class="text-muted">Reviewed</span>
             @if ($submission->game_done === App\Models\GameSubmitInfo::SUBMISSION_REVIEWED)

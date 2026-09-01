@@ -22,7 +22,7 @@ class ReleaseSceneController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $release->game), $release->game->game_name),
+                    new Crumb(route('admin.games.games.edit', $release->game), $release->game->name),
                     new Crumb(route('admin.games.releases.index', $release->game), 'Releases'),
                     new Crumb(
                         route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]),
@@ -62,7 +62,7 @@ class ReleaseSceneController extends Controller
                 'action'           => Changelog::UPDATE,
                 'section'          => 'Game Release',
                 'section_id'       => $release->getKey(),
-                'section_name'     => $release->game->game_name,
+                'section_name'     => $release->game->name,
                 'sub_section'      => 'Scene',
                 'sub_section_id'   => $release->getKey(),
                 'sub_section_name' => $release->trainers->pluck('name')->join(', '),

@@ -53,7 +53,7 @@ class ReleaseScansTest extends AdminTestCase
         $this->assertSame(GameReleaseScan::TYPE_OTHER, $scan->type);
 
         Storage::disk('public')->assertExists($scan->path);
-        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
     }
 
     /**
@@ -125,7 +125,7 @@ class ReleaseScansTest extends AdminTestCase
 
         $this->assertSame(GameReleaseScan::TYPE_BOX_BACK, $scan->type);
         $this->assertSame('Scanned from the budget box.', $scan->notes);
-        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->name);
     }
 
     public function test_a_scan_is_deleted_with_its_image(): void
@@ -146,7 +146,7 @@ class ReleaseScansTest extends AdminTestCase
         Storage::disk('public')->assertMissing($scan->path);
         Storage::disk('public')->assertExists($other->path);
 
-        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->game_name);
+        $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
     public function test_non_admins_are_turned_away(): void

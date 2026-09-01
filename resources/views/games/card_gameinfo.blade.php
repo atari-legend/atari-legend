@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4 card-game">
     <div class="card-header text-center">
         <h2 class="text-uppercase d-none d-lg-block">Game info</h2>
-        <h2 class="text-uppercase d-lg-none">{{ $game->game_name }}</h2>
+        <h2 class="text-uppercase d-lg-none">{{ $game->name }}</h2>
     </div>
     <div class="card-body p-0 striped">
         @include('games.card_gameinfo_votes')
@@ -125,7 +125,7 @@
                             @if ($aka->language !== null)
                                 <small class="text-muted">{{ $aka->language->name }}: </small>
                             @endif
-                            {{ $aka->aka_name }}
+                            {{ $aka->name }}
                         </div>
                     @endforeach
                 </div>

@@ -23,7 +23,7 @@ class GameVideoController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                    new Crumb(route('admin.games.games.edit', $game), $game->name),
                     new Crumb(route('admin.games.game-videos.index', $game), 'Videos'),
                 ],
                 'game'        => $game,
@@ -65,7 +65,7 @@ class GameVideoController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Video',
             'sub_section_id'   => $video->id,
             'sub_section_name' => $video->title,
@@ -82,7 +82,7 @@ class GameVideoController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Games',
             'section_id'       => $game->getKey(),
-            'section_name'     => $game->game_name,
+            'section_name'     => $game->name,
             'sub_section'      => 'Video',
             'sub_section_id'   => $video->id,
             'sub_section_name' => $video->youtube_id,

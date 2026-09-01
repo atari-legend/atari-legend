@@ -35,8 +35,8 @@ class SitemapController extends Controller
     public function games($letter)
     {
         $games = Helper::whereTitleStartsWith(
-            Game::orderBy('game_name'),
-            'game_name',
+            Game::orderBy('name'),
+            'name',
             $letter
         );
 

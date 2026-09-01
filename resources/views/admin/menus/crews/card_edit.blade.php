@@ -53,7 +53,7 @@
                 <div class="mb-3">
                     Releases:
                     @foreach ($crew->releases as $release)
-                        <a href="{{ route('games.releases.show', $release) }}">{{ $release->game->game_name }}</a>
+                        <a href="{{ route('games.releases.show', $release) }}">{{ $release->game->name }}</a>
                         @if (!$loop->last), @endif
                     @endforeach
                 </div>

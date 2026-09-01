@@ -6,7 +6,7 @@
         @if ($user->reviews->isNotEmpty())
             <p>
                 @foreach ($user->reviews as $review)
-                    <a href="{{ route('reviews.show', $review) }}">{{ $review->games->first()->game_name }}</a>
+                    <a href="{{ route('reviews.show', $review) }}">{{ $review->games->first()->name }}</a>
                     @if (!$loop->last), @endif
                 @endforeach
             </p>
@@ -56,7 +56,7 @@
             <p>
                 @foreach ($user->gameSubmissions->sortByDesc('timestamp') as $submission)
                     <a
-                        href="{{ route('admin.games.submissions.show', $submission) }}">{{ $submission->game->game_name }}</a>
+                        href="{{ route('admin.games.submissions.show', $submission) }}">{{ $submission->game->name }}</a>
                     @if (!$loop->last), @endif
                 @endforeach
             </p>

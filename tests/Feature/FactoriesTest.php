@@ -188,7 +188,7 @@ class FactoriesTest extends TestCase
     {
         $game = Game::factory()->named('Bubble Bobble')->create();
 
-        $this->assertSame('Bubble Bobble', $game->game_name);
+        $this->assertSame('Bubble Bobble', $game->name);
         $this->assertSame('bubble-bobble', $game->slug);
     }
 
@@ -248,7 +248,7 @@ class FactoriesTest extends TestCase
             ->scored(graphics: 5, sound: 3, gameplay: 4, overall: 4)
             ->create();
 
-        $this->assertSame('Xenon', $review->games->first()->game_name);
+        $this->assertSame('Xenon', $review->games->first()->name);
         $this->assertSame(5, $review->review_graphics);
         $this->assertSame(3, $review->review_sound);
     }

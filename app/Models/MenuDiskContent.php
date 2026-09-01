@@ -34,9 +34,9 @@ class MenuDiskContent extends Model
     public function getLabelAttribute()
     {
         if ($this->game) {
-            return $this->game->game_name;
+            return $this->game->name;
         } elseif ($this->release) {
-            return $this->release->game->game_name;
+            return $this->release->game->name;
         } elseif ($this->menuSoftware) {
             return $this->menuSoftware->name;
         } else {

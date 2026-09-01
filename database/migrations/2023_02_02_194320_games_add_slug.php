@@ -32,7 +32,7 @@ return new class extends Migration
 
         foreach ($games as $gameId => $gameRows) {
             $firstRow = $gameRows->first();
-            $slug = $firstRow->game_name;
+            $slug = $firstRow->name;
 
             // Handle names like "Enforcer, The" -> "The Enforcer"
             foreach (['The', 'A', 'Das', 'Die', 'Der', 'Les', 'La', 'Le', "L'"] as $article) {

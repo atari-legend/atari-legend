@@ -117,7 +117,7 @@ class MenuSetPagesTest extends TestCase
         $response = $this->get(route('menus.search', ['title' => 'Xtra']))->assertOk();
 
         $this->assertSame(['Xtracker'], $response->viewData('software')->pluck('name')->all());
-        $this->assertSame([], $response->viewData('games')->pluck('game_name')->all());
+        $this->assertSame([], $response->viewData('games')->pluck('name')->all());
     }
 
     /**
@@ -142,12 +142,12 @@ class MenuSetPagesTest extends TestCase
         $game = Game::factory()->named('Bubble Bobble')->create();
         \Illuminate\Support\Facades\DB::table('game_akas')->insert([
             'game_id'  => $game->getKey(),
-            'aka_name' => 'Baburu Boburu',
+            'name' => 'Baburu Boburu',
         ]);
 
         $response = $this->get(route('menus.search', ['title' => 'Baburu']))->assertOk();
 
-        $this->assertSame(['Bubble Bobble'], $response->viewData('games')->pluck('game_name')->all());
+        $this->assertSame(['Bubble Bobble'], $response->viewData('games')->pluck('name')->all());
     }
 
     /**

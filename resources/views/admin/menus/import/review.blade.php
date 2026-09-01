@@ -237,7 +237,7 @@
                                                             <input class="autocomplete form-control @if (count($errors)) is-invalid @endif"
                                                                 type="search"
                                                                 data-autocomplete-endpoint="{{ route('admin.ajax.games') }}"
-                                                                data-autocomplete-key="game_name" data-autocomplete-id="id"
+                                                                data-autocomplete-key="name" data-autocomplete-id="id"
                                                                 data-autocomplete-companion="{{ $companion }}"
                                                                 data-autocomplete-max="20"
                                                                 data-search-method="setGameSearch" data-search-args="[{{ $mi }}, {{ $di }}, {{ $ci }}]"

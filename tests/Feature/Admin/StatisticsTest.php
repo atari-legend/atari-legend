@@ -33,7 +33,7 @@ class StatisticsTest extends TestCase
     {
         DB::table('games')->insert([
             'id'        => $id,
-            'game_name' => $name,
+            'name' => $name,
             'slug'      => strtolower($name),
         ]);
     }

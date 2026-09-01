@@ -22,7 +22,7 @@ class GameHelperHasBoxscanTest extends TestCase
     public function testBoxscanReleaseLevel()
     {
         $game = new Game();
-        $game->game_name = 'Test';
+        $game->name = 'Test';
         $game->slug = 'test';
         $game->save();
 

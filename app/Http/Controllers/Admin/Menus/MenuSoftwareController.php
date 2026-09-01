@@ -69,7 +69,7 @@ class MenuSoftwareController extends Controller
     {
         $games = collect([]);
         if ('game' === strtolower($software->menuSoftwareContentType->name)) {
-            $games = Game::where('game_name', '=', $software->name)->get();
+            $games = Game::where('name', '=', $software->name)->get();
         }
 
         return view('admin.menus.software.edit')

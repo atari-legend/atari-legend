@@ -29,9 +29,9 @@
                         @foreach ($disk->contents->sortBy('order') as $content)
                             <li>
                                 @if ($content->release)
-                                    <a href="{{ route('games.releases.show', $content->release) }}">{{ $content->release->game->game_name }}</a>
+                                    <a href="{{ route('games.releases.show', $content->release) }}">{{ $content->release->game->name }}</a>
                                 @elseif ($content->game)
-                                    <a href="{{ route('games.show', $content->game) }}">{{ $content->game->game_name }}</a>
+                                    <a href="{{ route('games.show', $content->game) }}">{{ $content->game->name }}</a>
                                 @elseif ($content->menuSoftware)
                                     @if (isset($software) && $software->id === $content->menuSoftware->id)
                                         <b>{{ $content->menuSoftware->name }}</b>

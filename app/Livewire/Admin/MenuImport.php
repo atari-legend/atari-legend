@@ -299,17 +299,17 @@ class MenuImport extends Component
             return [null, null, []];
         }
 
-        $games = Game::where('game_name', $name)->get(['id', 'game_name']);
-        $akas = GameAka::where('aka_name', $name)->get(['game_id', 'aka_name']);
+        $games = Game::where('name', $name)->get(['id', 'name']);
+        $akas = GameAka::where('name', $name)->get(['game_id', 'name']);
 
         $candidates = collect();
         foreach ($games as $game) {
-            $candidates->push(['id' => $game->getKey(), 'name' => $game->game_name]);
+            $candidates->push(['id' => $game->getKey(), 'name' => $game->name]);
         }
         foreach ($akas as $aka) {
             // game_id is GameAka's foreign key to the game this alias belongs to,
             // not GameAka's own primary key: the candidate list identifies games.
-            $candidates->push(['id' => $aka->game_id, 'name' => $aka->aka_name . ' (AKA)']);
+            $candidates->push(['id' => $aka->game_id, 'name' => $aka->name . ' (AKA)']);
         }
         $candidates = $candidates->unique('id')->values();
 
@@ -409,8 +409,8 @@ class MenuImport extends Component
         $game = $gameId ? Game::find($gameId) : null;
 
         $this->menus[$mi]['disks'][$di]['contents'][$ci]['game_id'] = $game?->getKey();
-        $this->menus[$mi]['disks'][$di]['contents'][$ci]['game_name'] = $game?->game_name;
-        $this->menus[$mi]['disks'][$di]['contents'][$ci]['query'] = $game?->game_name;
+        $this->menus[$mi]['disks'][$di]['contents'][$ci]['game_name'] = $game?->name;
+        $this->menus[$mi]['disks'][$di]['contents'][$ci]['query'] = $game?->name;
         $this->menus[$mi]['disks'][$di]['contents'][$ci]['candidates'] = [];
     }
 

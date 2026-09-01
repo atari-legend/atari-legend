@@ -46,7 +46,7 @@ class GameSearchController extends Controller
         $searchPossible = false;
 
         if ($request->filled('titleAZ')) {
-            Helper::whereTitleStartsWith($games, 'game_name', $request->input('titleAZ'));
+            Helper::whereTitleStartsWith($games, 'games.name', $request->input('titleAZ'));
             Helper::whereTitleStartsWith($software, 'name', $request->input('titleAZ'));
             $searchPossible = true;
             $softwareSearchPossible = true;
@@ -55,9 +55,9 @@ class GameSearchController extends Controller
         if ($request->filled('title')) {
             // Search main game name or an AKA
             $games->where(function (Builder $query) use ($request) {
-                $query->where('game_name', 'like', '%' . $request->input('title') . '%')
+                $query->where('games.name', 'like', '%' . $request->input('title') . '%')
                     ->orWhereHas('akas', function (Builder $subQuery) use ($request) {
-                        $subQuery->where('aka_name', 'like', '%' . $request->input('title') . '%');
+                        $subQuery->where('name', 'like', '%' . $request->input('title') . '%');
                     });
             });
             $searchPossible = true;
@@ -215,7 +215,7 @@ class GameSearchController extends Controller
         }
 
         $games = $games
-            ->orderBy('game_name');
+            ->orderBy('games.name');
 
         if (! $softwareSearchPossible) {
             // Force no software results when there were no titles selected
@@ -235,7 +235,7 @@ class GameSearchController extends Controller
         // If only one match with the requested title, redirect to it
         if ($games->count() === 1
             && $request->filled('title')
-            && strtolower($games->first()->game_name) === strtolower($request->title)) {
+            && strtolower($games->first()->name) === strtolower($request->title)) {
             return redirect()->route('games.show', $games->first());
         }
 

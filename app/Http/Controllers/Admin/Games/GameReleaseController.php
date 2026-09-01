@@ -26,7 +26,7 @@ class GameReleaseController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                    new Crumb(route('admin.games.games.edit', $game), $game->name),
                     new Crumb(route('admin.games.releases.index', $game), 'Releases'),
                 ],
                 'game'        => $game,
@@ -44,7 +44,7 @@ class GameReleaseController extends Controller
                     [
                         'breadcrumbs' => [
                             new Crumb(route('admin.games.games.index'), 'Games'),
-                            new Crumb(route('admin.games.games.edit', $release->game), $release->game->game_name),
+                            new Crumb(route('admin.games.games.edit', $release->game), $release->game->name),
                             new Crumb(route('admin.games.releases.index', $release->game), 'Releases'),
                             new Crumb(
                                 route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]),
@@ -70,7 +70,7 @@ class GameReleaseController extends Controller
                     [
                         'breadcrumbs' => [
                             new Crumb(route('admin.games.games.index'), 'Games'),
-                            new Crumb(route('admin.games.games.edit', $game), $game->game_name),
+                            new Crumb(route('admin.games.games.edit', $game), $game->name),
                             new Crumb(route('admin.games.releases.index', $game), 'Releases'),
                             new Crumb(route('admin.games.releases.create', $game), 'Add new release'),
                         ],
@@ -92,10 +92,10 @@ class GameReleaseController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Game Release',
             'section_id'       => $release->getKey(),
-            'section_name'     => $release->game->game_name,
+            'section_name'     => $release->game->name,
             'sub_section'      => 'Release Info',
             'sub_section_id'   => $release->getKey(),
-            'sub_section_name' => $release->full_label ?? $release->game->game_name,
+            'sub_section_name' => $release->full_label ?? $release->game->name,
         ]);
 
         return redirect()->route('admin.games.releases.show', [
@@ -113,10 +113,10 @@ class GameReleaseController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Game Release',
             'section_id'       => $release->getKey(),
-            'section_name'     => $release->game->game_name,
+            'section_name'     => $release->game->name,
             'sub_section'      => 'Release Info',
             'sub_section_id'   => $release->getKey(),
-            'sub_section_name' => $release->full_label ?? $release->game->game_name,
+            'sub_section_name' => $release->full_label ?? $release->game->name,
         ]);
 
         return redirect()->route('admin.games.releases.index', $release->game);
@@ -130,10 +130,10 @@ class GameReleaseController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Game Release',
             'section_id'       => $release->getKey(),
-            'section_name'     => $release->game->game_name,
+            'section_name'     => $release->game->name,
             'sub_section'      => 'Release Info',
             'sub_section_id'   => $release->getKey(),
-            'sub_section_name' => $release->full_label ?? $release->game->game_name,
+            'sub_section_name' => $release->full_label ?? $release->game->name,
         ]);
 
         return redirect()->route('admin.games.releases.index', $release->game);
@@ -151,7 +151,7 @@ class GameReleaseController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Game Release',
             'section_id'       => $release->getKey(),
-            'section_name'     => $release->game->game_name,
+            'section_name'     => $release->game->name,
             'sub_section'      => 'Release AKA',
             'sub_section_id'   => $aka->getKey(),
             'sub_section_name' => $aka->name,
@@ -168,7 +168,7 @@ class GameReleaseController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Game Release',
             'section_id'       => $aka->release->getKey(),
-            'section_name'     => $aka->release->game->game_name,
+            'section_name'     => $aka->release->game->name,
             'sub_section'      => 'Release AKA',
             'sub_section_id'   => $aka->getKey(),
             'sub_section_name' => $aka->name,

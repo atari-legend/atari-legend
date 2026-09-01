@@ -77,13 +77,13 @@ class Comment extends Model
     {
         switch ($this->type) {
             case self::TYPE_GAME:
-                return $this->games->first()->game_name;
+                return $this->games->first()->name;
             case self::TYPE_ARTICLE:
                 return $this->articles->first()->article_title;
             case self::TYPE_INTERVIEW:
                 return $this->interviews->first()->individual->ind_name;
             case self::TYPE_REVIEW:
-                return $this->reviews->first()->games->first()->game_name;
+                return $this->reviews->first()->games->first()->name;
             default:
                 throw new Error('Unknown comment type');
         }

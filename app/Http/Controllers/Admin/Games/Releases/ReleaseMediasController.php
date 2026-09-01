@@ -26,7 +26,7 @@ class ReleaseMediasController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.games.games.index'), 'Games'),
-                    new Crumb(route('admin.games.games.edit', $release->game), $release->game->game_name),
+                    new Crumb(route('admin.games.games.edit', $release->game), $release->game->name),
                     new Crumb(route('admin.games.releases.index', $release->game), 'Releases'),
                     new Crumb(
                         route('admin.games.releases.show', ['game' => $release->game, 'release' => $release]),
@@ -64,10 +64,10 @@ class ReleaseMediasController extends Controller
                 'action'           => Changelog::UPDATE,
                 'section'          => 'Game Release',
                 'section_id'       => $media->release->getKey(),
-                'section_name'     => $media->release->game->game_name,
+                'section_name'     => $media->release->game->name,
                 'sub_section'      => 'Media',
                 'sub_section_id'   => $media->getKey(),
-                'sub_section_name' => $media->release->game->game_name,
+                'sub_section_name' => $media->release->game->name,
             ]);
         }
 
@@ -89,10 +89,10 @@ class ReleaseMediasController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Game Release',
             'section_id'       => $media->release->getKey(),
-            'section_name'     => $media->release->game->game_name,
+            'section_name'     => $media->release->game->name,
             'sub_section'      => 'Media',
             'sub_section_id'   => $media->getKey(),
-            'sub_section_name' => $media->release->game->game_name,
+            'sub_section_name' => $media->release->game->name,
         ]);
 
         return redirect()->route('admin.games.releases.medias.index', [
@@ -117,10 +117,10 @@ class ReleaseMediasController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Game Release',
             'section_id'       => $media->release->getKey(),
-            'section_name'     => $media->release->game->game_name,
+            'section_name'     => $media->release->game->name,
             'sub_section'      => 'Media',
             'sub_section_id'   => $media->getKey(),
-            'sub_section_name' => $media->release->game->game_name,
+            'sub_section_name' => $media->release->game->name,
         ]);
     }
 }
