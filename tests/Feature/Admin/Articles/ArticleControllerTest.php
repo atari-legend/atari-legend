@@ -69,12 +69,12 @@ class ArticleControllerTest extends AdminTestCase
         $article = Article::sole();
 
         $this->assertSame($this->admin->getKey(), $article->user_id);
-        $this->assertSame('Coding the blitter', $article->article_title);
-        $this->assertSame('A short introduction.', $article->article_intro);
-        $this->assertSame('The body of the article.', $article->article_text);
+        $this->assertSame('Coding the blitter', $article->title);
+        $this->assertSame('A short introduction.', $article->intro);
+        $this->assertSame('The body of the article.', $article->text);
         $this->assertSame(
             Carbon::parse('2026-03-14')->timestamp,
-            $article->getRawOriginal('article_date')
+            $article->getRawOriginal('date')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Articles', 'Coding the blitter');
@@ -121,8 +121,8 @@ class ArticleControllerTest extends AdminTestCase
         $article->refresh();
 
         $this->assertSame($type->getKey(), $article->article_type_id);
-        $this->assertSame('New title', $article->article_title);
-        $this->assertSame('Rewritten.', $article->article_text);
+        $this->assertSame('New title', $article->title);
+        $this->assertSame('Rewritten.', $article->text);
     }
 
     /**

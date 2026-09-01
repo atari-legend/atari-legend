@@ -16,11 +16,11 @@ class Article extends Model implements Feedable
 
     protected $fillable = [
         'user_id', 'article_type_id', 'draft',
-        'article_title', 'article_text', 'article_date', 'article_intro',
+        'title', 'text', 'date', 'intro',
     ];
 
     protected $casts = [
-        'article_date' => 'datetime:timestamp',
+        'date' => 'datetime:timestamp',
     ];
 
     public function user()
@@ -51,9 +51,9 @@ class Article extends Model implements Feedable
     {
         return FeedItem::create([
             'id'         => $this->getKey(),
-            'title'      => 'Article: ' . $this->article_title,
-            'summary'    => Helper::bbCode($this->article_intro),
-            'updated'    => $this->article_date,
+            'title'      => 'Article: ' . $this->title,
+            'summary'    => Helper::bbCode($this->intro),
+            'updated'    => $this->date,
             'link'       => route('articles.show', $this),
             'authorName' => Helper::user($this->user),
         ]);

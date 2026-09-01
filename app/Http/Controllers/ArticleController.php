@@ -14,7 +14,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::orderByDesc('article_date')
+        $articles = Article::orderByDesc('date')
             ->paginate(5);
 
         return view('articles.index')
@@ -33,14 +33,14 @@ class ArticleController extends Controller
                 ->get();
         }
 
-        $articles = Article::orderByDesc('article_date')
+        $articles = Article::orderByDesc('date')
             ->limit(5)
             ->get();
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', $article->article_title)
+            ->add('headline', $article->title)
             ->add('author', Helper::user($article->user))
-            ->add('datePublished', $article->article_date->format('Y-m-d'));
+            ->add('datePublished', $article->date->format('Y-m-d'));
         if ($article->screenshots->isNotEmpty()) {
             $jsonLd->add('image', $article->screenshots->first()->getUrl('article'));
         }
@@ -67,10 +67,10 @@ class ArticleController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Articles',
             'section_id'       => $article->getKey(),
-            'section_name'     => $article->article_title,
+            'section_name'     => $article->title,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $comment->getKey(),
-            'sub_section_name' => $article->article_title,
+            'sub_section_name' => $article->title,
         ]);
 
         return back();

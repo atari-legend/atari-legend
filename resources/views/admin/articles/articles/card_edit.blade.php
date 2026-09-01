@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($article))
-                {{ $article->article_title }}
+                {{ $article->title }}
             @else
                 Create article
             @endif
@@ -23,7 +23,7 @@
                         <label for="title" class="form-label">Title</label>
                         <input type="text" required class="form-control @error('title') is-invalid @enderror"
                             name="title" id="title"
-                            value="{{ old('title', isset($article) ? $article->article_title : '') }}">
+                            value="{{ old('title', isset($article) ? $article->title : '') }}">
 
                         @error('title')
                             <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                         <label for="date" class="form-label">Date</label>
                         <input type="date" required class="form-control @error('date') is-invalid @enderror" name="date"
                             id="date"
-                            value="{{ old('date',isset($article) ? $article->article_date?->toDateString() : \Carbon\Carbon::now()->toDateString()) }}">
+                            value="{{ old('date',isset($article) ? $article->date?->toDateString() : \Carbon\Carbon::now()->toDateString()) }}">
 
                         @error('date')
                             <span class="invalid-feedback" role="alert">
@@ -103,7 +103,7 @@
                         <label for="intro" class="form-label">Intro</label>
                         <textarea class="form-control sceditor @error('intro') is-invalid @enderror" id="intro" name="intro" required
                             {{-- Legacy CPANEL was inserting <br /> for new lines, so we replace them with actual newlines --}}
-                            rows="7">{{ old('intro', isset($article) ? Str::replace('<br />', "\n", $article->article_intro) : '') }}</textarea>
+                            rows="7">{{ old('intro', isset($article) ? Str::replace('<br />', "\n", $article->intro) : '') }}</textarea>
 
                         @error('intro')
                             <span class="invalid-feedback" role="alert">
@@ -119,7 +119,7 @@
                         <label for="text" class="form-label">Text</label>
                         <textarea class="form-control sceditor @error('text') is-invalid @enderror" id="text" name="text" required
                             {{-- Legacy CPANEL was inserting <br /> for new lines, so we replace them with actual newlines --}}
-                            rows="30">{{ old('text', isset($article) ? Str::replace('<br />', "\n", $article->article_text) : '') }}</textarea>
+                            rows="30">{{ old('text', isset($article) ? Str::replace('<br />', "\n", $article->text) : '') }}</textarea>
 
                         @error('text')
                             <span class="invalid-feedback" role="alert">

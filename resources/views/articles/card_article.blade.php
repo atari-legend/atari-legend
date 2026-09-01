@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
-            {{ $article->article_title }}
+            {{ $article->title }}
             @contributor
                 <a href="{{ route('admin.articles.articles.edit', $article) }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -12,7 +12,7 @@
 
     <div class="card-body p-2 bg-darklight">
         <h3 class="fs-5 text-audiowide">Written by {{ Helper::user($article->user) }}</h3>
-        <span class="text-muted">{{ $article->article_date->format('F j, Y') }}</span>
+        <span class="text-muted">{{ $article->date->format('F j, Y') }}</span>
     </div>
 
     <div class="card-body p-2 bg-darklight">
@@ -28,6 +28,6 @@
                 </div>
             @endforeach
         </div>
-        <p class="card-text">{!! Helper::bbCode(nl2br(e($article->article_text), false)) !!}</p>
+        <p class="card-text">{!! Helper::bbCode(nl2br(e($article->text), false)) !!}</p>
     </div>
 </div>

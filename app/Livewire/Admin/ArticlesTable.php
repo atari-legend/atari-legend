@@ -17,7 +17,7 @@ class ArticlesTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('article_date', 'desc');
+        $this->setDefaultSort('date', 'desc');
     }
 
     public function columns(): array
@@ -25,23 +25,23 @@ class ArticlesTable extends DataTableComponent
         return [
             LinkColumn::make('Title')
                 ->title(
-                    fn ($row) => $row->article_title
+                    fn ($row) => $row->title
                 )
                 ->location(
                     fn ($row) => route('admin.articles.articles.edit', $row)
                 )
                 ->searchable(
-                    fn ($query, $term) => $query->where('article_title', 'like', "%{$term}%")
-                        ->orWhere('article_text', 'like', "%{$term}%")
-                        ->orWhere('article_intro', 'like', "%{$term}%")
+                    fn ($query, $term) => $query->where('title', 'like', "%{$term}%")
+                        ->orWhere('text', 'like', "%{$term}%")
+                        ->orWhere('intro', 'like', "%{$term}%")
                 )
                 ->sortable(),
             Column::make('Date')
                 ->label(
-                    fn ($row) => $row->article_date?->toFormattedDateString() ?? '-'
+                    fn ($row) => $row->date?->toFormattedDateString() ?? '-'
                 )
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('article_date', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('date', $direction)
                 ),
             Column::make('Author')
                 ->label(fn ($row) => Helper::user($row->user)),

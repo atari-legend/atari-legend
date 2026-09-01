@@ -391,10 +391,10 @@ class E2ESeeder extends Seeder
         $this->insert('articles', ['id' => self::ARTICLE_ID], [
             'user_id'         => self::USER_ADMIN_ID,
             'article_type_id' => self::ARTICLE_TYPE_ID,
-            'article_title'   => self::ARTICLE_TITLE,
-            'article_intro'   => 'Playwright test article intro.',
-            'article_text'    => 'Playwright test article content.',
-            'article_date'    => now()->timestamp,
+            'title'   => self::ARTICLE_TITLE,
+            'intro'   => 'Playwright test article intro.',
+            'text'    => 'Playwright test article content.',
+            'date'    => now()->timestamp,
         ]);
 
         // Same chain as the interview screenshot below, one table along.

@@ -17,11 +17,11 @@
                 <div class="clearfix mb-2">
                     <h3 class="fs-5 text-audiowide">
                         <a href="{{ route('articles.show', ['article' => $article]) }}">
-                            {{ $article->article_title }}
+                            {{ $article->title }}
                         </a>
                     </h3>
                     <p class="card-subtitle text-muted">
-                        {{ $article->article_date->format('F j, Y') }} by {{ Helper::user($article->user) }}
+                        {{ $article->date->format('F j, Y') }} by {{ Helper::user($article->user) }}
                         <span class="badge bg-secondary ms-2">{{ $article->type->name ?? ''}}</span>
                     </p>
                 </div>
@@ -33,9 +33,9 @@
                         </a>
                     @endif
 
-                    {!! Helper::bbCode(e($article->article_intro)) !!}<br>
+                    {!! Helper::bbCode(e($article->intro)) !!}<br>
                     <a class="d-block text-end mt-2" href="{{ route('articles.show', ['article' => $article]) }}">
-                        Read {{ $article->article_title }} <i class="fas fa-chevron-right"></i>
+                        Read {{ $article->title }} <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
             </div>

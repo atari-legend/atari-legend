@@ -260,14 +260,14 @@ class FactoriesTest extends TestCase
     public function test_interviews_and_articles_come_with_their_text(): void
     {
         $this->assertNotNull(Interview::factory()->create()->interview_text);
-        $this->assertNotNull(Article::factory()->create()->article_title);
+        $this->assertNotNull(Article::factory()->create()->title);
     }
 
     public function test_article_can_be_given_a_title(): void
     {
         $article = Article::factory()->titled('Coding the blitter')->create();
 
-        $this->assertSame('Coding the blitter', $article->article_title);
+        $this->assertSame('Coding the blitter', $article->title);
     }
 
     /**

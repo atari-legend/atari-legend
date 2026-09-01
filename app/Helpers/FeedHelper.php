@@ -22,7 +22,7 @@ class FeedHelper
             ->limit(20)
             ->get();
 
-        $articles = Article::orderByDesc('article_date')
+        $articles = Article::orderByDesc('date')
             ->limit(20)
             ->get();
 

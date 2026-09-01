@@ -12,7 +12,7 @@
             <ul>
                 @foreach ($otherArticles as $a)
                     <li>
-                        <a href="{{ route('articles.show', ['article' => $a ]) }}">{{ $a->article_title }}</a>
+                        <a href="{{ route('articles.show', ['article' => $a ]) }}">{{ $a->title }}</a>
                     </li>
                 @endforeach
             </ul>

@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin')
-@section('title', "Article - ".(isset($article) ? $article->article_title : 'Create article'))
+@section('title', "Article - ".(isset($article) ? $article->title : 'Create article'))
 
 @section('content')
     <div class="row">

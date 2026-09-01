@@ -33,7 +33,7 @@ class ContentPagesTest extends TestCase
     {
         return Article::factory()->titled($title)->create([
             'user_id'      => ($author ?? User::factory()->create())->getKey(),
-            'article_date' => Carbon::parse($date)->timestamp,
+            'date' => Carbon::parse($date)->timestamp,
         ]);
     }
 
@@ -55,7 +55,7 @@ class ContentPagesTest extends TestCase
 
         $this->assertSame(
             ['Newer', 'Older'],
-            $articles->map(fn ($article) => $article->article_title)->all()
+            $articles->map(fn ($article) => $article->title)->all()
         );
     }
 
@@ -83,7 +83,7 @@ class ContentPagesTest extends TestCase
 
         $this->assertSame(
             ['Another one'],
-            $others->map(fn ($other) => $other->article_title)->all()
+            $others->map(fn ($other) => $other->title)->all()
         );
     }
 

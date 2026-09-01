@@ -72,7 +72,7 @@ class CommentController extends Controller
                 break;
             case 'article':
                 $section = 'Articles';
-                $sectionName = Article::find($id)->article_title;
+                $sectionName = Article::find($id)->title;
                 break;
         }
 

@@ -36,7 +36,7 @@ class ArticleController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.articles.articles.index'), 'Articles'),
-                    new Crumb('', $article->article_title),
+                    new Crumb('', $article->title),
                 ],
                 'article'     => $article,
                 'types'       => $types,
@@ -66,20 +66,20 @@ class ArticleController extends Controller
             'user_id'         => $request->author,
             'article_type_id' => $request->type,
             'draft'           => $request->draft ? true : false,
-            'article_title'   => $request->title,
-            'article_date'    => Carbon::parse($request->date)->timestamp,
-            'article_text'    => $request->text,
-            'article_intro'   => $request->intro,
+            'title'   => $request->title,
+            'date'    => Carbon::parse($request->date)->timestamp,
+            'text'    => $request->text,
+            'intro'   => $request->intro,
         ]);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Articles',
             'section_id'       => $article->getKey(),
-            'section_name'     => $article->article_title,
+            'section_name'     => $article->title,
             'sub_section'      => 'Article',
             'sub_section_id'   => $article->getKey(),
-            'sub_section_name' => $article->article_title,
+            'sub_section_name' => $article->title,
         ]);
 
         return redirect()->route('admin.articles.articles.index');
@@ -89,16 +89,16 @@ class ArticleController extends Controller
     {
         $request->validate($this->getValidationRules());
 
-        $oldTitle = $article->article_title;
+        $oldTitle = $article->title;
 
         $article->update([
             'user_id'         => $request->author,
             'article_type_id' => $request->type,
             'draft'           => $request->draft ? true : false,
-            'article_title'   => $request->title,
-            'article_date'    => Carbon::parse($request->date)->timestamp,
-            'article_text'    => $request->text,
-            'article_intro'   => $request->intro,
+            'title'   => $request->title,
+            'date'    => Carbon::parse($request->date)->timestamp,
+            'text'    => $request->text,
+            'intro'   => $request->intro,
         ]);
 
         ChangelogHelper::insert([
@@ -108,7 +108,7 @@ class ArticleController extends Controller
             'section_name'     => $oldTitle,
             'sub_section'      => 'Article',
             'sub_section_id'   => $article->getKey(),
-            'sub_section_name' => $article->article_title,
+            'sub_section_name' => $article->title,
         ]);
 
         return redirect()->route('admin.articles.articles.index');
@@ -116,7 +116,7 @@ class ArticleController extends Controller
 
     public function destroy(Article $article)
     {
-        $oldTitle = $article->article_title;
+        $oldTitle = $article->title;
 
         foreach ($article->screenshots as $screenshot) {
             Storage::disk('public')->delete($screenshot->getPath('article'));
@@ -158,7 +158,7 @@ class ArticleController extends Controller
                     'action'           => Changelog::INSERT,
                     'section'          => 'Articles',
                     'section_id'       => $article->getKey(),
-                    'section_name'     => $article->article_title,
+                    'section_name'     => $article->title,
                     'sub_section'      => 'Screenshots',
                     'sub_section_id'   => $screenshot->getKey(),
                     'sub_section_name' => $screenshot->file,
@@ -178,7 +178,7 @@ class ArticleController extends Controller
             'action'           => Changelog::DELETE,
             'section'          => 'Articles',
             'section_id'       => $article->getKey(),
-            'section_name'     => $article->article_title,
+            'section_name'     => $article->title,
             'sub_section'      => 'Screenshots',
             'sub_section_id'   => $image->getKey(),
             'sub_section_name' => $image->file,
@@ -212,10 +212,10 @@ class ArticleController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Articles',
             'section_id'       => $article->getKey(),
-            'section_name'     => $article->article_title,
+            'section_name'     => $article->title,
             'sub_section'      => 'Screenshots',
             'sub_section_id'   => $article->getKey(),
-            'sub_section_name' => $article->article_title,
+            'sub_section_name' => $article->title,
         ]);
 
         return redirect()->route('admin.articles.articles.edit', $article);

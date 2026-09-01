@@ -421,7 +421,7 @@ class AdminStatisticsHelper
             'News'       => DB::table('news')->pluck('date'),
             'Reviews'    => DB::table('reviews')->pluck('review_date'),
             'Interviews' => DB::table('interviews')->pluck('interview_date'),
-            'Articles'   => DB::table('articles')->pluck('article_date'),
+            'Articles'   => DB::table('articles')->pluck('date'),
         ];
 
         $years = [];
