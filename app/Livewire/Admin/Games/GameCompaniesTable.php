@@ -60,7 +60,7 @@ class GameCompaniesTable extends DataTableComponent
                 ->filter(
                     // A company with no logo is now one NULL column rather
                     // than a missing row, so the 202 companies that never had
-                    // a pub_dev_text row at all finally answer "No" instead of
+                    // a logo row at all finally answer "No" instead of
                     // dropping out of both halves of this filter.
                     fn (Builder $query, string $term) => $term === 'true'
                         ? $query->whereNotNull('imgext')
