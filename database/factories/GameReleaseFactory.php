@@ -30,7 +30,7 @@ class GameReleaseFactory extends Factory
             'date'           => fake()->dateTimeBetween('1985-01-01', '1995-12-31')->format('Y-m-d'),
             'license'        => GameRelease::LICENCE_COMMERCIAL,
             'type'           => null,
-            'pub_dev_id'     => null,
+            'company_id'     => null,
             'hd_installable' => false,
             'status'         => null,
             'notes'          => null,
@@ -49,7 +49,7 @@ class GameReleaseFactory extends Factory
     public function publishedBy(?string $name = null): static
     {
         return $this->state(fn () => [
-            'pub_dev_id' => PubDevFactory::new()->state(
+            'company_id' => CompanyFactory::new()->state(
                 $name === null ? [] : ['name' => $name]
             ),
         ]);
@@ -109,7 +109,7 @@ class GameReleaseFactory extends Factory
         return $this->afterCreating(function (GameRelease $release) use ($names) {
             foreach ($names as $name) {
                 $release->distributors()->attach(
-                    PubDevFactory::new()->create(['name' => $name])
+                    CompanyFactory::new()->create(['name' => $name])
                 );
             }
         });

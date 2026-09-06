@@ -9,7 +9,7 @@ use App\Models\GameRelease;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\MenuDisk;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\Website;
@@ -42,7 +42,7 @@ class StatisticsHelperTest extends TestCase
     {
         Game::factory()->count(3)->create();
         GameRelease::factory()->count(2)->create();
-        PubDev::factory()->create();
+        Company::factory()->create();
         User::factory()->count(4)->create();
         Website::factory()->create();
         Magazine::factory()->create();

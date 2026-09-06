@@ -9,7 +9,7 @@ use App\Models\GameRelease;
 use App\Models\GameReleaseAka;
 use App\Models\Language;
 use App\Models\Location;
-use App\Models\PubDev;
+use App\Models\Company;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -114,7 +114,7 @@ class GameReleaseControllerTest extends AdminTestCase
     public function test_a_publisher_can_be_set(): void
     {
         $game = Game::factory()->create();
-        $publisher = PubDev::factory()->create(['name' => 'Ocean']);
+        $publisher = Company::factory()->create(['name' => 'Ocean']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
             'publisher' => $publisher->getKey(),
@@ -129,7 +129,7 @@ class GameReleaseControllerTest extends AdminTestCase
         $location = Location::factory()->create(['name' => 'France']);
         $crew = Crew::factory()->create(['name' => 'The Replicants']);
         $language = Language::factory()->create(['id' => 'fr', 'name' => 'French']);
-        $distributor = PubDev::factory()->create(['name' => 'Erbe']);
+        $distributor = Company::factory()->create(['name' => 'Erbe']);
 
         $this->post(route('admin.games.releases.store', $game), $this->payload([
             'locations'    => [$location->getKey()],
@@ -179,13 +179,13 @@ class GameReleaseControllerTest extends AdminTestCase
             $this->payload(['publisher' => null])
         )->assertRedirect(route('admin.games.releases.index', $release->game));
 
-        $this->assertNull($release->fresh()->pub_dev_id);
+        $this->assertNull($release->fresh()->company_id);
     }
 
     public function test_the_publisher_can_be_swapped(): void
     {
         $release = GameRelease::factory()->publishedBy('Ocean')->create();
-        $other = PubDev::factory()->create(['name' => 'US Gold']);
+        $other = Company::factory()->create(['name' => 'US Gold']);
 
         $this->put(
             route('admin.games.releases.update', [$release->game, $release]),

@@ -6,7 +6,7 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PubDev extends Model
+class Company extends Model
 {
     use HasFactory;
 

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Individual;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -85,7 +85,7 @@ class BlankProfileTest extends TestCase
         ]);
 
         $this->assertNull(
-            PubDev::where('name', 'Ocean')->firstOrFail()->profile
+            Company::where('name', 'Ocean')->firstOrFail()->profile
         );
     }
 
@@ -98,7 +98,7 @@ class BlankProfileTest extends TestCase
 
         $this->assertSame(
             'Founded in 1983',
-            PubDev::where('name', 'Infogrames')->firstOrFail()->profile
+            Company::where('name', 'Infogrames')->firstOrFail()->profile
         );
     }
 }

@@ -12,7 +12,7 @@ use App\Models\GameRelease;
 use App\Models\GameReleaseAka;
 use App\Models\Language;
 use App\Models\Location;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -208,7 +208,7 @@ class GameReleaseController extends Controller
             // aborted the whole save with a 404 - so a release could never have
             // its publisher removed once it had one.
             if ($request->publisher) {
-                $release->publisher()->associate(PubDev::findOrFail($request->publisher));
+                $release->publisher()->associate(Company::findOrFail($request->publisher));
             } else {
                 $release->publisher()->dissociate();
             }
@@ -257,7 +257,7 @@ class GameReleaseController extends Controller
             if ($request->distributors) {
                 $release->distributors()->saveMany(
                     collect($request->distributors)
-                        ->map(fn ($id) => PubDev::findOrFail($id))
+                        ->map(fn ($id) => Company::findOrFail($id))
                         ->all()
                 );
                 $release->save();
@@ -267,7 +267,7 @@ class GameReleaseController extends Controller
 
     private function getReferenceData(): array
     {
-        $companies = PubDev::orderBy('name')->get();
+        $companies = Company::orderBy('name')->get();
         $licenses = GameRelease::LICENSES;
         $types = GameRelease::TYPES;
         $statuses = GameRelease::STATUSES;

@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\PubDev;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PubDev>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
  */
-class PubDevFactory extends Factory
+class CompanyFactory extends Factory
 {
-    protected $model = PubDev::class;
+    protected $model = Company::class;
 
     public function definition(): array
     {

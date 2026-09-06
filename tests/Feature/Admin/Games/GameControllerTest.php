@@ -18,7 +18,7 @@ use App\Models\Language;
 use App\Models\MagazineIndex;
 use App\Models\MenuDisk;
 use App\Models\ProgrammingLanguage;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\Sndh;
@@ -259,7 +259,7 @@ class GameControllerTest extends AdminTestCase
                 ['individual_role_id' => DB::table('individual_roles')->insertGetId(['name' => 'Coder'])]
             ),
             'developers' => $game->developers()->attach(
-                PubDev::factory()->create(),
+                Company::factory()->create(),
                 ['developer_role_id' => DB::table('developer_roles')->insertGetId(['name' => 'Developer'])]
             ),
             'sndhs'   => $game->sndhs()->attach(Sndh::factory()->create()),

@@ -97,7 +97,7 @@ class Game extends Model
 
     public function developers()
     {
-        return $this->belongsToMany(PubDev::class, 'game_developer')
+        return $this->belongsToMany(Company::class, 'game_developer')
             ->withPivot('developer_role_id')
             ->using(GameDeveloper::class);
     }

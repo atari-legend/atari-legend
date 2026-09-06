@@ -25,26 +25,26 @@ class Tops extends Component
      */
     public function render()
     {
-        $developers = DB::table('pub_devs')
-            ->join('game_developer', 'game_developer.pub_dev_id', '=', 'pub_devs.id')
-            ->selectRaw('count(game_id) as game_count, pub_devs.name, pub_devs.id')
-            ->where('pub_devs.name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
-            ->groupBy('pub_devs.id', 'pub_devs.name')
+        $developers = DB::table('companies')
+            ->join('game_developer', 'game_developer.company_id', '=', 'companies.id')
+            ->selectRaw('count(game_id) as game_count, companies.name, companies.id')
+            ->where('companies.name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
+            ->groupBy('companies.id', 'companies.name')
             ->orderBy('game_count', 'desc')
-            ->orderBy('pub_devs.name')
+            ->orderBy('companies.name')
             ->limit(5)
             ->get();
 
-        $publishers = DB::table('pub_devs')
-            ->join('game_releases', 'game_releases.pub_dev_id', '=', 'pub_devs.id')
-            ->selectRaw('count(pub_devs.id) as release_count, pub_devs.name, pub_devs.id')
-            ->where('pub_devs.name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
-            // game_releases still has a `pub_dev_id` foreign key while pub_devs'
+        $publishers = DB::table('companies')
+            ->join('game_releases', 'game_releases.company_id', '=', 'companies.id')
+            ->selectRaw('count(companies.id) as release_count, companies.name, companies.id')
+            ->where('companies.name', '<>', GameRelease::LICENSE_NON_COMMERCIAL)
+            // game_releases still has a `company_id` foreign key while companies'
             // own key is now `id`, so both sides stay qualified: only MySQL
             // resolves a bare name against the select list.
-            ->groupBy('pub_devs.id', 'pub_devs.name')
+            ->groupBy('companies.id', 'companies.name')
             ->orderBy('release_count', 'desc')
-            ->orderBy('pub_devs.name')
+            ->orderBy('companies.name')
             ->limit(5)
             ->get();
 

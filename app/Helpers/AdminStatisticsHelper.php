@@ -51,7 +51,7 @@ class AdminStatisticsHelper
             'Releases'    => DB::table('game_releases')->count(),
             'Screenshots' => DB::table('screenshots')->count(),
             'Individuals' => DB::table('individuals')->count(),
-            'Companies'   => DB::table('pub_devs')->count(),
+            'Companies'   => DB::table('companies')->count(),
             'Users'       => DB::table('users')->count(),
         ];
     }
@@ -124,8 +124,8 @@ class AdminStatisticsHelper
                 'Crews'                  => DB::table('crews')->count(),
                 'Sub-crews'              => DB::table('sub_crew')->count(),
                 'Crew members'           => DB::table('crew_individual')->count(),
-                'Companies'              => DB::table('pub_devs')->count(),
-                'Companies with profile' => self::countWithText('pub_devs', 'profile', 'id'),
+                'Companies'              => DB::table('companies')->count(),
+                'Companies with profile' => self::countWithText('companies', 'profile', 'id'),
             ],
             'Community' => [
                 'Registered users'  => DB::table('users')->count(),
@@ -150,7 +150,7 @@ class AdminStatisticsHelper
         $games = DB::table('games')->count();
         $releases = DB::table('game_releases')->count();
         $individuals = DB::table('individuals')->count();
-        $companies = DB::table('pub_devs')->count();
+        $companies = DB::table('companies')->count();
         $menuDisks = DB::table('menu_disks')->count();
         $sndhs = DB::table('sndhs')->count();
 
@@ -160,7 +160,7 @@ class AdminStatisticsHelper
                 self::coverageRow('With screenshots', DB::table('screenshot_game')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a genre', DB::table('game_genre_cross')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a developer', DB::table('game_developer')->distinct('game_id')->count(), $games),
-                self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('pub_dev_id')->distinct('game_id')->count(), $games),
+                self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('company_id')->distinct('game_id')->count(), $games),
                 self::coverageRow('With creators', DB::table('game_individual')->distinct('game_id')->count(), $games),
                 self::coverageRow('With music', DB::table('game_sndh')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a review', DB::table('review_game')->distinct('game_id')->count(), $games),
@@ -171,7 +171,7 @@ class AdminStatisticsHelper
             ],
             'Releases' => [
                 self::coverageRow('With a date', DB::table('game_releases')->whereNotNull('date')->count(), $releases),
-                self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('pub_dev_id')->count(), $releases),
+                self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('company_id')->count(), $releases),
                 self::coverageRow('With a licence', DB::table('game_releases')->whereNotNull('license')->count(), $releases),
                 self::coverageRow('With scans', DB::table('game_release_scans')->distinct('game_release_id')->count(), $releases),
                 self::coverageRow('With a language', DB::table('game_release_language')->distinct('game_release_id')->count(), $releases),
@@ -180,7 +180,7 @@ class AdminStatisticsHelper
             ],
             'Other' => [
                 self::coverageRow('Individuals with a bio', self::countWithText('individuals', 'profile', 'id'), $individuals),
-                self::coverageRow('Companies with a profile', self::countWithText('pub_devs', 'profile', 'id'), $companies),
+                self::coverageRow('Companies with a profile', self::countWithText('companies', 'profile', 'id'), $companies),
                 self::coverageRow('Menu disks with a dump', DB::table('menu_disks')->whereNotNull('menu_disk_dump_id')->count(), $menuDisks),
                 self::coverageRow('Menu disks with a screenshot', DB::table('menu_disk_screenshots')->distinct('menu_disk_id')->count(), $menuDisks),
                 self::coverageRow('SNDH files linked to a game', DB::table('game_sndh')->distinct('sndh_id')->count(), $sndhs),
@@ -319,9 +319,9 @@ class AdminStatisticsHelper
     public static function topPublishers($limit = 15)
     {
         $rows = DB::table('game_releases')
-            ->join('pub_devs', 'pub_devs.id', '=', 'game_releases.pub_dev_id')
-            ->select('pub_devs.name', DB::raw('count(*) as total'))
-            ->groupBy('pub_devs.id', 'pub_devs.name')
+            ->join('companies', 'companies.id', '=', 'game_releases.company_id')
+            ->select('companies.name', DB::raw('count(*) as total'))
+            ->groupBy('companies.id', 'companies.name')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();
@@ -338,9 +338,9 @@ class AdminStatisticsHelper
     public static function topDevelopers($limit = 15)
     {
         $rows = DB::table('game_developer')
-            ->join('pub_devs', 'pub_devs.id', '=', 'game_developer.pub_dev_id')
-            ->select('pub_devs.name', DB::raw('count(distinct game_developer.game_id) as total'))
-            ->groupBy('pub_devs.id', 'pub_devs.name')
+            ->join('companies', 'companies.id', '=', 'game_developer.company_id')
+            ->select('companies.name', DB::raw('count(distinct game_developer.game_id) as total'))
+            ->groupBy('companies.id', 'companies.name')
             ->orderByDesc('total')
             ->limit($limit)
             ->get();

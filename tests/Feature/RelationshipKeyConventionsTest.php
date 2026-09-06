@@ -55,7 +55,7 @@ class RelationshipKeyConventionsTest extends TestCase
         'ScreenshotReview::comment()'       => 'declared on a Pivot: no derivable default exists',
 
         // TABLE, NOT MODEL
-        'GameRelease::publisher()'          => 'pub_dev_id is right; belongsTo derives publisher_id from the method name',
+        'GameRelease::publisher()'          => 'company_id is right; belongsTo derives publisher_id from the method name',
         'Game::vs()'                        => 'atari_id says what game_id would not',
 
         // DECLINED ON PRICING

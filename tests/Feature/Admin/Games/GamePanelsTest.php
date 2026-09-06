@@ -7,7 +7,7 @@ use App\Models\Game;
 use App\Models\GameFact;
 use App\Models\GameVideo;
 use App\Models\Individual;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Screenshot;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -136,9 +136,9 @@ class GamePanelsTest extends AdminTestCase
         $this->post(route('admin.games.companies.store'), [
             'name'    => 'Ocean',
             'profile' => 'A Manchester publisher.',
-        ])->assertRedirect(route('admin.games.companies.edit', PubDev::sole()));
+        ])->assertRedirect(route('admin.games.companies.edit', Company::sole()));
 
-        $company = PubDev::sole();
+        $company = Company::sole();
 
         $this->assertSame('Ocean', $company->name);
         $this->assertSame('A Manchester publisher.', $company->profile);
@@ -147,12 +147,12 @@ class GamePanelsTest extends AdminTestCase
 
     public function test_company_names_are_unique(): void
     {
-        PubDev::factory()->create(['name' => 'Ocean']);
+        Company::factory()->create(['name' => 'Ocean']);
 
         $this->post(route('admin.games.companies.store'), ['name' => 'Ocean'])
             ->assertSessionHasErrors('name');
 
-        $this->assertSame(1, PubDev::query()->count());
+        $this->assertSame(1, Company::query()->count());
     }
 
     /**
@@ -160,7 +160,7 @@ class GamePanelsTest extends AdminTestCase
      */
     public function test_a_company_may_keep_its_own_name(): void
     {
-        $company = PubDev::factory()->create(['name' => 'Ocean']);
+        $company = Company::factory()->create(['name' => 'Ocean']);
 
         $this->put(route('admin.games.companies.update', $company), ['name' => 'Ocean'])
             ->assertRedirect();
@@ -228,7 +228,7 @@ class GamePanelsTest extends AdminTestCase
     public function test_a_developer_can_be_credited_and_uncredited(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $developer = PubDev::factory()->create(['name' => 'The Bitmap Brothers']);
+        $developer = Company::factory()->create(['name' => 'The Bitmap Brothers']);
         $role = $this->developerRole();
 
         $this->post(route('admin.games.game-developers.store', $game), [

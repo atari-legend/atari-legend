@@ -9,7 +9,7 @@ use App\Models\GameGenre;
 use App\Models\GameRelease;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
-use App\Models\PubDev;
+use App\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -54,7 +54,7 @@ class AjaxEndpointsTest extends TestCase
     private function create(string $route, string $name): void
     {
         match ($route) {
-            'ajax.companies'   => PubDev::factory()->create(['name' => $name]),
+            'ajax.companies'   => Company::factory()->create(['name' => $name]),
             'ajax.crews'       => Crew::factory()->create(['name' => $name]),
             'ajax.engines'     => Engine::forceCreate(['name' => $name]),
             'ajax.genres'      => GameGenre::forceCreate(['name' => $name]),
@@ -119,7 +119,7 @@ class AjaxEndpointsTest extends TestCase
 
     public function test_a_company_carries_its_id(): void
     {
-        $company = PubDev::factory()->create(['name' => 'Psygnosis']);
+        $company = Company::factory()->create(['name' => 'Psygnosis']);
 
         $results = $this->getJson(route('ajax.companies', ['q' => 'Psy']))->assertOk()->json();
 

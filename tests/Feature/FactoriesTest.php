@@ -30,7 +30,7 @@ use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\News;
 use App\Models\NewsSubmission;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Resolution;
 use App\Models\Review;
 use App\Models\Screenshot;
@@ -78,7 +78,7 @@ class FactoriesTest extends TestCase
             'game'                => [Game::class],
             'release'             => [GameRelease::class],
             'screenshot'          => [Screenshot::class],
-            'publisher/developer' => [PubDev::class],
+            'publisher/developer' => [Company::class],
             'individual'          => [Individual::class],
             'crew'                => [Crew::class],
             'genre'               => [GameGenre::class],
@@ -310,15 +310,15 @@ class FactoriesTest extends TestCase
      */
     public function test_non_fillable_attributes_still_reach_the_database(): void
     {
-        $publisher = PubDev::factory()->create();
+        $publisher = Company::factory()->create();
 
-        // pub_dev_id is not fillable on Release
-        $release = GameRelease::factory()->create(['pub_dev_id' => $publisher->getKey()]);
+        // company_id is not fillable on Release
+        $release = GameRelease::factory()->create(['company_id' => $publisher->getKey()]);
 
-        $this->assertSame($publisher->getKey(), $release->fresh()->pub_dev_id);
+        $this->assertSame($publisher->getKey(), $release->fresh()->company_id);
         $this->assertFalse(
-            in_array('pub_dev_id', (new GameRelease())->getFillable(), true),
-            'This test is only meaningful while pub_dev_id is outside GameRelease::$fillable.'
+            in_array('company_id', (new GameRelease())->getFillable(), true),
+            'This test is only meaningful while company_id is outside GameRelease::$fillable.'
         );
     }
 

@@ -9,7 +9,7 @@ use App\Models\DeveloperRole;
 use App\Models\Game;
 use App\Models\Individual;
 use App\Models\IndividualRole;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -81,7 +81,7 @@ class GameCreditsController extends Controller
 
     public function storeDeveloper(Request $request, Game $game)
     {
-        $developer = PubDev::find($request->developer);
+        $developer = Company::find($request->developer);
         if ($developer !== null) {
             $developer->games()->attach($game, ['developer_role_id' => $request->role]);
 
@@ -99,11 +99,11 @@ class GameCreditsController extends Controller
         return redirect()->route('admin.games.game-credits.index', $game);
     }
 
-    public function destroyDeveloper(Request $request, Game $game, PubDev $developer)
+    public function destroyDeveloper(Request $request, Game $game, Company $developer)
     {
         DB::table('game_developer')
             ->where('game_id', $game->getKey())
-            ->where('pub_dev_id', $developer->getKey())
+            ->where('company_id', $developer->getKey())
             ->where('developer_role_id', $request->role)
             ->delete();
 

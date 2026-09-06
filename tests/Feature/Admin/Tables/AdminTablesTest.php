@@ -30,7 +30,7 @@ use App\Models\MagazineIssue;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\NewsSubmission;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Screenshot;
 use App\Models\Spotlight;
 use App\Models\User;
@@ -261,8 +261,8 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_companies_table_filters_on_having_a_logo(): void
     {
-        PubDev::factory()->create(['name' => 'Ocean', 'imgext' => 'png']);
-        PubDev::factory()->create(['name' => 'US Gold', 'imgext' => null]);
+        Company::factory()->create(['name' => 'Ocean', 'imgext' => 'png']);
+        Company::factory()->create(['name' => 'US Gold', 'imgext' => null]);
 
         Livewire::test(GameCompaniesTable::class)->assertSeeInOrder(['Ocean', 'US Gold']);
 
@@ -470,7 +470,7 @@ class AdminTablesTest extends AdminTestCase
     {
         $crew = Crew::factory()->create(['name' => 'The Replicants']);
         $individual = Individual::factory()->create(['name' => 'Someone']);
-        $company = PubDev::factory()->create(['name' => 'Ocean']);
+        $company = Company::factory()->create(['name' => 'Ocean']);
         $link = Website::factory()->create(['name' => 'Hatari']);
 
         Livewire::test(CrewsTable::class)

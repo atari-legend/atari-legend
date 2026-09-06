@@ -10,7 +10,7 @@ use App\Models\GameSubmitInfo;
 use App\Models\GameVote;
 use App\Models\Individual;
 use App\Models\Interview;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\User;
@@ -101,7 +101,7 @@ class GamePageTest extends TestCase
     {
         $game = Game::factory()->create();
         $game->developers()->attach(
-            PubDev::factory()->create(),
+            Company::factory()->create(),
             ['developer_role_id' => DB::table('developer_roles')->insertGetId(['name' => 'Developer'])]
         );
 

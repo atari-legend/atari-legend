@@ -328,7 +328,7 @@ class E2ESeeder extends Seeder
         ]);
 
         $this->insert('game_series', ['id' => self::GAME_SERIES_ID], ['name' => self::SERIES_NAME]);
-        $this->insert('pub_devs', ['id' => self::COMPANY_ID], ['name' => self::COMPANY_NAME]);
+        $this->insert('companies', ['id' => self::COMPANY_ID], ['name' => self::COMPANY_NAME]);
 
         $this->insert('sndhs', ['id' => self::SNDH_ID], [
             'sndh_archive_id' => self::SNDH_ARCHIVE_ID,
@@ -343,7 +343,7 @@ class E2ESeeder extends Seeder
      * Hang the reference rows off the game.
      *
      * Its own step, after seedReferenceData() and seedContent(): the company,
-     * genre, engine and individual all have to exist first, and pub_dev_id on
+     * genre, engine and individual all have to exist first, and company_id on
      * a release is a foreign key.
      *
      * These links are what make the game search assertable through its
@@ -357,11 +357,11 @@ class E2ESeeder extends Seeder
     {
         DB::table('game_releases')
             ->where('id', self::RELEASE_ID)
-            ->update(['pub_dev_id' => self::COMPANY_ID]);
+            ->update(['company_id' => self::COMPANY_ID]);
 
         $this->insert('game_developer', [
             'game_id'    => self::GAME_ID,
-            'pub_dev_id' => self::COMPANY_ID,
+            'company_id' => self::COMPANY_ID,
         ], []);
 
         $this->insert('game_genre_cross', [

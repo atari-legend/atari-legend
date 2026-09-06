@@ -8,7 +8,7 @@ use App\Models\GameAka;
 use App\Models\GameGenre;
 use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,19 +34,19 @@ class GameHelperDescriptionTest extends TestCase
         $genre2->name = 'Genre 2';
         $game->genres()->save($genre2);
 
-        $developer1 = new PubDev();
+        $developer1 = new Company();
         $developer1->name = 'Dev 1';
         $game->developers()->save($developer1);
 
-        $developer2 = new PubDev();
+        $developer2 = new Company();
         $developer2->name = 'Dev 2';
         $game->developers()->save($developer2);
 
-        $publisher1 = new PubDev();
+        $publisher1 = new Company();
         $publisher1->name = 'Pub 1';
         $publisher1->save();
 
-        $publisher2 = new PubDev();
+        $publisher2 = new Company();
         $publisher2->name = 'Pub 2';
         $publisher2->save();
 

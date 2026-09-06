@@ -8,7 +8,7 @@ use App\Models\Game;
 use App\Models\GameGenre;
 use App\Models\GameRelease;
 use App\Models\Individual;
-use App\Models\PubDev;
+use App\Models\Company;
 use App\Models\Review;
 use App\Models\Sndh;
 use Carbon\Carbon;
@@ -102,7 +102,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_found_by_developer(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $developer = PubDev::factory()->create(['name' => 'The Bitmap Brothers']);
+        $developer = Company::factory()->create(['name' => 'The Bitmap Brothers']);
         $game->developers()->attach($developer, ['developer_role_id' => $this->developerRoleId()]);
 
         Game::factory()->named('Something else')->create();
@@ -122,7 +122,7 @@ class GameSearchTest extends TestCase
         $this->assertSame(['Published game'], $this->names(['publisher' => 'Ocean']));
         $this->assertSame(
             ['Published game'],
-            $this->names(['publisher_id' => $release->fresh()->pub_dev_id])
+            $this->names(['publisher_id' => $release->fresh()->company_id])
         );
     }
 
