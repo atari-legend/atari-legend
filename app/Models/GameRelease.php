@@ -131,12 +131,12 @@ class GameRelease extends Model
 
     public function emulatorIncompatibles()
     {
-        return $this->belongsToMany(Emulator::class, 'game_release_emulator_incompatibility');
+        return $this->belongsToMany(Emulator::class, 'game_release_emulator_incompatible');
     }
 
     public function tosIncompatibles()
     {
-        return $this->hasMany(GameReleaseTosVersionIncompatibility::class);
+        return $this->hasMany(GameReleaseTosIncompatibility::class);
     }
 
     public function akas()

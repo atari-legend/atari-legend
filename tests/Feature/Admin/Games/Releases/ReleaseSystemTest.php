@@ -10,7 +10,7 @@ use App\Models\Enhancement;
 use App\Models\GameRelease;
 use App\Models\GameReleaseMemoryEnhanced;
 use App\Models\GameReleaseSystemEnhanced;
-use App\Models\GameReleaseTosVersionIncompatibility;
+use App\Models\GameReleaseTosIncompatibility;
 use App\Models\Language;
 use App\Models\Memory;
 use App\Models\Resolution;
@@ -208,7 +208,7 @@ class ReleaseSystemTest extends AdminTestCase
             'language' => $language->id,
         ])->assertRedirect(route('admin.games.releases.system.index', [$release->game, $release]));
 
-        $row = GameReleaseTosVersionIncompatibility::sole();
+        $row = GameReleaseTosIncompatibility::sole();
 
         $this->assertSame($release->getKey(), $row->game_release_id);
         $this->assertSame('1.62', $row->tos->name);
@@ -218,7 +218,7 @@ class ReleaseSystemTest extends AdminTestCase
         $this->delete(route('admin.games.releases.system-tos-incompatibility.destroy', [$release->game, $release, $row]))
             ->assertRedirect();
 
-        $this->assertSame(0, GameReleaseTosVersionIncompatibility::query()->count());
+        $this->assertSame(0, GameReleaseTosIncompatibility::query()->count());
         $this->assertChangelog(Changelog::DELETE, 'Game Release', $release->game->name);
     }
 
@@ -234,7 +234,7 @@ class ReleaseSystemTest extends AdminTestCase
             'language' => 'zz',
         ])->assertSessionHasErrors('language');
 
-        $this->assertSame(0, GameReleaseTosVersionIncompatibility::query()->count());
+        $this->assertSame(0, GameReleaseTosIncompatibility::query()->count());
         $this->assertNoChangelog();
     }
 

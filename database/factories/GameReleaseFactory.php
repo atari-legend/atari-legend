@@ -7,7 +7,7 @@ use App\Models\GameRelease;
 use App\Models\GameReleaseAka;
 use App\Models\GameReleaseMemoryEnhanced;
 use App\Models\GameReleaseSystemEnhanced;
-use App\Models\GameReleaseTosVersionIncompatibility;
+use App\Models\GameReleaseTosIncompatibility;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -198,7 +198,7 @@ class GameReleaseFactory extends Factory
     public function incompatibleWithTos(string $version, ?string $languageId = null): static
     {
         return $this->afterCreating(function (GameRelease $release) use ($version, $languageId) {
-            GameReleaseTosVersionIncompatibility::create([
+            GameReleaseTosIncompatibility::create([
                 'game_release_id' => $release->getKey(),
                 'tos_id'          => TosFactory::new()->create(['name' => $version])->id,
                 'language_id'     => $languageId === null

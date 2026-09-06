@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GameReleaseTosVersionIncompatibility extends Model
+class GameReleaseTosIncompatibility extends Model
 {
     public $timestamps = false;
     protected $fillable = ['tos_id', 'language_id', 'game_release_id'];
