@@ -24,8 +24,11 @@ in the containers.
 ```bash
 cp .env.example .env
 composer install            # or, without host PHP, the Sail bootstrap container:
-                            # docker run --rm -v "$(pwd):/var/www/html" -w /var/www/html \
-                            #   laravelsail/php84-composer:latest composer install
+                            # docker run --rm -u $(id -u):$(id -g) -v "$(pwd):/var/www/html" -w /var/www/html \
+                            #   laravelsail/php84-composer:latest composer install --ignore-platform-req=ext-gd
+                            # (-u avoids a git "dubious ownership" error; --ignore-platform-req=ext-gd
+                            # is needed because this bootstrap image lacks gd, unlike the real Sail
+                            # image built below, which has it)
 ./vendor/bin/sail up -d
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate
