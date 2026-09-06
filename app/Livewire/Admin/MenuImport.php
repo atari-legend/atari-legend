@@ -119,9 +119,9 @@ class MenuImport extends Component
     }
 
     /**
-     * Drop a single content row, closing the gap it leaves in the disk's `order`
-     * sequence. Keys are preserved rather than re-indexed for the same reason as
-     * in {@see self::removeDisk()}.
+     * Drop a single content row, closing the gap it leaves in the disk's
+     * `position` sequence. Keys are preserved rather than re-indexed for the
+     * same reason as in {@see self::removeDisk()}.
      *
      * A disk left with no contents is kept: unlike an empty menu, it carries its
      * own part / condition / donator / notes, and a content-free disk is a
@@ -143,9 +143,9 @@ class MenuImport extends Component
     /**
      * Renumber a disk's contents 1..N, following the order in which they are
      * listed (which is the order they appear in on screen, and the order they
-     * came in from the sheet) rather than their current `order` values. Flattens
-     * out both the gap a deleted row leaves behind and any odd numbering the
-     * spreadsheet came with.
+     * came in from the sheet) rather than their current `position` values.
+     * Flattens out both the gap a deleted row leaves behind and any odd
+     * numbering the spreadsheet came with.
      */
     public function renumberDisk(int $mi, int $di): void
     {
@@ -153,9 +153,9 @@ class MenuImport extends Component
             return;
         }
 
-        $order = 1;
+        $position = 1;
         foreach ($this->menus[$mi]['disks'][$di]['contents'] as $ci => $content) {
-            $this->menus[$mi]['disks'][$di]['contents'][$ci]['order'] = $order++;
+            $this->menus[$mi]['disks'][$di]['contents'][$ci]['position'] = $position++;
         }
     }
 
@@ -255,7 +255,7 @@ class MenuImport extends Component
 
         $resolved = [
             'row'          => $content['row'],
-            'order'        => $content['order'],
+            'position'     => $content['position'],
             // `name` is the immutable original from the sheet (for the "From
             // sheet" hint); `query` is the current search term (what the user
             // typed / the resolved name), used for the value + error wording.
@@ -619,8 +619,8 @@ class MenuImport extends Component
     {
         $errors = [];
 
-        if ($content['order'] === null || $content['order'] === '' || ! is_numeric($content['order'])) {
-            $errors[] = 'Order must be a whole number.';
+        if ($content['position'] === null || $content['position'] === '' || ! is_numeric($content['position'])) {
+            $errors[] = 'Position must be a whole number.';
         }
 
         $mode = $content['link_mode'];
@@ -898,7 +898,7 @@ class MenuImport extends Component
     private function commitContent(array $content, MenuDisk $disk, ?GameRelease $extraRelease = null): ?GameRelease
     {
         $model = MenuDiskContent::create([
-            'order'        => $content['order'],
+            'position'     => $content['position'],
             'subtype'      => $content['subtype'] ?: null,
             'version'      => $content['version'] ?: null,
             'requirements' => $content['requirements'] ?: null,

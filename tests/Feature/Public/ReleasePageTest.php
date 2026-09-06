@@ -49,7 +49,7 @@ class ReleasePageTest extends TestCase
 
         MenuDiskContent::forceCreate([
             'menu_disk_id'    => $disk->getKey(),
-            'order'           => 1,
+            'position'        => 1,
             'game_release_id' => $release->getKey(),
         ]);
 

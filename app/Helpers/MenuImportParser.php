@@ -20,7 +20,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
  *         ['part' => ?string, 'condition' => ?string, 'donated_by' => ?string,
  *          'notes' => ?string, 'scrolltext' => ?string,
  *          'contents' => [
- *             ['row' => int, 'order' => ?string, 'name' => ?string, 'type' => ?string,
+ *             ['row' => int, 'position' => ?string, 'name' => ?string, 'type' => ?string,
  *              'subtype' => ?string, 'version' => ?string, 'requirements' => ?string],
  *          ]],
  *      ]],
@@ -103,7 +103,7 @@ class MenuImportParser
             if (self::hasContent($cells)) {
                 $menus[$menuIndex]['disks'][$diskIndex]['contents'][] = [
                     'row'          => $excelRow,
-                    'order'        => $cells['content_order'],
+                    'position'     => $cells['content_order'],
                     'name'         => $cells['content_name'],
                     'type'         => $cells['content_type'],
                     'subtype'      => $cells['content_subtype'],

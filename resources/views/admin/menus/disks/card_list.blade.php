@@ -26,7 +26,7 @@
                 @endif
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        @foreach ($disk->contents->sortBy('order') as $content)
+                        @foreach ($disk->contents->sortBy('position') as $content)
                             <li>
                                 @if ($content->release)
                                     <a href="{{ route('games.releases.show', $content->release) }}">{{ $content->release->game->name }}</a>

@@ -86,7 +86,7 @@ class MenuDisksTest extends AdminTestCase
     {
         $this->post(
             route('admin.menus.disks.content.store', $disk),
-            array_merge(['disk' => $disk->getKey(), 'order' => 1], $attributes)
+            array_merge(['disk' => $disk->getKey(), 'position' => 1], $attributes)
         )->assertRedirect();
 
         return MenuDiskContent::query()->latest('id')->first();
@@ -366,14 +366,14 @@ class MenuDisksTest extends AdminTestCase
         $content = $this->addContent($disk, ['type' => 'software', 'software' => $software->getKey()]);
 
         $this->put(route('admin.menus.disks.content.update', ['disk' => $disk, 'content' => $content]), [
-            'order'        => 3,
+            'position'     => 3,
             'version'      => '2.3',
             'requirements' => 'TOS 1.62',
         ])->assertRedirect(route('admin.menus.disks.edit', $disk));
 
         $content->refresh();
 
-        $this->assertSame(3, $content->order);
+        $this->assertSame(3, $content->position);
         $this->assertSame('2.3', $content->version);
         $this->assertSame('TOS 1.62', $content->requirements);
         $this->assertSame($software->getKey(), $content->menu_software_id);
@@ -386,7 +386,7 @@ class MenuDisksTest extends AdminTestCase
      * definition not the game itself, so it has to say what it is - a doc, a
      * trainer, a hint.
      */
-    public function test_content_needs_an_order_and_a_subtype_when_it_points_at_a_game(): void
+    public function test_content_needs_a_position_and_a_subtype_when_it_points_at_a_game(): void
     {
         $disk = $this->disk();
         $game = Game::factory()->named('Xenon')->create();
@@ -398,17 +398,17 @@ class MenuDisksTest extends AdminTestCase
         ]);
 
         $this->put(route('admin.menus.disks.content.update', ['disk' => $disk, 'content' => $content]), [
-            'order' => 'first',
-        ])->assertSessionHasErrors('order');
+            'position' => 'first',
+        ])->assertSessionHasErrors('position');
 
         $this->put(route('admin.menus.disks.content.update', ['disk' => $disk, 'content' => $content]), [
-            'order'   => 2,
+            'position' => 2,
             'subtype' => '',
         ])->assertSessionHasErrors('subtype');
 
         $content->refresh();
 
-        $this->assertSame(1, $content->order);
+        $this->assertSame(1, $content->position);
         $this->assertSame('doc', $content->subtype);
     }
 
@@ -433,7 +433,7 @@ class MenuDisksTest extends AdminTestCase
         $docContent = $this->addContent($disk, [
             'type'    => 'release',
             'action'  => 'use-release',
-            'order'   => 2,
+            'position' => 2,
             'release' => $release->getKey(),
             'subtype' => 'doc',
         ]);
@@ -483,7 +483,7 @@ class MenuDisksTest extends AdminTestCase
         ]);
         $this->addContent($disk, [
             'type'    => 'game',
-            'order'   => 2,
+            'position' => 2,
             'game'    => $game->getKey(),
             'subtype' => 'hints',
         ]);

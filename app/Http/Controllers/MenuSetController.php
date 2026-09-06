@@ -34,8 +34,8 @@ class MenuSetController extends Controller
         return MenuDisk::select('menu_disks.*')
             ->join('menus', 'menu_id', '=', 'menus.id')
             ->where('menus.menu_set_id', '=', $set->id)
-            ->orderBy('number', $set->menus_sort)
-            ->orderBy('issue', $set->menus_sort)
+            ->orderBy('number', $set->sort_direction)
+            ->orderBy('issue', $set->sort_direction)
             ->orderBy('version')
             ->orderBy('part');
     }

@@ -9,7 +9,7 @@ class MenuSet extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'menus_sort'];
+    protected $fillable = ['name', 'sort_direction'];
 
     public function crews()
     {

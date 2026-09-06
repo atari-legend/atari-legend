@@ -29,7 +29,7 @@ class MenuImportTest extends TestCase
 
     private function set(): MenuSet
     {
-        return MenuSet::create(['name' => 'Test Set', 'menus_sort' => 'asc']);
+        return MenuSet::create(['name' => 'Test Set', 'sort_direction' => 'asc']);
     }
 
     private function game(string $name): Game
@@ -49,7 +49,7 @@ class MenuImportTest extends TestCase
     {
         return array_merge([
             'row'           => 3,
-            'order'         => 1,
+            'position'      => 1,
             'name'          => 'From sheet',
             'query'         => 'From sheet',
             'subtype'       => null,
@@ -201,11 +201,11 @@ class MenuImportTest extends TestCase
                 'existing_disk_label' => $disk->label,
                 'contents'            => [
                     $this->content([
-                        'order'     => 1, 'game_id' => $game->getKey(), 'game_name' => $game->name,
+                        'position'     => 1, 'game_id' => $game->getKey(), 'game_name' => $game->name,
                         'link_mode' => 'new_release',
                     ]),
                     $this->content([
-                        'order'   => 2, 'game_id' => $game->getKey(), 'game_name' => $game->name,
+                        'position'   => 2, 'game_id' => $game->getKey(), 'game_name' => $game->name,
                         'subtype' => 'Docs', 'link_mode' => 'extra',
                     ]),
                 ],
@@ -403,9 +403,9 @@ class MenuImportTest extends TestCase
                 'disks'  => [$this->disk([
                     'condition_id' => $condition->id,
                     'contents'     => [
-                        $this->content(['order' => 1, 'game_id' => $first->getKey(), 'game_name' => $first->name]),
-                        $this->content(['order' => 2, 'game_id' => $dropped->getKey(), 'game_name' => $dropped->name]),
-                        $this->content(['order' => 3, 'game_id' => $last->getKey(), 'game_name' => $last->name]),
+                        $this->content(['position' => 1, 'game_id' => $first->getKey(), 'game_name' => $first->name]),
+                        $this->content(['position' => 2, 'game_id' => $dropped->getKey(), 'game_name' => $dropped->name]),
+                        $this->content(['position' => 3, 'game_id' => $last->getKey(), 'game_name' => $last->name]),
                     ],
                 ])],
             ])])
@@ -415,13 +415,13 @@ class MenuImportTest extends TestCase
         // keeps its original array key so the index-addressed autocomplete
         // inputs still point at it.
         $this->assertNull($component->get('menus.0.disks.0.contents.1'));
-        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.order'));
-        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.2.order'));
+        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.position'));
+        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.2.position'));
         $this->assertEquals($last->getKey(), $component->get('menus.0.disks.0.contents.2.game_id'));
 
         $component->call('runImport');
 
-        $orders = MenuDiskContent::orderBy('order')->pluck('order')->all();
+        $orders = MenuDiskContent::orderBy('position')->pluck('position')->all();
         $this->assertEquals([1, 2], $orders);
         $this->assertEquals(0, GameRelease::where('game_id', $dropped->getKey())->count());
     }
@@ -435,16 +435,16 @@ class MenuImportTest extends TestCase
         $component = Livewire::test(MenuImport::class, ['set' => $set])
             ->set('reviewing', true)
             ->set('menus', [$this->menu(['disks' => [$this->disk(['contents' => [
-                $this->content(['order' => 5, 'game_id' => $game->getKey()]),
-                $this->content(['order' => 6, 'game_id' => $game->getKey()]),
-                $this->content(['order' => 9, 'game_id' => $game->getKey()]),
-                $this->content(['order' => 12, 'game_id' => $game->getKey()]),
+                $this->content(['position' => 5, 'game_id' => $game->getKey()]),
+                $this->content(['position' => 6, 'game_id' => $game->getKey()]),
+                $this->content(['position' => 9, 'game_id' => $game->getKey()]),
+                $this->content(['position' => 12, 'game_id' => $game->getKey()]),
             ]])]])])
             ->call('removeContent', 0, 0, 1);
 
-        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.order'));
-        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.2.order'));
-        $this->assertEquals(3, $component->get('menus.0.disks.0.contents.3.order'));
+        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.position'));
+        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.2.position'));
+        $this->assertEquals(3, $component->get('menus.0.disks.0.contents.3.position'));
     }
 
     public function testRenumberDiskNormalisesWithoutDeleting(): void
@@ -454,15 +454,15 @@ class MenuImportTest extends TestCase
         $component = Livewire::test(MenuImport::class, ['set' => $set])
             ->set('reviewing', true)
             ->set('menus', [$this->menu(['disks' => [$this->disk(['contents' => [
-                $this->content(['order' => 10]),
-                $this->content(['order' => '']),
-                $this->content(['order' => 40]),
+                $this->content(['position' => 10]),
+                $this->content(['position' => '']),
+                $this->content(['position' => 40]),
             ]])]])])
             ->call('renumberDisk', 0, 0);
 
-        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.order'));
-        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.1.order'));
-        $this->assertEquals(3, $component->get('menus.0.disks.0.contents.2.order'));
+        $this->assertEquals(1, $component->get('menus.0.disks.0.contents.0.position'));
+        $this->assertEquals(2, $component->get('menus.0.disks.0.contents.1.position'));
+        $this->assertEquals(3, $component->get('menus.0.disks.0.contents.2.position'));
     }
 
     public function testRemovingAMainReleaseRowFlagsItsDependentExtra(): void
@@ -478,10 +478,10 @@ class MenuImportTest extends TestCase
                     'condition_id' => $condition->id,
                     'contents'     => [
                         $this->content([
-                            'order' => 1, 'game_id' => $game->getKey(), 'link_mode' => 'new_release',
+                            'position' => 1, 'game_id' => $game->getKey(), 'link_mode' => 'new_release',
                         ]),
                         $this->content([
-                            'order'   => 2, 'game_id' => $game->getKey(),
+                            'position'   => 2, 'game_id' => $game->getKey(),
                             'subtype' => 'Docs', 'link_mode' => 'extra',
                         ]),
                     ],

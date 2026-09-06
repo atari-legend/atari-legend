@@ -185,7 +185,7 @@
                                 <table class="table align-top mb-0">
                                     <thead>
                                         <tr>
-                                            <th style="width: 6rem">Order</th>
+                                            <th style="width: 6rem">Position</th>
                                             <th style="width: 15rem">Link as</th>
                                             <th style="min-width: 18rem">Game / Software</th>
                                             <th style="width: 11rem">Sub-type</th>
@@ -200,8 +200,8 @@
                                             <tr wire:key="menu-{{ $mi }}-disk-{{ $di }}-content-{{ $ci }}" class="align-top">
                                                 <td @class(['border-start border-danger border-3' => count($errors) > 0])>
                                                     <input type="text"
-                                                        @class(['form-control', 'is-invalid' => $content['order'] === null || $content['order'] === '' || ! is_numeric($content['order'])])
-                                                        wire:model.live.debounce.500ms="menus.{{ $mi }}.disks.{{ $di }}.contents.{{ $ci }}.order">
+                                                        @class(['form-control', 'is-invalid' => $content['position'] === null || $content['position'] === '' || ! is_numeric($content['position'])])
+                                                        wire:model.live.debounce.500ms="menus.{{ $mi }}.disks.{{ $di }}.contents.{{ $ci }}.position">
                                                 </td>
                                                 <td>
                                                     <select class="form-select"

@@ -95,10 +95,10 @@ class MenuSetPagesTest extends TestCase
         $set = $this->setWithDisks('Automation');
         $disk = $set->menus->first()->disks->first();
 
-        foreach ([1, 2] as $order) {
+        foreach ([1, 2] as $position) {
             MenuDiskContent::forceCreate([
                 'menu_disk_id'     => $disk->getKey(),
-                'order'            => $order,
+                'position'         => $position,
                 'menu_software_id' => $software->getKey(),
             ]);
         }
@@ -181,7 +181,7 @@ class MenuSetPagesTest extends TestCase
 
         MenuDiskContent::forceCreate([
             'menu_disk_id'    => $disk->getKey(),
-            'order'           => 1,
+            'position'        => 1,
             'game_release_id' => $release->getKey(),
         ]);
 

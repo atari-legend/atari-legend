@@ -45,12 +45,12 @@
 
             <div class="row mb-3">
                 <div class="col-12 col-md-6">
-                    <label for="order" class="form-label">Order</label>
-                    <input type="number" class="form-control @error('order') is-invalid @enderror"
-                        id="order" name="order" placeholder="e.g.: 1" required
-                        value="{{ old('order', $content->order ?? '') }}">
+                    <label for="position" class="form-label">Position</label>
+                    <input type="number" class="form-control @error('position') is-invalid @enderror"
+                        id="position" name="position" placeholder="e.g.: 1" required
+                        value="{{ old('position', $content->position ?? '') }}">
 
-                    @error('order')
+                    @error('position')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

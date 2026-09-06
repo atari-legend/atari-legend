@@ -270,7 +270,7 @@ class GameControllerTest extends AdminTestCase
             ]),
             'reviews'          => $game->reviews()->attach(Review::factory()->create()),
             'menuDiskContents' => $game->menuDiskContents()->create([
-                'order'        => 1,
+                'position'     => 1,
                 'menu_disk_id' => MenuDisk::factory()->create()->getKey(),
             ]),
             'magazineIndices' => MagazineIndex::factory()->create(['game_id' => $game->getKey()]),

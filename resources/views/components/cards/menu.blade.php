@@ -26,7 +26,7 @@
             </figure>
             <div class="px-0">
                 <ol class="list-unstyled striped border-top border-black">
-                    @forelse ($disk->contents->sortBy('order')->take(5) as $content)
+                    @forelse ($disk->contents->sortBy('position')->take(5) as $content)
                         <li class="p-2">
                             @if ($content->release)
                                 <a class="d-inline-block" href="{{ route('games.show', $content->release->game) }}">{{ $content->release->game->name }} {{ $content->version }}</a>

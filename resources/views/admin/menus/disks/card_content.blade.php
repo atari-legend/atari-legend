@@ -27,7 +27,7 @@
 
         @isset ($disk)
             <div class="row">
-                @foreach ($disk->contents->sortBy('order') as $content)
+                @foreach ($disk->contents->sortBy('position') as $content)
                     <div class="col-12 col-sm-6 col-md-3 col-xl-2 d-flex">
                         @include('admin.menus.disks.card_content_item')
                     </div>

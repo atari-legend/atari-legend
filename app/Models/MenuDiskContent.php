@@ -9,7 +9,7 @@ class MenuDiskContent extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order', 'subtype', 'version', 'requirements', 'menu_disk_id'];
+    protected $fillable = ['position', 'subtype', 'version', 'requirements', 'menu_disk_id'];
 
     public function menuDisk()
     {

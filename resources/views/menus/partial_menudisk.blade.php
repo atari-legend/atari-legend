@@ -63,14 +63,14 @@
                     <span class="text-muted">Unknown content</span>
                 @else
                     <ul class="list-unstyled col-12 @if ($disk->contents->count() > 1) col-sm-6 @endif mb-0">
-                        @foreach ($disk->contents->sortBy('order')->split(2)->first() as $content)
+                        @foreach ($disk->contents->sortBy('position')->split(2)->first() as $content)
                             @include('menus.partial_menudisk_content')
                         @endforeach
                     </ul>
 
                     @if ($disk->contents->count() > 1)
                         <ul class="list-unstyled col-12 col-sm-6 mb-0">
-                            @foreach ($disk->contents->sortBy('order')->split(2)->last() as $content)
+                            @foreach ($disk->contents->sortBy('position')->split(2)->last() as $content)
                                 @include('menus.partial_menudisk_content')
                             @endforeach
                         </ul>

@@ -16,7 +16,7 @@
     <h3>Disk content:</h3>
 
     <ul>
-        @foreach ($disk->contents->sortBy('order') as $content)
+        @foreach ($disk->contents->sortBy('position') as $content)
             @include('menus.partial_menudisk_content', ['demozoo_icon_url' => 'images/demozoo.png'])
         @endforeach
     </ul>

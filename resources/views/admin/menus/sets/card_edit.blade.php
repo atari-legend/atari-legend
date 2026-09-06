@@ -29,14 +29,14 @@
                 </div>
                 <div class="col-md-6">
                     @php
-                        // menu_sets.menus_sort is an enum of 'asc' / 'desc' - the
+                        // menu_sets.sort_direction is an enum of 'asc' / 'desc' - the
                         // same values this select posts, and the same ones
                         // MenuSetController passes to orderBy(). Comparing
                         // against 'ascending' / 'descending', as this used to,
                         // matched neither option on a saved set: the browser fell
                         // back to the first one, and saving the form again put the
                         // direction back to 'asc' without saying so.
-                        $sort = old('sort', $set->menus_sort ?? 'asc');
+                        $sort = old('sort', $set->sort_direction ?? 'asc');
                     @endphp
                     <label for="sort" class="form-label">Menus sort direction</label>
                     <select class="form-select @error('sort') is-invalid @enderror"

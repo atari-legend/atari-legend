@@ -61,8 +61,8 @@ class MenuSetsController extends Controller
         $request->validate(MenuSetsController::VALIDATION_RULES);
 
         $set = MenuSet::create([
-            'name'       => $request->name,
-            'menus_sort' => $request->sort,
+            'name'           => $request->name,
+            'sort_direction' => $request->sort,
         ]);
 
         collect($request->crews)
@@ -117,8 +117,8 @@ class MenuSetsController extends Controller
         $oldName = $set->name;
 
         $set->update([
-            'name'       => $request->name,
-            'menus_sort' => $request->sort,
+            'name'           => $request->name,
+            'sort_direction' => $request->sort,
         ]);
 
         ChangelogHelper::insert([

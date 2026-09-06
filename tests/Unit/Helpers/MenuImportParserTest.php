@@ -82,7 +82,7 @@ class MenuImportParserTest extends TestCase
         $this->assertCount(2, $diskA['contents']);
 
         $this->assertSame('Populous', $diskA['contents'][0]['name']);
-        $this->assertSame('1', $diskA['contents'][0]['order']);
+        $this->assertSame('1', $diskA['contents'][0]['position']);
         $this->assertNull($diskA['contents'][0]['subtype']);
         $this->assertSame(3, $diskA['contents'][0]['row']);
         $this->assertSame('Docs', $diskA['contents'][1]['subtype']);

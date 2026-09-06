@@ -54,15 +54,15 @@ async function openPublicDisk(page, set, disk) {
  * Two locators, and both are load-bearing. The `:has(> .card-footer > form)`
  * picks the content cards apart from the "Disk content" card they all sit
  * inside, which would otherwise match every filter below it. And the heading is
- * matched on '{order}. {label}' rather than on the label alone, because a
+ * matched on '{position}. {label}' rather than on the label alone, because a
  * content's label comes from whatever it points at
  * (MenuDiskContent::getLabelAttribute) - so a release and the trainer hanging
- * off it share one, and only the order tells their cards apart.
+ * off it share one, and only the position tells their cards apart.
  */
-function contentCard(page, order, label) {
+function contentCard(page, position, label) {
   return page
     .locator('.card:has(> .card-footer > form[action*="/content/"])')
-    .filter({ has: page.getByRole('heading', { name: `${order}. ${label}` }) });
+    .filter({ has: page.getByRole('heading', { name: `${position}. ${label}` }) });
 }
 
 /**
@@ -72,8 +72,8 @@ function contentCard(page, order, label) {
  * there is no URL to take the id from - and deleteByAction() needs it to find
  * that same form again later.
  */
-async function contentId(page, order, label) {
-  const action = await contentCard(page, order, label)
+async function contentId(page, position, label) {
+  const action = await contentCard(page, position, label)
     .locator('form[action*="/content/"]')
     .getAttribute('action');
 
@@ -86,8 +86,8 @@ async function contentId(page, order, label) {
  * The head of the form differs per type - a game picker, a software picker, or
  * a radio pair - so the caller does that part; this is the tail they all have.
  */
-async function saveContent(page, disk, { order, subtype = '', version = '', requirements = '' }) {
-  await page.fill('#order', String(order));
+async function saveContent(page, disk, { position, subtype = '', version = '', requirements = '' }) {
+  await page.fill('#position', String(position));
   await page.fill('#subtype', subtype);
   await page.fill('#version', version);
   await page.fill('#requirements', requirements);
@@ -312,7 +312,7 @@ test.describe('Admin menu sets', () => {
       // 7a. A game that is on the menu: a release is created for it on save.
       await page.goto(`/admin/menus/disks/${disk.id}/content/create?type=release`);
       await pickAutocomplete(page, 'game_name', gameOnMenu.name);
-      await saveContent(page, disk, { order: 1 });
+      await saveContent(page, disk, { position: 1 });
 
       diskCard = await openPublicDisk(page, set, disk);
       await expect(diskCard.getByRole('link', { name: gameOnMenu.name }))
@@ -321,7 +321,7 @@ test.describe('Admin menu sets', () => {
       // 7b. A piece of software, with a version beside its name.
       await page.goto(`/admin/menus/disks/${disk.id}/content/create?type=software`);
       await pickAutocomplete(page, 'software_name', software.name);
-      await saveContent(page, disk, { order: 2, version: '1.2' });
+      await saveContent(page, disk, { position: 2, version: '1.2' });
 
       diskCard = await openPublicDisk(page, set, disk);
       const softwareLink = diskCard.getByRole('link', { name: software.name });
@@ -332,7 +332,7 @@ test.describe('Admin menu sets', () => {
       //     standalone form is for. Its subtype is required by the controller.
       await page.goto(`/admin/menus/disks/${disk.id}/content/create?type=game`);
       await pickAutocomplete(page, 'game_name', docGame.name);
-      await saveContent(page, disk, { order: 3, subtype: 'doc', requirements: 'TOS 1.62' });
+      await saveContent(page, disk, { position: 3, subtype: 'doc', requirements: 'TOS 1.62' });
 
       diskCard = await openPublicDisk(page, set, disk);
       await expect(diskCard.getByRole('link', { name: docGame.name }))
@@ -346,9 +346,9 @@ test.describe('Admin menu sets', () => {
       await page.check('#use-release');
       await expect(page.locator('#action-use-release')).toBeVisible();
       await page.selectOption('#release', { label: gameOnMenu.name });
-      await saveContent(page, disk, { order: 4, subtype: 'trainer' });
+      await saveContent(page, disk, { position: 4, subtype: 'trainer' });
 
-      // Read in `order`, not in the order they were entered - which they were,
+      // Read in `position`, not in the order they were entered - which they were,
       // here, so what this really pins down is that the public partial sorts at
       // all: it splits the list into two columns and would silently reorder it.
       diskCard = await openPublicDisk(page, set, disk);
@@ -406,7 +406,7 @@ test.describe('Admin menu sets', () => {
       const softwareId = await contentId(page, 2, software.name);
 
       await page.goto(`/admin/menus/disks/${disk.id}/content/${softwareId}/edit`);
-      await page.fill('#order', '5');
+      await page.fill('#position', '5');
       await page.fill('#version', '2.0');
       await page.getByRole('button', { name: 'Save' }).click();
 

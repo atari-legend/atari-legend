@@ -130,7 +130,7 @@ class SearchDialectTest extends TestCase
 
     public function testMenuSetIndexCountsDisks()
     {
-        $set = MenuSet::create(['name' => 'Automation', 'menus_sort' => 'asc']);
+        $set = MenuSet::create(['name' => 'Automation', 'sort_direction' => 'asc']);
         $menu = Menu::create(['number' => 1, 'version' => '1.0', 'menu_set_id' => $set->id]);
 
         // Two disks, only one of them intact, so `missing` must come out as 1

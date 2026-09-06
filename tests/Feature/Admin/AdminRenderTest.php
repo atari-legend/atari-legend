@@ -82,7 +82,7 @@ class AdminRenderTest extends AdminTestCase
         $menu = Menu::factory()->create(['menu_set_id' => $set->getKey()]);
         $disk = MenuDisk::factory()->create(['menu_id' => $menu->getKey()]);
 
-        $content = new MenuDiskContent(['menu_disk_id' => $disk->getKey(), 'order' => 1]);
+        $content = new MenuDiskContent(['menu_disk_id' => $disk->getKey(), 'position' => 1]);
         $content->game_id = $game->getKey();
         $content->save();
 

@@ -53,7 +53,7 @@ class MenuDisksContentController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'order' => 'required|numeric',
+            'position' => 'required|numeric',
         ];
 
         switch ($request->type) {
@@ -82,7 +82,7 @@ class MenuDisksContentController extends Controller
 
         $disk = MenuDisk::find($request->disk);
         $content = MenuDiskContent::create([
-            'order'        => $request->order,
+            'position'     => $request->position,
             'subtype'      => $request->subtype,
             'version'      => $request->version,
             'requirements' => $request->requirements,
@@ -148,7 +148,7 @@ class MenuDisksContentController extends Controller
     public function update(Request $request, MenuDisk $disk, MenuDiskContent $content)
     {
         $request->validate([
-            'order' => 'required|numeric',
+            'position' => 'required|numeric',
         ]);
 
         if ($content->game !== null) {
@@ -158,7 +158,7 @@ class MenuDisksContentController extends Controller
         }
 
         $content->update([
-            'order'        => $request->order,
+            'position'     => $request->position,
             'subtype'      => $request->subtype,
             'version'      => $request->version,
             'requirements' => $request->requirements,

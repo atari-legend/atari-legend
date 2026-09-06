@@ -404,7 +404,7 @@ today, and what it does not:
    asserting on are asserted deliberately, with `expectResourceLoads()`, against
    a row the spec owns.
 8. **Fixed: a menu set's sort direction did not survive its own edit form.**
-   `admin/menus/sets/card_edit.blade.php` compared the stored `menus_sort`
+   `admin/menus/sets/card_edit.blade.php` compared the stored `sort_direction`
    against `'ascending'` / `'descending'`, but the column is an enum of `asc` /
    `desc`. `MenuAdminTest` never saw it: it posts `sort` and reads the column
    back, so the round trip it checks never goes through the rendered select.

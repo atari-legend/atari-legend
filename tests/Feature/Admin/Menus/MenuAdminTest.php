@@ -81,7 +81,7 @@ class MenuAdminTest extends AdminTestCase
         $set = MenuSet::sole();
 
         $this->assertSame('Automation', $set->name);
-        $this->assertSame('asc', $set->menus_sort);
+        $this->assertSame('asc', $set->sort_direction);
         $this->assertSame(['The Replicants'], $set->crews->pluck('name')->all());
         $this->assertChangelog(Changelog::INSERT, 'Menus', 'Automation');
     }
@@ -109,7 +109,7 @@ class MenuAdminTest extends AdminTestCase
         $set->refresh();
 
         $this->assertSame('Automation Menus', $set->name);
-        $this->assertSame('desc', $set->menus_sort);
+        $this->assertSame('desc', $set->sort_direction);
     }
 
     public function test_a_set_can_be_deleted(): void
@@ -347,14 +347,14 @@ class MenuAdminTest extends AdminTestCase
         $this->post(route('admin.menus.disks.content.store', $disk), [
             'disk'     => $disk->getKey(),
             'type'     => 'software',
-            'order'    => 1,
+            'position' => 1,
             'software' => $software->getKey(),
         ])->assertRedirect();
 
         $content = MenuDiskContent::sole();
 
         $this->assertSame($software->getKey(), $content->menu_software_id);
-        $this->assertSame(1, $content->order);
+        $this->assertSame(1, $content->position);
     }
 
     public function test_a_game_can_be_put_on_a_disk(): void
@@ -363,11 +363,11 @@ class MenuAdminTest extends AdminTestCase
         $game = Game::factory()->named('Xenon')->create();
 
         $this->post(route('admin.menus.disks.content.store', $disk), [
-            'disk'    => $disk->getKey(),
-            'type'    => 'game',
-            'order'   => 1,
-            'game'    => $game->getKey(),
-            'subtype' => 'Game',
+            'disk'     => $disk->getKey(),
+            'type'     => 'game',
+            'position' => 1,
+            'game'     => $game->getKey(),
+            'subtype'  => 'Game',
         ])->assertRedirect();
 
         $this->assertSame($game->getKey(), MenuDiskContent::sole()->game_id);
@@ -379,25 +379,25 @@ class MenuAdminTest extends AdminTestCase
         $release = GameRelease::factory()->create();
 
         $this->post(route('admin.menus.disks.content.store', $disk), [
-            'disk'    => $disk->getKey(),
-            'type'    => 'release',
-            'action'  => 'use-release',
-            'order'   => 1,
-            'release' => $release->getKey(),
-            'subtype' => 'Game',
+            'disk'     => $disk->getKey(),
+            'type'     => 'release',
+            'action'   => 'use-release',
+            'position' => 1,
+            'release'  => $release->getKey(),
+            'subtype'  => 'Game',
         ])->assertRedirect();
 
         $this->assertSame($release->getKey(), MenuDiskContent::sole()->game_release_id);
     }
 
-    public function test_disk_content_needs_an_order_and_its_own_fields(): void
+    public function test_disk_content_needs_a_position_and_its_own_fields(): void
     {
         $disk = $this->disk();
 
         $this->post(route('admin.menus.disks.content.store', $disk), [
             'disk' => $disk->getKey(),
             'type' => 'software',
-        ])->assertSessionHasErrors(['order', 'software']);
+        ])->assertSessionHasErrors(['position', 'software']);
 
         $this->assertSame(0, MenuDiskContent::query()->count());
     }
@@ -414,9 +414,9 @@ class MenuAdminTest extends AdminTestCase
         $this->expectException(\ErrorException::class);
 
         $this->post(route('admin.menus.disks.content.store', $disk), [
-            'disk'  => $disk->getKey(),
-            'type'  => 'nonsense',
-            'order' => 1,
+            'disk'     => $disk->getKey(),
+            'type'     => 'nonsense',
+            'position' => 1,
         ]);
     }
 

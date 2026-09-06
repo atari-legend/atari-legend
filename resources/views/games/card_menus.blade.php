@@ -41,7 +41,7 @@
 
                             <div class="px-2 flex-fill">
                                 <ul class="list-unstyled ps-2">
-                                    @foreach ($disk->contents->sortBy('order') as $content)
+                                    @foreach ($disk->contents->sortBy('position') as $content)
 
                                         {{-- Only show the first 5 items and collapse the rest --}}
                                         @if ($loop->index == 5)

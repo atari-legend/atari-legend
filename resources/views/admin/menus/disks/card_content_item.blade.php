@@ -4,7 +4,7 @@
             <i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
         </a>
 
-        <h5 class="card-title fs-6"><span class="text-muted">{{$content->order}}.</span> {{ $content->label }}</h5>
+        <h5 class="card-title fs-6"><span class="text-muted">{{$content->position}}.</span> {{ $content->label }}</h5>
 
         <p class="card-text">
             <ul class="list-unstyled">

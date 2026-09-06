@@ -13,19 +13,19 @@ class MenuSetFactory extends Factory
     protected $model = MenuSet::class;
 
     /**
-     * `menus_sort` is constrained to 'asc' or 'desc' at the database level, so
-     * it cannot be left to chance.
+     * `sort_direction` is constrained to 'asc' or 'desc' at the database
+     * level, so it cannot be left to chance.
      */
     public function definition(): array
     {
         return [
-            'name'       => fake()->unique()->lastName() . ' Menus',
-            'menus_sort' => 'asc',
+            'name'           => fake()->unique()->lastName() . ' Menus',
+            'sort_direction' => 'asc',
         ];
     }
 
     public function sortedDescending(): static
     {
-        return $this->state(fn () => ['menus_sort' => 'desc']);
+        return $this->state(fn () => ['sort_direction' => 'desc']);
     }
 }

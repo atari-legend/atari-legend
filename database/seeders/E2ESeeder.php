@@ -596,7 +596,7 @@ class E2ESeeder extends Seeder
         ]);
         $this->insert('menu_disk_contents', ['id' => self::MENU_DISK_CONTENT_ID], [
             'menu_disk_id' => self::MENU_DISK_ID,
-            'order'        => 1,
+            'position'     => 1,
             'game_id'      => self::GAME_ID,
             'created_at'   => $now,
             'updated_at'   => $now,
