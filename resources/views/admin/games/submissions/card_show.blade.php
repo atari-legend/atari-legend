@@ -12,7 +12,7 @@
                 href="{{ route('games.show', $submission->game) }}">{{ $submission->game->name }}</a>
             <br>
             <span class="text-muted">Reviewed</span>
-            @if ($submission->game_done === App\Models\GameSubmitInfo::SUBMISSION_REVIEWED)
+            @if ($submission->game_done === App\Models\GameSubmission::SUBMISSION_REVIEWED)
                 <span class="text-success">Yes</span>
             @else
                 <span class="text-warning">No</span>
@@ -64,7 +64,7 @@
             @csrf
             @method('PUT')
 
-            @if ($submission->game_done === App\Models\GameSubmitInfo::SUBMISSION_REVIEWED)
+            @if ($submission->game_done === App\Models\GameSubmission::SUBMISSION_REVIEWED)
                 <button type="submit" class="btn btn-warning" name="action" value="unreview">Mark back as not
                     reviewed</button>
             @else

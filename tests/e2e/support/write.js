@@ -19,7 +19,7 @@ import { fillEditor } from './editor.js';
  * A 1x1 PNG, for the forms that take a real upload.
  *
  * Has to be an actual image rather than a buffer with a .png name: both
- * Screenshot::storeScreenshot() and GameController::submitInfo() take the
+ * Screenshot::storeScreenshot() and GameController::submit() take the
  * extension from UploadedFile::extension(), which sniffs the content.
  */
 export const PNG = Buffer.from(

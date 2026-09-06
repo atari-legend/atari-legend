@@ -12,7 +12,7 @@ use App\Models\Game;
 use App\Models\GameFact;
 use App\Models\GameRelease;
 use App\Models\GameSeries;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\Link;
@@ -92,12 +92,12 @@ class AdminRenderTest extends AdminTestCase
             'fact'    => 'Written in a fortnight.',
         ]);
 
-        $submission = GameSubmitInfo::forceCreate([
+        $submission = GameSubmission::forceCreate([
             'game_id'   => $game->getKey(),
             'user_id'   => User::factory()->create()->getKey(),
             'timestamp' => (string) now()->timestamp,
             'text'      => 'Please add this.',
-            'game_done' => GameSubmitInfo::SUBMISSION_NEW,
+            'game_done' => GameSubmission::SUBMISSION_NEW,
         ]);
 
         return [

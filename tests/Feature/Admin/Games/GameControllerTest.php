@@ -10,7 +10,7 @@ use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\GameRelease;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use App\Models\GameVote;
 use App\Models\GameVs;
 use App\Models\Genre;
@@ -274,12 +274,12 @@ class GameControllerTest extends AdminTestCase
                 'menu_disk_id' => MenuDisk::factory()->create()->getKey(),
             ]),
             'magazineIndices' => MagazineIndex::factory()->create(['game_id' => $game->getKey()]),
-            'infoSubmissions' => DB::table('game_submit_infos')->insert([
+            'submissions' => DB::table('game_submissions')->insert([
                 'game_id'   => $game->getKey(),
                 'user_id'   => $this->admin->getKey(),
                 'timestamp' => (string) mktime(12, 0, 0, 6, 1, 2020),
                 'text'      => 'The musician is Jochen Hippel.',
-                'game_done' => GameSubmitInfo::SUBMISSION_NEW,
+                'game_done' => GameSubmission::SUBMISSION_NEW,
             ]),
             'similarGames'        => $game->similarGames()->attach(Game::factory()->create()),
             'similarGamesReverse' => $game->similarGamesReverse()->attach(Game::factory()->create()),
@@ -344,7 +344,7 @@ class GameControllerTest extends AdminTestCase
             ['reviews'],
             ['menuDiskContents'],
             ['magazineIndices'],
-            ['infoSubmissions'],
+            ['submissions'],
             ['similarGames'],
             ['similarGamesReverse'],
         ];

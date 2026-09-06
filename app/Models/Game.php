@@ -75,7 +75,7 @@ class Game extends Model
             return false;
         }
 
-        if ($this->infoSubmissions()->exists()) {
+        if ($this->submissions()->exists()) {
             return false;
         }
 
@@ -200,9 +200,9 @@ class Game extends Model
         return $this->belongsTo(GameSeries::class);
     }
 
-    public function infoSubmissions()
+    public function submissions()
     {
-        return $this->hasMany(GameSubmitInfo::class);
+        return $this->hasMany(GameSubmission::class);
     }
 
     public function menuDiskContents()

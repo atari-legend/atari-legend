@@ -314,7 +314,7 @@ class E2ESeeder extends Seeder
             'fact'    => 'The Bitmap Brothers wrote this one.',
         ]);
 
-        $this->insert('game_submit_infos', ['id' => self::GAME_SUBMISSION_ID], [
+        $this->insert('game_submissions', ['id' => self::GAME_SUBMISSION_ID], [
             'game_id'   => self::GAME_ID,
             'user_id'   => self::USER_STANDARD_ID,
             'timestamp' => (string) now()->timestamp,

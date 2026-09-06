@@ -6,7 +6,7 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Comment;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use App\Models\Screenshot;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class GameSubmissionController extends Controller
             ]);
     }
 
-    public function show(GameSubmitInfo $submission)
+    public function show(GameSubmission $submission)
     {
         return view('admin.games.submissions.show')
             ->with([
@@ -36,11 +36,11 @@ class GameSubmissionController extends Controller
             ]);
     }
 
-    public function update(Request $request, GameSubmitInfo $submission)
+    public function update(Request $request, GameSubmission $submission)
     {
         switch ($request->action) {
             case 'unreview':
-                $submission->game_done = GameSubmitInfo::SUBMISSION_NEW;
+                $submission->game_done = GameSubmission::SUBMISSION_NEW;
                 $submission->save();
 
                 ChangelogHelper::insert([
@@ -54,7 +54,7 @@ class GameSubmissionController extends Controller
                 ]);
                 break;
             case 'review':
-                $submission->game_done = GameSubmitInfo::SUBMISSION_REVIEWED;
+                $submission->game_done = GameSubmission::SUBMISSION_REVIEWED;
                 $submission->save();
 
                 ChangelogHelper::insert([
@@ -94,7 +94,7 @@ class GameSubmissionController extends Controller
         return redirect()->route('admin.games.submissions.index');
     }
 
-    public function destroy(GameSubmitInfo $submission)
+    public function destroy(GameSubmission $submission)
     {
         // The screenshot rows go with the files. Deleting only the file left an
         // orphan in screenshots per submission anyone had ever thrown away.
@@ -118,7 +118,7 @@ class GameSubmissionController extends Controller
         return redirect()->route('admin.games.submissions.index');
     }
 
-    public function destroyScreenshot(GameSubmitInfo $submission, Screenshot $screenshot)
+    public function destroyScreenshot(GameSubmission $submission, Screenshot $screenshot)
     {
         if ($submission->screenshots->contains($screenshot)) {
             $submission->screenshots()->detach($screenshot);

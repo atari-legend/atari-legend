@@ -3,7 +3,7 @@
 namespace App\Livewire\Admin\Games;
 
 use App\Helpers\Helper;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -38,13 +38,13 @@ class GameSubmissionsTable extends DataTableComponent
                         })
                 )
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->join('games', 'game_submit_infos.game_id', '=', 'games.id')
+                    return $query->join('games', 'game_submissions.game_id', '=', 'games.id')
                         ->orderBy('games.name', $direction);
                 }),
             Column::make('User')
                 ->label(fn ($row) => Helper::user($row->user))
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->join('users', 'game_submit_infos.user_id', '=', 'users.id')
+                    return $query->join('users', 'game_submissions.user_id', '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
             Column::make('Date')
@@ -62,7 +62,7 @@ class GameSubmissionsTable extends DataTableComponent
                     return $query->orderByRaw("timestamp + 0 $d");
                 }),
             BooleanColumn::make('Reviewed', 'game_done')
-                ->setCallback(fn ($value) => $value === GameSubmitInfo::SUBMISSION_REVIEWED)
+                ->setCallback(fn ($value) => $value === GameSubmission::SUBMISSION_REVIEWED)
                 ->sortable(),
             Column::make('Actions')
                 ->label(
@@ -74,7 +74,7 @@ class GameSubmissionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return GameSubmitInfo::select('game_submit_infos.*');
+        return GameSubmission::select('game_submissions.*');
     }
 
     public function filters(): array
@@ -93,7 +93,7 @@ class GameSubmissionsTable extends DataTableComponent
                     'no'  => 'No',
                 ])
                 ->filter(
-                    fn (Builder $query, string $term) => $query->where('game_done', $term === 'yes' ? '=' : '!=', GameSubmitInfo::SUBMISSION_REVIEWED)
+                    fn (Builder $query, string $term) => $query->where('game_done', $term === 'yes' ? '=' : '!=', GameSubmission::SUBMISSION_REVIEWED)
                 ),
             'attachments' => SelectFilter::make('Has attachments', 'attachments')
                 ->options([

@@ -8,7 +8,7 @@ use App\Helpers\JsonLd;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Http\Request;
@@ -187,22 +187,22 @@ class GameController extends Controller
         return back();
     }
 
-    public function submitInfo(Game $game, Request $request)
+    public function submit(Game $game, Request $request)
     {
-        $info = new GameSubmitInfo();
-        $info->timestamp = time();
-        $info->text = $request->info;
-        $info->game_done = GameSubmitInfo::SUBMISSION_NEW;
+        $submission = new GameSubmission();
+        $submission->timestamp = time();
+        $submission->text = $request->info;
+        $submission->game_done = GameSubmission::SUBMISSION_NEW;
 
-        $info->user()->associate($request->user());
-        $game->infoSubmissions()->save($info);
+        $submission->user()->associate($request->user());
+        $game->submissions()->save($submission);
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $screenshot = new Screenshot();
                 $screenshot->imgext = $file->extension();
 
-                $info->screenshots()->save($screenshot);
+                $submission->screenshots()->save($screenshot);
 
                 $file->storeAs('images/game_submit_screenshots', $screenshot->getKey() . '.' . $screenshot->imgext, 'public');
             }

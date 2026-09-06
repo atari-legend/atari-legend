@@ -20,7 +20,7 @@
         </div>
         <div class="col-12 col-sm-6 col-lg-3 order-3">
             @include('games.card_boxscan')
-            @include('games.card_submit_info', ['game' => $release->game])
+            @include('games.card_submit', ['game' => $release->game])
         </div>
     </div>
 @endsection

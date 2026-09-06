@@ -115,7 +115,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function gameSubmissions()
     {
-        return $this->hasMany(GameSubmitInfo::class);
+        return $this->hasMany(GameSubmission::class);
     }
 
     public function dumps()
@@ -127,7 +127,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * A user can only be deleted while nothing holds a RESTRICT on them.
      *
      * Exactly two relations block, and they are the two whose foreign key is
-     * ON DELETE RESTRICT: game_submitinfo and dump. Without this guard,
+     * ON DELETE RESTRICT: game_submissions and dump. Without this guard,
      * deleting one of the 114 accounts holding such a row reaches the admin as
      * a raw 1451 error page, and takes an unattended user:delete-unverified
      * run down with it.

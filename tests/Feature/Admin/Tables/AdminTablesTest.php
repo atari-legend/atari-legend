@@ -24,7 +24,7 @@ use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\GameSeries;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\Link;
@@ -147,9 +147,9 @@ class AdminTablesTest extends AdminTestCase
 
     // Game submissions
 
-    private function submission(string $gameName, int $done = GameSubmitInfo::SUBMISSION_NEW): GameSubmitInfo
+    private function submission(string $gameName, int $done = GameSubmission::SUBMISSION_NEW): GameSubmission
     {
-        $submission = new GameSubmitInfo();
+        $submission = new GameSubmission();
         $submission->game_id = Game::factory()->named($gameName)->create()->getKey();
         $submission->user_id = User::factory()->create()->getKey();
         $submission->text = 'Something is wrong with ' . $gameName;
@@ -170,7 +170,7 @@ class AdminTablesTest extends AdminTestCase
     public function test_the_submissions_table_filters_on_reviewed_and_attachments(): void
     {
         $new = $this->submission('Xenon');
-        $this->submission('Turrican', GameSubmitInfo::SUBMISSION_REVIEWED);
+        $this->submission('Turrican', GameSubmission::SUBMISSION_REVIEWED);
 
         Livewire::test(GameSubmissionsTable::class)
             ->set('filterComponents.processed', 'no')

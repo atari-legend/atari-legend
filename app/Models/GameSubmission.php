@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GameSubmitInfo extends Model
+class GameSubmission extends Model
 {
     const SUBMISSION_NEW = '2';
     const SUBMISSION_REVIEWED = '1';
@@ -18,7 +18,7 @@ class GameSubmitInfo extends Model
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_game_submitinfo');
+        return $this->belongsToMany(Screenshot::class);
     }
 
     public function user()

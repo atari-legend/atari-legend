@@ -334,7 +334,7 @@ class RemainingSectionsTest extends AdminTestCase
     }
 
     /**
-     * `game_submitinfo` is one of the three foreign keys pointing at `users`
+     * `game_submissions` is one of the three foreign keys pointing at `users`
      * that is ON DELETE RESTRICT. Without the guard on the model this delete
      * reaches the database and comes back as a raw 1451 error page, so the
      * refusal has to be a flashed message and a redirect - not a 403, and not
@@ -346,7 +346,7 @@ class RemainingSectionsTest extends AdminTestCase
         $blocked = User::factory()->create(['userid' => 'Ren']);
 
         $this->actingAs($blocked)
-            ->post(route('games.submitInfo', $game), ['info' => 'The publisher is wrong.']);
+            ->post(route('games.submit', $game), ['info' => 'The publisher is wrong.']);
         $this->actingAs($this->admin);
 
         $this->delete(route('admin.users.users.destroy', $blocked))
@@ -377,7 +377,7 @@ class RemainingSectionsTest extends AdminTestCase
         User::factory()->create(['userid' => 'Stimpy']);
 
         $this->actingAs($blocked)
-            ->post(route('games.submitInfo', $game), ['info' => 'The publisher is wrong.']);
+            ->post(route('games.submit', $game), ['info' => 'The publisher is wrong.']);
         $this->actingAs($this->admin);
 
         Livewire::test(UsersTable::class)

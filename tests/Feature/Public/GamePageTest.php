@@ -7,7 +7,7 @@ use App\Models\Comment;
 use App\Models\Company;
 use App\Models\Game;
 use App\Models\GameRelease;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use App\Models\GameVote;
 use App\Models\Individual;
 use App\Models\Interview;
@@ -261,14 +261,14 @@ class GamePageTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)
-            ->post(route('games.submitInfo', $game), ['info' => 'The publisher is wrong.'])
+            ->post(route('games.submit', $game), ['info' => 'The publisher is wrong.'])
             ->assertRedirect()
             ->assertSessionHas('alert-title', 'Info submitted');
 
-        $submission = GameSubmitInfo::sole();
+        $submission = GameSubmission::sole();
 
         $this->assertSame('The publisher is wrong.', $submission->text);
-        $this->assertSame(GameSubmitInfo::SUBMISSION_NEW, $submission->game_done);
+        $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->game_done);
         $this->assertSame($user->getKey(), $submission->user_id);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());
     }
@@ -284,7 +284,7 @@ class GamePageTest extends TestCase
         $game = Game::factory()->create();
 
         $this->actingAs(User::factory()->create())
-            ->post(route('games.submitInfo', $game), [
+            ->post(route('games.submit', $game), [
                 'info'  => 'Here are better shots.',
                 'files' => [UploadedFile::fake()->image('shot.png')],
             ])
@@ -302,9 +302,9 @@ class GamePageTest extends TestCase
     {
         $game = Game::factory()->create();
 
-        $this->post(route('games.submitInfo', $game), ['info' => 'Spam'])
+        $this->post(route('games.submit', $game), ['info' => 'Spam'])
             ->assertRedirect(route('login'));
 
-        $this->assertSame(0, GameSubmitInfo::query()->count());
+        $this->assertSame(0, GameSubmission::query()->count());
     }
 }

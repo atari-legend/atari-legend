@@ -33,7 +33,7 @@
             @include('games.card_facts')
             @include('games.card_interviews')
             @include('games.card_comments')
-            @include('games.card_submit_info')
+            @include('games.card_submit')
         </div>
     </div>
 @endsection

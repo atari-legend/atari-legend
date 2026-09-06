@@ -54,7 +54,7 @@ Route::middleware(['verified', 'nondraft'])->group(function () {
     Route::middleware('auth:web')->group(function () {
         Route::post('/news/submit', [NewsController::class, 'postNews'])->name('news.submit');
         Route::post('/games/{game:slug}/comment', [GameController::class, 'postComment'])->name('games.comment');
-        Route::post('/games/{game:slug}/submitInfo', [GameController::class, 'submitInfo'])->name('games.submitInfo');
+        Route::post('/games/{game:slug}/submit', [GameController::class, 'submit'])->name('games.submit');
         Route::post('/games/{game:slug}/vote', [GameVoteController::class, 'vote'])->name('games.vote');
         Route::get('/reviews/submit', [ReviewController::class, 'edit'])->name('reviews.edit');
         Route::post('/reviews/submit', [ReviewController::class, 'submit'])->name('reviews.submit');

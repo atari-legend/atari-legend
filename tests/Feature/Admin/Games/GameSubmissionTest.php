@@ -5,7 +5,7 @@ namespace Tests\Feature\Admin\Games;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
-use App\Models\GameSubmitInfo;
+use App\Models\GameSubmission;
 use App\Models\Screenshot;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +18,7 @@ use Tests\Feature\Admin\AdminTestCase;
  * comment on the game, or throws away.
  *
  * The table has no factory, so the fixtures are built with the query builder -
- * `game_submitinfo` predates the models and has no timestamps and a string
+ * `game_submissions` predates the models and has no timestamps and a string
  * `timestamp` column holding a Unix time.
  */
 class GameSubmissionTest extends AdminTestCase
@@ -35,9 +35,9 @@ class GameSubmissionTest extends AdminTestCase
     private function submission(
         Game $game,
         string $text = 'The musician is Jochen Hippel.',
-        string $done = GameSubmitInfo::SUBMISSION_NEW
-    ): GameSubmitInfo {
-        $id = DB::table('game_submit_infos')->insertGetId([
+        string $done = GameSubmission::SUBMISSION_NEW
+    ): GameSubmission {
+        $id = DB::table('game_submissions')->insertGetId([
             'game_id'   => $game->getKey(),
             'user_id'   => $this->visitor->getKey(),
             'timestamp' => (string) mktime(12, 0, 0, 6, 1, 2020),
@@ -45,10 +45,10 @@ class GameSubmissionTest extends AdminTestCase
             'game_done' => $done,
         ]);
 
-        return GameSubmitInfo::findOrFail($id);
+        return GameSubmission::findOrFail($id);
     }
 
-    private function screenshot(GameSubmitInfo $submission): Screenshot
+    private function screenshot(GameSubmission $submission): Screenshot
     {
         $screenshot = Screenshot::factory()->create();
         $submission->screenshots()->attach($screenshot);
@@ -89,7 +89,7 @@ class GameSubmissionTest extends AdminTestCase
         $this->put(route('admin.games.submissions.update', $submission), ['action' => 'review'])
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $this->assertSame(GameSubmitInfo::SUBMISSION_REVIEWED, $submission->fresh()->game_done);
+        $this->assertSame(GameSubmission::SUBMISSION_REVIEWED, $submission->fresh()->game_done);
         $this->assertChangelog(Changelog::UPDATE, 'Games', 'Xenon');
     }
 
@@ -98,13 +98,13 @@ class GameSubmissionTest extends AdminTestCase
         $submission = $this->submission(
             Game::factory()->named('Xenon')->create(),
             'The musician is Jochen Hippel.',
-            GameSubmitInfo::SUBMISSION_REVIEWED
+            GameSubmission::SUBMISSION_REVIEWED
         );
 
         $this->put(route('admin.games.submissions.update', $submission), ['action' => 'unreview'])
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $this->assertSame(GameSubmitInfo::SUBMISSION_NEW, $submission->fresh()->game_done);
+        $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->fresh()->game_done);
         $this->assertChangelog(Changelog::UPDATE, 'Games', 'Xenon');
     }
 
@@ -128,7 +128,7 @@ class GameSubmissionTest extends AdminTestCase
         $this->assertSame($submission->timestamp, (string) $comment->timestamp);
         $this->assertSame([$game->getKey()], $comment->games->pluck('id')->all());
 
-        $this->assertSame(0, GameSubmitInfo::query()->count());
+        $this->assertSame(0, GameSubmission::query()->count());
 
         $this->assertChangelog(Changelog::INSERT, 'Games', 'Xenon');
         $this->assertChangelog(Changelog::DELETE, 'Games', 'Xenon');
@@ -145,7 +145,7 @@ class GameSubmissionTest extends AdminTestCase
         $this->put(route('admin.games.submissions.update', $submission), ['action' => 'nonsense'])
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $this->assertSame(GameSubmitInfo::SUBMISSION_NEW, $submission->fresh()->game_done);
+        $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->fresh()->game_done);
         $this->assertSame(0, Comment::query()->count());
         $this->assertNoChangelog();
     }
@@ -160,8 +160,8 @@ class GameSubmissionTest extends AdminTestCase
         $this->delete(route('admin.games.submissions.destroy', $submission))
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $this->assertSame(0, GameSubmitInfo::query()->count());
-        $this->assertSame(0, DB::table('screenshot_game_submitinfo')->count());
+        $this->assertSame(0, GameSubmission::query()->count());
+        $this->assertSame(0, DB::table('game_submission_screenshot')->count());
         Storage::disk('public')->assertMissing($screenshot->getPath('game_submission'));
 
         $this->assertChangelog(Changelog::DELETE, 'Games', 'Xenon');
@@ -216,6 +216,6 @@ class GameSubmissionTest extends AdminTestCase
         $this->assertNonAdminIsTurnedAway(route('admin.games.submissions.show', $submission));
         $this->assertNonAdminIsTurnedAway(route('admin.games.submissions.destroy', $submission), 'delete');
 
-        $this->assertSame(1, GameSubmitInfo::query()->count());
+        $this->assertSame(1, GameSubmission::query()->count());
     }
 }

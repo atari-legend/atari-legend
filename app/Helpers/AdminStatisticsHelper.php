@@ -72,7 +72,7 @@ class AdminStatisticsHelper
                 'Series'             => DB::table('game_series')->count(),
                 'Videos'             => DB::table('game_videos')->count(),
                 'Similar game links' => DB::table('game_similar')->count(),
-                'Game submissions'   => DB::table('game_submit_infos')->count(),
+                'Game submissions'   => DB::table('game_submissions')->count(),
             ],
             'Media' => [
                 'Game screenshots'      => DB::table('screenshot_game')->count(),

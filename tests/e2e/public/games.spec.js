@@ -97,7 +97,7 @@ test.describe('Games', () => {
     await expect(page.getByText('Please log in to add your own comment')).toBeVisible();
     await expect(page.getByText('Please log in to submit info')).toBeVisible();
 
-    for (const action of ['/vote', '/comment', '/submitInfo']) {
+    for (const action of ['/vote', '/comment', '/submit']) {
       await expect(page.locator(`form[action$="${action}"]`)).toHaveCount(0);
     }
   });

@@ -101,10 +101,10 @@ test.describe('Game info submissions', () => {
     await signIn(page, FIXTURE.contributor);
     await page.goto(`/games/${game.slug}`);
 
-    const form = page.locator(`form[action$="/${game.slug}/submitInfo"]`);
+    const form = page.locator(`form[action$="/${game.slug}/submit"]`);
     await form.locator('textarea[name="info"]').fill(info);
     // The one upload on the public side of the site, and a plain multipart
-    // input rather than a Filepond pond. submitInfo() takes the extension from
+    // input rather than a Filepond pond. submit() takes the extension from
     // the file's own magic bytes, so this has to be a real image.
     await form.locator('input[name="files[]"]').setInputFiles({
       name: 'correction.png',
@@ -153,7 +153,7 @@ test.describe('Game info submissions', () => {
     // No attachment this time: the upload is the test above, and a screenshot
     // here would leave an orphan screenshots row behind for nothing - see
     // follow-up 11 in the README.
-    const form = page.locator(`form[action$="/${game.slug}/submitInfo"]`);
+    const form = page.locator(`form[action$="/${game.slug}/submit"]`);
     await form.locator('textarea[name="info"]').fill(info);
     await form.getByRole('button', { name: 'Submit' }).click();
 
