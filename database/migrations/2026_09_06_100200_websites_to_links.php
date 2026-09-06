@@ -24,10 +24,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     private const TABLES = [
-        'websites'             => 'links',
-        'website_categories'   => 'categories',
+        'websites'               => 'links',
+        'website_categories'     => 'categories',
         'website_category_cross' => 'link_category',
-        'website_validates'    => 'link_submissions',
+        'website_validates'      => 'link_submissions',
     ];
 
     public function up(): void

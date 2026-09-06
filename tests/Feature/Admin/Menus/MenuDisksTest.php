@@ -403,7 +403,7 @@ class MenuDisksTest extends AdminTestCase
 
         $this->put(route('admin.menus.disks.content.update', ['disk' => $disk, 'content' => $content]), [
             'position' => 2,
-            'subtype' => '',
+            'subtype'  => '',
         ])->assertSessionHasErrors('subtype');
 
         $content->refresh();
@@ -431,11 +431,11 @@ class MenuDisksTest extends AdminTestCase
         $release = GameRelease::sole();
 
         $docContent = $this->addContent($disk, [
-            'type'    => 'release',
-            'action'  => 'use-release',
+            'type'     => 'release',
+            'action'   => 'use-release',
             'position' => 2,
-            'release' => $release->getKey(),
-            'subtype' => 'doc',
+            'release'  => $release->getKey(),
+            'subtype'  => 'doc',
         ]);
 
         $this->delete(route('admin.menus.disks.content.destroy', ['disk' => $disk, 'content' => $gameContent]))
@@ -482,10 +482,10 @@ class MenuDisksTest extends AdminTestCase
             'game'   => $game->getKey(),
         ]);
         $this->addContent($disk, [
-            'type'    => 'game',
+            'type'     => 'game',
             'position' => 2,
-            'game'    => $game->getKey(),
-            'subtype' => 'hints',
+            'game'     => $game->getKey(),
+            'subtype'  => 'hints',
         ]);
 
         $this->delete(route('admin.menus.disks.destroy', $disk))

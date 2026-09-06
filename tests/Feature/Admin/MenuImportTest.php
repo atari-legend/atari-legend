@@ -202,11 +202,11 @@ class MenuImportTest extends TestCase
                 'contents'            => [
                     $this->content([
                         'position'     => 1, 'game_id' => $game->getKey(), 'game_name' => $game->name,
-                        'link_mode' => 'new_release',
+                        'link_mode'    => 'new_release',
                     ]),
                     $this->content([
                         'position'   => 2, 'game_id' => $game->getKey(), 'game_name' => $game->name,
-                        'subtype' => 'Docs', 'link_mode' => 'extra',
+                        'subtype'    => 'Docs', 'link_mode' => 'extra',
                     ]),
                 ],
             ])],
@@ -482,7 +482,7 @@ class MenuImportTest extends TestCase
                         ]),
                         $this->content([
                             'position'   => 2, 'game_id' => $game->getKey(),
-                            'subtype' => 'Docs', 'link_mode' => 'extra',
+                            'subtype'    => 'Docs', 'link_mode' => 'extra',
                         ]),
                     ],
                 ])],

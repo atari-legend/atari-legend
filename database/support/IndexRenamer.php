@@ -53,7 +53,7 @@ class IndexRenamer
 {
     /**
      * @param  array<string, list<array{0: string, 1: list<string>}>>  $indexes
-     *         table => list of [target index name, columns]
+     *                                                                           table => list of [target index name, columns]
      */
     public static function renameIndexes(array $indexes): void
     {
@@ -82,7 +82,7 @@ class IndexRenamer
      * byte-for-byte reversible, only correct once migrated forward again.
      *
      * @param  array<string, list<array{0: string, 1: list<string>, 2: string}>>  $indexes
-     *         table => list of [target index name, columns, original name]
+     *                                                                                      table => list of [target index name, columns, original name]
      */
     public static function reverseIndexes(array $indexes): void
     {
@@ -133,7 +133,7 @@ class IndexRenamer
 
     /**
      * @param  list<array{0: string, 1: string, 2: string, 3: string, 4: string, 5: string, 6: string, 7: string}>  $constraints
-     *         [table, old constraint name, new constraint name, column, referenced table, referenced column, ON UPDATE rule, ON DELETE rule]
+     *                                                                                                                            [table, old constraint name, new constraint name, column, referenced table, referenced column, ON UPDATE rule, ON DELETE rule]
      */
     public static function renameForeignKeys(array $constraints): void
     {

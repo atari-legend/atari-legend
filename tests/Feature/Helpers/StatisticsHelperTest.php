@@ -106,7 +106,7 @@ class StatisticsHelperTest extends TestCase
             Genre::factory()->count(2)->create()
                 ->map(fn (Genre $genre) => [
                     'game_id'       => $game->getKey(),
-                    'genre_id' => $genre->getKey(),
+                    'genre_id'      => $genre->getKey(),
                 ])
                 ->all()
         );

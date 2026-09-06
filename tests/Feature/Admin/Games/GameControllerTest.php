@@ -274,7 +274,7 @@ class GameControllerTest extends AdminTestCase
                 'menu_disk_id' => MenuDisk::factory()->create()->getKey(),
             ]),
             'magazineIndices' => MagazineIndex::factory()->create(['game_id' => $game->getKey()]),
-            'submissions' => DB::table('game_submissions')->insert([
+            'submissions'     => DB::table('game_submissions')->insert([
                 'game_id'   => $game->getKey(),
                 'user_id'   => $this->admin->getKey(),
                 'timestamp' => (string) mktime(12, 0, 0, 6, 1, 2020),
