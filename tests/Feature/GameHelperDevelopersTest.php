@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Helpers\GameHelper;
-use App\Models\Game;
 use App\Models\Company;
+use App\Models\Game;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -4,21 +4,21 @@ namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
 use App\Models\Comment;
+use App\Models\Company;
 use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameAka;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
 use App\Models\GameSubmitInfo;
 use App\Models\GameVote;
 use App\Models\GameVs;
+use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\Language;
 use App\Models\MagazineIndex;
 use App\Models\MenuDisk;
 use App\Models\ProgrammingLanguage;
-use App\Models\Company;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\Sndh;
@@ -56,7 +56,7 @@ class GameControllerTest extends AdminTestCase
     public function test_create_and_edit_forms_load(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        GameGenre::factory()->create(['name' => 'Shoot-em-up']);
+        Genre::factory()->create(['name' => 'Shoot-em-up']);
 
         $this->get(route('admin.games.games.create'))->assertOk()->assertSee('Shoot-em-up');
 
@@ -121,7 +121,7 @@ class GameControllerTest extends AdminTestCase
     {
         $game = Game::factory()->named('Xenon')->create();
 
-        $genre = GameGenre::factory()->create(['name' => 'Shoot-em-up']);
+        $genre = Genre::factory()->create(['name' => 'Shoot-em-up']);
         $engine = Engine::forceCreate(['name' => 'STOS']);
         $control = Control::forceCreate(['name' => 'Joystick']);
         $sound = SoundHardware::forceCreate(['name' => 'YM2149']);
@@ -151,7 +151,7 @@ class GameControllerTest extends AdminTestCase
     public function test_unticking_a_genre_removes_it(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $game->genres()->attach(GameGenre::factory()->create());
+        $game->genres()->attach(Genre::factory()->create());
 
         $this->post(route('admin.games.games.update.base-info', $game), $this->payload());
 
@@ -303,7 +303,7 @@ class GameControllerTest extends AdminTestCase
     {
         $game = Game::factory()->named('Xenon')->create();
 
-        $game->genres()->attach(GameGenre::factory()->create());
+        $game->genres()->attach(Genre::factory()->create());
         foreach (['akas', 'vs', 'comments', 'votes'] as $relation) {
             $this->attachDependent($game, $relation);
         }
@@ -322,7 +322,7 @@ class GameControllerTest extends AdminTestCase
         $this->assertSame(0, DB::table('game_user_comments')->count());
 
         // Reference data is an attribute of the game, and goes with it
-        $this->assertSame(0, DB::table('game_genre_cross')->count());
+        $this->assertSame(0, DB::table('game_genre')->count());
 
         $this->assertChangelog(Changelog::DELETE, 'Games', 'Xenon');
     }

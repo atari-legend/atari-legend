@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Models\Company;
 use App\Models\Engine;
 use App\Models\Game;
-use App\Models\GameGenre;
+use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
-use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -306,7 +306,7 @@ class GameSearchController extends Controller
             ->orderBy('year')
             ->get();
 
-        $genres = GameGenre::all()
+        $genres = Genre::all()
             ->sortBy('name');
 
         $individuals = Individual::all()

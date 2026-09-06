@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Helpers\GameHelper;
+use App\Models\Company;
 use App\Models\Game;
 use App\Models\GameAka;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
-use App\Models\Company;
+use App\Models\Genre;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,11 +26,11 @@ class GameHelperDescriptionTest extends TestCase
 
         $game->save();
 
-        $genre1 = new GameGenre();
+        $genre1 = new Genre();
         $genre1->name = 'Genre 1';
         $game->genres()->save($genre1);
 
-        $genre2 = new GameGenre();
+        $genre2 = new Genre();
         $genre2->name = 'Genre 2';
         $game->genres()->save($genre2);
 

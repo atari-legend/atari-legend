@@ -3,13 +3,13 @@
 namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
+use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\GameReleaseAka;
 use App\Models\Language;
 use App\Models\Location;
-use App\Models\Company;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**

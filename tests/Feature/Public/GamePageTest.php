@@ -4,13 +4,13 @@ namespace Tests\Feature\Public;
 
 use App\Models\Changelog;
 use App\Models\Comment;
+use App\Models\Company;
 use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\GameSubmitInfo;
 use App\Models\GameVote;
 use App\Models\Individual;
 use App\Models\Interview;
-use App\Models\Company;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\User;

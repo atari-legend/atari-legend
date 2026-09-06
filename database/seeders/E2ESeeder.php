@@ -364,9 +364,9 @@ class E2ESeeder extends Seeder
             'company_id' => self::COMPANY_ID,
         ], []);
 
-        $this->insert('game_genre_cross', [
-            'game_id'       => self::GAME_ID,
-            'game_genre_id' => self::GENRE_ID,
+        $this->insert('game_genre', [
+            'game_id'  => self::GAME_ID,
+            'genre_id' => self::GENRE_ID,
         ], []);
 
         $this->insert('game_engine', [
@@ -646,7 +646,7 @@ class E2ESeeder extends Seeder
     {
         $this->insert('ports', ['id' => self::PORT_ID], ['name' => self::PORT_NAME]);
         $this->insert('game_progress_systems', ['id' => self::PROGRESS_SYSTEM_ID], ['name' => self::PROGRESS_SYSTEM_NAME]);
-        $this->insert('game_genres', ['id' => self::GENRE_ID], ['name' => self::GENRE_NAME]);
+        $this->insert('genres', ['id' => self::GENRE_ID], ['name' => self::GENRE_NAME]);
         $this->insert('programming_languages', ['id' => self::PROGRAMMING_LANGUAGE_ID], ['name' => self::PROGRAMMING_LANGUAGE_NAME]);
         $this->insert('engines', ['id' => self::ENGINE_ID], ['name' => self::ENGINE_NAME]);
         $this->insert('controls', ['id' => self::CONTROL_ID], ['name' => self::CONTROL_NAME]);

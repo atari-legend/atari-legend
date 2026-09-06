@@ -10,10 +10,10 @@ use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameAka;
-use App\Models\GameGenre;
 use App\Models\GameProgressSystem;
 use App\Models\GameSeries;
 use App\Models\GameVs;
+use App\Models\Genre;
 use App\Models\Language;
 use App\Models\Port;
 use App\Models\ProgrammingLanguage;
@@ -184,7 +184,7 @@ class GameController extends Controller
         $game->genres()->detach();
         collect($request->genres)
             ->map(function ($id) {
-                return GameGenre::find($id);
+                return Genre::find($id);
             })
             ->each(function ($genre) use ($game) {
                 $game->genres()->attach($genre);
@@ -353,7 +353,7 @@ class GameController extends Controller
 
     private function getReferenceData(): array
     {
-        $genres = GameGenre::all()->sortBy('name');
+        $genres = Genre::all()->sortBy('name');
         $ports = Port::all()->sortBy('name');
         $programmingLanguages = ProgrammingLanguage::all()->sortBy('name');
         $engines = Engine::all()->sortBy('name');

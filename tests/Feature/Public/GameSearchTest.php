@@ -3,12 +3,12 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Changelog;
+use App\Models\Company;
 use App\Models\Engine;
 use App\Models\Game;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
+use App\Models\Genre;
 use App\Models\Individual;
-use App\Models\Company;
 use App\Models\Review;
 use App\Models\Sndh;
 use Carbon\Carbon;
@@ -129,7 +129,7 @@ class GameSearchTest extends TestCase
     public function test_games_can_be_found_by_genre(): void
     {
         $game = Game::factory()->named('Xenon')->create();
-        $genre = GameGenre::factory()->create(['name' => 'Shoot-em-up']);
+        $genre = Genre::factory()->create(['name' => 'Shoot-em-up']);
         $game->genres()->attach($genre);
 
         Game::factory()->named('Other')->create();

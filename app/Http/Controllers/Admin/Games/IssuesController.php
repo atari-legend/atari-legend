@@ -6,8 +6,8 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
+use App\Models\Genre;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
@@ -33,7 +33,7 @@ class IssuesController extends Controller
             ->whereDoesntHave('boxscans')
             ->get();
 
-        $genres = GameGenre::orderBy('name')->get();
+        $genres = Genre::orderBy('name')->get();
 
         return view('admin.games.issues.index')
             ->with([

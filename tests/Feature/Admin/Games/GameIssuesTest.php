@@ -4,9 +4,9 @@ namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
 use App\Models\Game;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
+use App\Models\Genre;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -24,10 +24,10 @@ class GameIssuesTest extends AdminTestCase
      * a screenshot, a genre and a hand-written slug, so it must not show up in
      * any of the cards.
      */
-    private function cleanGame(string $name, ?GameGenre $genre = null): Game
+    private function cleanGame(string $name, ?Genre $genre = null): Game
     {
         $game = Game::factory()->named($name)->withScreenshot()->create();
-        $game->genres()->attach($genre ?? GameGenre::factory()->create());
+        $game->genres()->attach($genre ?? Genre::factory()->create());
 
         GameReleaseScan::factory()->create([
             'game_release_id' => GameRelease::factory()->create(['game_id' => $game->getKey()]),
@@ -74,7 +74,7 @@ class GameIssuesTest extends AdminTestCase
      */
     public function test_only_a_game_with_a_legacy_slug_is_listed(): void
     {
-        $genre = GameGenre::factory()->create();
+        $genre = Genre::factory()->create();
 
         $this->cleanGame('Xenon', $genre);
         $this->cleanGame('Legacy Game', $genre)->update(['slug' => 'legacy-game-id-42']);
@@ -127,7 +127,7 @@ class GameIssuesTest extends AdminTestCase
      */
     public function test_the_genre_card_offers_a_game_that_has_screenshots_but_no_genre(): void
     {
-        $genre = GameGenre::factory()->create(['name' => 'Shoot-em-up']);
+        $genre = Genre::factory()->create(['name' => 'Shoot-em-up']);
 
         Game::factory()->named('Xenon')->withScreenshot()->create()->genres()->attach($genre);
 
@@ -144,8 +144,8 @@ class GameIssuesTest extends AdminTestCase
     {
         $game = Game::factory()->named('Xenon')->withScreenshot()->create();
 
-        $shooter = GameGenre::factory()->create(['name' => 'Shoot-em-up']);
-        $platform = GameGenre::factory()->create(['name' => 'Platform']);
+        $shooter = Genre::factory()->create(['name' => 'Shoot-em-up']);
+        $platform = Genre::factory()->create(['name' => 'Platform']);
 
         $this->post(route('admin.games.issues.genres', $game), [
             'genres' => [$shooter->getKey(), $platform->getKey()],

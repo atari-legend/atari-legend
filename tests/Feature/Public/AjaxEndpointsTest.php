@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Public;
 
+use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Engine;
 use App\Models\Game;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
+use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
-use App\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -57,7 +57,7 @@ class AjaxEndpointsTest extends TestCase
             'ajax.companies'   => Company::factory()->create(['name' => $name]),
             'ajax.crews'       => Crew::factory()->create(['name' => $name]),
             'ajax.engines'     => Engine::forceCreate(['name' => $name]),
-            'ajax.genres'      => GameGenre::forceCreate(['name' => $name]),
+            'ajax.genres'      => Genre::forceCreate(['name' => $name]),
             'ajax.software'    => MenuSoftware::factory()->named($name)->create(),
             'ajax.individuals' => Individual::factory()->create(['name' => $name]),
         };
@@ -143,7 +143,7 @@ class AjaxEndpointsTest extends TestCase
     public function test_an_engine_and_a_genre_come_back_as_a_name_alone(): void
     {
         Engine::forceCreate(['name' => 'AGOS']);
-        GameGenre::forceCreate(['name' => 'Shoot-em-up']);
+        Genre::forceCreate(['name' => 'Shoot-em-up']);
 
         $this->assertSame(
             ['name' => 'AGOS'],

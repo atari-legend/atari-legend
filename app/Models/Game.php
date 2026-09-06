@@ -114,7 +114,7 @@ class Game extends Model
 
     public function genres()
     {
-        return $this->belongsToMany(GameGenre::class, 'game_genre_cross');
+        return $this->belongsToMany(Genre::class);
     }
 
     public function releases()

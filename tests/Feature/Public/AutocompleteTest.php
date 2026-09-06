@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Public;
 
+use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
-use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;

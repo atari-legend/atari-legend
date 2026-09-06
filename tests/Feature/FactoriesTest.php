@@ -11,9 +11,9 @@ use App\Models\CopyProtection;
 use App\Models\Crew;
 use App\Models\Dump;
 use App\Models\Game;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
+use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\Language;
@@ -81,7 +81,7 @@ class FactoriesTest extends TestCase
             'publisher/developer' => [Company::class],
             'individual'          => [Individual::class],
             'crew'                => [Crew::class],
-            'genre'               => [GameGenre::class],
+            'genre'               => [Genre::class],
             'language'            => [Language::class],
             'resolution'          => [Resolution::class],
             'memory'              => [Memory::class],

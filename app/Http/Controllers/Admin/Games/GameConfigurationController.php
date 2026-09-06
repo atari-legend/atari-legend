@@ -25,7 +25,7 @@ class GameConfigurationController extends Controller
         'disk-protection'      => 'disk_protections',
         'trainer'              => 'trainer_options',
         'enhancement'          => 'enhancements',
-        'genre'                => 'game_genres',
+        'genre'                => 'genres',
         'individual-role'      => 'individual_roles',
         'sound'                => 'sound_hardware',
         'language'             => 'programming_languages',

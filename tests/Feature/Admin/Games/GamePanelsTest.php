@@ -3,11 +3,11 @@
 namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
+use App\Models\Company;
 use App\Models\Game;
 use App\Models\GameFact;
 use App\Models\GameVideo;
 use App\Models\Individual;
-use App\Models\Company;
 use App\Models\Screenshot;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;

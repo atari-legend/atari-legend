@@ -5,8 +5,8 @@ namespace Tests\Feature\Helpers;
 use App\Helpers\StatisticsHelper;
 use App\Models\Company;
 use App\Models\Game;
-use App\Models\GameGenre;
 use App\Models\GameRelease;
+use App\Models\Genre;
 use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
@@ -102,11 +102,11 @@ class StatisticsHelperTest extends TestCase
     {
         $game = Game::factory()->create();
 
-        DB::table('game_genre_cross')->insert(
-            GameGenre::factory()->count(2)->create()
-                ->map(fn (GameGenre $genre) => [
+        DB::table('game_genre')->insert(
+            Genre::factory()->count(2)->create()
+                ->map(fn (Genre $genre) => [
                     'game_id'       => $game->getKey(),
-                    'game_genre_id' => $genre->getKey(),
+                    'genre_id' => $genre->getKey(),
                 ])
                 ->all()
         );

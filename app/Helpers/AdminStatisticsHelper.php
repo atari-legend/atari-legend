@@ -158,7 +158,7 @@ class AdminStatisticsHelper
             'Games' => [
                 self::coverageRow('With a release', DB::table('game_releases')->distinct('game_id')->count(), $games),
                 self::coverageRow('With screenshots', DB::table('screenshot_game')->distinct('game_id')->count(), $games),
-                self::coverageRow('With a genre', DB::table('game_genre_cross')->distinct('game_id')->count(), $games),
+                self::coverageRow('With a genre', DB::table('game_genre')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a developer', DB::table('game_developer')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('company_id')->distinct('game_id')->count(), $games),
                 self::coverageRow('With creators', DB::table('game_individual')->distinct('game_id')->count(), $games),
@@ -300,10 +300,10 @@ class AdminStatisticsHelper
      */
     public static function gamesByGenre()
     {
-        $rows = DB::table('game_genre_cross')
-            ->join('game_genres', 'game_genres.id', '=', 'game_genre_cross.game_genre_id')
-            ->select('game_genres.name', DB::raw('count(*) as total'))
-            ->groupBy('game_genres.id', 'game_genres.name')
+        $rows = DB::table('game_genre')
+            ->join('genres', 'genres.id', '=', 'game_genre.genre_id')
+            ->select('genres.name', DB::raw('count(*) as total'))
+            ->groupBy('genres.id', 'genres.name')
             ->orderByDesc('total')
             ->get();
 

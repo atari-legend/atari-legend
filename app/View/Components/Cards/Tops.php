@@ -48,10 +48,10 @@ class Tops extends Component
             ->limit(5)
             ->get();
 
-        $genres = DB::table('game_genres')
-            ->join('game_genre_cross', 'game_genre_cross.game_genre_id', '=', 'game_genres.id')
-            ->selectRaw('count(game_id) as game_count, game_genres.name, game_genres.id')
-            ->groupBy('game_genres.id', 'game_genres.name')
+        $genres = DB::table('genres')
+            ->join('game_genre', 'game_genre.genre_id', '=', 'genres.id')
+            ->selectRaw('count(game_id) as game_count, genres.name, genres.id')
+            ->groupBy('genres.id', 'genres.name')
             ->orderBy('game_count', 'desc')
             ->orderBy('name')
             ->limit(5)
