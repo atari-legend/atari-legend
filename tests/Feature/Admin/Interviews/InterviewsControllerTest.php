@@ -5,8 +5,8 @@ namespace Tests\Feature\Admin\Interviews;
 use App\Models\Changelog;
 use App\Models\Individual;
 use App\Models\Interview;
+use App\Models\InterviewScreenshot;
 use App\Models\Screenshot;
-use App\Models\ScreenshotInterview;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -176,7 +176,7 @@ class InterviewsControllerTest extends AdminTestCase
         $screenshot = Screenshot::factory()->create();
         $interview->screenshots()->attach($screenshot);
 
-        $pivot = ScreenshotInterview::sole();
+        $pivot = InterviewScreenshot::sole();
 
         $this->put(route('admin.interviews.interviews.image.update', $interview), [
             'description-' . $pivot->getKey() => 'At the keyboard',

@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ScreenshotReviewComment extends Model
+class ArticleScreenshotComment extends Model
 {
     public $timestamps = false;
+    protected $fillable = ['text'];
 }

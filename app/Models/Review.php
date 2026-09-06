@@ -38,18 +38,18 @@ class Review extends Model implements Feedable
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_review')
+        return $this->belongsToMany(Screenshot::class)
             // withPivot names a column on the pivot itself, and this is the
             // pivot's own primary key, so it followed the `id` rename.
             ->withPivot('id')
-            ->using(ScreenshotReview::class);
+            ->using(ReviewScreenshot::class);
     }
 
     /**
      * Get the comment for a specific screenshot in this review.
      *
      * @param  int  $screenshotId  ID of the screenshot to get the comment for
-     * @return ScreenshotReview|null The ScreenshotReview pivot model with the comment, or null if not found
+     * @return ReviewScreenshot|null The ReviewScreenshot pivot model with the comment, or null if not found
      */
     public function getScreenshotComment(int $screenshotId)
     {

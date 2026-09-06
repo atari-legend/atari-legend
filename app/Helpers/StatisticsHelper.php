@@ -16,8 +16,8 @@ class StatisticsHelper
         return [
             'Games'                         => DB::table('games')->count(),
             'Releases'                      => DB::table('game_releases')->count(),
-            'Screenshots'                   => DB::table('screenshot_game')->count(),
-            'Games with screenshots'        => DB::table('screenshot_game')->distinct('game_id')->count(),
+            'Screenshots'                   => DB::table('game_screenshot')->count(),
+            'Games with screenshots'        => DB::table('game_screenshot')->distinct('game_id')->count(),
             'Companies'                     => DB::table('companies')->count(),
             'Games with companies assigned' => DB::table('game_releases')->whereNotNull('company_id')->distinct('game_id')->count(),
             'Games with developer assigned' => DB::table('game_developer')->distinct('game_id')->count(),

@@ -75,11 +75,11 @@ class AdminStatisticsHelper
                 'Game submissions'   => DB::table('game_submissions')->count(),
             ],
             'Media' => [
-                'Game screenshots'      => DB::table('screenshot_game')->count(),
-                'Game fact screenshots' => DB::table('screenshot_game_fact')->count(),
-                'Review screenshots'    => DB::table('screenshot_review')->count(),
-                'Interview screenshots' => DB::table('screenshot_interview')->count(),
-                'Article screenshots'   => DB::table('screenshot_article')->count(),
+                'Game screenshots'      => DB::table('game_screenshot')->count(),
+                'Game fact screenshots' => DB::table('game_fact_screenshot')->count(),
+                'Review screenshots'    => DB::table('review_screenshot')->count(),
+                'Interview screenshots' => DB::table('interview_screenshot')->count(),
+                'Article screenshots'   => DB::table('article_screenshot')->count(),
                 'Release scans'         => DB::table('game_release_scans')->count(),
                 'Media'                 => DB::table('media')->count(),
                 'Media scans'           => DB::table('media_scans')->count(),
@@ -157,7 +157,7 @@ class AdminStatisticsHelper
         return [
             'Games' => [
                 self::coverageRow('With a release', DB::table('game_releases')->distinct('game_id')->count(), $games),
-                self::coverageRow('With screenshots', DB::table('screenshot_game')->distinct('game_id')->count(), $games),
+                self::coverageRow('With screenshots', DB::table('game_screenshot')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a genre', DB::table('game_genre')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a developer', DB::table('game_developer')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('company_id')->distinct('game_id')->count(), $games),

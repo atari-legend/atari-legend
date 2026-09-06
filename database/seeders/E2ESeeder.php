@@ -18,7 +18,7 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (screenshot_game, review_game, game_user_comments,
+ * all (game_screenshot, review_game, game_user_comments,
  * link_category), the factories are random where the specs need fixed
  * names and slugs, and $fillable on the legacy models is thin enough that
  * Model::create() would silently drop columns we depend on.
@@ -296,7 +296,7 @@ class E2ESeeder extends Seeder
         ]);
 
         $this->insert('screenshots', ['id' => self::SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('screenshot_game', [
+        $this->insert('game_screenshot', [
             'game_id'       => self::GAME_ID,
             'screenshot_id' => self::SCREENSHOT_ID,
         ], []);
@@ -399,12 +399,12 @@ class E2ESeeder extends Seeder
 
         // Same chain as the interview screenshot below, one table along.
         $this->insert('screenshots', ['id' => self::ARTICLE_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('screenshot_article', ['id' => 1], [
+        $this->insert('article_screenshot', ['id' => 1], [
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
         ]);
-        $this->insert('screenshot_article_comments', ['id' => 1], [
-            'screenshot_article_id' => 1,
+        $this->insert('article_screenshot_comments', ['id' => 1], [
+            'article_screenshot_id' => 1,
             'text'                  => self::ARTICLE_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
@@ -449,12 +449,12 @@ class E2ESeeder extends Seeder
         // screenshot seeded without its comment would 500 the public page
         // rather than render an empty caption.
         $this->insert('screenshots', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
-        $this->insert('screenshot_interview', ['id' => 1], [
+        $this->insert('interview_screenshot', ['id' => 1], [
             'interview_id'  => self::INTERVIEW_ID,
             'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
         ]);
-        $this->insert('screenshot_interview_comments', ['id' => 1], [
-            'screenshot_interview_id' => 1,
+        $this->insert('interview_screenshot_comments', ['id' => 1], [
+            'interview_screenshot_id' => 1,
             'text'                    => self::INTERVIEW_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');

@@ -92,7 +92,7 @@ class Game extends Model
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_game');
+        return $this->belongsToMany(Screenshot::class);
     }
 
     public function developers()

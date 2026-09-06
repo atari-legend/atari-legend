@@ -5,8 +5,8 @@ namespace Tests\Feature\Admin\Reviews;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Review;
+use App\Models\ReviewScreenshotComment;
 use App\Models\Screenshot;
-use App\Models\ScreenshotReviewComment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -207,20 +207,20 @@ class ReviewsControllerTest extends AdminTestCase
             'screenshot_comment_' . $screenshot->getKey() => 'The first level',
         ]))->assertRedirect();
 
-        $this->assertSame('The first level', ScreenshotReviewComment::sole()->text);
+        $this->assertSame('The first level', ReviewScreenshotComment::sole()->text);
 
         $this->put(route('admin.reviews.reviews.update', $review), $this->payload([
             'screenshot_comment_' . $screenshot->getKey() => 'A better caption',
         ]));
 
-        $this->assertSame('A better caption', ScreenshotReviewComment::sole()->text);
+        $this->assertSame('A better caption', ReviewScreenshotComment::sole()->text);
 
         // A null value removes the pivot, and the caption with it
         $this->put(route('admin.reviews.reviews.update', $review), $this->payload([
             'screenshot_comment_' . $screenshot->getKey() => null,
         ]));
 
-        $this->assertSame(0, DB::table('screenshot_review')->count());
+        $this->assertSame(0, DB::table('review_screenshot')->count());
     }
 
     public function test_destroy_removes_the_review(): void

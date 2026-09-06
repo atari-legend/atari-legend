@@ -114,7 +114,7 @@ class StatisticsTest extends TestCase
         $this->game(4, 'Turrican');
 
         DB::table('screenshots')->insert(['id' => 1, 'imgext' => 'png']);
-        DB::table('screenshot_game')->insert(['game_id' => 1, 'screenshot_id' => 1]);
+        DB::table('game_screenshot')->insert(['game_id' => 1, 'screenshot_id' => 1]);
 
         $games = collect(AdminStatisticsHelper::coverage()['Games'])
             ->firstWhere('label', 'With screenshots');
@@ -135,7 +135,7 @@ class StatisticsTest extends TestCase
             ['id' => 1, 'imgext' => 'png'],
             ['id' => 2, 'imgext' => 'png'],
         ]);
-        DB::table('screenshot_game')->insert([
+        DB::table('game_screenshot')->insert([
             ['game_id' => 1, 'screenshot_id' => 1],
             ['game_id' => 1, 'screenshot_id' => 2],
         ]);

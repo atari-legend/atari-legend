@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ScreenshotArticle extends Pivot
+class ReviewScreenshot extends Pivot
 {
     public $timestamps = false;
 
     public function comment()
     {
-        return $this->hasOne(ScreenshotArticleComment::class, 'screenshot_article_id');
+        return $this->hasOne(ReviewScreenshotComment::class, 'review_screenshot_id');
     }
 }

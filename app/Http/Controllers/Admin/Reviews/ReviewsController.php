@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ScreenshotReviewComment;
+use App\Models\ReviewScreenshotComment;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
@@ -120,14 +120,14 @@ class ReviewsController extends Controller
                     $screenshot->pivot->delete();
                 } elseif ($value !== null) {
                     // Screenshot comment does not exist, create new pivot and comment
-                    $id = DB::table('screenshot_review')
+                    $id = DB::table('review_screenshot')
                         ->insertGetId([
                             'review_id'     => $review->getKey(),
                             'screenshot_id' => $screenshotId,
                         ]);
-                    $comment = new ScreenshotReviewComment();
+                    $comment = new ReviewScreenshotComment();
                     $comment->text = $value;
-                    $comment->screenshot_review_id = $id;
+                    $comment->review_screenshot_id = $id;
                     $comment->save();
                 }
             });

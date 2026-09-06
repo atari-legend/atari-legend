@@ -6,9 +6,9 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Interview;
+use App\Models\InterviewScreenshot;
+use App\Models\InterviewScreenshotComment;
 use App\Models\Screenshot;
-use App\Models\ScreenshotInterview;
-use App\Models\ScreenshotInterviewComment;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -188,10 +188,10 @@ class InterviewsController extends Controller
             ->filter(fn ($value, $key) => str_starts_with($key, 'description-'))
             ->each(function ($value, $key) {
                 $screenshotId = str_replace('description-', '', $key);
-                $screenshotInterview = ScreenshotInterview::findOrFail($screenshotId);
-                $comment = $screenshotInterview->comment;
+                $interviewScreenshot = InterviewScreenshot::findOrFail($screenshotId);
+                $comment = $interviewScreenshot->comment;
                 if (! $comment && $value) {
-                    $screenshotInterview->comment()->save(new ScreenshotInterviewComment([
+                    $interviewScreenshot->comment()->save(new InterviewScreenshotComment([
                         'text' => $value,
                     ]));
                 } elseif ($comment && $value) {

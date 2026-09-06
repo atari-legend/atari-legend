@@ -11,7 +11,7 @@ class GameFact extends Model
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_game_fact');
+        return $this->belongsToMany(Screenshot::class);
     }
 
     public function game()

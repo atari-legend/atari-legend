@@ -9,7 +9,7 @@ use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ScreenshotReviewComment;
+use App\Models\ReviewScreenshotComment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -120,14 +120,14 @@ class ReviewController extends Controller
                 $gameScreenshot = $gameScreenshots[$i++];
 
                 if ($screenshotComment !== null) {
-                    $id = DB::table('screenshot_review')
+                    $id = DB::table('review_screenshot')
                         ->insertGetId([
                             'review_id'     => $review->getKey(),
                             'screenshot_id' => $gameScreenshot->getKey(),
                         ]);
-                    $comment = new ScreenshotReviewComment();
+                    $comment = new ReviewScreenshotComment();
                     $comment->text = $screenshotComment;
-                    $comment->screenshot_review_id = $id;
+                    $comment->review_screenshot_id = $id;
                     $comment->save();
                 }
             }

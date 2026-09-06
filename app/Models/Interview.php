@@ -35,11 +35,11 @@ class Interview extends Model implements Feedable
 
     public function screenshots()
     {
-        return $this->belongsToMany(Screenshot::class, 'screenshot_interview')
+        return $this->belongsToMany(Screenshot::class)
             // withPivot names a column on the pivot itself, and this is the
             // pivot's own primary key, so it followed the `id` rename.
             ->withPivot('id')
-            ->using(ScreenshotInterview::class);
+            ->using(InterviewScreenshot::class);
     }
 
     public function comments()

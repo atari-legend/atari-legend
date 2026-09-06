@@ -3,10 +3,10 @@
 namespace Tests\Feature\Admin\Articles;
 
 use App\Models\Article;
+use App\Models\ArticleScreenshot;
 use App\Models\ArticleType;
 use App\Models\Changelog;
 use App\Models\Screenshot;
-use App\Models\ScreenshotArticle;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
@@ -229,7 +229,7 @@ class ArticleControllerTest extends AdminTestCase
         $screenshot = Screenshot::factory()->create();
         $article->screenshots()->attach($screenshot);
 
-        $pivot = ScreenshotArticle::sole();
+        $pivot = ArticleScreenshot::sole();
 
         // Added
         $this->put(route('admin.articles.articles.image.update', $article), [
@@ -259,7 +259,7 @@ class ArticleControllerTest extends AdminTestCase
         $screenshot = Screenshot::factory()->create();
         $article->screenshots()->attach($screenshot);
 
-        $pivot = ScreenshotArticle::sole();
+        $pivot = ArticleScreenshot::sole();
 
         $this->put(route('admin.articles.articles.image.update', $article), [
             'description-' . $pivot->getKey() => '',

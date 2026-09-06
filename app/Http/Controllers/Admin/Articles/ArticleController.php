@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Admin\Articles;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\ArticleScreenshot;
+use App\Models\ArticleScreenshotComment;
 use App\Models\ArticleType;
 use App\Models\Changelog;
 use App\Models\Screenshot;
-use App\Models\ScreenshotArticle;
-use App\Models\ScreenshotArticleComment;
 use App\View\Components\Admin\Crumb;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -193,10 +193,10 @@ class ArticleController extends Controller
             ->filter(fn ($value, $key) => str_starts_with($key, 'description-'))
             ->each(function ($value, $key) {
                 $screenshotId = str_replace('description-', '', $key);
-                $screenshotArticle = ScreenshotArticle::findOrFail($screenshotId);
-                $comment = $screenshotArticle->comment;
+                $articleScreenshot = ArticleScreenshot::findOrFail($screenshotId);
+                $comment = $articleScreenshot->comment;
                 if (! $comment && $value) {
-                    $comment = $screenshotArticle->comment()->save(new ScreenshotArticleComment([
+                    $comment = $articleScreenshot->comment()->save(new ArticleScreenshotComment([
                         'text' => $value,
                     ]));
                 } elseif ($comment && $value) {
