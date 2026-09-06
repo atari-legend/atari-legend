@@ -108,9 +108,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(NewsSubmission::class);
     }
 
-    public function websiteSubmissions()
+    public function linkSubmissions()
     {
-        return $this->hasMany(WebsiteValidate::class);
+        return $this->hasMany(LinkSubmission::class);
     }
 
     public function gameSubmissions()
@@ -134,7 +134,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * Nothing else blocks, deliberately, and the distinction is what makes the
      * guard usable rather than an obstacle. Articles, interviews, news,
-     * reviews, website and website_validate are SET NULL: the content survives
+     * reviews, links and link_submissions are SET NULL: the content survives
      * and the author blanks. game_votes is SET NULL too, so the vote survives
      * as an anonymous one. comments, changelogs, menu_disk_dumps and
      * news_submissions either SET NULL or dangle harmlessly, and the frontend

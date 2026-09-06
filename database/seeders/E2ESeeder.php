@@ -19,7 +19,7 @@ use RuntimeException;
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
  * all (screenshot_game, review_game, game_user_comments,
- * website_category_cross), the factories are random where the specs need fixed
+ * link_category), the factories are random where the specs need fixed
  * names and slugs, and $fillable on the legacy models is thin enough that
  * Model::create() would silently drop columns we depend on.
  */
@@ -121,8 +121,8 @@ class E2ESeeder extends Seeder
     public const MENU_DISK_CONTENT_ID = 3101;
     public const MENU_SOFTWARE_ID = 3001;
 
-    public const WEBSITE_ID = 3201;
-    public const WEBSITE_CATEGORY_ID = 3301;
+    public const LINK_ID = 3201;
+    public const CATEGORY_ID = 3301;
 
     /** Seeded by a migration, not by us. */
     public const MENU_CONDITION_INTACT_ID = 4;
@@ -169,8 +169,8 @@ class E2ESeeder extends Seeder
     public const COMPANY_NAME = 'Playwright Test Company';
     public const CREW_NAME = 'Playwright Test Crew';
     public const SERIES_NAME = 'Playwright Test Series';
-    public const WEBSITE_NAME = 'Playwright Test Website';
-    public const WEBSITE_CATEGORY_NAME = 'Playwright Test Category';
+    public const LINK_NAME = 'Playwright Test Link';
+    public const CATEGORY_NAME = 'Playwright Test Category';
 
     /**
      * An 8x8 opaque RGBA PNG, base64-encoded.
@@ -607,11 +607,11 @@ class E2ESeeder extends Seeder
 
     private function seedLinks(): void
     {
-        $this->insert('website_categories', ['id' => self::WEBSITE_CATEGORY_ID], [
-            'name' => self::WEBSITE_CATEGORY_NAME,
+        $this->insert('categories', ['id' => self::CATEGORY_ID], [
+            'name' => self::CATEGORY_NAME,
         ]);
-        $this->insert('websites', ['id' => self::WEBSITE_ID], [
-            'name'        => self::WEBSITE_NAME,
+        $this->insert('links', ['id' => self::LINK_ID], [
+            'name'        => self::LINK_NAME,
             'url'         => 'https://example.com/',
             'date'        => now()->timestamp,
             'user_id'     => self::USER_ADMIN_ID,
@@ -619,11 +619,11 @@ class E2ESeeder extends Seeder
             'inactive'    => 0,
             'description' => 'Playwright test link.',
         ]);
-        $this->insert('website_category_cross', [
-            'website_id'          => self::WEBSITE_ID,
-            'website_category_id' => self::WEBSITE_CATEGORY_ID,
+        $this->insert('link_category', [
+            'link_id'     => self::LINK_ID,
+            'category_id' => self::CATEGORY_ID,
         ], []);
-        $this->seedImage('images/website_images/' . self::WEBSITE_ID . '.png');
+        $this->seedImage('images/website_images/' . self::LINK_ID . '.png');
     }
 
     private function seedOthers(): void

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ChangelogHelper;
+use App\Models\Category;
 use App\Models\Changelog;
-use App\Models\Website;
-use App\Models\WebsiteCategory;
-use App\Models\WebsiteValidate;
+use App\Models\Link;
+use App\Models\LinkSubmission;
 use Illuminate\Http\Request;
 
 class LinkController extends Controller
@@ -14,41 +14,41 @@ class LinkController extends Controller
     public function index(Request $request)
     {
         $category = $request->filled('category')
-            ? WebsiteCategory::find($request->category)
+            ? Category::find($request->category)
             : null;
 
-        $categories = WebsiteCategory::select('website_categories.*')
+        $categories = Category::select('categories.*')
             ->orderBy('name')
             ->get();
 
-        $websites = Website::select('websites.*');
+        $links = Link::select('links.*');
 
         if ($category !== null) {
-            $websites->join('website_category_cross', 'website_category_cross.website_id', '=', 'websites.id')
-                ->where('website_category_cross.website_category_id', $category->getKey());
+            $links->join('link_category', 'link_category.link_id', '=', 'links.id')
+                ->where('link_category.category_id', $category->getKey());
         }
 
-        $websites = $websites
+        $links = $links
             ->orderBy('name')
             ->paginate(5);
 
         return view('links.index')
             ->with([
-                'categories'    => $categories,
-                'category'      => $category,
-                'websites'      => $websites,
+                'categories' => $categories,
+                'category'   => $category,
+                'links'      => $links,
             ]);
     }
 
     public function postLink(Request $request)
     {
-        $submission = new WebsiteValidate();
+        $submission = new LinkSubmission();
         $submission->name = $request->name;
         $submission->url = $request->url;
         $submission->description = $request->description;
         $submission->date = time();
 
-        $request->user()->websiteSubmissions()->save($submission);
+        $request->user()->linkSubmissions()->save($submission);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,

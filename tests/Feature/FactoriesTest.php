@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Article;
 use App\Models\ArticleType;
+use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Company;
 use App\Models\CopyProtection;
 use App\Models\Crew;
 use App\Models\Dump;
@@ -15,6 +17,7 @@ use App\Models\GameReleaseScan;
 use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\Language;
+use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIndex;
 use App\Models\MagazineIndexType;
@@ -30,7 +33,6 @@ use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\News;
 use App\Models\NewsSubmission;
-use App\Models\Company;
 use App\Models\Resolution;
 use App\Models\Review;
 use App\Models\Screenshot;
@@ -38,8 +40,6 @@ use App\Models\Spotlight;
 use App\Models\TrainerOption;
 use App\Models\Trivia;
 use App\Models\User;
-use App\Models\Website;
-use App\Models\WebsiteCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -92,8 +92,8 @@ class FactoriesTest extends TestCase
             'article'             => [Article::class],
             'article type'        => [ArticleType::class],
             'news'                => [News::class],
-            'website'             => [Website::class],
-            'website category'    => [WebsiteCategory::class],
+            'link'                => [Link::class],
+            'link category'       => [Category::class],
             'menu set'            => [MenuSet::class],
             'menu'                => [Menu::class],
             'menu disk'           => [MenuDisk::class],
@@ -297,10 +297,10 @@ class FactoriesTest extends TestCase
         );
     }
 
-    public function test_website_starts_visible_and_can_be_hidden(): void
+    public function test_link_starts_visible_and_can_be_hidden(): void
     {
-        $this->assertFalse((bool) Website::factory()->create()->inactive);
-        $this->assertTrue((bool) Website::factory()->inactive()->create()->inactive);
+        $this->assertFalse((bool) Link::factory()->create()->inactive);
+        $this->assertTrue((bool) Link::factory()->inactive()->create()->inactive);
     }
 
     /**

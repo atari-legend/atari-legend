@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Models\Category;
 use App\Models\Game;
 use App\Models\Interview;
 use App\Models\Review;
-use App\Models\WebsiteCategory;
 
 class SitemapController extends Controller
 {
@@ -22,12 +22,12 @@ class SitemapController extends Controller
         $reviews = Review::where('edit', Review::REVIEW_PUBLISHED)
             ->orderBy('date')
             ->get();
-        $categories = WebsiteCategory::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
 
         return response()->view('sitemap.general', [
-            'interviews'        => $interviews,
-            'reviews'           => $reviews,
-            'websiteCategories' => $categories,
+            'interviews' => $interviews,
+            'reviews'    => $reviews,
+            'categories' => $categories,
         ])
             ->withHeaders(['Content-Type' => 'text/xml']);
     }

@@ -235,14 +235,14 @@ rather than `support/test.js` to get that fixture — it extends the other one, 
 Everything else in the suite is back where it started afterwards. This one is
 not, and it is the application's doing rather than the spec's:
 
-**A `website_validate` row per run.** `public-write/links.spec.js` submits a
-link, and the admin in this repo has no screen for `website_validate` at all -
+**A `link_submissions` row per run.** `public-write/links.spec.js` submits a
+link, and the admin in this repo has no screen for `link_submissions` at all -
 link submissions are still approved in the legacy CPANEL, so there is no route
 to delete one through. The row is named `E2E Link …`, renders nowhere, and is
 greppable. Give the admin a submissions screen - follow-up 12 - and this
 becomes an ordinary spec.
 
-`SELECT * FROM website_validates WHERE name LIKE 'E2E %'` is therefore
+`SELECT * FROM link_submissions WHERE name LIKE 'E2E %'` is therefore
 the only number that should move. Anything else growing across runs is a spec
 that failed to clean up - including `screenshots`, which used to gain two
 rows a run until follow-up 11 was fixed and is now a useful canary.
@@ -350,7 +350,7 @@ today, and what it does not:
 | Charts | the admin statistics page draws all of them, the updates chart on /games | the magazine page-count chart (needs 5 seeded issues) |
 | Admin menus | sets list, 4 edit forms, 6 create forms and their bare-URL 404s, 3 disk-content types, import screen and template, screenshot and dump uploads | running an import |
 | Admin magazines | list, magazine and issue create/edit, index types, the index editor rendering its rows and re-sorting them | - |
-| Admin links | list, create and edit, categories | approving submissions - there is no screen for `website_validate` at all |
+| Admin links | list, create and edit, categories | approving submissions - there is no screen for `link_submissions` at all |
 | Admin users | list, edit, comments, the users autocomplete | - |
 | Admin others | trivia, quotes, spotlights + create/edit, statistics, changelog | statistics figures |
 | **Admin writes** | news, reviews, interviews, articles, game, game AKA, release, individual, menu set, menu, disk, disk content, magazine, issue, menu software, link, category, spotlight - each created and deleted through its form, parents included; the company, individual, game, software, sndh and user pickers driven as widgets; magazine and issue updated field by field; the magazine index editor built row by row and checked on the public page after every change; a menu set built up to two menus and three disks, with a screenshot and a dump uploaded, and checked on the public page after every change; all six release system panels, the scene panel, release and media scans; crews with members, sub-crews, parent crews and a logo; individual nicknames and avatar, company logo, series membership, the issues-screen genres action, the game music panel; the inline tables - game config, menu conditions, content types, article types, magazine index types, trivia and quotes; article, interview and news images; a user edited, promoted, deactivated and given an avatar | deleting a user (nothing can create one - follow-up 12), running a spreadsheet import, the crew genealogy picker on an individual |
@@ -432,7 +432,7 @@ today, and what it does not:
     moderator had ever removed in production. Both delete the row now, as
     `MenuDisksController::destroyScreenshot()` always did.
 12. **Link submissions have no screen in this admin at all.** `/links/submit`
-    writes a `WebsiteValidate` row and the only place one can be read or approved
+    writes a `LinkSubmission` row and the only place one can be read or approved
     is the legacy CPANEL. News submissions (`admin/news/submissions`) are the
     shape to copy: an index, an approve and a destroy. That would close the last
     gap in the admin's coverage of the three moderation queues, and turn

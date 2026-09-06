@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Public;
 
+use App\Models\Category;
 use App\Models\Game;
 use App\Models\Interview;
 use App\Models\Review;
-use App\Models\WebsiteCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -29,7 +29,7 @@ class SitemapTest extends TestCase
     {
         $interview = Interview::factory()->create();
         $review = Review::factory()->forGame()->create();
-        WebsiteCategory::factory()->create(['name' => 'Emulation']);
+        Category::factory()->create(['name' => 'Emulation']);
 
         $response = $this->get(route('sitemap.general'))->assertOk();
 

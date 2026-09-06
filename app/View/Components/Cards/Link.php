@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Cards;
 
-use App\Models\Website;
+use App\Models\Link as ModelsLink;
 use Illuminate\View\Component;
 
 class Link extends Component
@@ -24,9 +24,9 @@ class Link extends Component
      */
     public function render()
     {
-        $website = Website::inRandomOrder()->first();
+        $link = ModelsLink::inRandomOrder()->first();
 
         return view('components.cards.link')
-            ->with(['website' => $website]);
+            ->with(['link' => $link]);
     }
 }

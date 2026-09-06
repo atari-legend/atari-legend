@@ -8,18 +8,18 @@ test.describe('Links', () => {
 
     await expectPageRenders(page, response, '/links');
     await expect(page.getByRole('heading', { name: 'Links', level: 1 })).toBeVisible();
-    await expect(page.getByRole('heading', { name: FIXTURE.website.name })).toBeVisible();
+    await expect(page.getByRole('heading', { name: FIXTURE.link.name })).toBeVisible();
   });
 
   test('filters links by category', async ({ page }) => {
-    const response = await page.goto(`/links?category=${FIXTURE.websiteCategory.id}`);
+    const response = await page.goto(`/links?category=${FIXTURE.category.id}`);
 
     await expectPageRenders(page, response, '/links');
-    await expect(page.getByRole('heading', { name: FIXTURE.website.name })).toBeVisible();
+    await expect(page.getByRole('heading', { name: FIXTURE.link.name })).toBeVisible();
   });
 
   test('serves a link screenshot', async ({ page }) => {
-    const path = `/websites/${FIXTURE.website.id}/screenshot.webp`;
+    const path = `/links/${FIXTURE.link.id}/screenshot.webp`;
 
     await expectResourceLoads(await page.request.get(path), path, {
       contentType: 'image/webp',

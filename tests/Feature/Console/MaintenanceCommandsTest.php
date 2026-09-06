@@ -3,10 +3,10 @@
 namespace Tests\Feature\Console;
 
 use App\Models\Dump;
+use App\Models\Link;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskDump;
 use App\Models\User;
-use App\Models\Website;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -162,7 +162,7 @@ class MaintenanceCommandsTest extends TestCase
     {
         Http::fake(['*' => Http::response('Hello', 200)]);
 
-        $website = Website::factory()->inactive()->create([
+        $link = Link::factory()->inactive()->create([
             'name' => 'Hatari',
             'url'  => 'https://hatari.example.org',
         ]);
@@ -171,20 +171,20 @@ class MaintenanceCommandsTest extends TestCase
             ->expectsOutputToContain('Checking 1/1: Hatari')
             ->assertExitCode(0);
 
-        $this->assertFalse((bool) $website->fresh()->inactive);
+        $this->assertFalse((bool) $link->fresh()->inactive);
     }
 
     public function test_a_link_returning_an_error_is_marked_inactive(): void
     {
         Http::fake(['*' => Http::response('Gone', 404)]);
 
-        $website = Website::factory()->create(['name' => 'Dead']);
+        $link = Link::factory()->create(['name' => 'Dead']);
 
         $this->artisan('links:check')
             ->expectsOutputToContain('Error: 404')
             ->assertExitCode(0);
 
-        $this->assertTrue((bool) $website->fresh()->inactive);
+        $this->assertTrue((bool) $link->fresh()->inactive);
     }
 
     /**
@@ -195,7 +195,7 @@ class MaintenanceCommandsTest extends TestCase
     {
         Http::fake(fn () => throw new \Illuminate\Http\Client\ConnectionException('Connection timed out'));
 
-        $reachable = Website::factory()->create(['name' => 'Unreachable']);
+        $reachable = Link::factory()->create(['name' => 'Unreachable']);
 
         $this->artisan('links:check')
             ->expectsOutputToContain('Connection timed out')

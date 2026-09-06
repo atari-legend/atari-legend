@@ -41,10 +41,10 @@
         @endif
 
         <h3 class="card-subtitle fs-5">Link submissions</h3>
-        @if ($user->websiteSubmissions->isNotEmpty())
+        @if ($user->linkSubmissions->isNotEmpty())
             <p>
-                @foreach ($user->websiteSubmissions->sortByDesc('date') as $website)
-                    {{ $website->name }}@if (!$loop->last), @endif
+                @foreach ($user->linkSubmissions->sortByDesc('date') as $link)
+                    {{ $link->name }}@if (!$loop->last), @endif
                 @endforeach
             </p>
         @else

@@ -19,23 +19,23 @@ use App\Livewire\Admin\SoftwareTable;
 use App\Livewire\Admin\SpotlightsTable;
 use App\Livewire\Admin\UsersTable;
 use App\Models\Article;
+use App\Models\Category;
+use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\GameSeries;
 use App\Models\GameSubmitInfo;
 use App\Models\Individual;
 use App\Models\Interview;
+use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\NewsSubmission;
-use App\Models\Company;
 use App\Models\Screenshot;
 use App\Models\Spotlight;
 use App\Models\User;
-use App\Models\Website;
-use App\Models\WebsiteCategory;
 use Carbon\Carbon;
 use Livewire\Livewire;
 use Tests\Feature\Admin\AdminTestCase;
@@ -294,12 +294,12 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_links_table_filters_by_category_and_status(): void
     {
-        $emulation = WebsiteCategory::factory()->create(['name' => 'Emulation']);
+        $emulation = Category::factory()->create(['name' => 'Emulation']);
 
-        $hatari = Website::factory()->create(['name' => 'Hatari']);
+        $hatari = Link::factory()->create(['name' => 'Hatari']);
         $hatari->categories()->attach($emulation);
 
-        Website::factory()->inactive()->create(['name' => 'Dead link']);
+        Link::factory()->inactive()->create(['name' => 'Dead link']);
 
         Livewire::test(LinksTable::class)->assertSeeInOrder(['Dead link', 'Hatari']);
 
@@ -321,17 +321,17 @@ class AdminTablesTest extends AdminTestCase
 
     public function test_the_link_categories_table_counts_its_links(): void
     {
-        $category = WebsiteCategory::factory()->create(['name' => 'Emulation']);
-        Website::factory()->create()->categories()->attach($category);
+        $category = Category::factory()->create(['name' => 'Emulation']);
+        Link::factory()->create()->categories()->attach($category);
 
-        WebsiteCategory::factory()->create(['name' => 'Archives']);
+        Category::factory()->create(['name' => 'Archives']);
 
         Livewire::test(LinkCategoriesTable::class)->assertSeeInOrder(['Archives', 'Emulation']);
 
         $rows = Livewire::test(LinkCategoriesTable::class)->instance()->builder()->get();
 
-        $this->assertSame(1, $rows->firstWhere('name', 'Emulation')->websites_count);
-        $this->assertSame(0, $rows->firstWhere('name', 'Archives')->websites_count);
+        $this->assertSame(1, $rows->firstWhere('name', 'Emulation')->links_count);
+        $this->assertSame(0, $rows->firstWhere('name', 'Archives')->links_count);
     }
 
     // Magazines
@@ -471,7 +471,7 @@ class AdminTablesTest extends AdminTestCase
         $crew = Crew::factory()->create(['name' => 'The Replicants']);
         $individual = Individual::factory()->create(['name' => 'Someone']);
         $company = Company::factory()->create(['name' => 'Ocean']);
-        $link = Website::factory()->create(['name' => 'Hatari']);
+        $link = Link::factory()->create(['name' => 'Hatari']);
 
         Livewire::test(CrewsTable::class)
             ->assertSee(route('admin.menus.crews.edit', $crew), escape: false);

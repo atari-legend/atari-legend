@@ -4,7 +4,9 @@ namespace Tests\Feature\Admin;
 
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Game;
 use App\Models\GameFact;
@@ -13,6 +15,7 @@ use App\Models\GameSeries;
 use App\Models\GameSubmitInfo;
 use App\Models\Individual;
 use App\Models\Interview;
+use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\Media;
@@ -24,12 +27,9 @@ use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\News;
-use App\Models\Company;
 use App\Models\Review;
 use App\Models\Spotlight;
 use App\Models\User;
-use App\Models\Website;
-use App\Models\WebsiteCategory;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -102,7 +102,7 @@ class AdminRenderTest extends AdminTestCase
 
         return [
             'article'      => Article::factory()->create(),
-            'category'     => WebsiteCategory::factory()->create(),
+            'category'     => Category::factory()->create(),
             'comment'      => Comment::factory()->onGame($game)->create(),
             'company'      => Company::factory()->create(),
             'condition'    => MenuDiskCondition::query()->firstOrFail(),
@@ -115,7 +115,7 @@ class AdminRenderTest extends AdminTestCase
             'individual'   => Individual::factory()->create(),
             'interview'    => Interview::factory()->create(),
             'issue'        => MagazineIssue::factory()->create(['magazine_id' => $magazine->getKey()]),
-            'link'         => Website::factory()->create(),
+            'link'         => Link::factory()->create(),
             'magazine'     => $magazine,
             'menu'         => $menu,
             'news'         => News::factory()->create(),

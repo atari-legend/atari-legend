@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Admin\Links;
 
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Changelog;
-use App\Models\WebsiteCategory;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 
 class LinkCategoryController extends Controller
 {
     const VALIDATION_RULES = [
-        'name' => 'required|max:128|unique:website_categories,name',
+        'name' => 'required|max:128|unique:categories,name',
     ];
 
     public function index()
@@ -38,7 +38,7 @@ class LinkCategoryController extends Controller
             ]);
     }
 
-    public function edit(WebsiteCategory $category)
+    public function edit(Category $category)
     {
         return view('admin.links.categories.edit')
             ->with([
@@ -55,7 +55,7 @@ class LinkCategoryController extends Controller
     {
         $request->validate(self::VALIDATION_RULES);
 
-        $category = WebsiteCategory::create([
+        $category = Category::create([
             'name' => $request->name,
         ]);
 
@@ -72,10 +72,10 @@ class LinkCategoryController extends Controller
         return redirect()->route('admin.links.categories.index');
     }
 
-    public function update(Request $request, WebsiteCategory $category)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|max:128|unique:website_categories,name,' . $category->getKey() . ',id',
+            'name' => 'required|max:128|unique:categories,name,' . $category->getKey() . ',id',
         ]);
 
         $oldName = $category->name;
@@ -96,12 +96,12 @@ class LinkCategoryController extends Controller
         return redirect()->route('admin.links.categories.index');
     }
 
-    public function destroy(WebsiteCategory $category)
+    public function destroy(Category $category)
     {
         $name = $category->name;
         $id = $category->getKey();
 
-        $category->websites()->detach();
+        $category->links()->detach();
         $category->delete();
 
         ChangelogHelper::insert([

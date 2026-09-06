@@ -7,11 +7,11 @@ test.describe('Admin links', () => {
     const response = await page.goto('/admin/links/links');
 
     await expectPageRenders(page, response, '/admin/links/links');
-    await expect(page.getByText(FIXTURE.website.name).first()).toBeVisible();
+    await expect(page.getByText(FIXTURE.link.name).first()).toBeVisible();
   });
 
   test('opens the edit form for a link', async ({ page }) => {
-    const path = `/admin/links/links/${FIXTURE.website.id}/edit`;
+    const path = `/admin/links/links/${FIXTURE.link.id}/edit`;
 
     await expectPageRenders(page, await page.goto(path), path);
   });
@@ -21,7 +21,7 @@ test.describe('Admin links', () => {
   });
 
   test('opens the edit form for a category', async ({ page }) => {
-    const path = `/admin/links/categories/${FIXTURE.websiteCategory.id}/edit`;
+    const path = `/admin/links/categories/${FIXTURE.category.id}/edit`;
 
     await expectPageRenders(page, await page.goto(path), path);
   });

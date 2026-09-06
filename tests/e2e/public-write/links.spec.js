@@ -9,8 +9,8 @@ import { uniqueName } from '../support/write.js';
 // exception anywhere to the rule that a write spec deletes everything it
 // creates.
 //
-// LinkController::postLink() writes a WebsiteValidate row, and the admin in
-// this repo has no screen for website_validate at all - link submissions are
+// LinkController::postLink() writes a LinkSubmission row, and the admin in
+// this repo has no screen for link_submissions at all - link submissions are
 // still approved in the legacy CPANEL. There is no route to delete one through,
 // so the row stays.
 //

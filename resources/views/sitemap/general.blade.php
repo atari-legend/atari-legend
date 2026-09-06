@@ -24,8 +24,8 @@
 		<loc>{{ route('links.index') }}</loc>
 		<changefreq>monthly</changefreq>
 	</url>
-@foreach ($websiteCategories as $category)
-@if ($category->websites->isNotEmpty())
+@foreach ($categories as $category)
+@if ($category->links->isNotEmpty())
 	<url>
 		<loc>{{ route('links.index', ['category' => $category]) }}</loc>
 		<changefreq>monthly</changefreq>

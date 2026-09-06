@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Website;
-use App\Models\WebsiteCategory;
+use App\Models\Category;
+use App\Models\Link;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -25,11 +25,11 @@ class LinksTable extends DataTableComponent
                 ->title(fn ($row) => $row->name)
                 ->location(fn ($row) => route('admin.links.links.edit', $row))
                 ->searchable(
-                    fn (Builder $query, string $term) => $query->where('websites.name', 'like', "%{$term}%")
-                        ->orWhere('websites.url', 'like', "%{$term}%")
-                        ->orWhere('websites.description', 'like', "%{$term}%")
+                    fn (Builder $query, string $term) => $query->where('links.name', 'like', "%{$term}%")
+                        ->orWhere('links.url', 'like', "%{$term}%")
+                        ->orWhere('links.description', 'like', "%{$term}%")
                 )
-                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('websites.name', $direction)),
+                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('links.name', $direction)),
             Column::make('URL', 'url')
                 ->format(fn ($value) => '<a href="' . e($value) . '" target="_blank" rel="noopener noreferrer">' . e($value) . '</a>')
                 ->html()
@@ -49,12 +49,12 @@ class LinksTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Website::with('categories')->select('websites.*');
+        return Link::with('categories')->select('links.*');
     }
 
     public function filters(): array
     {
-        $categories = WebsiteCategory::orderBy('name')
+        $categories = Category::orderBy('name')
             ->get()
             ->mapWithKeys(fn ($cat) => [strval($cat->getKey()) => $cat->name])
             ->all();
@@ -64,11 +64,11 @@ class LinksTable extends DataTableComponent
             'category' => SelectFilter::make('Category')
                 ->options($categories)
                 ->filter(function (Builder $query, string $value) {
-                    $query->whereHas('categories', fn ($q) => $q->where('website_categories.id', $value));
+                    $query->whereHas('categories', fn ($q) => $q->where('categories.id', $value));
                 }),
             'inactive' => SelectFilter::make('Status')
                 ->options(['' => 'Any', '0' => 'Active', '1' => 'Inactive'])
-                ->filter(fn (Builder $query, string $value) => $query->where('websites.inactive', $value)),
+                ->filter(fn (Builder $query, string $value) => $query->where('links.inactive', $value)),
         ];
     }
 }

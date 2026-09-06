@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Website;
+use App\Models\Link;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic;
 
-class WebsiteResourcesController extends Controller
+class LinkResourcesController extends Controller
 {
-    public function screenshot(Website $website)
+    public function screenshot(Link $link)
     {
-        if ($website->file && Storage::disk('public')->exists($website->path)) {
-            $image = ImageManagerStatic::make(Storage::disk('public')->get($website->path));
+        if ($link->file && Storage::disk('public')->exists($link->path)) {
+            $image = ImageManagerStatic::make(Storage::disk('public')->get($link->path));
 
             return response()->stream(function () use ($image) {
                 echo $image->resize(500, null, function ($constraint) {

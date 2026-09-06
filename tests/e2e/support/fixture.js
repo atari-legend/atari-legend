@@ -140,8 +140,8 @@ export const FIXTURE = {
   menuConditionMissing: { id: 1, name: 'Missing' },
   menuContentType: { id: 1, name: 'Game' },
 
-  website: { id: 3201, name: 'Playwright Test Website' },
-  websiteCategory: { id: 3301, name: 'Playwright Test Category' },
+  link: { id: 3201, name: 'Playwright Test Link' },
+  category: { id: 3301, name: 'Playwright Test Category' },
 
   spotlight: { id: 4001, screenshotId: 402 },
 };

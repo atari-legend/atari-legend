@@ -3,22 +3,22 @@
         <h2 class="text-uppercase"><a href="{{ route('links.index') }}">Hot Links</a></h2>
     </div>
     <div class="card-body p-0">
-        @isset ($website)
-            @if ($website->file !== null)
+        @isset ($link)
+            @if ($link->file !== null)
                 <figure>
-                    <img class="w-100 cropped" src="{{ route('websites.screenshot', $website) }}" alt="Screenshot of the website {{ $website->name }}">
+                    <img class="w-100 cropped" src="{{ route('links.screenshot', $link) }}" alt="Screenshot of the link {{ $link->name }}">
                     <figcaption class="py-2 px-3">
                         <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
-                        <div class="figcaption-title"><a href="{{ $website->url }}">{{ $website->name }}</a></div>
+                        <div class="figcaption-title"><a href="{{ $link->url }}">{{ $link->name }}</a></div>
                         <div class="figcaption-subtitle mb-2"><strong>Random link</strong></div>
                     </figcaption>
                 </figure>
             @endif
             <div class="p-2">
-                <p class="card-text">{{ $website->description }}</p>
-                <p class="card-subtitle text-muted">{{ date('F j, Y', $website->date) }} by {{ Helper::user($website->user) }}</p>
-                <a class="d-block text-end" href="{{ $website->url }}">
-                    Visit {{ parse_url($website->url, PHP_URL_HOST) }} <i class="fas fa-chevron-right"></i>
+                <p class="card-text">{{ $link->description }}</p>
+                <p class="card-subtitle text-muted">{{ date('F j, Y', $link->date) }} by {{ Helper::user($link->user) }}</p>
+                <a class="d-block text-end" href="{{ $link->url }}">
+                    Visit {{ parse_url($link->url, PHP_URL_HOST) }} <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
         @endisset

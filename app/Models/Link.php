@@ -6,7 +6,7 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Website extends Model
+class Link extends Model
 {
     use HasFactory;
 
@@ -28,7 +28,7 @@ class Website extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(WebsiteCategory::class, 'website_category_cross');
+        return $this->belongsToMany(Category::class, 'link_category');
     }
 
     public function getFileAttribute()

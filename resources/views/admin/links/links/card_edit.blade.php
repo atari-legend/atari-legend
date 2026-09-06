@@ -96,7 +96,7 @@
                 <div class="col-12 col-md-4">
                     <div class="text-center mb-3">
                         <img class="p-1 border border-dark shadow-sm mw-100" style="max-height: 10rem"
-                            src="{{ isset($link) && $link->file ? asset('storage/' . $link->path) : asset('images/image-placeholder.png') }}" alt="Website screenshot">
+                            src="{{ isset($link) && $link->file ? asset('storage/' . $link->path) : asset('images/image-placeholder.png') }}" alt="Link screenshot">
 
                         @if (isset($link) && $link->file)
                             <button class="btn btn-link" type="button"

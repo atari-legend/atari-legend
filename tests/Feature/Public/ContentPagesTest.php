@@ -3,19 +3,19 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Interview;
+use App\Models\Link;
+use App\Models\LinkSubmission;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\Review;
 use App\Models\User;
-use App\Models\Website;
-use App\Models\WebsiteCategory;
-use App\Models\WebsiteValidate;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -261,19 +261,19 @@ class ContentPagesTest extends TestCase
 
     public function test_links_are_listed_and_can_be_filtered_by_category(): void
     {
-        $emulation = WebsiteCategory::factory()->create(['name' => 'Emulation']);
+        $emulation = Category::factory()->create(['name' => 'Emulation']);
 
-        $inCategory = Website::factory()->create(['name' => 'Hatari']);
+        $inCategory = Link::factory()->create(['name' => 'Hatari']);
         $inCategory->categories()->attach($emulation);
 
-        Website::factory()->create(['name' => 'Something else']);
+        Link::factory()->create(['name' => 'Something else']);
 
-        $all = $this->get(route('links.index'))->assertOk()->viewData('websites');
+        $all = $this->get(route('links.index'))->assertOk()->viewData('links');
         $this->assertCount(2, $all);
 
         $filtered = $this->get(route('links.index', ['category' => $emulation->getKey()]))
             ->assertOk()
-            ->viewData('websites');
+            ->viewData('links');
 
         $this->assertSame(['Hatari'], $filtered->pluck('name')->all());
     }
@@ -292,8 +292,8 @@ class ContentPagesTest extends TestCase
             ->assertRedirect()
             ->assertSessionHas('alert-title', 'Link submitted');
 
-        $this->assertSame('Atari Legend', WebsiteValidate::sole()->name);
-        $this->assertSame(0, Website::query()->count());
+        $this->assertSame('Atari Legend', LinkSubmission::sole()->name);
+        $this->assertSame(0, Link::query()->count());
         $this->assertSame(1, Changelog::where('section', 'Links')->count());
     }
 

@@ -6,10 +6,10 @@ use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
 use App\Models\Individual;
+use App\Models\Link;
 use App\Models\Screenshot;
 use App\Models\Sndh;
 use App\Models\Spotlight;
-use App\Models\Website;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -193,10 +193,10 @@ class ResourceControllersTest extends TestCase
 
     public function test_a_link_screenshot_is_served_as_a_webp(): void
     {
-        $website = Website::factory()->create(['imgext' => 'png']);
-        $this->storePng($website->path, 1024, 768);
+        $link = Link::factory()->create(['imgext' => 'png']);
+        $this->storePng($link->path, 1024, 768);
 
-        $response = $this->get(route('websites.screenshot', $website))
+        $response = $this->get(route('links.screenshot', $link))
             ->assertOk()
             ->assertHeader('Content-Type', 'image/webp');
 
@@ -240,15 +240,15 @@ class ResourceControllersTest extends TestCase
 
     public function test_a_link_screenshot_missing_from_disk_is_a_404(): void
     {
-        $website = Website::factory()->create(['imgext' => 'png']);
+        $link = Link::factory()->create(['imgext' => 'png']);
         // Do not store file on disk
 
-        $this->get(route('websites.screenshot', $website))->assertNotFound();
+        $this->get(route('links.screenshot', $link))->assertNotFound();
     }
 
     public function test_a_link_with_no_screenshot_is_a_404(): void
     {
-        $this->get(route('websites.screenshot', Website::factory()->create()))->assertNotFound();
+        $this->get(route('links.screenshot', Link::factory()->create()))->assertNotFound();
     }
 
     /**

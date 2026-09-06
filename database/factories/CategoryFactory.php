@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\WebsiteCategory;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WebsiteCategory>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
  */
-class WebsiteCategoryFactory extends Factory
+class CategoryFactory extends Factory
 {
-    protected $model = WebsiteCategory::class;
+    protected $model = Category::class;
 
     public function definition(): array
     {

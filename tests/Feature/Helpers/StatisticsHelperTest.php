@@ -3,16 +3,16 @@
 namespace Tests\Feature\Helpers;
 
 use App\Helpers\StatisticsHelper;
+use App\Models\Company;
 use App\Models\Game;
 use App\Models\GameGenre;
 use App\Models\GameRelease;
+use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\MenuDisk;
-use App\Models\Company;
 use App\Models\Review;
 use App\Models\User;
-use App\Models\Website;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -44,7 +44,7 @@ class StatisticsHelperTest extends TestCase
         GameRelease::factory()->count(2)->create();
         Company::factory()->create();
         User::factory()->count(4)->create();
-        Website::factory()->create();
+        Link::factory()->create();
         Magazine::factory()->create();
         MagazineIssue::factory()->count(2)->create();
         MenuDisk::factory()->create();

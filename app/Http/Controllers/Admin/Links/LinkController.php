@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin\Links;
 
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Changelog;
-use App\Models\Website;
-use App\Models\WebsiteCategory;
+use App\Models\Link;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +19,7 @@ class LinkController extends Controller
         'description'  => 'nullable',
         'inactive'     => 'nullable|boolean',
         'categories'   => 'nullable|array',
-        'categories.*' => 'exists:website_categories,id',
+        'categories.*' => 'exists:categories,id',
         'image'        => 'nullable|image',
     ];
 
@@ -35,7 +35,7 @@ class LinkController extends Controller
 
     public function create()
     {
-        $categories = WebsiteCategory::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
 
         return view('admin.links.links.edit')
             ->with([
@@ -47,9 +47,9 @@ class LinkController extends Controller
             ]);
     }
 
-    public function edit(Website $link)
+    public function edit(Link $link)
     {
-        $categories = WebsiteCategory::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
 
         return view('admin.links.links.edit')
             ->with([
@@ -66,7 +66,7 @@ class LinkController extends Controller
     {
         $request->validate(self::VALIDATION_RULES);
 
-        $link = Website::create([
+        $link = Link::create([
             'name'        => $request->name,
             'url'         => $request->url,
             'description' => $request->description,
@@ -96,7 +96,7 @@ class LinkController extends Controller
         return redirect()->route('admin.links.links.index');
     }
 
-    public function update(Request $request, Website $link)
+    public function update(Request $request, Link $link)
     {
         $request->validate(self::VALIDATION_RULES);
 
@@ -128,7 +128,7 @@ class LinkController extends Controller
         return redirect()->route('admin.links.links.index');
     }
 
-    public function destroy(Website $link)
+    public function destroy(Link $link)
     {
         $name = $link->name;
         $id = $link->getKey();
@@ -150,7 +150,7 @@ class LinkController extends Controller
         return redirect()->route('admin.links.links.index');
     }
 
-    public function destroyImage(Website $link)
+    public function destroyImage(Link $link)
     {
         if ($link->file) {
             $this->deleteImageFile($link);
@@ -171,7 +171,7 @@ class LinkController extends Controller
         return redirect()->route('admin.links.links.edit', $link);
     }
 
-    private function addOrUpdateImage(Request $request, Website $link): void
+    private function addOrUpdateImage(Request $request, Link $link): void
     {
         if ($request->hasFile('image')) {
             $action = $link->file ? Changelog::UPDATE : Changelog::INSERT;
@@ -195,7 +195,7 @@ class LinkController extends Controller
         }
     }
 
-    private function deleteImageFile(Website $link): void
+    private function deleteImageFile(Link $link): void
     {
         if ($link->file) {
             Storage::disk('public')->delete($link->path);

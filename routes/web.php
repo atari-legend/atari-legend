@@ -25,6 +25,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndividualResourcesController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\LinkResourcesController;
 use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\MenuSetController;
 use App\Http\Controllers\NewsController;
@@ -32,7 +33,6 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SpotlightResourcesController;
-use App\Http\Controllers\WebsiteResourcesController;
 use App\Models\Game;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -115,7 +115,7 @@ Route::middleware(['verified', 'nondraft'])->group(function () {
 
     Route::get('/individuals/{individual}/avatar.webp', [IndividualResourcesController::class, 'avatar'])->name('individuals.avatar');
     Route::get('/spotlights/{spotlight}/spotlight.webp', [SpotlightResourcesController::class, 'screenshot'])->name('spotlights.screenshot');
-    Route::get('/websites/{website}/screenshot.webp', [WebsiteResourcesController::class, 'screenshot'])->name('websites.screenshot');
+    Route::get('/links/{link}/screenshot.webp', [LinkResourcesController::class, 'screenshot'])->name('links.screenshot');
 
     Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap.index');
     Route::get('/sitemap/general', [SitemapController::class, 'general'])->name('sitemap.general');

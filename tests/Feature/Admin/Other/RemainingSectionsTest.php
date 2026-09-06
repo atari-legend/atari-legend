@@ -4,17 +4,17 @@ namespace Tests\Feature\Admin\Other;
 
 use App\Livewire\Admin\UsersTable;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
+use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\Spotlight;
 use App\Models\Trivia;
 use App\Models\TriviaQuote;
 use App\Models\User;
-use App\Models\Website;
-use App\Models\WebsiteCategory;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
@@ -116,7 +116,7 @@ class RemainingSectionsTest extends AdminTestCase
 
     public function test_a_link_can_be_created_with_categories(): void
     {
-        $category = WebsiteCategory::factory()->create(['name' => 'Emulation']);
+        $category = Category::factory()->create(['name' => 'Emulation']);
 
         $this->post(route('admin.links.links.store'), [
             'name'        => 'Hatari',
@@ -125,7 +125,7 @@ class RemainingSectionsTest extends AdminTestCase
             'categories'  => [$category->getKey()],
         ])->assertRedirect();
 
-        $link = Website::sole();
+        $link = Link::sole();
 
         $this->assertSame('Hatari', $link->name);
         $this->assertSame(['Emulation'], $link->categories->pluck('name')->all());
@@ -140,7 +140,7 @@ class RemainingSectionsTest extends AdminTestCase
         $this->post(route('admin.links.links.store'), [])
             ->assertSessionHasErrors(['name', 'url']);
 
-        $this->assertSame(0, Website::query()->count());
+        $this->assertSame(0, Link::query()->count());
     }
 
     public function test_a_link_rejects_an_unknown_category(): void
@@ -151,7 +151,7 @@ class RemainingSectionsTest extends AdminTestCase
             'categories' => [9999],
         ])->assertSessionHasErrors('categories.0');
 
-        $this->assertSame(0, Website::query()->count());
+        $this->assertSame(0, Link::query()->count());
     }
 
     /**
@@ -159,7 +159,7 @@ class RemainingSectionsTest extends AdminTestCase
      */
     public function test_a_link_can_be_hidden_and_shown(): void
     {
-        $link = Website::factory()->create(['name' => 'Hatari']);
+        $link = Link::factory()->create(['name' => 'Hatari']);
 
         $this->put(route('admin.links.links.update', $link), [
             'name'     => 'Hatari',
@@ -172,12 +172,12 @@ class RemainingSectionsTest extends AdminTestCase
 
     public function test_a_link_can_be_deleted(): void
     {
-        $link = Website::factory()->create(['name' => 'Hatari']);
+        $link = Link::factory()->create(['name' => 'Hatari']);
 
         $this->delete(route('admin.links.links.destroy', $link))
             ->assertRedirect(route('admin.links.links.index'));
 
-        $this->assertSame(0, Website::query()->count());
+        $this->assertSame(0, Link::query()->count());
         $this->assertChangelog(Changelog::DELETE, 'Links', 'Hatari');
     }
 
@@ -186,7 +186,7 @@ class RemainingSectionsTest extends AdminTestCase
         $this->post(route('admin.links.categories.store'), ['name' => 'Emulation'])
             ->assertRedirect(route('admin.links.categories.index'));
 
-        $category = WebsiteCategory::sole();
+        $category = Category::sole();
         $this->assertSame('Emulation', $category->name);
 
         $this->put(route('admin.links.categories.update', $category), ['name' => 'Emulators'])
@@ -194,7 +194,7 @@ class RemainingSectionsTest extends AdminTestCase
         $this->assertSame('Emulators', $category->fresh()->name);
 
         $this->delete(route('admin.links.categories.destroy', $category))->assertRedirect();
-        $this->assertSame(0, WebsiteCategory::query()->count());
+        $this->assertSame(0, Category::query()->count());
     }
 
     // Trivia, quotes and spotlights

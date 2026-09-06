@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Website;
+use App\Models\Link;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
 /**
- * Command to check links from the website table, and mark them as inactive
+ * Command to check links from the links table, and mark them as inactive
  * if the connection failed.
  */
 class CheckLinks extends Command
@@ -25,7 +25,7 @@ class CheckLinks extends Command
      *
      * @var string
      */
-    protected $description = 'Check the websites / links for dead links';
+    protected $description = 'Check the links for dead links';
 
     /**
      * Create a new command instance.
@@ -44,32 +44,32 @@ class CheckLinks extends Command
      */
     public function handle()
     {
-        $total = Website::count();
+        $total = Link::count();
         $current = 0;
 
-        Website::all()
+        Link::all()
             ->sortBy('name')
-            ->each(function ($website) use (&$current, $total) {
+            ->each(function ($link) use (&$current, $total) {
                 $current++;
-                $this->info("Checking $current/$total: $website->name ($website->url)");
+                $this->info("Checking $current/$total: $link->name ($link->url)");
 
                 try {
                     $response = Http::timeout(intval($this->option('timeout')))
-                        ->get($website->url);
+                        ->get($link->url);
 
                     if ($response->failed()) {
                         $this->error("\tError: " . $response->status());
-                        $website->inactive = 1;
+                        $link->inactive = 1;
                     } else {
                         $this->comment("\tOK");
-                        $website->inactive = 0;
+                        $link->inactive = 0;
                     }
                 } catch (Exception $e) {
                     $this->error("\tError: " . $e->getMessage());
-                    $website->inactive = 1;
+                    $link->inactive = 1;
                 }
 
-                $website->save();
+                $link->save();
             });
 
         return 0;

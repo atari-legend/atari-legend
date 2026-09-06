@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WebsiteCategory extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,8 @@ class WebsiteCategory extends Model
         'name',
     ];
 
-    public function websites()
+    public function links()
     {
-        return $this->belongsToMany(Website::class, 'website_category_cross');
+        return $this->belongsToMany(Link::class, 'link_category');
     }
 }

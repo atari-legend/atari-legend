@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\WebsiteCategory;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -27,7 +27,7 @@ class LinkCategoriesTable extends DataTableComponent
                 )
                 ->sortable(),
             Column::make('Links')
-                ->label(fn ($row) => $row->websites_count),
+                ->label(fn ($row) => $row->links_count),
             Column::make('Actions')
                 ->label(
                     fn ($row) => view('admin.links.categories.datatable_actions')->with(['row' => $row])
@@ -37,6 +37,6 @@ class LinkCategoriesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return WebsiteCategory::select('website_categories.*')->withCount('websites');
+        return Category::select('categories.*')->withCount('links');
     }
 }
