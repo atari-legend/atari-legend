@@ -122,7 +122,7 @@ class ReleaseMediasDumpsController extends Controller
 
     public function update(Game $game, GameRelease $release, Media $media, Dump $dump, Request $request)
     {
-        $dump->info = $request->info;
+        $dump->notes = $request->notes;
         $dump->save();
 
         ChangelogHelper::insert([

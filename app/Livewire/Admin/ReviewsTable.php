@@ -63,7 +63,7 @@ class ReviewsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Review::select('reviews.*', 'games.name')
-            ->where('reviews.edit', '=', $this->submissions)
+            ->where('reviews.submission', '=', $this->submissions)
             ->leftJoin('game_review', 'game_review.review_id', '=', 'reviews.id')
             ->leftJoin('games', 'game_review.game_id', '=', 'games.id');
     }

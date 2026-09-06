@@ -61,7 +61,7 @@
         <h6>Visitor comments:</h6>
 
         @foreach ($comments as $comment)
-            <h6 class="text-muted">{{ $comment->user_name}} - {{ date('F j, Y', $comment->timestamp) }}</h6>
+            <h6 class="text-muted">{{ $comment->name}} - {{ date('F j, Y', $comment->timestamp) }}</h6>
             <p>{!! nl2br(stripslashes(e($comment->comment)), false) !!}</p>
         @endforeach
     </div>

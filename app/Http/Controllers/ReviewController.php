@@ -23,7 +23,7 @@ class ReviewController extends Controller
         $authors = User::has('reviews')
             ->get();
 
-        $reviews = Review::where('edit', Review::REVIEW_PUBLISHED);
+        $reviews = Review::where('submission', Review::REVIEW_PUBLISHED);
 
         if ($request->filled('author')) {
             $reviews->whereHas('user', function (Builder $query) use ($request) {
@@ -97,7 +97,7 @@ class ReviewController extends Controller
         $review = new Review();
         $review->text = $request->text;
         $review->date = time();
-        $review->edit = Review::REVIEW_UNPUBLISHED;
+        $review->submission = Review::REVIEW_UNPUBLISHED;
         // Set before the first save, not after it: the scores are columns on
         // the review now, so filling them here is one insert where the old
         // score row needed a second write. A submitted review with no scores
@@ -177,7 +177,7 @@ class ReviewController extends Controller
     private function getReviewsForUser(User $user)
     {
         return Review::where('user_id', $user->getKey())
-            ->where('edit', Review::REVIEW_PUBLISHED)
+            ->where('submission', Review::REVIEW_PUBLISHED)
             ->orderBy('date', 'desc');
     }
 }

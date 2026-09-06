@@ -92,7 +92,7 @@
                         <label class="form-label">Submission</label>
                         <div class="form-check form-switch">
                             <input class="form-check-input @error('submission') is-invalid @enderror" type="checkbox" role="switch"
-                                name="submission" id="submission" @checked(old('submission', isset($review) ? $review->edit : false)) value="true">
+                                name="submission" id="submission" @checked(old('submission', isset($review) ? $review->submission : false)) value="true">
                             <label class="form-check-label" for="submission">If enabled, the review will be considered a user submission
                                 and will not appear on the main site unless approved</label>
 
@@ -198,7 +198,7 @@
 
             <button type="submit" class="btn btn-success" name="stay" value="true">Save</button>
             <button type="submit" class="btn btn-primary">Save & Close</button>
-            <a href="{{ route('admin.reviews.'.(old('submission', isset($review) ? $review->edit : false) ? 'submissions' : 'reviews').'.index') }}" class="btn btn-link">Cancel</a>
+            <a href="{{ route('admin.reviews.'.(old('submission', isset($review) ? $review->submission : false) ? 'submissions' : 'reviews').'.index') }}" class="btn btn-link">Cancel</a>
 
         </form>
 

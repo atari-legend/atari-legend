@@ -76,7 +76,7 @@ class ReviewsControllerTest extends AdminTestCase
         $this->assertSame('A fine shoot-em-up.', $review->text);
         $this->assertSame($this->admin->getKey(), $review->user_id);
         $this->assertSame('Xenon', $review->games->first()->name);
-        $this->assertSame(Review::REVIEW_PUBLISHED, $review->edit);
+        $this->assertSame(Review::REVIEW_PUBLISHED, $review->submission);
 
         $this->assertSame(5, $review->graphics);
         $this->assertSame(4, $review->sound);
@@ -104,7 +104,7 @@ class ReviewsControllerTest extends AdminTestCase
             'submission' => '1',
         ]))->assertRedirect(route('admin.reviews.reviews.index'));
 
-        $this->assertSame(Review::REVIEW_UNPUBLISHED, Review::sole()->edit);
+        $this->assertSame(Review::REVIEW_UNPUBLISHED, Review::sole()->submission);
     }
 
     public function test_store_requires_a_known_game(): void

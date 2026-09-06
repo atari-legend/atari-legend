@@ -271,10 +271,10 @@ class ReleaseMediaTest extends AdminTestCase
 
         $this->put(route('admin.games.releases.medias.dumps.update', [
             $release->game, $release, $media, $dump,
-        ]), ['info' => 'Cracked by The Replicants.'])
+        ]), ['notes' => 'Cracked by The Replicants.'])
             ->assertRedirect(route('admin.games.releases.medias.index', [$release->game, $release]));
 
-        $this->assertSame('Cracked by The Replicants.', $dump->fresh()->info);
+        $this->assertSame('Cracked by The Replicants.', $dump->fresh()->notes);
         $this->assertChangelog(Changelog::UPDATE, 'Game Release', $release->game->name);
     }
 

@@ -8,5 +8,5 @@ class TriviaQuote extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['quote'];
+    protected $fillable = ['text'];
 }

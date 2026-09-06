@@ -230,7 +230,7 @@ class RemainingSectionsTest extends AdminTestCase
 
         $quote = TriviaQuote::sole();
 
-        $this->assertSame('Power without the price.', $quote->quote);
+        $this->assertSame('Power without the price.', $quote->text);
 
         $this->delete(route('admin.others.quotes.destroy', $quote))->assertRedirect();
         $this->assertSame(0, TriviaQuote::query()->count());

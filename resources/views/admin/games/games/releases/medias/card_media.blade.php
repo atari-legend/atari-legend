@@ -185,7 +185,7 @@
                                             @method('PUT')
 
                                             <div class="input-group">
-                                                <textarea class="form-control" name="info">{{ $dump->info }}</textarea>
+                                                <textarea class="form-control" name="notes">{{ $dump->notes }}</textarea>
                                                 <button class="btn btn-outline-success">Update</button>
                                             </div>
                                         </form>

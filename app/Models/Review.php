@@ -18,7 +18,7 @@ class Review extends Model implements Feedable
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'draft', 'text', 'date', 'edit',
+        'user_id', 'draft', 'text', 'date', 'submission',
         'graphics', 'sound', 'gameplay', 'overall',
     ];
 

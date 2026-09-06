@@ -26,7 +26,7 @@ class DumpFactory extends Factory
             'sha512'        => hash('sha512', fake()->uuid()),
             'date'          => now()->timestamp,
             'size'          => 819200,
-            'info'          => null,
+            'notes'         => null,
             'track_picture' => false,
         ];
     }

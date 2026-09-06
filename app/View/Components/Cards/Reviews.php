@@ -24,7 +24,7 @@ class Reviews extends Component
      */
     public function render()
     {
-        $reviews = Review::where('edit', Review::REVIEW_PUBLISHED)
+        $reviews = Review::where('submission', Review::REVIEW_PUBLISHED)
             ->orderByDesc('date')
             ->limit(3)
             ->get();

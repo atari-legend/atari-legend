@@ -20,11 +20,11 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'text'    => fake()->paragraph(),
-            'date'    => now()->timestamp,
-            'edit'    => Review::REVIEW_PUBLISHED,
-            'draft'   => false,
+            'user_id'    => User::factory(),
+            'text'       => fake()->paragraph(),
+            'date'       => now()->timestamp,
+            'submission' => Review::REVIEW_PUBLISHED,
+            'draft'      => false,
         ];
     }
 
@@ -42,7 +42,7 @@ class ReviewFactory extends Factory
      */
     public function unpublished(): static
     {
-        return $this->state(fn () => ['edit' => Review::REVIEW_UNPUBLISHED]);
+        return $this->state(fn () => ['submission' => Review::REVIEW_UNPUBLISHED]);
     }
 
     /**

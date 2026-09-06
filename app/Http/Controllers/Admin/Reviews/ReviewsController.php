@@ -57,15 +57,15 @@ class ReviewsController extends Controller
             ['game' => 'required|exists:games,id']));
 
         $review = new Review([
-            'user_id'  => $request->author,
-            'draft'    => $request->draft ? true : false,
-            'edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'text'     => $request->text,
-            'date'     => Carbon::parse($request->date)->timestamp,
-            'graphics' => $request->graphics ?? 0,
-            'sound'    => $request->sound ?? 0,
-            'gameplay' => $request->gameplay ?? 0,
-            'overall'  => $request->overall ?? 0,
+            'user_id'    => $request->author,
+            'draft'      => $request->draft ? true : false,
+            'submission' => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'text'       => $request->text,
+            'date'       => Carbon::parse($request->date)->timestamp,
+            'graphics'   => $request->graphics ?? 0,
+            'sound'      => $request->sound ?? 0,
+            'gameplay'   => $request->gameplay ?? 0,
+            'overall'    => $request->overall ?? 0,
         ]);
 
         $game = Game::findOrFail($request->game);
@@ -96,15 +96,15 @@ class ReviewsController extends Controller
         $request->validate($this->getValidationRules());
 
         $review->update([
-            'user_id'  => $request->author,
-            'draft'    => $request->draft ? true : false,
-            'edit'     => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'text'     => $request->text,
-            'date'     => Carbon::parse($request->date)->timestamp,
-            'graphics' => $request->graphics ?? 0,
-            'sound'    => $request->sound ?? 0,
-            'gameplay' => $request->gameplay ?? 0,
-            'overall'  => $request->overall ?? 0,
+            'user_id'    => $request->author,
+            'draft'      => $request->draft ? true : false,
+            'submission' => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'text'       => $request->text,
+            'date'       => Carbon::parse($request->date)->timestamp,
+            'graphics'   => $request->graphics ?? 0,
+            'sound'      => $request->sound ?? 0,
+            'gameplay'   => $request->gameplay ?? 0,
+            'overall'    => $request->overall ?? 0,
         ]);
 
         collect($request->all())
