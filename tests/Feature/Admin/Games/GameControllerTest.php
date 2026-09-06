@@ -171,8 +171,8 @@ class GameControllerTest extends AdminTestCase
 
         $game->refresh();
 
-        $this->assertSame(2, $game->number_players_on_same_machine);
-        $this->assertSame(4, $game->number_players_multiple_machines);
+        $this->assertSame(2, $game->players_same_machine);
+        $this->assertSame(4, $game->players_multiple_machines);
         $this->assertSame('Simultaneous', $game->multiplayer_type);
         $this->assertSame('Midi-Link', $game->multiplayer_hardware);
         $this->assertChangelog(Changelog::UPDATE, 'Games', 'Xenon');
@@ -219,13 +219,13 @@ class GameControllerTest extends AdminTestCase
         $game = Game::factory()->named('Xenon')->create();
 
         $this->post(route('admin.games.games.vs.store', $game), [
-            'amiga_id'     => 1234,
-            'lemon64_slug' => 'xenon',
+            'lemonamiga_id' => 1234,
+            'lemon64_slug'  => 'xenon',
         ])->assertRedirect(route('admin.games.games.edit', $game));
 
         $vs = GameVs::sole();
 
-        $this->assertSame(1234, $vs->amiga_id);
+        $this->assertSame(1234, $vs->lemonamiga_id);
         $this->assertSame('xenon', $vs->lemon64_slug);
         $this->assertChangelog(Changelog::INSERT, 'Games', 'Xenon');
 
@@ -284,7 +284,7 @@ class GameControllerTest extends AdminTestCase
             'similarGames'        => $game->similarGames()->attach(Game::factory()->create()),
             'similarGamesReverse' => $game->similarGamesReverse()->attach(Game::factory()->create()),
             'akas'                => GameAka::create(['game_id' => $game->getKey(), 'name' => 'Xenon II']),
-            'vs'                  => GameVs::create(['atari_id' => $game->getKey(), 'amiga_id' => 1234]),
+            'vs'                  => GameVs::create(['atari_id' => $game->getKey(), 'lemonamiga_id' => 1234]),
             'comments'            => $game->comments()->attach(Comment::factory()->create()),
             'votes'               => GameVote::factory()->create([
                 'game_id' => $game->getKey(),

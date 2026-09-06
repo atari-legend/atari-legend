@@ -237,10 +237,10 @@ class GameController extends Controller
         ]);
 
         $game->update([
-            'number_players_on_same_machine'   => $request->players,
-            'number_players_multiple_machines' => $request->players_linked,
-            'multiplayer_type'                 => $request->multiplayer_type,
-            'multiplayer_hardware'             => $request->multiplayer_hardware,
+            'players_same_machine'      => $request->players,
+            'players_multiple_machines' => $request->players_linked,
+            'multiplayer_type'          => $request->multiplayer_type,
+            'multiplayer_hardware'      => $request->multiplayer_hardware,
         ]);
 
         ChangelogHelper::insert([
@@ -298,7 +298,7 @@ class GameController extends Controller
     {
         $vs = GameVs::create([
             'atari_id'      => $game->getKey(),
-            'amiga_id'      => $request->amiga_id,
+            'lemonamiga_id' => $request->lemonamiga_id,
             'lemon64_slug'  => $request->lemon64_slug,
         ]);
 
@@ -315,14 +315,14 @@ class GameController extends Controller
         return redirect()->route('admin.games.games.edit', $game);
     }
 
-    public function destroyVs(Game $game, int $amigaId)
+    public function destroyVs(Game $game, int $lemonamigaId)
     {
         $vs = GameVs::where('atari_id', $game->getKey())
-            ->where('amiga_id', $amigaId)
+            ->where('lemonamiga_id', $lemonamigaId)
             ->firstOrFail();
 
         GameVs::where('atari_id', $game->getKey())
-            ->where('amiga_id', $amigaId)
+            ->where('lemonamiga_id', $lemonamigaId)
             ->delete();
 
         ChangelogHelper::insert([
@@ -331,7 +331,7 @@ class GameController extends Controller
             'section_id'       => $vs->atari->getKey(),
             'section_name'     => $vs->atari->name,
             'sub_section'      => 'Vs',
-            'sub_section_id'   => $vs->amiga_id,
+            'sub_section_id'   => $vs->lemonamiga_id,
             'sub_section_name' => $vs->atari->name,
         ]);
 

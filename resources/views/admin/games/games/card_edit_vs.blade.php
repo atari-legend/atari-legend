@@ -8,12 +8,12 @@
             @csrf
 
             <div class="col">
-                <label class="form-label" for="amiga_id">LemonAmiga ID</label>
-                <input class="form-control @error('amiga_id') is-invalid @enderror"
+                <label class="form-label" for="lemonamiga_id">LemonAmiga ID</label>
+                <input class="form-control @error('lemonamiga_id') is-invalid @enderror"
                     placeholder="e.g. '123'"
-                    name="amiga_id" id="amiga_id" type="number" required>
+                    name="lemonamiga_id" id="lemonamiga_id" type="number" required>
 
-                @error('amiga_id')
+                @error('lemonamiga_id')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -49,10 +49,10 @@
             <tbody>
                 @foreach($game->vs as $vs)
                     <tr>
-                        <td>@if ($vs->amiga_id) <a href="{{ $vs->lemon_amiga_url }}">{{ $vs->amiga_id }}</a>  @else - @endif</td>
+                        <td>@if ($vs->lemonamiga_id) <a href="{{ $vs->lemon_amiga_url }}">{{ $vs->lemonamiga_id }}</a>  @else - @endif</td>
                         <td>@if ($vs->lemon64_slug) <a href="{{ $vs->lemon_64_url }}">{{ $vs->lemon64_slug }}</a>  @else - @endif</td>
                         <td>
-                            <form action="{{ route('admin.games.games.destroy.vs', ['game' => $game, 'vs' => $vs->amiga_id]) }}"
+                            <form action="{{ route('admin.games.games.destroy.vs', ['game' => $game, 'vs' => $vs->lemonamiga_id]) }}"
                                 method="POST"
                                 onsubmit="javascript:return confirm('This item will be permanently deleted')">
                                 @csrf

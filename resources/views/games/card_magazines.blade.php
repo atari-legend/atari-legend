@@ -8,9 +8,9 @@
                 <div class="p-2">
                     <span class="float-end">{{ $index->score }}</span>
                     <h3 class="fs-6 mb-0">
-                        @if ($index->magazineIssue?->magazine?->location?->country_iso2 !== null)
+                        @if ($index->magazineIssue?->magazine?->location?->iso2 !== null)
                             <span title="{{ $index->magazineIssue->magazine->location->name }}"
-                                class="fi fi-{{ strtolower($index->magazineIssue->magazine->location->country_iso2) }} me-1"></span>
+                                class="fi fi-{{ strtolower($index->magazineIssue->magazine->location->iso2) }} me-1"></span>
                         @endif
                         <a class="d-inline-block"
                             href="{{ route('magazines.show', ['magazine' => $index->magazineIssue->magazine, 'page' => $index->magazineIssue->magazine_page_number]) }}#magazine-issue-{{ $index->magazineIssue->id }}">

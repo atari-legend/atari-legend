@@ -15,7 +15,7 @@ class Game extends Model
 
     protected $fillable = [
         'name', 'slug', 'port_id', 'game_progress_system_id', 'game_series_id',
-        'number_players_on_same_machine', 'number_players_multiple_machines',
+        'players_same_machine', 'players_multiple_machines',
         'multiplayer_type', 'multiplayer_hardware',
     ];
 

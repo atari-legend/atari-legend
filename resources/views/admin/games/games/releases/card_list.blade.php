@@ -32,9 +32,9 @@
                         </td>
                         <td>
                             @foreach ($release->locations as $location)
-                                @if ($location->country_iso2 !== null)
+                                @if ($location->iso2 !== null)
                                     <span title="{{ $location->name }}"
-                                        class="fi fi-{{ strtolower($location->country_iso2) }} mx-1"></span>
+                                        class="fi fi-{{ strtolower($location->iso2) }} mx-1"></span>
                                 @endif
                             @endforeach
 

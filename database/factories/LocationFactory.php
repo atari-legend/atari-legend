@@ -21,8 +21,8 @@ class LocationFactory extends Factory
             'name'           => fake()->unique()->country(),
             'type'           => 'Country',
             'continent_code' => null,
-            'country_iso2'   => null,
-            'country_iso3'   => null,
+            'iso2'           => null,
+            'iso3'           => null,
         ];
     }
 

@@ -212,7 +212,7 @@ test.describe('Admin games', () => {
       await page.getByRole('button', { name: 'Add AKA' }).click();
       await expect(page.getByRole('cell', { name: akaName })).toBeVisible();
 
-      await page.fill('#amiga_id', '99988');
+      await page.fill('#lemonamiga_id', '99988');
       await page.fill('#lemon64_slug', 'e2e-vs-slug');
       await page.getByRole('button', { name: 'Add Versus' }).click();
       await expect(page.getByRole('cell', { name: '99988' })).toBeVisible();

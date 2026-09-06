@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class GameVs extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['atari_id', 'amiga_id', 'lemon64_slug'];
+    protected $fillable = ['atari_id', 'lemonamiga_id', 'lemon64_slug'];
 
     public function atari()
     {
@@ -16,7 +16,7 @@ class GameVs extends Model
 
     public function getLemonAmigaUrlAttribute()
     {
-        return 'https://www.lemonamiga.com/games/details.php?id=' . $this->amiga_id;
+        return 'https://www.lemonamiga.com/games/details.php?id=' . $this->lemonamiga_id;
     }
 
     public function getLemon64UrlAttribute()

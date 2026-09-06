@@ -19,9 +19,9 @@
                 <div class="text-muted">
                     {{ $magazine->issues->count() }} {{ Str::plural('issue', $magazine->issues->count()) }}
 
-                    @if ($magazine->location?->country_iso2 !== null)
+                    @if ($magazine->location?->iso2 !== null)
                         <span title="{{ $magazine->location->name }}"
-                            class="fi fi-{{ strtolower($magazine->location->country_iso2) }} ms-1"></span>
+                            class="fi fi-{{ strtolower($magazine->location->iso2) }} ms-1"></span>
                     @endif
                 </div>
             </div>
