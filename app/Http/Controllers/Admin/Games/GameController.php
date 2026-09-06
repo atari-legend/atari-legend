@@ -146,7 +146,7 @@ class GameController extends Controller
             // which used to be swept by hand here because they had no foreign
             // key at all. One case is left that the database will not do:
             //
-            //   comments - game_user_comments cascades, but the comments row it
+            //   comments - game_comment cascades, but the comments row it
             //              points at does not, and Comment::getType() throws on
             //              a comment that belongs to nothing, which would take
             //              out the admin comments table.

@@ -44,7 +44,7 @@ class Interview extends Model implements Feedable
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'interview_user_comments');
+        return $this->belongsToMany(Comment::class, 'interview_comment');
     }
 
     /**

@@ -109,7 +109,7 @@ class Game extends Model
 
     public function reviews()
     {
-        return $this->belongsToMany(Review::class, 'review_game');
+        return $this->belongsToMany(Review::class);
     }
 
     public function genres()
@@ -172,7 +172,7 @@ class Game extends Model
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'game_user_comments');
+        return $this->belongsToMany(Comment::class, 'game_comment');
     }
 
     public function similarGames()

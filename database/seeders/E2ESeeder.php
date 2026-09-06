@@ -18,7 +18,7 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (game_screenshot, review_game, game_user_comments,
+ * all (game_screenshot, game_review, game_comment,
  * link_category), the factories are random where the specs need fixed
  * names and slugs, and $fillable on the legacy models is thin enough that
  * Model::create() would silently drop columns we depend on.
@@ -414,7 +414,7 @@ class E2ESeeder extends Seeder
             'text'    => 'Great game!',
             'date'    => now()->timestamp,
         ]);
-        $this->insert('review_game', [
+        $this->insert('game_review', [
             'review_id' => self::REVIEW_ID,
             'game_id'   => self::GAME_ID,
         ], []);
@@ -487,7 +487,7 @@ class E2ESeeder extends Seeder
             'timestamp' => (string) now()->timestamp,
             'user_id'   => self::USER_STANDARD_ID,
         ]);
-        $this->insert('game_user_comments', [
+        $this->insert('game_comment', [
             'game_id'    => self::GAME_ID,
             'comment_id' => self::COMMENT_ID,
         ], []);

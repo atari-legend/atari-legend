@@ -64,8 +64,8 @@ class ReviewsTable extends DataTableComponent
     {
         return Review::select('reviews.*', 'games.name')
             ->where('reviews.edit', '=', $this->submissions)
-            ->leftJoin('review_game', 'review_game.review_id', '=', 'reviews.id')
-            ->leftJoin('games', 'review_game.game_id', '=', 'games.id');
+            ->leftJoin('game_review', 'game_review.review_id', '=', 'reviews.id')
+            ->leftJoin('games', 'game_review.game_id', '=', 'games.id');
     }
 
     public function filters(): array

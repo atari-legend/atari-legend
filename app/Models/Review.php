@@ -33,7 +33,7 @@ class Review extends Model implements Feedable
 
     public function games()
     {
-        return $this->belongsToMany(Game::class, 'review_game');
+        return $this->belongsToMany(Game::class);
     }
 
     public function screenshots()
@@ -58,7 +58,7 @@ class Review extends Model implements Feedable
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'review_user_comments');
+        return $this->belongsToMany(Comment::class, 'review_comment');
     }
 
     public function toFeedItem(): FeedItem

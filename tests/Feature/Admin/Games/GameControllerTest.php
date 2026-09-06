@@ -319,7 +319,7 @@ class GameControllerTest extends AdminTestCase
         // The pivot cascades, but the comment behind it does not - a comment
         // that belongs to nothing throws when the admin lists it
         $this->assertSame(0, Comment::query()->count());
-        $this->assertSame(0, DB::table('game_user_comments')->count());
+        $this->assertSame(0, DB::table('game_comment')->count());
 
         // Reference data is an attribute of the game, and goes with it
         $this->assertSame(0, DB::table('game_genre')->count());

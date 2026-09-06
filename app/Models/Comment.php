@@ -29,25 +29,25 @@ class Comment extends Model
     public function games()
     {
         // FIXME: Should be N:1
-        return $this->belongsToMany(Game::class, 'game_user_comments');
+        return $this->belongsToMany(Game::class, 'game_comment');
     }
 
     public function articles()
     {
         // FIXME: Should be N:1
-        return $this->belongsToMany(Article::class, 'article_user_comments');
+        return $this->belongsToMany(Article::class);
     }
 
     public function interviews()
     {
         // FIXME: Should be N:1
-        return $this->belongsToMany(Interview::class, 'interview_user_comments');
+        return $this->belongsToMany(Interview::class, 'interview_comment');
     }
 
     public function reviews()
     {
         // FIXME: Should be N:1
-        return $this->belongsToMany(Review::class, 'review_user_comments');
+        return $this->belongsToMany(Review::class, 'review_comment');
     }
 
     /**
