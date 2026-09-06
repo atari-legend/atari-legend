@@ -32,7 +32,7 @@ class Individual extends Model
      */
     public function nicknames()
     {
-        return $this->belongsToMany(Individual::class, 'individual_nicks', 'individual_id', 'nick_id');
+        return $this->belongsToMany(Individual::class, 'individual_nickname', 'individual_id', 'nick_id');
     }
 
     /**
@@ -41,7 +41,7 @@ class Individual extends Model
      */
     public function individuals()
     {
-        return $this->belongsToMany(Individual::class, 'individual_nicks', 'nick_id', 'individual_id');
+        return $this->belongsToMany(Individual::class, 'individual_nickname', 'nick_id', 'individual_id');
     }
 
     public function crews()

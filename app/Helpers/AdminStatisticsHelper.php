@@ -120,7 +120,7 @@ class AdminStatisticsHelper
             'People & companies' => [
                 'Individuals'            => DB::table('individuals')->count(),
                 'Individuals with bio'   => self::countWithText('individuals', 'profile', 'id'),
-                'Nicknames'              => DB::table('individual_nicks')->count(),
+                'Nicknames'              => DB::table('individual_nickname')->count(),
                 'Crews'                  => DB::table('crews')->count(),
                 'Sub-crews'              => DB::table('sub_crew')->count(),
                 'Crew members'           => DB::table('crew_individual')->count(),

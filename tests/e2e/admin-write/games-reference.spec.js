@@ -25,7 +25,7 @@ test.describe('Admin games reference data', () => {
 
     // The nicknames card is a second form on the individual's edit screen.
     // A nickname is itself a row in `individuals`, linked back through
-    // individual_nicks, which is why it has to be a unique name of its own.
+    // individual_nickname, which is why it has to be a unique name of its own.
     await page.goto(edit);
     await page.fill('#nickname', nickname);
     await page.getByRole('button', { name: 'Add nickname' }).click();

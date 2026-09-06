@@ -46,8 +46,8 @@ class RelationshipKeyConventionsTest extends TestCase
         'Crew::subCrews()'                  => 'sub_crew needs parent_id and crew_id',
         'Game::similarGames()'              => 'game_similar needs game_id and similar_game_id',
         'Game::similarGamesReverse()'       => 'game_similar needs similar_game_id and game_id',
-        'Individual::nicknames()'           => 'individual_nicks needs individual_id and nick_id',
-        'Individual::individuals()'         => 'individual_nicks needs nick_id and individual_id',
+        'Individual::nicknames()'           => 'individual_nickname needs individual_id and nick_id',
+        'Individual::individuals()'         => 'individual_nickname needs nick_id and individual_id',
 
         // PIVOT SUBCLASS
         'ArticleScreenshot::comment()'      => 'declared on a Pivot: no derivable default exists',
