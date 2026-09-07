@@ -48,6 +48,23 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
+# Configure caching for assets served directly out of storage/ (screenshots,
+# scans, menu dumps, etc.). public/storage is a symlink straight into
+# storage/app/public, so these requests are served by Apache directly and
+# never reach a Laravel controller - the Cache-Control header that
+# GameResourcesController and GameReleaseResourcesController already set on
+# their own routes never applies here. storage/ itself is excluded from
+# deployment (see deploy.sh) and owned entirely by the server, so this has to
+# be scoped by request path in this file rather than by a .htaccess placed in
+# that directory, the way public/build/.htaccess handles /build/.
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_URI} ^/storage/
+    RewriteRule .* - [E=CACHEABLE_STORAGE_ASSET:1]
+</IfModule>
+<IfModule mod_headers.c>
+    Header set Cache-Control "max-age=31536000" env=CACHEABLE_STORAGE_ASSET
+</IfModule>
+
 # Configure compression on static resources
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
