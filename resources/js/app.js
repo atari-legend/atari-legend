@@ -7,6 +7,7 @@ import './review/submit';
 import './comments';
 import './game/search';
 import './game/media';
+import './game/video';
 import './user';
 import './about/history';
 import './collapse';

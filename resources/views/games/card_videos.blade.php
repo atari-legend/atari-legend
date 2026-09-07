@@ -6,12 +6,21 @@
         <div class="card-body p-0">
             @foreach ($game->videos as $video)
                 <div>
-                    <div class="video-container mb-2">
-                        <iframe
-                            class="w-100"
-                            src="https://www.youtube-nocookie.com/embed/{{ $video->youtube_id }}"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe>
+                    <div
+                        class="video-container video-facade mb-2"
+                        data-youtube-id="{{ $video->youtube_id }}"
+                        data-youtube-title="{{ $video->title }}"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Play video: {{ $video->title }}"
+                    >
+                        <img
+                            class="video-facade-thumb"
+                            src="https://i.ytimg.com/vi/{{ $video->youtube_id }}/hqdefault.jpg"
+                            alt=""
+                            loading="lazy"
+                        >
+                        <img class="video-facade-play" src="{{ asset('images/play-overlay.png') }}" alt="" loading="lazy">
                     </div>
                     <p class="p-2">
                         <span class="text-muted">{{ $video->author }}: </span>
