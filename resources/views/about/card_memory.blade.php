@@ -4,7 +4,7 @@
     </div>
     <div class="card-body p-0">
         <figure>
-            <img class="w-100" src="{{ asset('images/class_al/Andreas3.jpg') }}" alt="Picture of Andreas Wahlin">
+            <img class="w-100" width="552" height="354" src="{{ asset('images/class_al/Andreas3.jpg') }}" alt="Picture of Andreas Wahlin" loading="lazy">
             <figcaption class="py-2 px-3">
                 <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                 <div class="figcaption-title"><a href="{{ route('about.andreas') }}">Andreas Wahlin</a></div>

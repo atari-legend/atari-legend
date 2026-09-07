@@ -5,7 +5,7 @@
                 <div class="carousel-inner">
                     @foreach ($triviaImages->random(10) as $image)
                         <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                            <img class="d-block w-100" src="{{ asset('images/'.$image) }}" alt="Large carousel image">
+                            <img class="d-block w-100" width="850" height="470" src="{{ asset('images/'.$image) }}" alt="Large carousel image">
 
                             <div class="carousel-bg">
                                 <h2 class="text-uppercase">{{ $triviaQuote->text }}</h2>

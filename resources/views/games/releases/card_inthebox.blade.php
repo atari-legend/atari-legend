@@ -9,7 +9,7 @@
                 @if (!Str::startsWith($boxscan->type, 'Box'))
                     <div class="col-3 col-sm-2 me-4 text-center text-muted">
                         <a class="lightbox-link" href="{{ asset('storage/'.$boxscan->path) }}">
-                            <img class="w-100 mb-1" src="{{ route('games.releases.boxscan', ['release' => $release, 'id' => $boxscan->getKey()]) }}">
+                            <img class="w-100 mb-1" src="{{ route('games.releases.boxscan', ['release' => $release, 'id' => $boxscan->getKey()]) }}" loading="lazy">
                         </a>
                         {{ $boxscan->notes }}
                     </div>

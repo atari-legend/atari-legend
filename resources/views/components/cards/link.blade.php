@@ -6,7 +6,7 @@
         @isset ($link)
             @if ($link->file !== null)
                 <figure>
-                    <img class="w-100 cropped" src="{{ route('links.screenshot', $link) }}" alt="Screenshot of the link {{ $link->name }}">
+                    <img class="w-100 cropped" src="{{ route('links.screenshot', $link) }}" alt="Screenshot of the link {{ $link->name }}" loading="lazy">
                     <figcaption class="py-2 px-3">
                         <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                         <div class="figcaption-title"><a href="{{ $link->url }}">{{ $link->name }}</a></div>

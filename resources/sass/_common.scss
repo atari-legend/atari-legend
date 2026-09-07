@@ -54,6 +54,16 @@ h2 {
     width: 45% !important;
 }
 
+// Any <img> with HTML width/height attributes (added to reserve layout space
+// and avoid CLS) needs this, or a responsive width utility (.w-100,
+// .card-img-top, etc.) that overrides only width - not height - leaves the
+// height attribute applied as a literal pixel value, completely disconnected
+// from the actual rendered width. Same reason Bootstrap's own .img-fluid
+// mixin sets this.
+img[width][height] {
+    height: auto;
+}
+
 img.cropped {
     object-fit: cover;
     object-position: top left;

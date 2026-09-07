@@ -9,7 +9,7 @@
                     <p class="card-text">{!! Helper::bbCode(nl2br(e($fact->fact), false)) !!}</p>
                     @foreach($fact->screenshots as $screenshot)
                         <a class="lightbox-link" href="{{ $screenshot->getUrl('game_fact') }}">
-                            <img class="w-100 mb-2" src="{{ $screenshot->getUrl('game_fact') }}" alt="Game fact picture">
+                            <img class="w-100 mb-2" src="{{ $screenshot->getUrl('game_fact') }}" alt="Game fact picture" loading="lazy">
                         </a>
                     @endforeach
                 </div>

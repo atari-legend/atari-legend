@@ -20,7 +20,7 @@
             @foreach ($article->screenshots as $screenshot)
                 <div class="bg-dark p-2">
                     <a class="lightbox-link" href="{{ $screenshot->getUrl('article') }}" title="@isset($screenshot->pivot->comment) {{ $screenshot->pivot->comment->text }} @endif">
-                        <img class="w-100 " src="{{ $screenshot->getUrl('article') }}" alt="@isset($screenshot->pivot->comment) {{ $screenshot->pivot->comment->text }} @endif">
+                        <img class="w-100 " src="{{ $screenshot->getUrl('article') }}" alt="@isset($screenshot->pivot->comment) {{ $screenshot->pivot->comment->text }} @endif" loading="lazy">
                     </a>
                     @if (isset($screenshot->pivot->comment))
                         <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->text }}</p>

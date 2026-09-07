@@ -13,7 +13,7 @@
         @foreach ($magazines as $magazine)
             <div class="col text-center mb-5">
                 <a href="{{ route('magazines.show', $magazine) }}">
-                    <img src="{{ $magazine->cover_url }}" class="card-img bg-black" alt="Cover for {{ $magazine->name }}">
+                    <img src="{{ $magazine->cover_url }}" class="card-img bg-black" alt="Cover for {{ $magazine->name }}" loading="lazy">
                 </a>
                 <h3 class="fs-4 mt-2"><a href="{{ route('magazines.show', $magazine) }}">{{ $magazine->name }}</a></h3>
                 <div class="text-muted">

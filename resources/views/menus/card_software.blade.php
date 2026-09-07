@@ -7,7 +7,7 @@
             <em>{{ $software->name }}</em> ({{$software->menuSoftwareContentType->name}}) is present on {{ $menuDisks->count() }} {{ Str::plural('menudisk', $menuDisks->count()) }}.
             @if ($software->demozoo_id)
                 More information on <em>{{ $software->name }}</em> at <a href="https://demozoo.org/productions/{{ $software->demozoo_id }}">
-                    Demozoo <img src="{{ asset('images/demozoo-16x16.png') }}" class="border-0" alt="Demozoo link for {{ $software->name }}">
+                    Demozoo <img src="{{ asset('images/demozoo-16x16.png') }}" width="16" height="16" class="border-0" alt="Demozoo link for {{ $software->name }}" loading="lazy">
                 </a>
             @endif
         </p>

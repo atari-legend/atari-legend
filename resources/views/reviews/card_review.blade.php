@@ -20,7 +20,7 @@
             @foreach ($review->screenshots->sortBy('id') as $screenshot)
                 <div class="bg-dark p-2">
                     <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" title="{{ $screenshot->pivot->comment->text ?? '' }}">
-                        <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" alt="{{ $screenshot->pivot->comment->text ?? '' }}">
+                        <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" alt="{{ $screenshot->pivot->comment->text ?? '' }}" loading="lazy">
                     </a>
                     <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->text }}</p>
                 </div>

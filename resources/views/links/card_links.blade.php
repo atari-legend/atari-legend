@@ -28,7 +28,7 @@
                 <div class="col-md-4">
                     @if ($link->file)
                         <a class="lightbox-link" href="{{ asset('storage/'. $link->path) }}">
-                            <img class="w-100 cropped mb-2 mb-md-0" src="{{ route('links.screenshot', $link) }}" alt="Screenshot of link {{ $link->name }}">
+                            <img class="w-100 cropped mb-2 mb-md-0" src="{{ route('links.screenshot', $link) }}" alt="Screenshot of link {{ $link->name }}" loading="lazy">
                         </a>
                     @endif
                 </div>

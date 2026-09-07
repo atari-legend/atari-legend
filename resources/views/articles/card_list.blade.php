@@ -29,7 +29,7 @@
                 <div class="clearfix">
                     @if ($article->screenshots->isNotEmpty())
                         <a class="lightbox-link" href="{{ $article->screenshots->first()->getUrl('article') }}">
-                            <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ $article->screenshots->first()->getUrl('article') }}" alt="Article screenshot">
+                            <img class="col-4 col-sm-3 float-start mt-1 me-2 mb-1" src="{{ $article->screenshots->first()->getUrl('article') }}" alt="Article screenshot" loading="lazy">
                         </a>
                     @endif
 

@@ -41,7 +41,7 @@
                                             <span class="align-middle">{{ $dump->format }}</span>
                                             @if ($dump->track_picture_url)
                                                 <a class="lightbox-link ms-2" href="{{ $dump->track_picture_url }}">
-                                                    <img src="{{ $dump->track_picture_url }}" style="height: 2rem;" alt="Track analysis picture">
+                                                    <img src="{{ $dump->track_picture_url }}" style="height: 2rem;" alt="Track analysis picture" loading="lazy">
                                                 </a>
                                             @endif
                                         </td>
@@ -70,7 +70,7 @@
                             @foreach ($media->scans as $scan)
                                 <div class="col-3 col-sm-2 me-4 text-center text-muted">
                                     <a class="lightbox-link" href="{{ $scan->url }}">
-                                        <img class="w-100 mb-1" src="{{ $scan->url }}">
+                                        <img class="w-100 mb-1" src="{{ $scan->url }}" loading="lazy">
                                     </a>
                                     {{ $scan->type->name ?? '' }}
                                 </div>

@@ -48,12 +48,12 @@
                     title="{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->part }}">
                     <img class="card-img-top w-100"
                         src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
-                        alt="Screenshot of disk">
+                        alt="Screenshot of disk" loading="lazy">
                 </a>
             @else
-                <img class="card-img-top w-100 bg-black"
+                <img class="card-img-top w-100 bg-black" width="1209" height="756"
                     src="{{ asset('images/no-screenshot.svg') }}"
-                    alt="No screenshot for this disk">
+                    alt="No screenshot for this disk" loading="lazy">
             @endif
             </div>
         </div>

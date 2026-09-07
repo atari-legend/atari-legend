@@ -9,7 +9,7 @@
     </div>
     <div class="card-body p-0">
         @if ($release->game->screenshots->isNotEmpty())
-            <img class="w-100 pixelated" src="{{ $release->game->screenshots->random()->getUrlRoute('game', $release->game) }}" alt="Screenshot of {{ $release->game->name }}">
+            <img class="w-100 pixelated" src="{{ $release->game->screenshots->random()->getUrlRoute('game', $release->game) }}" alt="Screenshot of {{ $release->game->name }}" loading="lazy">
         @else
             <p class="card-text text-center m-2">
                 <i class="fas fa-images fa-4x text-muted"></i><br>

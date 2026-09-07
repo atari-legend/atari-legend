@@ -33,10 +33,10 @@
                         @if ($disk->screenshots->isNotEmpty())
                             <img class="w-100"
                                 src="{{ asset('storage/images/menu_screenshots/' . $disk->screenshots->first()->file) }}"
-                                alt="Screenshot for disk">
+                                alt="Screenshot for disk" loading="lazy">
                         @else
-                            <img class="w-100 bg-black" src="{{ asset('images/no-screenshot.svg') }}"
-                                alt="No screenshot for this disk">
+                            <img class="w-100 bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}"
+                                alt="No screenshot for this disk" loading="lazy">
                         @endif
                     </div>
 

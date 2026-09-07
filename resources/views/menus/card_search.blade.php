@@ -31,7 +31,7 @@
 
                         @if ($soft->demozoo_id)
                             <a class="ms-1" href="https://demozoo.org/productions/{{ $soft->demozoo_id }}">
-                                <img src="{{ asset('images/demozoo-16x16.png') }}" class="border-0" alt="Demozoo link for {{ $soft->name }}">
+                                <img src="{{ asset('images/demozoo-16x16.png') }}" width="16" height="16" class="border-0" alt="Demozoo link for {{ $soft->name }}" loading="lazy">
                             </a>
                         @endif
                     </div>

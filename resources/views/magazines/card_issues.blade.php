@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="col-sm-3 order-sm-last">
                     <img src="{{ $issue->image }}" class="img-fluid bg-black"
-                        alt="Cover for {{ $issue->display_label_with_date }}">
+                        alt="Cover for {{ $issue->display_label_with_date }}" loading="lazy">
                 </div>
                 <div class="col pt-3 pt-sm-0">
                     @if ($issue->indices->isNotEmpty())

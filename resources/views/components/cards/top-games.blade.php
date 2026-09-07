@@ -15,9 +15,9 @@
                     <div class="col-3">
                         <a class="fs-4 d-inline-block" href="{{ route('games.show', $game) }}">
                             @if ($game->screenshots->isNotEmpty())
-                                <img class="img-fluid" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ e($game->name) }}">
+                                <img class="img-fluid" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ e($game->name) }}" loading="lazy">
                             @else
-                                <img class="img-fluid" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot">
+                                <img class="img-fluid" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot" loading="lazy">
                             @endif
                         </a>
                     </div>

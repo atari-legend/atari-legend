@@ -30,12 +30,12 @@
                                         title="{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->part }}">
                                         <img class="card-img-top w-100"
                                             src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
-                                            alt="Screenshot of disk">
+                                            alt="Screenshot of disk" loading="lazy">
                                     </a>
                                 @else
-                                    <img class="card-img-top w-100 bg-black"
+                                    <img class="card-img-top w-100 bg-black" width="1209" height="756"
                                         src="{{ asset('images/no-screenshot.svg') }}"
-                                        alt="Screenshot of disk">
+                                        alt="Screenshot of disk" loading="lazy">
                                 @endif
                             </figure>
 
@@ -65,7 +65,7 @@
                                             @endif
                                             @if ($content->menuSoftware && $content->menuSoftware->demozoo_id)
                                                 <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
-                                                    <img src="{{ asset('images/demozoo-16x16.png') }}" class="border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}">
+                                                    <img src="{{ asset('images/demozoo-16x16.png') }}" width="16" height="16" class="border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}" loading="lazy">
                                                 </a>
                                             @endif
 

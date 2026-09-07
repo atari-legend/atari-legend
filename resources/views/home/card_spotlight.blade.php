@@ -14,7 +14,7 @@
     <div class="card-body p-0">
         @isset ($spotlight)
             @isset ($spotlight->screenshot)
-                <img class="w-100" src="{{ route('spotlights.screenshot', $spotlight) }}" alt="Spotlight image">
+                <img class="w-100" src="{{ route('spotlights.screenshot', $spotlight) }}" alt="Spotlight image" loading="lazy">
             @endisset
             <p class="card-text p-2">
                 {{ $spotlight->text }}

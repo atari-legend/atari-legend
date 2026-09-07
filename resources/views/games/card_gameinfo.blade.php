@@ -9,7 +9,7 @@
             <div class="row p-2 g-0">
                 <div class="col text-center">
                     @foreach ($developersLogos as $logo)
-                        <img class="company-logo bg-black me-2" src="{{ $logo }}" alt="Logo of the developer company">
+                        <img class="company-logo bg-black me-2" src="{{ $logo }}" alt="Logo of the developer company" loading="lazy">
                     @endforeach
                 </div>
             </div>
@@ -261,10 +261,10 @@
                     @foreach ($game->vs as $vs)
                         <div class="mb-1">
                             @if ($vs->lemonamiga_id !== null && $vs->lemonamiga_id > 0)
-                                <a href="{{ $vs->lemon_amiga_url }}"><img class="w-25" src="{{ asset('images/game/Amiga.png') }}" alt="Amiga logo"></a>
+                                <a href="{{ $vs->lemon_amiga_url }}"><img class="w-25" width="610" height="180" src="{{ asset('images/game/Amiga.png') }}" alt="Amiga logo" loading="lazy"></a>
                             @endif
                             @if ($vs->lemon64_slug !== null)
-                                <a href="{{ $vs->lemon_64_url }}"><img class="w-25" src="{{ asset('images/game/c64.jpg') }}" alt="Commodore 64 logo"></a>
+                                <a href="{{ $vs->lemon_64_url }}"><img class="w-25" width="610" height="179" src="{{ asset('images/game/c64.jpg') }}" alt="Commodore 64 logo" loading="lazy"></a>
                             @endif
                         </div>
                     @endforeach

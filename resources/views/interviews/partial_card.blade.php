@@ -2,7 +2,7 @@
     @isset ($interview)
         @if (isset($interview->individual->file))
             <figure>
-                <img class="w-100" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->name }}">
+                <img class="w-100" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->name }}" loading="lazy">
                 <figcaption class="py-2 px-3">
                     <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                     <div class="figcaption-title"><a href="{{ route('interviews.show', ['interview' => $interview->getKey()]) }}">{{ $interview->individual->name }}</a></div>

@@ -12,7 +12,7 @@
         </div>
         <div class="card-body p-0">
             <figure>
-                <img class="w-100 pixelated" src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}" alt="Screenshot of {{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->label }}">
+                <img class="w-100 pixelated" src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}" alt="Screenshot of {{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->label }}" loading="lazy">
                 <figcaption class="py-2 px-3">
                     <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                     <div class="figcaption-title"><a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => $disk->menuset_page_number]) }}#menudisk-{{ $disk->id }}">{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->label }}</a></div>
@@ -43,7 +43,7 @@
                             @endif
                             @if ($content->menuSoftware && $content->menuSoftware->demozoo_id)
                                 <a href="https://demozoo.org/productions/{{ $content->menuSoftware->demozoo_id }}/" class="d-inline-block">
-                                    <img src="{{ asset('images/demozoo-16x16.png') }}" class="border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}">
+                                    <img src="{{ asset('images/demozoo-16x16.png') }}" width="16" height="16" class="border-0" alt="Demozoo link for {{ $content->menuSoftware->name }}" loading="lazy">
                                 </a>
                             @endif
 

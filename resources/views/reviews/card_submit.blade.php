@@ -63,7 +63,7 @@
                                     <div class="row mb-3">
                                         <div class="col-2">
                                             <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
-                                                <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $game) }}" alt="Game screenshot">
+                                                <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $game) }}" alt="Game screenshot" loading="lazy">
                                             </a>
                                         </div>
                                         <div class="col-10 d-flex">
@@ -105,7 +105,7 @@
                                 @foreach ($game->screenshots->sortBy('id') as $screenshot)
                                     <div class="bg-dark p-2">
                                         <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $game) }}">
-                                            <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $game) }}">
+                                            <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $game) }}" loading="lazy">
                                         </a>
                                         <p class="pb-5 mb-0" id="preview-screenshot-comment-{{ $screenshot->getKey() }}"></p>
                                     </div>

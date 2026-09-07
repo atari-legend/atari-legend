@@ -8,7 +8,7 @@
 
     <div class="card-body p-0">
         @if (isset($interview->individual->file))
-           <img class="w-100" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->name }}">
+           <img class="w-100" src="{{ route('individuals.avatar', $interview->individual) }}" alt="Picture of {{ $interview->individual->name }}" loading="lazy">
         @endif
         <p class="card-text p-2">
             {!! Helper::bbCode(e($interview->intro)) !!}

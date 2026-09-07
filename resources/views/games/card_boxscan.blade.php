@@ -17,7 +17,7 @@
                             @foreach ($boxscans as $boxscan)
                                 <div class="carousel-item @if ($loop->first) active @endif">
                                     <a class="lightbox-link" href="{{ $boxscan['boxscan'] }}">
-                                        <img class="w-100 d-block" src="{{ $boxscan['preview'] }}" alt="Large scan of the game box">
+                                        <img class="w-100 d-block" src="{{ $boxscan['preview'] }}" alt="Large scan of the game box" loading="lazy">
                                     </a>
                                     @if (isset($game) && $boxscan['release'] !== null)
                                         {{-- When displaing boxscans in the game page, display the specific
@@ -49,7 +49,7 @@
                 <div class="col">
                     <div class="carousel-thumbnails d-flex flex-nowrap @if (count($boxscans) < 5) justify-content-center @endif overflow-hidden" data-bs-carousel="carousel-boxscans">
                         @foreach ($boxscans as $boxscan)
-                            <a href="#carousel-boxscans" data-bs-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif><img class="me-2" src="{{ $boxscan['preview'] }}" alt="Thumbnail of other scans of the game box"></a>
+                            <a href="#carousel-boxscans" data-bs-slide-to="{{ $loop->index }}" @if ($loop->first) class="active" @endif><img class="me-2" src="{{ $boxscan['preview'] }}" alt="Thumbnail of other scans of the game box" loading="lazy"></a>
                         @endforeach
                     </div>
                 </div>
