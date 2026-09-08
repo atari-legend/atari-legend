@@ -241,27 +241,62 @@ component category's share of the bundle.)
 1. **Extract `flag-icons` into its own small stylesheet**, loaded only by the
    three templates that use flag classes. Low risk: flags don't interact with
    the cascade of anything else, so there's no ordering/specificity concern
-   to work around.
-2. **Fix the actual render-blocking mechanism (addresses findings 5 and 7
-   together).** Since Lighthouse is penalizing the blocking round trip itself
-   rather than the byte count, load the main bundle non-blocking via the
-   standard preload/swap pattern — `<link rel="preload" as="style"
-   onload="this.rel='stylesheet'">` with a `<noscript>` fallback — and inline
-   a small hand-written critical-CSS block in `<head>` covering the header,
-   nav, and the LCP background-image rule (`_header-footer.scss:23`,
-   `background-image: url('../images/css_top_bg.webp')` — the LCP element on
-   most pages per finding 7). That unblocks first paint entirely and lets the
-   LCP background image start downloading without waiting on the external
-   stylesheet, without fragmenting the CSS into risky per-route bundles.
+   to work around. **Done** (`8606a130`), and kept.
+2. **Fix the actual render-blocking mechanism.** Since Lighthouse is penalizing
+   the blocking round trip itself rather than the byte count, load the main
+   bundle non-blocking via the standard preload/swap pattern — `<link
+   rel="preload" as="style" onload="this.rel='stylesheet'">` with a
+   `<noscript>` fallback — and inline a small critical-CSS block in `<head>`
+   covering the header and nav. **Tried in `8606a130`/`f4a1b100` and reverted;
+   see below.**
 
 **Not recommended:** splitting the page-specific partials (game/menu/magazine/home/about/link)
 into separate per-page Vite entries. The measured saving (~6 KiB gzip,
 thinly spread) doesn't clear the bar for the added maintenance surface.
 
-**Impact:** step 2 removes the render-blocking penalty (the actual
-PSI-flagged cost) and doubles as the finding-7 fix. **Effort:** step 1 small,
-step 2 medium (touches the base layout's `<head>`, needs careful critical-CSS
-selection so nothing above the fold flashes unstyled).
+**Step 2 was implemented and then reverted — the async load traded a
+render-blocking penalty for a much worse layout-shift one.** Re-running PSI
+against production on 2026-09-08, same four URLs, mobile and desktop:
+Cumulative Layout Shift came back at **0.78-0.97 on 7 of 8 runs** ("poor"
+starts at 0.25), against 0.00-0.16 on the baseline above, and performance
+scores fell on 6 of 8 runs even though `render-blocking-insight` now passed on
+6 of 8. Lighthouse's `layout-shifts` audit named `body > main.container-xxxl`
+— the content shell every template renders inside — as the largest shift on
+every affected run (review/mobile: score 0.933, an 8173px shift). The reason
+is structural: the inlined critical CSS covered `header`/`nav.navbar` only,
+while Bootstrap's grid, container and card rules that `<main>` depends on
+arrived with the swapped-in stylesheet, so the whole content area rendered
+unstyled and snapped into its final layout in one frame.
+
+Broadening the critical CSS by hand doesn't fix that. `_grid.scss` and
+`_containers.scss` are pure layout and would import cleanly, but `_card.scss`
+and `_reboot.scss` mix layout and paint in the same shorthand declarations
+(`.card`'s `border: var(--bs-card-border-width) solid var(--bs-card-border-color)`),
+which can't be split without hand-authoring and hand-maintaining the split
+against Bootstrap's internals.
+
+Generating the critical subset at build time instead was designed out in full:
+`beasties` (the maintained fork of GoogleChromeLabs' archived `critters`,
+htmlparser2-based, no headless browser) compiling the built `app.css` once,
+scanning a handful of real pages served from the E2E fixtures, and merging
+their document tokens into a single generated bundle. It works, and it is the
+right shape — nothing hand-authored, nothing to drift. It was **not taken**
+because of what it costs to stand up: a Node build script, a new dependency, a
+hand-maintained page list, two CI steps, a config-driven runtime path in the
+base layout with a fallback branch, and a feature test for that branch. That
+is a lot of machinery to carry for one Lighthouse metric.
+
+**So `app.scss` loads as a plain blocking stylesheet again, and
+`render-blocking-insight`'s 150ms-2,530ms is a knowingly accepted cost, not an
+open finding.** Anyone reopening this should start from the generated-bundle
+design above rather than a hand-written critical block, and should re-measure
+CLS, not just `render-blocking-insight`.
+
+Two pieces of `8606a130`/`f4a1b100` survive the revert because neither depends
+on the async load: the `flags.scss` split (step 1), and the four Sass values
+promoted into `_variables.scss` (`$header-gradient-top`, `$header-height`,
+`$header-max-width`, `$nav-border-color`) that `_header-footer.scss` and
+`_nav.scss` now share.
 
 ### 6. Game screenshots have no resize/WebP pipeline — `app/Http/Controllers/GameResourcesController.php`
 
@@ -324,6 +359,11 @@ hint on it either way. Once finding 5 is addressed this may resolve on its own;
 if not, a `<link rel="preload" as="image">` for this specific asset in
 `resources/views/layouts/app.blade.php` addresses it directly.
 
+**Done** (`8606a130`): the preload is in the base layout and stays there.
+Finding 5's step 2 was reverted, so the stylesheet blocks again and the preload
+is now the whole of this fix rather than half of it — it still starts the image
+fetch while the stylesheet is downloading and parsing, instead of after.
+
 **Impact:** improves LCP timing on nearly every page. **Effort:** small, but
 best done after / together with finding 5.
 
@@ -375,9 +415,10 @@ same-effort-as-finding-2 change to the base layout.
    its own pass through the shared card/component partials.
 4. Finding 5's step 1 (flag-icons extraction) — small, low-risk, no
    dependency on anything else.
-5. Finding 5's step 2 + finding 7 together (preload/swap + critical CSS +
-   LCP image) — medium effort, do after step 4 lands so it's measuring the
-   trimmed bundle's baseline.
+5. ~~Finding 5's step 2 + finding 7 together (preload/swap + critical CSS +
+   LCP image)~~ — done and then reverted; only the LCP image preload survives.
+   See finding 5 for the CLS regression that reversed it and for what a
+   further attempt would have to look like.
 6. Finding 6, magazine covers only (screenshots ruled out, see above) — small
    effort, follows the existing box-scan pattern exactly; no urgency, do when
    convenient.
