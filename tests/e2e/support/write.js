@@ -157,9 +157,21 @@ function tableRows(page) {
  * The search box is bound with wire:model.live, so it filters on every
  * keystroke - but only once Livewire has attached its listener. These specs
  * arrive here straight after a form redirect, early enough that a value set
- * before that lands in the box and filters nothing. Hence the retry around
- * the typing rather than a bare wait: if the first attempt was too early, the
- * next one types into a booted component.
+ * before that lands in the box and filters nothing.
+ *
+ * Wait for Livewire to actually finish hydrating first, rather than relying
+ * only on the retry below to paper over the race: `Livewire.all()` is empty
+ * until hydration has run, and hydration is also what wires up the
+ * wire:model.live listener, so this is a direct signal instead of a guess at
+ * how long that takes.
+ *
+ * The retry stays as a safety net for a second, separate race: wire:model.live
+ * still means a real server round trip per keystroke, and CI runs many workers
+ * against one PHP dev server, so that round trip can occasionally run past a
+ * tight per-attempt timeout under load rather than the filter itself being
+ * wrong. Generous but bounded per-attempt/overall timeouts give a slow
+ * in-flight request room to land before a fresh fill() restarts it, without
+ * letting a genuinely broken filter hang the suite.
  *
  * The search box is the text input with a Search placeholder; the one in
  * the site nav is type="search" and belongs to the games search. We use
@@ -169,10 +181,12 @@ async function searchTable(page, term, expectedRows) {
   const search = page.locator('input[type="text"][placeholder="Search"]').first();
   const rows = tableRows(page);
 
+  await page.waitForFunction(() => window.Livewire && window.Livewire.all().length > 0, null, { timeout: 10000 });
+
   await expect(async () => {
     await search.fill(term);
-    await expect(rows).toHaveCount(expectedRows, { timeout: 3000 });
-  }).toPass({ timeout: 15000 });
+    await expect(rows).toHaveCount(expectedRows, { timeout: 5000 });
+  }).toPass({ timeout: 20000 });
 
   return rows;
 }
