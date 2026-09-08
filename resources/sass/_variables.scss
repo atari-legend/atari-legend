@@ -12,6 +12,12 @@ $primary-dark: color.scale($primary, $lightness: -40%);
 $dark: #122323;
 $dark-light: #0d2e2e;
 
+// Bootstrap's card/text-muted defaults assume a light theme; theme them to
+// this site's dark palette so text and links on cards keep AA contrast.
+$card-bg: $dark;
+$card-cap-bg: $dark;
+$text-muted: #999999; // dark enough to stay visually distinct from $body-color, light enough for AA against every dark background text-muted appears on
+
 $border-radius: 0;
 $border-radius-sm: 0;
 $border-radius-lg: 0;

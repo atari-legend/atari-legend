@@ -113,3 +113,17 @@ footer {
 
     border-top: solid 10px $primary;
 }
+
+// The copyright text, CC badge <img>, and GitHub icon <i> are three
+// different kinds of content with three different font/box metrics, so no
+// single vertical-align keyword lines them all up against each other.
+// Flex centering aligns them by actual box height instead. Scoped to its
+// own class rather than folded into .icon-link, which is shared by
+// several other icon-only links that only ever contain one icon glyph and
+// don't have this problem.
+.footer-copyright {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}

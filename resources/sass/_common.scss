@@ -90,3 +90,21 @@ img.pixelated {
     margin-left: auto;
     margin-right: auto;
 }
+
+// Guarantees icon-only links/buttons meet the 24x24 CSS px minimum touch
+// target size via an invisible, enlarged hit area - not by resizing the
+// link's own box, which would pull it out of normal inline alignment with
+// any surrounding text (tried and reverted: inline-flex + padding left the
+// icon's line-box height taller than the text's, so vertical-align could
+// never fully line the two up). The visible icon stays exactly as wide/tall
+// as its content, in the normal flow, aligned like any other inline link.
+.icon-link {
+    position: relative;
+    text-decoration: none;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -.375rem;
+    }
+}

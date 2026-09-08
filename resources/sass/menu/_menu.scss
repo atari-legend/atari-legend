@@ -18,9 +18,13 @@
 }
 
 .menu-link {
-    display: none;
+    // opacity, not display:none - a display:none link can never receive
+    // keyboard focus in the first place, which would make the
+    // h3:focus-within rule below unreachable by keyboard.
+    opacity: 0;
 }
 
-h3:hover .menu-link {
-    display: inline;
+h3:hover .menu-link,
+h3:focus-within .menu-link {
+    opacity: 1;
 }

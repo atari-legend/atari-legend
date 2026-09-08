@@ -104,11 +104,11 @@
 
     @include('layouts.nav')
 
-    <div class="container-xxxl">
+    <main class="container-xxxl">
         @include('layouts.alert')
 
         @yield('content')
-    </div>
+    </main>
 
     @include('layouts.online_users')
 

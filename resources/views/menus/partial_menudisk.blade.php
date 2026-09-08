@@ -27,13 +27,13 @@
             @endif
 
             @contributor
-                <a href="{{ route('admin.menus.disks.edit', $disk) }}" class="ms-1">
+                <a href="{{ route('admin.menus.disks.edit', $disk) }}" class="ms-1 icon-link" aria-label="Edit disk">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
                 </a>
             @endcontributor
 
             <a href="{{ route('menus.show', ['set' => $disk->menu->menuSet, 'page' => Request::input('page')]) }}#menudisk-{{ $disk->id }}"
-                class="ms-1 menu-link">
+                class="ms-1 menu-link icon-link" aria-label="Permalink to this disk">
                 <i class="fas fa-link text-muted fs-6"></i>
             </a>
 
@@ -112,14 +112,15 @@
             </div>
             <div class="col text-end">
                 @if ($disk->menuDiskDump !== null)
-                    <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
+                    <a class="ms-1 text-muted icon-link" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;" aria-label="Copy checksum to clipboard"><i class="far fa-copy"></i></a>
                     <abbr class="text-muted d-inline-block" title="{{ $disk->menuDiskDump->sha512 }}">
                         <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
                     </abbr>
 
-                    <a class="d-inline-block ms-2"
+                    <a class="d-inline-block ms-2 icon-link"
                         href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
-                        download="{{ $disk->download_filename}}">
+                        download="{{ $disk->download_filename}}"
+                        aria-label="Download disk dump">
                         <i class="fas fa-download"></i>
                     </a>
 

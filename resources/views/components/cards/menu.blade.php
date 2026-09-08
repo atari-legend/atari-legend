@@ -66,15 +66,16 @@
         </div>
         <div class="card-footer pt-0 ps-2">
             @isset ($disk->menuDiskDump)
-                <a class="d-inline-block"
+                <a class="d-inline-block icon-link"
                     href="{{ asset('storage/zips/menus/'.$disk->menuDiskDump->id.'.zip') }}"
-                    download="{{ $disk->download_filename}}">
+                    download="{{ $disk->download_filename}}"
+                    aria-label="Download disk dump">
                     <i class="fas fa-download"></i>
                 </a>
 
                 <small class="text-muted me-2">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>
 
-                <a class="ms-1 text-muted" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;"><i class="far fa-copy"></i></a>
+                <a class="ms-1 text-muted icon-link" data-copy-text="{{ $disk->menuDiskDump->sha512 }}" href="javascript:;" aria-label="Copy checksum to clipboard"><i class="far fa-copy"></i></a>
                 <abbr class="text-muted d-inline-block" title="{{ $disk->menuDiskDump->sha512 }}">
                     <small>{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</small>
                 </abbr>

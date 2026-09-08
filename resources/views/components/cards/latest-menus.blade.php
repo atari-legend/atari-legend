@@ -47,9 +47,10 @@
                             </p>
 
                             Dump updated
-                            <a class="d-inline-block ms-2"
+                            <a class="d-inline-block ms-2 icon-link"
                                 href="{{ asset('storage/zips/menus/' . $disk->menuDiskDump->id . '.zip') }}"
-                                download="{{ $disk->download_filename }}">
+                                download="{{ $disk->download_filename }}"
+                                aria-label="Download disk dump">
                                 <i class="fas fa-download"></i>
                             </a>
                             <small class="text-muted">{{ Helper::fileSize($disk->menuDiskDump->size) }}</small>

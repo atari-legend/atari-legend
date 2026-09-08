@@ -6,7 +6,7 @@
                 $descriptions = ReleaseDescriptionHelper::menuDescriptions($content->release)
             @endphp
             @if (count($descriptions) > 0)
-                <a href="javascript:;" class="text-muted d-inline-block" data-bs-toggle="popover" data-bs-html="true" data-bs-content-selector="#release-info-{{ $content->id }}">
+                <a href="javascript:;" class="text-muted d-inline-block icon-link" data-bs-toggle="popover" data-bs-html="true" data-bs-content-selector="#release-info-{{ $content->id }}" aria-label="More information">
                     <i class="fas fa-info-circle"></i>
                 </a>
                 <div id="release-info-{{ $content->id }}" class="visually-hidden">
