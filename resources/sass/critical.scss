@@ -1,0 +1,115 @@
+// Critical CSS for the header/nav, inlined synchronously into <head> (see
+// app.blade.php) to avoid a flash of unstyled content while app.scss loads
+// asynchronously below it. Reuses the same Sass variables/mixins as
+// _header-footer.scss and _nav.scss, so colours, breakpoints and spacing
+// can't drift out of sync with them - but it's still a hand-mirrored SUBSET
+// of their selectors, not a generated one: smaller details (nav-link
+// padding, uppercase font) still shift slightly once the real stylesheet
+// swaps in, and this still needs a look if header.blade.php's or
+// nav.blade.php's markup shape changes.
+@import 'variables';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+
+body {
+    margin: 0;
+    background: $body-bg;
+    color: $body-color;
+}
+
+header {
+    background: linear-gradient($header-gradient-top, $body-bg);
+    box-shadow: 0 0 7px $primary;
+
+    @include media-breakpoint-up(sm) {
+        box-shadow: none;
+        height: $header-height;
+
+        .header-inner {
+            max-width: $header-max-width;
+            height: $header-height;
+            margin: 0 auto;
+            background-image: url('../images/css_top_bg.webp');
+        }
+    }
+
+    // header.blade.php picks which of its 4 banner/logo images to show via
+    // Bootstrap's d-none/d-sm-inline/d-lg-inline utility classes; without
+    // those, all 4 would stack and overlap instead of swapping by
+    // breakpoint. Scoped to `header` rather than a sitewide utility clone.
+    .d-none.d-sm-inline { display: none; }
+    .d-inline.d-sm-none { display: inline; }
+    .d-none.d-lg-inline { display: none; }
+    .float-end { float: right; }
+
+    @include media-breakpoint-up(sm) {
+        .d-none.d-sm-inline { display: inline; }
+        .d-inline.d-sm-none { display: none; }
+    }
+
+    @include media-breakpoint-up(lg) {
+        .d-none.d-lg-inline { display: inline; }
+    }
+}
+
+nav.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0;
+    margin: map-get($spacers, 2) 0 map-get($spacers, 3);
+    background: $primary;
+    border: solid $nav-border-color;
+    border-width: 0 2px 3px;
+
+    .container-fluid {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0 ($grid-gutter-width * .5);
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav-link {
+        color: $dark;
+        text-decoration: none;
+    }
+}
+
+@include media-breakpoint-down(xl) {
+    // Matches Bootstrap's own .collapse:not(.show) selector (see
+    // bootstrap/scss/_transitions.scss) rather than a plain .navbar-collapse
+    // rule: Bootstrap has no counterpart ".show { display: ... }" rule to
+    // override a plain one with - it relies on `.show` making this selector
+    // stop matching once the toggler opens it. An unconditional rule here
+    // would keep the menu permanently closed after the real stylesheet
+    // loads, since nothing would ever un-set it.
+    .navbar-collapse:not(.show) { display: none; }
+}
+
+@include media-breakpoint-up(xl) {
+    .navbar-toggler { display: none; }
+
+    // Bootstrap's own .navbar-collapse rules (flex-basis: 100%/auto,
+    // flex-grow: 1) never set flex-wrap on this element at all - it relies
+    // on the initial `nowrap`. Declaring flex-wrap here (even matching
+    // Bootstrap's value) would be pointless *and* risky: unlike
+    // display/flex-grow, there'd be no real-stylesheet rule to reassert it,
+    // so it's simplest to just not touch the property and let its default
+    // stand, matching what Bootstrap actually relies on.
+    .navbar-collapse {
+        display: flex;
+        flex-grow: 1;
+        flex-basis: auto;
+        align-items: center;
+    }
+
+    nav.navbar ul.navbar-nav { display: flex; }
+}

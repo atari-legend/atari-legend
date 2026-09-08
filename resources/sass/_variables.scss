@@ -12,6 +12,14 @@ $primary-dark: color.scale($primary, $lightness: -40%);
 $dark: #122323;
 $dark-light: #0d2e2e;
 
+// Header/nav shape and colour that critical.scss (the inline critical-CSS
+// chunk inlined into <head>) also needs, so both share one source of truth
+// instead of duplicating literals that could silently drift apart.
+$header-gradient-top: #175f5f;
+$header-height: 217px;
+$header-max-width: 1280px;
+$nav-border-color: #008b8b;
+
 // Bootstrap's card/text-muted defaults assume a light theme; theme them to
 // this site's dark palette so text and links on cards keep AA contrast.
 $card-bg: $dark;

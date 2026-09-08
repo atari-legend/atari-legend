@@ -9,21 +9,38 @@
 
     <title>@yield('title', 'Atari ST games, reviews, interviews, news and more') | Atari Legend</title>
 
-    {{-- Prevent a white flash while the stylesheet below loads asynchronously --}}
-    <style>body{background:#000;color:#fff}</style>
+    @php
+        $headerBgUrl = Vite::asset('resources/images/css_top_bg.webp');
+    @endphp
+
+    {{-- Prevent a flash of unstyled content while the stylesheet below loads asynchronously.
+    Compiled from resources/sass/critical.scss, which hand-mirrors just enough of
+    _header-footer.scss and _nav.scss's selectors to hold the header/nav's shape and collapse
+    behaviour until the real stylesheet swaps in. Colours/breakpoints/spacing are shared Sass
+    variables and mixins, so they can't drift from the real stylesheet - but it's still a
+    hand-picked subset of rules, not a generated one, so smaller details (nav-link padding,
+    uppercase font) still shift slightly once it lands, and it still needs a look if
+    header.blade.php or nav.blade.php's markup shape changes. --}}
+    @if (Vite::isRunningHot())
+        @vite(['resources/sass/critical.scss'])
+    @else
+        <style>{!! Vite::content('resources/sass/critical.scss') !!}</style>
+    @endif
 
     {{-- The header's background image (finding 7 of the PageSpeed audit) is the LCP
     element on most pages, but it's set via a CSS rule the browser can't discover
     until it has the stylesheet below - preloading it directly here lets the fetch
     start immediately instead of waiting on that. --}}
-    <link rel="preload" as="image" href="{{ Vite::asset('resources/images/css_top_bg.webp') }}">
+    <link rel="preload" as="image" href="{{ $headerBgUrl }}">
 
     @if (Vite::isRunningHot())
         @vite(['resources/sass/app.scss'])
     @else
         {{-- Load the stylesheet without blocking first render. The `onload` swap is the standard
-        loadCSS pattern; `<noscript>` covers visitors with JavaScript disabled. --}}
-        <link rel="preload" href="{{ Vite::asset('resources/sass/app.scss') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        loadCSS pattern; `<noscript>` covers visitors with JavaScript disabled. The `id` lets
+        page-specific JS (e.g. menus.js's Isotope layout) detect when it's actually applied,
+        since it's no longer safe to assume that's true by DOMContentLoaded. --}}
+        <link id="app-styles" rel="preload" href="{{ Vite::asset('resources/sass/app.scss') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="{{ Vite::asset('resources/sass/app.scss') }}"></noscript>
     @endif
 

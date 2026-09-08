@@ -1,12 +1,12 @@
 header {
-    background: linear-gradient(#175f5f, black);
+    background: linear-gradient($header-gradient-top, black);
     box-shadow: 0 0 7px $primary;
 
     // Full size header/banner for larger screens
     @include media-breakpoint-up(sm) {
         box-shadow: none;
 
-        height: 217px;
+        height: $header-height;
         background-image: url('../images/css_top_bg_left.webp'),
             url('../images/css_top_bg_right.webp'),
             url('../images/css_top_bg_sides.webp');
@@ -18,8 +18,8 @@ header {
             repeat-x;
 
         .header-inner {
-            max-width: 1280px;
-            height: 217px;
+            max-width: $header-max-width;
+            height: $header-height;
             background-image: url('../images/css_top_bg.webp');
         }
     }

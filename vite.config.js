@@ -35,6 +35,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/sass/app.scss',
+                'resources/sass/critical.scss',
                 'resources/sass/flags.scss',
                 'resources/js/app.js',
                 'resources/sass/admin/admin.scss',
