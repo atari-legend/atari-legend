@@ -6,6 +6,10 @@
     @section('image', $release->game->screenshots->random()->getUrlRoute('game', $release->game))
 @endif
 
+@section('head')
+    @vite(['resources/sass/flags.scss'])
+@endsection
+
 @section('content')
     <h1 class="visually-hidden">{{ $release->game->name }}</h1>
     <div class="row">

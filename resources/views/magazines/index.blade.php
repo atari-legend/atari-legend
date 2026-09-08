@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Atari ST magazines')
 
+@section('head')
+    @vite(['resources/sass/flags.scss'])
+@endsection
+
 @section('content')
     <h1 class="visually-hidden">Magazines</h1>
     <div class="row">

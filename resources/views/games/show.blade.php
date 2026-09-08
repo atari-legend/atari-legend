@@ -46,4 +46,5 @@
 
 @section('head')
     <meta name="atarilegend:id" content="{{ $game->getKey() }}">
+    @vite(['resources/sass/flags.scss'])
 @endsection

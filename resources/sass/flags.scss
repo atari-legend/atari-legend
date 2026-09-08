@@ -1,0 +1,4 @@
+// Country flags. Split out of app.scss (PageSpeed finding 5) since only a
+// handful of views render a flag - everyone else was paying for this on
+// every page load.
+@import 'flag-icons/css/flag-icons';

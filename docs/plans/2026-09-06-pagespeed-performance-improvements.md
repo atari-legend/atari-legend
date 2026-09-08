@@ -186,18 +186,82 @@ images actually defer. **Effort:** medium — mechanical, but touches many files
 
 `render-blocking-insight` fails on 7 of 8 runs, 150ms-2,530ms wasted (worse on
 the simulated mobile connection: 1,202ms home, 2,530ms menu set). One
-stylesheet — `app-*.css`, ~78.6 KiB — bundles Bootstrap 5.2, all three
-FontAwesome icon families, and `flag-icons`, and is loaded via
-`@vite(['resources/sass/app.scss'])` in `<head>` on every front-end page
-regardless of what that page actually uses. The JS side already has per-page
-Vite entry points (`menus.js`, `charts.js`, `tabulator.js`, `game/music.js`);
-the CSS side has no equivalent split. Worth an audit of which pages actually
-need `flag-icons` and which FontAwesome icon families, to move what isn't
-universal into page-specific entries.
+stylesheet — `app-*.css`, ~78.6 KiB transferred / 65.6 KiB gzip — bundles
+Bootstrap 5.2, all three FontAwesome icon families, and `flag-icons`, and is
+loaded via `@vite(['resources/sass/app.scss'])` in `<head>` on every
+front-end page regardless of what that page actually uses. The JS side
+already has per-page Vite entry points (`menus.js`, `charts.js`,
+`tabulator.js`, `game/music.js`); the CSS side has no equivalent split.
 
-**Impact:** removes the single largest, most consistent render-blocking
-resource on the site. **Effort:** medium-to-large — requires auditing per-page
-CSS usage before splitting anything.
+**Investigated: per-page splitting by FontAwesome family/flag-icons doesn't
+pay off.** Compiling each piece of `app.scss` in isolation to measure its
+real contribution:
+
+| Piece | gzip size | Share |
+|---|---|---|
+| Bootstrap | 27.5 KiB | 42% |
+| FontAwesome (all 3 families) | 22.9 KiB | 35% |
+| flag-icons | 2.3 KiB | 4% |
+| All custom partials combined (887 lines: `common`, `header-footer`, `nav`, `game`, `menu`, `magazine`, `home`, `about`, `link`, etc.) | ~13 KiB | 19% |
+
+Bootstrap and FontAwesome are 77% of the bundle, and both are genuinely
+sitewide, not just "the biggest pages happen to use them": `layouts/footer.blade.php`
+(`fab fa-github`) and `layouts/online_users.blade.php` (`far fa-user`) are
+both `@include`d in `layouts/app.blade.php` on every page, so all three
+FontAwesome families load regardless of page content — there's no per-page
+family to split out. (The family-specific files are tiny anyway — `solid.min.css`
+and `regular.min.css` gzip to ~340 bytes each; the 22.9 KiB is almost
+entirely `fontawesome.css`, the shared icon-name-to-glyph map that any use of
+`fa-solid`/`fa-regular`/`fa-brands` requires.) Bootstrap is pulled in via the
+site's global grid/nav/forms/cards, also genuinely sitewide.
+
+What *is* page-scoped: `flag-icons` (2.3 KiB, used only by
+`games/card_magazines.blade.php`, `games/card_releases.blade.php`, and
+`magazines/card_list.blade.php`), and the fully page-specific partials
+(`game`, `menu`, `magazine`, `home`, `about`, `link` — as opposed to
+sitewide ones like `common`/`header-footer`/`nav`), which sum to only ~6 KiB
+gzip *combined*. Splitting those into per-page Vite CSS entries mirroring the
+JS pattern is possible, but recovers at most a few KiB on any single page —
+not enough on its own to move a 150ms-2,530ms `render-blocking-insight`
+penalty, which is mostly the fixed cost of one extra blocking round trip, not
+raw byte count. It also isn't free: each per-page entry would need Bootstrap's
+variables/mixins available to it independently, and 6 KiB doesn't obviously
+justify maintaining N Sass entry points.
+
+**Revised approach, in two independent steps:**
+
+(A third step — trimming `@import 'bootstrap/scss/bootstrap'` to only the
+components actually used — was considered and measured as feasible, but
+deliberately not taken: it would mean hand-maintaining a list of "enabled"
+Bootstrap components going forward, and every future feature that reaches
+for a Bootstrap component not on that list would silently render unstyled
+until someone remembered to add it. Not worth that ongoing tax for one
+component category's share of the bundle.)
+
+1. **Extract `flag-icons` into its own small stylesheet**, loaded only by the
+   three templates that use flag classes. Low risk: flags don't interact with
+   the cascade of anything else, so there's no ordering/specificity concern
+   to work around.
+2. **Fix the actual render-blocking mechanism (addresses findings 5 and 7
+   together).** Since Lighthouse is penalizing the blocking round trip itself
+   rather than the byte count, load the main bundle non-blocking via the
+   standard preload/swap pattern — `<link rel="preload" as="style"
+   onload="this.rel='stylesheet'">` with a `<noscript>` fallback — and inline
+   a small hand-written critical-CSS block in `<head>` covering the header,
+   nav, and the LCP background-image rule (`_header-footer.scss:23`,
+   `background-image: url('../images/css_top_bg.webp')` — the LCP element on
+   most pages per finding 7). That unblocks first paint entirely and lets the
+   LCP background image start downloading without waiting on the external
+   stylesheet, without fragmenting the CSS into risky per-route bundles.
+
+**Not recommended:** splitting the page-specific partials (game/menu/magazine/home/about/link)
+into separate per-page Vite entries. The measured saving (~6 KiB gzip,
+thinly spread) doesn't clear the bar for the added maintenance surface.
+
+**Impact:** step 2 removes the render-blocking penalty (the actual
+PSI-flagged cost) and doubles as the finding-7 fix. **Effort:** step 1 small,
+step 2 medium (touches the base layout's `<head>`, needs careful critical-CSS
+selection so nothing above the fold flashes unstyled).
 
 ### 6. Game screenshots have no resize/WebP pipeline — `app/Http/Controllers/GameResourcesController.php`
 
@@ -280,10 +344,12 @@ same-effort-as-finding-2 change to the base layout.
 2. Finding 3 (font-display) — small, independent, no risk.
 3. Finding 4 (image dimensions) — mechanical but touches many files; do it as
    its own pass through the shared card/component partials.
-4. Findings 5 and 7 together (CSS split + LCP preload) — needs a real
-   per-page CSS usage audit first; higher effort, do after the quick wins land
-   so the audit is measuring the post-fix baseline.
-5. Finding 6 (screenshot WebP pipeline) — medium effort, follows an existing
+4. Finding 5's step 1 (flag-icons extraction) — small, low-risk, no
+   dependency on anything else.
+5. Finding 5's step 2 + finding 7 together (preload/swap + critical CSS +
+   LCP image) — medium effort, do after step 4 lands so it's measuring the
+   trimmed bundle's baseline.
+6. Finding 6 (screenshot WebP pipeline) — medium effort, follows an existing
    pattern exactly; no urgency, do when convenient.
 
 ## Raw data

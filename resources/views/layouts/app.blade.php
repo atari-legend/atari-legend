@@ -5,9 +5,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    @use('Illuminate\Support\Facades\Vite')
+
     <title>@yield('title', 'Atari ST games, reviews, interviews, news and more') | Atari Legend</title>
 
-    @vite(['resources/sass/app.scss'])
+    {{-- Prevent a white flash while the stylesheet below loads asynchronously --}}
+    <style>body{background:#000;color:#fff}</style>
+
+    {{-- The header's background image (finding 7 of the PageSpeed audit) is the LCP
+    element on most pages, but it's set via a CSS rule the browser can't discover
+    until it has the stylesheet below - preloading it directly here lets the fetch
+    start immediately instead of waiting on that. --}}
+    <link rel="preload" as="image" href="{{ Vite::asset('resources/images/css_top_bg.webp') }}">
+
+    @if (Vite::isRunningHot())
+        @vite(['resources/sass/app.scss'])
+    @else
+        {{-- Load the stylesheet without blocking first render. The `onload` swap is the standard
+        loadCSS pattern; `<noscript>` covers visitors with JavaScript disabled. --}}
+        <link rel="preload" href="{{ Vite::asset('resources/sass/app.scss') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{{ Vite::asset('resources/sass/app.scss') }}"></noscript>
+    @endif
 
     <link rel="canonical" href="{{ url()->current() }}">
 
