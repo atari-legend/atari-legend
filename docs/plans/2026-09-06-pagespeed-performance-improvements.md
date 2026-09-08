@@ -276,14 +276,43 @@ catches it directly — e.g.
 `/games/the-great-giana-sisters/screenshot-3798.png` flagged for both format
 ("Using a modern image format... could improve this image's download size")
 and oversizing ("this image file is larger than it needs to be... for its
-displayed dimensions"). The pattern to reuse already exists one controller
-over, in `GameReleaseResourcesController`, which resizes and streams WebP via
-`Intervention\Image`. Applying the same pattern here (and to magazine cover
-images, which have no resize route at all) is the fix.
+displayed dimensions").
 
-**Impact:** direct KiB savings on every page with game screenshots (i.e. most
-of the site). **Effort:** medium — follow an existing pattern, but it's a
-behavior change to a public route.
+**Investigated further (2026-09-08) and decided not worth it for game
+screenshots specifically.** The 25,908 files in `game_screenshots/` are almost
+entirely native Atari ST resolution (91% sampled at 320×200 or within a few
+px), averaging 12 KB — there's no oversizing in the usual sense to fix by
+resizing; `w-100 pixelated` upscales these via CSS for display, it doesn't
+downscale an oversized source. Format conversion was tested directly against
+this corpus through the app's actual GD/Intervention stack (inside Sail):
+
+| Encoding | Avg size vs PNG |
+|---|---|
+| WebP quality=100 (the encoding `GameReleaseResourcesController` already uses) | **+123% bigger** |
+| WebP lossless (`IMG_WEBP_LOSSLESS`, not reachable via Intervention's `encode()` — requires dropping to the raw GD resource) | **-48% smaller** |
+
+So the existing lossy-WebP pattern would make screenshots worse, not better —
+flat-color, hard-edged pixel art compresses badly under lossy block
+prediction. Lossless WebP does save ~48%, but capturing it means bypassing
+Intervention's public API, and — measured in the same environment — costs
+~9ms of CPU per image to decode+re-encode versus <0.3ms to stream the file
+as-is, which rules out doing it on-the-fly per request the way box scans are
+done today (screenshots are the single highest-request-volume image type on
+the site: game show carousel, cards, search results, "similar games", release
+cards). Making it cheap would require a one-off backfill converting all
+25,908 files plus an upload-time conversion hook — real engineering for
+~6 KB/image, on files that are already small in absolute terms. Decided not
+worth the added complexity. Not pursuing further.
+
+**Magazine cover scans remain a separate, worthwhile case.** Only 66 files in
+`magazine_scans/`, but they're conventional photo scans (~1000×1400px,
+120-225 KB JPEGs) with no resize route at all — the exact profile the
+existing `GameReleaseResourcesController` resize+lossy-WebP pattern was built
+for, and the low file count/traffic means on-the-fly conversion is fine as-is.
+
+**Impact:** direct KiB savings on magazine listing pages only (screenshots
+dropped, see above). **Effort:** small — apply the existing box-scan pattern
+to magazine covers; no new route needed for screenshots.
 
 ### 7. The LCP element isn't discoverable until CSS parses — layout header
 
@@ -349,8 +378,9 @@ same-effort-as-finding-2 change to the base layout.
 5. Finding 5's step 2 + finding 7 together (preload/swap + critical CSS +
    LCP image) — medium effort, do after step 4 lands so it's measuring the
    trimmed bundle's baseline.
-6. Finding 6 (screenshot WebP pipeline) — medium effort, follows an existing
-   pattern exactly; no urgency, do when convenient.
+6. Finding 6, magazine covers only (screenshots ruled out, see above) — small
+   effort, follows the existing box-scan pattern exactly; no urgency, do when
+   convenient.
 
 ## Raw data
 
