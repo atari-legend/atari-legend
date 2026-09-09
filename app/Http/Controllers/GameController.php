@@ -132,32 +132,6 @@ class GameController extends Controller
             ->get()
             ->sortBy('download_basename');
 
-        // Collect all SNDH tracks
-        $sndhs = $game->sndhs
-            ->map(function ($sndh) use ($game) {
-                $songs = [];
-                if ($sndh->subtunes > 1) {
-                    for ($i = 1; $i <= $sndh->subtunes; $i++) {
-                        $songs[] = [
-                            'name'   => ($sndh->title ?? 'Unknown') . ' (' . $i . '/' . $sndh->subtunes . ')',
-                            'artist' => $sndh->composer ?? 'Unknown',
-                            'url'    => route('music', ['sndh' => $sndh, 'subtune' => $i]),
-                            'cover'  => route('music.cover', $game),
-                        ];
-                    }
-                } else {
-                    $songs[] = [
-                        'name'   => $sndh->title ?? 'Unknown',
-                        'artist' => $sndh->composer ?? 'Unknown',
-                        'url'    => route('music', $sndh),
-                        'cover'  => route('music.cover', $game),
-                    ];
-                }
-
-                return $songs;
-            })
-            ->flatten(1);
-
         $jsonLd = (new JsonLd('VideoGame', url()->current()))
             ->add('name', $game->name)
             ->add('description', GameHelper::description($game))
@@ -197,7 +171,6 @@ class GameController extends Controller
             'reviews'           => $reviews,
             'similar'           => $similar,
             'menuDisks'         => $menuDisks,
-            'sndhs'             => $sndhs,
             'jsonLd'            => $jsonLd,
             'vote'              => $vote,
             'score'             => $score,

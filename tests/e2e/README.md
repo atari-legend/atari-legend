@@ -341,7 +341,6 @@ today, and what it does not:
 | Menu sets | list, detail, search by title and A-Z, the empty state, by-software, EPUB export, the software and crews autocompletes; a disk card end to end - contents in all three shapes, condition, donor, notes, scrolltext, screenshot and dump download; the software page, a game's menus card, and the Latest menus card | condition filters, crew pages |
 | Magazines | list, detail, the rendered index of an issue and all four of its row shapes, an issue cover, the archive.org read link and its /details/ to /stream/ rewrite | the page-count chart (needs 5 seeded issues) |
 | Links | list, category filter, screenshot, no submission form for a guest | dead-link flagging |
-| Music | cover image | the SNDH player (ym2149-wasm). The proxy is covered by ResourceControllersTest rather than here - see follow-up 5 |
 | Account | sign in, sign out, profile, review form, password confirm, guests kept out (pages and the admin autocompletes), a signed-in non-admin kept out of /admin, unverified redirect | registering (needs a real hCaptcha), the e-mail field's uniqueness rule |
 | Crawler | sitemaps, robots.txt, both feeds, health check | that they list the right entities |
 | Admin games | list, create and edit forms, 7 game panels, 5 release panels, fact create/edit, issues, music, 4 reference sections + their create forms, 20 config tables, the games and sndh autocompletes | - |
@@ -378,12 +377,15 @@ today, and what it does not:
    Registration is the one public write still out of reach: it needs a real
    hCaptcha response, which is why `tests/Feature/Public/AuthTest` swaps the
    captcha HTTP client instead.
-5. **Fixed: `/music/{sndh}` had its upstream host spelled into the controller.**
-   `config('al.sndh.mp3_base_url')` supplies it now, defaulting to the same URL,
-   so a test can point it somewhere it controls. No e2e spec followed, and the
-   TODO in `public/music.spec.js` says why: `ResourceControllersTest` already
-   fakes the HTTP client and covers the URL composed, the subtune padding and a
-   404 passing through.
+5. **Gone: both routes the MP3 player needed.** `/music/{sndh}` proxied
+   recordings of the archive from a plain-HTTP host, and `/music/cover/{game}`
+   padded a screenshot into square player artwork. Playback has been ym2149-wasm
+   reading the `.sndh` files off the public disk since the January 2026 switch,
+   and the current player shows no artwork, so the routes, their config, their
+   controller and `public/music.spec.js` all went. **The player itself is now
+   uncovered** - ym2149-wasm loading and starting playback is the part most
+   likely to break silently, and it is pure browser work, which is exactly what
+   an e2e spec is for. A new `public/music.spec.js` should drive it.
 6. **Fixed: clearing an index row's type silently threw away the edit.** The
    blank option of the magazine index editor's type select carried
    `value="null"`, so choosing it bound the *string* `null` to an integer

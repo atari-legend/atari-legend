@@ -816,6 +816,6 @@ test.describe('Admin magazines', () => {
   // fetchImage() calls Http::get() against a hard-coded https://archive.org,
   // so saving an issue with useArchiveOrgCover set makes a real request to a
   // third party that page.route() cannot see - which is why the test above
-  // stops at the flag. Extracting the host to config, as follow-up 5 proposes
-  // for sndhrecord.atari.org, would make the whole round trip testable.
+  // stops at the flag. Extracting the host to config/al.php, so a spec could
+  // point it somewhere it controls, would make the whole round trip testable.
 });

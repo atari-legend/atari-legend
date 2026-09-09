@@ -17,6 +17,7 @@ use App\Models\MenuDiskContent;
 use App\Models\MenuSet;
 use App\Models\Review;
 use App\Models\Screenshot;
+use App\Models\Sndh;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -251,6 +252,41 @@ class GamePageTest extends TestCase
         $this->assertNotNull(
             $this->actingAs($user)->get(route('games.show', $game))->viewData('vote')
         );
+    }
+
+    /**
+     * A tune with subtunes is listed once per subtune, and the `(n/total)`
+     * suffix numbers the subtune inside its own tune. It used to be given the
+     * row's position in the whole table, which drifted from the real subtune as
+     * soon as a game had more than one tune - and was one out even when it did
+     * not.
+     */
+    public function test_subtunes_are_numbered_within_their_own_tune(): void
+    {
+        $game = Game::factory()->create();
+        $game->sndhs()->attach(Sndh::factory()->create(['title' => 'Title Music']));
+        $game->sndhs()->attach(Sndh::factory()->withSubtunes(3)->create(['title' => 'In Game Music']));
+
+        $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSeeInOrder(['In Game Music', '(1/3)', 'In Game Music', '(2/3)', 'In Game Music', '(3/3)'])
+            ->assertDontSee('(4/3)');
+    }
+
+    /**
+     * A tune with a single subtune is the whole song, so it gets no counter.
+     */
+    public function test_a_tune_with_one_subtune_carries_no_counter(): void
+    {
+        $game = Game::factory()->create();
+        $game->sndhs()->attach(Sndh::factory()->create(['title' => 'Title Music']));
+
+        $content = $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSee('Title Music')
+            ->getContent();
+
+        $this->assertDoesNotMatchRegularExpression('~\(\d+/\d+\)~', $content);
     }
 
     public function test_the_page_carries_structured_data(): void

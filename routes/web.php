@@ -15,7 +15,6 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GameController;
-use App\Http\Controllers\GameMusicController;
 use App\Http\Controllers\GameReleaseController;
 use App\Http\Controllers\GameReleaseResourcesController;
 use App\Http\Controllers\GameResourcesController;
@@ -82,11 +81,6 @@ Route::middleware(['verified', 'nondraft'])->group(function () {
     Route::get('/games/{game:slug}', [GameController::class, 'show'])->name('games.show');
 
     Route::get('/games/{game:slug}/screenshot-{id}.{ext}', [GameResourcesController::class, 'screenshot'])->name('games.screenshot');
-
-    Route::get('/music/cover/{game:slug}', [GameMusicController::class, 'cover'])->name('music.cover');
-    Route::get('/music/{sndh}', [GameMusicController::class, 'music'])
-        ->where(['sndh' => '[\w\s\-_\/()]+'])
-        ->name('music');
 
     Route::get('/menusets', [MenuSetController::class, 'index'])->name('menus.index');
     Route::get('/menusets/software/{software}', [MenuSetController::class, 'software'])->name('menus.software');

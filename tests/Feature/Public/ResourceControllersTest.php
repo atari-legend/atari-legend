@@ -2,42 +2,28 @@
 
 namespace Tests\Feature\Public;
 
-use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
 use App\Models\Individual;
 use App\Models\Link;
-use App\Models\Screenshot;
-use App\Models\Sndh;
 use App\Models\Spotlight;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
- * The routes that serve a file rather than a page: box scans, avatars,
- * spotlight and link screenshots, the music player's cover art, and the SNDH
- * proxy.
+ * The routes that serve a file rather than a page: box scans, avatars, and
+ * spotlight and link screenshots.
  *
  * They all read from the public disk by a path the model derives from its id
  * and its stored extension, so the fixtures below are written to exactly those
  * paths - a file one directory out is the same as no file at all.
  *
- * The four `.webp` routes re-encode what they read; the cover art route does
- * not, and answers in the format it read.
+ * All four re-encode what they read as `.webp`.
  */
 class ResourceControllersTest extends TestCase
 {
     use RefreshDatabase;
-
-    /**
-     * A tune's key is its path inside the SNDH archive, which is also the path
-     * the proxy asks the record site for.
-     */
-    private const TUNE = 'Musicians/Mad_Max/Turrican';
-
-    private const TUNE_URL = 'http://sndhrecord.atari.org/mp3/Musicians/Mad_Max/Turrican';
 
     protected function setUp(): void
     {
@@ -60,11 +46,6 @@ class ResourceControllersTest extends TestCase
         imagedestroy($image);
 
         Storage::disk('public')->put($path, $bytes);
-    }
-
-    private function assertRequested(string $url): void
-    {
-        Http::assertSent(fn ($request) => $request->url() === $url);
     }
 
     private function sizeOf(string $bytes): array
@@ -249,99 +230,5 @@ class ResourceControllersTest extends TestCase
     public function test_a_link_with_no_screenshot_is_a_404(): void
     {
         $this->get(route('links.screenshot', Link::factory()->create()))->assertNotFound();
-    }
-
-    /**
-     * The music player wants a square cover, and the screenshots are 4:3. The
-     * shot is padded rather than cropped, so the square is as wide as it was.
-     */
-    public function test_a_music_cover_is_the_first_screenshot_on_a_square_canvas(): void
-    {
-        $game = Game::factory()->create();
-        $screenshot = Screenshot::factory()->create();
-        $game->screenshots()->attach($screenshot);
-        $this->storePng($screenshot->getPath('game'), 320, 200);
-
-        $response = $this->get(route('music.cover', $game))
-            ->assertOk()
-            ->assertHeader('Content-Type', 'image/png');
-
-        $this->assertSame([320, 320, IMAGETYPE_PNG], $this->sizeOf($response->getContent()));
-    }
-
-    public function test_a_game_with_no_screenshot_has_no_cover(): void
-    {
-        $this->get(route('music.cover', Game::factory()->create()))
-            ->assertNotFound()
-            ->assertHeader('Content-Type', 'text/plain; charset=utf-8')
-            ->assertSee('No screenshot for this game');
-    }
-
-    /**
-     * The tunes are served over plain HTTP by sndhrecord.atari.org, which a
-     * browser will not load into an HTTPS page - hence the proxy.
-     */
-    public function test_a_tune_is_proxied_from_the_sndh_record_site(): void
-    {
-        Http::fake([
-            'sndhrecord.atari.org/*' => Http::response('ID3-the-mp3', 200, ['Content-Type' => 'audio/mpeg']),
-        ]);
-
-        $sndh = Sndh::factory()->create(['id' => self::TUNE]);
-
-        $this->get(route('music', $sndh))
-            ->assertOk()
-            ->assertHeader('Content-Type', 'audio/mpeg')
-            ->assertSee('ID3-the-mp3');
-
-        $this->assertRequested(self::TUNE_URL . '.mp3');
-    }
-
-    /**
-     * Subtunes are separate files upstream, numbered from one and padded to
-     * three digits.
-     */
-    public function test_a_subtune_is_asked_for_by_its_padded_number(): void
-    {
-        Http::fake(['sndhrecord.atari.org/*' => Http::response('ID3-the-mp3')]);
-
-        $sndh = Sndh::factory()->withSubtunes(4)->create(['id' => self::TUNE]);
-
-        $this->get(route('music', ['sndh' => $sndh, 'subtune' => 3]))->assertOk();
-
-        $this->assertRequested(self::TUNE_URL . '-003.mp3');
-    }
-
-    /**
-     * The first subtune is the file with no suffix, so a request for it must
-     * not ask for a `-001` that is not there.
-     */
-    public function test_the_default_subtune_has_no_suffix(): void
-    {
-        Http::fake(['sndhrecord.atari.org/*' => Http::response('ID3-the-mp3')]);
-
-        $sndh = Sndh::factory()->create(['id' => self::TUNE]);
-
-        $this->get(route('music', ['sndh' => $sndh, 'subtune' => 0]))->assertOk();
-
-        $this->assertRequested(self::TUNE_URL . '.mp3');
-    }
-
-    public function test_a_tune_missing_upstream_is_passed_through_as_a_404(): void
-    {
-        Http::fake(['sndhrecord.atari.org/*' => Http::response('Not found', 404)]);
-
-        $sndh = Sndh::factory()->create(['id' => self::TUNE]);
-
-        $this->get(route('music', $sndh))->assertNotFound();
-    }
-
-    public function test_an_unknown_tune_is_a_404(): void
-    {
-        Http::fake();
-
-        $this->get('/music/Musicians/Nobody/Nothing')->assertNotFound();
-
-        Http::assertNothingSent();
     }
 }

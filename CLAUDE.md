@@ -23,7 +23,7 @@ app/
 ├── Models/               # Eloquent models
 └── Rules/                # Custom validation (Slug, YoutubeUrl)
 config/
-├── al.php                # App-specific config (Stonish, HxCFE, SNDH)
+├── al.php                # App-specific config (Stonish, HxCFE)
 routes/
 ├── web.php               # Public routes
 ├── admin.php             # Admin panel routes
@@ -182,7 +182,6 @@ ChangelogHelper::insert([
 - `GameController`, `GameSearchController` - Game browsing
 - `GameReleaseController` - Release details
 - `MenuSetController` - Menu disk browsing, EPUB export
-- `GameMusicController` - SNDH playback (via ym2149-wasm)
 - `ReviewController`, `InterviewController`, `ArticleController` - Content
 
 **Admin:**

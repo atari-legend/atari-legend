@@ -39,7 +39,7 @@
 @endsection
 
 @section('scripts')
-    @if ($sndhs->isNotEmpty())
+    @if ($game->sndhs->isNotEmpty())
         @vite(['resources/js/game/music.js'])
     @endif
 @endsection
