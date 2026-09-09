@@ -11,7 +11,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $news = News::orderByDesc('date')
+        // card_news renders the author of every item, so eager load them
+        // rather than paying a lookup per news entry.
+        $news = News::with('user')
+            ->orderByDesc('date')
             ->limit(6)
             ->get();
 

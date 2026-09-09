@@ -27,11 +27,22 @@ class LatestMenus extends Component
      */
     public function render()
     {
-        $dumps = MenuDiskDump::orderByDesc('updated_at')
+        // The card renders each row's menu set, screenshot and dump, so load
+        // them in one go rather than per row - this card is in the sidebar of
+        // several pages, so the lazy loads were multiplying across the site.
+        $diskRelations = ['menu.menuSet', 'screenshots', 'menuDiskDump'];
+
+        $dumps = MenuDiskDump::with(
+            collect($diskRelations)
+                ->map(fn ($relation) => 'menuDisk.' . $relation)
+                ->all()
+        )
+            ->orderByDesc('updated_at')
             ->limit(LatestMenus::MAX_ITEMS)
             ->get();
 
-        $disks = MenuDisk::orderByDesc('updated_at')
+        $disks = MenuDisk::with($diskRelations)
+            ->orderByDesc('updated_at')
             ->limit(LatestMenus::MAX_ITEMS)
             ->get();
 

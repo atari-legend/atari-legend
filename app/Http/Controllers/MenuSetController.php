@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Models\Game;
 use App\Models\MenuDisk;
+use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +28,34 @@ class MenuSetController extends Controller
         2 => 'warning',
         3 => 'warning',
         4 => 'success',
+    ];
+
+    /**
+     * Everything menus/partial_menudisk and menus/partial_menudisk_content
+     * touch on a disk.
+     */
+    private const DISK_EAGER_LOADS = [
+        'menu.menuSet',
+        'screenshots',
+        'menuDiskCondition',
+        'menuDiskDump',
+        'donatedByIndividual.games',
+        'contents.game',
+        'contents.menuSoftware',
+        'contents.release.game',
+        // The relations ReleaseDescriptionHelper::menuDescriptions() walks.
+        'contents.release.languages',
+        'contents.release.resolutions',
+        'contents.release.systemEnhanced',
+        'contents.release.memoryEnhanced',
+        'contents.release.memoryMinimums',
+        'contents.release.memoryIncompatibles',
+        'contents.release.emulatorIncompatibles',
+        'contents.release.systemIncompatibles',
+        'contents.release.tosIncompatibles',
+        'contents.release.copyProtections',
+        'contents.release.diskProtections',
+        'contents.release.trainers',
     ];
 
     private function getSortedDisksForSet(MenuSet $set)
@@ -73,7 +102,14 @@ class MenuSetController extends Controller
 
     public function show(MenuSet $set)
     {
+        // card_show renders the crews and the number of menus, and the page's
+        // meta description (MenuHelper::description) walks the disks of every
+        // menu in the set. Loading the disks is one query here instead of one
+        // per menu; the set of models held in memory is the same either way.
+        $set->load(['crews', 'menus.disks']);
+
         $disks = $this->getSortedDisksForSet($set)
+            ->with(MenuSetController::DISK_EAGER_LOADS)
             ->paginate(MenuSetController::PAGE_SIZE);
 
         $missingDiskCount = DB::table('menu_disks')
@@ -88,14 +124,16 @@ class MenuSetController extends Controller
             ->whereNotNull('scrolltext')
             ->count();
 
-        $randomScreenshot = null;
-        $this->getSortedDisksForSet($set)
-            ->get()
-            ->pluck('screenshots')
-            ->flatten()
-            ->whenNotEmpty(function ($collection) use (&$randomScreenshot) {
-                $randomScreenshot = $collection->random();
-            });
+        // Only used for the og:image meta tag. Picking it in SQL keeps this to
+        // one query: doing it in PHP meant reading every disk in the set -
+        // not just the page being shown - and lazy-loading the screenshots of
+        // each one to throw all but a single row away.
+        $randomScreenshot = MenuDiskScreenshot::select('menu_disk_screenshots.*')
+            ->join('menu_disks', 'menu_disks.id', '=', 'menu_disk_screenshots.menu_disk_id')
+            ->join('menus', 'menu_disks.menu_id', '=', 'menus.id')
+            ->where('menus.menu_set_id', '=', $set->id)
+            ->inRandomOrder()
+            ->first();
 
         return view('menus.show')->with([
             'menuset'          => $set,

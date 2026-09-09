@@ -9,6 +9,7 @@ use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\GameSubmission;
+use App\Models\MenuDisk;
 use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Http\Request;
@@ -20,6 +21,25 @@ class GameController extends Controller
 {
     public function show(Game $game)
     {
+        // Everything this method and the card_* partials of games/show walk.
+        // Loaded up front, each relation costs one query instead of one per
+        // row
+        $game->load([
+            'developers',
+            'genres',
+            'screenshots',
+            'sndhs',
+            'reviews',
+            'individuals.interviews',
+            'releases.boxscans',
+            'releases.menuDiskContents',
+            'menuDiskContents',
+            // getAllSimilarGamesAttribute() merges these two, and the filter
+            // below reads the screenshots of every game they return.
+            'similarGames.screenshots',
+            'similarGamesReverse.screenshots',
+        ]);
+
         $developersLogos = $game->developers
             ->filter(function ($developer) {
                 return $developer->logo;
@@ -79,17 +99,37 @@ class GameController extends Controller
 
         // First collect all releases that are part of a menu, and get the
         // corresponding disk
-        $menuDisks = $game->releases
+        $menuDiskIds = $game->releases
             ->filter(function ($release) {
                 return $release->menuDiskContents->isNotEmpty();
             })
             ->map(function ($release) {
-                return $release->menuDiskContents->first()->menuDisk;
+                return $release->menuDiskContents->first()->menu_disk_id;
             })
+            // These are ids, not models. Eloquent\Collection::map() only
+            // downgrades to a base collection when it can see a non-model in
+            // the result, so for a game whose releases are none of them in a
+            // menu it hands back an empty *Eloquent* collection - and
+            // Eloquent\Collection::unique() then calls getKey() on the ints
+            // concat'd in below. Force the type rather than rely on content.
+            ->toBase()
             // Then collect all standalone menus disks that don't have a release
             // (i.e. docs, trainer, ...)
-            ->concat($game->menuDiskContents->pluck('menuDisk'))
-            ->unique()
+            ->concat($game->menuDiskContents->pluck('menu_disk_id'))
+            ->unique();
+
+        // Fetch the disks themselves in one query, with everything card_menus
+        // renders for each of them.
+        $menuDisks = MenuDisk::with([
+            'menu.menuSet',
+            'screenshots',
+            'menuDiskDump',
+            'contents.release.game',
+            'contents.game',
+            'contents.menuSoftware',
+        ])
+            ->whereIn('id', $menuDiskIds)
+            ->get()
             ->sortBy('download_basename');
 
         // Collect all SNDH tracks

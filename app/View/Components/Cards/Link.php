@@ -24,7 +24,7 @@ class Link extends Component
      */
     public function render()
     {
-        $link = ModelsLink::inRandomOrder()->first();
+        $link = ModelsLink::with('user')->inRandomOrder()->first();
 
         return view('components.cards.link')
             ->with(['link' => $link]);

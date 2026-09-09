@@ -10,7 +10,7 @@
             {{ Str::plural('menu', $menuset->menus->count()) }}
             and
             {{ $disks->total() }}
-            {{ Str::plural('disk', $menuset->menus->pluck('disks')->flatten()->count()) }}.
+            {{ Str::plural('disk', $disks->total()) }}.
 
             <span class="ms-3">
                 @if ($missingCount > 0)
