@@ -170,8 +170,8 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-      - name: Production optimizations
-        if: github.ref == 'refs/heads/master'
+      - name: Deployment optimizations
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/development'
         # Clear all caches, they will be rebuilt on the host
         run: |
           php artisan cache:clear
@@ -179,13 +179,7 @@ jobs:
           php artisan optimize:clear
           php artisan route:clear
           php artisan view:clear
-          # --no-dev matters: Debugbar and Ignition are require-dev but are
-          # auto-discovered, so without this they register and boot service
-          # providers on each request.
-          # --classmap-authoritative stops the autoloader stat-ing the filesystem
-          # for classes it cannot find, which is worth having on a slow shared
-          # filesystem.
-          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --no-dev --optimize-autoloader --classmap-authoritative
+          composer install -q --no-ansi --no-interaction --no-suggest --no-progress --prefer-dist --no-dev --optimize-autoloader --classmap-authoritative
           # Everything above ran against the dev autoloader; boot the app once
           # with the one that actually ships, so a class the authoritative
           # classmap cannot resolve fails here rather than mid-deploy, after
