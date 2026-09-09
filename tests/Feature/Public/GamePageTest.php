@@ -11,6 +11,10 @@ use App\Models\GameSubmission;
 use App\Models\GameVote;
 use App\Models\Individual;
 use App\Models\Interview;
+use App\Models\Menu;
+use App\Models\MenuDisk;
+use App\Models\MenuDiskContent;
+use App\Models\MenuSet;
 use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\User;
@@ -95,6 +99,38 @@ class GamePageTest extends TestCase
 
         $this->assertCount(2, $boxscans);
         $this->assertStringContainsString('/games/release/', $boxscans->first()['preview']);
+    }
+
+    /**
+     * `menu_disk_contents` carries `game_id` as well as `game_release_id`: a
+     * game reaches a disk either through one of its releases or on its own, as
+     * documentation, a trainer, or a version with no release of its own.
+     * GameController::show() collects those two sets separately and merges
+     * them; this covers a game that has releases but none of them on a disk,
+     * so that only the second set contributes.
+     */
+    public function test_menu_disks_are_listed_when_no_release_of_the_game_is_on_one(): void
+    {
+        $game = Game::factory()->create();
+        GameRelease::factory()->create(['game_id' => $game->getKey()]);
+
+        $set = MenuSet::factory()->create(['name' => 'Automation']);
+        $menu = Menu::factory()->create(['menu_set_id' => $set->getKey(), 'number' => 1]);
+        $disk = MenuDisk::factory()->create(['menu_id' => $menu->getKey()]);
+
+        MenuDiskContent::forceCreate([
+            'menu_disk_id' => $disk->getKey(),
+            'position'     => 1,
+            'game_id'      => $game->getKey(),
+        ]);
+
+        $menuDisks = $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSee('Automation')
+            ->viewData('menuDisks');
+
+        $this->assertCount(1, $menuDisks);
+        $this->assertSame($disk->getKey(), $menuDisks->first()->getKey());
     }
 
     public function test_developer_logos_are_shown_only_when_there_is_one(): void

@@ -5,21 +5,21 @@
 Google PageSpeed Insights (Lighthouse 13.4.1) was run against the production
 site — homepage, a game detail page (`/games/super-stario-land`), a menu set
 page (`/menusets/1`), and a review page (`/reviews/133`) — on both mobile and
-desktop, all four categories. This is analysis only; nothing here has been
-implemented yet.
+desktop, all four categories.
 
-Two things worth knowing about the data before the findings: field data (real
+One thing worth knowing about the data before the findings: field data (real
 Chrome-User-Experience-Report numbers) came back identical across all four
 pages, which means Chrome doesn't have enough per-URL traffic to report
 page-level field data for this site and is falling back to origin-level
 numbers for every page tested — treat the "field data" figures below as
-site-wide, not page-specific. And time-to-first-byte reads "Average" rather
-than "Fast" in that field data; lab tests here show `server-response-time` and
-`network-rtt`/`network-server-latency` all scoring perfectly, and the deploy
-script (`.github/workflows/deploy.sh`) already runs `artisan optimize` (config,
-route and view caching) on every deploy, so this isn't a caching gap in the
-app — it reads as ordinary network latency to a single shared-hosting origin,
-not something a code change here fixes.
+site-wide, not page-specific.
+
+Time to first byte has its own section below, ahead of the Lighthouse
+findings, because it is the largest single cost on every page and none of it
+is front-end. Lighthouse's `server-response-time` audit passes on all 8 runs;
+its threshold is 600ms and PSI measures from Google's own infrastructure, so
+that pass says nothing useful here. Measured directly from a residential
+connection, TTFB is 1.3-3.7s and almost all of it is server-side.
 
 ## Scores
 
@@ -33,6 +33,153 @@ not something a code change here fixes.
 The game detail page's desktop run is the outlier (**64**), and it isolates
 cleanly to one cause (finding 1 below), not a general desktop problem — its
 mobile score is a healthy 92.
+
+## Time to first byte
+
+Measured against production on 2026-09-09, four runs per URL:
+
+```
+curl -s -o /dev/null \
+    -w 'tls=%{time_appconnect}s ttfb=%{time_starttransfer}s\n' \
+    https://www.atarilegend.com/up
+```
+
+| Request | TTFB |
+|---|---|
+| `/build/assets/app-*.css` — Apache, no PHP | 0.10-0.15s |
+| `/up` — boots Laravel, nothing else | 0.49-1.29s |
+| `/` | 1.32-2.35s |
+| `/reviews/133` | 1.78-1.96s |
+| `/games/super-stario-land` | 1.54-4.48s |
+| `/menusets/1` | 2.94-3.18s |
+
+DNS resolves in 1-30ms, TCP connects at 22ms and TLS completes at 50ms, so the
+network to the origin costs ~50ms of the numbers above. Apache serving a file
+off disk costs ~100ms. Everything beyond that is PHP.
+
+`/up` is the isolating probe: Laravel registers it with a bare `Route::get()`
+outside the `web` group (`ApplicationBuilder.php:218`), so it runs no
+middleware, starts no session and issues no query — confirmed by the absence
+of `Set-Cookie` on its response, which every other page sets. Its ~680ms
+median is framework boot and nothing else.
+
+Fitting the remaining pages against their query counts gives:
+
+**~680ms framework boot + ~550ms fixed per-page work + ~7.5ms per query.**
+
+The model predicts the game page at 1.96s against 1.95s measured, and the
+review page at 1.89s against 1.83s. At ~0.3ms per query locally against
+~7.5ms in production, the per-query term is the cost of a database on a
+separate host, and it makes query count the dominant per-page variable.
+
+### OPcache is absent from the web SAPI
+
+A probe placed in `public/` and deleted afterwards reports PHP 8.4.24,
+`PHP_SAPI` of `cgi-fcgi`, `extension_loaded('Zend OPcache')` false, and:
+
+```
+Warning: ini_get_all(): Extension "zend opcache" cannot be found
+```
+
+Every request therefore re-parses and re-compiles every PHP file it includes —
+814 of them for a framework boot and `/up`, and more for any real page.
+Measured in the Sail container on 2026-09-09, booting the
+framework and handling `/up` costs 148ms with OPcache off against 75ms with a
+warm `opcache.file_cache` — and `file_cache_only` is the slower of the two
+warm modes, so shared memory would beat 75ms.
+
+**This cannot be fixed from this repository.** An extension cannot be loaded
+from a `.user.ini`, `zend_extension` being `PHP_INI_SYSTEM`, and the Ionos
+build does not ship the extension for the web SAPI at all. Enabling it is a
+hosting-plan question. Until it is answered, the ~680ms boot is a fixed cost
+on every request, and the work below targets the two terms that are reachable.
+
+### Fewer files on the boot path — `.github/workflows/build-and-deploy.yml`
+
+The production composer install shipped dev dependencies. Debugbar and
+Ignition are `require-dev` but auto-discovered, so both registered service
+providers on every request; `bootstrap/cache/packages.php` listed them. Of the
+814 files a boot and `/up` load, 37 come from dev-only packages.
+
+The install now runs with `--no-dev --optimize-autoloader
+--classmap-authoritative`. Without OPcache every one of those files is
+compile work, and the authoritative classmap also stops the autoloader
+stat-ing the filesystem for classes it cannot resolve.
+
+`php artisan about --only=environment` runs immediately after it. The test
+suite runs against the dev autoloader and cannot catch a class the
+authoritative classmap fails to resolve; without this gate that failure
+surfaces mid-deploy, after `deploy.sh` has already run `artisan down`.
+Dropping `--classmap-authoritative` is the revert.
+
+### Fewer queries per page
+
+Query counts for one request, measured on 2026-09-09 against the development
+database by booting the kernel, calling `DB::enableQueryLog()` and counting
+`DB::getQueryLog()` after `handle()`:
+
+| Page | Before | After |
+|---|---|---|
+| `/menusets/1` | 247 | 57 |
+| `/games/super-stario-land` | 111 | 63 |
+| `/` | 50 | 41 |
+| `/reviews/133` | 89 | 85 |
+
+At ~7.5ms per query that is ~1.4s off the menu set page, ~360ms off a game
+page and ~70ms off the homepage. The development database holds fewer rows
+than production, where an N+1 scales with the row count and an eager load does
+not, so these are lower bounds.
+
+- `MenuSetController::show()` — the og:image screenshot was chosen by reading
+  every disk in the set, not just the page being displayed, and lazy-loading
+  the screenshots of each one. It is now one query joining
+  `menu_disk_screenshots` through `menu_disks` to `menus`. The paginated disks
+  carry `DISK_EAGER_LOADS`, covering what `menus/partial_menudisk.blade.php`
+  and `menus/partial_menudisk_content.blade.php` touch, including the 13
+  relations `ReleaseDescriptionHelper::menuDescriptions()` walks per release.
+  `$set->load(['crews', 'menus.disks'])` covers `MenuHelper::description()`.
+- `GameController::show()` — one `$game->load()` for the relations the method
+  and the `games/card_*.blade.php` partials walk. The menu disks are collected
+  as `menu_disk_id`s and fetched in a single query carrying what
+  `games/card_menus.blade.php` renders.
+- `HomeController`, and the `Reviews`, `Screenstar`, `Link` and `LatestMenus`
+  card components — the homepage's 12 `users` lookups were 6 news authors,
+  4 review authors, the screenstar author and the link author.
+
+### Examined and left alone
+
+- **`MenuDisk::getMenusetPageNumberAttribute()`** (`app/Models/MenuDisk.php:98`)
+  runs one query per rendered disk, and each reads the ordered id list of the
+  whole set to find one index — 7 on the menu set page, 4 on a game page.
+  Removing it needs state scoped to the request, which this codebase has no
+  pattern for, and the value feeds link `href`s the e2e specs assert on.
+- **`/reviews/133`**, at 85 queries, is now the heaviest of the four pages.
+- **The online-user lists** (`app/Http/Middleware/OnlineUsers.php:25`, `:31`)
+  run two `users` queries in the header of every page, plus a `last_visit`
+  write on every authenticated one. Neither query can use an index:
+  `last_visit` is a `varchar(32)` holding a unix timestamp, so comparing it
+  against an integer converts the whole column. The scan itself is cheap at
+  the 767 rows development holds; the two round trips to a database on another
+  host are the cost. Correcting the column type is the fix, and it belongs to
+  the schema campaign in `docs/plans/`.
+- **Edge caching of anonymous HTML** would skip PHP entirely for the traffic
+  that does not need it, which is worth more than every other item in this
+  section combined while OPcache stays off. It is viable: none of the four
+  pages emits a `_token` when logged out, every POST form being behind
+  `@auth`. Two things block it — Laravel sets a session cookie on every
+  anonymous request, and `layouts/header.blade.php:5` picks a random logo per
+  request, which would freeze per cached copy.
+
+### Acceptance
+
+- `php artisan test` — 1011 passing.
+- `GamePageTest::test_menu_disks_are_listed_when_no_release_of_the_game_is_on_one`
+  is the gate on the two ways a game reaches a menu disk being merged
+  correctly. It fails without the `toBase()` in `GameController::show()`.
+- Query counts re-measured by the method named in this section.
+- Rendering `/`, `/games/super-stario-land`, `/menusets/1`, `/menusets/1?page=2`
+  and `/reviews/133` before and after the eager loading differs only in the
+  random trivia quote, which `TriviaQuote::inRandomOrder()` varies per request.
 
 ## Findings, prioritized by impact vs. effort
 
@@ -375,10 +522,8 @@ best done after / together with finding 5.
   configuration lives on that host, not in this repository. `public/.htaccess`
   already enables gzip via `mod_deflate` — that's the ceiling for what's
   controllable from here without hosting-provider access.
-- **Origin-level time-to-first-byte.** Reads "Average" in field data; lab
-  metrics and the deploy script's `artisan optimize` step rule out an
-  application-level cause. This is ordinary network distance to a single
-  origin server, not a code fix.
+- **OPcache on the production web SAPI.** See the time-to-first-byte section
+  above for the measurement and why the repository cannot enable it.
 - **A ZoomInfo tracking pixel** (`ws.zoominfo.com/pixel/collect`) appeared in
   the menu-set page's network dependency chain during one test run — as a
   phantom child of the navigation request, 0 bytes transferred, absent from
@@ -408,8 +553,11 @@ same-effort-as-finding-2 change to the base layout.
 
 ## Suggested order of work
 
+This orders the numbered Lighthouse findings against each other. Every one of
+them is smaller than the per-request costs in the time-to-first-byte section.
+
 1. Findings 1 and 2 (video facade, storage cache headers) — smallest effort,
-   largest and most certain wins, no risk to layout.
+   largest and most certain of these, no risk to layout.
 2. Finding 3 (font-display) — small, independent, no risk.
 3. Finding 4 (image dimensions) — mechanical but touches many files; do it as
    its own pass through the shared card/component partials.
