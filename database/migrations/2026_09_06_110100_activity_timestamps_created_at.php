@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * table => [source column, source type, source length, nullable, default]
+     * table => [source column, source type, source length, nullable, default].
      */
     private const COLUMNS = [
         'changelogs'       => ['timestamp', 'integer', null, false, null],
