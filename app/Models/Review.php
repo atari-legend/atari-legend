@@ -18,7 +18,7 @@ class Review extends Model implements Feedable
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'draft', 'text', 'published_at', 'submission',
+        'game_id', 'user_id', 'draft', 'text', 'published_at', 'submission',
         'graphics', 'sound', 'gameplay', 'overall',
     ];
 
@@ -31,9 +31,9 @@ class Review extends Model implements Feedable
         return $this->belongsTo(User::class);
     }
 
-    public function games()
+    public function game()
     {
-        return $this->belongsToMany(Game::class);
+        return $this->belongsTo(Game::class);
     }
 
     public function screenshots()
@@ -65,7 +65,7 @@ class Review extends Model implements Feedable
     {
         return FeedItem::create([
             'id'         => $this->getKey(),
-            'title'      => 'Review: ' . $this->games->first()->name,
+            'title'      => 'Review: ' . $this->game->name,
             'summary'    => Helper::bbCode(Helper::extractTag(e($this->text), 'frontpage')),
             'updated'    => $this->published_at,
             'link'       => route('reviews.show', $this),

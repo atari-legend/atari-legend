@@ -269,7 +269,7 @@ class GameControllerTest extends AdminTestCase
                 'author'     => 'Someone',
                 'youtube_id' => 'dQw4w9WgXcQ',
             ]),
-            'reviews'          => $game->reviews()->attach(Review::factory()->create()),
+            'reviews'          => Review::factory()->create(['game_id' => $game->getKey()]),
             'menuDiskContents' => $game->menuDiskContents()->create([
                 'position'     => 1,
                 'menu_disk_id' => MenuDisk::factory()->create()->getKey(),

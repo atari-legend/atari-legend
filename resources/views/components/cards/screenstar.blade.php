@@ -4,7 +4,7 @@
     </div>
     <div class="card-body p-0">
         @isset ($screenstar)
-            @php ($game = $screenstar->games->first())
+            @php ($game = $screenstar->game)
             @if ($game !== null && $game->screenshots->isNotEmpty())
                 <figure>
                     <img class="w-100 pixelated" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}">

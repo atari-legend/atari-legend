@@ -18,7 +18,7 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (game_screenshot, game_review, game_comment,
+ * all (game_screenshot, game_comment,
  * link_category), the factories are random where the specs need fixed
  * names and slugs, and $fillable on the legacy models is thin enough that
  * Model::create() would silently drop columns we depend on.
@@ -409,14 +409,11 @@ class E2ESeeder extends Seeder
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
         $this->insert('reviews', ['id' => self::REVIEW_ID], [
+            'game_id'      => self::GAME_ID,
             'user_id'      => self::USER_ADMIN_ID,
             'text'         => 'Great game!',
             'published_at' => now(),
         ]);
-        $this->insert('game_review', [
-            'review_id' => self::REVIEW_ID,
-            'game_id'   => self::GAME_ID,
-        ], []);
 
         // The "Who is it?" card on the home page only picks an interview whose
         // individual has a picture, and the card then reads the interview's

@@ -81,7 +81,7 @@ class Comment extends Model
             case self::TYPE_INTERVIEW:
                 return $this->interviews->first()->individual->name;
             case self::TYPE_REVIEW:
-                return $this->reviews->first()->games->first()->name;
+                return $this->reviews->first()->game->name;
             default:
                 throw new Error('Unknown comment type');
         }

@@ -74,7 +74,7 @@ class ReviewsControllerTest extends AdminTestCase
 
         $this->assertSame('A fine shoot-em-up.', $review->text);
         $this->assertSame($this->admin->getKey(), $review->user_id);
-        $this->assertSame('Xenon', $review->games->first()->name);
+        $this->assertSame('Xenon', $review->game->name);
         $this->assertSame(Review::REVIEW_PUBLISHED, $review->submission);
 
         $this->assertSame(5, $review->graphics);

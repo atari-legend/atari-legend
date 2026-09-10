@@ -3,7 +3,7 @@
 
         <h2 class="card-title fs-4">
             @if (isset($review))
-                {{ $review->games[0]->name }}
+                {{ $review->game->name }}
             @else
                 Create review
             @endif
@@ -170,11 +170,11 @@
 
                 <fieldset class="lightbox-gallery">
                     <legend>Screenshots</legend>
-                    @if (isset($review) && $review->games[0]->screenshots->isNotEmpty())
-                        @foreach ($review->games[0]->screenshots->sortBy('id') as $screenshot)
+                    @if (isset($review) && $review->game->screenshots->isNotEmpty())
+                        @foreach ($review->game->screenshots->sortBy('id') as $screenshot)
                             <div class="row mb-3">
                                 <div class="col-2">
-                                    <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $review->games[0]) }}" alt="Game screenshot">
+                                    <img class="w-100" src="{{ $screenshot->getUrlRoute('game', $review->game) }}" alt="Game screenshot">
                                 </div>
                                 <div class="col-10">
                                     <input type="text" class="form-control @error('screenshot_comment_'.$screenshot->getKey()) is-invalid @enderror" id="screenshot-comment-{{ $screenshot->getKey() }}"

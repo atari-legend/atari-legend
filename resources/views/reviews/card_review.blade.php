@@ -1,7 +1,7 @@
 <div class="card bg-dark mb-4">
     <div class="card-header text-center">
         <h2 class="text-uppercase">
-            <a href="{{ route('games.show', ['game' => $review->games->first()]) }}">{{ $review->games->first()->name }}</a>
+            <a href="{{ route('games.show', ['game' => $review->game]) }}">{{ $review->game->name }}</a>
             @contributor
                 <a href="{{ route('admin.reviews.reviews.edit', $review) }}">
                     <small><i class="fas fa-pencil-alt text-contributor"></i></small>
@@ -19,8 +19,8 @@
         <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
             @foreach ($review->screenshots->sortBy('id') as $screenshot)
                 <div class="bg-dark p-2">
-                    <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" title="{{ $screenshot->pivot->comment->text ?? '' }}">
-                        <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $review->games->first()) }}" alt="{{ $screenshot->pivot->comment->text ?? '' }}" loading="lazy">
+                    <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $review->game) }}" title="{{ $screenshot->pivot->comment->text ?? '' }}">
+                        <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $review->game) }}" alt="{{ $screenshot->pivot->comment->text ?? '' }}" loading="lazy">
                     </a>
                     <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->text }}</p>
                 </div>

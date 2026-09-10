@@ -163,7 +163,7 @@ class AdminStatisticsHelper
                 self::coverageRow('With a publisher', DB::table('game_releases')->whereNotNull('company_id')->distinct('game_id')->count(), $games),
                 self::coverageRow('With creators', DB::table('game_individual')->distinct('game_id')->count(), $games),
                 self::coverageRow('With music', DB::table('game_sndh')->distinct('game_id')->count(), $games),
-                self::coverageRow('With a review', DB::table('game_review')->distinct('game_id')->count(), $games),
+                self::coverageRow('With a review', DB::table('reviews')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a magazine index entry', DB::table('magazine_indices')->whereNotNull('game_id')->distinct('game_id')->count(), $games),
                 self::coverageRow('With an alternative title', DB::table('game_akas')->distinct('game_id')->count(), $games),
                 self::coverageRow('With a video', DB::table('game_videos')->distinct('game_id')->count(), $games),

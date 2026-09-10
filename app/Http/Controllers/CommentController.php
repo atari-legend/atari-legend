@@ -63,7 +63,7 @@ class CommentController extends Controller
                 break;
             case 'review':
                 $section = 'Reviews';
-                $sectionName = Review::find($id)->games->first()->name;
+                $sectionName = Review::find($id)->game->name;
                 break;
             case 'interview':
                 $section = 'Interviews';

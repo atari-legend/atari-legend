@@ -24,7 +24,7 @@ class StatisticsHelper
             'Games with magazine review'    => DB::table('magazine_indices')->distinct('game_id')->count(),
             'Releases with box scans'       => DB::table('game_release_scans')->distinct('game_release_id')->count(),
             'Games with genre assigned'     => DB::table('game_genre')->distinct('game_id')->count(),
-            'Games reviewed'                => DB::table('game_review')->distinct('game_id')->count(),
+            'Games reviewed'                => DB::table('reviews')->distinct('game_id')->count(),
             'Menu sets'                     => DB::table('menu_sets')->count(),
             'Menu disks'                    => DB::table('menu_disks')->count(),
             'Magazines'                     => DB::table('magazines')->count(),

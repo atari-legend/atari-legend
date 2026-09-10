@@ -6,7 +6,7 @@
         @if ($user->reviews->isNotEmpty())
             <p>
                 @foreach ($user->reviews as $review)
-                    <a href="{{ route('reviews.show', $review) }}">{{ $review->games->first()->name }}</a>
+                    <a href="{{ route('reviews.show', $review) }}">{{ $review->game->name }}</a>
                     @if (!$loop->last), @endif
                 @endforeach
             </p>

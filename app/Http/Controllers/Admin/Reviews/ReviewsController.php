@@ -32,7 +32,7 @@ class ReviewsController extends Controller
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route('admin.reviews.reviews.index'), 'Reviews'),
-                    new Crumb('', $review->games[0]->name),
+                    new Crumb('', $review->game->name),
                 ],
                 'review' => $review,
             ]);
@@ -77,10 +77,10 @@ class ReviewsController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Reviews',
             'section_id'       => $review->getKey(),
-            'section_name'     => $review->games[0]->name,
+            'section_name'     => $review->game->name,
             'sub_section'      => 'Review',
             'sub_section_id'   => $review->getKey(),
-            'sub_section_name' => $review->games[0]->name,
+            'sub_section_name' => $review->game->name,
         ]);
 
         if ($request->stay) {
@@ -135,10 +135,10 @@ class ReviewsController extends Controller
             'action'           => Changelog::UPDATE,
             'section'          => 'Reviews',
             'section_id'       => $review->getKey(),
-            'section_name'     => $review->games[0]->name,
+            'section_name'     => $review->game->name,
             'sub_section'      => 'Review',
             'sub_section_id'   => $review->getKey(),
-            'sub_section_name' => $review->games[0]->name,
+            'sub_section_name' => $review->game->name,
         ]);
 
         if ($request->stay) {
@@ -150,7 +150,7 @@ class ReviewsController extends Controller
 
     public function destroy(Review $review)
     {
-        $reviewGameName = $review->games[0]->name;
+        $reviewGameName = $review->game->name;
 
         $review->delete();
 

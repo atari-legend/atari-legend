@@ -55,11 +55,11 @@ class ReviewController extends Controller
         }
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', 'Review of ' . $review->games->first()->name)
+            ->add('headline', 'Review of ' . $review->game->name)
             ->add('author', Helper::user($review->user))
             ->add('datePublished', $review->published_at->format('Y-m-d'));
         if ($review->screenshots->isNotEmpty()) {
-            $jsonLd->add('image', $review->screenshots->first()->getUrlRoute('game', $review->games->first()));
+            $jsonLd->add('image', $review->screenshots->first()->getUrlRoute('game', $review->game));
         }
 
         return view('reviews.show')
@@ -107,8 +107,8 @@ class ReviewController extends Controller
         $review->gameplay = $request->gameplay ?? 0;
         $review->overall = $request->overall ?? 0;
 
-        $request->user()->reviews()->save($review);
         $game->reviews()->save($review);
+        $request->user()->reviews()->save($review);
 
         // Process screenshots comments. Screenshots were ordered by screenshot_id
         // so we should iterate over the same ordered list of game screenshots to
@@ -164,10 +164,10 @@ class ReviewController extends Controller
             'action'           => Changelog::INSERT,
             'section'          => 'Reviews',
             'section_id'       => $review->getKey(),
-            'section_name'     => $review->games->first()->name,
+            'section_name'     => $review->game->name,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $comment->getKey(),
-            'sub_section_name' => $review->games->first()->name,
+            'sub_section_name' => $review->game->name,
         ]);
 
         return back();
