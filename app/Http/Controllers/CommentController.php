@@ -36,7 +36,6 @@ class CommentController extends Controller
 
             if (Auth::user()->getKey() === $comment->user->getKey()) {
                 $comment->text = $request->comment;
-                $comment->timestamp = time();
                 $comment->save();
 
                 $this->insertChangelog(Changelog::UPDATE, $request->context, $request->id, $comment);

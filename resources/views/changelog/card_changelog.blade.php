@@ -9,7 +9,7 @@
             get an atom feed for your preferred filters.
             There are currently <strong>{{ $changes->total() }}</strong> changes
             @if ($firstChange !== null)
-                since the first recorded one on {{ $firstChange->timestamp->format('F j, Y') }}.
+                since the first recorded one on {{ $firstChange->created_at->format('F j, Y') }}.
             @else
                 recorded.
             @endif
@@ -90,9 +90,9 @@
                                 <span class="text-break">{{ $change->sub_section_name }}</span>
                             </td>
                             <td >
-                                <abbr title="{{ $change->timestamp->format('F j, Y H:i') }}">
-                                    <span class="d-md-none">{{ $change->timestamp->diffForHumans() }}</span>
-                                    <span class="d-none d-md-inline text-nowrap">{{ $change->timestamp->diffForHumans() }}</span>
+                                <abbr title="{{ $change->created_at->format('F j, Y H:i') }}">
+                                    <span class="d-md-none">{{ $change->created_at->diffForHumans() }}</span>
+                                    <span class="d-none d-md-inline text-nowrap">{{ $change->created_at->diffForHumans() }}</span>
                                 </abbr>
                             </td>
                         </tr>

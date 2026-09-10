@@ -27,7 +27,6 @@ class NewsController extends Controller
         $submission = new NewsSubmission();
         $submission->headline = $request->title;
         $submission->text = $request->text;
-        $submission->date = time();
 
         $request->user()->newsSubmissions()->save($submission);
 

@@ -14,14 +14,13 @@ class Dump extends Model
 
     const TRACKPICTURES_DIRECTORY = 'images/dump_trackpictures';
 
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
     protected $casts = [
-        'date'          => 'datetime:timestamp',
         'track_picture' => 'boolean',
     ];
 
-    protected $fillable = ['format', 'sha512', 'date', 'size', 'track_picture'];
+    protected $fillable = ['format', 'sha512', 'size', 'track_picture'];
 
     public function user()
     {

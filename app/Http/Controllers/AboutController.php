@@ -14,7 +14,7 @@ class AboutController extends Controller
     public function andreas()
     {
         $comments = Andreas::all()
-            ->sortByDesc('timestamp');
+            ->sortByDesc('created_at');
 
         return view('about.andreas')
             ->with([

@@ -4,7 +4,6 @@ namespace App\Livewire\Admin\Games;
 
 use App\Helpers\Helper;
 use App\Models\GameSubmission;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -47,20 +46,13 @@ class GameSubmissionsTable extends DataTableComponent
                     return $query->join('users', 'game_submissions.user_id', '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
-            Column::make('Date')
-                ->label(
-                    fn ($row) => $row->timestamp
-                        ? Carbon::createFromTimestamp($row->timestamp)->toDayDateTimeString()
-                        : '-'
-                )
-                ->sortable(function (Builder $query, $direction) {
-                    // Validate direction to avoid SQL injections
-                    $d = $direction === 'asc' ? 'asc' : 'desc';
-
-                    // `+ 0` coerces the varchar timestamp to a number in both
-                    // MySQL and SQLite; convert(..., unsigned) is MySQL-only.
-                    return $query->orderByRaw("timestamp + 0 $d");
-                }),
+            // The column is qualified because the Game and User sorts above
+            // join `games` and `users`, both of which carry a created_at.
+            Column::make('Date', 'created_at')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
+                ->sortable(
+                    fn (Builder $query, $direction) => $query->orderBy('game_submissions.created_at', $direction)
+                ),
             BooleanColumn::make('Reviewed', 'game_done')
                 ->setCallback(fn ($value) => $value === GameSubmission::SUBMISSION_REVIEWED)
                 ->sortable(),

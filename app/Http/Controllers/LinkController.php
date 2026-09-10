@@ -46,7 +46,6 @@ class LinkController extends Controller
         $submission->name = $request->name;
         $submission->url = $request->url;
         $submission->description = $request->description;
-        $submission->date = time();
 
         $request->user()->linkSubmissions()->save($submission);
 

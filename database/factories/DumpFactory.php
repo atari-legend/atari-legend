@@ -24,7 +24,7 @@ class DumpFactory extends Factory
             'user_id'       => User::factory(),
             'format'        => 'STX',
             'sha512'        => hash('sha512', fake()->uuid()),
-            'date'          => now()->timestamp,
+            'created_at'    => now(),
             'size'          => 819200,
             'notes'         => null,
             'track_picture' => false,

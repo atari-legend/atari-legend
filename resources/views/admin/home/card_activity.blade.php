@@ -27,8 +27,8 @@
                             <span class="text-muted">{{ $change->sub_section }}:</span>
                             {{ $change->sub_section_name }}</td>
                         <td>
-                            <abbr title="{{ $change->timestamp->format('F j, Y H:i') }}">
-                                {{ $change->timestamp->diffForHumans() }}
+                            <abbr title="{{ $change->created_at->format('F j, Y H:i') }}">
+                                {{ $change->created_at->diffForHumans() }}
                             </abbr>
                         </td>
                     </tr>

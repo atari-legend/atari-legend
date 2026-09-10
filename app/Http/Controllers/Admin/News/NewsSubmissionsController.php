@@ -26,7 +26,7 @@ class NewsSubmissionsController extends Controller
         $news = News::create([
             'headline'     => $submission->headline,
             'user_id'      => $submission->user_id,
-            'published_at' => $submission->date,
+            'published_at' => $submission->created_at,
             'text'         => $submission->text,
         ]);
 

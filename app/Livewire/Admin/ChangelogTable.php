@@ -18,7 +18,7 @@ class ChangelogTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('timestamp', 'desc');
+        $this->setDefaultSort('created_at', 'desc');
     }
 
     public function columns(): array
@@ -49,7 +49,9 @@ class ChangelogTable extends DataTableComponent
             Column::make('Sub-item', 'sub_section_name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Date', 'timestamp')
+            // The column is qualified because the User sort above left-joins
+            // `users`, which now carries a created_at of its own.
+            Column::make('Date', 'created_at')
                 ->format(
                     fn ($value) => $value
                         ? '<abbr title="' . e($value->format('F j, Y H:i')) . '">'
@@ -57,7 +59,9 @@ class ChangelogTable extends DataTableComponent
                         : '-'
                 )
                 ->html()
-                ->sortable(),
+                ->sortable(
+                    fn (Builder $query, $direction) => $query->orderBy('changelogs.created_at', $direction)
+                ),
         ];
     }
 
@@ -75,17 +79,17 @@ class ChangelogTable extends DataTableComponent
             'from' => DateFilter::make('Date from', 'from')
                 ->filter(
                     fn (Builder $query, string $value) => $query->where(
-                        'changelogs.timestamp',
+                        'changelogs.created_at',
                         '>=',
-                        Carbon::parse($value)->startOfDay()->timestamp
+                        Carbon::parse($value)->startOfDay()
                     )
                 ),
             'to' => DateFilter::make('Date to', 'to')
                 ->filter(
                     fn (Builder $query, string $value) => $query->where(
-                        'changelogs.timestamp',
+                        'changelogs.created_at',
                         '<=',
-                        Carbon::parse($value)->endOfDay()->timestamp
+                        Carbon::parse($value)->endOfDay()
                     )
                 ),
             'action' => SelectFilter::make('Action')

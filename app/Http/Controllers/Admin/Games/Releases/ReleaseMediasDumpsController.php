@@ -10,7 +10,6 @@ use App\Models\Dump;
 use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\Media;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -77,7 +76,6 @@ class ReleaseMediasDumpsController extends Controller
             $dump = new Dump([
                 'format' => $format,
                 'sha512' => hash('sha512', file_get_contents($fullpath)),
-                'date'   => Carbon::now()->timestamp,
                 'size'   => filesize($fullpath),
             ]);
 

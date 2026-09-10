@@ -58,7 +58,6 @@ class ArticleController extends Controller
     {
         $comment = new Comment();
         $comment->text = $request->comment;
-        $comment->timestamp = time();
 
         $request->user()->comments()->save($comment);
         $article->comments()->save($comment);

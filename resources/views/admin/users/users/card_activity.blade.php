@@ -30,7 +30,7 @@
         <h3 class="card-subtitle fs-5">News submissions</h3>
         @if ($user->newsSubmissions->isNotEmpty())
             <p>
-                @foreach ($user->newsSubmissions->sortByDesc('date') as $news)
+                @foreach ($user->newsSubmissions->sortByDesc('created_at') as $news)
                     <a
                         href="{{ route('admin.news.submissions.index') }}">{{ $news->headline }}</a>
                     @if (!$loop->last), @endif
@@ -43,7 +43,7 @@
         <h3 class="card-subtitle fs-5">Link submissions</h3>
         @if ($user->linkSubmissions->isNotEmpty())
             <p>
-                @foreach ($user->linkSubmissions->sortByDesc('date') as $link)
+                @foreach ($user->linkSubmissions->sortByDesc('created_at') as $link)
                     {{ $link->name }}@if (!$loop->last), @endif
                 @endforeach
             </p>
@@ -54,7 +54,7 @@
         <h3 class="card-subtitle fs-5">Game submissions</h3>
         @if ($user->gameSubmissions->isNotEmpty())
             <p>
-                @foreach ($user->gameSubmissions->sortByDesc('timestamp') as $submission)
+                @foreach ($user->gameSubmissions->sortByDesc('created_at') as $submission)
                     <a
                         href="{{ route('admin.games.submissions.show', $submission) }}">{{ $submission->game->name }}</a>
                     @if (!$loop->last), @endif

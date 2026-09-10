@@ -16,7 +16,7 @@
             @endif
             <div class="p-2">
                 <p class="card-text">{{ $link->description }}</p>
-                <p class="card-subtitle text-muted">{{ date('F j, Y', $link->date) }} by {{ Helper::user($link->user) }}</p>
+                <p class="card-subtitle text-muted">{{ $link->created_at->format('F j, Y') }} by {{ Helper::user($link->user) }}</p>
                 <a class="d-block text-end" href="{{ $link->url }}">
                     Visit {{ parse_url($link->url, PHP_URL_HOST) }} <i class="fas fa-chevron-right"></i>
                 </a>

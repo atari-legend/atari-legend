@@ -10,7 +10,7 @@ class ChangelogController extends Controller
 {
     public function index(Request $request)
     {
-        $firstChange = Changelog::orderBy('timestamp', 'asc')
+        $firstChange = Changelog::orderBy('created_at', 'asc')
             ->first();
 
         [$section, $subsection] = $this->getFilter($request);
@@ -55,7 +55,7 @@ class ChangelogController extends Controller
             }
         }
 
-        return $changes->orderBy('timestamp', 'desc');
+        return $changes->orderBy('created_at', 'desc');
     }
 
     private function getFilter(Request $request): array

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Public;
 
+use App\Models\Andreas;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Changelog;
@@ -337,7 +338,7 @@ class ContentPagesTest extends TestCase
             'sub_section_id'   => 0,
             'sub_section_name' => '',
             'user_id'          => User::factory()->create()->getKey(),
-            'timestamp'        => Carbon::parse($date)->timestamp,
+            'created_at'       => Carbon::parse($date),
         ]);
     }
 
@@ -360,8 +361,17 @@ class ContentPagesTest extends TestCase
 
     public function test_the_about_pages_render(): void
     {
+        // The guestbook table is empty in every test and in E2ESeeder, so
+        // without a row card_andreas.blade.php renders no entry at all and
+        // nothing reaches the date it formats.
+        Andreas::forceCreate([
+            'name'       => 'Andreas',
+            'comment'    => 'Thanks for everything.',
+            'created_at' => Carbon::parse('2004-06-01 12:00:00'),
+        ]);
+
         $this->get(route('about.index'))->assertOk();
-        $this->get(route('about.andreas'))->assertOk();
+        $this->get(route('about.andreas'))->assertOk()->assertSee('June 1, 2004');
     }
 
     // Comments
@@ -371,9 +381,11 @@ class ContentPagesTest extends TestCase
         $game = Game::factory()->named('Xenon')->create();
         $user = User::factory()->create();
 
+        $this->travelTo(Carbon::parse('2026-01-01 09:00:00'));
         $this->actingAs($user)->post(route('games.comment', $game), ['comment' => 'First take.']);
         $comment = Comment::sole();
 
+        $this->travelTo(Carbon::parse('2026-01-02 15:30:00'));
         $this->actingAs($user)
             ->post(route('comments.update'), [
                 'comment_id' => $comment->getKey(),
@@ -383,7 +395,16 @@ class ContentPagesTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertSame('Second take.', $comment->fresh()->text);
+        $comment = $comment->fresh();
+
+        $this->assertSame('Second take.', $comment->text);
+
+        // The posting time is what the page shows, so an edit must leave it
+        // where it was and move updated_at instead - which is the whole
+        // reason comments carry both columns.
+        $this->assertSame('2026-01-01 09:00:00', $comment->created_at->toDateTimeString());
+        $this->assertSame('2026-01-02 15:30:00', $comment->updated_at->toDateTimeString());
+
         $this->assertSame(1, Changelog::where('action', Changelog::UPDATE)->count());
     }
 

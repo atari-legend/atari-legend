@@ -22,7 +22,7 @@ class LinkFactory extends Factory
         return [
             'name'         => fake()->unique()->company(),
             'url'          => fake()->url(),
-            'date'         => now()->timestamp,
+            'created_at'   => now(),
             'user_id'      => User::factory(),
             'imgext'       => null,
             'view_count'   => 0,

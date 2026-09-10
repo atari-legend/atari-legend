@@ -45,7 +45,7 @@
                             </a>
                         @endcontributor
                     </h3>
-                    <p class="card-subtitle text-muted">Added on {{ date('F j, Y', $link->date) }} by {{ Helper::user($link->user) }}</p>
+                    <p class="card-subtitle text-muted">Added on {{ $link->created_at->format('F j, Y') }} by {{ Helper::user($link->user) }}</p>
                     <div class="mb-2"><small><a href="{{ $link->url }}">{{ $link->url }}</a></small></div>
                     <p class="card-text">{{ $link->description }}</p>
                 </div>

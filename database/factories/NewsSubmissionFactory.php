@@ -27,7 +27,7 @@ class NewsSubmissionFactory extends Factory
             'text'          => fake()->paragraph(),
             'news_image_id' => 0,
             'user_id'       => User::factory(),
-            'date'          => time(),
+            'created_at'    => now(),
         ];
     }
 }

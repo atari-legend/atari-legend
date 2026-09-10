@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\View\Components\Admin\Crumb;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -32,7 +31,7 @@ class CommentController extends Controller
 
     public function edit(Comment $comment)
     {
-        $label = Carbon::createFromTimestamp($comment->timestamp)->toDayDateTimeString()
+        $label = $comment->created_at?->toDayDateTimeString()
             . ' by ' . Helper::user($comment->user);
 
         return view('admin.users.comments.edit')

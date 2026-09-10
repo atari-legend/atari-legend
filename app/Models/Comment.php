@@ -15,10 +15,8 @@ class Comment extends Model
     const TYPE_INTERVIEW = 'interview';
     const TYPE_ARTICLE = 'article';
 
-    public $timestamps = false;
-
     protected $fillable = [
-        'text', 'user_id', 'timestamp',
+        'text', 'user_id', 'created_at',
     ];
 
     public function user()

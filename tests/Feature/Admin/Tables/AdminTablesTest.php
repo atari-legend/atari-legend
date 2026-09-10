@@ -141,7 +141,7 @@ class AdminTablesTest extends AdminTestCase
         $this->actingAs($this->admin);
 
         Livewire::test(CommentsTable::class)
-            ->call('sortBy', 'timestamp')
+            ->call('sortBy', 'created_at')
             ->assertSee('The only one.');
     }
 
@@ -153,7 +153,6 @@ class AdminTablesTest extends AdminTestCase
         $submission->game_id = Game::factory()->named($gameName)->create()->getKey();
         $submission->user_id = User::factory()->create()->getKey();
         $submission->text = 'Something is wrong with ' . $gameName;
-        $submission->timestamp = time();
         $submission->game_done = $done;
         $submission->save();
 
@@ -195,12 +194,12 @@ class AdminTablesTest extends AdminTestCase
             ->assertDontSee('Xenon');
     }
 
-    public function test_the_submissions_table_sorts_dates_numerically(): void
+    public function test_the_submissions_table_sorts_by_date(): void
     {
         $this->submission('Xenon');
 
         Livewire::test(GameSubmissionsTable::class)
-            ->call('sortBy', 'timestamp')
+            ->call('sortBy', 'created_at')
             ->assertSee('Xenon');
     }
 
@@ -383,16 +382,16 @@ class AdminTablesTest extends AdminTestCase
     public function test_the_news_submissions_table_lists_newest_first(): void
     {
         NewsSubmission::forceCreate([
-            'headline' => 'Older submission',
-            'text'     => 'Text',
-            'user_id'  => User::factory()->create()->getKey(),
-            'date'     => strtotime('2026-01-01'),
+            'headline'   => 'Older submission',
+            'text'       => 'Text',
+            'user_id'    => User::factory()->create()->getKey(),
+            'created_at' => Carbon::parse('2026-01-01'),
         ]);
         NewsSubmission::forceCreate([
-            'headline' => 'Newer submission',
-            'text'     => 'Text',
-            'user_id'  => User::factory()->create()->getKey(),
-            'date'     => strtotime('2026-06-01'),
+            'headline'   => 'Newer submission',
+            'text'       => 'Text',
+            'user_id'    => User::factory()->create()->getKey(),
+            'created_at' => Carbon::parse('2026-06-01'),
         ]);
 
         Livewire::test(NewsSubmissionsTable::class)

@@ -210,13 +210,13 @@ class AdminStatisticsHelper
         $series = array_fill_keys($actions, $buckets);
 
         $changes = DB::table('changelogs')
-            ->select('timestamp', 'action')
-            ->where('timestamp', '>=', $from->getTimestamp())
+            ->select('created_at', 'action')
+            ->where('created_at', '>=', $from)
             ->get();
 
         foreach ($changes as $change) {
             $action = self::ACTION_ALIASES[$change->action] ?? $change->action;
-            $bucket = date('Y-m', (int) $change->timestamp);
+            $bucket = substr($change->created_at, 0, 7);
 
             if (isset($series[$action][$bucket])) {
                 $series[$action][$bucket]++;
@@ -238,7 +238,7 @@ class AdminStatisticsHelper
      */
     public static function changesByYear()
     {
-        return self::bucketByYear(DB::table('changelogs')->pluck('timestamp'));
+        return self::bucketByYear(DB::table('changelogs')->pluck('created_at'), false);
     }
 
     /**
@@ -481,7 +481,7 @@ class AdminStatisticsHelper
      */
     public static function commentsByYear()
     {
-        return self::bucketByYear(DB::table('comments')->pluck('timestamp'));
+        return self::bucketByYear(DB::table('comments')->pluck('created_at'), false);
     }
 
     /**

@@ -47,7 +47,6 @@ class InterviewController extends Controller
     {
         $comment = new Comment();
         $comment->text = $request->comment;
-        $comment->timestamp = time();
 
         $request->user()->comments()->save($comment);
         $interview->comments()->save($comment);

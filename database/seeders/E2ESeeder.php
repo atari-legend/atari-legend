@@ -315,11 +315,11 @@ class E2ESeeder extends Seeder
         ]);
 
         $this->insert('game_submissions', ['id' => self::GAME_SUBMISSION_ID], [
-            'game_id'   => self::GAME_ID,
-            'user_id'   => self::USER_STANDARD_ID,
-            'timestamp' => (string) now()->timestamp,
-            'text'      => 'Playwright test submission.',
-            'game_done' => 'N',
+            'game_id'    => self::GAME_ID,
+            'user_id'    => self::USER_STANDARD_ID,
+            'created_at' => now(),
+            'text'       => 'Playwright test submission.',
+            'game_done'  => 'N',
         ]);
 
         $this->insert('game_akas', ['id' => self::GAME_AKA_ID], [
@@ -483,9 +483,10 @@ class E2ESeeder extends Seeder
         // 'Unknown comment type' without one, and the admin comment form
         // builds a route name out of it.
         $this->insert('comments', ['id' => self::COMMENT_ID], [
-            'text'      => 'Playwright test comment.',
-            'timestamp' => (string) now()->timestamp,
-            'user_id'   => self::USER_STANDARD_ID,
+            'text'       => 'Playwright test comment.',
+            'created_at' => now(),
+            'updated_at' => now(),
+            'user_id'    => self::USER_STANDARD_ID,
         ]);
         $this->insert('game_comment', [
             'game_id'    => self::GAME_ID,
@@ -613,7 +614,7 @@ class E2ESeeder extends Seeder
         $this->insert('links', ['id' => self::LINK_ID], [
             'name'        => self::LINK_NAME,
             'url'         => 'https://example.com/',
-            'date'        => now()->timestamp,
+            'created_at'  => now(),
             'user_id'     => self::USER_ADMIN_ID,
             'imgext'      => 'png',
             'inactive'    => 0,
