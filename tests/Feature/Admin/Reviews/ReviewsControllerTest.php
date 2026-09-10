@@ -5,7 +5,6 @@ namespace Tests\Feature\Admin\Reviews;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScreenshotComment;
 use App\Models\Screenshot;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -206,13 +205,13 @@ class ReviewsControllerTest extends AdminTestCase
             'screenshot_comment_' . $screenshot->getKey() => 'The first level',
         ]))->assertRedirect();
 
-        $this->assertSame('The first level', ReviewScreenshotComment::sole()->text);
+        $this->assertSame('The first level', DB::table('review_screenshot')->value('description'));
 
         $this->put(route('admin.reviews.reviews.update', $review), $this->payload([
             'screenshot_comment_' . $screenshot->getKey() => 'A better caption',
         ]));
 
-        $this->assertSame('A better caption', ReviewScreenshotComment::sole()->text);
+        $this->assertSame('A better caption', DB::table('review_screenshot')->value('description'));
 
         // A null value removes the pivot, and the caption with it
         $this->put(route('admin.reviews.reviews.update', $review), $this->payload([

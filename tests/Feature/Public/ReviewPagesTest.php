@@ -6,7 +6,6 @@ use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScreenshotComment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -226,8 +225,8 @@ class ReviewPagesTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertSame(1, ReviewScreenshotComment::query()->count());
-        $this->assertSame('The second screen', ReviewScreenshotComment::sole()->text);
+        $this->assertSame(1, DB::table('review_screenshot')->count());
+        $this->assertSame('The second screen', DB::table('review_screenshot')->value('description'));
 
         $this->assertSame(
             $screenshots[1]->getKey(),

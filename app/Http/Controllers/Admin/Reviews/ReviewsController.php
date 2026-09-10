@@ -7,11 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScreenshotComment;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ReviewsController extends Controller
@@ -110,24 +108,14 @@ class ReviewsController extends Controller
             ->filter(fn ($v, $k) => Str::startsWith($k, 'screenshot_comment_'))
             ->each(function ($value, $key) use ($review) {
                 $screenshotId = (int) str_replace('screenshot_comment_', '', $key);
-                $screenshot = $review->getScreenshotComment($screenshotId);
-                if ($screenshot?->pivot?->comment && $value !== null) {
-                    $screenshot->pivot->comment->text = $value;
-                    $screenshot->pivot->comment->save();
-                } elseif ($screenshot?->pivot && $value === null) {
-                    // Screenshot comment exists but now should be removed
-                    $screenshot->pivot->delete();
-                } elseif ($value !== null) {
-                    // Screenshot comment does not exist, create new pivot and comment
-                    $id = DB::table('review_screenshot')
-                        ->insertGetId([
-                            'review_id'     => $review->getKey(),
-                            'screenshot_id' => $screenshotId,
-                        ]);
-                    $comment = new ReviewScreenshotComment();
-                    $comment->text = $value;
-                    $comment->review_screenshot_id = $id;
-                    $comment->save();
+                if ($value === null) {
+                    // A review carries only the screenshots it has captioned,
+                    // so clearing the caption takes the screenshot with it.
+                    $review->screenshots()->detach($screenshotId);
+                } else {
+                    $review->screenshots()->syncWithoutDetaching([
+                        $screenshotId => ['description' => $value],
+                    ]);
                 }
             });
 

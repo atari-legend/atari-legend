@@ -6,7 +6,6 @@ use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleScreenshot;
-use App\Models\ArticleScreenshotComment;
 use App\Models\ArticleType;
 use App\Models\Changelog;
 use App\Models\Screenshot;
@@ -193,18 +192,7 @@ class ArticleController extends Controller
             ->each(function ($value, $key) {
                 $screenshotId = str_replace('description-', '', $key);
                 $articleScreenshot = ArticleScreenshot::findOrFail($screenshotId);
-                $comment = $articleScreenshot->comment;
-                if (! $comment && $value) {
-                    $comment = $articleScreenshot->comment()->save(new ArticleScreenshotComment([
-                        'text' => $value,
-                    ]));
-                } elseif ($comment && $value) {
-                    $comment->update([
-                        'text' => $value,
-                    ]);
-                } elseif ($comment && ! $value) {
-                    $comment->delete();
-                }
+                $articleScreenshot->update(['description' => $value ?: null]);
             });
 
         ChangelogHelper::insert([

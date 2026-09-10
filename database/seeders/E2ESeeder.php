@@ -401,10 +401,7 @@ class E2ESeeder extends Seeder
         $this->insert('article_screenshot', ['id' => 1], [
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
-        ]);
-        $this->insert('article_screenshot_comments', ['id' => 1], [
-            'article_screenshot_id' => 1,
-            'text'                  => self::ARTICLE_SCREENSHOT_CAPTION,
+            'description'   => self::ARTICLE_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
@@ -439,19 +436,13 @@ class E2ESeeder extends Seeder
             'published_at'  => now(),
         ]);
 
-        // A screenshot on the interview, and the caption row that goes with it.
-        // interviews/card_interview.blade.php reads
-        // $screenshot->pivot->comment->text without guarding it, so a
-        // screenshot seeded without its comment would 500 the public page
-        // rather than render an empty caption.
+        // A screenshot on the interview, with the caption the public card
+        // renders beneath it.
         $this->insert('screenshots', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('interview_screenshot', ['id' => 1], [
             'interview_id'  => self::INTERVIEW_ID,
             'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
-        ]);
-        $this->insert('interview_screenshot_comments', ['id' => 1], [
-            'interview_screenshot_id' => 1,
-            'text'                    => self::INTERVIEW_SCREENSHOT_CAPTION,
+            'description'   => self::INTERVIEW_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Changelog;
 use App\Models\Interview;
 use App\Models\InterviewScreenshot;
-use App\Models\InterviewScreenshotComment;
 use App\Models\Screenshot;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
@@ -188,18 +187,7 @@ class InterviewsController extends Controller
             ->each(function ($value, $key) {
                 $screenshotId = str_replace('description-', '', $key);
                 $interviewScreenshot = InterviewScreenshot::findOrFail($screenshotId);
-                $comment = $interviewScreenshot->comment;
-                if (! $comment && $value) {
-                    $interviewScreenshot->comment()->save(new InterviewScreenshotComment([
-                        'text' => $value,
-                    ]));
-                } elseif ($comment && $value) {
-                    $comment->update([
-                        'text' => $value,
-                    ]);
-                } elseif ($comment && ! $value) {
-                    $comment->delete();
-                }
+                $interviewScreenshot->update(['description' => $value ?: null]);
             });
 
         ChangelogHelper::insert([

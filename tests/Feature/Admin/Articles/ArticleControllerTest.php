@@ -219,8 +219,8 @@ class ArticleControllerTest extends AdminTestCase
     }
 
     /**
-     * Captions are posted as description-{pivot id}, and the pivot row is what
-     * the comment hangs off - not the screenshot.
+     * Captions are posted as description-{pivot id}, and the caption is a
+     * column on the pivot row - not on the screenshot.
      */
     public function test_a_caption_can_be_added_changed_and_removed(): void
     {
@@ -235,21 +235,21 @@ class ArticleControllerTest extends AdminTestCase
             'description-' . $pivot->getKey() => 'The blitter at work',
         ])->assertRedirect(route('admin.articles.articles.edit', $article));
 
-        $this->assertSame('The blitter at work', $pivot->fresh()->comment->text);
+        $this->assertSame('The blitter at work', $pivot->fresh()->description);
 
         // Changed
         $this->put(route('admin.articles.articles.image.update', $article), [
             'description-' . $pivot->getKey() => 'A better caption',
         ]);
 
-        $this->assertSame('A better caption', $pivot->fresh()->comment->text);
+        $this->assertSame('A better caption', $pivot->fresh()->description);
 
         // Removed
         $this->put(route('admin.articles.articles.image.update', $article), [
             'description-' . $pivot->getKey() => '',
         ]);
 
-        $this->assertNull($pivot->fresh()->comment);
+        $this->assertNull($pivot->fresh()->description);
     }
 
     public function test_an_empty_caption_on_an_uncaptioned_image_stays_empty(): void
@@ -264,7 +264,7 @@ class ArticleControllerTest extends AdminTestCase
             'description-' . $pivot->getKey() => '',
         ])->assertRedirect();
 
-        $this->assertNull($pivot->fresh()->comment);
+        $this->assertNull($pivot->fresh()->description);
     }
 
     public function test_a_caption_for_an_unknown_image_is_a_404(): void

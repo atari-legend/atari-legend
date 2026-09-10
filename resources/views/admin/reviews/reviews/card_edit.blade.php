@@ -178,7 +178,7 @@
                                 </div>
                                 <div class="col-10">
                                     <input type="text" class="form-control @error('screenshot_comment_'.$screenshot->getKey()) is-invalid @enderror" id="screenshot-comment-{{ $screenshot->getKey() }}"
-                                        value="{{ old('screenshot_comment_'.$screenshot->getKey(), isset($review) ? $review->getScreenshotComment($screenshot->getKey())?->pivot?->comment?->text : '') }}"
+                                        value="{{ old('screenshot_comment_'.$screenshot->getKey(), isset($review) ? $review->getScreenshotComment($screenshot->getKey())?->pivot?->description : '') }}"
                                         name="screenshot_comment_{{ $screenshot->getKey() }}" placeholder="Comment for this screenshot">
 
                                     @error('screenshot_comment_'.$screenshot->getKey())

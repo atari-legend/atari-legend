@@ -19,10 +19,12 @@
         <div class="float-end col-5 col-sm-3 ps-2 text-center text-muted lightbox-gallery">
             @foreach ($review->screenshots->sortBy('id') as $screenshot)
                 <div class="bg-dark p-2">
-                    <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $review->game) }}" title="{{ $screenshot->pivot->comment->text ?? '' }}">
-                        <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $review->game) }}" alt="{{ $screenshot->pivot->comment->text ?? '' }}" loading="lazy">
+                    <a class="lightbox-link" href="{{ $screenshot->getUrlRoute('game', $review->game) }}" title="{{ $screenshot->pivot->description }}">
+                        <img class="w-100 mb-2" src="{{ $screenshot->getUrlRoute('game', $review->game) }}" alt="{{ $screenshot->pivot->description }}" loading="lazy">
                     </a>
-                    <p class="pb-5 mb-0">{{ $screenshot->pivot->comment->text }}</p>
+                    @isset($screenshot->pivot->description)
+                        <p class="pb-5 mb-0">{{ $screenshot->pivot->description }}</p>
+                    @endisset
                 </div>
             @endforeach
         </div>
