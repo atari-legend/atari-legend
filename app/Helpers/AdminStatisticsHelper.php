@@ -451,7 +451,7 @@ class AdminStatisticsHelper
      */
     public static function userSignupsByYear()
     {
-        return self::bucketByYear(DB::table('users')->pluck('join_date'));
+        return self::bucketByYear(DB::table('users')->pluck('created_at'), false);
     }
 
     /**

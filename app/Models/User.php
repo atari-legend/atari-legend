@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
     const ACTIVE = 0;
     const INACTIVE = 1;
 
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
     /* The attributes that are mass assignable.
      *
@@ -27,8 +27,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'userid', 'email', 'avatar_ext',
         'website', 'facebook', 'twitter', 'atari_forum',
-        'permission', 'join_date', 'inactive',
+        'permission', 'inactive',
         'sha512_password', 'salt',
+    ];
+
+    protected $casts = [
+        'last_visit_at'     => 'datetime',
+        'email_verified_at' => 'datetime',
     ];
 
     /**

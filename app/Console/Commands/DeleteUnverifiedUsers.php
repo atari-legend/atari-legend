@@ -47,8 +47,8 @@ class DeleteUnverifiedUsers extends Command
         $minDate = Carbon::now()->subDay();
 
         $users = User::whereNull('email_verified_at')
-            ->where('join_date', '<', $minDate->timestamp)
-            ->orderBy('join_date')
+            ->where('created_at', '<', $minDate)
+            ->orderBy('created_at')
             ->get();
 
         if ($users->isNotEmpty()) {
@@ -71,7 +71,7 @@ class DeleteUnverifiedUsers extends Command
                 }
 
                 $this->comment("Deleting '" . $user->userid . "' " . $user->email . ' (Join date: '
-                    . Carbon::createFromTimestamp($user->join_date)->toDateTimeString() . ')');
+                    . $user->created_at->toDateTimeString() . ')');
 
                 if ($this->option('delete')) {
                     $user->delete();

@@ -76,7 +76,6 @@ class RegisterController extends Controller implements HasMiddleware
             'twitter'         => $data['twitter'] ?? null,
             'atari_forum'     => $data['af'] ?? null,
             'permission'      => User::PERMISSION_USER,
-            'join_date'       => time(),
             'inactive'        => User::ACTIVE,
         ]);
     }

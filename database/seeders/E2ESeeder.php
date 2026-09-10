@@ -271,8 +271,7 @@ class E2ESeeder extends Seeder
                     'sha512_password'   => $sha512Password,
                     'permission'        => $permission,
                     'inactive'          => User::ACTIVE,
-                    'join_date'         => (string) now()->timestamp,
-                    'last_visit'        => (string) now()->timestamp,
+                    'last_visit_at'     => now(),
                     'remember_token'    => Str::random(10),
                     'karma'             => 0,
                 ]

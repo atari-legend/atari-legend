@@ -14,9 +14,9 @@
             <div class="col-12 col-md-6">
                 <div class="mb-3">
                     <label for="joined" class="form-label">Joined</label>
-                    @if ($user->join_date)
+                    @if ($user->created_at)
                         <input type="text" readonly class="form-control" id="joined"
-                            value="{{ Carbon\Carbon::createFromTimestamp($user->join_date)->toDayDateTimeString() }}">
+                            value="{{ $user->created_at->toDayDateTimeString() }}">
                     @else
                         <input type="text" readonly class="form-control-plaintext" id="joined" value="-">
                     @endif
@@ -24,9 +24,9 @@
 
                 <div class="mb-3">
                     <label for="visit" class="form-label">Last visit</label>
-                    @if ($user->last_visit)
+                    @if ($user->last_visit_at)
                         <input type="text" readonly class="form-control" id="visit"
-                            value="{{ Carbon\Carbon::createFromTimestamp($user->last_visit)->diffForHumans() }}">
+                            value="{{ $user->last_visit_at->diffForHumans() }}">
                     @else
                         <input type="text" readonly class="form-control-plaintext" id="visit" value="-">
                     @endif

@@ -91,17 +91,18 @@ class AdminTablesTest extends AdminTestCase
     }
 
     /**
-     * Join date and last visit are unix timestamps kept in varchar columns, so
-     * they have to be sorted numerically rather than as text - '9' must not
-     * come after '10'.
+     * Join date and last visit were unix timestamps kept in varchar columns
+     * until 2026_09_06_110200, which sorted as text - '999999999' after
+     * '1000000000'. The two dates below are the pair that used to come back
+     * the wrong way round.
      */
-    public function test_the_users_table_sorts_dates_numerically(): void
+    public function test_the_users_table_sorts_by_join_date(): void
     {
-        User::factory()->create(['userid' => 'Older', 'join_date' => '999999999']);
-        User::factory()->create(['userid' => 'Newer', 'join_date' => '1000000000']);
+        User::factory()->create(['userid' => 'Older', 'created_at' => Carbon::createFromTimestamp(999999999)]);
+        User::factory()->create(['userid' => 'Newer', 'created_at' => Carbon::createFromTimestamp(1000000000)]);
 
         Livewire::test(UsersTable::class)
-            ->call('sortBy', 'join_date')
+            ->call('sortBy', 'created_at')
             ->assertSeeInOrder(['Older', 'Newer']);
     }
 
