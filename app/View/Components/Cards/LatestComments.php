@@ -43,7 +43,7 @@ class LatestComments extends Component
             $comments->where('user_id', $this->user->getKey());
         }
 
-        $comments = $comments->orderBy('timestamp', 'desc')
+        $comments = $comments->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 

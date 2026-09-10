@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Andreas extends Model
 {
-    public $timestamps = false;
+    const UPDATED_AT = null;
 }

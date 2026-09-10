@@ -170,7 +170,7 @@
                                             </a>
                                         @endif
                                     </td>
-                                    <td>{{ $dump->date->toDayDateTimeString() }}</td>
+                                    <td>{{ $dump->created_at->toDayDateTimeString() }}</td>
                                     <td>{{ Helper::user($dump->user) }}</td>
                                     <td>{{ Helper::fileSize($dump->size) }}</td>
                                     <td>

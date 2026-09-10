@@ -10,7 +10,6 @@ use App\Models\InterviewScreenshot;
 use App\Models\InterviewScreenshotComment;
 use App\Models\Screenshot;
 use App\View\Components\Admin\Crumb;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -63,7 +62,7 @@ class InterviewsController extends Controller
             'text'          => $request->text,
             'intro'         => $request->intro,
             'chapters'      => $request->chapters,
-            'date'          => Carbon::parse($request->date)->timestamp,
+            'published_at'  => $request->published_at,
         ]);
         $interview->save();
 
@@ -89,12 +88,12 @@ class InterviewsController extends Controller
         $request->validate($this->getValidationRules());
 
         $interview->update([
-            'user_id'  => $request->author,
-            'draft'    => $request->draft ? true : false,
-            'text'     => $request->text,
-            'intro'    => $request->intro,
-            'chapters' => $request->chapters,
-            'date'     => Carbon::parse($request->date)->timestamp,
+            'user_id'      => $request->author,
+            'draft'        => $request->draft ? true : false,
+            'text'         => $request->text,
+            'intro'        => $request->intro,
+            'chapters'     => $request->chapters,
+            'published_at' => $request->published_at,
         ]);
 
         ChangelogHelper::insert([
@@ -219,12 +218,12 @@ class InterviewsController extends Controller
     private function getValidationRules(): array
     {
         return [
-            'author'   => 'required|exists:users,id',
-            'date'     => 'required|date',
-            'text'     => 'required',
-            'intro'    => 'nullable',
-            'chapters' => 'nullable',
-            'draft'    => 'nullable',
+            'author'       => 'required|exists:users,id',
+            'published_at' => 'required|date',
+            'text'         => 'required',
+            'intro'        => 'nullable',
+            'chapters'     => 'nullable',
+            'draft'        => 'nullable',
         ];
     }
 }

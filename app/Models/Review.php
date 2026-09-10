@@ -18,12 +18,12 @@ class Review extends Model implements Feedable
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'draft', 'text', 'date', 'submission',
+        'user_id', 'draft', 'text', 'published_at', 'submission',
         'graphics', 'sound', 'gameplay', 'overall',
     ];
 
     protected $casts = [
-        'date' => 'datetime:timestamp',
+        'published_at' => 'datetime',
     ];
 
     public function user()
@@ -67,7 +67,7 @@ class Review extends Model implements Feedable
             'id'         => $this->getKey(),
             'title'      => 'Review: ' . $this->games->first()->name,
             'summary'    => Helper::bbCode(Helper::extractTag(e($this->text), 'frontpage')),
-            'updated'    => $this->date,
+            'updated'    => $this->published_at,
             'link'       => route('reviews.show', $this),
             'authorName' => Helper::user($this->user),
         ]);

@@ -6,7 +6,7 @@
         <p class="card-subtitle mb-3">
             <span class="text-muted">By</span> {{ Helper::user($submission->user) }}
             <span class="text-muted">on</span>
-            {{ Carbon\Carbon::createFromTimestamp($submission->timestamp)->toDayDateTimeString() }}
+            {{ $submission->created_at?->toDayDateTimeString() }}
             <br>
             <span class="text-muted">For</span> <a
                 href="{{ route('games.show', $submission->game) }}">{{ $submission->game->name }}</a>

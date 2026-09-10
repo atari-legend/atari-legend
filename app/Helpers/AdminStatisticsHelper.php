@@ -210,13 +210,13 @@ class AdminStatisticsHelper
         $series = array_fill_keys($actions, $buckets);
 
         $changes = DB::table('changelogs')
-            ->select('timestamp', 'action')
-            ->where('timestamp', '>=', $from->getTimestamp())
+            ->select('created_at', 'action')
+            ->where('created_at', '>=', $from)
             ->get();
 
         foreach ($changes as $change) {
             $action = self::ACTION_ALIASES[$change->action] ?? $change->action;
-            $bucket = date('Y-m', (int) $change->timestamp);
+            $bucket = substr($change->created_at, 0, 7);
 
             if (isset($series[$action][$bucket])) {
                 $series[$action][$bucket]++;
@@ -238,7 +238,7 @@ class AdminStatisticsHelper
      */
     public static function changesByYear()
     {
-        return self::bucketByYear(DB::table('changelogs')->pluck('timestamp'));
+        return self::bucketByYear(DB::table('changelogs')->pluck('created_at'));
     }
 
     /**
@@ -288,7 +288,7 @@ class AdminStatisticsHelper
     {
         $dates = DB::table('game_releases')->whereNotNull('date')->pluck('date');
 
-        return self::bucketByYear($dates, false) + [
+        return self::bucketByYear($dates) + [
             'undated' => DB::table('game_releases')->whereNull('date')->count(),
         ];
     }
@@ -390,7 +390,7 @@ class AdminStatisticsHelper
             ->whereNotNull('menus.date')
             ->pluck('menus.date');
 
-        return self::bucketByYear($dates, false);
+        return self::bucketByYear($dates);
     }
 
     /**
@@ -418,16 +418,16 @@ class AdminStatisticsHelper
     public static function contentByYear()
     {
         $sources = [
-            'News'       => DB::table('news')->pluck('date'),
-            'Reviews'    => DB::table('reviews')->pluck('date'),
-            'Interviews' => DB::table('interviews')->pluck('date'),
-            'Articles'   => DB::table('articles')->pluck('date'),
+            'News'       => DB::table('news')->pluck('published_at'),
+            'Reviews'    => DB::table('reviews')->pluck('published_at'),
+            'Interviews' => DB::table('interviews')->pluck('published_at'),
+            'Articles'   => DB::table('articles')->pluck('published_at'),
         ];
 
         $years = [];
         $counted = [];
-        foreach ($sources as $label => $timestamps) {
-            $counted[$label] = self::countByYear($timestamps);
+        foreach ($sources as $label => $dates) {
+            $counted[$label] = self::countByYear($dates);
             $years = array_merge($years, array_keys($counted[$label]));
         }
 
@@ -451,7 +451,7 @@ class AdminStatisticsHelper
      */
     public static function userSignupsByYear()
     {
-        return self::bucketByYear(DB::table('users')->pluck('join_date'));
+        return self::bucketByYear(DB::table('users')->pluck('created_at'));
     }
 
     /**
@@ -481,7 +481,7 @@ class AdminStatisticsHelper
      */
     public static function commentsByYear()
     {
-        return self::bucketByYear(DB::table('comments')->pluck('timestamp'));
+        return self::bucketByYear(DB::table('comments')->pluck('created_at'));
     }
 
     /**
@@ -555,13 +555,12 @@ class AdminStatisticsHelper
     /**
      * Turn a list of dates into a per-year series with no gaps.
      *
-     * @param  \Illuminate\Support\Collection  $dates  Unix timestamps, or date strings when $epoch is false
-     * @param  bool  $epoch
+     * @param  \Illuminate\Support\Collection  $dates  Date or datetime strings
      * @return array ['labels' => string[], 'data' => int[]]
      */
-    private static function bucketByYear($dates, $epoch = true)
+    private static function bucketByYear($dates)
     {
-        return self::fillYears(self::countByYear($dates, $epoch));
+        return self::fillYears(self::countByYear($dates));
     }
 
     /**
@@ -584,11 +583,10 @@ class AdminStatisticsHelper
     /**
      * Count how many of the given dates fall in each year.
      *
-     * @param  \Illuminate\Support\Collection  $dates
-     * @param  bool  $epoch  Whether the values are unix timestamps rather than date strings
+     * @param  \Illuminate\Support\Collection  $dates  Date or datetime strings
      * @return array Map of year => count
      */
-    private static function countByYear($dates, $epoch = true)
+    private static function countByYear($dates)
     {
         $counts = [];
 
@@ -597,11 +595,9 @@ class AdminStatisticsHelper
                 continue;
             }
 
-            // date() rather than Carbon here: this runs over every row of
+            // substr() rather than Carbon here: this runs over every row of
             // changelogs, where building a Carbon instance per row costs ~700ms.
-            $year = $epoch
-                ? (int) date('Y', (int) $date)
-                : (int) Carbon::parse($date)->year;
+            $year = (int) substr($date, 0, 4);
 
             if ($year < self::YEAR_MIN || $year > self::YEAR_MAX) {
                 continue;

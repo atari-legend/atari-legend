@@ -9,11 +9,7 @@ class NewsSubmission extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
-    protected $casts = [
-        'date' => 'datetime:timestamp',
-    ];
+    const UPDATED_AT = null;
 
     public function user()
     {

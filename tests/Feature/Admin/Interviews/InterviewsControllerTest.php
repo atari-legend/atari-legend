@@ -7,7 +7,6 @@ use App\Models\Individual;
 use App\Models\Interview;
 use App\Models\InterviewScreenshot;
 use App\Models\Screenshot;
-use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
@@ -24,12 +23,12 @@ class InterviewsControllerTest extends AdminTestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'author'   => $this->admin->getKey(),
-            'date'     => '2026-03-14',
-            'text'     => 'The interview itself.',
-            'intro'    => 'A short introduction.',
-            'chapters' => null,
-            'draft'    => null,
+            'author'       => $this->admin->getKey(),
+            'published_at' => '2026-03-14T09:30',
+            'text'         => 'The interview itself.',
+            'intro'        => 'A short introduction.',
+            'chapters'     => null,
+            'draft'        => null,
         ], $overrides);
     }
 
@@ -69,8 +68,8 @@ class InterviewsControllerTest extends AdminTestCase
         $this->assertSame('The interview itself.', $interview->text);
         $this->assertSame('A short introduction.', $interview->intro);
         $this->assertSame(
-            Carbon::parse('2026-03-14')->timestamp,
-            $interview->getRawOriginal('date')
+            '2026-03-14 09:30:00',
+            $interview->getRawOriginal('published_at')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Interviews', 'Jochen Hippel');
@@ -108,7 +107,7 @@ class InterviewsControllerTest extends AdminTestCase
 
         $this->post(route('admin.interviews.interviews.store'), [
             'individual' => $individual->getKey(),
-        ])->assertSessionHasErrors(['author', 'date', 'text']);
+        ])->assertSessionHasErrors(['author', 'published_at', 'text']);
 
         $this->assertSame(0, Interview::query()->count());
     }

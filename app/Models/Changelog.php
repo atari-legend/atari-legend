@@ -13,16 +13,12 @@ class Changelog extends Model implements Feedable
     const UPDATE = 'Update';
     const DELETE = 'Delete';
 
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'section', 'section_id', 'section_name',
         'sub_section', 'sub_section_id', 'sub_section_name',
-        'user_id', 'action', 'timestamp',
-    ];
-
-    protected $casts = [
-        'timestamp' => 'datetime:timestamp',
+        'user_id', 'action', 'created_at',
     ];
 
     public function user()
@@ -37,7 +33,7 @@ class Changelog extends Model implements Feedable
             'title'      => $this->action . ' in ' . $this->section . ': ' . $this->section_name,
             'summary'    => $this->action . ' in ' . $this->section . ': ' . $this->section_name
                 . ', sub-section ' . $this->sub_section . ': ' . $this->sub_section_name,
-            'updated'    => $this->timestamp,
+            'updated'    => $this->created_at,
             // Use an ID so that items in the feed have different IDs
             // The ID is effectively ignored in the Changelog page
             'link'       => route('changelog.index', ['id' => $this->getKey()]),

@@ -11,7 +11,6 @@ use App\Models\ArticleType;
 use App\Models\Changelog;
 use App\Models\Screenshot;
 use App\View\Components\Admin\Crumb;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -67,7 +66,7 @@ class ArticleController extends Controller
             'article_type_id' => $request->type,
             'draft'           => $request->draft ? true : false,
             'title'           => $request->title,
-            'date'            => Carbon::parse($request->date)->timestamp,
+            'published_at'    => $request->published_at,
             'text'            => $request->text,
             'intro'           => $request->intro,
         ]);
@@ -96,7 +95,7 @@ class ArticleController extends Controller
             'article_type_id' => $request->type,
             'draft'           => $request->draft ? true : false,
             'title'           => $request->title,
-            'date'            => Carbon::parse($request->date)->timestamp,
+            'published_at'    => $request->published_at,
             'text'            => $request->text,
             'intro'           => $request->intro,
         ]);
@@ -224,13 +223,13 @@ class ArticleController extends Controller
     private function getValidationRules(): array
     {
         return [
-            'title'  => 'required',
-            'author' => 'required|exists:users,id',
-            'date'   => 'required|date',
-            'intro'  => 'required',
-            'text'   => 'required',
-            'type'   => 'nullable',
-            'draft'  => 'nullable',
+            'title'        => 'required',
+            'author'       => 'required|exists:users,id',
+            'published_at' => 'required|date',
+            'intro'        => 'required',
+            'text'         => 'required',
+            'type'         => 'nullable',
+            'draft'        => 'nullable',
         ];
     }
 }

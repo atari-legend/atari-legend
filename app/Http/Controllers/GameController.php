@@ -182,7 +182,6 @@ class GameController extends Controller
     {
         $comment = new Comment();
         $comment->text = $request->comment;
-        $comment->timestamp = time();
 
         $request->user()->comments()->save($comment);
         $game->comments()->save($comment);
@@ -203,7 +202,6 @@ class GameController extends Controller
     public function submit(Game $game, Request $request)
     {
         $submission = new GameSubmission();
-        $submission->timestamp = time();
         $submission->text = $request->info;
         $submission->game_done = GameSubmission::SUBMISSION_NEW;
 

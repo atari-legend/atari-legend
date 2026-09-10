@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -40,37 +39,21 @@ class UsersTable extends DataTableComponent
                 ->sortable(function (Builder $query, $direction) {
                     return $query->orderBy('avatar_ext', $direction);
                 }),
-            Column::make('Join date', 'join_date')
-                ->format(
-                    fn ($value) => $value
-                        ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
-                        : '-'
-                )
-                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw(
-                    'join_date + 0 ' . self::direction($direction)
-                )),
-            Column::make('Last visit', 'last_visit')
-                ->format(
-                    fn ($value) => $value
-                        ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
-                        : '-'
-                )
-                ->sortable(fn (Builder $query, $direction) => $query->orderByRaw(
-                    'last_visit + 0 ' . self::direction($direction)
-                )),
+            Column::make('Join date', 'created_at')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
+                ->sortable(
+                    fn (Builder $query, $direction) => $query->orderBy('created_at', $direction)
+                ),
+            Column::make('Last visit', 'last_visit_at')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
+                ->sortable(
+                    fn (Builder $query, $direction) => $query->orderBy('last_visit_at', $direction)
+                ),
             Column::make('Actions')
                 ->label(
                     fn ($row) => view('admin.users.users.datatable_actions')->with(['row' => $row])
                 ),
         ];
-    }
-
-    /**
-     * Only ever 'asc' or 'desc', since the value is interpolated into raw SQL.
-     */
-    private static function direction(string $direction): string
-    {
-        return $direction === 'asc' ? 'asc' : 'desc';
     }
 
     public function builder(): Builder

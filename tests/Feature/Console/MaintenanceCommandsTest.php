@@ -29,8 +29,8 @@ class MaintenanceCommandsTest extends TestCase
     private function unverifiedUser(string $name, string $joined): User
     {
         return User::factory()->unverified()->create([
-            'userid'    => $name,
-            'join_date' => (string) Carbon::parse($joined)->timestamp,
+            'userid'     => $name,
+            'created_at' => Carbon::parse($joined),
         ]);
     }
 
@@ -63,8 +63,8 @@ class MaintenanceCommandsTest extends TestCase
     {
         $this->unverifiedUser('JustRegistered', Carbon::now()->subMinutes(5)->toDateTimeString());
         User::factory()->create([
-            'userid'    => 'Verified',
-            'join_date' => (string) Carbon::parse('2020-01-01')->timestamp,
+            'userid'     => 'Verified',
+            'created_at' => Carbon::parse('2020-01-01'),
         ]);
 
         $this->artisan('user:delete-unverified', ['--delete' => true])->assertExitCode(0);

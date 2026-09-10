@@ -52,7 +52,7 @@
                                             </abbr>
                                         </td>
                                         <td class="ps-2 text-nowrap">{{ Helper::fileSize($dump->size) }}</td>
-                                        <td class="ps-2 text-nowrap d-none d-sm-table-cell">{{ $dump->date->format('F j, Y') }}
+                                        <td class="ps-2 text-nowrap d-none d-sm-table-cell">{{ $dump->created_at->format('F j, Y') }}
                                         <td class="d-none d-sm-table-cell">{{ Helper::user($dump->user) }}</td>
                                         <td>{{ $dump->notes }}</td>
                                     </tr>

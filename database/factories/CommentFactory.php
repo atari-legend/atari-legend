@@ -18,9 +18,6 @@ class CommentFactory extends Factory
     protected $model = Comment::class;
 
     /**
-     * `timestamp` is a unix timestamp held in a varchar column, which is what
-     * the controllers write - anything date-shaped there sorts wrongly.
-     *
      * A bare comment is attached to nothing, and `type`, `target` and
      * `target_id` all throw in that state because each walks the four pivot
      * tables looking for a match. Use one of the `on*()` states for anything
@@ -29,9 +26,9 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'text'      => fake()->sentence(),
-            'user_id'   => User::factory(),
-            'timestamp' => time(),
+            'text'       => fake()->sentence(),
+            'user_id'    => User::factory(),
+            'created_at' => now(),
         ];
     }
 

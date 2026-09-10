@@ -17,7 +17,7 @@ class ArticlesTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('date', 'desc');
+        $this->setDefaultSort('published_at', 'desc');
     }
 
     public function columns(): array
@@ -36,12 +36,10 @@ class ArticlesTable extends DataTableComponent
                         ->orWhere('intro', 'like', "%{$term}%")
                 )
                 ->sortable(),
-            Column::make('Date')
-                ->label(
-                    fn ($row) => $row->date?->toFormattedDateString() ?? '-'
-                )
+            Column::make('Date', 'published_at')
+                ->format(fn ($value) => $value?->toFormattedDateString() ?? '-')
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('date', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('published_at', $direction)
                 ),
             Column::make('Author')
                 ->label(fn ($row) => Helper::user($row->user)),

@@ -93,11 +93,11 @@ class AdminRenderTest extends AdminTestCase
         ]);
 
         $submission = GameSubmission::forceCreate([
-            'game_id'   => $game->getKey(),
-            'user_id'   => User::factory()->create()->getKey(),
-            'timestamp' => (string) now()->timestamp,
-            'text'      => 'Please add this.',
-            'game_done' => GameSubmission::SUBMISSION_NEW,
+            'game_id'    => $game->getKey(),
+            'user_id'    => User::factory()->create()->getKey(),
+            'created_at' => now(),
+            'text'       => 'Please add this.',
+            'game_done'  => GameSubmission::SUBMISSION_NEW,
         ]);
 
         return [

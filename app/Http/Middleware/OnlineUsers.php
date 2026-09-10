@@ -21,14 +21,14 @@ class OnlineUsers
      */
     public function handle($request, Closure $next)
     {
-        $oneMinuteAgo = Carbon::now()->subMinute()->timestamp;
-        $onlineUsers = User::where('last_visit', '>=', $oneMinuteAgo)
+        $oneMinuteAgo = Carbon::now()->subMinute();
+        $onlineUsers = User::where('last_visit_at', '>=', $oneMinuteAgo)
             ->where('inactive', '=', 0)
             ->get();
         $request->attributes->set('onlineUsers', $onlineUsers);
 
-        $oneDayAgo = Carbon::now()->subDay()->timestamp;
-        $pastDayUsers = User::where('last_visit', '>=', $oneDayAgo)
+        $oneDayAgo = Carbon::now()->subDay();
+        $pastDayUsers = User::where('last_visit_at', '>=', $oneDayAgo)
             ->where('inactive', '=', 0)
             ->get();
         $request->attributes->set('pastDayUsers', $pastDayUsers);
@@ -36,7 +36,7 @@ class OnlineUsers
         $response = $next($request);
 
         if (Auth::check()) {
-            Auth::user()->last_visit = time();
+            Auth::user()->last_visit_at = now();
             // Do not trigger an event otherwise it will be logged in the changelog
             Auth::user()->saveQuietly();
         }

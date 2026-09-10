@@ -10,13 +10,12 @@ class Link extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'name',
         'url',
         'description',
-        'date',
         'user_id',
         'inactive',
     ];

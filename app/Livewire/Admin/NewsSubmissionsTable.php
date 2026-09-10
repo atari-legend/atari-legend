@@ -13,7 +13,7 @@ class NewsSubmissionsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('date', 'desc');
+        $this->setDefaultSort('created_at', 'desc');
     }
 
     public function columns(): array
@@ -28,7 +28,7 @@ class NewsSubmissionsTable extends DataTableComponent
             // Sortable so that configure()'s default sort on this column takes
             // effect - without it the queue came back in insertion order rather
             // than newest first.
-            Column::make('Date', 'date')
+            Column::make('Date', 'created_at')
                 ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Text', 'text')

@@ -9,7 +9,7 @@ class GameSubmission extends Model
     const SUBMISSION_NEW = '2';
     const SUBMISSION_REVIEWED = '1';
 
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
     public function game()
     {

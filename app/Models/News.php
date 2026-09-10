@@ -15,11 +15,11 @@ class News extends Model implements Feedable
     public $timestamps = false;
 
     protected $fillable = [
-        'headline', 'user_id', 'date', 'text',
+        'headline', 'user_id', 'published_at', 'text',
     ];
 
     protected $casts = [
-        'date' => 'datetime:timestamp',
+        'published_at' => 'datetime',
     ];
 
     public function user()
@@ -47,7 +47,7 @@ class News extends Model implements Feedable
             'id'         => $this->getKey(),
             'title'      => $this->headline,
             'summary'    => Helper::bbCode(Helper::extractTag(e($this->text), 'frontpage')),
-            'updated'    => $this->date,
+            'updated'    => $this->published_at,
             // Use an ID so that articles in the feed have different IDs
             // The ID is effectively ignored in the News page
             'link'       => route('news.index', ['news' => $this->getKey()]),

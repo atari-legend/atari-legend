@@ -25,7 +25,7 @@ class StatisticsTest extends TestCase
             'sub_section_id'   => 0,
             'sub_section_name' => '',
             'user_id'          => 1,
-            'timestamp'        => Carbon::parse($date . ' 12:00:00')->timestamp,
+            'created_at'       => Carbon::parse($date . ' 12:00:00'),
         ]);
     }
 

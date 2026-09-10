@@ -20,7 +20,7 @@ class SitemapController extends Controller
     {
         $interviews = Interview::orderBy('id')->get();
         $reviews = Review::where('submission', Review::REVIEW_PUBLISHED)
-            ->orderBy('date')
+            ->orderBy('published_at')
             ->get();
         $categories = Category::orderBy('name')->get();
 

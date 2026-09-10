@@ -13,7 +13,7 @@ class NewsController extends Controller
     public function index()
     {
         $news = News::select('news.*')
-            ->orderByDesc('date')
+            ->orderByDesc('published_at')
             ->paginate(6);
 
         return view('news.index')
@@ -27,7 +27,6 @@ class NewsController extends Controller
         $submission = new NewsSubmission();
         $submission->headline = $request->title;
         $submission->text = $request->text;
-        $submission->date = time();
 
         $request->user()->newsSubmissions()->save($submission);
 

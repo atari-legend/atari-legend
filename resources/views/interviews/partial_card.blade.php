@@ -14,7 +14,7 @@
             <p class="card-text">
                 {!! Helper::bbCode(Helper::extractTag(e($interview->intro), "frontpage")) !!}
             </p>
-            <p class="card-subtitle text-muted">{{ $interview->date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
+            <p class="card-subtitle text-muted">{{ $interview->published_at->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
             <a class="d-block text-end" href="{{ route('interviews.show', ['interview' => $interview->getKey()]) }}">
                 Read interview of {{ $interview->individual->name }} <i class="fas fa-chevron-right"></i>
             </a>

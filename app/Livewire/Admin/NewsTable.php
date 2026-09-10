@@ -16,7 +16,7 @@ class NewsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('date', 'desc');
+        $this->setDefaultSort('published_at', 'desc');
     }
 
     public function columns(): array
@@ -30,7 +30,7 @@ class NewsTable extends DataTableComponent
                         ->orWhere('news.text', 'like', "%{$term}%")
                 )
                 ->sortable(),
-            Column::make('Date', 'date')
+            Column::make('Date', 'published_at')
                 ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(),
             Column::make('Image')

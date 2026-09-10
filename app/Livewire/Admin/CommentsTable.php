@@ -5,7 +5,6 @@ namespace App\Livewire\Admin;
 use App\Helpers\Helper;
 use App\Models\Comment;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -18,7 +17,7 @@ class CommentsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('timestamp');
+        $this->setDefaultSort('created_at');
     }
 
     public function columns(): array
@@ -30,20 +29,13 @@ class CommentsTable extends DataTableComponent
                     return $query->join('users', 'comments.user_id', '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
-            Column::make('Date', 'timestamp')
-                ->format(
-                    fn ($value) => $value
-                        ? Carbon::createFromTimestamp($value)->toDayDateTimeString()
-                        : '-'
-                )
-                ->sortable(function (Builder $query, $direction) {
-                    // Validate direction to avoid SQL injections
-                    $d = $direction === 'asc' ? 'asc' : 'desc';
-
-                    // `+ 0` coerces the varchar timestamp to a number in both
-                    // MySQL and SQLite; convert(..., unsigned) is MySQL-only.
-                    return $query->orderByRaw("`timestamp` + 0 $d");
-                }),
+            // The column is qualified because the User sort above joins
+            // `users`, which now carries a created_at of its own.
+            Column::make('Date', 'created_at')
+                ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
+                ->sortable(
+                    fn (Builder $query, $direction) => $query->orderBy('comments.created_at', $direction)
+                ),
             Column::make('Type')
                 ->label(
                     fn ($row) => '<div class="text-muted">' . Str::ucfirst($row->type) . '</div>'

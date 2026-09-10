@@ -21,7 +21,7 @@
                         </a>
                     </h3>
                     <p class="card-subtitle text-muted">
-                        {{ $article->date->format('F j, Y') }} by {{ Helper::user($article->user) }}
+                        {{ $article->published_at->format('F j, Y') }} by {{ Helper::user($article->user) }}
                         <span class="badge bg-secondary ms-2">{{ $article->type->name ?? ''}}</span>
                     </p>
                 </div>

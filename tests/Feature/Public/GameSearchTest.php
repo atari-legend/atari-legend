@@ -324,7 +324,7 @@ class GameSearchTest extends TestCase
             'sub_section_id'   => 0,
             'sub_section_name' => '',
             'user_id'          => 1,
-            'timestamp'        => Carbon::now()->startOfMonth()->addDay()->timestamp,
+            'created_at'       => Carbon::now()->startOfMonth()->addDay(),
         ]);
 
         $updates = $this->get(route('games.index'))->assertOk()->viewData('updates');

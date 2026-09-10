@@ -33,10 +33,8 @@ class UserFactory extends Factory
             'remember_token'    => Str::random(10),
             'permission'        => User::PERMISSION_USER,
             'inactive'          => User::ACTIVE,
-            // Unix timestamps held in varchar columns, as the legacy site wrote
-            // them. `OnlineUsers` compares these numerically.
-            'join_date'         => (string) now()->timestamp,
-            'last_visit'        => (string) now()->timestamp,
+            'created_at'        => now(),
+            'last_visit_at'     => now(),
             'avatar_ext'        => null,
             'website'           => null,
             'facebook'          => null,

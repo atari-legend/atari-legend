@@ -49,7 +49,7 @@ class FixMenuSoftwareChangelogSectionTest extends TestCase
             'sub_section_id'   => 1,
             'sub_section_name' => $name,
             'user_id'          => 1,
-            'timestamp'        => Carbon::parse('2025-01-01')->timestamp,
+            'created_at'       => Carbon::parse('2025-01-01'),
         ]);
     }
 

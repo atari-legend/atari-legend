@@ -71,6 +71,6 @@
     </small>
     @endif
     <div class="text-muted text-end">
-        {{ date('F j, Y', $comment->timestamp) }}
+        {{ $comment->created_at?->format('F j, Y') }}
     </div>
 </div>

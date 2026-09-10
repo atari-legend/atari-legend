@@ -91,17 +91,18 @@ class AdminTablesTest extends AdminTestCase
     }
 
     /**
-     * Join date and last visit are unix timestamps kept in varchar columns, so
-     * they have to be sorted numerically rather than as text - '9' must not
-     * come after '10'.
+     * Join date and last visit were unix timestamps kept in varchar columns
+     * until 2026_09_06_110200, which sorted as text - '999999999' after
+     * '1000000000'. The two dates below are the pair that used to come back
+     * the wrong way round.
      */
-    public function test_the_users_table_sorts_dates_numerically(): void
+    public function test_the_users_table_sorts_by_join_date(): void
     {
-        User::factory()->create(['userid' => 'Older', 'join_date' => '999999999']);
-        User::factory()->create(['userid' => 'Newer', 'join_date' => '1000000000']);
+        User::factory()->create(['userid' => 'Older', 'created_at' => Carbon::createFromTimestamp(999999999)]);
+        User::factory()->create(['userid' => 'Newer', 'created_at' => Carbon::createFromTimestamp(1000000000)]);
 
         Livewire::test(UsersTable::class)
-            ->call('sortBy', 'join_date')
+            ->call('sortBy', 'created_at')
             ->assertSeeInOrder(['Older', 'Newer']);
     }
 
@@ -141,7 +142,7 @@ class AdminTablesTest extends AdminTestCase
         $this->actingAs($this->admin);
 
         Livewire::test(CommentsTable::class)
-            ->call('sortBy', 'timestamp')
+            ->call('sortBy', 'created_at')
             ->assertSee('The only one.');
     }
 
@@ -153,7 +154,6 @@ class AdminTablesTest extends AdminTestCase
         $submission->game_id = Game::factory()->named($gameName)->create()->getKey();
         $submission->user_id = User::factory()->create()->getKey();
         $submission->text = 'Something is wrong with ' . $gameName;
-        $submission->timestamp = time();
         $submission->game_done = $done;
         $submission->save();
 
@@ -195,12 +195,12 @@ class AdminTablesTest extends AdminTestCase
             ->assertDontSee('Xenon');
     }
 
-    public function test_the_submissions_table_sorts_dates_numerically(): void
+    public function test_the_submissions_table_sorts_by_date(): void
     {
         $this->submission('Xenon');
 
         Livewire::test(GameSubmissionsTable::class)
-            ->call('sortBy', 'timestamp')
+            ->call('sortBy', 'created_at')
             ->assertSee('Xenon');
     }
 
@@ -383,16 +383,16 @@ class AdminTablesTest extends AdminTestCase
     public function test_the_news_submissions_table_lists_newest_first(): void
     {
         NewsSubmission::forceCreate([
-            'headline' => 'Older submission',
-            'text'     => 'Text',
-            'user_id'  => User::factory()->create()->getKey(),
-            'date'     => strtotime('2026-01-01'),
+            'headline'   => 'Older submission',
+            'text'       => 'Text',
+            'user_id'    => User::factory()->create()->getKey(),
+            'created_at' => Carbon::parse('2026-01-01'),
         ]);
         NewsSubmission::forceCreate([
-            'headline' => 'Newer submission',
-            'text'     => 'Text',
-            'user_id'  => User::factory()->create()->getKey(),
-            'date'     => strtotime('2026-06-01'),
+            'headline'   => 'Newer submission',
+            'text'       => 'Text',
+            'user_id'    => User::factory()->create()->getKey(),
+            'created_at' => Carbon::parse('2026-06-01'),
         ]);
 
         Livewire::test(NewsSubmissionsTable::class)
@@ -419,18 +419,17 @@ class AdminTablesTest extends AdminTestCase
 
     /**
      * The only assertion in this file about a *rendered date*, and it is here
-     * for a reason. articles.date is an integer timestamp with a
-     * `datetime:timestamp` cast, and the column used to be read off a join,
-     * where it arrived raw and was passed through Carbon::createFromTimestamp().
-     * Handing that method a Carbon does not throw on Carbon 3 -- it stringifies
-     * the date and sums the digits, rendering "Jan 1, 1970" in every row. So a
+     * for a reason. The column used to be read off a join, where it arrived
+     * raw and was passed through Carbon::createFromTimestamp(). Handing that
+     * method a Carbon does not throw on Carbon 3 -- it stringifies the date
+     * and sums the digits, rendering "Jan 1, 1970" in every row. So a
      * regression here is silent everywhere else: the page is still a 200, the
      * markup is still well formed, and only the date is wrong.
      */
     public function test_the_articles_table_renders_the_date(): void
     {
         Article::factory()->titled('Coding the blitter')->create([
-            'date' => Carbon::parse('2018-01-21')->timestamp,
+            'published_at' => Carbon::parse('2018-01-21'),
         ]);
 
         Livewire::test(ArticlesTable::class)

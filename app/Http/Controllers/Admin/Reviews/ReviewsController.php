@@ -10,7 +10,6 @@ use App\Models\Review;
 use App\Models\ReviewScreenshotComment;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -57,15 +56,15 @@ class ReviewsController extends Controller
             ['game' => 'required|exists:games,id']));
 
         $review = new Review([
-            'user_id'    => $request->author,
-            'draft'      => $request->draft ? true : false,
-            'submission' => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'text'       => $request->text,
-            'date'       => Carbon::parse($request->date)->timestamp,
-            'graphics'   => $request->graphics ?? 0,
-            'sound'      => $request->sound ?? 0,
-            'gameplay'   => $request->gameplay ?? 0,
-            'overall'    => $request->overall ?? 0,
+            'user_id'      => $request->author,
+            'draft'        => $request->draft ? true : false,
+            'submission'   => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'text'         => $request->text,
+            'published_at' => $request->published_at,
+            'graphics'     => $request->graphics ?? 0,
+            'sound'        => $request->sound ?? 0,
+            'gameplay'     => $request->gameplay ?? 0,
+            'overall'      => $request->overall ?? 0,
         ]);
 
         $game = Game::findOrFail($request->game);
@@ -96,15 +95,15 @@ class ReviewsController extends Controller
         $request->validate($this->getValidationRules());
 
         $review->update([
-            'user_id'    => $request->author,
-            'draft'      => $request->draft ? true : false,
-            'submission' => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
-            'text'       => $request->text,
-            'date'       => Carbon::parse($request->date)->timestamp,
-            'graphics'   => $request->graphics ?? 0,
-            'sound'      => $request->sound ?? 0,
-            'gameplay'   => $request->gameplay ?? 0,
-            'overall'    => $request->overall ?? 0,
+            'user_id'      => $request->author,
+            'draft'        => $request->draft ? true : false,
+            'submission'   => $request->submission ? Review::REVIEW_UNPUBLISHED : Review::REVIEW_PUBLISHED,
+            'text'         => $request->text,
+            'published_at' => $request->published_at,
+            'graphics'     => $request->graphics ?? 0,
+            'sound'        => $request->sound ?? 0,
+            'gameplay'     => $request->gameplay ?? 0,
+            'overall'      => $request->overall ?? 0,
         ]);
 
         collect($request->all())
@@ -171,15 +170,15 @@ class ReviewsController extends Controller
     private function getValidationRules(): array
     {
         return [
-            'author'     => 'required|exists:users,id',
-            'date'       => 'required|date',
-            'text'       => 'required',
-            'draft'      => 'nullable',
-            'submission' => 'nullable',
-            'graphics'   => 'required|integer|min:0|max:10',
-            'sound'      => 'required|integer|min:0|max:10',
-            'gameplay'   => 'required|integer|min:0|max:10',
-            'overall'    => 'required|integer|min:0|max:10',
+            'author'       => 'required|exists:users,id',
+            'published_at' => 'required|date',
+            'text'         => 'required',
+            'draft'        => 'nullable',
+            'submission'   => 'nullable',
+            'graphics'     => 'required|integer|min:0|max:10',
+            'sound'        => 'required|integer|min:0|max:10',
+            'gameplay'     => 'required|integer|min:0|max:10',
+            'overall'      => 'required|integer|min:0|max:10',
         ];
     }
 }

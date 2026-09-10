@@ -13,7 +13,7 @@ class HomeController extends Controller
     public function index()
     {
         $changes = Changelog::where('user_id', Auth::user()->getKey())
-            ->orderBy('timestamp', 'desc')
+            ->orderBy('created_at', 'desc')
             ->limit(15)
             ->get();
 

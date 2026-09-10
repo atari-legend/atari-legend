@@ -8,7 +8,6 @@ use App\Models\Review;
 use App\Models\ReviewScreenshotComment;
 use App\Models\Screenshot;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -25,13 +24,13 @@ class ReviewsControllerTest extends AdminTestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'author'   => $this->admin->getKey(),
-            'date'     => '2026-03-14',
-            'text'     => 'A fine shoot-em-up.',
-            'graphics' => 5,
-            'sound'    => 4,
-            'gameplay' => 3,
-            'overall'  => 4,
+            'author'       => $this->admin->getKey(),
+            'published_at' => '2026-03-14T09:30',
+            'text'         => 'A fine shoot-em-up.',
+            'graphics'     => 5,
+            'sound'        => 4,
+            'gameplay'     => 3,
+            'overall'      => 4,
         ], $overrides);
     }
 
@@ -84,8 +83,8 @@ class ReviewsControllerTest extends AdminTestCase
         $this->assertSame(4, $review->overall);
 
         $this->assertSame(
-            Carbon::parse('2026-03-14')->timestamp,
-            $review->getRawOriginal('date')
+            '2026-03-14 09:30:00',
+            $review->getRawOriginal('published_at')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Reviews', 'Xenon');
@@ -122,7 +121,7 @@ class ReviewsControllerTest extends AdminTestCase
 
         $this->post(route('admin.reviews.reviews.store'), [
             'game' => $game->getKey(),
-        ])->assertSessionHasErrors(['author', 'date', 'text', 'graphics', 'sound', 'gameplay', 'overall']);
+        ])->assertSessionHasErrors(['author', 'published_at', 'text', 'graphics', 'sound', 'gameplay', 'overall']);
 
         $this->assertSame(0, Review::query()->count());
     }

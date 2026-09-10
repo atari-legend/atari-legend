@@ -6,7 +6,7 @@
         <p class="card-subtitle mb-3">
             <span class="text-muted">By</span> {{ Helper::user($comment->user) }}
             <span class="text-muted">on</span>
-            {{ Carbon\Carbon::createFromTimestamp($comment->timestamp)->toDayDateTimeString() }}
+            {{ $comment->created_at?->toDayDateTimeString() }}
             <br>
             <span class="text-muted">{{ Str::ucfirst($comment->type) }}</span>: <a href="{{ route("{$comment->type}s.show", $comment->target_id) }}#comment-{{ $comment->getKey() }}">{{ $comment->target }}</a>
         </p>

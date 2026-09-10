@@ -23,6 +23,7 @@ use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\Sndh;
 use App\Models\SoundHardware;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tests\Feature\Admin\AdminTestCase;
 
@@ -275,11 +276,11 @@ class GameControllerTest extends AdminTestCase
             ]),
             'magazineIndices' => MagazineIndex::factory()->create(['game_id' => $game->getKey()]),
             'submissions'     => DB::table('game_submissions')->insert([
-                'game_id'   => $game->getKey(),
-                'user_id'   => $this->admin->getKey(),
-                'timestamp' => (string) mktime(12, 0, 0, 6, 1, 2020),
-                'text'      => 'The musician is Jochen Hippel.',
-                'game_done' => GameSubmission::SUBMISSION_NEW,
+                'game_id'    => $game->getKey(),
+                'user_id'    => $this->admin->getKey(),
+                'created_at' => Carbon::parse('2020-06-01 12:00:00'),
+                'text'       => 'The musician is Jochen Hippel.',
+                'game_done'  => GameSubmission::SUBMISSION_NEW,
             ]),
             'similarGames'        => $game->similarGames()->attach(Game::factory()->create()),
             'similarGamesReverse' => $game->similarGamesReverse()->attach(Game::factory()->create()),

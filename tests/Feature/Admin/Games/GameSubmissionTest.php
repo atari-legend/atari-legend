@@ -8,6 +8,7 @@ use App\Models\Game;
 use App\Models\GameSubmission;
 use App\Models\Screenshot;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
@@ -17,9 +18,7 @@ use Tests\Feature\Admin\AdminTestCase;
  * administrator reads and then either marks as dealt with, turns into a public
  * comment on the game, or throws away.
  *
- * The table has no factory, so the fixtures are built with the query builder -
- * `game_submissions` predates the models and has no timestamps and a string
- * `timestamp` column holding a Unix time.
+ * The table has no factory, so the fixtures are built with the query builder.
  */
 class GameSubmissionTest extends AdminTestCase
 {
@@ -38,11 +37,11 @@ class GameSubmissionTest extends AdminTestCase
         string $done = GameSubmission::SUBMISSION_NEW
     ): GameSubmission {
         $id = DB::table('game_submissions')->insertGetId([
-            'game_id'   => $game->getKey(),
-            'user_id'   => $this->visitor->getKey(),
-            'timestamp' => (string) mktime(12, 0, 0, 6, 1, 2020),
-            'text'      => $text,
-            'game_done' => $done,
+            'game_id'    => $game->getKey(),
+            'user_id'    => $this->visitor->getKey(),
+            'created_at' => Carbon::parse('2020-06-01 12:00:00'),
+            'text'       => $text,
+            'game_done'  => $done,
         ]);
 
         return GameSubmission::findOrFail($id);
@@ -125,7 +124,7 @@ class GameSubmissionTest extends AdminTestCase
 
         $this->assertSame('Best soundtrack on the ST.', $comment->text);
         $this->assertSame($this->visitor->getKey(), $comment->user_id);
-        $this->assertSame($submission->timestamp, (string) $comment->timestamp);
+        $this->assertTrue($comment->created_at->equalTo($submission->created_at));
         $this->assertSame([$game->getKey()], $comment->games->pluck('id')->all());
 
         $this->assertSame(0, GameSubmission::query()->count());
