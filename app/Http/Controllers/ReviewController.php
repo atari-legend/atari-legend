@@ -34,7 +34,7 @@ class ReviewController extends Controller
         }
 
         $reviews = $reviews
-            ->orderByDesc('date')
+            ->orderByDesc('published_at')
             ->paginate(5);
 
         return view('reviews.index')
@@ -57,7 +57,7 @@ class ReviewController extends Controller
         $jsonLd = (new JsonLd('Article', url()->current()))
             ->add('headline', 'Review of ' . $review->games->first()->name)
             ->add('author', Helper::user($review->user))
-            ->add('datePublished', $review->date->format('Y-m-d'));
+            ->add('datePublished', $review->published_at->format('Y-m-d'));
         if ($review->screenshots->isNotEmpty()) {
             $jsonLd->add('image', $review->screenshots->first()->getUrlRoute('game', $review->games->first()));
         }
@@ -96,7 +96,7 @@ class ReviewController extends Controller
 
         $review = new Review();
         $review->text = $request->text;
-        $review->date = time();
+        $review->published_at = now();
         $review->submission = Review::REVIEW_UNPUBLISHED;
         // Set before the first save, not after it: the scores are columns on
         // the review now, so filling them here is one insert where the old
@@ -178,6 +178,6 @@ class ReviewController extends Controller
     {
         return Review::where('user_id', $user->getKey())
             ->where('submission', Review::REVIEW_PUBLISHED)
-            ->orderBy('date', 'desc');
+            ->orderBy('published_at', 'desc');
     }
 }

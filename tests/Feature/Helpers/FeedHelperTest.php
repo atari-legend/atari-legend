@@ -35,8 +35,8 @@ class FeedHelperTest extends TestCase
     private function news(string $headline, string $date): News
     {
         return News::factory()->create([
-            'headline' => $headline,
-            'date'     => Carbon::parse($date)->timestamp,
+            'headline'     => $headline,
+            'published_at' => Carbon::parse($date),
         ]);
     }
 
@@ -44,20 +44,20 @@ class FeedHelperTest extends TestCase
     {
         return Review::factory()
             ->forGame(Game::factory()->named($gameName)->create()->getKey())
-            ->create(['date' => Carbon::parse($date)->timestamp]);
+            ->create(['published_at' => Carbon::parse($date)]);
     }
 
     private function interview(string $date): Interview
     {
         return Interview::factory()->create([
-            'date' => Carbon::parse($date)->timestamp,
+            'published_at' => Carbon::parse($date),
         ]);
     }
 
     private function article(string $title, string $date): Article
     {
         return Article::factory()->titled($title)->create([
-            'date' => Carbon::parse($date)->timestamp,
+            'published_at' => Carbon::parse($date),
         ]);
     }
 
@@ -103,7 +103,7 @@ class FeedHelperTest extends TestCase
         Review::factory()
             ->unpublished()
             ->forGame(Game::factory()->named('Unfinished')->create()->getKey())
-            ->create(['date' => Carbon::parse('2026-01-01')->timestamp]);
+            ->create(['published_at' => Carbon::parse('2026-01-01')]);
 
         $this->review('Published', '2026-01-02');
 

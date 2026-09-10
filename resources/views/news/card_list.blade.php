@@ -15,7 +15,7 @@
                         </a>
                     @endcontributor
                 </h3>
-                <p class="text-muted my-1">{{ $new->date->format('F j, Y') }} by {{ Helper::user($new->user) }}</p>
+                <p class="text-muted my-1">{{ $new->published_at->format('F j, Y') }} by {{ Helper::user($new->user) }}</p>
             </div>
             <div class="p-2 clearfix mb-4 ">
                 <p class="card-text pt-2">

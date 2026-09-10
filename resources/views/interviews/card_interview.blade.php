@@ -14,7 +14,7 @@
 
     <div class="card-body p-2 bg-darklight">
         <h3 class="fs-5 text-audiowide">Written by {{ Helper::user($interview->user) }}</h3>
-        <span class="text-muted">{{ $interview->date->format('F j, Y') }}</span>
+        <span class="text-muted">{{ $interview->published_at->format('F j, Y') }}</span>
     </div>
     <div class="card-body p-2 bg-darklight">
         @if (isset($interview->chapters))

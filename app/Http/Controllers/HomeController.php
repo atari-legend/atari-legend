@@ -14,7 +14,7 @@ class HomeController extends Controller
         // card_news renders the author of every item, so eager load them
         // rather than paying a lookup per news entry.
         $news = News::with('user')
-            ->orderByDesc('date')
+            ->orderByDesc('published_at')
             ->limit(6)
             ->get();
 

@@ -13,10 +13,6 @@ class NewsFactory extends Factory
 {
     protected $model = News::class;
 
-    /**
-     * `date` is a unix timestamp in an integer column, as on the legacy
-     * site. The home page orders on it, so it has to be a real value.
-     */
     public function definition(): array
     {
         return [
@@ -24,7 +20,7 @@ class NewsFactory extends Factory
             'text'          => fake()->paragraph(),
             'news_image_id' => null,
             'user_id'       => User::factory(),
-            'date'          => now()->timestamp,
+            'published_at'  => now(),
         ];
     }
 }

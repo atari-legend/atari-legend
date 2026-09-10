@@ -20,7 +20,7 @@ class ReviewsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setDefaultSort('date', 'desc');
+        $this->setDefaultSort('published_at', 'desc');
     }
 
     public function columns(): array
@@ -40,14 +40,10 @@ class ReviewsTable extends DataTableComponent
                 ->sortable(
                     fn (Builder $query, $direction) => $query->orderBy('games.name', $direction)
                 ),
-            Column::make('Date')
-                ->label(
-                    fn ($row) => $row->date
-                        ? $row->date->toFormattedDateString()
-                        : '-'
-                )
+            Column::make('Date', 'published_at')
+                ->format(fn ($value) => $value?->toFormattedDateString() ?? '-')
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('reviews.date', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy('reviews.published_at', $direction)
                 ),
             Column::make('Author')
                 ->label(fn ($row) => Helper::user($row->user)),

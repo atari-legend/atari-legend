@@ -419,18 +419,17 @@ class AdminTablesTest extends AdminTestCase
 
     /**
      * The only assertion in this file about a *rendered date*, and it is here
-     * for a reason. articles.date is an integer timestamp with a
-     * `datetime:timestamp` cast, and the column used to be read off a join,
-     * where it arrived raw and was passed through Carbon::createFromTimestamp().
-     * Handing that method a Carbon does not throw on Carbon 3 -- it stringifies
-     * the date and sums the digits, rendering "Jan 1, 1970" in every row. So a
+     * for a reason. The column used to be read off a join, where it arrived
+     * raw and was passed through Carbon::createFromTimestamp(). Handing that
+     * method a Carbon does not throw on Carbon 3 -- it stringifies the date
+     * and sums the digits, rendering "Jan 1, 1970" in every row. So a
      * regression here is silent everywhere else: the page is still a 200, the
      * markup is still well formed, and only the date is wrong.
      */
     public function test_the_articles_table_renders_the_date(): void
     {
         Article::factory()->titled('Coding the blitter')->create([
-            'date' => Carbon::parse('2018-01-21')->timestamp,
+            'published_at' => Carbon::parse('2018-01-21'),
         ]);
 
         Livewire::test(ArticlesTable::class)

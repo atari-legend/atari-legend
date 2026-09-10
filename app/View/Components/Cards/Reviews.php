@@ -27,7 +27,7 @@ class Reviews extends Component
         // The card renders both the author and the reviewed game per row.
         $reviews = Review::with(['user', 'games'])
             ->where('submission', Review::REVIEW_PUBLISHED)
-            ->orderByDesc('date')
+            ->orderByDesc('published_at')
             ->limit(3)
             ->get();
 

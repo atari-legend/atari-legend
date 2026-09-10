@@ -8,6 +8,7 @@ use App\Models\Game;
 use App\Models\Review;
 use App\Models\ReviewScreenshotComment;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -28,8 +29,8 @@ class ReviewPagesTest extends TestCase
             ->forGame(Game::factory()->named($gameName)->create()->getKey())
             ->scored()
             ->create([
-                'user_id' => ($author ?? User::factory()->create())->getKey(),
-                'date'    => strtotime($date),
+                'user_id'      => ($author ?? User::factory()->create())->getKey(),
+                'published_at' => Carbon::parse($date),
             ]);
     }
 

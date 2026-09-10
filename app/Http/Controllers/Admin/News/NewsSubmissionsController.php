@@ -24,10 +24,10 @@ class NewsSubmissionsController extends Controller
     public function approve(NewsSubmission $submission)
     {
         $news = News::create([
-            'headline' => $submission->headline,
-            'user_id'  => $submission->user_id,
-            'date'     => $submission->date->timestamp,
-            'text'     => $submission->text,
+            'headline'     => $submission->headline,
+            'user_id'      => $submission->user_id,
+            'published_at' => $submission->date,
+            'text'         => $submission->text,
         ]);
 
         ChangelogHelper::insert([

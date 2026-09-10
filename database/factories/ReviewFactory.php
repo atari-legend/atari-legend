@@ -13,18 +13,14 @@ class ReviewFactory extends Factory
 {
     protected $model = Review::class;
 
-    /**
-     * `reviews.date` is a unix timestamp in an integer column, the way the
-     * legacy site wrote it, not a datetime.
-     */
     public function definition(): array
     {
         return [
-            'user_id'    => User::factory(),
-            'text'       => fake()->paragraph(),
-            'date'       => now()->timestamp,
-            'submission' => Review::REVIEW_PUBLISHED,
-            'draft'      => false,
+            'user_id'      => User::factory(),
+            'text'         => fake()->paragraph(),
+            'published_at' => now(),
+            'submission'   => Review::REVIEW_PUBLISHED,
+            'draft'        => false,
         ];
     }
 

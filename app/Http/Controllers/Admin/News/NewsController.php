@@ -9,17 +9,16 @@ use App\Models\News;
 use App\Models\NewsImage;
 use App\Models\User;
 use App\View\Components\Admin\Crumb;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
     const VALIDATION_RULES = [
-        'headline' => 'required',
-        'author'   => 'required|numeric',
-        'date'     => 'required|date',
-        'text'     => 'required',
+        'headline'     => 'required',
+        'author'       => 'required|numeric',
+        'published_at' => 'required|date',
+        'text'         => 'required',
     ];
 
     public function index()
@@ -60,10 +59,10 @@ class NewsController extends Controller
         $request->validate(NewsController::VALIDATION_RULES);
 
         $news->update([
-            'headline' => $request->headline,
-            'user_id'  => User::find($request->author)->getKey(),
-            'date'     => Carbon::parse($request->date)->timestamp,
-            'text'     => $request->text,
+            'headline'     => $request->headline,
+            'user_id'      => User::find($request->author)->getKey(),
+            'published_at' => $request->published_at,
+            'text'         => $request->text,
         ]);
 
         $this->addOrUpdateImage($request, $news);
@@ -86,10 +85,10 @@ class NewsController extends Controller
         $request->validate(NewsController::VALIDATION_RULES);
 
         $news = News::create([
-            'headline' => $request->headline,
-            'user_id'  => User::find($request->author)->getKey(),
-            'date'     => Carbon::parse($request->date)->timestamp,
-            'text'     => $request->text,
+            'headline'     => $request->headline,
+            'user_id'      => User::find($request->author)->getKey(),
+            'published_at' => $request->published_at,
+            'text'         => $request->text,
         ]);
 
         $this->addOrUpdateImage($request, $news);

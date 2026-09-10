@@ -394,7 +394,7 @@ class E2ESeeder extends Seeder
             'title'           => self::ARTICLE_TITLE,
             'intro'           => 'Playwright test article intro.',
             'text'            => 'Playwright test article content.',
-            'date'            => now()->timestamp,
+            'published_at'    => now(),
         ]);
 
         // Same chain as the interview screenshot below, one table along.
@@ -410,9 +410,9 @@ class E2ESeeder extends Seeder
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
         $this->insert('reviews', ['id' => self::REVIEW_ID], [
-            'user_id' => self::USER_ADMIN_ID,
-            'text'    => 'Great game!',
-            'date'    => now()->timestamp,
+            'user_id'      => self::USER_ADMIN_ID,
+            'text'         => 'Great game!',
+            'published_at' => now(),
         ]);
         $this->insert('game_review', [
             'review_id' => self::REVIEW_ID,
@@ -439,8 +439,8 @@ class E2ESeeder extends Seeder
             'intro'         => 'Playwright test interview intro.',
             'text'          => '[hotspot=1]' . self::INTERVIEW_CHAPTER . '[/hotspot] '
                 . 'Playwright test interview content.',
-            'chapters' => '[hotspotUrl=#1]' . self::INTERVIEW_CHAPTER . '[/hotspotUrl]',
-            'date'     => now()->timestamp,
+            'chapters'      => '[hotspotUrl=#1]' . self::INTERVIEW_CHAPTER . '[/hotspotUrl]',
+            'published_at'  => now(),
         ]);
 
         // A screenshot on the interview, and the caption row that goes with it.
@@ -460,10 +460,10 @@ class E2ESeeder extends Seeder
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 
         $this->insert('news', ['id' => self::NEWS_ID], [
-            'headline' => self::NEWS_HEADLINE,
-            'text'     => 'Playwright test news post.',
-            'user_id'  => self::USER_ADMIN_ID,
-            'date'     => now()->timestamp,
+            'headline'     => self::NEWS_HEADLINE,
+            'text'         => 'Playwright test news post.',
+            'user_id'      => self::USER_ADMIN_ID,
+            'published_at' => now(),
         ]);
 
         // Enough news to paginate. /news shows six at a time and orders by
@@ -472,10 +472,10 @@ class E2ESeeder extends Seeder
         // page two.
         for ($number = 1; $number <= self::NEWS_FILLER_COUNT; $number++) {
             $this->insert('news', ['id' => self::NEWS_ID + $number], [
-                'headline' => self::NEWS_FILLER_HEADLINE . ' ' . $number,
-                'text'     => 'Playwright test filler news post.',
-                'user_id'  => self::USER_ADMIN_ID,
-                'date'     => now()->subDays($number)->timestamp,
+                'headline'     => self::NEWS_FILLER_HEADLINE . ' ' . $number,
+                'text'         => 'Playwright test filler news post.',
+                'user_id'      => self::USER_ADMIN_ID,
+                'published_at' => now()->subDays($number),
             ]);
         }
 

@@ -60,12 +60,12 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="date" class="form-label">Date</label>
-                        <input type="date" required class="form-control @error('date') is-invalid @enderror" name="date"
-                            id="date"
-                            value="{{ old('date', isset($interview) ? $interview->date?->toDateString() : \Carbon\Carbon::now()->toDateString()) }}">
+                        <label for="published_at" class="form-label">Published</label>
+                        <input type="datetime-local" required class="form-control @error('published_at') is-invalid @enderror" name="published_at"
+                            id="published_at"
+                            value="{{ old('published_at', isset($interview) ? $interview->published_at?->format('Y-m-d\TH:i') : now()->format('Y-m-d\TH:i')) }}">
 
-                        @error('date')
+                        @error('published_at')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

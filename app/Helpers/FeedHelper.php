@@ -11,18 +11,18 @@ class FeedHelper
 {
     public function getFeedItems()
     {
-        $news = News::orderByDesc('date')->limit(20)->get();
+        $news = News::orderByDesc('published_at')->limit(20)->get();
 
         $reviews = Review::where('submission', Review::REVIEW_PUBLISHED)
-            ->orderByDesc('date')
+            ->orderByDesc('published_at')
             ->limit(20)
             ->get();
 
-        $interviews = Interview::orderByDesc('date')
+        $interviews = Interview::orderByDesc('published_at')
             ->limit(20)
             ->get();
 
-        $articles = Article::orderByDesc('date')
+        $articles = Article::orderByDesc('published_at')
             ->limit(20)
             ->get();
 

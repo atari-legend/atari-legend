@@ -14,7 +14,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::orderByDesc('date')
+        $articles = Article::orderByDesc('published_at')
             ->paginate(5);
 
         return view('articles.index')
@@ -33,14 +33,14 @@ class ArticleController extends Controller
                 ->get();
         }
 
-        $articles = Article::orderByDesc('date')
+        $articles = Article::orderByDesc('published_at')
             ->limit(5)
             ->get();
 
         $jsonLd = (new JsonLd('Article', url()->current()))
             ->add('headline', $article->title)
             ->add('author', Helper::user($article->user))
-            ->add('datePublished', $article->date->format('Y-m-d'));
+            ->add('datePublished', $article->published_at->format('Y-m-d'));
         if ($article->screenshots->isNotEmpty()) {
             $jsonLd->add('image', $article->screenshots->first()->getUrl('article'));
         }

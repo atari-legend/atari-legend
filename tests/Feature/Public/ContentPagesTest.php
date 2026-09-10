@@ -32,15 +32,15 @@ class ContentPagesTest extends TestCase
     private function article(string $title, string $date = '2026-01-01', ?User $author = null): Article
     {
         return Article::factory()->titled($title)->create([
-            'user_id' => ($author ?? User::factory()->create())->getKey(),
-            'date'    => Carbon::parse($date)->timestamp,
+            'user_id'      => ($author ?? User::factory()->create())->getKey(),
+            'published_at' => Carbon::parse($date),
         ]);
     }
 
     private function interview(string $date = '2026-01-01'): Interview
     {
         return Interview::factory()->create([
-            'date' => Carbon::parse($date)->timestamp,
+            'published_at' => Carbon::parse($date),
         ]);
     }
 
@@ -160,8 +160,8 @@ class ContentPagesTest extends TestCase
     {
         foreach (range(1, 8) as $i) {
             News::factory()->create([
-                'headline' => 'Item ' . $i,
-                'date'     => Carbon::parse('2026-01-01')->addDays($i)->timestamp,
+                'headline'     => 'Item ' . $i,
+                'published_at' => Carbon::parse('2026-01-01')->addDays($i),
             ]);
         }
 
@@ -347,8 +347,8 @@ class ContentPagesTest extends TestCase
     {
         foreach (range(1, 8) as $i) {
             News::factory()->create([
-                'headline' => 'Item ' . $i,
-                'date'     => Carbon::parse('2026-01-01')->addDays($i)->timestamp,
+                'headline'     => 'Item ' . $i,
+                'published_at' => Carbon::parse('2026-01-01')->addDays($i),
             ]);
         }
 

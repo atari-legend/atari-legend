@@ -8,7 +8,6 @@ use App\Models\ArticleType;
 use App\Models\Changelog;
 use App\Models\Screenshot;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
@@ -24,13 +23,13 @@ class ArticleControllerTest extends AdminTestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'title'  => 'Coding the blitter',
-            'author' => $this->admin->getKey(),
-            'date'   => '2026-03-14',
-            'intro'  => 'A short introduction.',
-            'text'   => 'The body of the article.',
-            'type'   => ArticleType::factory()->create()->getKey(),
-            'draft'  => null,
+            'title'        => 'Coding the blitter',
+            'author'       => $this->admin->getKey(),
+            'published_at' => '2026-03-14T09:30',
+            'intro'        => 'A short introduction.',
+            'text'         => 'The body of the article.',
+            'type'         => ArticleType::factory()->create()->getKey(),
+            'draft'        => null,
         ], $overrides);
     }
 
@@ -73,8 +72,8 @@ class ArticleControllerTest extends AdminTestCase
         $this->assertSame('A short introduction.', $article->intro);
         $this->assertSame('The body of the article.', $article->text);
         $this->assertSame(
-            Carbon::parse('2026-03-14')->timestamp,
-            $article->getRawOriginal('date')
+            '2026-03-14 09:30:00',
+            $article->getRawOriginal('published_at')
         );
 
         $this->assertChangelog(Changelog::INSERT, 'Articles', 'Coding the blitter');
@@ -90,7 +89,7 @@ class ArticleControllerTest extends AdminTestCase
     public function test_store_requires_the_text_fields(): void
     {
         $this->post(route('admin.articles.articles.store'), [])
-            ->assertSessionHasErrors(['title', 'author', 'date', 'intro', 'text']);
+            ->assertSessionHasErrors(['title', 'author', 'published_at', 'intro', 'text']);
 
         $this->assertSame(0, Article::query()->count());
         $this->assertNoChangelog();

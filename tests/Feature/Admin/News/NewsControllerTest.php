@@ -5,7 +5,6 @@ namespace Tests\Feature\Admin\News;
 use App\Models\Changelog;
 use App\Models\News;
 use App\Models\User;
-use Carbon\Carbon;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -20,10 +19,10 @@ class NewsControllerTest extends AdminTestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'headline' => 'Automation 189 released',
-            'author'   => $this->admin->getKey(),
-            'date'     => '2026-03-14',
-            'text'     => 'A new menu disk has been dumped.',
+            'headline'     => 'Automation 189 released',
+            'author'       => $this->admin->getKey(),
+            'published_at' => '2026-03-14T09:30',
+            'text'         => 'A new menu disk has been dumped.',
         ], $overrides);
     }
 
@@ -61,10 +60,9 @@ class NewsControllerTest extends AdminTestCase
         $this->assertSame('A new menu disk has been dumped.', $news->text);
         $this->assertSame($this->admin->getKey(), $news->user_id);
 
-        // news.date is a unix timestamp in an integer column
         $this->assertSame(
-            Carbon::parse('2026-03-14')->timestamp,
-            $news->getRawOriginal('date')
+            '2026-03-14 09:30:00',
+            $news->getRawOriginal('published_at')
         );
     }
 
@@ -100,7 +98,7 @@ class NewsControllerTest extends AdminTestCase
     public function test_store_requires_every_field(): void
     {
         $this->post(route('admin.news.news.store'), [])
-            ->assertSessionHasErrors(['headline', 'author', 'date', 'text']);
+            ->assertSessionHasErrors(['headline', 'author', 'published_at', 'text']);
 
         $this->assertSame(0, News::query()->count());
         $this->assertNoChangelog();
@@ -108,8 +106,8 @@ class NewsControllerTest extends AdminTestCase
 
     public function test_store_rejects_an_unparseable_date(): void
     {
-        $this->post(route('admin.news.news.store'), $this->payload(['date' => 'last Thursday-ish']))
-            ->assertSessionHasErrors('date');
+        $this->post(route('admin.news.news.store'), $this->payload(['published_at' => 'last Thursday-ish']))
+            ->assertSessionHasErrors('published_at');
 
         $this->assertSame(0, News::query()->count());
     }

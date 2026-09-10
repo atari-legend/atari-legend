@@ -17,7 +17,7 @@
         <h3 class="card-subtitle fs-5">News</h3>
         @if ($user->news->isNotEmpty())
             <p>
-                @foreach ($user->news->sortByDesc('date') as $news)
+                @foreach ($user->news->sortByDesc('published_at') as $news)
                     <a
                         href="{{ route('admin.news.news.edit', $news) }}">{{ $news->headline }}</a>
                     @if (!$loop->last), @endif

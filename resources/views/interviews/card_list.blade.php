@@ -25,7 +25,7 @@
                             {{ $interview->individual->name }}
                         </a>
                     </h3>
-                    <p class="card-subtitle text-muted">{{ $interview->date->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
+                    <p class="card-subtitle text-muted">{{ $interview->published_at->format('F j, Y') }} by {{ Helper::user($interview->user) }}</p>
                 </div>
 
                 <div class="clearfix">

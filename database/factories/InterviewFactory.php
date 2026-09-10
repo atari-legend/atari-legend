@@ -20,7 +20,7 @@ class InterviewFactory extends Factory
             'individual_id' => IndividualFactory::new(),
             'draft'         => false,
             'text'          => fake()->paragraph(),
-            'date'          => now()->timestamp,
+            'published_at'  => now(),
             'intro'         => fake()->sentence(),
             'chapters'      => null,
         ];

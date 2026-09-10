@@ -16,11 +16,11 @@ class Interview extends Model implements Feedable
 
     protected $fillable = [
         'user_id', 'individual_id', 'draft',
-        'text', 'date', 'intro', 'chapters',
+        'text', 'published_at', 'intro', 'chapters',
     ];
 
     protected $casts = [
-        'date' => 'datetime:timestamp',
+        'published_at' => 'datetime',
     ];
 
     public function user()
@@ -61,7 +61,7 @@ class Interview extends Model implements Feedable
             'id'         => $this->getKey(),
             'title'      => 'Interview: ' . $this->individual->name,
             'summary'    => Helper::bbCode($this->intro),
-            'updated'    => $this->date,
+            'updated'    => $this->published_at,
             'link'       => route('interviews.show', $this),
             'authorName' => Helper::user($this->user),
         ]);

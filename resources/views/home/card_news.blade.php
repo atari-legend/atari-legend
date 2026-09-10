@@ -6,7 +6,7 @@
         @foreach ($news as $new)
             <div class="card-body p-2">
                 <h3 class="card-title fs-6 text-audiowide"><a class="text-nowrap overflow-hidden overflow-ellipsis d-block" href="{{ route('news.index') }}">{{ $new->headline }}</a></h3>
-                <p class="card-subtitle text-muted mb-2">{{ $new->date->format('F j, Y', ) }} by {{ Helper::user($new->user) }}</p>
+                <p class="card-subtitle text-muted mb-2">{{ $new->published_at->format('F j, Y', ) }} by {{ Helper::user($new->user) }}</p>
                 <p class="card-text mb-0 ">
                     {!! Helper::bbCode(Helper::extractTag(e($new->text), "frontpage")) !!}
                 </p>

@@ -418,16 +418,16 @@ class AdminStatisticsHelper
     public static function contentByYear()
     {
         $sources = [
-            'News'       => DB::table('news')->pluck('date'),
-            'Reviews'    => DB::table('reviews')->pluck('date'),
-            'Interviews' => DB::table('interviews')->pluck('date'),
-            'Articles'   => DB::table('articles')->pluck('date'),
+            'News'       => DB::table('news')->pluck('published_at'),
+            'Reviews'    => DB::table('reviews')->pluck('published_at'),
+            'Interviews' => DB::table('interviews')->pluck('published_at'),
+            'Articles'   => DB::table('articles')->pluck('published_at'),
         ];
 
         $years = [];
         $counted = [];
-        foreach ($sources as $label => $timestamps) {
-            $counted[$label] = self::countByYear($timestamps);
+        foreach ($sources as $label => $dates) {
+            $counted[$label] = self::countByYear($dates, false);
             $years = array_merge($years, array_keys($counted[$label]));
         }
 
@@ -597,11 +597,11 @@ class AdminStatisticsHelper
                 continue;
             }
 
-            // date() rather than Carbon here: this runs over every row of
+            // substr() rather than Carbon here: this runs over every row of
             // changelogs, where building a Carbon instance per row costs ~700ms.
             $year = $epoch
                 ? (int) date('Y', (int) $date)
-                : (int) Carbon::parse($date)->year;
+                : (int) substr($date, 0, 4);
 
             if ($year < self::YEAR_MIN || $year > self::YEAR_MAX) {
                 continue;
