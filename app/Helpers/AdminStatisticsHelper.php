@@ -238,7 +238,7 @@ class AdminStatisticsHelper
      */
     public static function changesByYear()
     {
-        return self::bucketByYear(DB::table('changelogs')->pluck('created_at'), false);
+        return self::bucketByYear(DB::table('changelogs')->pluck('created_at'));
     }
 
     /**
@@ -288,7 +288,7 @@ class AdminStatisticsHelper
     {
         $dates = DB::table('game_releases')->whereNotNull('date')->pluck('date');
 
-        return self::bucketByYear($dates, false) + [
+        return self::bucketByYear($dates) + [
             'undated' => DB::table('game_releases')->whereNull('date')->count(),
         ];
     }
@@ -390,7 +390,7 @@ class AdminStatisticsHelper
             ->whereNotNull('menus.date')
             ->pluck('menus.date');
 
-        return self::bucketByYear($dates, false);
+        return self::bucketByYear($dates);
     }
 
     /**
@@ -427,7 +427,7 @@ class AdminStatisticsHelper
         $years = [];
         $counted = [];
         foreach ($sources as $label => $dates) {
-            $counted[$label] = self::countByYear($dates, false);
+            $counted[$label] = self::countByYear($dates);
             $years = array_merge($years, array_keys($counted[$label]));
         }
 
@@ -451,7 +451,7 @@ class AdminStatisticsHelper
      */
     public static function userSignupsByYear()
     {
-        return self::bucketByYear(DB::table('users')->pluck('created_at'), false);
+        return self::bucketByYear(DB::table('users')->pluck('created_at'));
     }
 
     /**
@@ -481,7 +481,7 @@ class AdminStatisticsHelper
      */
     public static function commentsByYear()
     {
-        return self::bucketByYear(DB::table('comments')->pluck('created_at'), false);
+        return self::bucketByYear(DB::table('comments')->pluck('created_at'));
     }
 
     /**
@@ -555,13 +555,12 @@ class AdminStatisticsHelper
     /**
      * Turn a list of dates into a per-year series with no gaps.
      *
-     * @param  \Illuminate\Support\Collection  $dates  Unix timestamps, or date strings when $epoch is false
-     * @param  bool  $epoch
+     * @param  \Illuminate\Support\Collection  $dates  Date or datetime strings
      * @return array ['labels' => string[], 'data' => int[]]
      */
-    private static function bucketByYear($dates, $epoch = true)
+    private static function bucketByYear($dates)
     {
-        return self::fillYears(self::countByYear($dates, $epoch));
+        return self::fillYears(self::countByYear($dates));
     }
 
     /**
@@ -584,11 +583,10 @@ class AdminStatisticsHelper
     /**
      * Count how many of the given dates fall in each year.
      *
-     * @param  \Illuminate\Support\Collection  $dates
-     * @param  bool  $epoch  Whether the values are unix timestamps rather than date strings
+     * @param  \Illuminate\Support\Collection  $dates  Date or datetime strings
      * @return array Map of year => count
      */
-    private static function countByYear($dates, $epoch = true)
+    private static function countByYear($dates)
     {
         $counts = [];
 
@@ -599,9 +597,7 @@ class AdminStatisticsHelper
 
             // substr() rather than Carbon here: this runs over every row of
             // changelogs, where building a Carbon instance per row costs ~700ms.
-            $year = $epoch
-                ? (int) date('Y', (int) $date)
-                : (int) substr($date, 0, 4);
+            $year = (int) substr($date, 0, 4);
 
             if ($year < self::YEAR_MIN || $year > self::YEAR_MAX) {
                 continue;
