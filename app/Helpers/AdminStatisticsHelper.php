@@ -181,7 +181,7 @@ class AdminStatisticsHelper
             'Other' => [
                 self::coverageRow('Individuals with a bio', self::countWithText('individuals', 'profile', 'id'), $individuals),
                 self::coverageRow('Companies with a profile', self::countWithText('companies', 'profile', 'id'), $companies),
-                self::coverageRow('Menu disks with a dump', DB::table('menu_disks')->whereNotNull('menu_disk_dump_id')->count(), $menuDisks),
+                self::coverageRow('Menu disks with a dump', DB::table('menu_disk_dumps')->count(), $menuDisks),
                 self::coverageRow('Menu disks with a screenshot', DB::table('menu_disk_screenshots')->distinct('menu_disk_id')->count(), $menuDisks),
                 self::coverageRow('SNDH files linked to a game', DB::table('game_sndh')->distinct('sndh_id')->count(), $sndhs),
                 self::coverageRow('SNDH files with a year', DB::table('sndhs')->whereBetween('year', [self::YEAR_MIN, self::YEAR_MAX])->count(), $sndhs),

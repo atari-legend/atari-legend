@@ -107,9 +107,10 @@ class MenuDisksTest extends AdminTestCase
     public function test_the_edit_form_shows_the_disk_and_its_dump(): void
     {
         $disk = $this->disk();
-        $dump = MenuDiskDump::factory()->inFormat('MSA')->create(['user_id' => $this->admin->getKey()]);
-        $disk->menuDiskDump()->associate($dump);
-        $disk->save();
+        MenuDiskDump::factory()->inFormat('MSA')->create([
+            'menu_disk_id' => $disk->getKey(),
+            'user_id'      => $this->admin->getKey(),
+        ]);
 
         $this->get(route('admin.menus.disks.edit', $disk))
             ->assertOk()
@@ -136,7 +137,7 @@ class MenuDisksTest extends AdminTestCase
         $this->assertSame(9, $dump->size);
         $this->assertSame(hash('sha512', 'DISKIMAGE'), $dump->sha512);
         $this->assertSame($this->admin->getKey(), $dump->user_id);
-        $this->assertSame($dump->getKey(), $disk->fresh()->menu_disk_dump_id);
+        $this->assertSame($dump->getKey(), $disk->fresh()->menuDiskDump->getKey());
 
         Storage::disk('public')->assertExists('zips/menus/' . $dump->getKey() . '.zip');
         $this->assertSame(
@@ -179,9 +180,10 @@ class MenuDisksTest extends AdminTestCase
         Storage::fake('public');
 
         $disk = $this->disk();
-        $dump = MenuDiskDump::factory()->inFormat('MSA')->create(['user_id' => $this->admin->getKey()]);
-        $disk->menuDiskDump()->associate($dump);
-        $disk->save();
+        $dump = MenuDiskDump::factory()->inFormat('MSA')->create([
+            'menu_disk_id' => $disk->getKey(),
+            'user_id'      => $this->admin->getKey(),
+        ]);
 
         $this->post(route('admin.menus.disks.storeDump', $disk), [
             'dump' => UploadedFile::fake()->createWithContent('somedump.stx', 'BETTERDUMP'),
@@ -193,7 +195,7 @@ class MenuDisksTest extends AdminTestCase
 
         $this->assertSame('STX', $dump->format);
         $this->assertSame(hash('sha512', 'BETTERDUMP'), $dump->sha512);
-        $this->assertSame($dump->getKey(), $disk->fresh()->menu_disk_dump_id);
+        $this->assertSame($dump->getKey(), $disk->fresh()->menuDiskDump->getKey());
 
         Storage::disk('public')->assertExists('zips/menus/' . $dump->getKey() . '.zip');
         $this->assertChangelog(Changelog::UPDATE, 'Menu Disks', 'Automation #189A');
@@ -235,7 +237,7 @@ class MenuDisksTest extends AdminTestCase
         ])->assertSessionHas('alert-danger');
 
         $this->assertSame(0, MenuDiskDump::query()->count());
-        $this->assertNull($disk->fresh()->menu_disk_dump_id);
+        $this->assertNull($disk->fresh()->menuDiskDump);
         $this->assertNoChangelog();
     }
 
@@ -255,7 +257,7 @@ class MenuDisksTest extends AdminTestCase
             ->assertRedirect(route('admin.menus.disks.edit', $disk));
 
         $this->assertSame(0, MenuDiskDump::query()->count());
-        $this->assertNull($disk->fresh()->menu_disk_dump_id);
+        $this->assertNull($disk->fresh()->menuDiskDump);
         Storage::disk('public')->assertMissing('zips/menus/' . $dump->getKey() . '.zip');
 
         $this->assertChangelog(Changelog::DELETE, 'Menu Disks', 'Automation #189A');
@@ -281,7 +283,7 @@ class MenuDisksTest extends AdminTestCase
         $this->delete(route('admin.menus.disks.destroyDump', [$otherDisk, $dump]))->assertRedirect();
 
         $this->assertSame(1, MenuDiskDump::query()->count());
-        $this->assertSame($dump->getKey(), $disk->fresh()->menu_disk_dump_id);
+        $this->assertSame($dump->getKey(), $disk->fresh()->menuDiskDump->getKey());
         Storage::disk('public')->assertExists('zips/menus/' . $dump->getKey() . '.zip');
     }
 
@@ -497,6 +499,29 @@ class MenuDisksTest extends AdminTestCase
         $this->assertSame(1, Game::query()->count());
 
         $this->assertChangelog(Changelog::DELETE, 'Menu Disks', 'Automation #189A');
+    }
+
+    /**
+     * menu_disk_dumps.menu_disk_id cascades, so the row goes with the disk.
+     * The ZIP is not the database's to remove, so destroy() deletes it.
+     */
+    public function test_deleting_a_disk_takes_its_dump_and_the_zip(): void
+    {
+        Storage::fake('public');
+
+        $disk = $this->disk();
+
+        $this->post(route('admin.menus.disks.storeDump', $disk), [
+            'dump' => UploadedFile::fake()->createWithContent('somedump.st', 'DISKIMAGE'),
+        ])->assertRedirect();
+
+        $dump = MenuDiskDump::sole();
+        Storage::disk('public')->assertExists('zips/menus/' . $dump->getKey() . '.zip');
+
+        $this->delete(route('admin.menus.disks.destroy', $disk))->assertRedirect();
+
+        $this->assertSame(0, MenuDiskDump::query()->count());
+        Storage::disk('public')->assertMissing('zips/menus/' . $dump->getKey() . '.zip');
     }
 
     public function test_disks_and_their_contents_are_closed_to_non_admins(): void

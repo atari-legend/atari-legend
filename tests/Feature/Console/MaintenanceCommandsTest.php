@@ -108,14 +108,12 @@ class MaintenanceCommandsTest extends TestCase
 
     private function menuDump(): MenuDiskDump
     {
-        $dump = MenuDiskDump::create(['format' => 'STX']);
+        $disk = MenuDisk::factory()->create(['part' => 'A']);
 
-        MenuDisk::factory()->create([
-            'part'              => 'A',
-            'menu_disk_dump_id' => $dump->getKey(),
+        return MenuDiskDump::create([
+            'menu_disk_id' => $disk->getKey(),
+            'format'       => 'STX',
         ]);
-
-        return $dump;
     }
 
     public function test_check_dumps_passes_when_every_file_is_present(): void
