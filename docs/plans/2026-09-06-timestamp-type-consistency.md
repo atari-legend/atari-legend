@@ -142,7 +142,7 @@ schema units in this plan:
 ```php
 class UnixTimestampColumnConverter
 {
-    public static function up(string $table, string $from, string $to, bool $nullable): void;
+    public static function up(string $table, string $from, string $to, string $sourceType, bool $nullable): void;
     public static function down(string $table, string $to, string $from, string $sourceType, ?int $length, bool $nullable, mixed $default = null): void;
 }
 ```
@@ -151,7 +151,9 @@ Every column this plan converts also changes name, so `up()` needs no
 intermediate column: it adds `$to` as a nullable `DATETIME`, backfills it from
 `$from`, drops `$from`, then — if `$nullable` is `false` — alters `$to` to NOT
 NULL. `down()` is the same four steps in reverse, rebuilding `$from` from
-`$sourceType` and `$length` and restoring `$default`.
+`$sourceType` and `$length` and restoring `$default`. Both directions take
+`$sourceType`; `up()` uses it for one thing only, and the trap below is that
+thing.
 
 Both backfills are driver-branched on `DB::connection()->getDriverName()`, on
 the same "not sqlite" distinction `TableRenamer` documents
@@ -159,21 +161,44 @@ the same "not sqlite" distinction `TableRenamer` documents
 (`TableRenamer.php:91`) — this connection's driver name is `mariadb`, not
 `mysql`:
 
-- `up()`: `FROM_UNIXTIME(NULLIF({$from}, ''))` on MariaDB,
-  `datetime(nullif({$from}, ''), 'unixepoch')` on SQLite, both
-  `WHERE {$from} IS NOT NULL`.
+- `up()`: `FROM_UNIXTIME({$source})` on MariaDB,
+  `datetime({$source}, 'unixepoch')` on SQLite, both
+  `WHERE {$from} IS NOT NULL`, where `{$source}` is `NULLIF({$from}, '')` for
+  a `string` source and the bare `{$from}` for an `integer` one.
 - `down()`: `UNIX_TIMESTAMP({$to})` on MariaDB, `strftime('%s', {$to})` on
   SQLite, both `WHERE {$to} IS NOT NULL`.
 
-`NULLIF(column, '')` on MariaDB evaluates to `NULL` for a `0` value as well as
-an empty string (`SELECT NULLIF(0, '')` is `NULL`, since `''` compares equal to
-`0`), so it is a no-op on the `int` sources in this unit and Unit 2 only
-because none of the nine converted `int` columns holds a `0` value (measured
-2026-09-09; see this unit's table and Unit 2's) — it handles the `varchar`
-sources in Units 2 and 3 as designed. A `0` reaching a NOT NULL target would
-fail the NOT NULL alter, not corrupt a row. The SQLite branch runs even though
-every migrated table is empty under `migrate:fresh`, so `up()`/`down()` stay
-symmetric regardless of which driver a test runs against.
+**`NULLIF(column, '')` must not reach an `int` column, and that is the whole
+reason `up()` needs `$sourceType`.** The `varchar` sources in Units 2 and 3
+need it: 20 `users.join_date` and 9 `users.last_visit` rows hold `''`, and it
+is what turns those into `NULL`. On an `int` column it reads as a harmless
+no-op and is not one. MariaDB coerces the `''` to a number to make the
+comparison, and under this connection's `STRICT_TRANS_TABLES` that coercion is
+an error, not a warning. An earlier draft of this plan wrapped every source
+alike, and the first `articles` backfill died on it:
+
+```
+SQLSTATE[22007]: Invalid datetime format: 1292 Truncated incorrect DECIMAL
+value: '' (Connection: mariadb, SQL: UPDATE `articles` SET `published_at` =
+FROM_UNIXTIME(NULLIF(`date`, '')) WHERE `date` IS NOT NULL)
+```
+
+Nothing about the `int` sources wanted it in the first place. All nine are
+either NOT NULL or hold no empty value, and none holds a `0` (measured
+2026-09-09; see this unit's table and Unit 2's). If one did, the bare column
+sends it through `FROM_UNIXTIME(0)` and stores the epoch, which is a better
+outcome than the `NULL` the wrapped form would have produced and the NOT NULL
+alter would then have rejected.
+
+Because the failure is a statement error rather than a bad row, it is loud on
+the first table of the first unit and cannot reach a later one silently. It
+does leave the migration half-applied — `articles.published_at` added, the
+migration not recorded — so recovering is a manual `DROP COLUMN` before
+re-running.
+
+The SQLite branch runs even though every migrated table is empty under
+`migrate:fresh`, so `up()`/`down()` stay symmetric regardless of which driver
+a test runs against.
 
 **`up()` drops the column default and does not replace it.** A `DATETIME`
 column cannot carry `DEFAULT 0`, so `news.published_at` comes out NOT NULL
@@ -190,9 +215,9 @@ on this stack (`@@session.time_zone = SYSTEM` with `NOW() = UTC_TIMESTAMP()`;
 2026-09-09).
 
 `2026_09_06_110000_content_dates_published_at.php` calls
-`UnixTimestampColumnConverter::up($table, 'date', 'published_at', nullable:
-false)` for each of the four tables; `down()` passes
-`sourceType: 'integer', length: null, nullable: false`, plus `default: 0` for
+`UnixTimestampColumnConverter::up($table, 'date', 'published_at', sourceType:
+'integer', nullable: false)` for each of the four tables; `down()` passes the
+same `sourceType` with `length: null, nullable: false`, plus `default: 0` for
 `news`.
 
 ### The code
@@ -332,7 +357,9 @@ Each of these records when its row was created, and nothing else:
 `update()`, and is rendered as "Added on …"
 (`resources/views/links/card_links.blade.php:48`); the three submission
 columns are set once, on submit; `dumps.date` is set in `storeDump()` and
-shown next to the uploader (`games/releases/card_media.blade.php:55`);
+shown next to the uploader on both the public and the admin release page
+(`games/releases/card_media.blade.php:55`,
+`admin/games/games/releases/medias/card_media.blade.php:173`);
 `andreas.timestamp` has no writer in the app at all — `AboutController:17` is
 its only reader. **All eight become `created_at`.** No table in this unit has
 a `created_at` or `updated_at` today, so no rename collides — the
@@ -347,13 +374,22 @@ Laravel columns: `timestamp` becomes `created_at`, and a nullable `updated_at`
 is added alongside it.** The edit paths stop assigning either — Eloquent
 maintains `updated_at` — so the comment keeps showing when it was posted.
 
-`changelogs.timestamp` carries `changelogs_timestamp_index`, added as
-`change_log_timestamp_index` by
-`database/migrations/2026_08_09_000000_change_log_indexes.php:15` and renamed
-with its table. It is the only index on any of the fourteen columns this plan
-converts (`SELECT table_name, index_name, column_name FROM
+`changelogs.timestamp` carries the only index on any of the fourteen columns
+this plan converts (`SELECT table_name, index_name, column_name FROM
 information_schema.statistics WHERE table_schema = DATABASE() AND column_name
 IN ('date', 'timestamp', 'join_date', 'last_visit')`, 2026-09-09: one row).
+
+**The two engines disagree on what that index is called.**
+`database/migrations/2026_08_09_000000_change_log_indexes.php:15` created it
+as `change_log_timestamp_index`, and the pluralisation rewrote that to
+`changelogs_timestamp_index` when the table was renamed — but `TableRenamer`
+skips SQLite (`TableRenamer.php:91`), and so does
+`2026_09_06_101300_stale_index_and_constraint_names_close`, so a database
+built by `migrate:fresh` on SQLite still carries the `change_log` stem. The
+dev and production databases carry the pluralised name. This is
+`IndexRenamer`'s own rule arriving from a second direction — "read the current
+name at run time, never assume it" (`IndexRenamer.php:36-42`) — and the
+migration below obeys it.
 
 Every one of these except `andreas.timestamp` is written via `time()` or
 `Carbon::now()->timestamp` and read back through a manual
@@ -368,26 +404,49 @@ lexicographically. `CommentFactory.php:21-22` already names the symptom:
 `2026_09_06_110100_activity_timestamps_created_at.php` calls
 `UnixTimestampColumnConverter::up()` for all eight columns
 (`nullable: false` for `changelogs`, `links`, `link_submissions`,
-`news_submissions`; `nullable: true` for the rest). `down()` passes
+`news_submissions`; `nullable: true` for the rest). Both directions pass
 `sourceType: 'integer', length: null` for the five `int` columns (plus
-`default: 0` for `links`, `link_submissions`, `news_submissions`) and
-`sourceType: 'string', length: 32` for the three `varchar` columns.
+`default: 0` in `down()` for `links`, `link_submissions`, `news_submissions`)
+and `sourceType: 'string', length: 32` for the three `varchar` columns. This
+is the one migration of the three carrying both source types, so it is where
+the `NULLIF` split described in Unit 1's "The migration" is visible.
 
-**The migration drops `changelogs_timestamp_index` before the conversion and
-creates the index on the new column after it**, and mirrors both in `down()`.
-MariaDB drops a single-column index with its column, but SQLite refuses to
-drop an indexed column at all, and `migrate:fresh` runs the index migration
-above on both engines:
+**The migration drops the index on `changelogs.timestamp` before the
+conversion and creates one on the new column after it**, and mirrors both in
+`down()`. MariaDB drops a single-column index with its column, but SQLite
+refuses to drop an indexed column at all, and `migrate:fresh` runs the index
+migration above on both engines:
 
 ```
-SQLSTATE[HY000]: General error: 1 error in index changelogs_timestamp_index after drop column: no such column: timestamp
+SQLSTATE[HY000]: General error: 1 error in index change_log_timestamp_index after drop column: no such column: timestamp (Connection: sqlite, SQL: alter table "changelogs" drop column "timestamp")
 ```
 
-With `'prefix_indexes' => true` and an empty prefix,
+**The index is found by its column, not by its name**, for the reason in "The
+columns" above: `dropIndex('changelogs_timestamp_index')` is right on MariaDB
+and wrong on every SQLite test database, where it fails before the conversion
+even starts —
+
+```
+SQLSTATE[HY000]: General error: 1 no such index: changelogs_timestamp_index (Connection: sqlite, SQL: drop index "changelogs_timestamp_index")
+```
+
+— which breaks every test that migrates, not just the changelog ones. A
+private helper walks `Schema::getIndexes('changelogs')`, which returns names
+and column lists on both drivers, and drops whichever index covers exactly the
+one column. `down()` does the same on `created_at`.
+
+Both directions then recreate the index under the name Laravel derives today:
+with `'prefix_indexes' => true` and an empty prefix,
 `Schema::table('changelogs', fn (Blueprint $t) => $t->index('created_at'))`
-derives `changelogs_created_at_index`. Nothing else in this plan needs the
-index: `changesByMonth()` filters `WHERE created_at >= ?` over 61,799 rows and
-`ChangelogTable` sorts and range-filters on the column.
+derives `changelogs_created_at_index`, and `$t->index('timestamp')` in
+`down()` derives `changelogs_timestamp_index`. On SQLite that means `down()`
+does not restore the `change_log` stem it found — the one asymmetry in this
+migration, and an improvement rather than a loss, since the stem names a table
+that has not existed since the pluralisation.
+
+Nothing else in this plan needs the index: `changesByMonth()` filters
+`WHERE created_at >= ?` over 61,799 rows and `ChangelogTable` sorts and
+range-filters on the column.
 
 `comments.updated_at` is added by the same migration, as a nullable `DATETIME`
 matching the type the converter produces, and backfilled from the column the
@@ -472,10 +531,18 @@ already dirty alone, so an explicit value survives.
   `whereBetween('timestamp', [$from->getTimestamp(), $to->getTimestamp()])`
   becomes `whereBetween('created_at', [$from, $to])` — the query builder
   formats a `DateTimeInterface` binding with the connection's date format.
+  `games/releases/card_media.blade.php:55` and
+  `admin/games/games/releases/medias/card_media.blade.php:173` already call a
+  `Carbon` method on the `Dump` attribute, so both need the name and nothing
+  else.
 - **Livewire tables** — drop the `+ 0` `orderByRaw` sort and the
   `Carbon::createFromTimestamp()` formatter in
   `Games/GameSubmissionsTable.php:50-63` and `CommentsTable.php:21,33-46`, and
   rename the sort key and column field in both.
+  `NewsSubmissionsTable.php:16,31` needs neither: its Date column is already
+  a plain `Column::make('Date', 'date')->format(...)->sortable()` reading
+  through the model's cast, so only its `setDefaultSort()` key and column
+  field move.
   **The Date column sorts an explicitly qualified column.**
   `CommentsTable`'s User sort joins `users` and `GameSubmissionsTable`'s Game
   and User sorts join `games` and `users`; after this unit and Unit 3 all four
@@ -586,11 +653,12 @@ the same varchar-sort workaround as Unit 2's Livewire tables.
 
 `2026_09_06_110200_user_timestamps_created_at.php` calls
 `UnixTimestampColumnConverter::up('users', 'join_date', 'created_at',
-nullable: true)` and `up('users', 'last_visit', 'last_visit_at', nullable:
-true)`. `down()` passes `sourceType: 'string', length: 32, nullable: true` for
-both — restoring the 29 empty-string rows as `NULL` rather than `''`, the one
-gap named in Unit 2's acceptance gate, applying here to `created_at` (20 rows)
-and `last_visit_at` (9 rows).
+sourceType: 'string', nullable: true)` and `up('users', 'last_visit',
+'last_visit_at', sourceType: 'string', nullable: true)`. `down()` passes
+`sourceType: 'string', length: 32, nullable: true` for both — restoring the 29
+empty-string rows as `NULL` rather than `''`, the one gap named in Unit 2's
+acceptance gate, applying here to `created_at` (20 rows) and `last_visit_at`
+(9 rows). These are the two columns the `NULLIF` in `up()` exists for.
 
 ### The code
 
@@ -625,9 +693,11 @@ and `last_visit_at` (9 rows).
 - **`database/seeders/E2ESeeder.php:274-275`**: the `join_date` line goes —
   these rows are written through `User::updateOrCreate` (`:265`), so Eloquent
   stamps `created_at` — and `'last_visit' => (string) now()->timestamp`
-  becomes `'last_visit_at' => now()`. That value is discarded either way:
-  `last_visit` is not in `$fillable` today and `last_visit_at` is not added to
-  it here, so the seeded users have no last visit before or after this unit.
+  becomes `'last_visit_at' => now()`. **That value lands, and did before this
+  unit too.** Neither name is in `$fillable`, but `SeedCommand::handle()`
+  wraps the whole seeder in `Model::unguarded()`, so `$fillable` does not
+  apply to anything `E2ESeeder` writes through a model. The seeded users have
+  a last visit either way; nothing asserts on it.
 - **Tests** — `Console/MaintenanceCommandsTest.php:33,67`,
   `Admin/Tables/AdminTablesTest.php:94-104` (which currently asserts the
   varchar sort bug directly, with `'999999999'` against `'1000000000'`).
