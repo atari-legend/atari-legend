@@ -16,14 +16,21 @@ test.describe('Admin users', () => {
     await expectPageRenders(page, await page.goto(path), path);
   });
 
-  test('lists comments', async ({ page }) => {
-    await expectPageRenders(page, await page.goto('/admin/users/comments'), '/admin/users/comments');
-  });
+  // One screen per section since the comment tables were split: the table a
+  // comment is in is what says which section it is on, so each has its own
+  // list and its own edit form.
+  for (const section of ['games', 'articles', 'interviews', 'reviews']) {
+    test(`lists ${section} comments`, async ({ page }) => {
+      const path = `/admin/users/comments/${section}`;
 
-  test('opens the edit form for a comment', async ({ page }) => {
-    // The form links back to whatever the comment is attached to, which it
-    // reads off the pivot table - a comment with no pivot row throws.
-    const path = `/admin/users/comments/${FIXTURE.comment.id}/edit`;
+      await expectPageRenders(page, await page.goto(path), path);
+    });
+  }
+
+  test('opens the edit form for a game comment', async ({ page }) => {
+    // The form links back to the game the comment is on, through the foreign
+    // key on game_comments.
+    const path = `/admin/users/comments/games/${FIXTURE.comment.id}/edit`;
 
     await expectPageRenders(page, await page.goto(path), path);
   });

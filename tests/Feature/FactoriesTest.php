@@ -3,19 +3,21 @@
 namespace Tests\Feature;
 
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\ArticleType;
 use App\Models\Category;
-use App\Models\Comment;
 use App\Models\Company;
 use App\Models\CopyProtection;
 use App\Models\Crew;
 use App\Models\Dump;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\GameRelease;
 use App\Models\GameReleaseScan;
 use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\Interview;
+use App\Models\InterviewComment;
 use App\Models\Language;
 use App\Models\Link;
 use App\Models\Magazine;
@@ -35,6 +37,7 @@ use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\Resolution;
 use App\Models\Review;
+use App\Models\ReviewComment;
 use App\Models\Screenshot;
 use App\Models\Spotlight;
 use App\Models\TrainerOption;
@@ -109,7 +112,10 @@ class FactoriesTest extends TestCase
             'dump'                => [Dump::class],
             'menu disk dump'      => [MenuDiskDump::class],
             'spotlight'           => [Spotlight::class],
-            'comment'             => [Comment::class],
+            'game comment'        => [GameComment::class],
+            'article comment'     => [ArticleComment::class],
+            'interview comment'   => [InterviewComment::class],
+            'review comment'      => [ReviewComment::class],
             'news submission'     => [NewsSubmission::class],
             'trivia'              => [Trivia::class],
             'user'                => [User::class],
@@ -117,23 +123,22 @@ class FactoriesTest extends TestCase
     }
 
     /**
-     * A comment reaches whatever it is attached to through one of four pivot
-     * tables, and `type` throws outright when it is attached to none of them.
-     * Each state has to land in the right table.
+     * A comment lives in the table of whatever it is on, and each factory comes
+     * with an owner of that kind.
      */
-    public function test_comment_states_attach_to_their_target(): void
+    public function test_each_comment_factory_names_its_own_section(): void
     {
-        $this->assertSame(Comment::TYPE_GAME, Comment::factory()->onGame()->create()->type);
-        $this->assertSame(Comment::TYPE_REVIEW, Comment::factory()->onReview()->create()->type);
-        $this->assertSame(Comment::TYPE_ARTICLE, Comment::factory()->onArticle()->create()->type);
-        $this->assertSame(Comment::TYPE_INTERVIEW, Comment::factory()->onInterview()->create()->type);
+        $this->assertSame('Games', GameComment::factory()->create()::SECTION);
+        $this->assertSame('Articles', ArticleComment::factory()->create()::SECTION);
+        $this->assertSame('Interviews', InterviewComment::factory()->create()::SECTION);
+        $this->assertSame('Reviews', ReviewComment::factory()->create()::SECTION);
     }
 
     public function test_a_comment_can_be_attached_to_a_named_game(): void
     {
         $game = Game::factory()->named('Turrican')->create();
 
-        $comment = Comment::factory()->onGame($game)->create();
+        $comment = GameComment::factory()->create(['game_id' => $game->getKey()]);
 
         $this->assertSame('Turrican', $comment->target);
         $this->assertSame($game->getKey(), $comment->target_id);

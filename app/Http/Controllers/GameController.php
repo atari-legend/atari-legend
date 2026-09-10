@@ -6,8 +6,8 @@ use App\Helpers\ChangelogHelper;
 use App\Helpers\GameHelper;
 use App\Helpers\JsonLd;
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\GameSubmission;
 use App\Models\MenuDisk;
 use App\Models\Review;
@@ -180,11 +180,11 @@ class GameController extends Controller
 
     public function postComment(Game $game, Request $request)
     {
-        $comment = new Comment();
+        $comment = new GameComment();
         $comment->text = $request->comment;
 
-        $request->user()->comments()->save($comment);
         $game->comments()->save($comment);
+        $request->user()->gameComments()->save($comment);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,

@@ -6,8 +6,8 @@ use App\Helpers\ChangelogHelper;
 use App\Helpers\Helper;
 use App\Helpers\JsonLd;
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\Changelog;
-use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -56,11 +56,11 @@ class ArticleController extends Controller
 
     public function postComment(Article $article, Request $request)
     {
-        $comment = new Comment();
+        $comment = new ArticleComment();
         $comment->text = $request->comment;
 
-        $request->user()->comments()->save($comment);
         $article->comments()->save($comment);
+        $request->user()->articleComments()->save($comment);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,

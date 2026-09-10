@@ -18,10 +18,9 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (game_screenshot, game_comment,
- * link_category), the factories are random where the specs need fixed
- * names and slugs, and $fillable on the legacy models is thin enough that
- * Model::create() would silently drop columns we depend on.
+ * all (game_screenshot, link_category), the factories are random where the
+ * specs need fixed names and slugs, and $fillable on the legacy models is thin
+ * enough that Model::create() would silently drop columns we depend on.
  */
 class E2ESeeder extends Seeder
 {
@@ -466,19 +465,13 @@ class E2ESeeder extends Seeder
             ]);
         }
 
-        // The pivot is not optional: Comment::getTypeAttribute() throws
-        // 'Unknown comment type' without one, and the admin comment form
-        // builds a route name out of it.
-        $this->insert('comments', ['id' => self::COMMENT_ID], [
+        $this->insert('game_comments', ['id' => self::COMMENT_ID], [
+            'game_id'    => self::GAME_ID,
             'text'       => 'Playwright test comment.',
             'created_at' => now(),
             'updated_at' => now(),
             'user_id'    => self::USER_STANDARD_ID,
         ]);
-        $this->insert('game_comment', [
-            'game_id'    => self::GAME_ID,
-            'comment_id' => self::COMMENT_ID,
-        ], []);
     }
 
     private function seedMagazines(): void

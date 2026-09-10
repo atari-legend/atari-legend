@@ -65,12 +65,13 @@
         @endif
 
         <h3 class="card-subtitle fs-5">Comments</h3>
-        @if ($user->comments->isNotEmpty())
+        @if ($user->gameComments->isNotEmpty() || $user->articleComments->isNotEmpty()
+            || $user->reviewComments->isNotEmpty() || $user->interviewComments->isNotEmpty())
             <ul>
-                <li>{{ $user->comments->pluck('games')->flatten()->count() }} game comments</li>
-                <li>{{ $user->comments->pluck('articles')->flatten()->count() }} article comments</li>
-                <li>{{ $user->comments->pluck('reviews')->flatten()->count() }} review comments</li>
-                <li>{{ $user->comments->pluck('interviews')->flatten()->count() }} interview comments</li>
+                <li>{{ $user->gameComments->count() }} game comments</li>
+                <li>{{ $user->articleComments->count() }} article comments</li>
+                <li>{{ $user->reviewComments->count() }} review comments</li>
+                <li>{{ $user->interviewComments->count() }} interview comments</li>
             </ul>
         @else
             <p class="text-muted">No comments</p>

@@ -44,10 +44,10 @@ use App\Http\Controllers\Admin\Menus\MenuCrewController;
 use App\Http\Controllers\Admin\Menus\MenuDisksContentController;
 use App\Http\Controllers\Admin\Menus\MenuDisksController;
 use App\Http\Controllers\Admin\Menus\MenuImportController;
-use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\Menus\MenuSetsController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
+use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\News\NewsController;
 use App\Http\Controllers\Admin\News\NewsSubmissionsController;
 use App\Http\Controllers\Admin\Other\ChangelogController;
@@ -57,7 +57,10 @@ use App\Http\Controllers\Admin\Other\StatisticsController;
 use App\Http\Controllers\Admin\Other\TriviaController;
 use App\Http\Controllers\Admin\Reviews\ReviewsController;
 use App\Http\Controllers\Admin\Reviews\ReviewsSubmissionsController;
-use App\Http\Controllers\Admin\User\CommentController;
+use App\Http\Controllers\Admin\User\ArticleCommentController;
+use App\Http\Controllers\Admin\User\GameCommentController;
+use App\Http\Controllers\Admin\User\InterviewCommentController;
+use App\Http\Controllers\Admin\User\ReviewCommentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -179,7 +182,21 @@ Route::middleware('verified')->group(function () {
                 Route::prefix('/users')->name('users.')->group(function () {
                     Route::delete('users/{user}/avatar', [UserController::class, 'destroyAvatar'])->name('users.avatar');
                     Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
-                    Route::resource('comments', CommentController::class)->except(['create', 'store', 'show']);
+                    // One screen per section. ->parameters() keeps the URL
+                    // placeholder honest: what follows the section is a comment
+                    // id, not a game or an article.
+                    Route::prefix('comments')->name('comments.')->group(function () {
+                        foreach ([
+                            'games'      => GameCommentController::class,
+                            'articles'   => ArticleCommentController::class,
+                            'interviews' => InterviewCommentController::class,
+                            'reviews'    => ReviewCommentController::class,
+                        ] as $section => $controller) {
+                            Route::resource($section, $controller)
+                                ->parameters([$section => 'comment'])
+                                ->except(['create', 'store', 'show']);
+                        }
+                    });
                 });
 
                 Route::prefix('/news')->name('news.')->group(function () {

@@ -3,9 +3,9 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
+use App\Models\ReviewComment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -252,7 +252,7 @@ class ReviewPagesTest extends TestCase
             ->post(route('review.comment', $review), ['comment' => 'Good write-up.'])
             ->assertRedirect();
 
-        $this->assertSame('Good write-up.', Comment::sole()->text);
+        $this->assertSame('Good write-up.', ReviewComment::sole()->text);
         $this->assertSame(1, $review->comments()->count());
         $this->assertSame(
             1,
@@ -267,6 +267,6 @@ class ReviewPagesTest extends TestCase
         $this->post(route('review.comment', $review), ['comment' => 'Spam'])
             ->assertRedirect(route('login'));
 
-        $this->assertSame(0, Comment::query()->count());
+        $this->assertSame(0, ReviewComment::query()->count());
     }
 }

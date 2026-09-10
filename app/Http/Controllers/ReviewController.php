@@ -6,9 +6,9 @@ use App\Helpers\ChangelogHelper;
 use App\Helpers\Helper;
 use App\Helpers\JsonLd;
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
+use App\Models\ReviewComment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -144,11 +144,11 @@ class ReviewController extends Controller
 
     public function postComment(Review $review, Request $request)
     {
-        $comment = new Comment();
+        $comment = new ReviewComment();
         $comment->text = $request->comment;
 
-        $request->user()->comments()->save($comment);
         $review->comments()->save($comment);
+        $request->user()->reviewComments()->save($comment);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,

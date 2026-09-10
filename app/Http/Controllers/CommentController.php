@@ -4,22 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ChangelogHelper;
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\Changelog;
 use App\Models\Comment;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\Interview;
+use App\Models\InterviewComment;
 use App\Models\Review;
+use App\Models\ReviewComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    /**
+     * A comment id is only unique within its own table now, so the posted
+     * context is what says which table to look in.
+     */
+    const MODELS = [
+        'game'      => GameComment::class,
+        'article'   => ArticleComment::class,
+        'interview' => InterviewComment::class,
+        'review'    => ReviewComment::class,
+    ];
+
     public function delete(Request $request)
     {
         if ($request->filled('comment_id')) {
-            $comment = Comment::find($request->comment_id);
+            $comment = $this->find($request->context, $request->comment_id);
 
-            if (Auth::user()->getKey() === $comment->user->getKey()) {
+            if ($comment !== null && Auth::user()->getKey() === $comment->user->getKey()) {
                 $comment->delete();
 
                 $this->insertChangelog(Changelog::DELETE, $request->context, $request->id, $comment);
@@ -32,9 +47,9 @@ class CommentController extends Controller
     public function update(Request $request)
     {
         if ($request->filled('comment_id') && $request->filled('comment')) {
-            $comment = Comment::find($request->comment_id);
+            $comment = $this->find($request->context, $request->comment_id);
 
-            if (Auth::user()->getKey() === $comment->user->getKey()) {
+            if ($comment !== null && Auth::user()->getKey() === $comment->user->getKey()) {
                 $comment->text = $request->comment;
                 $comment->save();
 
@@ -43,6 +58,13 @@ class CommentController extends Controller
         }
 
         return back();
+    }
+
+    private function find(?string $context, int $id): ?Comment
+    {
+        $model = self::MODELS[$context] ?? null;
+
+        return $model === null ? null : $model::find($id);
     }
 
     public function insertChangelog(string $action, ?string $context, ?int $id, object $comment)

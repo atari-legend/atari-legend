@@ -60,7 +60,7 @@ class Review extends Model implements Feedable
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'review_comment');
+        return $this->hasMany(ReviewComment::class);
     }
 
     public function toFeedItem(): FeedItem

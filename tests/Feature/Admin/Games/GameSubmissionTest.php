@@ -3,8 +3,8 @@
 namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\GameSubmission;
 use App\Models\Screenshot;
 use App\Models\User;
@@ -120,12 +120,12 @@ class GameSubmissionTest extends AdminTestCase
         $this->put(route('admin.games.submissions.update', $submission), ['action' => 'comment'])
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $comment = Comment::sole();
+        $comment = GameComment::sole();
 
         $this->assertSame('Best soundtrack on the ST.', $comment->text);
         $this->assertSame($this->visitor->getKey(), $comment->user_id);
         $this->assertTrue($comment->created_at->equalTo($submission->created_at));
-        $this->assertSame([$game->getKey()], $comment->games->pluck('id')->all());
+        $this->assertSame($game->getKey(), $comment->game_id);
 
         $this->assertSame(0, GameSubmission::query()->count());
 
@@ -145,7 +145,7 @@ class GameSubmissionTest extends AdminTestCase
             ->assertRedirect(route('admin.games.submissions.index'));
 
         $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->fresh()->game_done);
-        $this->assertSame(0, Comment::query()->count());
+        $this->assertSame(0, GameComment::query()->count());
         $this->assertNoChangelog();
     }
 

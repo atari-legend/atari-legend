@@ -155,7 +155,10 @@
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.users.users.*')" href="{{ route('admin.users.users.index') }}">Users</a></li>
-                        <li><a class="@activeroute('admin.users.comments.*')" href="{{ route('admin.users.comments.index') }}">Comments</a></li>
+                        <li><a class="@activeroute('admin.users.comments.games.*')" href="{{ route('admin.users.comments.games.index') }}">Game comments</a></li>
+                        <li><a class="@activeroute('admin.users.comments.articles.*')" href="{{ route('admin.users.comments.articles.index') }}">Article comments</a></li>
+                        <li><a class="@activeroute('admin.users.comments.interviews.*')" href="{{ route('admin.users.comments.interviews.index') }}">Interview comments</a></li>
+                        <li><a class="@activeroute('admin.users.comments.reviews.*')" href="{{ route('admin.users.comments.reviews.index') }}">Review comments</a></li>
                     </ul>
                 </div>
             </div>

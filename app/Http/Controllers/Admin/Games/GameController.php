@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Games;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
@@ -21,7 +20,6 @@ use App\Models\SoundHardware;
 use App\Rules\Slug;
 use App\View\Components\Admin\Crumb;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class GameController extends Controller
@@ -140,25 +138,11 @@ class GameController extends Controller
         $key = $game->getKey();
         $name = $game->name;
 
-        DB::transaction(function () use ($game) {
-            // Everything with a foreign key to `game` cascades, and since the
-            // schema consistency sweep that includes game_aka and game_vs,
-            // which used to be swept by hand here because they had no foreign
-            // key at all. One case is left that the database will not do:
-            //
-            //   comments - game_comment cascades, but the comments row it
-            //              points at does not, and Comment::getType() throws on
-            //              a comment that belongs to nothing, which would take
-            //              out the admin comments table.
-            //
-            // Read the comments before deleting the game: the pivot rows that
-            // reach them are gone the moment it goes.
-            $commentIds = $game->comments->modelKeys();
-
-            $game->delete();
-
-            Comment::destroy($commentIds);
-        });
+        // Everything with a foreign key to `game` cascades, and since the
+        // relationship cardinality plan that includes game_comments, which used
+        // to be swept by hand here: game_comment cascaded but the comments row
+        // it pointed at did not.
+        $game->delete();
 
         ChangelogHelper::insert([
             'action'           => Changelog::DELETE,

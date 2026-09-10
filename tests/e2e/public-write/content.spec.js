@@ -67,8 +67,8 @@ test.describe('Article comments', () => {
 //
 // The visitor's own controls are covered above and on a game; these are the two
 // routes only a moderator can reach - PUT and DELETE on
-// /admin/users/comments/{comment} - and nothing in the suite touched either.
-// The pair matters together: an edit that a visitor cannot see is not
+// /admin/users/comments/articles/{comment} - and nothing in the suite touched
+// either. The pair matters together: an edit that a visitor cannot see is not
 // moderation, so both halves are read back from the public page rather than
 // from the admin's own table.
 test.describe('Comment moderation', () => {
@@ -89,11 +89,10 @@ test.describe('Comment moderation', () => {
     // Straight to the form rather than through the table: admin/users.spec.js
     // already loads the comments list, and what has no coverage is what the
     // two buttons on this screen do.
-    await adminPage.goto(`/admin/users/comments/${comment.id}/edit`);
+    await adminPage.goto(`/admin/users/comments/articles/${comment.id}/edit`);
 
-    // A comment knows nothing about what it is on: both the author and the
-    // article are worked out from the pivot tables, so a subtitle naming them
-    // is the round trip through Comment::getTargetAttribute().
+    // The subtitle names both the author and the article, which is the round
+    // trip through ArticleComment::getTargetAttribute().
     await expect(adminPage.locator('.card-subtitle')).toContainText(FIXTURE.contributor.userid);
     await expect(adminPage.locator('.card-subtitle')).toContainText(article.title);
 
@@ -102,7 +101,7 @@ test.describe('Comment moderation', () => {
     // textarea in the markup would post the comment unchanged.
     await fillEditor(adminPage, 'content', moderated);
     await adminPage.getByRole('button', { name: 'Save' }).click();
-    await expect(adminPage).toHaveURL(/\/admin\/users\/comments$/);
+    await expect(adminPage).toHaveURL(/\/admin\/users\/comments\/articles$/);
 
     // What the visitor now reads, on the same comment - the id has not moved.
     await page.goto(`/articles/${article.id}`);

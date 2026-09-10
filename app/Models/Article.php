@@ -45,7 +45,7 @@ class Article extends Model implements Feedable
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class);
+        return $this->hasMany(ArticleComment::class);
     }
 
     public function toFeedItem(): FeedItem

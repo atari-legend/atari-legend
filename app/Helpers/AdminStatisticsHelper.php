@@ -19,6 +19,13 @@ use Illuminate\Support\Facades\DB;
 class AdminStatisticsHelper
 {
     /**
+     * One comment table per section, since the relationship cardinality plan.
+     */
+    const COMMENT_TABLES = [
+        'game_comments', 'article_comments', 'interview_comments', 'review_comments',
+    ];
+
+    /**
      * Legacy values found in changelogs.action, mapped onto the current constants.
      */
     const ACTION_ALIASES = [
@@ -133,7 +140,7 @@ class AdminStatisticsHelper
                 'Inactive users'    => DB::table('users')->where('inactive', User::INACTIVE)->count(),
                 'Verified users'    => DB::table('users')->whereNotNull('email_verified_at')->where('inactive', User::ACTIVE)->count(),
                 'Administrators'    => DB::table('users')->where('permission', User::PERMISSION_ADMIN)->count(),
-                'Comments'          => DB::table('comments')->count(),
+                'Comments'          => collect(self::COMMENT_TABLES)->sum(fn ($table) => DB::table($table)->count()),
                 'Votes'             => DB::table('game_votes')->count(),
                 'News submissions'  => DB::table('news_submissions')->count(),
             ],
@@ -481,7 +488,10 @@ class AdminStatisticsHelper
      */
     public static function commentsByYear()
     {
-        return self::bucketByYear(DB::table('comments')->pluck('created_at'));
+        return self::bucketByYear(
+            collect(self::COMMENT_TABLES)
+                ->flatMap(fn ($table) => DB::table($table)->pluck('created_at'))
+        );
     }
 
     /**

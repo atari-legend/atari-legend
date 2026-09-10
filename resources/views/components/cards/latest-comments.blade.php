@@ -4,7 +4,7 @@
     </div>
     <div class="striped">
         @forelse ($comments as $comment)
-            @include('components.cards.partial_comment', ['showGame' => true])
+            @include('components.cards.partial_comment', ['showGame' => true, 'context' => 'game', 'id' => $comment->game_id])
         @empty
             <div class="card-body p-2">
                 @if ($user !== null)

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Games;
 use App\Helpers\ChangelogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Changelog;
-use App\Models\Comment;
+use App\Models\GameComment;
 use App\Models\GameSubmission;
 use App\Models\Screenshot;
 use App\View\Components\Admin\Crumb;
@@ -68,13 +68,12 @@ class GameSubmissionController extends Controller
                 ]);
                 break;
             case  'comment':
-                $comment = new Comment([
+                $comment = GameComment::create([
+                    'game_id'    => $submission->game_id,
                     'text'       => $submission->text,
                     'created_at' => $submission->created_at,
                     'user_id'    => $submission->user_id,
                 ]);
-                $comment->save();
-                $comment->games()->attach($submission->game);
 
                 ChangelogHelper::insert([
                     'action'           => Changelog::INSERT,

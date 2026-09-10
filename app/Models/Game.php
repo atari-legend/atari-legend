@@ -172,7 +172,7 @@ class Game extends Model
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'game_comment');
+        return $this->hasMany(GameComment::class);
     }
 
     public function similarGames()
