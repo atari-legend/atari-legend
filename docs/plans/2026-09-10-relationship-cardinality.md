@@ -60,11 +60,13 @@ pull request.**
 |---|---|---|---|
 | 1 | `reviews`, `game_review` | `2026_09_10_100000_review_game_to_column.php` | `--step=1` |
 | 2 | `article_screenshot`, `interview_screenshot`, `review_screenshot` and their three comment tables | `2026_09_10_100100_merge_article_screenshot_comments.php`, `2026_09_10_100200_merge_interview_screenshot_comments.php`, `2026_09_10_100300_merge_review_screenshot_comments.php` | `--step=3` |
-| 3 | `menu_disks`, `menu_disk_dumps` | `2026_09_10_100400_menu_disk_dump_id_to_child.php` | `--step=1` |
-| 4 | `comments` and the four comment pivots | `2026_09_10_100500_comments_to_four_tables.php` | `--step=1` |
+| 3 | `menu_disks`, `menu_disk_dumps` | `2026_09_10_100350_delete_orphaned_menu_disk_dumps.php`, `2026_09_10_100400_menu_disk_dump_id_to_child.php` | `--step=2` |
+| 4 | `comments` and the four comment pivots | `2026_09_10_100450_delete_ownerless_comments.php`, `2026_09_10_100500_comments_to_four_tables.php` | `--step=2` |
 
 Reverting a unit's commit removes all of that unit's migration files at once,
-so Unit 2's revert removes three.
+so Unit 2's revert removes three and Units 3 and 4 two each. The cleanup
+migrations delete rows their `down()` cannot restore, so rolling either unit back
+returns the schema, not those rows.
 
 Units ship in order 1, 2, 3, 4. Unit 1 must precede Unit 2 because both edit
 `resources/views/reviews/card_review.blade.php:22-23`, and must precede Unit 4
@@ -398,9 +400,14 @@ the two relations already declare; a plain index would be the `dumps.media_id`
 shape, which no reader in `app/` or `resources/` is written for — all thirty-odd
 of them read `$disk->menuDiskDump` as a single object.
 
-**The two unreferenced dumps are deleted before the migration, not by it.**
-Deleting rows inside `up()` is not reversible by `down()`, so `up()` throws
-instead and names the count.
+**A migration deletes the unreferenced dumps, by predicate rather than by id.**
+`menu_disks` is the only way in to a dump, so a dump no disk references is
+unreachable: no page renders it, no download links to it, and
+`menus:check-dumps` can only label it `Unknown`. Deleting rows nothing can reach
+is what makes the column NOT NULL, and `down()` restoring them would have no
+value — `2026_09_10_100400`'s own `down()` does not recreate them either. The
+predicate, not the two ids measured here, is what the migration deletes on, so
+it holds on any database and needs no re-measurement before a deploy.
 
 ### The migration
 
@@ -413,7 +420,13 @@ instead and names the count.
   RuntimeException: 2 menu_disk_dumps rows have no menu disk; delete them before migrating.
   ```
 
-  It also throws if any dump is referenced by more than one disk.
+  `2026_09_10_100350_delete_orphaned_menu_disk_dumps.php` runs first and empties
+  that count, so the guard is the check that it did rather than a step a person
+  has to take. The cleanup selects on the same predicate, prints each row it is
+  about to delete — id, format, upload date and the head of its sha512 — so the
+  deploy log records what went, then deletes those ids. Its `down()` does
+  nothing.
+- `up()` also throws if any dump is referenced by more than one disk.
 - Adds `menu_disk_id` `unsignedBigInteger` nullable, backfills from
   `menu_disks`, throws unless every dump row is filled, then
   `->nullable(false)->change()`, adds a unique index and the foreign key to
@@ -472,7 +485,7 @@ The relation keeps its name on both sides, so the 33 blade readers of
 
 ### Acceptance
 
-- Before migrating: `DELETE FROM menu_disk_dumps WHERE id IN (592, 3052)`, and `SELECT COUNT(*) FROM menu_disk_dumps` returns 3825.
+- `SELECT COUNT(*) FROM menu_disk_dumps` returns 3825, the cleanup migration having deleted the 2 rows with no disk and named them in the migrate output.
 - `SELECT COUNT(*) FROM menu_disk_dumps d JOIN <pre-migration menu_disks> md ON md.menu_disk_dump_id = d.id WHERE d.menu_disk_id != md.id` returns 0, run against the pre-migration dump before it is discarded.
 - `SELECT COUNT(*) FROM menu_disk_dumps WHERE menu_disk_id IS NULL` returns 0, and `SHOW CREATE TABLE menu_disk_dumps` names a unique index on `menu_disk_id` and a cascading foreign key to `menu_disks`.
 - `SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'menu_disks' AND column_name = 'menu_disk_dump_id'` returns 0.
@@ -541,9 +554,14 @@ columns therefore take no constraint at all rather than a column change —
 `Comment::user()` is a `belongsTo` that returns null for a dangling id, and
 `Helper::user()` answers "Former user". Four new tables do not reopen that.
 
-**The two ownerless comments are deleted before the migration, not by it.**
-`comments` is dropped in this unit, so a row with no owner has nowhere to go
-and `down()` could not restore it. `up()` throws and names the count instead.
+**A migration deletes the ownerless comments, by predicate rather than by id.**
+A comment reaches what it is on through one of the four pivots, so a row in none
+of them is unreachable: no page has ever rendered it, and `getTypeAttribute()`
+throws `Unknown comment type` on it rather than displaying it. `comments` is
+dropped here, so such a row has no table to go to, and `down()` restoring a row
+nothing could reach would have no value. The predicate, not the two ids measured
+here, is what the migration deletes on, so it holds on any database and needs no
+re-measurement before a deploy.
 
 ### The admin screens
 
@@ -616,6 +634,13 @@ section's group.
   ```
   RuntimeException: 2 comments belong to nothing; delete them before migrating.
   ```
+
+  `2026_09_10_100450_delete_ownerless_comments.php` runs first and empties the
+  `owners = 0` bucket, so the guard is the check that it did rather than a step a
+  person has to take. The cleanup selects on the same predicate, prints each row
+  it is about to delete — id, author, date and the first 60 characters of the
+  text — so the deploy log records what went, then deletes those ids. Its
+  `down()` does nothing.
 
 - Creates the four tables. Each: `integer('id', true)`; `integer('<owner>_id')`
   with a `cascadeOnDelete` foreign key, matching what the pivot has today;
@@ -769,7 +794,7 @@ that the comment's text is unchanged and no changelog row is written.
 
 ### Acceptance
 
-- `SELECT COUNT(*) FROM game_comments` returns 936, `article_comments` 3, `interview_comments` 18, `review_comments` 26.
+- Each of `game_comments`, `article_comments`, `interview_comments` and `review_comments` holds the row count its pivot held before the migration, which is what `up()` asserts before it drops anything. On 2026-09-10 that was 936, 3, 18 and 26; `comments` takes writes, so the four figures move and the equality is the gate rather than the numbers.
 - `SELECT COUNT(*) FROM game_comments gc JOIN <pre-migration comments> c ON c.id = gc.id JOIN <pre-migration game_comment> p ON p.comment_id = c.id WHERE gc.game_id != p.game_id OR gc.text <=> c.text = 0 OR gc.user_id != c.user_id` returns 0, and likewise for the other three, run against the pre-migration dump before it is discarded.
 - `SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name IN ('comments', 'game_comment', 'article_comment', 'interview_comment', 'review_comment')` returns 0.
 - `SHOW CREATE TABLE game_comments` names a cascading foreign key to `games` and no constraint on `user_id`, and likewise for the other three.
@@ -778,7 +803,7 @@ that the comment's text is unchanged and no changelog row is written.
 - `grep -n "function owner()" app/Models/*Comment.php` returns nothing, and `tests/Feature/RelationshipKeyConventionsTest.php` passes without a new `DECLINED` entry.
 - Posting a comment through each of `games.comment`, `article.comment`, `interview.comment` and `review.comment` writes one row carrying both its owner id and its author. This is the ordering gate: with the two saves the other way round the insert fails with the NOT NULL error named above.
 - `POST /comments/update` carrying a `comment_id` and no `context` leaves the comment's text unchanged and writes no changelog row.
-- `php artisan migrate:rollback --step=1` then `php artisan migrate` puts all 983 comments back on the same owners with the same ids, text, author and timestamps.
+- `php artisan migrate:rollback --step=1` then `php artisan migrate` puts every comment back on the same owner with the same id, text, author and timestamps — 983 of them on 2026-09-10. `--step=1` reverses the structural migration alone; a second step reverses the cleanup, whose `down()` restores nothing.
 - `grep -rnE -e '->games(->first\(\)|\[0\])' app resources tests database --include=*.php --include=*.blade.php` returns nothing, and the `->(articles|interviews|reviews)` grep beside it in the end state returns only `resources/views/games/card_gameinfo.blade.php:77`. Unit 4 is the last unit at which both hold: Unit 1 clears 39 of the 42 lines and this unit clears the three that unwrap `Comment::games()`.
 - `grep -rc belongsToMany app/Models/*.php | awk -F: '{s+=$2} END {print s}'` returns 41, down from the 51 the end state records.
 - `./vendor/bin/sail artisan test` passes, including `tests/Feature/Public/GamePageTest.php`, `ContentPagesTest.php`, `ReviewPagesTest.php` and `tests/Feature/Admin/Tables/AdminTablesTest.php`.
@@ -813,18 +838,22 @@ A dump immediately before each of the four units — four separate deploys, not
 one. Every unit moves real row data and drops a table, on tables with live
 writers.
 
-Two units have a manual step before their migration, each of which `up()`
-refuses to run without.
+No step is taken by hand. Units 3 and 4 each delete their unreachable rows in a
+migration that runs before the structural one, so `artisan migrate --force` in
+`.github/workflows/deploy.sh:105` carries the whole unit. Both cleanups print the
+rows they delete, and that output in the deploy log is the record: the rows do
+not come back, on a rollback or otherwise.
 
-Unit 3: `DELETE FROM menu_disk_dumps WHERE id IN (592, 3052)`. Check
-`storage/app/public/zips/menus/592.zip` and `3052.zip` on the production
-filesystem first and delete them too if they are there; the dev checkout has no
-`zips/menus` directory, so this could not be checked on 2026-09-10.
+What the cleanups do not remove is a dump's ZIP. A deleted dump leaves
+`storage/app/public/zips/menus/{id}.zip` behind as a file no row names, which
+`menus:check-dumps` never reports because it iterates rows. On 2026-09-10 the two
+orphans were id 592 and 3052; the dev checkout has no `zips/menus` directory, so
+whether those files exist could only be checked on the deploy target.
 
-Unit 4: `DELETE FROM comments WHERE id IN (41, 43)`. Read them first — they are
-two 2004 comments by `user_id` 3 that belong to no game, article, interview or
-review, and no page has ever rendered them. `down()` does not bring them
-back.
+A failed guard stops the deploy with the site in maintenance mode and the
+schema short of that unit. That is what the guards buy: a unit that cannot
+complete refuses before any DDL runs, rather than leaving the schema half
+migrated. Bring the site back with `artisan up`.
 
 ## Out of scope
 
