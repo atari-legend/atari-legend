@@ -3,12 +3,12 @@
 namespace Tests\Feature\Admin\Games;
 
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Company;
 use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameAka;
+use App\Models\GameComment;
 use App\Models\GameRelease;
 use App\Models\GameSubmission;
 use App\Models\GameVote;
@@ -269,7 +269,7 @@ class GameControllerTest extends AdminTestCase
                 'author'     => 'Someone',
                 'youtube_id' => 'dQw4w9WgXcQ',
             ]),
-            'reviews'          => $game->reviews()->attach(Review::factory()->create()),
+            'reviews'          => Review::factory()->create(['game_id' => $game->getKey()]),
             'menuDiskContents' => $game->menuDiskContents()->create([
                 'position'     => 1,
                 'menu_disk_id' => MenuDisk::factory()->create()->getKey(),
@@ -286,7 +286,7 @@ class GameControllerTest extends AdminTestCase
             'similarGamesReverse' => $game->similarGamesReverse()->attach(Game::factory()->create()),
             'akas'                => GameAka::create(['game_id' => $game->getKey(), 'name' => 'Xenon II']),
             'vs'                  => GameVs::create(['atari_id' => $game->getKey(), 'lemonamiga_id' => 1234]),
-            'comments'            => $game->comments()->attach(Comment::factory()->create()),
+            'comments'            => GameComment::factory()->create(['game_id' => $game->getKey()]),
             'votes'               => GameVote::factory()->create([
                 'game_id' => $game->getKey(),
                 'user_id' => $this->admin->getKey(),
@@ -297,8 +297,7 @@ class GameControllerTest extends AdminTestCase
     /**
      * A game is deletable only while nothing references it, so what it takes
      * with it is everything the database will not remove on its own: the two
-     * tables with no foreign key, and the comment rows behind a pivot that
-     * cascades without them.
+     * tables with no foreign key. game_comments now cascades like the rest.
      */
     public function test_a_deletable_game_takes_its_loose_ends_with_it(): void
     {
@@ -317,10 +316,7 @@ class GameControllerTest extends AdminTestCase
         $this->assertSame(0, GameVs::query()->count());
         $this->assertSame(0, GameVote::query()->count());
 
-        // The pivot cascades, but the comment behind it does not - a comment
-        // that belongs to nothing throws when the admin lists it
-        $this->assertSame(0, Comment::query()->count());
-        $this->assertSame(0, DB::table('game_comment')->count());
+        $this->assertSame(0, GameComment::query()->count());
 
         // Reference data is an attribute of the game, and goes with it
         $this->assertSame(0, DB::table('game_genre')->count());

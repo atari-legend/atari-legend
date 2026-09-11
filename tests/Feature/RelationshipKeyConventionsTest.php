@@ -49,11 +49,6 @@ class RelationshipKeyConventionsTest extends TestCase
         'Individual::nicknames()'           => 'individual_nickname needs individual_id and nick_id',
         'Individual::individuals()'         => 'individual_nickname needs nick_id and individual_id',
 
-        // PIVOT SUBCLASS
-        'ArticleScreenshot::comment()'      => 'declared on a Pivot: no derivable default exists',
-        'InterviewScreenshot::comment()'    => 'declared on a Pivot: no derivable default exists',
-        'ReviewScreenshot::comment()'       => 'declared on a Pivot: no derivable default exists',
-
         // TABLE, NOT MODEL
         'GameRelease::publisher()'          => 'company_id is right; belongsTo derives publisher_id from the method name',
         'Game::vs()'                        => 'atari_id says what game_id would not',

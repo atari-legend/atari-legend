@@ -11,11 +11,11 @@ class MenuDiskDump extends Model
 
     const EXTENSIONS = ['STX', 'MSA', 'RAW', 'SCP', 'ST'];
 
-    protected $fillable = ['user_id', 'format', 'sha512', 'size'];
+    protected $fillable = ['menu_disk_id', 'user_id', 'format', 'sha512', 'size'];
 
     public function menuDisk()
     {
-        return $this->hasOne(MenuDisk::class);
+        return $this->belongsTo(MenuDisk::class);
     }
 
     public function user()

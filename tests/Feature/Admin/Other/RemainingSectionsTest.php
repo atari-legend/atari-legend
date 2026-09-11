@@ -6,8 +6,8 @@ use App\Livewire\Admin\UsersTable;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
@@ -394,21 +394,19 @@ class RemainingSectionsTest extends AdminTestCase
         $this->actingAs($user)->post(route('games.comment', $game), ['comment' => 'Original.']);
         $this->actingAs($this->admin);
 
-        $comment = Comment::sole();
+        $comment = GameComment::sole();
 
         // The moderation form posts the body as `content`
-        $this->put(route('admin.users.comments.update', $comment), ['content' => 'Moderated.'])
+        $this->put(route('admin.games.comments.update', $comment), ['content' => 'Moderated.'])
             ->assertRedirect();
 
         $this->assertSame('Moderated.', $comment->fresh()->text);
 
-        $this->delete(route('admin.users.comments.destroy', $comment))
-            ->assertRedirect(route('admin.users.comments.index'));
+        $this->delete(route('admin.games.comments.destroy', $comment))
+            ->assertRedirect(route('admin.games.comments.index'));
 
-        $this->assertSame(0, Comment::query()->count());
+        $this->assertSame(0, GameComment::query()->count());
 
-        // The changelog has to name what the comment was on, which is only
-        // knowable before the delete removes the pivot rows
         $this->assertChangelog(Changelog::DELETE, 'Games', 'Xenon');
     }
 

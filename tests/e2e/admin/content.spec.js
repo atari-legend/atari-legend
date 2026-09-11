@@ -20,21 +20,27 @@ const sections = [
     index: '/admin/reviews/reviews',
     create: '/admin/reviews/reviews/create',
     edit: `/admin/reviews/reviews/${FIXTURE.review.id}/edit`,
-    extra: [{ name: 'submissions', path: '/admin/reviews/submissions' }],
+    extra: [
+      { name: 'submissions', path: '/admin/reviews/submissions' },
+      { name: 'comments', path: '/admin/reviews/comments' },
+    ],
   },
   {
     name: 'Interviews',
     index: '/admin/interviews/interviews',
     create: '/admin/interviews/interviews/create',
     edit: `/admin/interviews/interviews/${FIXTURE.interview.id}/edit`,
-    extra: [],
+    extra: [{ name: 'comments', path: '/admin/interviews/comments' }],
   },
   {
     name: 'Articles',
     index: '/admin/articles/articles',
     create: '/admin/articles/articles/create',
     edit: `/admin/articles/articles/${FIXTURE.article.id}/edit`,
-    extra: [{ name: 'types', path: '/admin/articles/types' }],
+    extra: [
+      { name: 'types', path: '/admin/articles/types' },
+      { name: 'comments', path: '/admin/articles/comments' },
+    ],
   },
 ];
 

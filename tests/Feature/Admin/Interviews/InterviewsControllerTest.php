@@ -181,13 +181,13 @@ class InterviewsControllerTest extends AdminTestCase
             'description-' . $pivot->getKey() => 'At the keyboard',
         ])->assertRedirect(route('admin.interviews.interviews.edit', $interview));
 
-        $this->assertSame('At the keyboard', $pivot->fresh()->comment->text);
+        $this->assertSame('At the keyboard', $pivot->fresh()->description);
 
         $this->put(route('admin.interviews.interviews.image.update', $interview), [
             'description-' . $pivot->getKey() => '',
         ]);
 
-        $this->assertNull($pivot->fresh()->comment);
+        $this->assertNull($pivot->fresh()->description);
     }
 
     public function test_non_admins_are_turned_away(): void

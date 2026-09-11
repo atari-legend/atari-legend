@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Cards;
 
-use App\Models\Comment;
+use App\Models\GameComment;
 use App\Models\User;
 use Illuminate\View\Component;
 
@@ -36,8 +36,7 @@ class LatestComments extends Component
      */
     public function render()
     {
-        $comments = Comment::select('comments.*')
-            ->join('game_comment', 'comments.id', '=', 'game_comment.comment_id');
+        $comments = GameComment::query();
 
         if ($this->user !== null) {
             $comments->where('user_id', $this->user->getKey());

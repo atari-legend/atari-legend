@@ -3,8 +3,10 @@
 use App\Http\Controllers\Admin\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Admin\Ajax\SNDHController;
 use App\Http\Controllers\Admin\Ajax\UserController as AjaxUserController;
+use App\Http\Controllers\Admin\Articles\ArticleCommentController;
 use App\Http\Controllers\Admin\Articles\ArticleController;
 use App\Http\Controllers\Admin\Articles\ArticleTypeController;
+use App\Http\Controllers\Admin\Games\GameCommentController;
 use App\Http\Controllers\Admin\Games\GameCompanyController;
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Http\Controllers\Admin\Games\GameController;
@@ -33,6 +35,7 @@ use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemMemoryController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemMemoryEnhancementController;
 use App\Http\Controllers\Admin\Games\Releases\ReleaseSystemTosController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\Interviews\InterviewCommentController;
 use App\Http\Controllers\Admin\Interviews\InterviewsController;
 use App\Http\Controllers\Admin\Links\LinkCategoryController;
 use App\Http\Controllers\Admin\Links\LinkController as AdminLinkController;
@@ -44,10 +47,10 @@ use App\Http\Controllers\Admin\Menus\MenuCrewController;
 use App\Http\Controllers\Admin\Menus\MenuDisksContentController;
 use App\Http\Controllers\Admin\Menus\MenuDisksController;
 use App\Http\Controllers\Admin\Menus\MenuImportController;
-use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\Menus\MenuSetsController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareContentTypesController;
 use App\Http\Controllers\Admin\Menus\MenuSoftwareController;
+use App\Http\Controllers\Admin\Menus\MenusController;
 use App\Http\Controllers\Admin\News\NewsController;
 use App\Http\Controllers\Admin\News\NewsSubmissionsController;
 use App\Http\Controllers\Admin\Other\ChangelogController;
@@ -55,9 +58,9 @@ use App\Http\Controllers\Admin\Other\QuoteController;
 use App\Http\Controllers\Admin\Other\SpotlightController;
 use App\Http\Controllers\Admin\Other\StatisticsController;
 use App\Http\Controllers\Admin\Other\TriviaController;
+use App\Http\Controllers\Admin\Reviews\ReviewCommentController;
 use App\Http\Controllers\Admin\Reviews\ReviewsController;
 use App\Http\Controllers\Admin\Reviews\ReviewsSubmissionsController;
-use App\Http\Controllers\Admin\User\CommentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +76,8 @@ Route::middleware('verified')->group(function () {
 
                     Route::get('music', [MusicController::class, 'index'])->name('music');
                     Route::post('music', [MusicController::class, 'associate'])->name('music.associate');
+
+                    Route::resource('comments', GameCommentController::class)->except(['create', 'store', 'show']);
 
                     Route::prefix('/{game}')->group(function () {
                         Route::get('music', [GameMusicController::class, 'index'])->name('game-music.index');
@@ -179,7 +184,6 @@ Route::middleware('verified')->group(function () {
                 Route::prefix('/users')->name('users.')->group(function () {
                     Route::delete('users/{user}/avatar', [UserController::class, 'destroyAvatar'])->name('users.avatar');
                     Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
-                    Route::resource('comments', CommentController::class)->except(['create', 'store', 'show']);
                 });
 
                 Route::prefix('/news')->name('news.')->group(function () {
@@ -200,6 +204,8 @@ Route::middleware('verified')->group(function () {
                 Route::prefix('/reviews')->name('reviews.')->group(function () {
                     Route::resource('reviews', ReviewsController::class)->except(['show']);
                     Route::resource('submissions', ReviewsSubmissionsController::class)->only(['index']);
+
+                    Route::resource('comments', ReviewCommentController::class)->except(['create', 'store', 'show']);
                 });
 
                 Route::prefix('/interviews')->name('interviews.')->group(function () {
@@ -208,6 +214,8 @@ Route::middleware('verified')->group(function () {
                     Route::post('interviews/{interview}/image', [InterviewsController::class, 'storeImage'])->name('interviews.image.store');
                     Route::put('interviews/{interview}/image', [InterviewsController::class, 'updateImage'])->name('interviews.image.update');
                     Route::delete('interviews/{interview}/image/{image}', [InterviewsController::class, 'destroyImage'])->name('interviews.image.destroy');
+
+                    Route::resource('comments', InterviewCommentController::class)->except(['create', 'store', 'show']);
                 });
 
                 Route::prefix('/articles')->name('articles.')->group(function () {
@@ -217,6 +225,8 @@ Route::middleware('verified')->group(function () {
                     Route::post('articles/{article}/image', [ArticleController::class, 'storeImage'])->name('articles.image.store');
                     Route::put('articles/{article}/image', [ArticleController::class, 'updateImage'])->name('articles.image.update');
                     Route::delete('articles/{article}/image/{image}', [ArticleController::class, 'destroyImage'])->name('articles.image.destroy');
+
+                    Route::resource('comments', ArticleCommentController::class)->except(['create', 'store', 'show']);
                 });
 
                 Route::prefix('/others')->name('others.')->group(function () {

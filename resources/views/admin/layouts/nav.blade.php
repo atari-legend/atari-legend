@@ -26,6 +26,7 @@
                         <li><a class="@activeroute('admin.games.individuals.*')" href="{{ route('admin.games.individuals.index') }}">Individuals</a></li>
                         <li><a class="@activeroute('admin.games.companies.*')" href="{{ route('admin.games.companies.index') }}">Companies</a></li>
                         <li><a class="@activeroute('admin.games.music')" href="{{ route('admin.games.music') }}">Music</a></li>
+                        <li><a class="@activeroute('admin.games.comments.*')" href="{{ route('admin.games.comments.index') }}">Comments</a></li>
                     </ul>
                 </div>
             </div>
@@ -42,6 +43,7 @@
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.reviews.reviews.*')" href="{{ route('admin.reviews.reviews.index') }}">Reviews</a></li>
                         <li><a class="@activeroute('admin.reviews.submissions.*')" href="{{ route('admin.reviews.submissions.index') }}">Submissions</a></li>
+                        <li><a class="@activeroute('admin.reviews.comments.*')" href="{{ route('admin.reviews.comments.index') }}">Comments</a></li>
                     </ul>
                 </div>
             </div>
@@ -57,6 +59,7 @@
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.interviews.interviews.*')" href="{{ route('admin.interviews.interviews.index') }}">Interviews</a></li>
+                        <li><a class="@activeroute('admin.interviews.comments.*')" href="{{ route('admin.interviews.comments.index') }}">Comments</a></li>
                     </ul>
                 </div>
             </div>
@@ -105,6 +108,7 @@
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.articles.articles.*')" href="{{ route('admin.articles.articles.index') }}">Articles</a></li>
                         <li><a class="@activeroute('admin.articles.types.*')" href="{{ route('admin.articles.types.index') }}">Types</a></li>
+                        <li><a class="@activeroute('admin.articles.comments.*')" href="{{ route('admin.articles.comments.index') }}">Comments</a></li>
                     </ul>
                 </div>
             </div>
@@ -155,7 +159,6 @@
                 <div class="accordion-body">
                     <ul class="list-unstyled mb-2">
                         <li><a class="@activeroute('admin.users.users.*')" href="{{ route('admin.users.users.index') }}">Users</a></li>
-                        <li><a class="@activeroute('admin.users.comments.*')" href="{{ route('admin.users.comments.index') }}">Comments</a></li>
                     </ul>
                 </div>
             </div>

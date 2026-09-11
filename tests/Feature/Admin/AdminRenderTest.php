@@ -4,17 +4,19 @@ namespace Tests\Feature\Admin;
 
 use App\Http\Controllers\Admin\Games\GameConfigurationController;
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\Category;
-use App\Models\Comment;
 use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\GameFact;
 use App\Models\GameRelease;
 use App\Models\GameSeries;
 use App\Models\GameSubmission;
 use App\Models\Individual;
 use App\Models\Interview;
+use App\Models\InterviewComment;
 use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
@@ -28,6 +30,7 @@ use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\News;
 use App\Models\Review;
+use App\Models\ReviewComment;
 use App\Models\Spotlight;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -103,7 +106,12 @@ class AdminRenderTest extends AdminTestCase
         return [
             'article'      => Article::factory()->create(),
             'category'     => Category::factory()->create(),
-            'comment'      => Comment::factory()->onGame($game)->create(),
+            // One per section: the four comment screens share a {comment}
+            // parameter but each looks the id up in its own table.
+            'comment'           => GameComment::factory()->create(['game_id' => $game->getKey()]),
+            'article_comment'   => ArticleComment::factory()->create(),
+            'interview_comment' => InterviewComment::factory()->create(),
+            'review_comment'    => ReviewComment::factory()->create(),
             'company'      => Company::factory()->create(),
             'condition'    => MenuDiskCondition::query()->firstOrFail(),
             'content'      => $content,
@@ -145,6 +153,9 @@ class AdminRenderTest extends AdminTestCase
             'admin.menus.menus.create'         => ['set' => $fixtures['set']->getKey()],
             'admin.menus.disks.create'         => ['menu' => $fixtures['menu']->getKey()],
             'admin.menus.disks.content.create' => ['type' => 'game'],
+            'admin.articles.comments.edit'     => ['comment' => $fixtures['article_comment']],
+            'admin.interviews.comments.edit'   => ['comment' => $fixtures['interview_comment']],
+            'admin.reviews.comments.edit'      => ['comment' => $fixtures['review_comment']],
             default                            => [],
         };
     }

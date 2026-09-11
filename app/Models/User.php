@@ -98,9 +98,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Article::class);
     }
 
-    public function comments()
+    public function gameComments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(GameComment::class);
+    }
+
+    public function articleComments()
+    {
+        return $this->hasMany(ArticleComment::class);
+    }
+
+    public function interviewComments()
+    {
+        return $this->hasMany(InterviewComment::class);
+    }
+
+    public function reviewComments()
+    {
+        return $this->hasMany(ReviewComment::class);
     }
 
     public function changelogs()

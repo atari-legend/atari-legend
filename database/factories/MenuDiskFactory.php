@@ -28,7 +28,6 @@ class MenuDiskFactory extends Factory
             'scrolltext'               => null,
             'donated_by_individual_id' => null,
             'menu_disk_condition_id'   => MenuSetController::INTACT_CONDITION_ID,
-            'menu_disk_dump_id'        => null,
             'notes'                    => null,
         ];
     }

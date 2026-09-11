@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use Error;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+/**
+ * What a game, article, interview and review comment have in common. Each lives
+ * in its own table, so the table a comment is in is what says which section it
+ * is on -- there is no type to work out at run time.
+ */
+abstract class Comment extends Model
 {
-    use HasFactory;
-
-    const TYPE_GAME = 'game';
-    const TYPE_REVIEW = 'review';
-    const TYPE_INTERVIEW = 'interview';
-    const TYPE_ARTICLE = 'article';
+    /**
+     * The changelog section comments on this kind of owner are filed under.
+     */
+    const SECTION = null;
 
     protected $fillable = [
         'text', 'user_id', 'created_at',
@@ -24,86 +25,14 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function games()
-    {
-        // FIXME: Should be N:1
-        return $this->belongsToMany(Game::class, 'game_comment');
-    }
-
-    public function articles()
-    {
-        // FIXME: Should be N:1
-        return $this->belongsToMany(Article::class);
-    }
-
-    public function interviews()
-    {
-        // FIXME: Should be N:1
-        return $this->belongsToMany(Interview::class, 'interview_comment');
-    }
-
-    public function reviews()
-    {
-        // FIXME: Should be N:1
-        return $this->belongsToMany(Review::class, 'review_comment');
-    }
+    /**
+     * @return string Name of the target of the comment. For a comment on a game
+     *                it is the game name.
+     */
+    abstract public function getTargetAttribute();
 
     /**
-     * @return string Get the type of comment, as a comment can apply to different
-     *                things on the site.
+     * @return int ID of the target of the comment
      */
-    public function getTypeAttribute()
-    {
-        if ($this->games->isNotEmpty()) {
-            return self::TYPE_GAME;
-        } elseif ($this->articles->isNotEmpty()) {
-            return self::TYPE_ARTICLE;
-        } elseif ($this->interviews->isNotEmpty()) {
-            return self::TYPE_INTERVIEW;
-        } elseif ($this->reviews->isNotEmpty()) {
-            return self::TYPE_REVIEW;
-        } else {
-            throw new Error('Unknown comment type');
-        }
-    }
-
-    /**
-     * @return string Name of the target of the comment. For example for a
-     *                comment on a game it would be the game name.
-     */
-    public function getTargetAttribute()
-    {
-        switch ($this->type) {
-            case self::TYPE_GAME:
-                return $this->games->first()->name;
-            case self::TYPE_ARTICLE:
-                return $this->articles->first()->title;
-            case self::TYPE_INTERVIEW:
-                return $this->interviews->first()->individual->name;
-            case self::TYPE_REVIEW:
-                return $this->reviews->first()->games->first()->name;
-            default:
-                throw new Error('Unknown comment type');
-        }
-    }
-
-    /**
-     * @return string ID of the target of the comment. For example for a comment
-     *                on a game it would be the game id.
-     */
-    public function getTargetIdAttribute()
-    {
-        switch ($this->type) {
-            case self::TYPE_GAME:
-                return $this->games->first()->getKey();
-            case self::TYPE_ARTICLE:
-                return $this->articles->first()->getKey();
-            case self::TYPE_INTERVIEW:
-                return $this->interviews->first()->getKey();
-            case self::TYPE_REVIEW:
-                return $this->reviews->first()->getKey();
-            default:
-                throw new Error('Unknown comment type');
-        }
-    }
+    abstract public function getTargetIdAttribute();
 }

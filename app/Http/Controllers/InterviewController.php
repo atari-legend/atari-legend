@@ -6,8 +6,8 @@ use App\Helpers\ChangelogHelper;
 use App\Helpers\Helper;
 use App\Helpers\JsonLd;
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Interview;
+use App\Models\InterviewComment;
 use Illuminate\Http\Request;
 
 class InterviewController extends Controller
@@ -45,11 +45,11 @@ class InterviewController extends Controller
 
     public function postComment(Interview $interview, Request $request)
     {
-        $comment = new Comment();
+        $comment = new InterviewComment();
         $comment->text = $request->comment;
 
-        $request->user()->comments()->save($comment);
         $interview->comments()->save($comment);
+        $request->user()->interviewComments()->save($comment);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,

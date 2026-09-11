@@ -238,14 +238,12 @@ class MenuDisksController extends Controller
                     'sub_section_name' => $dump->format,
                 ]);
             } else {
-                $dump = MenuDiskDump::create([
+                $dump = $disk->menuDiskDump()->create([
                     'user_id' => Auth::user()->getKey(),
                     'format'  => $dumpFormat,
                     'sha512'  => $dumpChecksum,
                     'size'    => $dumpSize,
                 ]);
-                $disk->menuDiskDump()->associate($dump);
-                $disk->save();
 
                 ChangelogHelper::insert([
                     'action'           => Changelog::INSERT,
@@ -269,10 +267,8 @@ class MenuDisksController extends Controller
 
     public function destroyDump(MenuDisk $disk, MenuDiskDump $dump)
     {
-        if ($dump->menuDisk->id === $disk->id) {
+        if ($dump->menu_disk_id === $disk->getKey()) {
             Storage::disk('public')->delete('zips/menus/' . $dump->id . '.zip');
-            $dump->menuDisk->menuDiskDump()->dissociate();
-            $dump->menuDisk->save();
             $dump->delete();
 
             ChangelogHelper::insert([
@@ -304,6 +300,10 @@ class MenuDisksController extends Controller
             ->each(function ($release) {
                 $release->delete();
             });
+
+        if ($disk->menuDiskDump !== null) {
+            Storage::disk('public')->delete('zips/menus/' . $disk->menuDiskDump->id . '.zip');
+        }
 
         $disk->delete();
 

@@ -31,7 +31,7 @@ const pages = [
   { name: 'companies', path: `/admin/games/companies/${FIXTURE.company.id}/edit` },
   // The fact edit route has no /edit; see the comment in admin/games.spec.js.
   { name: 'game facts', path: `/admin/games/${FIXTURE.game.id}/facts/${FIXTURE.game.factId}` },
-  { name: 'user comments', path: `/admin/users/comments/${FIXTURE.comment.id}/edit` },
+  { name: 'game comments', path: `/admin/games/comments/${FIXTURE.comment.id}/edit` },
 ];
 
 test.describe('Admin BBCode editor', () => {

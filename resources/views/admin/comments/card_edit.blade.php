@@ -8,10 +8,10 @@
             <span class="text-muted">on</span>
             {{ $comment->created_at?->toDayDateTimeString() }}
             <br>
-            <span class="text-muted">{{ Str::ucfirst($comment->type) }}</span>: <a href="{{ route("{$comment->type}s.show", $comment->target_id) }}#comment-{{ $comment->getKey() }}">{{ $comment->target }}</a>
+            <span class="text-muted">{{ Str::ucfirst(Str::singular($section)) }}</span>: <a href="{{ route("{$section}.show", $comment->target_id) }}#comment-{{ $comment->getKey() }}">{{ $comment->target }}</a>
         </p>
 
-        <form action="{{ route('admin.users.comments.update', $comment) }}"
+        <form action="{{ route("admin.{$section}.comments.update", $comment) }}"
             onkeydown="return event.key != 'Enter';"
             method="post">
             @csrf

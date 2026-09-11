@@ -20,6 +20,8 @@
                 <form id="comment-delete-{{ $comment->getKey() }}" action="{{ route('comments.delete') }}" method="POST" class="d-none">
                     @csrf
                     <input type="hidden" name="comment_id" value="{{ $comment->getKey() }}">
+                    <input type="hidden" name="context" value="{{ $context ?? ''}}">
+                    <input type="hidden" name="id" value="{{ $id ?? ''}}">
                 </form>
                 <small>
                     <a href="{{ route('comments.delete') }}"
@@ -28,14 +30,14 @@
             </div>
         @endif
 
-        @if (isset($showGame) && $showGame === true && $comment->games->isNotEmpty())
-            <span class="float-end"><a href="{{ route('games.show', ['game' => $comment->games->first()]) }}">{{ $comment->games->first()->name }}</a></span>
+        @if (isset($showGame) && $showGame === true && $comment->game !== null)
+            <span class="float-end"><a href="{{ route('games.show', ['game' => $comment->game]) }}">{{ $comment->game->name }}</a></span>
         @endif
     </div>
 
     <div class="py-2 mb-1" id="comment-{{ $comment->getKey() }}">
         @contributor
-            <a class="d-inline-block me-1" href="{{ route('admin.users.comments.edit', $comment) }}">
+            <a class="d-inline-block me-1" href="{{ route("admin.{$context}s.comments.edit", $comment) }}">
                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
             </a>
         @endcontributor

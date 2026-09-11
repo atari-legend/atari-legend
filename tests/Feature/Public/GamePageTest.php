@@ -3,9 +3,9 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Company;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\GameRelease;
 use App\Models\GameSubmission;
 use App\Models\GameVote;
@@ -310,7 +310,7 @@ class GamePageTest extends TestCase
             ->post(route('games.comment', $game), ['comment' => 'Still holds up.'])
             ->assertRedirect();
 
-        $comment = Comment::sole();
+        $comment = GameComment::sole();
 
         $this->assertSame('Still holds up.', $comment->text);
         $this->assertSame(1, $game->comments()->count());
@@ -324,7 +324,7 @@ class GamePageTest extends TestCase
         $this->post(route('games.comment', $game), ['comment' => 'Spam'])
             ->assertRedirect(route('login'));
 
-        $this->assertSame(0, Comment::query()->count());
+        $this->assertSame(0, GameComment::query()->count());
     }
 
     public function test_a_signed_in_visitor_can_submit_a_correction(): void

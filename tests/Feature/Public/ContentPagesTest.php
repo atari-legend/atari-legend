@@ -4,11 +4,13 @@ namespace Tests\Feature\Public;
 
 use App\Models\Andreas;
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\Category;
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\Interview;
+use App\Models\InterviewComment;
 use App\Models\Link;
 use App\Models\LinkSubmission;
 use App\Models\Magazine;
@@ -16,6 +18,7 @@ use App\Models\MagazineIssue;
 use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\Review;
+use App\Models\ReviewComment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -106,7 +109,7 @@ class ContentPagesTest extends TestCase
             ->post(route('article.comment', $article), ['comment' => 'Useful.'])
             ->assertRedirect();
 
-        $this->assertSame('Useful.', Comment::sole()->text);
+        $this->assertSame('Useful.', ArticleComment::sole()->text);
         $this->assertSame(1, Changelog::where('section', 'Articles')->count());
     }
 
@@ -151,7 +154,7 @@ class ContentPagesTest extends TestCase
             ->post(route('interview.comment', $interview), ['comment' => 'Great read.'])
             ->assertRedirect();
 
-        $this->assertSame('Great read.', Comment::sole()->text);
+        $this->assertSame('Great read.', InterviewComment::sole()->text);
         $this->assertSame(1, Changelog::where('section', 'Interviews')->count());
     }
 
@@ -383,7 +386,7 @@ class ContentPagesTest extends TestCase
 
         $this->travelTo(Carbon::parse('2026-01-01 09:00:00'));
         $this->actingAs($user)->post(route('games.comment', $game), ['comment' => 'First take.']);
-        $comment = Comment::sole();
+        $comment = GameComment::sole();
 
         $this->travelTo(Carbon::parse('2026-01-02 15:30:00'));
         $this->actingAs($user)
@@ -417,7 +420,7 @@ class ContentPagesTest extends TestCase
         $author = User::factory()->create();
 
         $this->actingAs($author)->post(route('games.comment', $game), ['comment' => 'Mine.']);
-        $comment = Comment::sole();
+        $comment = GameComment::sole();
 
         $this->actingAs(User::factory()->create())
             ->post(route('comments.update'), [
@@ -440,13 +443,13 @@ class ContentPagesTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('comments.delete'), [
-                'comment_id' => Comment::sole()->getKey(),
+                'comment_id' => GameComment::sole()->getKey(),
                 'context'    => 'game',
                 'id'         => $game->getKey(),
             ])
             ->assertRedirect();
 
-        $this->assertSame(0, Comment::query()->count());
+        $this->assertSame(0, GameComment::query()->count());
         $this->assertSame(1, Changelog::where('action', Changelog::DELETE)->count());
     }
 
@@ -459,21 +462,20 @@ class ContentPagesTest extends TestCase
 
         $this->actingAs(User::factory()->create())
             ->post(route('comments.delete'), [
-                'comment_id' => Comment::sole()->getKey(),
+                'comment_id' => GameComment::sole()->getKey(),
                 'context'    => 'game',
                 'id'         => $game->getKey(),
             ])
             ->assertRedirect();
 
-        $this->assertSame(1, Comment::query()->count());
+        $this->assertSame(1, GameComment::query()->count());
     }
 
     /**
-     * Comments can be edited from pages that are not a game, review, interview
-     * or article. There is nothing sensible to write in the changelog then, so
-     * the edit goes through without one.
+     * The posted context is what says which of the four comment tables an id is
+     * in, so without one there is no comment to edit and nothing happens.
      */
-    public function test_an_edit_without_a_context_is_not_logged(): void
+    public function test_an_edit_without_a_context_changes_nothing(): void
     {
         $game = Game::factory()->create();
         $user = User::factory()->create();
@@ -483,12 +485,12 @@ class ContentPagesTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('comments.update'), [
-                'comment_id' => Comment::sole()->getKey(),
+                'comment_id' => GameComment::sole()->getKey(),
                 'comment'    => 'Second take.',
             ])
             ->assertRedirect();
 
-        $this->assertSame('Second take.', Comment::sole()->text);
+        $this->assertSame('First take.', GameComment::sole()->text);
         $this->assertSame(0, Changelog::query()->count());
     }
 
@@ -508,7 +510,7 @@ class ContentPagesTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('comments.update'), [
-                'comment_id' => Comment::sole()->getKey(),
+                'comment_id' => ReviewComment::sole()->getKey(),
                 'comment'    => 'Edited.',
                 'context'    => 'review',
                 'id'         => $review->getKey(),

@@ -26,13 +26,13 @@ class Screenstar extends Component
     {
         $screenstar = null;
         $firstRelease = null;
-        $screenstar = Review::with(['user', 'games.releases'])
+        $screenstar = Review::with(['user', 'game.releases'])
             ->where('submission', Review::REVIEW_PUBLISHED)
             ->inRandomOrder()
             ->first();
 
         if ($screenstar) {
-            $firstRelease = $screenstar->games->first()?->releases
+            $firstRelease = $screenstar->game?->releases
                 ->filter(function ($release) {
                     return $release->date !== null;
                 })

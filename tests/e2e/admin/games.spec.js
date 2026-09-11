@@ -85,6 +85,18 @@ test.describe('Admin games', () => {
     await expectPageRenders(page, await page.goto('/admin/games/music'), '/admin/games/music');
   });
 
+  test('lists the comments', async ({ page }) => {
+    await expectPageRenders(page, await page.goto('/admin/games/comments'), '/admin/games/comments');
+  });
+
+  test('opens the edit form for a comment', async ({ page }) => {
+    // The form links back to the game the comment is on, through the foreign
+    // key on game_comments.
+    const path = `/admin/games/comments/${FIXTURE.comment.id}/edit`;
+
+    await expectPageRenders(page, await page.goto(path), path);
+  });
+
   // TODO: creating a game, adding a release, uploading a screenshot, and the
   // changelog rows every one of those is supposed to write.
 });

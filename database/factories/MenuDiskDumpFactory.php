@@ -22,10 +22,11 @@ class MenuDiskDumpFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'format'  => 'STX',
-            'sha512'  => hash('sha512', fake()->uuid()),
-            'size'    => 819200,
+            'menu_disk_id' => MenuDiskFactory::new(),
+            'user_id'      => User::factory(),
+            'format'       => 'STX',
+            'sha512'       => hash('sha512', fake()->uuid()),
+            'size'         => 819200,
         ];
     }
 

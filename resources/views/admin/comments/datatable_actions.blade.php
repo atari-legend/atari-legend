@@ -1,4 +1,4 @@
-<form action="{{ route('admin.users.comments.destroy', $row) }}" method="POST"
+<form action="{{ route("admin.{$section}.comments.destroy", $row) }}" method="POST"
     onsubmit="javascript:return confirm('This item will be permanently deleted')">
     @csrf
     @method('DELETE')

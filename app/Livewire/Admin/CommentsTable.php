@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin;
 
 use App\Helpers\Helper;
-use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -12,8 +11,43 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
-class CommentsTable extends DataTableComponent
+/**
+ * One comment table per section. builder() returns one Eloquent builder, and the
+ * four comment tables cannot produce one between them, so each section gets a
+ * subclass naming its model, its table and its routes.
+ */
+abstract class CommentsTable extends DataTableComponent
 {
+    /**
+     * @return class-string<\App\Models\Comment> The model this table lists
+     */
+    abstract protected function model(): string;
+
+    /**
+     * The relation on User that counts this section's comments, for the author
+     * filter.
+     */
+    abstract protected function userRelation(): string;
+
+    /**
+     * The admin route group this table's rows link into: `games`, `articles`,
+     * `interviews` or `reviews`.
+     */
+    abstract protected function section(): string;
+
+    /**
+     * What the Target column calls the thing a comment is on.
+     */
+    abstract protected function targetHeading(): string;
+
+    /**
+     * The model's table, which the sorts and the author filter qualify with.
+     */
+    protected function table(): string
+    {
+        return (new ($this->model()))->getTable();
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -22,11 +56,13 @@ class CommentsTable extends DataTableComponent
 
     public function columns(): array
     {
+        $table = $this->table();
+
         return [
             Column::make('User')
                 ->label(fn ($row) => Helper::user($row->user))
-                ->sortable(function (Builder $query, $direction) {
-                    return $query->join('users', 'comments.user_id', '=', 'users.id')
+                ->sortable(function (Builder $query, $direction) use ($table) {
+                    return $query->join('users', "{$table}.user_id", '=', 'users.id')
                         ->orderBy('users.userid', $direction);
                 }),
             // The column is qualified because the User sort above joins
@@ -34,23 +70,20 @@ class CommentsTable extends DataTableComponent
             Column::make('Date', 'created_at')
                 ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')
                 ->sortable(
-                    fn (Builder $query, $direction) => $query->orderBy('comments.created_at', $direction)
+                    fn (Builder $query, $direction) => $query->orderBy("{$table}.created_at", $direction)
                 ),
-            Column::make('Type')
-                ->label(
-                    fn ($row) => '<div class="text-muted">' . Str::ucfirst($row->type) . '</div>'
-                        . $row->target
-                )
-                ->html(),
+            Column::make($this->targetHeading())
+                ->label(fn ($row) => $row->target),
             LinkColumn::make('Content')
                 ->title(fn ($row) => Str::words($row->text, 20))
-                ->location(fn ($row) => route('admin.users.comments.edit', $row))
+                ->location(fn ($row) => route("admin.{$this->section()}.comments.edit", $row))
                 ->searchable(
                     fn ($query, $term) => $query->where('text', 'like', '%' . $term . '%')
                 ),
             Column::make('Actions')
                 ->label(
-                    fn ($row) => view('admin.users.comments.datatable_actions')->with(['row' => $row])
+                    fn ($row) => view('admin.comments.datatable_actions')
+                        ->with(['row' => $row, 'section' => $this->section()])
                 ),
 
         ];
@@ -58,12 +91,14 @@ class CommentsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Comment::select('comments.*');
+        return $this->model()::select($this->table() . '.*');
     }
 
     public function filters(): array
     {
-        $authors = User::has('comments')
+        $table = $this->table();
+
+        $authors = User::has($this->userRelation())
             ->orderBy('userid')
             ->get()
             ->mapWithKeys(function ($user) {
@@ -72,18 +107,9 @@ class CommentsTable extends DataTableComponent
         $authors = ['' => 'Any'] + $authors;
 
         return [
-            'type' => SelectFilter::make('Type')
-                ->options([
-                    ''           => 'Any',
-                    'games'      => 'Game',
-                    'reviews'    => 'Review',
-                    'interviews' => 'Interview',
-                    'articles'   => 'Article',
-                ])
-                ->filter(fn ($query, $term) => $query->has($term)),
             'author' => SelectFilter::make('Author')
                 ->options($authors)
-                ->filter(fn ($query, $term) => $query->where('comments.user_id', '=', $term)),
+                ->filter(fn ($query, $term) => $query->where("{$table}.user_id", '=', $term)),
 
         ];
     }

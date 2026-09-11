@@ -16,6 +16,7 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
+            'game_id'      => GameFactory::new(),
             'user_id'      => User::factory(),
             'text'         => fake()->paragraph(),
             'published_at' => now(),
@@ -47,9 +48,7 @@ class ReviewFactory extends Factory
      */
     public function forGame(?int $gameId = null): static
     {
-        return $this->afterCreating(function (Review $review) use ($gameId) {
-            $review->games()->attach($gameId ?? GameFactory::new()->create()->getKey());
-        });
+        return $this->state(fn () => ['game_id' => $gameId ?? GameFactory::new()]);
     }
 
     public function scored(int $graphics = 4, int $sound = 4, int $gameplay = 4, int $overall = 4): static

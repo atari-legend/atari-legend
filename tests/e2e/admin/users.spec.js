@@ -16,20 +16,11 @@ test.describe('Admin users', () => {
     await expectPageRenders(page, await page.goto(path), path);
   });
 
-  test('lists comments', async ({ page }) => {
-    await expectPageRenders(page, await page.goto('/admin/users/comments'), '/admin/users/comments');
-  });
+  // Comments are no longer a Users screen: each section moderates its own, and
+  // those screens are covered in admin/games.spec.js and admin/content.spec.js.
 
-  test('opens the edit form for a comment', async ({ page }) => {
-    // The form links back to whatever the comment is attached to, which it
-    // reads off the pivot table - a comment with no pivot row throws.
-    const path = `/admin/users/comments/${FIXTURE.comment.id}/edit`;
-
-    await expectPageRenders(page, await page.goto(path), path);
-  });
-
-  // TODO: changing a user's permission, deactivating an account, deleting an
-  // avatar, and moderating a comment.
+  // TODO: changing a user's permission, deactivating an account, and deleting
+  // an avatar.
 });
 
 // The author field on the news, review, interview and article forms picks a

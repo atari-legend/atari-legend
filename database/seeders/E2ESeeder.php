@@ -18,10 +18,9 @@ use RuntimeException;
  *
  * Rows are written with raw DB::table() inserts rather than the factories in
  * database/factories/, deliberately: several of these tables have no model at
- * all (game_screenshot, game_review, game_comment,
- * link_category), the factories are random where the specs need fixed
- * names and slugs, and $fillable on the legacy models is thin enough that
- * Model::create() would silently drop columns we depend on.
+ * all (game_screenshot, link_category), the factories are random where the
+ * specs need fixed names and slugs, and $fillable on the legacy models is thin
+ * enough that Model::create() would silently drop columns we depend on.
  */
 class E2ESeeder extends Seeder
 {
@@ -401,22 +400,16 @@ class E2ESeeder extends Seeder
         $this->insert('article_screenshot', ['id' => 1], [
             'article_id'    => self::ARTICLE_ID,
             'screenshot_id' => self::ARTICLE_SCREENSHOT_ID,
-        ]);
-        $this->insert('article_screenshot_comments', ['id' => 1], [
-            'article_screenshot_id' => 1,
-            'text'                  => self::ARTICLE_SCREENSHOT_CAPTION,
+            'description'   => self::ARTICLE_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/article_screenshots/' . self::ARTICLE_SCREENSHOT_ID . '.png');
 
         $this->insert('reviews', ['id' => self::REVIEW_ID], [
+            'game_id'      => self::GAME_ID,
             'user_id'      => self::USER_ADMIN_ID,
             'text'         => 'Great game!',
             'published_at' => now(),
         ]);
-        $this->insert('game_review', [
-            'review_id' => self::REVIEW_ID,
-            'game_id'   => self::GAME_ID,
-        ], []);
 
         // The "Who is it?" card on the home page only picks an interview whose
         // individual has a picture, and the card then reads the interview's
@@ -442,19 +435,13 @@ class E2ESeeder extends Seeder
             'published_at'  => now(),
         ]);
 
-        // A screenshot on the interview, and the caption row that goes with it.
-        // interviews/card_interview.blade.php reads
-        // $screenshot->pivot->comment->text without guarding it, so a
-        // screenshot seeded without its comment would 500 the public page
-        // rather than render an empty caption.
+        // A screenshot on the interview, with the caption the public card
+        // renders beneath it.
         $this->insert('screenshots', ['id' => self::INTERVIEW_SCREENSHOT_ID], ['imgext' => 'png']);
         $this->insert('interview_screenshot', ['id' => 1], [
             'interview_id'  => self::INTERVIEW_ID,
             'screenshot_id' => self::INTERVIEW_SCREENSHOT_ID,
-        ]);
-        $this->insert('interview_screenshot_comments', ['id' => 1], [
-            'interview_screenshot_id' => 1,
-            'text'                    => self::INTERVIEW_SCREENSHOT_CAPTION,
+            'description'   => self::INTERVIEW_SCREENSHOT_CAPTION,
         ]);
         $this->seedImage('images/interview_screenshots/' . self::INTERVIEW_SCREENSHOT_ID . '.png');
 
@@ -478,19 +465,13 @@ class E2ESeeder extends Seeder
             ]);
         }
 
-        // The pivot is not optional: Comment::getTypeAttribute() throws
-        // 'Unknown comment type' without one, and the admin comment form
-        // builds a route name out of it.
-        $this->insert('comments', ['id' => self::COMMENT_ID], [
+        $this->insert('game_comments', ['id' => self::COMMENT_ID], [
+            'game_id'    => self::GAME_ID,
             'text'       => 'Playwright test comment.',
             'created_at' => now(),
             'updated_at' => now(),
             'user_id'    => self::USER_STANDARD_ID,
         ]);
-        $this->insert('game_comment', [
-            'game_id'    => self::GAME_ID,
-            'comment_id' => self::COMMENT_ID,
-        ], []);
     }
 
     private function seedMagazines(): void

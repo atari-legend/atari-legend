@@ -6,15 +6,13 @@ use App\Helpers\ChangelogHelper;
 use App\Helpers\Helper;
 use App\Helpers\JsonLd;
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScreenshotComment;
+use App\Models\ReviewComment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
@@ -55,11 +53,11 @@ class ReviewController extends Controller
         }
 
         $jsonLd = (new JsonLd('Article', url()->current()))
-            ->add('headline', 'Review of ' . $review->games->first()->name)
+            ->add('headline', 'Review of ' . $review->game->name)
             ->add('author', Helper::user($review->user))
             ->add('datePublished', $review->published_at->format('Y-m-d'));
         if ($review->screenshots->isNotEmpty()) {
-            $jsonLd->add('image', $review->screenshots->first()->getUrlRoute('game', $review->games->first()));
+            $jsonLd->add('image', $review->screenshots->first()->getUrlRoute('game', $review->game));
         }
 
         return view('reviews.show')
@@ -107,8 +105,8 @@ class ReviewController extends Controller
         $review->gameplay = $request->gameplay ?? 0;
         $review->overall = $request->overall ?? 0;
 
-        $request->user()->reviews()->save($review);
         $game->reviews()->save($review);
+        $request->user()->reviews()->save($review);
 
         // Process screenshots comments. Screenshots were ordered by screenshot_id
         // so we should iterate over the same ordered list of game screenshots to
@@ -120,15 +118,7 @@ class ReviewController extends Controller
                 $gameScreenshot = $gameScreenshots[$i++];
 
                 if ($screenshotComment !== null) {
-                    $id = DB::table('review_screenshot')
-                        ->insertGetId([
-                            'review_id'     => $review->getKey(),
-                            'screenshot_id' => $gameScreenshot->getKey(),
-                        ]);
-                    $comment = new ReviewScreenshotComment();
-                    $comment->text = $screenshotComment;
-                    $comment->review_screenshot_id = $id;
-                    $comment->save();
+                    $review->screenshots()->attach($gameScreenshot, ['description' => $screenshotComment]);
                 }
             }
         }
@@ -154,20 +144,20 @@ class ReviewController extends Controller
 
     public function postComment(Review $review, Request $request)
     {
-        $comment = new Comment();
+        $comment = new ReviewComment();
         $comment->text = $request->comment;
 
-        $request->user()->comments()->save($comment);
         $review->comments()->save($comment);
+        $request->user()->reviewComments()->save($comment);
 
         ChangelogHelper::insert([
             'action'           => Changelog::INSERT,
             'section'          => 'Reviews',
             'section_id'       => $review->getKey(),
-            'section_name'     => $review->games->first()->name,
+            'section_name'     => $review->game->name,
             'sub_section'      => 'Comment',
             'sub_section_id'   => $comment->getKey(),
-            'sub_section_name' => $review->games->first()->name,
+            'sub_section_name' => $review->game->name,
         ]);
 
         return back();

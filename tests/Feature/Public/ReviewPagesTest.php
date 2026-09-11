@@ -3,10 +3,9 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Changelog;
-use App\Models\Comment;
 use App\Models\Game;
 use App\Models\Review;
-use App\Models\ReviewScreenshotComment;
+use App\Models\ReviewComment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,7 +42,7 @@ class ReviewPagesTest extends TestCase
 
         $this->assertSame(
             ['Newer', 'Older'],
-            $reviews->map(fn ($review) => $review->games->first()->name)->all()
+            $reviews->map(fn ($review) => $review->game->name)->all()
         );
     }
 
@@ -69,7 +68,7 @@ class ReviewPagesTest extends TestCase
             ->viewData('reviews');
 
         $this->assertCount(1, $reviews);
-        $this->assertSame('By Alice', $reviews->first()->games->first()->name);
+        $this->assertSame('By Alice', $reviews->first()->game->name);
     }
 
     /**
@@ -125,7 +124,7 @@ class ReviewPagesTest extends TestCase
 
         $this->assertSame(
             ['Turrican'],
-            $others->map(fn ($other) => $other->games->first()->name)->all()
+            $others->map(fn ($other) => $other->game->name)->all()
         );
     }
 
@@ -226,8 +225,8 @@ class ReviewPagesTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertSame(1, ReviewScreenshotComment::query()->count());
-        $this->assertSame('The second screen', ReviewScreenshotComment::sole()->text);
+        $this->assertSame(1, DB::table('review_screenshot')->count());
+        $this->assertSame('The second screen', DB::table('review_screenshot')->value('description'));
 
         $this->assertSame(
             $screenshots[1]->getKey(),
@@ -253,7 +252,7 @@ class ReviewPagesTest extends TestCase
             ->post(route('review.comment', $review), ['comment' => 'Good write-up.'])
             ->assertRedirect();
 
-        $this->assertSame('Good write-up.', Comment::sole()->text);
+        $this->assertSame('Good write-up.', ReviewComment::sole()->text);
         $this->assertSame(1, $review->comments()->count());
         $this->assertSame(
             1,
@@ -268,6 +267,6 @@ class ReviewPagesTest extends TestCase
         $this->post(route('review.comment', $review), ['comment' => 'Spam'])
             ->assertRedirect(route('login'));
 
-        $this->assertSame(0, Comment::query()->count());
+        $this->assertSame(0, ReviewComment::query()->count());
     }
 }

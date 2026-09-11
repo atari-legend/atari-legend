@@ -30,7 +30,7 @@ class MenuDisk extends Model
 
     public function menuDiskDump()
     {
-        return $this->belongsTo(MenuDiskDump::class);
+        return $this->hasOne(MenuDiskDump::class);
     }
 
     public function menuDiskCondition()

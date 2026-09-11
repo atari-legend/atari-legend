@@ -2,23 +2,27 @@
 
 namespace Tests\Feature\Admin\Tables;
 
+use App\Livewire\Admin\ArticleCommentsTable;
 use App\Livewire\Admin\ArticlesTable;
-use App\Livewire\Admin\CommentsTable;
 use App\Livewire\Admin\CrewsTable;
+use App\Livewire\Admin\GameCommentsTable;
 use App\Livewire\Admin\Games\GameCompaniesTable;
 use App\Livewire\Admin\Games\GameIndividualsTable;
 use App\Livewire\Admin\Games\GameSeriesTable;
 use App\Livewire\Admin\Games\GameSubmissionsTable;
+use App\Livewire\Admin\InterviewCommentsTable;
 use App\Livewire\Admin\InterviewsTable;
 use App\Livewire\Admin\LinkCategoriesTable;
 use App\Livewire\Admin\LinksTable;
 use App\Livewire\Admin\MagazineIssuesTable;
 use App\Livewire\Admin\MagazinesTable;
 use App\Livewire\Admin\NewsSubmissionsTable;
+use App\Livewire\Admin\ReviewCommentsTable;
 use App\Livewire\Admin\SoftwareTable;
 use App\Livewire\Admin\SpotlightsTable;
 use App\Livewire\Admin\UsersTable;
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Crew;
@@ -27,12 +31,15 @@ use App\Models\GameSeries;
 use App\Models\GameSubmission;
 use App\Models\Individual;
 use App\Models\Interview;
+use App\Models\InterviewComment;
 use App\Models\Link;
 use App\Models\Magazine;
 use App\Models\MagazineIssue;
 use App\Models\MenuSoftware;
 use App\Models\MenuSoftwareContentType;
 use App\Models\NewsSubmission;
+use App\Models\Review;
+use App\Models\ReviewComment;
 use App\Models\Screenshot;
 use App\Models\Spotlight;
 use App\Models\User;
@@ -108,7 +115,7 @@ class AdminTablesTest extends AdminTestCase
 
     // Comments
 
-    public function test_the_comments_table_lists_searches_and_filters(): void
+    public function test_the_game_comments_table_lists_searches_and_filters(): void
     {
         $game = Game::factory()->named('Xenon')->create();
         $author = User::factory()->create(['userid' => 'Alice']);
@@ -116,24 +123,20 @@ class AdminTablesTest extends AdminTestCase
         $this->actingAs($author)->post(route('games.comment', $game), ['comment' => 'Still holds up.']);
         $this->actingAs($this->admin);
 
-        Livewire::test(CommentsTable::class)
+        Livewire::test(GameCommentsTable::class)
             ->assertSee('Still holds up.')
             ->assertSee('Xenon');
 
-        Livewire::test(CommentsTable::class)
+        Livewire::test(GameCommentsTable::class)
             ->set('search', 'holds')
             ->assertSee('Still holds up.');
 
-        Livewire::test(CommentsTable::class)
-            ->set('filterComponents.type', 'games')
-            ->assertSee('Still holds up.');
-
-        Livewire::test(CommentsTable::class)
+        Livewire::test(GameCommentsTable::class)
             ->set('filterComponents.author', strval($author->getKey()))
             ->assertSee('Still holds up.');
     }
 
-    public function test_the_comments_table_can_sort_by_date(): void
+    public function test_the_game_comments_table_can_sort_by_date(): void
     {
         $game = Game::factory()->create();
         $user = User::factory()->create();
@@ -141,9 +144,54 @@ class AdminTablesTest extends AdminTestCase
         $this->actingAs($user)->post(route('games.comment', $game), ['comment' => 'The only one.']);
         $this->actingAs($this->admin);
 
-        Livewire::test(CommentsTable::class)
+        Livewire::test(GameCommentsTable::class)
             ->call('sortBy', 'created_at')
             ->assertSee('The only one.');
+    }
+
+    /**
+     * The other three tables are the same class with a different model, so each
+     * needs only to list its own section's comment and name what it is on.
+     */
+    public function test_the_article_comments_table_names_the_article(): void
+    {
+        ArticleComment::factory()->create([
+            'article_id' => Article::factory()->titled('Coding the blitter')->create()->getKey(),
+            'text'       => 'Useful.',
+        ]);
+
+        Livewire::test(ArticleCommentsTable::class)
+            ->assertSee('Useful.')
+            ->assertSee('Coding the blitter');
+    }
+
+    public function test_the_interview_comments_table_names_the_individual(): void
+    {
+        InterviewComment::factory()->create([
+            'interview_id' => Interview::factory()->create([
+                'individual_id' => Individual::factory()->create(['name' => 'Jochen Hippel'])->getKey(),
+            ])->getKey(),
+            'text'         => 'Great read.',
+        ]);
+
+        Livewire::test(InterviewCommentsTable::class)
+            ->assertSee('Great read.')
+            ->assertSee('Jochen Hippel');
+    }
+
+    public function test_the_review_comments_table_names_the_reviewed_game(): void
+    {
+        ReviewComment::factory()->create([
+            'review_id' => Review::factory()
+                ->forGame(Game::factory()->named('Turrican')->create()->getKey())
+                ->create()
+                ->getKey(),
+            'text' => 'Good write-up.',
+        ]);
+
+        Livewire::test(ReviewCommentsTable::class)
+            ->assertSee('Good write-up.')
+            ->assertSee('Turrican');
     }
 
     // Game submissions
