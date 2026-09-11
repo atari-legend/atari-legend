@@ -19,6 +19,7 @@ use App\Models\Review;
 use App\Models\Screenshot;
 use App\Models\Sndh;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -315,6 +316,29 @@ class GamePageTest extends TestCase
         $this->assertSame('Still holds up.', $comment->text);
         $this->assertSame(1, $game->comments()->count());
         $this->assertSame(1, Changelog::where('sub_section', 'Comment')->count());
+    }
+
+    /**
+     * Newest first, and the rows are created out of date order so that row order
+     * and date order disagree. A sort on a key the model does not carry returns
+     * the collection untouched rather than failing, so only an assertion on the
+     * rendered order catches it.
+     */
+    public function test_comments_are_listed_newest_first(): void
+    {
+        $game = Game::factory()->named('Xenon')->create();
+
+        foreach (['MIDDLE' => '2020-06-01', 'NEWEST' => '2024-01-01', 'OLDEST' => '2004-03-01'] as $text => $date) {
+            GameComment::factory()->create([
+                'game_id'    => $game->getKey(),
+                'text'       => $text,
+                'created_at' => Carbon::parse($date . ' 12:00:00'),
+            ]);
+        }
+
+        $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSeeInOrder(['NEWEST', 'MIDDLE', 'OLDEST']);
     }
 
     public function test_a_guest_cannot_comment(): void

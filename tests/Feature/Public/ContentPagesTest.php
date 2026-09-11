@@ -113,6 +113,28 @@ class ContentPagesTest extends TestCase
         $this->assertSame(1, Changelog::where('section', 'Articles')->count());
     }
 
+    /**
+     * Newest first, with the rows created out of date order so that row order and
+     * date order disagree. A sort on a key the model does not carry returns the
+     * collection untouched rather than failing.
+     */
+    public function test_article_comments_are_listed_newest_first(): void
+    {
+        $article = $this->article('Coding the blitter');
+
+        foreach (['MIDDLE' => '2020-06-01', 'NEWEST' => '2024-01-01', 'OLDEST' => '2004-03-01'] as $text => $date) {
+            ArticleComment::factory()->create([
+                'article_id' => $article->getKey(),
+                'text'       => $text,
+                'created_at' => Carbon::parse($date . ' 12:00:00'),
+            ]);
+        }
+
+        $this->get(route('articles.show', $article))
+            ->assertOk()
+            ->assertSeeInOrder(['NEWEST', 'MIDDLE', 'OLDEST']);
+    }
+
     // Interviews
 
     public function test_interviews_are_listed_newest_first(): void
@@ -156,6 +178,28 @@ class ContentPagesTest extends TestCase
 
         $this->assertSame('Great read.', InterviewComment::sole()->text);
         $this->assertSame(1, Changelog::where('section', 'Interviews')->count());
+    }
+
+    /**
+     * Newest first, with the rows created out of date order so that row order and
+     * date order disagree. A sort on a key the model does not carry returns the
+     * collection untouched rather than failing.
+     */
+    public function test_interview_comments_are_listed_newest_first(): void
+    {
+        $interview = $this->interview();
+
+        foreach (['MIDDLE' => '2020-06-01', 'NEWEST' => '2024-01-01', 'OLDEST' => '2004-03-01'] as $text => $date) {
+            InterviewComment::factory()->create([
+                'interview_id' => $interview->getKey(),
+                'text'       => $text,
+                'created_at' => Carbon::parse($date . ' 12:00:00'),
+            ]);
+        }
+
+        $this->get(route('interviews.show', $interview))
+            ->assertOk()
+            ->assertSeeInOrder(['NEWEST', 'MIDDLE', 'OLDEST']);
     }
 
     // News

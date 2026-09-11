@@ -260,6 +260,28 @@ class ReviewPagesTest extends TestCase
         );
     }
 
+    /**
+     * Newest first, with the rows created out of date order so that row order and
+     * date order disagree. A sort on a key the model does not carry returns the
+     * collection untouched rather than failing.
+     */
+    public function test_comments_are_listed_newest_first(): void
+    {
+        $review = $this->review('Xenon');
+
+        foreach (['MIDDLE' => '2020-06-01', 'NEWEST' => '2024-01-01', 'OLDEST' => '2004-03-01'] as $text => $date) {
+            ReviewComment::factory()->create([
+                'review_id'  => $review->getKey(),
+                'text'       => $text,
+                'created_at' => Carbon::parse($date . ' 12:00:00'),
+            ]);
+        }
+
+        $this->get(route('reviews.show', $review))
+            ->assertOk()
+            ->assertSeeInOrder(['NEWEST', 'MIDDLE', 'OLDEST']);
+    }
+
     public function test_a_guest_cannot_comment_on_a_review(): void
     {
         $review = $this->review('Xenon');

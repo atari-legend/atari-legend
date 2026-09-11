@@ -19,7 +19,7 @@
         @endauth
     </div>
     <div class="striped">
-        @foreach ($article->comments->sortByDesc("timestamp") as $comment)
+        @foreach ($article->comments->sortByDesc('created_at') as $comment)
             @include('components.cards.partial_comment', ['context' => 'article', 'id' => $article->getKey()])
         @endforeach
     </div>
