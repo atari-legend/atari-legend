@@ -34,6 +34,10 @@ End state, clause by clause:
   `game_comment`, `article_comment`, `interview_comment` and `review_comment`
   do not exist. Checked by the Unit 4 acceptance queries, including the
   cascade check that deletes a game and watches its comments go.
+- Each section moderates its own comments: `artisan route:list --name=comments`
+  names `admin.games.comments.*`, `admin.articles.comments.*`,
+  `admin.interviews.comments.*` and `admin.reviews.comments.*`, and no route
+  name matches `admin.users.comments.*`. Checked by the Unit 4 acceptance.
 - No code unwraps a single-element collection to reach one of these four
   owners:
   `grep -rnE -e '->games(->first\(\)|\[0\])' app resources tests database --include=*.php --include=*.blade.php`
@@ -136,10 +140,19 @@ tighten, drop.
 
 - `app/Models/Review.php:34-37`: `games()` becomes
   `game()` → `belongsTo(Game::class)`. Add `game_id` to `$fillable`.
-- `app/Models/Game.php:110-113`: `reviews()` becomes
-  `hasMany(Review::class)`. `$game->reviews()->save($review)` keeps working at
-  `Admin/Reviews/ReviewsController.php:71` and `ReviewController.php:111`, so
-  neither line changes.
+- `app/Models/Game.php:110-113`: `reviews()` becomes `hasMany(Review::class)`.
+- `ReviewController.php:110-111` swaps its two saves, so that
+  `$game->reviews()->save($review)` runs before
+  `$request->user()->reviews()->save($review)`. Both save the same unsaved
+  review and the first save is the insert, so with the user first the insert
+  carries no `game_id` and the NOT NULL column rejects it.
+
+  ```
+  SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: reviews.game_id
+  ```
+
+  `Admin/Reviews/ReviewsController.php:71,74` already saves through the game
+  first and does not change.
 - Thirty-nine of the 42 unwrap sites become `->game`. The other three unwrap
   `Comment::games()` rather than `Review::games()` —
   `app/Models/Comment.php:78,98` and
@@ -176,6 +189,10 @@ tighten, drop.
   `tests/Feature/Public/ReviewPagesTest.php:46,72,128` and
   `tests/Feature/Admin/Reviews/ReviewsControllerTest.php:77` assert through
   `->games->first()->name` and become `->game->name`.
+- `tests/Feature/Admin/Games/GameControllerTest.php:272` reaches its review with
+  `$game->reviews()->attach(...)`, and `HasMany` defines no `attach()`. It names
+  `game_id` on the factory instead, the way the `releases` case at line 255
+  already does.
 
 `database/migrations/2025_12_30_113644_review_constraints.php:137` names
 `review_game_review_id_foreign`. It is a historical migration against a table
@@ -190,6 +207,8 @@ name two renames old and is not edited.
 - `./vendor/bin/sail artisan test` passes.
 - `php artisan migrate:fresh` and `php artisan db:seed --class=E2ESeeder` complete against the e2e database, and `tests/e2e/public/reviews.spec.js` and `tests/e2e/admin/content.spec.js` pass. The seeder writes through `DB::table()->updateOrInsert()`, which no model reaches, so it is the gate that catches a `game_review` insert left behind.
 - Creating a review in the admin UI stores the chosen game, and the admin Reviews table still sorts on the game name.
+- Submitting a review through the public form at `/reviews/submit` stores the chosen game. This is the ordering gate: with the two saves the other way round the insert fails with the NOT NULL error above, and `tests/e2e/public-write/reviews.spec.js` covers the same path in the browser.
+- `grep -rn "reviews()->attach" app tests database` returns nothing: `hasMany` has no `attach()`, so a caller that kept it would throw `BadMethodCallException` rather than fail a comparison.
 
 ## Unit 2 — the screenshot captions
 
@@ -554,14 +573,38 @@ returns one Eloquent `Builder`, which four tables cannot produce.
   read-before-delete dance at lines 67-73 — the section is the class, and the
   target is reachable through a foreign key that is still there while the row
   is.
-- `routes/admin.php:182`: `Route::resource('comments', CommentController::class)`
-  becomes four resources under a `comments` prefix and name, so the route names
-  are `admin.users.comments.{games,articles,interviews,reviews}.{index,edit,update,destroy}`.
-- `resources/views/admin/users/comments/{index,card_list,edit,card_edit,datatable_actions}.blade.php`
+
+**A comment screen belongs to the section it moderates, not to Users.** A
+comment's section is the table it is in, so Games, Articles, Interviews and
+Reviews each carry their own screen and Users carries none. The nav accordion
+reads route names — `@showroute('admin.games.*')` is what opens the Games group
+and `@activeroute` what marks the link inside it
+(`app/Providers/AppServiceProvider.php:44-54`) — so the route name is what
+decides which group a screen appears under, and the route is declared in that
+section's group.
+
+- `routes/admin.php:182`: the one resource under `/users` goes, and the `/games`,
+  `/reviews`, `/interviews` and `/articles` groups in the same file each gain
+  `Route::resource('comments', <Section>CommentController::class)
+  ->except(['create', 'store', 'show'])`. The route names are
+  `admin.{games,articles,interviews,reviews}.comments.{index,edit,update,destroy}`
+  and the URLs `/admin/{section}/comments`. A resource named `comments` derives
+  the `{comment}` parameter on its own, so no `->parameters()` override is
+  needed.
+- The four subclasses live in the section folders the routes reaching them live
+  in: `app/Http/Controllers/Admin/{Games,Articles,Interviews,Reviews}/`. The
+  abstract base belongs to no one section and sits directly in
+  `app/Http/Controllers/Admin/CommentController.php`, beside `HomeController`.
+  `Admin/User/` keeps `UserController`, which is all that is a Users screen.
+- `resources/views/admin/comments/{index,card_list,edit,card_edit,datatable_actions}.blade.php`
   take the section's route prefix and Livewire component as passed variables
-  rather than being copied four times.
+  rather than being copied four times. One shared set parameterised by the
+  section has no section folder to sit in, so it takes the same neutral place
+  the abstract controller takes.
 - `resources/views/admin/layouts/nav.blade.php:158`: the one Comments entry
-  becomes four, keeping `@activeroute('admin.users.comments.*')` on the group.
+  under Users goes, and each of the four section groups gains a `Comments`
+  entry keyed on `@activeroute('admin.{section}.comments.*')`. The group already
+  names the section, so the link does not repeat it.
 
 ### The migration
 
@@ -603,8 +646,9 @@ returns one Eloquent `Builder`, which four tables cannot produce.
 - Delete `app/Models/Comment.php`'s four `belongsToMany` declarations, its
   three derived attributes and its `HasFactory` body; what stays is an abstract
   `Comment` the four models extend, holding `$fillable`, `user()`, a `SECTION`
-  constant and abstract `owner()` and `getTargetAttribute()`. There are no
-  casts to carry over: `created_at` and `updated_at` are Eloquent's own.
+  constant and abstract `getTargetAttribute()` and `getTargetIdAttribute()`.
+  There are no casts to carry over: `created_at` and `updated_at` are
+  Eloquent's own.
   `TYPE_GAME`/`TYPE_REVIEW`/`TYPE_INTERVIEW`/`TYPE_ARTICLE` (lines 13-16)
   become each subclass's `SECTION`.
 - Add `app/Models/{Game,Article,Interview,Review}Comment.php`: `$table`, the
@@ -612,12 +656,35 @@ returns one Eloquent `Builder`, which four tables cannot produce.
   `getTargetAttribute()` returning `$this->game->name`,
   `$this->article->title`, `$this->interview->individual->name` and
   `$this->review->game->name` — the last being why this unit follows Unit 1.
+
+**No relation named `owner()` stands in for the four owner relations.** A
+`belongsTo` that the base declares and a subclass fills by returning
+`$this->game()` derives its key from the method that calls `belongsTo()`, so the
+key is `game_id` while the method name is `owner` —
+`RelationshipKeyAudit::relations()` reports that as divergent, and
+`tests/Feature/RelationshipKeyConventionsTest.php:43-64` fails on a divergent
+relation that its `DECLINED` registry does not list. The registry's four
+accepted reasons are self-referential pivots, pivot subclasses, a table whose
+model name diverges, and a method rename declined on cost; a delegating
+accessor is none of them, and the docblock at lines 25-42 records that no fifth
+reason has been accepted. Each subclass implements `getTargetIdAttribute()`
+returning its own foreign key column instead, which also reads the id without a
+query.
+
 - `app/Models/Game.php:173`, `Article.php:45-48`, `Interview.php:45-48`,
   `Review.php:59-62`: `comments()` becomes `hasMany(GameComment::class)` and so
-  on. The four `$owner->comments()->save($comment)` writers
-  (`GameController.php:187`, `ArticleController.php:63`,
-  `InterviewController.php:52`, `ReviewController.php:161`) keep working with
-  the matching model constructed above them.
+  on.
+- The four `postComment()` writers (`GameController.php:186-187`,
+  `ArticleController.php:62-63`, `InterviewController.php:51-52`,
+  `ReviewController.php:160-161`) construct the matching model and swap their
+  two saves for the reason Unit 1 records, so that
+  `$owner->comments()->save($comment)` runs before
+  `$request->user()->{$owner}Comments()->save($comment)`: the owner save has to
+  be the insert, because the owner id is NOT NULL.
+
+  ```
+  SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: game_comments.game_id
+  ```
 - `app/Models/User.php:101-104`: `comments()` becomes `gameComments()`,
   `articleComments()`, `interviewComments()` and `reviewComments()`.
   `resources/views/admin/users/users/card_activity.blade.php:68-73` reads those
@@ -645,11 +712,24 @@ returns one Eloquent `Builder`, which four tables cannot produce.
   already posts at lines 51-52 — without them `CommentController::delete()`
   cannot tell which table the id is in. Line 31's
   `$comment->games->isNotEmpty()`/`$comment->games->first()` becomes
-  `$comment->game`, and the contributor pencil at line 38 routes through the
-  comment's own section rather than one `admin.users.comments.edit`.
+  `$comment->game`, and the contributor pencil at line 38 routes through
+  `admin.{$context}s.comments.edit` rather than one
+  `admin.users.comments.edit`.
 - `resources/views/components/cards/latest-comments.blade.php:7` passes
   `'context' => 'game'` alongside `showGame`, which the pencil and the delete
   form now need; the card is game-only already.
+
+**A comment post with no `context` resolves no comment and changes nothing.** A
+comment id identifies a row only within its own table, so `context` is what
+`CommentController::update()` and `delete()` look the id up by, and a post
+without one has no table to look in. All five includes of
+`partial_comment.blade.php` pass a context — `{games,reviews,interviews,
+articles}/card_comments.blade.php:23` and `latest-comments.blade.php:7` — so no
+page reaches either route without one. `tests/Feature/Public/ContentPagesTest.php:471-493`
+asserts the old behaviour, an edit going through unlogged because
+`insertChangelog()` returns early on a null context; it becomes an assertion
+that the comment's text is unchanged and no changelog row is written.
+
 - `app/View/Components/Cards/LatestComments.php:39-40`:
   `Comment::select('comments.*')->join('game_comment', …)` becomes
   `GameComment::query()`.
@@ -678,8 +758,14 @@ returns one Eloquent `Builder`, which four tables cannot produce.
   name the section's model instead. `tests/Feature/Admin/Tables/AdminTablesTest.php`
   gains a case per new Livewire table.
 - `tests/e2e/support/comments.js` drives the shared comment box and needs no
-  change; `tests/e2e/admin/users.spec.js` visits the one comments screen and
-  gains the other three.
+  change. The four admin screens are covered where their sections already are:
+  `tests/e2e/admin/games.spec.js` gains the game comments list and edit form
+  beside the other section-level screens, and the three content sections gain a
+  `comments` entry in the `extra` list `tests/e2e/admin/content.spec.js:16,23,30,36`
+  already uses for submissions and types. `tests/e2e/admin/users.spec.js` loses
+  the comments screen it visited. `tests/e2e/admin/editor.spec.js:34` and
+  `tests/e2e/public-write/content.spec.js:92,105` name a comment edit URL and
+  take the section's.
 
 ### Acceptance
 
@@ -689,11 +775,16 @@ returns one Eloquent `Builder`, which four tables cannot produce.
 - `SHOW CREATE TABLE game_comments` names a cascading foreign key to `games` and no constraint on `user_id`, and likewise for the other three.
 - `DELETE FROM games WHERE id = <a game with comments>` in a transaction removes that game's rows from `game_comments` with no application code running, then is rolled back.
 - `grep -rn "FIXME: Should be N:1" app/Models` returns nothing, and `grep -rn "Comment::destroy\|modelKeys()" app/Http/Controllers/Admin/Games/GameController.php` returns nothing.
+- `grep -n "function owner()" app/Models/*Comment.php` returns nothing, and `tests/Feature/RelationshipKeyConventionsTest.php` passes without a new `DECLINED` entry.
+- Posting a comment through each of `games.comment`, `article.comment`, `interview.comment` and `review.comment` writes one row carrying both its owner id and its author. This is the ordering gate: with the two saves the other way round the insert fails with the NOT NULL error named above.
+- `POST /comments/update` carrying a `comment_id` and no `context` leaves the comment's text unchanged and writes no changelog row.
 - `php artisan migrate:rollback --step=1` then `php artisan migrate` puts all 983 comments back on the same owners with the same ids, text, author and timestamps.
 - `grep -rnE -e '->games(->first\(\)|\[0\])' app resources tests database --include=*.php --include=*.blade.php` returns nothing, and the `->(articles|interviews|reviews)` grep beside it in the end state returns only `resources/views/games/card_gameinfo.blade.php:77`. Unit 4 is the last unit at which both hold: Unit 1 clears 39 of the 42 lines and this unit clears the three that unwrap `Comment::games()`.
 - `grep -rc belongsToMany app/Models/*.php | awk -F: '{s+=$2} END {print s}'` returns 41, down from the 51 the end state records.
 - `./vendor/bin/sail artisan test` passes, including `tests/Feature/Public/GamePageTest.php`, `ContentPagesTest.php`, `ReviewPagesTest.php` and `tests/Feature/Admin/Tables/AdminTablesTest.php`.
-- `php artisan db:seed --class=E2ESeeder` completes, and `tests/e2e/public/{games,reviews,articles,interviews}.spec.js`, `tests/e2e/public-write/{games,content,reviews}.spec.js` and `tests/e2e/admin/users.spec.js` pass.
+- `artisan route:list --name=comments` names the sixteen `admin.{games,articles,interviews,reviews}.comments.*` routes, each resolving to that section's controller, and no `admin.users.comments.*` route.
+- Each of the four screens opens its own nav group and marks its own link: the rendered `/admin/{section}/comments` carries `id="{section}" class="accordion-collapse collapse show` and one `<a class="active"` whose href is that screen.
+- `php artisan db:seed --class=E2ESeeder` completes, and `tests/e2e/public/{games,reviews,articles,interviews}.spec.js`, `tests/e2e/public-write/{games,content,reviews}.spec.js`, `tests/e2e/admin/{games,content,editor,users}.spec.js` pass.
 - In the browser: posting, editing and deleting a comment works on a game, an article, an interview and a review — the delete needs the new `context` input, and no other page posts to `/comments/delete`. Each of the four admin comment screens lists, sorts by date, searches by content, filters by author, edits and deletes. Deleting a game from the admin removes its comments.
 ## Verification
 
@@ -836,7 +927,8 @@ back.
 - **`changelogs` rows that name a comment.** `ChangelogHelper::insert()` writes
   a comment's key into `sub_section_id` beside a `section` of 'Games',
   'Articles', 'Interviews' or 'Reviews'
-  (`Admin/User/CommentController.php:15-19,58`); `sub_section_id` is a plain
+  (`Admin/CommentController.php`, `COMMENT_CHANGELOG_SECTIONS` at lines 15-19
+  and the write at line 58 before this unit); `sub_section_id` is a plain
   `int(11)` with no foreign key, indexed only as part of
   `(section, sub_section)`. Unit 4 carries every existing comment id across
   unchanged, so no historical row is broken. What changes is the future: four
