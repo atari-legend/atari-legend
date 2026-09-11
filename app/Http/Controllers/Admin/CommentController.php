@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ChangelogHelper;
 use App\Helpers\Helper;
@@ -18,7 +18,9 @@ use Illuminate\Http\Request;
 abstract class CommentController extends Controller
 {
     /**
-     * Route and view prefix: `games`, `articles`, `interviews` or `reviews`.
+     * The section this screen belongs to: `games`, `articles`, `interviews`
+     * or `reviews`. Names the admin route group, and the public `show` route
+     * the edit form links back through.
      */
     protected string $section;
 
@@ -39,7 +41,7 @@ abstract class CommentController extends Controller
 
     public function index()
     {
-        return view('admin.users.comments.index')
+        return view('admin.comments.index')
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route($this->routeName('index')), $this->heading),
@@ -56,7 +58,7 @@ abstract class CommentController extends Controller
         $label = $comment->created_at?->toDayDateTimeString()
             . ' by ' . Helper::user($comment->user);
 
-        return view('admin.users.comments.edit')
+        return view('admin.comments.edit')
             ->with([
                 'breadcrumbs' => [
                     new Crumb(route($this->routeName('index')), $this->heading),
@@ -107,6 +109,6 @@ abstract class CommentController extends Controller
 
     private function routeName(string $action): string
     {
-        return "admin.users.comments.{$this->section}.{$action}";
+        return "admin.{$this->section}.comments.{$action}";
     }
 }

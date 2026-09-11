@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Admin\Articles;
 
+use App\Http\Controllers\Admin\CommentController;
 use App\Models\ArticleComment;
 
 class ArticleCommentController extends CommentController

@@ -153,9 +153,9 @@ class AdminRenderTest extends AdminTestCase
             'admin.menus.menus.create'         => ['set' => $fixtures['set']->getKey()],
             'admin.menus.disks.create'         => ['menu' => $fixtures['menu']->getKey()],
             'admin.menus.disks.content.create' => ['type' => 'game'],
-            'admin.users.comments.articles.edit'   => ['comment' => $fixtures['article_comment']],
-            'admin.users.comments.interviews.edit' => ['comment' => $fixtures['interview_comment']],
-            'admin.users.comments.reviews.edit'    => ['comment' => $fixtures['review_comment']],
+            'admin.articles.comments.edit'     => ['comment' => $fixtures['article_comment']],
+            'admin.interviews.comments.edit'   => ['comment' => $fixtures['interview_comment']],
+            'admin.reviews.comments.edit'      => ['comment' => $fixtures['review_comment']],
             default                            => [],
         };
     }

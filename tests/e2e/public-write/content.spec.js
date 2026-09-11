@@ -67,7 +67,7 @@ test.describe('Article comments', () => {
 //
 // The visitor's own controls are covered above and on a game; these are the two
 // routes only a moderator can reach - PUT and DELETE on
-// /admin/users/comments/articles/{comment} - and nothing in the suite touched
+// /admin/articles/comments/{comment} - and nothing in the suite touched
 // either. The pair matters together: an edit that a visitor cannot see is not
 // moderation, so both halves are read back from the public page rather than
 // from the admin's own table.
@@ -86,10 +86,10 @@ test.describe('Comment moderation', () => {
       body
     );
 
-    // Straight to the form rather than through the table: admin/users.spec.js
+    // Straight to the form rather than through the table: admin/content.spec.js
     // already loads the comments list, and what has no coverage is what the
     // two buttons on this screen do.
-    await adminPage.goto(`/admin/users/comments/articles/${comment.id}/edit`);
+    await adminPage.goto(`/admin/articles/comments/${comment.id}/edit`);
 
     // The subtitle names both the author and the article, which is the round
     // trip through ArticleComment::getTargetAttribute().
@@ -101,7 +101,7 @@ test.describe('Comment moderation', () => {
     // textarea in the markup would post the comment unchanged.
     await fillEditor(adminPage, 'content', moderated);
     await adminPage.getByRole('button', { name: 'Save' }).click();
-    await expect(adminPage).toHaveURL(/\/admin\/users\/comments\/articles$/);
+    await expect(adminPage).toHaveURL(/\/admin\/articles\/comments$/);
 
     // What the visitor now reads, on the same comment - the id has not moved.
     await page.goto(`/articles/${article.id}`);

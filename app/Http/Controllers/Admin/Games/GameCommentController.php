@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Admin\Games;
 
+use App\Http\Controllers\Admin\CommentController;
 use App\Models\GameComment;
 
 class GameCommentController extends CommentController

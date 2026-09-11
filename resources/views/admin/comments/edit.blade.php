@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col">
-            @include('admin.users.comments.card_edit')
+            @include('admin.comments.card_edit')
         </div>
     </div>
 @endsection

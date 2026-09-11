@@ -397,13 +397,13 @@ class RemainingSectionsTest extends AdminTestCase
         $comment = GameComment::sole();
 
         // The moderation form posts the body as `content`
-        $this->put(route('admin.users.comments.games.update', $comment), ['content' => 'Moderated.'])
+        $this->put(route('admin.games.comments.update', $comment), ['content' => 'Moderated.'])
             ->assertRedirect();
 
         $this->assertSame('Moderated.', $comment->fresh()->text);
 
-        $this->delete(route('admin.users.comments.games.destroy', $comment))
-            ->assertRedirect(route('admin.users.comments.games.index'));
+        $this->delete(route('admin.games.comments.destroy', $comment))
+            ->assertRedirect(route('admin.games.comments.index'));
 
         $this->assertSame(0, GameComment::query()->count());
 

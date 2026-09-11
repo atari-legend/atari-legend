@@ -30,7 +30,8 @@ abstract class CommentsTable extends DataTableComponent
     abstract protected function userRelation(): string;
 
     /**
-     * Route prefix: `games`, `articles`, `interviews` or `reviews`.
+     * The admin route group this table's rows link into: `games`, `articles`,
+     * `interviews` or `reviews`.
      */
     abstract protected function section(): string;
 
@@ -75,13 +76,13 @@ abstract class CommentsTable extends DataTableComponent
                 ->label(fn ($row) => $row->target),
             LinkColumn::make('Content')
                 ->title(fn ($row) => Str::words($row->text, 20))
-                ->location(fn ($row) => route("admin.users.comments.{$this->section()}.edit", $row))
+                ->location(fn ($row) => route("admin.{$this->section()}.comments.edit", $row))
                 ->searchable(
                     fn ($query, $term) => $query->where('text', 'like', '%' . $term . '%')
                 ),
             Column::make('Actions')
                 ->label(
-                    fn ($row) => view('admin.users.comments.datatable_actions')
+                    fn ($row) => view('admin.comments.datatable_actions')
                         ->with(['row' => $row, 'section' => $this->section()])
                 ),
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Admin\Interviews;
 
+use App\Http\Controllers\Admin\CommentController;
 use App\Models\InterviewComment;
 
 class InterviewCommentController extends CommentController

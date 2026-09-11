@@ -16,27 +16,11 @@ test.describe('Admin users', () => {
     await expectPageRenders(page, await page.goto(path), path);
   });
 
-  // One screen per section since the comment tables were split: the table a
-  // comment is in is what says which section it is on, so each has its own
-  // list and its own edit form.
-  for (const section of ['games', 'articles', 'interviews', 'reviews']) {
-    test(`lists ${section} comments`, async ({ page }) => {
-      const path = `/admin/users/comments/${section}`;
+  // Comments are no longer a Users screen: each section moderates its own, and
+  // those screens are covered in admin/games.spec.js and admin/content.spec.js.
 
-      await expectPageRenders(page, await page.goto(path), path);
-    });
-  }
-
-  test('opens the edit form for a game comment', async ({ page }) => {
-    // The form links back to the game the comment is on, through the foreign
-    // key on game_comments.
-    const path = `/admin/users/comments/games/${FIXTURE.comment.id}/edit`;
-
-    await expectPageRenders(page, await page.goto(path), path);
-  });
-
-  // TODO: changing a user's permission, deactivating an account, deleting an
-  // avatar, and moderating a comment.
+  // TODO: changing a user's permission, deactivating an account, and deleting
+  // an avatar.
 });
 
 // The author field on the news, review, interview and article forms picks a

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Admin\Reviews;
 
+use App\Http\Controllers\Admin\CommentController;
 use App\Models\ReviewComment;
 
 class ReviewCommentController extends CommentController

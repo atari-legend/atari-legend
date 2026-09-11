@@ -37,7 +37,7 @@
 
     <div class="py-2 mb-1" id="comment-{{ $comment->getKey() }}">
         @contributor
-            <a class="d-inline-block me-1" href="{{ route("admin.users.comments.{$context}s.edit", $comment) }}">
+            <a class="d-inline-block me-1" href="{{ route("admin.{$context}s.comments.edit", $comment) }}">
                 <small><i class="fas fa-pencil-alt text-contributor"></i></small>
             </a>
         @endcontributor
