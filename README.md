@@ -49,8 +49,10 @@ the rest reads the way the Laravel documentation does:
 | `sail down` / `sail up -d` | stop and start; the database survives |
 
 The database is empty until something is put in it. Restore a dump, or seed the
-end-to-end fixture with `sail artisan db:seed --class=E2ESeeder` - not the
-default `DatabaseSeeder`, which predates this schema.
+end-to-end fixture with `sail artisan db:seed` - which is what
+`sail artisan migrate:fresh --seed` runs too. The fixture leaves an existing
+dataset alone, so it is safe to run over a restored dump: it tops up the
+accounts and stops there.
 
 Other things the stack publishes:
 
