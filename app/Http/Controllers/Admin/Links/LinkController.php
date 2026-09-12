@@ -13,15 +13,22 @@ use Illuminate\Support\Facades\Storage;
 
 class LinkController extends Controller
 {
-    const VALIDATION_RULES = [
-        'name'         => 'required|max:128',
-        'url'          => 'required|url|max:255',
-        'description'  => 'nullable',
-        'inactive'     => 'nullable|boolean',
-        'categories'   => 'nullable|array',
-        'categories.*' => 'exists:categories,id',
-        'image'        => 'nullable|image',
-    ];
+    /**
+     * The image rule names the extensions `links.imgext` accepts, so that the
+     * form rejects what the column could not store.
+     */
+    private static function validationRules(): array
+    {
+        return [
+            'name'         => 'required|max:128',
+            'url'          => 'required|url|max:255',
+            'description'  => 'nullable',
+            'inactive'     => 'nullable|boolean',
+            'categories'   => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
+            'image'        => 'nullable|mimes:' . implode(',', Link::EXTENSIONS),
+        ];
+    }
 
     public function index()
     {
@@ -64,7 +71,7 @@ class LinkController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(self::VALIDATION_RULES);
+        $request->validate(self::validationRules());
 
         $link = Link::create([
             'name'        => $request->name,
@@ -97,7 +104,7 @@ class LinkController extends Controller
 
     public function update(Request $request, Link $link)
     {
-        $request->validate(self::VALIDATION_RULES);
+        $request->validate(self::validationRules());
 
         $link->update([
             'name'        => $request->name,

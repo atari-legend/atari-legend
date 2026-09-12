@@ -12,6 +12,8 @@ class MediaScan extends Model
 
     public $timestamps = false;
 
+    const EXTENSIONS = ['jpg', 'jpeg', 'png'];
+
     protected $fillable = ['imgext'];
 
     public function getFileAttribute()

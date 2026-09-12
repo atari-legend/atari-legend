@@ -13,6 +13,8 @@ class MagazineIssue extends Model
 {
     use HasFactory;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg'];
+
     protected $fillable = [
         'issue', 'label', 'archiveorg_url', 'alternate_url',
         'published', 'imgext', 'page_count', 'circulation',

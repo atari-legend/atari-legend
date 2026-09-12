@@ -20,6 +20,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     const UPDATED_AT = null;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
+
     /* The attributes that are mass assignable.
      *
      * @var array<int, string>

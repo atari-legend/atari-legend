@@ -169,6 +169,19 @@ class InterviewsControllerTest extends AdminTestCase
         Storage::disk('public')->assertMissing($screenshot->getPath('interview'));
     }
 
+    public function test_an_image_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $interview = Interview::factory()->create();
+
+        $this->post(route('admin.interviews.interviews.image.store', $interview), [
+            'image' => [UploadedFile::fake()->create('setup.exe', 10, 'application/x-msdownload')],
+        ])->assertSessionHasErrors('image.0');
+
+        $this->assertSame(0, Screenshot::query()->count());
+    }
+
     public function test_a_caption_can_be_added_and_removed(): void
     {
         $interview = Interview::factory()->create();

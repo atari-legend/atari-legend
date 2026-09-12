@@ -50,6 +50,7 @@ class GameCompanyController extends Controller
     {
         $request->validate([
             'name' => ['required', Rule::unique('companies', 'name')],
+            'logo' => ['nullable', 'mimes:' . implode(',', Company::EXTENSIONS)],
         ]);
 
         $company = new Company(['name' => $request->name]);
@@ -96,6 +97,7 @@ class GameCompanyController extends Controller
     {
         $request->validate([
             'name' => ['required', Rule::unique('companies', 'name')->ignore($company->getKey(), 'id')],
+            'logo' => ['nullable', 'mimes:' . implode(',', Company::EXTENSIONS)],
         ]);
 
         // Keep the logo already on file when the form comes back without one -

@@ -188,6 +188,19 @@ class ArticleControllerTest extends AdminTestCase
         );
     }
 
+    public function test_an_image_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $article = Article::factory()->create();
+
+        $this->post(route('admin.articles.articles.image.store', $article), [
+            'image' => [UploadedFile::fake()->create('setup.exe', 10, 'application/x-msdownload')],
+        ])->assertSessionHasErrors('image.0');
+
+        $this->assertSame(0, $article->screenshots()->count());
+    }
+
     public function test_an_upload_with_no_file_changes_nothing(): void
     {
         Storage::fake('public');

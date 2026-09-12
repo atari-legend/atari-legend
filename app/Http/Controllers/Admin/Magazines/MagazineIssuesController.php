@@ -15,17 +15,25 @@ use Illuminate\Support\Str;
 
 class MagazineIssuesController extends Controller
 {
-    const VALIDATION_RULES = [
-        'issue'          => 'nullable|numeric',
-        'archiveorg_url' => [
-            'nullable',
-            'regex:@https://archive.org/details/[^/]+/@',
-        ],
-        'alternate_url'  => 'nullable|url',
-        'published'      => 'nullable|date',
-        'page_count'     => 'nullable|numeric',
-        'circulation'    => 'nullable|numeric',
-    ];
+    /**
+     * The image rule names the extensions `magazine_issues.imgext` accepts, so
+     * that the form rejects what the column could not store.
+     */
+    private static function validationRules(): array
+    {
+        return [
+            'issue'          => 'nullable|numeric',
+            'archiveorg_url' => [
+                'nullable',
+                'regex:@https://archive.org/details/[^/]+/@',
+            ],
+            'alternate_url'  => 'nullable|url',
+            'published'      => 'nullable|date',
+            'page_count'     => 'nullable|numeric',
+            'circulation'    => 'nullable|numeric',
+            'image'          => 'nullable|mimes:' . implode(',', MagazineIssue::EXTENSIONS),
+        ];
+    }
 
     public function edit(Magazine $magazine, MagazineIssue $issue)
     {
@@ -56,7 +64,7 @@ class MagazineIssuesController extends Controller
 
     public function update(Request $request, Magazine $magazine, MagazineIssue $issue)
     {
-        $request->validate(MagazineIssuesController::VALIDATION_RULES);
+        $request->validate(MagazineIssuesController::validationRules());
 
         $issue->update([
             'issue'          => $request->issue,
@@ -92,7 +100,7 @@ class MagazineIssuesController extends Controller
 
     public function store(Request $request, Magazine $magazine)
     {
-        $request->validate(MagazineIssuesController::VALIDATION_RULES);
+        $request->validate(MagazineIssuesController::validationRules());
 
         $issue = new MagazineIssue([
             'issue'          => $request->issue,
@@ -150,8 +158,19 @@ class MagazineIssuesController extends Controller
 
         $response = Http::get($url);
 
+        // The cover is whatever archive.org answers with, which is not always
+        // an image: a missing item answers 404 with an HTML body. The extension
+        // is checked against what the column accepts before anything is stored.
         $mimeType = explode(';', $response->header('Content-Type'))[0];
-        $ext = explode('/', $mimeType)[1];
+        $ext = strtolower(explode('/', $mimeType)[1] ?? '');
+
+        if (! in_array($ext, MagazineIssue::EXTENSIONS, true)) {
+            session()->flash('alert-title', 'Cover not fetched');
+            session()->flash('alert-danger', "archive.org answered with '{$mimeType}', which is not an image this site can store.");
+
+            return;
+        }
+
         $path = "images/magazine_scans/{$issue->id}.{$ext}";
         Storage::disk('public')->put($path, $response->body());
 

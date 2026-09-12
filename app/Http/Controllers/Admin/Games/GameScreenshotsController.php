@@ -30,7 +30,7 @@ class GameScreenshotsController extends Controller
     {
         $request->validate([
             'screenshot'   => 'required',
-            'screenshot.*' => 'image',
+            'screenshot.*' => 'mimes:' . implode(',', Screenshot::EXTENSIONS),
         ]);
 
         if ($request->hasFile('screenshot')) {

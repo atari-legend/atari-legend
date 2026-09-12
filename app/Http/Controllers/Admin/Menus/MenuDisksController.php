@@ -116,6 +116,10 @@ class MenuDisksController extends Controller
 
     public function storeScreenshot(Request $request, MenuDisk $disk)
     {
+        $request->validate([
+            'screenshot' => 'nullable|mimes:' . implode(',', MenuDiskScreenshot::EXTENSIONS),
+        ]);
+
         if ($request->hasFile('screenshot')) {
             $screenshotFile = $request->file('screenshot');
             $screenshot = MenuDiskScreenshot::create([
@@ -123,7 +127,7 @@ class MenuDisksController extends Controller
                 'imgext'       => strtolower($screenshotFile->extension()),
             ]);
 
-            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshotFile->extension(), 'public');
+            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshot->imgext, 'public');
 
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,

@@ -52,6 +52,7 @@ class SpotlightController extends Controller
         $request->validate([
             'spotlight' => 'required',
             'link'      => 'required|url',
+            'image'     => 'nullable|mimes:' . implode(',', Screenshot::EXTENSIONS),
         ]);
 
         $oldText = $spotlight->text;
@@ -80,6 +81,7 @@ class SpotlightController extends Controller
         $request->validate([
             'spotlight' => 'required',
             'link'      => 'required|url',
+            'image'     => 'nullable|mimes:' . implode(',', Screenshot::EXTENSIONS),
         ]);
 
         $spotlight = Spotlight::create([

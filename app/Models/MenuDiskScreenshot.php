@@ -10,6 +10,8 @@ class MenuDiskScreenshot extends Model
 {
     use HasFactory;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg', 'bmp'];
+
     protected $fillable = ['menu_disk_id', 'imgext'];
 
     public function menuDisk()

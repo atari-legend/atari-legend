@@ -201,6 +201,11 @@ class GameController extends Controller
 
     public function submit(Game $game, Request $request)
     {
+        $request->validate([
+            'files'   => 'nullable|array',
+            'files.*' => 'mimes:' . implode(',', Screenshot::EXTENSIONS),
+        ]);
+
         $submission = new GameSubmission();
         $submission->text = $request->info;
         $submission->game_done = GameSubmission::SUBMISSION_NEW;

@@ -394,6 +394,29 @@ class GamePageTest extends TestCase
         );
     }
 
+    /**
+     * The submission form takes images, archives and disk images - whatever
+     * `screenshots.imgext` can hold - and nothing else. An executable is not on
+     * that list, and the whole submission is refused rather than stored
+     * without its file.
+     */
+    public function test_a_correction_refuses_a_file_the_column_cannot_hold(): void
+    {
+        Storage::fake('public');
+
+        $game = Game::factory()->create();
+
+        $this->actingAs(User::factory()->create())
+            ->post(route('games.submit', $game), [
+                'info'  => 'Here is a shot.',
+                'files' => [UploadedFile::fake()->create('setup.exe', 10, 'application/x-msdownload')],
+            ])
+            ->assertSessionHasErrors('files.0');
+
+        $this->assertSame(0, Screenshot::query()->count());
+        $this->assertSame(0, GameSubmission::query()->count());
+    }
+
     public function test_a_guest_cannot_submit_a_correction(): void
     {
         $game = Game::factory()->create();

@@ -182,6 +182,20 @@ class MenuCrewTest extends AdminTestCase
         $this->assertChangelog(Changelog::DELETE, 'Crew', 'The Replicants');
     }
 
+    public function test_a_logo_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
+
+        $this->post(route('admin.menus.crews.storeLogo', $crew), [
+            'logo' => UploadedFile::fake()->create('replicants.txt', 1, 'text/plain'),
+        ])->assertSessionHasErrors('logo');
+
+        $this->assertNull($crew->fresh()->logo);
+        $this->assertNoChangelog();
+    }
+
     public function test_submitting_the_logo_form_with_no_file_changes_nothing(): void
     {
         Storage::fake('public');

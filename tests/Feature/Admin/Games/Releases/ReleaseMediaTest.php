@@ -326,6 +326,24 @@ class ReleaseMediaTest extends AdminTestCase
     }
 
     /**
+     * A GIF is an image, and `media_scans.imgext` still cannot hold one.
+     */
+    public function test_a_media_scan_must_be_something_the_column_accepts(): void
+    {
+        MediaScanType::factory()->create();
+
+        $release = GameRelease::factory()->create();
+        $media = $this->media($release);
+
+        $this->post(route('admin.games.releases.medias.scans.store', [$release->game, $release, $media]), [
+            'file' => [$this->filepondServerId('label.gif', 'image')],
+        ])->assertSessionHasErrors('file');
+
+        $this->assertSame(0, MediaScan::query()->count());
+        $this->assertNoChangelog();
+    }
+
+    /**
      * Uploads always land as 'Other', because nothing in the file says which
      * side of which disk it is - the type is picked afterwards.
      */

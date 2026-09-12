@@ -98,6 +98,37 @@ class ReleaseScansTest extends AdminTestCase
      * FilePond posts an empty slot for a file the user removed before
      * submitting, and that slot must not turn into an empty scan.
      */
+    /**
+     * FilePond names its temporary file after the one the client sent, so the
+     * extension arrives in whatever case the client used and is lowercased
+     * before it reaches the column and the filename.
+     */
+    public function test_an_uppercase_extension_is_stored_lowercase(): void
+    {
+        $release = GameRelease::factory()->create();
+
+        $this->post(route('admin.games.releases.scans.store', [$release->game, $release]), [
+            'file' => [$this->filepondServerId('GOODIE.PNG', 'image')],
+        ])->assertRedirect();
+
+        $this->assertSame('png', GameReleaseScan::sole()->imgext);
+    }
+
+    /**
+     * A GIF is an image, and `game_release_scans.imgext` still cannot hold one.
+     */
+    public function test_a_scan_must_be_something_the_column_accepts(): void
+    {
+        $release = GameRelease::factory()->create();
+
+        $this->post(route('admin.games.releases.scans.store', [$release->game, $release]), [
+            'file' => [$this->filepondServerId('goodie.gif', 'image')],
+        ])->assertSessionHasErrors('file');
+
+        $this->assertSame(0, GameReleaseScan::query()->count());
+        $this->assertNoChangelog();
+    }
+
     public function test_an_empty_upload_slot_is_skipped(): void
     {
         $release = GameRelease::factory()->create();

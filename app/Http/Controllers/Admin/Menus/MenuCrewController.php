@@ -211,6 +211,10 @@ class MenuCrewController extends Controller
 
     public function storeLogo(Request $request, Crew $crew)
     {
+        $request->validate([
+            'logo' => 'nullable|mimes:' . implode(',', Crew::EXTENSIONS),
+        ]);
+
         if ($request->hasFile('logo')) {
             $logoFile = $request->file('logo');
 
