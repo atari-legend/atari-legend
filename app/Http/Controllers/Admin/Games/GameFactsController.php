@@ -59,7 +59,9 @@ class GameFactsController extends Controller
     public function update(Game $game, GameFact $fact, Request $request)
     {
         $request->validate([
-            'content'     => 'required',
+            'content' => 'required',
+            'file'    => 'nullable|array',
+            'file.*'  => 'mimes:' . implode(',', Screenshot::EXTENSIONS),
         ]);
 
         $fact->update([
@@ -88,7 +90,9 @@ class GameFactsController extends Controller
     public function store(Game $game, Request $request)
     {
         $request->validate([
-            'content'     => 'required',
+            'content' => 'required',
+            'file'    => 'nullable|array',
+            'file.*'  => 'mimes:' . implode(',', Screenshot::EXTENSIONS),
         ]);
 
         $fact = new GameFact([

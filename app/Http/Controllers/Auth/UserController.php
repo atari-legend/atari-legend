@@ -36,10 +36,10 @@ class UserController extends Controller
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $avatar->storeAs('images/user_avatars/', $user->getKey() . '.' . $avatar->extension(), 'public');
-            $user->avatar_ext = $avatar->extension();
+            $user->imgext = $avatar->extension();
         } elseif ($request->filled('avatar-removed')) {
-            Storage::disk('public')->delete('images/user_avatars/' . $user->getKey() . '.' . $user->avatar_ext);
-            $user->avatar_ext = null;
+            Storage::disk('public')->delete('images/user_avatars/' . $user->getKey() . '.' . $user->imgext);
+            $user->imgext = null;
         }
 
         $user->save();

@@ -11,27 +11,19 @@ use App\Models\Media;
 use App\Models\MediaScan;
 use App\Models\MediaScanType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class ReleaseMediasScansController extends Controller
 {
+    use ValidatesFilepondExtensions;
+
     public function store(Game $game, GameRelease $release, Media $media, Request $request)
     {
         $request->validate(['file' => 'required|array']);
 
-        $filepond = app(\Sopamo\LaravelFilepond\Filepond::class);
         $otherType = MediaScanType::where('name', '=', MediaScanType::TYPE_OTHER)->first();
 
-        foreach ($request->file as $file) {
-            if ($file === null) {
-                continue;
-            }
-
-            $path = $filepond->getPathFromServerId($file);
-            $fullpath = Storage::path($path);
-            $ext = File::extension($fullpath);
-
+        foreach ($this->filepondExtensions($request->file, MediaScan::EXTENSIONS) as $path => $ext) {
             $scan = new MediaScan([
                 'imgext' => $ext,
             ]);

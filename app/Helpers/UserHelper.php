@@ -20,7 +20,7 @@ class UserHelper
     public static function validationRules(?User $currentUser = null)
     {
         $rules = [
-            'avatar'   => ['nullable', 'image'],
+            'avatar'   => ['nullable', 'mimes:' . implode(',', User::EXTENSIONS)],
             'website'  => ['nullable', 'url'],
             'facebook' => ['nullable', 'url', 'starts_with:https://www.facebook.com/'],
             'twitter'  => ['nullable', 'url', 'starts_with:https://twitter.com/'],

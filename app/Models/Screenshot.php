@@ -14,6 +14,12 @@ class Screenshot extends Model
     protected $fillable = ['imgext'];
     public $timestamps = false;
 
+    const EXTENSIONS = [
+        'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp',
+        'zip', 'pdf', 'txt', 'bin',
+        'st', 'msa', 'stx', 'raw', 'scp',
+    ];
+
     const PATHS = [
         'game'            => 'game_screenshots',
         'game_fact'       => 'game_fact_screenshots',

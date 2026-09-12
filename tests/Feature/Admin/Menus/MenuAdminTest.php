@@ -337,6 +337,23 @@ class MenuAdminTest extends AdminTestCase
         Storage::disk('public')->assertMissing('images/menu_screenshots/' . $screenshot->file);
     }
 
+    /**
+     * A GIF is an image, and `menu_disk_screenshots.imgext` still cannot hold
+     * one.
+     */
+    public function test_a_disk_screenshot_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $disk = $this->disk();
+
+        $this->post(route('admin.menus.disks.storeScreenshot', $disk), [
+            'screenshot' => UploadedFile::fake()->image('menu.gif'),
+        ])->assertSessionHasErrors('screenshot');
+
+        $this->assertSame(0, MenuDiskScreenshot::query()->count());
+    }
+
     // Disk contents
 
     public function test_software_can_be_put_on_a_disk(): void

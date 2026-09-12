@@ -134,7 +134,8 @@ class InterviewsController extends Controller
     public function storeImage(Request $request, Interview $interview)
     {
         $request->validate([
-            'image' => 'array',
+            'image'   => 'array',
+            'image.*' => 'mimes:' . implode(',', Screenshot::EXTENSIONS),
         ]);
 
         if ($request->hasFile('image')) {

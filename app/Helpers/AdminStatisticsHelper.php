@@ -382,7 +382,13 @@ class AdminStatisticsHelper
      */
     public static function dumpsByFormat()
     {
-        return self::toChartData(self::groupByColumn('dumps', 'format'));
+        $chart = self::toChartData(self::groupByColumn('dumps', 'format'));
+
+        // The column holds a filename suffix and is lowercase; a chart label
+        // reads as the format's name.
+        $chart['labels'] = array_map('strtoupper', $chart['labels']);
+
+        return $chart;
     }
 
     /**

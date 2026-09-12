@@ -75,8 +75,9 @@ class GameIndividualController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'  => ['required'],
-            'email' => 'nullable|email',
+            'name'   => ['required'],
+            'email'  => 'nullable|email',
+            'avatar' => ['nullable', 'mimes:' . implode(',', Individual::EXTENSIONS)],
         ]);
 
         $individual = new Individual(['name' => $request->name]);
@@ -123,8 +124,9 @@ class GameIndividualController extends Controller
     public function update(Request $request, Individual $individual)
     {
         $request->validate([
-            'name'  => ['required'],
-            'email' => 'nullable|email',
+            'name'   => ['required'],
+            'email'  => 'nullable|email',
+            'avatar' => ['nullable', 'mimes:' . implode(',', Individual::EXTENSIONS)],
         ]);
 
         // Keep the avatar already on file when the form comes back without one,

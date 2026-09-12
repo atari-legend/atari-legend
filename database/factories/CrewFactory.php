@@ -16,7 +16,7 @@ class CrewFactory extends Factory
     {
         return [
             'name'    => fake()->unique()->lastName() . ' Crew',
-            'logo'    => null,
+            'imgext'  => null,
             'history' => null,
         ];
     }

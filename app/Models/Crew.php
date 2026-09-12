@@ -12,11 +12,13 @@ class Crew extends Model
 
     public $timestamps = false;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+
     protected $fillable = ['name', 'history'];
 
     public function getLogoFileAttribute()
     {
-        return Helper::filename($this->getKey(), $this->logo);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 
     public function menuSets()

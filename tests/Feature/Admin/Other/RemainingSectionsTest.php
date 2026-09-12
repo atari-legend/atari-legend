@@ -132,6 +132,22 @@ class RemainingSectionsTest extends AdminTestCase
         $this->assertChangelog(Changelog::INSERT, 'Links', 'Hatari');
     }
 
+    /**
+     * A GIF is an image, and `links.imgext` still cannot hold one.
+     */
+    public function test_a_link_image_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $this->post(route('admin.links.links.store'), [
+            'name'  => 'Hatari',
+            'url'   => 'https://hatari.tuxfamily.org',
+            'image' => UploadedFile::fake()->image('shot.gif'),
+        ])->assertSessionHasErrors('image');
+
+        $this->assertSame(0, Link::query()->count());
+    }
+
     public function test_a_link_needs_a_name_and_a_valid_url(): void
     {
         $this->post(route('admin.links.links.store'), ['name' => 'Hatari', 'url' => 'not a url'])
@@ -252,6 +268,19 @@ class RemainingSectionsTest extends AdminTestCase
         $this->assertSame('https://www.atarilegend.com', $spotlight->link);
     }
 
+    public function test_a_spotlight_image_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $this->post(route('admin.others.spotlights.store'), [
+            'spotlight' => 'A newly dumped menu disk.',
+            'link'      => 'https://www.atarilegend.com',
+            'image'     => UploadedFile::fake()->create('setup.exe', 10, 'application/x-msdownload'),
+        ])->assertSessionHasErrors('image');
+
+        $this->assertSame(0, Spotlight::query()->count());
+    }
+
     public function test_a_spotlight_needs_text_and_a_valid_link(): void
     {
         $this->post(route('admin.others.spotlights.store'), ['spotlight' => 'Something', 'link' => 'nope'])
@@ -275,6 +304,20 @@ class RemainingSectionsTest extends AdminTestCase
         ])->assertRedirect();
 
         $this->assertSame('new@example.org', $user->fresh()->email);
+    }
+
+    public function test_an_admin_uploaded_avatar_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create(['email' => 'old@example.org']);
+
+        $this->put(route('admin.users.users.update', $user), [
+            'email'  => 'old@example.org',
+            'avatar' => UploadedFile::fake()->create('me.txt', 1, 'text/plain'),
+        ])->assertSessionHasErrors('avatar');
+
+        $this->assertNull($user->fresh()->imgext);
     }
 
     public function test_a_user_cannot_take_another_users_email(): void

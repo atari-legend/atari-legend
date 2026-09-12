@@ -71,6 +71,21 @@ class GamePanelsTest extends AdminTestCase
         $this->assertNull($individual->email);
     }
 
+    /**
+     * A GIF is an image, and `individuals.imgext` still cannot hold one.
+     */
+    public function test_an_avatar_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $this->post(route('admin.games.individuals.store'), [
+            'name'   => 'Jochen Hippel',
+            'avatar' => UploadedFile::fake()->image('face.gif'),
+        ])->assertSessionHasErrors('avatar');
+
+        $this->assertSame(0, Individual::query()->count());
+    }
+
     public function test_an_individual_needs_a_name_and_a_valid_email(): void
     {
         $this->post(route('admin.games.individuals.store'), ['name' => ''])
@@ -143,6 +158,18 @@ class GamePanelsTest extends AdminTestCase
         $this->assertSame('Ocean', $company->name);
         $this->assertSame('A Manchester publisher.', $company->profile);
         $this->assertChangelog(Changelog::INSERT, 'Company', 'Ocean');
+    }
+
+    public function test_a_company_logo_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $this->post(route('admin.games.companies.store'), [
+            'name' => 'Ocean',
+            'logo' => UploadedFile::fake()->create('ocean.txt', 1, 'text/plain'),
+        ])->assertSessionHasErrors('logo');
+
+        $this->assertSame(0, Company::query()->count());
     }
 
     public function test_company_names_are_unique(): void
@@ -276,12 +303,12 @@ class GamePanelsTest extends AdminTestCase
         Storage::disk('public')->assertMissing($screenshot->getPath('game'));
     }
 
-    public function test_a_screenshot_upload_must_be_an_image(): void
+    public function test_a_screenshot_upload_must_be_something_the_column_accepts(): void
     {
         $game = Game::factory()->create();
 
         $this->post(route('admin.games.game-screenshots.store', $game), [
-            'screenshot' => [UploadedFile::fake()->create('notes.txt', 10)],
+            'screenshot' => [UploadedFile::fake()->create('setup.exe', 10, 'application/x-msdownload')],
         ])->assertSessionHasErrors('screenshot.0');
 
         $this->post(route('admin.games.game-screenshots.store', $game), [])
@@ -308,6 +335,20 @@ class GamePanelsTest extends AdminTestCase
         $this->assertSame('Composed in a day.', $fact->fresh()->fact);
 
         $this->delete(route('admin.games.game-facts.destroy', [$game, $fact]))->assertRedirect();
+
+        $this->assertSame(0, GameFact::query()->count());
+    }
+
+    public function test_a_fact_image_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $game = Game::factory()->create();
+
+        $this->post(route('admin.games.game-facts.store', $game), [
+            'content' => 'Composed in a week.',
+            'file'    => [UploadedFile::fake()->create('setup.exe', 10, 'application/x-msdownload')],
+        ])->assertSessionHasErrors('file.0');
 
         $this->assertSame(0, GameFact::query()->count());
     }

@@ -17,8 +17,8 @@
                 <label for="avatar" class="col-md-4 col-form-label text-md-end">Avatar</label>
 
                 <div class="col-md-6">
-                    @if ($user->avatar_ext)
-                        <img id="avatar-image" height="100" src="{{ asset('storage/images/user_avatars/'.$user->getKey().'.'.$user->avatar_ext) }}" alt="User avatar" loading="lazy">
+                    @if ($user->imgext)
+                        <img id="avatar-image" height="100" src="{{ asset('storage/images/user_avatars/'.$user->getKey().'.'.$user->imgext) }}" alt="User avatar" loading="lazy">
                         <a class="ms-2" id="delete-avatar" href="#"><i class="fas fa-trash-alt text-danger"></i></a>
                     @endif
 

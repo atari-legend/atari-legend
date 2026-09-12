@@ -211,10 +211,14 @@ class MenuCrewController extends Controller
 
     public function storeLogo(Request $request, Crew $crew)
     {
+        $request->validate([
+            'logo' => 'nullable|mimes:' . implode(',', Crew::EXTENSIONS),
+        ]);
+
         if ($request->hasFile('logo')) {
             $logoFile = $request->file('logo');
 
-            $crew->logo = strtolower($logoFile->extension());
+            $crew->imgext = strtolower($logoFile->extension());
             $crew->save();
 
             $logoFile->storeAs('images/crew_logos/', $crew->logo_file, 'public');
@@ -226,7 +230,7 @@ class MenuCrewController extends Controller
                 'section_name'     => $crew->name,
                 'sub_section'      => 'Logo',
                 'sub_section_id'   => $crew->getKey(),
-                'sub_section_name' => $crew->logo,
+                'sub_section_name' => $crew->imgext,
             ]);
         }
 
@@ -237,7 +241,7 @@ class MenuCrewController extends Controller
     {
         Storage::disk('public')->delete('images/crew_logos/' . $crew->logo_file);
 
-        $crew->logo = null;
+        $crew->imgext = null;
         $crew->save();
 
         ChangelogHelper::insert([

@@ -59,8 +59,9 @@ class ReleaseMediaTest extends AdminTestCase
             'game_release_id' => $release->getKey(),
             'label'           => 'Disk A',
         ]);
-        Dump::factory()->create(['media_id' => $media->getKey(), 'format' => 'STX']);
+        Dump::factory()->create(['media_id' => $media->getKey(), 'format' => 'stx']);
 
+        // The column holds a filename suffix; the card uppercases it.
         $this->get(route('admin.games.releases.medias.index', [$release->game, $release]))
             ->assertOk()
             ->assertSee('Disk A')
@@ -183,7 +184,7 @@ class ReleaseMediaTest extends AdminTestCase
         $dump = Dump::sole();
 
         $this->assertSame($media->getKey(), $dump->media_id);
-        $this->assertSame('STX', $dump->format);
+        $this->assertSame('stx', $dump->format);
         $this->assertSame(hash('sha512', $this->stxContents()), $dump->sha512);
         $this->assertSame(strlen($this->stxContents()), $dump->size);
         $this->assertSame($this->admin->getKey(), $dump->user_id);
@@ -207,7 +208,7 @@ class ReleaseMediaTest extends AdminTestCase
             'file' => [$this->filepondServerId('xenon.st', str_repeat('x', 32))],
         ])->assertRedirect();
 
-        $this->assertSame('ST', Dump::sole()->format);
+        $this->assertSame('st', Dump::sole()->format);
     }
 
     /**
@@ -244,7 +245,7 @@ class ReleaseMediaTest extends AdminTestCase
             ])],
         ])->assertRedirect();
 
-        $this->assertSame(['ST', 'ST'], Dump::query()->pluck('format')->all());
+        $this->assertSame(['st', 'st'], Dump::query()->pluck('format')->all());
 
         foreach (Dump::all() as $dump) {
             Storage::disk('public')->assertExists($dump->path);
@@ -323,6 +324,24 @@ class ReleaseMediaTest extends AdminTestCase
         Storage::assertMissing('filepond/label.png');
 
         $this->assertChangelog(Changelog::INSERT, 'Game Release', $release->game->name);
+    }
+
+    /**
+     * A GIF is an image, and `media_scans.imgext` still cannot hold one.
+     */
+    public function test_a_media_scan_must_be_something_the_column_accepts(): void
+    {
+        MediaScanType::factory()->create();
+
+        $release = GameRelease::factory()->create();
+        $media = $this->media($release);
+
+        $this->post(route('admin.games.releases.medias.scans.store', [$release->game, $release, $media]), [
+            'file' => [$this->filepondServerId('label.gif', 'image')],
+        ])->assertSessionHasErrors('file');
+
+        $this->assertSame(0, MediaScan::query()->count());
+        $this->assertNoChangelog();
     }
 
     /**

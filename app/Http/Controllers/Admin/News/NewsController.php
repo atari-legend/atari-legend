@@ -14,12 +14,20 @@ use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
-    const VALIDATION_RULES = [
-        'headline'     => 'required',
-        'author'       => 'required|numeric',
-        'published_at' => 'required|date',
-        'text'         => 'required',
-    ];
+    /**
+     * The image rule names the extensions `news_images.imgext` accepts, so that
+     * the form rejects what the column could not store.
+     */
+    private static function validationRules(): array
+    {
+        return [
+            'headline'     => 'required',
+            'author'       => 'required|numeric',
+            'published_at' => 'required|date',
+            'text'         => 'required',
+            'image'        => 'nullable|mimes:' . implode(',', NewsImage::EXTENSIONS),
+        ];
+    }
 
     public function index()
     {
@@ -56,7 +64,7 @@ class NewsController extends Controller
 
     public function update(Request $request, News $news)
     {
-        $request->validate(NewsController::VALIDATION_RULES);
+        $request->validate(NewsController::validationRules());
 
         $news->update([
             'headline'     => $request->headline,
@@ -82,7 +90,7 @@ class NewsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(NewsController::VALIDATION_RULES);
+        $request->validate(NewsController::validationRules());
 
         $news = News::create([
             'headline'     => $request->headline,

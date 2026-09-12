@@ -12,6 +12,8 @@ class Company extends Model
 
     public $timestamps = false;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+
     protected $fillable = ['name', 'profile', 'imgext'];
 
     public function games()

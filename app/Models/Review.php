@@ -23,6 +23,8 @@ class Review extends Model implements Feedable
     ];
 
     protected $casts = [
+        'draft'        => 'boolean',
+        'submission'   => 'boolean',
         'published_at' => 'datetime',
     ];
 

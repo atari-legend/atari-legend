@@ -31,6 +31,6 @@ class UserProvider extends EloquentUserProvider
 
         $hashedPassword = UserHelper::hashPassword($credentials['password'], $user->salt);
 
-        return $user->inactive === User::ACTIVE && $user->sha512_password === $hashedPassword;
+        return ! $user->inactive && $user->sha512_password === $hashedPassword;
     }
 }

@@ -12,6 +12,12 @@ class Link extends Model
 
     const UPDATED_AT = null;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg'];
+
+    protected $casts = [
+        'inactive' => 'boolean',
+    ];
+
     protected $fillable = [
         'name',
         'url',

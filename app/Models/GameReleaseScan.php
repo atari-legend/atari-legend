@@ -15,6 +15,8 @@ class GameReleaseScan extends Model
     const TYPE_BOX_BACK = 'Box back';
     const TYPES = [GameReleaseScan::TYPE_BOX_FRONT, GameReleaseScan::TYPE_BOX_BACK, 'Goodie', GameReleaseScan::TYPE_OTHER];
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg'];
+
     public $timestamps = false;
     protected $fillable = ['game_release_id', 'imgext', 'type'];
 

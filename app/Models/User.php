@@ -20,18 +20,21 @@ class User extends Authenticatable implements MustVerifyEmail
 
     const UPDATED_AT = null;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
+
     /* The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'userid', 'email', 'avatar_ext',
+        'userid', 'email', 'imgext',
         'website', 'facebook', 'twitter', 'atari_forum',
         'permission', 'inactive',
         'sha512_password', 'salt',
     ];
 
     protected $casts = [
+        'inactive'          => 'boolean',
         'last_visit_at'     => 'datetime',
         'email_verified_at' => 'datetime',
     ];
@@ -46,7 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasVerifiedEmail()
     {
-        return ! is_null($this->email_verified_at) && $this->inactive === User::ACTIVE;
+        return ! is_null($this->email_verified_at) && ! $this->inactive;
     }
 
     /**
@@ -71,8 +74,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getAvatarAttribute()
     {
-        if ($this->avatar_ext !== null && $this->avatar_ext !== '') {
-            return asset('storage/images/user_avatars/' . $this->getKey() . '.' . $this->avatar_ext);
+        if ($this->imgext !== null) {
+            return asset('storage/images/user_avatars/' . $this->getKey() . '.' . $this->imgext);
         } else {
             return null;
         }

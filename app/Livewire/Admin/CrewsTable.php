@@ -28,12 +28,12 @@ class CrewsTable extends DataTableComponent
                 ->sortable(fn (Builder $query, string $direction) => $query->orderBy('name')),
             Column::make('Logo')
                 ->label(
-                    fn ($row) => $row->logo !== null && trim($row->logo) !== ''
-                        ? '<img style="max-height: 2rem; max-width: 5rem;" src="' . asset('storage/images/crew_logos/' . $row->getKey() . '.' . trim($row->logo)) . '">'
+                    fn ($row) => $row->imgext !== null
+                        ? '<img style="max-height: 2rem; max-width: 5rem;" src="' . asset('storage/images/crew_logos/' . $row->logo_file) . '">'
                         : ''
                 )
                 ->html()
-                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('logo', $direction)),
+                ->sortable(fn (Builder $query, string $direction) => $query->orderBy('imgext', $direction)),
             Column::make('Genealogy')
                 ->label(function ($row) {
                     $output = [];

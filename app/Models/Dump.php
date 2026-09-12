@@ -10,7 +10,7 @@ class Dump extends Model
 {
     use HasFactory;
 
-    const FORMATS = ['MSA', 'SCP', 'ST', 'STX'];
+    const FORMATS = ['stx', 'msa', 'raw', 'scp', 'st'];
 
     const TRACKPICTURES_DIRECTORY = 'images/dump_trackpictures';
 

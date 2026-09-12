@@ -33,7 +33,7 @@
                     @endif
                 </div>
                 <div class="col-md-8 ps-2">
-                    @if ($link->inactive === 1)
+                    @if ($link->inactive)
                         <small class="text-warning mt-1 float-end"><i class="fas fa-exclamation-triangle"></i> Appears to be inactive</small>
                     @endif
 

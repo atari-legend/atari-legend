@@ -182,7 +182,7 @@ class ProfileTest extends TestCase
             ]))
             ->assertOk();
 
-        $this->assertSame('png', $user->fresh()->avatar_ext);
+        $this->assertSame('png', $user->fresh()->imgext);
         Storage::disk('public')->assertExists('images/user_avatars/' . $user->getKey() . '.png');
     }
 
@@ -198,21 +198,21 @@ class ProfileTest extends TestCase
             ]))
             ->assertSessionHasErrors('avatar');
 
-        $this->assertNull($user->fresh()->avatar_ext);
+        $this->assertNull($user->fresh()->imgext);
     }
 
     public function test_a_user_can_remove_their_avatar(): void
     {
         Storage::fake('public');
 
-        $user = User::factory()->create(['avatar_ext' => 'png']);
+        $user = User::factory()->create(['imgext' => 'png']);
         Storage::disk('public')->put('images/user_avatars/' . $user->getKey() . '.png', 'an image');
 
         $this->actingAs($user)
             ->post(route('auth.update'), $this->profile(['avatar-removed' => '1']))
             ->assertOk();
 
-        $this->assertNull($user->fresh()->avatar_ext);
+        $this->assertNull($user->fresh()->imgext);
         Storage::disk('public')->assertMissing('images/user_avatars/' . $user->getKey() . '.png');
     }
 

@@ -5,6 +5,8 @@ namespace Tests\Feature\Admin\News;
 use App\Models\Changelog;
 use App\Models\News;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Admin\AdminTestCase;
 
 /**
@@ -102,6 +104,17 @@ class NewsControllerTest extends AdminTestCase
 
         $this->assertSame(0, News::query()->count());
         $this->assertNoChangelog();
+    }
+
+    public function test_store_rejects_an_image_the_column_cannot_hold(): void
+    {
+        Storage::fake('public');
+
+        $this->post(route('admin.news.news.store'), $this->payload([
+            'image' => UploadedFile::fake()->create('shot.txt', 1, 'text/plain'),
+        ]))->assertSessionHasErrors('image');
+
+        $this->assertSame(0, News::query()->count());
     }
 
     public function test_store_rejects_an_unparseable_date(): void

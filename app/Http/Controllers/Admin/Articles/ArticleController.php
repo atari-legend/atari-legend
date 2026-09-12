@@ -139,7 +139,8 @@ class ArticleController extends Controller
     public function storeImage(Request $request, Article $article)
     {
         $request->validate([
-            'image' => 'array',
+            'image'   => 'array',
+            'image.*' => 'mimes:' . implode(',', Screenshot::EXTENSIONS),
         ]);
 
         if ($request->hasFile('image')) {

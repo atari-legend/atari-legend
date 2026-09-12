@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 
 class ReleaseScansController extends Controller
 {
+    use ValidatesFilepondExtensions;
+
     public function index(Game $game, GameRelease $release)
     {
         return view('admin.games.games.releases.scans.index')
@@ -87,17 +89,8 @@ class ReleaseScansController extends Controller
     {
         $request->validate(['file' => 'required|array']);
 
-        $filepond = app(\Sopamo\LaravelFilepond\Filepond::class);
-
-        foreach ($request->file as $file) {
-            if ($file === null) {
-                continue;
-            }
-
-            $path = $filepond->getPathFromServerId($file);
-            $fullpath = Storage::path($path);
-            $ext = File::extension($fullpath);
-            $name = Str::lower(File::name($fullpath));
+        foreach ($this->filepondExtensions($request->file, GameReleaseScan::EXTENSIONS) as $path => $ext) {
+            $name = Str::lower(File::name(Storage::path($path)));
 
             // Infer the type from the filename
             $type = GameReleaseScan::TYPE_OTHER;

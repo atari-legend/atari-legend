@@ -22,7 +22,7 @@ class DumpFactory extends Factory
         return [
             'media_id'      => MediaFactory::new(),
             'user_id'       => User::factory(),
-            'format'        => 'STX',
+            'format'        => 'stx',
             'sha512'        => hash('sha512', fake()->uuid()),
             'created_at'    => now(),
             'size'          => 819200,

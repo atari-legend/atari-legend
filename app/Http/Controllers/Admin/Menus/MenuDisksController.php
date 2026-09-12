@@ -116,6 +116,10 @@ class MenuDisksController extends Controller
 
     public function storeScreenshot(Request $request, MenuDisk $disk)
     {
+        $request->validate([
+            'screenshot' => 'nullable|mimes:' . implode(',', MenuDiskScreenshot::EXTENSIONS),
+        ]);
+
         if ($request->hasFile('screenshot')) {
             $screenshotFile = $request->file('screenshot');
             $screenshot = MenuDiskScreenshot::create([
@@ -123,7 +127,7 @@ class MenuDisksController extends Controller
                 'imgext'       => strtolower($screenshotFile->extension()),
             ]);
 
-            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshotFile->extension(), 'public');
+            $screenshotFile->storeAs('images/menu_screenshots/', $screenshot->id . '.' . $screenshot->imgext, 'public');
 
             ChangelogHelper::insert([
                 'action'           => Changelog::INSERT,
@@ -163,7 +167,7 @@ class MenuDisksController extends Controller
     {
         if ($request->hasFile('dump')) {
             $dumpFile = $request->file('dump');
-            $clientExt = strtoupper($dumpFile->getClientOriginalExtension());
+            $clientExt = strtolower($dumpFile->getClientOriginalExtension());
 
             $dumpFormat = null;
             $dumpSize = null;
@@ -173,13 +177,13 @@ class MenuDisksController extends Controller
             $dumpZip = new ZipArchive();
             $dumpZip->open($tmpFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-            if ($clientExt !== 'ZIP' && ! collect(MenuDiskDump::EXTENSIONS)->contains($clientExt)) {
+            if ($clientExt !== 'zip' && ! collect(MenuDiskDump::EXTENSIONS)->contains($clientExt)) {
                 $request->session()->flash('alert-danger', 'Unsupported file extension: ' . $clientExt);
 
                 return redirect()->route('admin.menus.disks.edit', $disk);
             }
 
-            if ($clientExt === 'ZIP') {
+            if ($clientExt === 'zip') {
                 $zip = new ZipArchive();
                 if ($zip->open($dumpFile->path()) !== true) {
                     $request->session()->flash('alert-danger', 'Error opening ZIP file: ' . $zip->getStatusString());
@@ -194,7 +198,7 @@ class MenuDisksController extends Controller
                 }
 
                 $zipEntryName = $zip->getNameIndex(0);
-                $zipEntryExt = strtoupper(pathinfo($zipEntryName, PATHINFO_EXTENSION));
+                $zipEntryExt = strtolower(pathinfo($zipEntryName, PATHINFO_EXTENSION));
 
                 if (! collect(MenuDiskDump::EXTENSIONS)->contains($zipEntryExt)) {
                     $request->session()->flash('alert-danger', 'File insize ZIP as an unsupported file extension: ' . $zipEntryExt);
@@ -204,17 +208,17 @@ class MenuDisksController extends Controller
                 }
 
                 $content = $zip->getFromIndex(0);
-                $dumpFormat = strtoupper($zipEntryExt);
+                $dumpFormat = $zipEntryExt;
                 $dumpSize = strlen($content);
                 $dumpChecksum = hash('sha512', $content);
 
-                $dumpZip->addFromString($disk->download_basename . '.' . strtolower($zipEntryExt), $content);
+                $dumpZip->addFromString($disk->download_basename . '.' . $zipEntryExt, $content);
             } else {
                 $dumpFormat = $clientExt;
                 $dumpSize = strlen($dumpFile->get());
                 $dumpChecksum = hash('sha512', $dumpFile->get());
 
-                $dumpZip->addFile($dumpFile->path(), $disk->download_basename . '.' . strtolower($clientExt));
+                $dumpZip->addFile($dumpFile->path(), $disk->download_basename . '.' . $clientExt);
             }
             $dumpZip->close();
 

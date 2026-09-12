@@ -224,6 +224,28 @@ class MagazinesTest extends AdminTestCase
     }
 
     /**
+     * A GIF is an image, and `magazine_issues.imgext` still cannot hold one.
+     */
+    public function test_a_cover_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $magazine = Magazine::factory()->create(['name' => 'ST Format']);
+        $issue = MagazineIssue::factory()->create([
+            'magazine_id' => $magazine->getKey(),
+            'issue'       => 12,
+            'imgext'      => null,
+        ]);
+
+        $this->put(route('admin.magazines.issues.update', [$magazine, $issue]), [
+            'issue' => 12,
+            'image' => UploadedFile::fake()->image('cover.gif'),
+        ])->assertSessionHasErrors('image');
+
+        $this->assertNull($issue->fresh()->imgext);
+    }
+
+    /**
      * The "Fetch from Archive.org" button reuses the archive.org URL of the
      * issue: the identifier is pulled out of it, and the cover thumbnail is
      * downloaded from the matching download URL. The extension stored on the
@@ -255,6 +277,31 @@ class MagazinesTest extends AdminTestCase
             'binary-jpeg-data',
             Storage::disk('public')->get('images/magazine_scans/' . $issue->getKey() . '.jpeg')
         );
+    }
+
+    /**
+     * An archive.org item that is not there answers 404 with an HTML body, and
+     * `html` is not a cover. The issue is created without one rather than
+     * carrying an extension the column cannot hold.
+     */
+    public function test_a_fetched_cover_that_is_not_an_image_is_refused(): void
+    {
+        Storage::fake('public');
+        Http::fake([
+            'archive.org/*' => Http::response('<html>Not found</html>', 404, ['Content-Type' => 'text/html']),
+        ]);
+
+        $magazine = Magazine::factory()->create(['name' => 'ST Format']);
+
+        $this->post(route('admin.magazines.issues.store', $magazine), [
+            'issue'              => 12,
+            'archiveorg_url'     => 'https://archive.org/details/st-format-012/',
+            'useArchiveOrgCover' => '1',
+        ])->assertRedirect()
+            ->assertSessionHas('alert-title', 'Cover not fetched');
+
+        $this->assertNull(MagazineIssue::sole()->imgext);
+        $this->assertSame([], Storage::disk('public')->allFiles('images/magazine_scans'));
     }
 
     public function test_an_issue_can_be_deleted(): void

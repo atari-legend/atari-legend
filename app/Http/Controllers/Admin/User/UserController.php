@@ -44,7 +44,7 @@ class UserController extends Controller
         // says "Select a file to replace the current avatar", and there is a
         // separate route for deleting one, so overwriting it with null here
         // dropped an avatar every time an admin edited an e-mail address.
-        $ext = $user->avatar_ext;
+        $ext = $user->imgext;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $avatar->storeAs('images/user_avatars/', $user->getKey() . '.' . $avatar->extension(), 'public');
@@ -54,7 +54,7 @@ class UserController extends Controller
         $user->update([
             'email'       => $request->email,
             'permission'  => $request->permission,
-            'avatar_ext'  => $ext,
+            'imgext'      => $ext,
             'website'     => $request->website,
             'facebook'    => $request->facebook,
             'twitter'     => $request->twitter,
@@ -108,8 +108,8 @@ class UserController extends Controller
 
     public function destroyAvatar(User $user)
     {
-        Storage::disk('public')->delete('images/user_avatars/' . $user->getKey() . '.' . $user->avatar_ext);
-        $user->avatar_ext = null;
+        Storage::disk('public')->delete('images/user_avatars/' . $user->getKey() . '.' . $user->imgext);
+        $user->imgext = null;
         $user->save();
 
         ChangelogHelper::insert([

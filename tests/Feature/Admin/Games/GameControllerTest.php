@@ -280,7 +280,7 @@ class GameControllerTest extends AdminTestCase
                 'user_id'    => $this->admin->getKey(),
                 'created_at' => Carbon::parse('2020-06-01 12:00:00'),
                 'text'       => 'The musician is Jochen Hippel.',
-                'game_done'  => GameSubmission::SUBMISSION_NEW,
+                'reviewed'   => false,
             ]),
             'similarGames'        => $game->similarGames()->attach(Game::factory()->create()),
             'similarGamesReverse' => $game->similarGamesReverse()->attach(Game::factory()->create()),

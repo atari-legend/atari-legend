@@ -140,7 +140,7 @@
                         Upload all files
                     </button>
                     <span class="ms-2 text-muted">
-                        The following dump formats are accepted: <strong>{{ join(', ', \App\Models\Dump::FORMATS) }}</strong>.
+                        The following dump formats are accepted: <strong>{{ join(', ', array_map('strtoupper', \App\Models\Dump::FORMATS)) }}</strong>.
                         You can also upload a ZIP containing one or more dumps.
                         <i class="fas fa-exclamation-triangle"></i> Only dumps are supported, not ZIPs with individual files.
                     </span>
@@ -163,7 +163,7 @@
                             @foreach ($media->dumps as $dump)
                                 <tr>
                                     <td>
-                                        {{ $dump->format }}
+                                        {{ strtoupper($dump->format) }}
                                         @if ($dump->track_picture_url)
                                             <a class="lightbox-link ms-2" href="{{ $dump->track_picture_url }}" target="_blank">
                                                 <img src="{{ $dump->track_picture_url }}" style="height: 2rem;" class="border border-secondary" alt="Track analysis picture">

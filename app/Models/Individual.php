@@ -12,6 +12,8 @@ class Individual extends Model
 
     public $timestamps = false;
 
+    const EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp'];
+
     protected $fillable = ['name', 'profile', 'imgext', 'email'];
 
     public function games()

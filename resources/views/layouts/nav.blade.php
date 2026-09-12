@@ -52,9 +52,9 @@
                     @csrf
                 </form>
                 <li class="nav-item dropdown ps-2 text-center">
-                    <a class="text-dark nav-link dropdown-toggle py-3 @if (Auth::user()->avatar_ext) ps-0 @endif" href="#" id="user-menu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        @if (Auth::user()->avatar_ext)
-                            <img id="avatar" class="rounded-circle border border-dark me-1" src="{{ asset('storage/images/user_avatars/'.Auth::user()->getKey().'.'.Auth::user()->avatar_ext) }}" alt="User avatar">
+                    <a class="text-dark nav-link dropdown-toggle py-3 @if (Auth::user()->imgext) ps-0 @endif" href="#" id="user-menu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (Auth::user()->imgext)
+                            <img id="avatar" class="rounded-circle border border-dark me-1" src="{{ asset('storage/images/user_avatars/'.Auth::user()->getKey().'.'.Auth::user()->imgext) }}" alt="User avatar">
                         @endif
                         {{ Auth::user()->userid }}
                     </a>

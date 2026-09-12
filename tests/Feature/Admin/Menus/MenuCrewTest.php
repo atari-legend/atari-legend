@@ -167,7 +167,7 @@ class MenuCrewTest extends AdminTestCase
 
         $crew->refresh();
 
-        $this->assertSame('png', $crew->logo);
+        $this->assertSame('png', $crew->imgext);
         Storage::disk('public')->assertExists('images/crew_logos/' . $crew->getKey() . '.png');
         $this->assertChangelog(Changelog::INSERT, 'Crew', 'The Replicants');
 
@@ -176,10 +176,24 @@ class MenuCrewTest extends AdminTestCase
 
         $crew->refresh();
 
-        $this->assertNull($crew->logo);
+        $this->assertNull($crew->imgext);
         $this->assertNull($crew->logo_file);
         Storage::disk('public')->assertMissing('images/crew_logos/' . $crew->getKey() . '.png');
         $this->assertChangelog(Changelog::DELETE, 'Crew', 'The Replicants');
+    }
+
+    public function test_a_logo_must_be_something_the_column_accepts(): void
+    {
+        Storage::fake('public');
+
+        $crew = Crew::factory()->create(['name' => 'The Replicants']);
+
+        $this->post(route('admin.menus.crews.storeLogo', $crew), [
+            'logo' => UploadedFile::fake()->create('replicants.txt', 1, 'text/plain'),
+        ])->assertSessionHasErrors('logo');
+
+        $this->assertNull($crew->fresh()->imgext);
+        $this->assertNoChangelog();
     }
 
     public function test_submitting_the_logo_form_with_no_file_changes_nothing(): void
@@ -191,7 +205,7 @@ class MenuCrewTest extends AdminTestCase
         $this->post(route('admin.menus.crews.storeLogo', $crew), [])
             ->assertRedirect(route('admin.menus.crews.edit', $crew));
 
-        $this->assertNull($crew->fresh()->logo);
+        $this->assertNull($crew->fresh()->imgext);
         $this->assertNoChangelog();
     }
 

@@ -196,13 +196,13 @@ class AdminTablesTest extends AdminTestCase
 
     // Game submissions
 
-    private function submission(string $gameName, int $done = GameSubmission::SUBMISSION_NEW): GameSubmission
+    private function submission(string $gameName, bool $reviewed = false): GameSubmission
     {
         $submission = new GameSubmission();
         $submission->game_id = Game::factory()->named($gameName)->create()->getKey();
         $submission->user_id = User::factory()->create()->getKey();
         $submission->text = 'Something is wrong with ' . $gameName;
-        $submission->game_done = $done;
+        $submission->reviewed = $reviewed;
         $submission->save();
 
         return $submission;
@@ -218,7 +218,7 @@ class AdminTablesTest extends AdminTestCase
     public function test_the_submissions_table_filters_on_reviewed_and_attachments(): void
     {
         $new = $this->submission('Xenon');
-        $this->submission('Turrican', GameSubmission::SUBMISSION_REVIEWED);
+        $this->submission('Turrican', true);
 
         Livewire::test(GameSubmissionsTable::class)
             ->set('filterComponents.processed', 'no')

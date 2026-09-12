@@ -77,7 +77,7 @@ class GamePageTest extends TestCase
         $reviews = $this->get(route('games.show', $game))->assertOk()->viewData('reviews');
 
         $this->assertCount(1, $reviews);
-        $this->assertSame(Review::REVIEW_PUBLISHED, $reviews->first()->submission);
+        $this->assertFalse($reviews->first()->submission);
     }
 
     /**
@@ -364,7 +364,7 @@ class GamePageTest extends TestCase
         $submission = GameSubmission::sole();
 
         $this->assertSame('The publisher is wrong.', $submission->text);
-        $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->game_done);
+        $this->assertFalse($submission->reviewed);
         $this->assertSame($user->getKey(), $submission->user_id);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());
     }
@@ -392,6 +392,29 @@ class GamePageTest extends TestCase
         Storage::disk('public')->assertExists(
             'images/game_submit_screenshots/' . $screenshot->getKey() . '.png'
         );
+    }
+
+    /**
+     * The submission form takes images, archives and disk images - whatever
+     * `screenshots.imgext` can hold - and nothing else. An executable is not on
+     * that list, and the whole submission is refused rather than stored
+     * without its file.
+     */
+    public function test_a_correction_refuses_a_file_the_column_cannot_hold(): void
+    {
+        Storage::fake('public');
+
+        $game = Game::factory()->create();
+
+        $this->actingAs(User::factory()->create())
+            ->post(route('games.submit', $game), [
+                'info'  => 'Here is a shot.',
+                'files' => [UploadedFile::fake()->create('setup.exe', 10, 'application/x-msdownload')],
+            ])
+            ->assertSessionHasErrors('files.0');
+
+        $this->assertSame(0, Screenshot::query()->count());
+        $this->assertSame(0, GameSubmission::query()->count());
     }
 
     public function test_a_guest_cannot_submit_a_correction(): void

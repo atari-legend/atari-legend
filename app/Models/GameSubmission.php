@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameSubmission extends Model
 {
-    const SUBMISSION_NEW = '2';
-    const SUBMISSION_REVIEWED = '1';
-
     const UPDATED_AT = null;
+
+    protected $casts = [
+        'reviewed' => 'boolean',
+    ];
 
     public function game()
     {

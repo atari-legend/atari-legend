@@ -99,7 +99,7 @@ class AuthTest extends TestCase
         $this->assertSame('sysop@example.org', $user->email);
         $this->assertSame('https://example.org/', $user->website);
         $this->assertSame(User::PERMISSION_USER, $user->permission);
-        $this->assertSame(User::ACTIVE, $user->inactive);
+        $this->assertFalse($user->inactive);
         $this->assertAuthenticatedAs($user);
     }
 
