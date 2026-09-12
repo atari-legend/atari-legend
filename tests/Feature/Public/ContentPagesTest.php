@@ -192,8 +192,8 @@ class ContentPagesTest extends TestCase
         foreach (['MIDDLE' => '2020-06-01', 'NEWEST' => '2024-01-01', 'OLDEST' => '2004-03-01'] as $text => $date) {
             InterviewComment::factory()->create([
                 'interview_id' => $interview->getKey(),
-                'text'       => $text,
-                'created_at' => Carbon::parse($date . ' 12:00:00'),
+                'text'         => $text,
+                'created_at'   => Carbon::parse($date . ' 12:00:00'),
             ]);
         }
 

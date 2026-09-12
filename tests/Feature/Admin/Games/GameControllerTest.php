@@ -10,7 +10,6 @@ use App\Models\Game;
 use App\Models\GameAka;
 use App\Models\GameComment;
 use App\Models\GameRelease;
-use App\Models\GameSubmission;
 use App\Models\GameVote;
 use App\Models\GameVs;
 use App\Models\Genre;

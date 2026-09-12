@@ -74,7 +74,7 @@ return new class extends Migration
             return;
         }
 
-        foreach (self::OVERSIZED as [$table, $column, , ]) {
+        foreach (self::OVERSIZED as [$table, $column]) {
             $over = DB::table($table)->whereRaw("CHAR_LENGTH(`{$column}`) > 255")->count();
 
             if ($over > 0) {
