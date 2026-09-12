@@ -18,7 +18,7 @@ class Crew extends Model
 
     public function getLogoFileAttribute()
     {
-        return Helper::filename($this->getKey(), $this->logo);
+        return Helper::filename($this->getKey(), $this->imgext);
     }
 
     public function menuSets()

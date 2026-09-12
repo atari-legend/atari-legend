@@ -27,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'userid', 'email', 'avatar_ext',
+        'userid', 'email', 'imgext',
         'website', 'facebook', 'twitter', 'atari_forum',
         'permission', 'inactive',
         'sha512_password', 'salt',
@@ -73,8 +73,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getAvatarAttribute()
     {
-        if ($this->avatar_ext !== null && $this->avatar_ext !== '') {
-            return asset('storage/images/user_avatars/' . $this->getKey() . '.' . $this->avatar_ext);
+        if ($this->imgext !== null) {
+            return asset('storage/images/user_avatars/' . $this->getKey() . '.' . $this->imgext);
         } else {
             return null;
         }

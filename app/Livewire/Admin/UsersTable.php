@@ -37,7 +37,7 @@ class UsersTable extends DataTableComponent
                 )
                 ->html()
                 ->sortable(function (Builder $query, $direction) {
-                    return $query->orderBy('avatar_ext', $direction);
+                    return $query->orderBy('imgext', $direction);
                 }),
             Column::make('Join date', 'created_at')
                 ->format(fn ($value) => $value?->toDayDateTimeString() ?? '-')

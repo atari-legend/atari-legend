@@ -317,7 +317,7 @@ class RemainingSectionsTest extends AdminTestCase
             'avatar' => UploadedFile::fake()->create('me.txt', 1, 'text/plain'),
         ])->assertSessionHasErrors('avatar');
 
-        $this->assertNull($user->fresh()->avatar_ext);
+        $this->assertNull($user->fresh()->imgext);
     }
 
     public function test_a_user_cannot_take_another_users_email(): void

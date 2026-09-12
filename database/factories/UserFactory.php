@@ -35,7 +35,7 @@ class UserFactory extends Factory
             'inactive'          => User::ACTIVE,
             'created_at'        => now(),
             'last_visit_at'     => now(),
-            'avatar_ext'        => null,
+            'imgext'            => null,
             'website'           => null,
             'facebook'          => null,
             'twitter'           => null,
