@@ -21,7 +21,7 @@
 
         @if ($disk !== null && $disk->menuDiskDump !== null)
             <ul class="list-unstyled mb-0">
-                <li><span class="text-muted">Format:</span> {{ $disk->menuDiskDump->format }}</li>
+                <li><span class="text-muted">Format:</span> {{ strtoupper($disk->menuDiskDump->format) }}</li>
                 <li><span class="text-muted">SHA-512:</span> <abbr title="{{ $disk->menuDiskDump->sha512 }}">{{ Str::limit($disk->menuDiskDump->sha512, 7, '') }}</abbr></li>
                 <li><span class="text-muted">Size:</span> {{ Helper::fileSize($disk->menuDiskDump->size) }}</li>
                 <li>

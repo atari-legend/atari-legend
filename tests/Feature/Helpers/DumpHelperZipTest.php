@@ -40,7 +40,7 @@ class DumpHelperZipTest extends TestCase
         parent::tearDown();
     }
 
-    private function dump(string $format = 'STX'): Dump
+    private function dump(string $format = 'stx'): Dump
     {
         // The zip is written through the filesystem, so the directory has to
         // exist before ZipArchive can create the archive in it.
@@ -60,12 +60,12 @@ class DumpHelperZipTest extends TestCase
     }
 
     /**
-     * The name inside the archive is the dump id and its lower-cased format,
-     * which is what a visitor ends up with after unzipping.
+     * The name inside the archive is the dump id and its format, which is what
+     * a visitor ends up with after unzipping.
      */
     public function test_the_archive_holds_one_file_named_after_the_dump(): void
     {
-        $dump = $this->dump('STX');
+        $dump = $this->dump('stx');
 
         DumpHelper::storeDump($dump, $this->source);
 

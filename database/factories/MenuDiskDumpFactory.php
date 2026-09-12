@@ -24,7 +24,7 @@ class MenuDiskDumpFactory extends Factory
         return [
             'menu_disk_id' => MenuDiskFactory::new(),
             'user_id'      => User::factory(),
-            'format'       => 'STX',
+            'format'       => 'stx',
             'sha512'       => hash('sha512', fake()->uuid()),
             'size'         => 819200,
         ];

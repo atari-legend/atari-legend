@@ -107,11 +107,12 @@ class MenuDisksTest extends AdminTestCase
     public function test_the_edit_form_shows_the_disk_and_its_dump(): void
     {
         $disk = $this->disk();
-        MenuDiskDump::factory()->inFormat('MSA')->create([
+        MenuDiskDump::factory()->inFormat('msa')->create([
             'menu_disk_id' => $disk->getKey(),
             'user_id'      => $this->admin->getKey(),
         ]);
 
+        // The column holds a filename suffix; the card uppercases it.
         $this->get(route('admin.menus.disks.edit', $disk))
             ->assertOk()
             ->assertSee('Automation')
@@ -133,7 +134,7 @@ class MenuDisksTest extends AdminTestCase
 
         $dump = MenuDiskDump::sole();
 
-        $this->assertSame('ST', $dump->format);
+        $this->assertSame('st', $dump->format);
         $this->assertSame(9, $dump->size);
         $this->assertSame(hash('sha512', 'DISKIMAGE'), $dump->sha512);
         $this->assertSame($this->admin->getKey(), $dump->user_id);
@@ -165,7 +166,7 @@ class MenuDisksTest extends AdminTestCase
 
         $dump = MenuDiskDump::sole();
 
-        $this->assertSame('STX', $dump->format);
+        $this->assertSame('stx', $dump->format);
         $this->assertSame(9, $dump->size);
         $this->assertSame(hash('sha512', 'DISKIMAGE'), $dump->sha512);
 
@@ -180,7 +181,7 @@ class MenuDisksTest extends AdminTestCase
         Storage::fake('public');
 
         $disk = $this->disk();
-        $dump = MenuDiskDump::factory()->inFormat('MSA')->create([
+        $dump = MenuDiskDump::factory()->inFormat('msa')->create([
             'menu_disk_id' => $disk->getKey(),
             'user_id'      => $this->admin->getKey(),
         ]);
@@ -193,7 +194,7 @@ class MenuDisksTest extends AdminTestCase
 
         $dump->refresh();
 
-        $this->assertSame('STX', $dump->format);
+        $this->assertSame('stx', $dump->format);
         $this->assertSame(hash('sha512', 'BETTERDUMP'), $dump->sha512);
         $this->assertSame($dump->getKey(), $disk->fresh()->menuDiskDump->getKey());
 
@@ -211,7 +212,7 @@ class MenuDisksTest extends AdminTestCase
             'dump' => UploadedFile::fake()->createWithContent('notes.txt', 'not a disk'),
         ])
             ->assertRedirect(route('admin.menus.disks.edit', $disk))
-            ->assertSessionHas('alert-danger', 'Unsupported file extension: TXT');
+            ->assertSessionHas('alert-danger', 'Unsupported file extension: txt');
 
         $this->assertSame(0, MenuDiskDump::query()->count());
         $this->assertNoChangelog();

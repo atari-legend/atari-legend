@@ -112,7 +112,7 @@ class MaintenanceCommandsTest extends TestCase
 
         return MenuDiskDump::create([
             'menu_disk_id' => $disk->getKey(),
-            'format'       => 'STX',
+            'format'       => 'stx',
         ]);
     }
 
@@ -293,9 +293,9 @@ class MaintenanceCommandsTest extends TestCase
         Storage::fake('public');
         config(['al.hxcfe' => '/nonexistent/hxcfe']);
 
-        $flux = Dump::factory()->inFormat('STX')->create(['track_picture' => false]);
-        $plain = Dump::factory()->inFormat('ST')->create(['track_picture' => false]);
-        $done = Dump::factory()->inFormat('SCP')->create(['track_picture' => true]);
+        $flux = Dump::factory()->inFormat('stx')->create(['track_picture' => false]);
+        $plain = Dump::factory()->inFormat('st')->create(['track_picture' => false]);
+        $done = Dump::factory()->inFormat('scp')->create(['track_picture' => true]);
 
         $this->artisan('dump:trackpictures')->assertExitCode(0);
 

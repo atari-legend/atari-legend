@@ -31,7 +31,7 @@ class GenerateDumpTrackPictures extends Command
     public function handle()
     {
         Dump::where('track_picture', false)
-            ->whereIn('format', ['STX', 'SCP'])
+            ->whereIn('format', ['stx', 'scp'])
             ->each(function (Dump $dump) {
                 $this->info('Generating track picture for ' . File::name($dump->download_filename) . ' (id=' . $dump->getKey() . ')', 'v');
                 $success = DumpHelper::generateTrackPicture($dump);

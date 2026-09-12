@@ -29,11 +29,11 @@ class DumpHelper
             if ($f) {
                 $header = fread($f, 4);
                 if ($header[0] === 'S' && $header[1] === 'C' && $header[2] === 'P') {
-                    $format = 'SCP';
+                    $format = 'scp';
                 } elseif (ord($header[0]) === 0x0E && ord($header[1]) === 0x0F) {
-                    $format = 'MSA';
+                    $format = 'msa';
                 } elseif ($header[0] === 'R' && $header[1] === 'S' && $header[2] === 'Y' && ord($header[3]) === 0x00) {
-                    $format = 'STX';
+                    $format = 'stx';
                 }
 
                 fclose($f);
@@ -42,8 +42,7 @@ class DumpHelper
 
         // If the format could not be detected, naively return the file extension
         if ($format === null) {
-            $ext = File::extension(strtolower($path));
-            $format = strtoupper($ext);
+            $format = File::extension(strtolower($path));
         }
 
         return $format;
@@ -67,7 +66,7 @@ class DumpHelper
             throw new \RuntimeException("Failed to create ZIP archive [{$zipPath}], error code: {$status}");
         }
 
-        $filenameInZip = $dump->getKey() . '.' . strtolower($dump->format);
+        $filenameInZip = $dump->getKey() . '.' . $dump->format;
         if (! $zip->addFile($path, $filenameInZip)) {
             $zip->close();
             throw new \RuntimeException("Failed to add file [{$path}] to ZIP archive [{$zipPath}]");

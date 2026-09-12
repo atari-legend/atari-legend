@@ -38,7 +38,7 @@
                                             </a>
                                         </td>
                                         <td class="ps-2 text-nowrap">
-                                            <span class="align-middle">{{ $dump->format }}</span>
+                                            <span class="align-middle">{{ strtoupper($dump->format) }}</span>
                                             @if ($dump->track_picture_url)
                                                 <a class="lightbox-link ms-2" href="{{ $dump->track_picture_url }}">
                                                     <img src="{{ $dump->track_picture_url }}" style="height: 2rem;" alt="Track analysis picture" loading="lazy">

@@ -9,7 +9,7 @@ class MenuDiskDump extends Model
 {
     use HasFactory;
 
-    const EXTENSIONS = ['STX', 'MSA', 'RAW', 'SCP', 'ST'];
+    const EXTENSIONS = ['stx', 'msa', 'raw', 'scp', 'st'];
 
     protected $fillable = ['menu_disk_id', 'user_id', 'format', 'sha512', 'size'];
 

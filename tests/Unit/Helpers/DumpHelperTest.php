@@ -10,27 +10,27 @@ class DumpHelperTest extends TestCase
     public function testDetectFormat()
     {
         $this->assertEquals(
-            'MSA',
+            'msa',
             DumpHelper::detectFormat(dirname(__FILE__) . '/example.msa')
         );
 
         $this->assertEquals(
-            'STX',
+            'stx',
             DumpHelper::detectFormat(dirname(__FILE__) . '/example.stx')
         );
 
         $this->assertEquals(
-            'SCP',
+            'scp',
             DumpHelper::detectFormat(dirname(__FILE__) . '/example.scp')
         );
 
         $this->assertEquals(
-            'ST',
+            'st',
             DumpHelper::detectFormat('/path/to/file.st')
         );
 
         $this->assertEquals(
-            'OTHER',
+            'other',
             DumpHelper::detectFormat('/path/to/file.other')
         );
     }
