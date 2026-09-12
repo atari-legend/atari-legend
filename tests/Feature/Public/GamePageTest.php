@@ -77,7 +77,7 @@ class GamePageTest extends TestCase
         $reviews = $this->get(route('games.show', $game))->assertOk()->viewData('reviews');
 
         $this->assertCount(1, $reviews);
-        $this->assertSame(Review::REVIEW_PUBLISHED, $reviews->first()->submission);
+        $this->assertFalse($reviews->first()->submission);
     }
 
     /**
@@ -364,7 +364,7 @@ class GamePageTest extends TestCase
         $submission = GameSubmission::sole();
 
         $this->assertSame('The publisher is wrong.', $submission->text);
-        $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->game_done);
+        $this->assertFalse($submission->reviewed);
         $this->assertSame($user->getKey(), $submission->user_id);
         $this->assertSame(1, Changelog::where('sub_section', 'Submission')->count());
     }

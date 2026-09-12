@@ -53,8 +53,7 @@ class GameSubmissionsTable extends DataTableComponent
                 ->sortable(
                     fn (Builder $query, $direction) => $query->orderBy('game_submissions.created_at', $direction)
                 ),
-            BooleanColumn::make('Reviewed', 'game_done')
-                ->setCallback(fn ($value) => $value === GameSubmission::SUBMISSION_REVIEWED)
+            BooleanColumn::make('Reviewed', 'reviewed')
                 ->sortable(),
             Column::make('Actions')
                 ->label(
@@ -85,7 +84,7 @@ class GameSubmissionsTable extends DataTableComponent
                     'no'  => 'No',
                 ])
                 ->filter(
-                    fn (Builder $query, string $term) => $query->where('game_done', $term === 'yes' ? '=' : '!=', GameSubmission::SUBMISSION_REVIEWED)
+                    fn (Builder $query, string $term) => $query->where('reviewed', $term === 'yes')
                 ),
             'attachments' => SelectFilter::make('Has attachments', 'attachments')
                 ->options([

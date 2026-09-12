@@ -40,7 +40,7 @@ class GameSubmissionController extends Controller
     {
         switch ($request->action) {
             case 'unreview':
-                $submission->game_done = GameSubmission::SUBMISSION_NEW;
+                $submission->reviewed = false;
                 $submission->save();
 
                 ChangelogHelper::insert([
@@ -54,7 +54,7 @@ class GameSubmissionController extends Controller
                 ]);
                 break;
             case 'review':
-                $submission->game_done = GameSubmission::SUBMISSION_REVIEWED;
+                $submission->reviewed = true;
                 $submission->save();
 
                 ChangelogHelper::insert([

@@ -187,7 +187,7 @@ class ReviewPagesTest extends TestCase
 
         $review = Review::sole();
 
-        $this->assertSame(Review::REVIEW_UNPUBLISHED, $review->submission);
+        $this->assertTrue($review->submission);
         $this->assertSame('A fine shoot-em-up.', $review->text);
         $this->assertSame($user->getKey(), $review->user_id);
         $this->assertSame(5, $review->graphics);

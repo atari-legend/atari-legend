@@ -106,7 +106,7 @@
                         <label class="form-label">&nbsp;</label>
                         <div class="form-check pt-2">
                             <input class="form-check-input @error('active') is-invalid @enderror" name="active"
-                                type="checkbox" value="true" @if (old('active', $user->inactive) !== 1) checked @endif id="active">
+                                type="checkbox" value="true" @if (old('active', ! $user->inactive)) checked @endif id="active">
                             <label class="form-check-label" for="active">
                                 Active
                             </label>

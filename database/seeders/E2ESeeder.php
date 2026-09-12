@@ -317,7 +317,7 @@ class E2ESeeder extends Seeder
             'user_id'    => self::USER_STANDARD_ID,
             'created_at' => now(),
             'text'       => 'Playwright test submission.',
-            'game_done'  => 'N',
+            'reviewed'   => false,
         ]);
 
         $this->insert('game_akas', ['id' => self::GAME_AKA_ID], [

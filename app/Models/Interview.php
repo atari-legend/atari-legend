@@ -20,6 +20,7 @@ class Interview extends Model implements Feedable
     ];
 
     protected $casts = [
+        'draft'        => 'boolean',
         'published_at' => 'datetime',
     ];
 

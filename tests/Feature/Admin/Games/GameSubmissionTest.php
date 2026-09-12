@@ -34,14 +34,14 @@ class GameSubmissionTest extends AdminTestCase
     private function submission(
         Game $game,
         string $text = 'The musician is Jochen Hippel.',
-        string $done = GameSubmission::SUBMISSION_NEW
+        bool $reviewed = false
     ): GameSubmission {
         $id = DB::table('game_submissions')->insertGetId([
             'game_id'    => $game->getKey(),
             'user_id'    => $this->visitor->getKey(),
             'created_at' => Carbon::parse('2020-06-01 12:00:00'),
             'text'       => $text,
-            'game_done'  => $done,
+            'reviewed'   => $reviewed,
         ]);
 
         return GameSubmission::findOrFail($id);
@@ -88,7 +88,7 @@ class GameSubmissionTest extends AdminTestCase
         $this->put(route('admin.games.submissions.update', $submission), ['action' => 'review'])
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $this->assertSame(GameSubmission::SUBMISSION_REVIEWED, $submission->fresh()->game_done);
+        $this->assertTrue($submission->fresh()->reviewed);
         $this->assertChangelog(Changelog::UPDATE, 'Games', 'Xenon');
     }
 
@@ -97,13 +97,13 @@ class GameSubmissionTest extends AdminTestCase
         $submission = $this->submission(
             Game::factory()->named('Xenon')->create(),
             'The musician is Jochen Hippel.',
-            GameSubmission::SUBMISSION_REVIEWED
+            true
         );
 
         $this->put(route('admin.games.submissions.update', $submission), ['action' => 'unreview'])
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->fresh()->game_done);
+        $this->assertFalse($submission->fresh()->reviewed);
         $this->assertChangelog(Changelog::UPDATE, 'Games', 'Xenon');
     }
 
@@ -144,7 +144,7 @@ class GameSubmissionTest extends AdminTestCase
         $this->put(route('admin.games.submissions.update', $submission), ['action' => 'nonsense'])
             ->assertRedirect(route('admin.games.submissions.index'));
 
-        $this->assertSame(GameSubmission::SUBMISSION_NEW, $submission->fresh()->game_done);
+        $this->assertFalse($submission->fresh()->reviewed);
         $this->assertSame(0, GameComment::query()->count());
         $this->assertNoChangelog();
     }

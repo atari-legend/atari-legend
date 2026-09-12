@@ -10,7 +10,6 @@ use App\Models\Game;
 use App\Models\GameComment;
 use App\Models\GameSubmission;
 use App\Models\MenuDisk;
-use App\Models\Review;
 use App\Models\Screenshot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,7 +81,7 @@ class GameController extends Controller
 
         // Filter unpublished reviews
         $reviews = $game->reviews->reject(function ($review) {
-            return $review->submission !== Review::REVIEW_PUBLISHED;
+            return $review->submission;
         });
 
         // Similar games, only the ones with screenshots
@@ -208,7 +207,7 @@ class GameController extends Controller
 
         $submission = new GameSubmission();
         $submission->text = $request->info;
-        $submission->game_done = GameSubmission::SUBMISSION_NEW;
+        $submission->reviewed = false;
 
         $submission->user()->associate($request->user());
         $game->submissions()->save($submission);

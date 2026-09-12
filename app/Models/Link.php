@@ -14,6 +14,10 @@ class Link extends Model
 
     const EXTENSIONS = ['png', 'jpg', 'jpeg'];
 
+    protected $casts = [
+        'inactive' => 'boolean',
+    ];
+
     protected $fillable = [
         'name',
         'url',

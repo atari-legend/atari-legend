@@ -34,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $casts = [
+        'inactive'          => 'boolean',
         'last_visit_at'     => 'datetime',
         'email_verified_at' => 'datetime',
     ];
@@ -48,7 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasVerifiedEmail()
     {
-        return ! is_null($this->email_verified_at) && $this->inactive === User::ACTIVE;
+        return ! is_null($this->email_verified_at) && ! $this->inactive;
     }
 
     /**

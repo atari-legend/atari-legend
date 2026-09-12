@@ -100,7 +100,7 @@ class AdminRenderTest extends AdminTestCase
             'user_id'    => User::factory()->create()->getKey(),
             'created_at' => now(),
             'text'       => 'Please add this.',
-            'game_done'  => GameSubmission::SUBMISSION_NEW,
+            'reviewed'   => false,
         ]);
 
         return [
