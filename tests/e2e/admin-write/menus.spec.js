@@ -379,7 +379,8 @@ test.describe('Admin menu sets', () => {
 
       await page.goto(`/games/${gameOnMenu.slug}`);
       await expect(page.getByRole('heading', { name: 'In 1 Menu' })).toBeVisible();
-      await expect(page.getByRole('link', { name: `${set.name} ${menu.label}${disk.part}` }))
+      // Exact: the disk's play overlay is a link named after it too
+      await expect(page.getByRole('link', { name: `${set.name} ${menu.label}${disk.part}`, exact: true }))
         .toBeVisible();
 
       await page.goto(`/games/${docGame.slug}`);
