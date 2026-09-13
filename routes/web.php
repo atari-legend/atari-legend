@@ -14,6 +14,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\EmulatorController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameReleaseController;
 use App\Http\Controllers\GameReleaseResourcesController;
@@ -76,6 +77,8 @@ Route::middleware(['verified', 'nondraft'])->group(function () {
     Route::get('/games/release/{release}', [GameReleaseController::class, 'show'])->name('games.releases.show');
     Route::get('/games/release/{release}/boxscan-{id}.webp', [GameReleaseResourcesController::class, 'boxscan'])
         ->name('games.releases.boxscan');
+    Route::get('/games/release/{release}/dump/{dump}/emulator', [EmulatorController::class, 'show'])
+        ->name('games.releases.emulator');
 
     Route::get('/games/{id}', fn ($id) => redirect('/games/' . Game::findOrFail($id)->slug, 301));
     Route::get('/games/{game:slug}', [GameController::class, 'show'])->name('games.show');

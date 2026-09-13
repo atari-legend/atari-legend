@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Helpers\GameHelper;
 use App\Helpers\JsonLd;
 use App\Helpers\ReleaseDescriptionHelper;
+use App\Helpers\ReleaseHelper;
 use App\Models\GameRelease;
-use Illuminate\Support\Str;
 
 class GameReleaseController extends Controller
 {
@@ -24,20 +24,7 @@ class GameReleaseController extends Controller
             abort(404);
         }
 
-        $boxscans = $release->boxscans
-            ->filter(function ($boxscan) {
-                return Str::startsWith($boxscan->type, 'Box');
-            })
-            ->map(function ($boxscan) use ($release) {
-                return [
-                    'release' => $release,
-                    'boxscan' => asset('storage/' . $boxscan->path),
-                    'preview' => route('games.releases.boxscan', [
-                        'release' => $release,
-                        'id'      => $boxscan->getKey(),
-                    ]),
-                ];
-            });
+        $boxscans = ReleaseHelper::boxScans($release);
 
         $jsonLd = (new JsonLd('VideoGame', url()->current()))
             ->add('name', $release->game->name)

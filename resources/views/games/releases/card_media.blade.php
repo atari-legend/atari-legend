@@ -26,6 +26,7 @@
                                     <th style="width: 15%;" class="ps-2 d-none d-sm-table-cell">Added</th>
                                     <th style="width: 10%;" class="d-none d-sm-table-cell">By</th>
                                     <th style="width: 40%;">Info</th>
+                                    <th>Play</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,6 +56,12 @@
                                         <td class="ps-2 text-nowrap d-none d-sm-table-cell">{{ $dump->created_at->format('F j, Y') }}
                                         <td class="d-none d-sm-table-cell">{{ Helper::user($dump->user) }}</td>
                                         <td>{{ $dump->notes }}</td>
+                                        <td>
+                                            <a href="{{ route('games.releases.emulator', ['release' => $release, 'dump' => $dump]) }}"
+                                                title="Play in the emulator" aria-label="Play in the emulator">
+                                                <i class="fas fa-fw fa-play"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
