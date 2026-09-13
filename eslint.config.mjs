@@ -1,4 +1,7 @@
 export default [{
+    // Hatari's WebAssembly build, vendored as generated
+    ignores: ["resources/js/emulator/**"],
+}, {
     rules: {
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
