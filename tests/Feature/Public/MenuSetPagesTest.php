@@ -8,6 +8,8 @@ use App\Models\GameRelease;
 use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskContent;
+use App\Models\MenuDiskDump;
+use App\Models\MenuDiskScreenshot;
 use App\Models\MenuSet;
 use App\Models\MenuSoftware;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -188,5 +190,40 @@ class MenuSetPagesTest extends TestCase
         $this->get(route('menus.show', $set))
             ->assertOk()
             ->assertSee('Xenon');
+    }
+
+    public function test_a_dumped_disk_screenshot_plays_it_in_the_emulator(): void
+    {
+        $set = $this->setWithDisks('Automation', disks: 2);
+        [$dumped, $undumped] = $set->menus->first()->disks->sortBy('part')->values()->all();
+
+        foreach ([$dumped, $undumped] as $disk) {
+            MenuDiskScreenshot::create(['menu_disk_id' => $disk->getKey(), 'imgext' => 'png']);
+        }
+        MenuDiskDump::factory()->create(['menu_disk_id' => $dumped->getKey()]);
+
+        $this->get(route('menus.show', $set))
+            ->assertOk()
+            ->assertSee(route('menus.emulator', ['set' => $set, 'disk' => $dumped]))
+            ->assertDontSee(route('menus.emulator', ['set' => $set, 'disk' => $undumped]));
+    }
+
+    public function test_a_game_page_menu_card_plays_the_disk(): void
+    {
+        $set = $this->setWithDisks('Automation');
+        $disk = $set->menus->first()->disks->first();
+        MenuDiskScreenshot::create(['menu_disk_id' => $disk->getKey(), 'imgext' => 'png']);
+        MenuDiskDump::factory()->create(['menu_disk_id' => $disk->getKey()]);
+
+        $game = Game::factory()->named('Xenon')->create();
+        MenuDiskContent::forceCreate([
+            'menu_disk_id' => $disk->getKey(),
+            'position'     => 1,
+            'game_id'      => $game->getKey(),
+        ]);
+
+        $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSee(route('menus.emulator', ['set' => $set, 'disk' => $disk]));
     }
 }

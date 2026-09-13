@@ -338,7 +338,7 @@ today, and what it does not:
 | Reviews | list, detail | the scores as published, unpublished hidden |
 | Interviews | list, detail, individual avatar, a chapter hotspot followed to its anchor, a screenshot and its caption | - |
 | Articles | list, detail, the type badge, a screenshot and its caption | filtering by type, which does not exist - see follow-up 13 |
-| Menu sets | list, detail, search by title and A-Z, the empty state, by-software, EPUB export, the software and crews autocompletes; a disk card end to end - contents in all three shapes, condition, donor, notes, scrolltext, screenshot and dump download; the software page, a game's menus card, and the Latest menus card | condition filters, crew pages |
+| Menu sets | list, detail, search by title and A-Z, the empty state, by-software, EPUB export, the software and crews autocompletes; a disk card end to end - contents in all three shapes, condition, donor, notes, scrolltext, screenshot and dump download, and the play link to its emulator page; the software page, a game's menus card, and the Latest menus card | condition filters, crew pages |
 | Magazines | list, detail, the rendered index of an issue and all four of its row shapes, an issue cover, the archive.org read link and its /details/ to /stream/ rewrite | the page-count chart (needs 5 seeded issues) |
 | Links | list, category filter, screenshot, no submission form for a guest | dead-link flagging |
 | Account | sign in, sign out, profile, review form, password confirm, guests kept out (pages and the admin autocompletes), a signed-in non-admin kept out of /admin, unverified redirect | registering (needs a real hCaptcha), the e-mail field's uniqueness rule |

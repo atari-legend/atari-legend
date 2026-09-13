@@ -31,9 +31,7 @@
                 <div class="row p-2 pb-2 g-0">
                     <div class="col-3">
                         @if ($disk->screenshots->isNotEmpty())
-                            <img class="w-100"
-                                src="{{ asset('storage/images/menu_screenshots/' . $disk->screenshots->first()->file) }}"
-                                alt="Screenshot for disk" loading="lazy">
+                            @include('menus.partial_screenshot', ['imgClass' => 'w-100', 'alt' => 'Screenshot for disk'])
                         @else
                             <img class="w-100 bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}"
                                 alt="No screenshot for this disk" loading="lazy">

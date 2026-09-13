@@ -22,4 +22,9 @@ class MenuDiskDump extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getDownloadUrlAttribute()
+    {
+        return asset('storage/zips/menus/' . $this->getKey() . '.zip');
+    }
 }

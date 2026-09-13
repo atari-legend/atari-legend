@@ -1,6 +1,6 @@
 import { test, expect } from '../support/test.js';
 import { FIXTURE } from '../support/fixture.js';
-import { expectResourceLoads } from '../support/assertions.js';
+import { expectPageRenders, expectResourceLoads } from '../support/assertions.js';
 import {
   PNG, uniqueName, acceptConfirms, pickAutocomplete, deleteByAction, deleteRow, findRow,
   createMenuSet, deleteMenuSet, createMenu, deleteMenu, createMenuDisk, deleteMenuDisk,
@@ -278,6 +278,9 @@ test.describe('Admin menu sets', () => {
       const screenshotPath = new URL(await screenshot.getAttribute('src')).pathname;
       await expectResourceLoads(await page.request.get(screenshotPath), screenshotPath, { magic: 'PNG' });
 
+      // A screenshot on its own offers nothing to play.
+      await expect(diskCard.getByRole('link', { name: /in the emulator$/ })).toHaveCount(0);
+
       // 6. A dump. storeDump() re-packs whatever it is given into a zip of its
       //    own, so the file that comes back out is not the one that went in -
       //    which is why fetching it is worth doing rather than only asserting
@@ -304,6 +307,14 @@ test.describe('Admin menu sets', () => {
       const zipPath = new URL(await download.getAttribute('href')).pathname;
       expect(zipPath).toMatch(/\/storage\/zips\/menus\/\d+\.zip$/);
       await expectResourceLoads(await page.request.get(zipPath), zipPath, { magic: 'PK' });
+
+      // With a dump, the screenshot plays the disk in the emulator. Not booted:
+      // there is no TOS on a CI runner.
+      const playLink = diskCard.getByRole('link', { name: `Play ${set.name} ${menu.label}${disk.part} in the emulator` });
+      await expect(playLink).toHaveAttribute('href', new RegExp(`/menusets/${set.id}/disks/${disk.id}/emulator$`));
+      const emulatorPath = new URL(await playLink.getAttribute('href')).pathname;
+      await expectPageRenders(page, await page.goto(emulatorPath), emulatorPath);
+      await expect(page.getByRole('heading', { name: 'Emulator' })).toBeVisible();
 
       // 7. The four shapes a disk content comes in, one per branch of
       //    menus/partial_menudisk_content.blade.php. Each drives the widget the
