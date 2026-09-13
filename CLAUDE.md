@@ -67,7 +67,7 @@ All in `storage/app/public/` (accessible via `Storage::disk('public')`):
 | `images/website_images/` | Link screenshots |
 | `images/avatars/` | User avatars |
 | `sndh/` | SNDH music files |
-| `tos/` | TOS images the emulator boots (not in the repository, put on each server by hand) |
+| `tos/` | TOS images the emulator boots, `tos{version}{country}.img` (`tos104uk.img`); not in the repository, see README |
 | `zips/menus/` | Menu dump ZIPs (`{menu_disk_dump_id}.zip`) |
 
 ## Artisan Commands
