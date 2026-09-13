@@ -6,10 +6,11 @@
         image-rendering: pixelated;
     }
 
+    // The bezel's proportions and its hole are measured from its SVG by
+    // EmulatorBezelHelper, and set on the element by the card
     .emulator-screen {
         position: relative;
-        // The bezel's viewBox, in millimetres
-        aspect-ratio: 267.22 / 212.6;
+        aspect-ratio: var(--bezel-ratio);
 
         // Over the screen rather than under it, so its rounded hole trims the corners
         &::after {
@@ -17,17 +18,16 @@
             position: absolute;
             inset: 0;
             // Relative to app.scss, which imports this partial
-            background: url('../images/emulator/sc1224-goldstar-thin-bezel.svg') center / 100% 100% no-repeat;
+            background: url('../images/emulator/emulator-bezel.svg') center / 100% 100% no-repeat;
             pointer-events: none;
         }
 
-        // The bezel's data-video-rect-pct: its 4:3 hole
         canvas {
             position: absolute;
-            left: 9.5839%;
-            top: 12.1825%;
-            width: 80.8323%;
-            height: 76.1994%;
+            left: var(--video-left);
+            top: var(--video-top);
+            width: var(--video-width);
+            height: var(--video-height);
         }
     }
 

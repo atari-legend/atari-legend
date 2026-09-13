@@ -40,7 +40,7 @@
         </p>
     </div>
 
-    <div class="emulator-screen m-2" data-emulator-screen>
+    <div class="emulator-screen m-2" style="{{ $bezelStyle }}" data-emulator-screen>
         {{-- Hatari's SDL layer looks its screen up by this id --}}
         <canvas id="canvas" width="640" height="400" tabindex="0" aria-label="Atari ST screen"></canvas>
     </div>
