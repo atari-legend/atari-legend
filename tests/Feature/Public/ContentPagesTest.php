@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\ArticleComment;
 use App\Models\Category;
 use App\Models\Changelog;
+use App\Models\Dump;
 use App\Models\Game;
 use App\Models\GameComment;
 use App\Models\Interview;
@@ -19,6 +20,7 @@ use App\Models\News;
 use App\Models\NewsSubmission;
 use App\Models\Review;
 use App\Models\ReviewComment;
+use App\Models\Screenshot;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -404,6 +406,18 @@ class ContentPagesTest extends TestCase
 
         $this->assertCount(6, $news);
         $this->assertSame('Item 8', $news->first()->headline);
+    }
+
+    public function test_the_screenstar_screenshot_plays_a_dumped_game(): void
+    {
+        $dump = Dump::factory()->create();
+        $game = $dump->media->release->game;
+        $game->screenshots()->attach(Screenshot::factory()->create());
+        Review::factory()->create(['game_id' => $game->getKey()]);
+
+        $this->get(route('home.index'))
+            ->assertOk()
+            ->assertSee(route('games.releases.emulator', ['release' => $dump->media->release, 'dump' => $dump]));
     }
 
     public function test_the_about_pages_render(): void

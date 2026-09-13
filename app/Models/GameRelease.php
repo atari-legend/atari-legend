@@ -59,6 +59,18 @@ class GameRelease extends Model
     }
 
     /**
+     * @return string|null Emulator page for the first dump of this release, or null if it has none
+     */
+    public function getEmulatorUrlAttribute(): ?string
+    {
+        $dump = $this->dumps->first();
+
+        return $dump !== null
+            ? route('games.releases.emulator', ['release' => $this, 'dump' => $dump])
+            : null;
+    }
+
+    /**
      * @return bool true if the release has goodies scans, false otherwise
      */
     public function getHasGoodiesAttribute()

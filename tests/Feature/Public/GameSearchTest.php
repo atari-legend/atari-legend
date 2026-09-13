@@ -4,12 +4,16 @@ namespace Tests\Feature\Public;
 
 use App\Models\Changelog;
 use App\Models\Company;
+use App\Models\Dump;
 use App\Models\Engine;
 use App\Models\Game;
 use App\Models\GameRelease;
+use App\Models\GameVote;
 use App\Models\Genre;
 use App\Models\Individual;
+use App\Models\Media;
 use App\Models\Review;
+use App\Models\Screenshot;
 use App\Models\Sndh;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -58,6 +62,44 @@ class GameSearchTest extends TestCase
         Game::factory()->count(3)->create();
 
         $this->assertSame([], $this->names([]));
+    }
+
+    /**
+     * A game with a screenshot and a dump.
+     *
+     * @return array The game, and the emulator page its screenshot plays
+     */
+    private function dumpedGame(string $name): array
+    {
+        $game = Game::factory()->named($name)->create();
+        $game->screenshots()->attach(Screenshot::factory()->create());
+        $release = GameRelease::factory()->create(['game_id' => $game->getKey()]);
+        $media = Media::factory()->create(['game_release_id' => $release->getKey()]);
+        $dump = Dump::factory()->create(['media_id' => $media->getKey()]);
+
+        return [$game, route('games.releases.emulator', ['release' => $release, 'dump' => $dump])];
+    }
+
+    public function test_a_dumped_games_screenshot_plays_it(): void
+    {
+        [$game, $url] = $this->dumpedGame('Xenon');
+        Game::factory()->named('Xenophobe')->create()->screenshots()->attach(Screenshot::factory()->create());
+
+        $response = $this->search(['title' => 'Xen'])
+            ->assertSee($url)
+            ->assertSee(route('games.show', $game));
+
+        $this->assertSame(1, substr_count($response->getContent(), 'class="play-screenshot'));
+    }
+
+    public function test_a_dumped_top_games_screenshot_plays_it(): void
+    {
+        [$game, $url] = $this->dumpedGame('Xenon');
+        GameVote::factory()->create(['game_id' => $game->getKey()]);
+
+        $this->get(route('games.index'))
+            ->assertOk()
+            ->assertSee($url);
     }
 
     public function test_games_are_matched_on_part_of_the_title(): void

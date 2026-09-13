@@ -239,6 +239,18 @@ class Game extends Model
             ->filter(fn ($release) => $release->menuDiskContents->isNotEmpty());
     }
 
+    /**
+     * @return string|null Emulator page for the first dump of the earliest release that has one, or null
+     */
+    public function getEmulatorUrlAttribute(): ?string
+    {
+        return $this
+            ->releases
+            ->sortBy('date')
+            ->map(fn ($release) => $release->emulator_url)
+            ->first(fn ($url) => $url !== null);
+    }
+
     public function getScoreAttribute()
     {
         $score = $this->votes->avg('score');

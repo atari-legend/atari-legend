@@ -6,7 +6,7 @@
     <h1 class="visually-hidden">{{ $release->game->name }}</h1>
     <div class="row">
         <div class="col-12 col-sm-6 col-lg-3 order-2 order-lg-1 lightbox-gallery">
-            @include('games.releases.card_game')
+            @include('games.releases.card_game', ['playOverlay' => false])
             @include('games.card_releases', ['game' => $release->game, 'currentRelease' => $release])
         </div>
 

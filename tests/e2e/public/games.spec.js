@@ -102,8 +102,9 @@ test.describe('Games', () => {
     }
   });
 
-  // TODO: the screenshot gallery, similar games, the emulator page. The last
-  // one needs a dump, and the seeded game must keep having none for the
+  // TODO: the screenshot gallery, similar games, the emulator page and the play
+  // overlay on a dumped game's screenshots. The last two need a dump, and the
+  // seeded game must keep having none for the
   // "drops a game that has neither a dump nor a tune" search below.
 });
 

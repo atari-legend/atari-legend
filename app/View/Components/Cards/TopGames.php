@@ -30,6 +30,7 @@ class TopGames extends Component
             ->groupBy('game_id');
 
         $games = Game::select('games.*')
+            ->with(['screenshots', 'genres', 'releases.medias.dumps'])
             ->addSelect('votes.avgScore', 'votes.numVotes')
             ->joinSub($votes, 'votes', 'votes.game_id', '=', 'games.id')
             ->orderByDesc('avgScore')

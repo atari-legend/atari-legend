@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Public;
 
+use App\Models\Dump;
 use App\Models\Game;
 use App\Models\GameRelease;
 use App\Models\GameVote;
@@ -72,6 +73,22 @@ class ReleasePageTest extends TestCase
             1,
             $this->get(route('games.releases.show', $release))->assertOk()->viewData('boxscans')
         );
+    }
+
+    public function test_the_game_screenshot_plays_the_releases_own_dump(): void
+    {
+        $dump = Dump::factory()->create();
+        $release = $dump->media->release;
+        $release->game->screenshots()->attach(Screenshot::factory()->create());
+        $undumped = GameRelease::factory()->create(['game_id' => $release->game_id]);
+
+        $this->get(route('games.releases.show', $release))
+            ->assertOk()
+            ->assertSee('class="play-screenshot" href="' . route('games.releases.emulator', ['release' => $release, 'dump' => $dump]) . '"', false);
+
+        $this->get(route('games.releases.show', $undumped))
+            ->assertOk()
+            ->assertDontSee('play-screenshot', false);
     }
 
     public function test_a_release_page_carries_structured_data(): void
