@@ -85,13 +85,19 @@
             @foreach ($games as $game)
                 <div class="col-4 text-center p-3 align-self-top">
 
-                    <a href="{{ route('games.show', ['game' => $game]) }}">
-                        @if ($game->screenshots->isNotEmpty())
-                            <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
-                        @else
-                            <img class="w-100 mb-2 bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->name }}" loading="lazy">
-                        @endif
-                    </a>
+                    @if ($game->screenshots->isNotEmpty() && $game->emulator_url !== null)
+                        <x-play-screenshot class="mb-2" :url="$game->emulator_url" :label="$game->name">
+                            <img class="w-100 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
+                        </x-play-screenshot>
+                    @else
+                        <a href="{{ route('games.show', ['game' => $game]) }}">
+                            @if ($game->screenshots->isNotEmpty())
+                                <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
+                            @else
+                                <img class="w-100 mb-2 bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->name }}" loading="lazy">
+                            @endif
+                        </a>
+                    @endif
 
                     <a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->name }}</a><br>
 

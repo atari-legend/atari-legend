@@ -4,6 +4,7 @@ namespace Tests\Feature\Public;
 
 use App\Models\Changelog;
 use App\Models\Company;
+use App\Models\Dump;
 use App\Models\Game;
 use App\Models\GameComment;
 use App\Models\GameRelease;
@@ -133,6 +134,19 @@ class GamePageTest extends TestCase
 
         $this->assertCount(1, $menuDisks);
         $this->assertSame($disk->getKey(), $menuDisks->first()->getKey());
+    }
+
+    public function test_a_dumped_similar_games_screenshot_plays_it(): void
+    {
+        $game = Game::factory()->create();
+        $dump = Dump::factory()->create();
+        $similar = $dump->media->release->game;
+        $similar->screenshots()->attach(Screenshot::factory()->create());
+        $game->similarGames()->attach($similar);
+
+        $this->get(route('games.show', $game))
+            ->assertOk()
+            ->assertSee(route('games.releases.emulator', ['release' => $dump->media->release, 'dump' => $dump]));
     }
 
     public function test_developer_logos_are_shown_only_when_there_is_one(): void

@@ -34,7 +34,9 @@ class GameSearchController extends Controller
 
     public function search(Request $request)
     {
-        $games = Game::select('games.*');
+        $games = Game::select('games.*')
+            // The results walk them for the play overlay and the dumps icon
+            ->with('releases.medias.dumps');
         $software = MenuSoftware::select('menu_software.*');
 
         // Boolean to check if a search on software can be made

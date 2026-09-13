@@ -8,7 +8,11 @@
         <h2 class="text-uppercase d-lg-none">Game Screenshot</h2>
     </div>
     <div class="card-body p-0">
-        @if ($release->game->screenshots->isNotEmpty())
+        @if ($release->game->screenshots->isNotEmpty() && ($playOverlay ?? true) && $release->emulator_url !== null)
+            <x-play-screenshot :url="$release->emulator_url" :label="$release->game->name">
+                <img class="w-100 pixelated" src="{{ $release->game->screenshots->random()->getUrlRoute('game', $release->game) }}" alt="Screenshot of {{ $release->game->name }}" loading="lazy">
+            </x-play-screenshot>
+        @elseif ($release->game->screenshots->isNotEmpty())
             <img class="w-100 pixelated" src="{{ $release->game->screenshots->random()->getUrlRoute('game', $release->game) }}" alt="Screenshot of {{ $release->game->name }}" loading="lazy">
         @else
             <p class="card-text text-center m-2">

@@ -44,4 +44,8 @@
         {{-- Hatari's SDL layer looks its screen up by this id --}}
         <canvas id="canvas" width="640" height="400" tabindex="0" aria-label="Atari ST screen"></canvas>
     </div>
+
+    <div class="card-footer text-muted text-center">
+        <small>Hatari WebAssembly build by <a href="http://absencehq.de/atariaviary/">Atariaviary</a>.</small>
+    </div>
 </div>

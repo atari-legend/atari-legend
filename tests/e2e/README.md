@@ -332,7 +332,7 @@ today, and what it does not:
 |---|---|---|
 | Home | page renders, nav links to each section, spotlight image, the Screenstar, Who is it? and Trivia cards | - |
 | Nav search | the games-and-software endpoint, `?q=`, url and icon on every row, following a game and a piece of software from the box | the icons as rendered, keyboard selection |
-| Games | list, detail by slug, release, slug redirect, screenshot, box scan, the magazines that covered it, the three contribution forms hidden from a guest | gallery, similar games, the emulator page |
+| Games | list, detail by slug, release, slug redirect, screenshot, box scan, the magazines that covered it, the three contribution forms hidden from a guest | gallery, similar games, the emulator page and the play overlay on game screenshots |
 | Games search | title, A-Z browse, exact-match redirect, empty state; its 6 autocomplete endpoints, AKA merging and ranking, a quote as data; searching by title, year, individual and publisher through the widget; genre, engine and developer by name, by id and through the dropdown toggle; the checkbox filters in both directions | the export view |
 | News | list, no submission form for a guest, pagination across both pages | - |
 | Reviews | list, detail | the scores as published, unpublished hidden |
