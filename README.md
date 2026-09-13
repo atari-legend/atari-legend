@@ -78,6 +78,19 @@ neither is needed to work on the site:
 - `resources/bin/unice68` or `resources/bin/icecat` - PACK-ICE decompression for
   `sndh:generate-json`. See `resources/bin/unice.sh`.
 
+### TOS images
+
+The in-browser emulator boots the Atari ST's operating system, TOS, which is
+Atari's copyrighted ROM and is not in the repository. Put the ROM images in
+`storage/app/public/tos/`, on every server and in every checkout that should
+run the emulator. The browser downloads them from `/storage/tos/`, so
+`storage:link` is needed.
+
+Name each image `tos` + its version without the dot + its country code, in
+lower case, with an `.img` extension: `tos104uk.img` is TOS 1.04, UK. Only
+`tos104uk.img` is used for now (`EmulatorController::TOS`). Without it the
+emulator page says it could not start, and the rest of the site is unaffected.
+
 ### Tests
 
 `sail test` runs the PHPUnit suite. The Playwright end-to-end suite has its own
