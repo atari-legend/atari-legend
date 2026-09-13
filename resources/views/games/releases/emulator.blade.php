@@ -11,7 +11,7 @@
         </div>
 
         <div class="col-12 col-lg-6 order-1 order-lg-2">
-            @include('games.releases.card_emulator')
+            @include('emulator.card')
         </div>
 
         <div class="col-12 col-sm-6 col-lg-3 order-3">

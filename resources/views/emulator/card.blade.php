@@ -1,5 +1,6 @@
+@php($currentDisk = $disks->firstWhere('current', true))
 <div class="card bg-dark mb-4 card-emulator" data-emulator data-tos-url="{{ $tosUrl }}"
-    data-disk-url="{{ $dump->download_url }}" data-disk-id="{{ $dump->getKey() }}">
+    data-disk-url="{{ $currentDisk['url'] }}" data-disk-id="{{ $currentDisk['id'] }}">
     <div class="card-header text-center">
         <h2 class="text-uppercase">Emulator</h2>
     </div>
@@ -24,11 +25,11 @@
 
         @if ($disks->count() > 1)
             <div class="d-flex flex-wrap gap-2 mb-2" role="group" aria-label="Disk in drive A">
-                @foreach ($disks as $disk)
-                    <button type="button" class="btn btn-outline-primary btn-sm @if ($disk['dump']->is($dump)) active @endif"
-                        data-emulator-disk="{{ $disk['dump']->getKey() }}" data-disk-url="{{ $disk['dump']->download_url }}"
-                        aria-pressed="{{ $disk['dump']->is($dump) ? 'true' : 'false' }}" disabled>
-                        <i class="far fa-floppy-disk me-1"></i>{{ $disk['label'] }}
+                @foreach ($disks as $diskButton)
+                    <button type="button" class="btn btn-outline-primary btn-sm @if ($diskButton['current']) active @endif"
+                        data-emulator-disk="{{ $diskButton['id'] }}" data-disk-url="{{ $diskButton['url'] }}"
+                        aria-pressed="{{ $diskButton['current'] ? 'true' : 'false' }}" disabled>
+                        <i class="far fa-floppy-disk me-1"></i>{{ $diskButton['label'] }}
                     </button>
                 @endforeach
             </div>

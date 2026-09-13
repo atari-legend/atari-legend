@@ -25,13 +25,7 @@
                     <div class="card-body p-0 d-flex flex-column striped">
                             <figure>
                                 @if ($disk->screenshots->isNotEmpty())
-                                    <a class="lightbox-link"
-                                        href="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
-                                        title="{{ $disk->menu->menuSet->name }} {{ $disk->menu->label }}{{ $disk->part }}">
-                                        <img class="card-img-top w-100"
-                                            src="{{ asset('storage/images/menu_screenshots/'.$disk->screenshots->first()->file) }}"
-                                            alt="Screenshot of disk" loading="lazy">
-                                    </a>
+                                    @include('menus.partial_screenshot', ['imgClass' => 'card-img-top w-100', 'alt' => 'Screenshot of disk', 'lightbox' => true])
                                 @else
                                     <img class="card-img-top w-100 bg-black" width="1209" height="756"
                                         src="{{ asset('images/no-screenshot.svg') }}"

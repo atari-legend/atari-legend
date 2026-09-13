@@ -28,3 +28,31 @@ h3:hover .menu-link,
 h3:focus-within .menu-link {
     opacity: 1;
 }
+
+// A menu screenshot that plays its disk in the emulator, with a play triangle
+// over it sized to the screenshot's width
+.menu-screenshot {
+    position: relative;
+    display: block;
+    container-type: inline-size;
+
+    .menu-play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(1rem, 20cqi, 6rem);
+        line-height: 1;
+        color: $primary;
+        // A tight dark edge and a wider soft shadow, so the triangle stands
+        // out on a light screenshot as well as a dark one
+        filter: drop-shadow(0 0 1px rgba(0, 0, 0, .9)) drop-shadow(0 .125rem .375rem rgba(0, 0, 0, .8));
+        opacity: .85;
+    }
+
+    &:hover .menu-play-overlay,
+    &:focus-visible .menu-play-overlay {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
