@@ -11,6 +11,7 @@ use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskDump;
 use App\Models\MenuSet;
+use App\Models\Resolution;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -39,6 +40,46 @@ class EmulatorPageTest extends TestCase
             ->assertOk()
             ->assertSee($dump->download_url)
             ->assertSee(asset('storage/' . EmulatorController::TOS));
+    }
+
+    /**
+     * The resolution the emulator page starts a release in.
+     *
+     * @param string[] $resolutions Names of the release's resolutions
+     * @return string|null Value of the page's data-resolution attribute, or null without one
+     */
+    private function startResolution(array $resolutions): ?string
+    {
+        $dump = Dump::factory()->create();
+        $release = $dump->media->release;
+        foreach ($resolutions as $name) {
+            $release->resolutions()->attach(Resolution::factory()->create(['name' => $name]));
+        }
+
+        $content = $this->get(route('games.releases.emulator', ['release' => $release, 'dump' => $dump]))
+            ->assertOk()
+            ->getContent();
+
+        return preg_match('/data-resolution="([^"]*)"/', $content, $matches) ? $matches[1] : null;
+    }
+
+    public function test_a_release_that_runs_in_low_resolution_starts_in_it(): void
+    {
+        $this->assertNull($this->startResolution([]));
+        $this->assertNull($this->startResolution([Resolution::ST_LOW, Resolution::ST_HIGH]));
+        $this->assertNull($this->startResolution([Resolution::ST_LOW, Resolution::ST_MEDIUM]));
+    }
+
+    public function test_a_release_without_low_resolution_prefers_medium(): void
+    {
+        $this->assertSame('med', $this->startResolution([Resolution::ST_MEDIUM]));
+        $this->assertSame('med', $this->startResolution([Resolution::ST_MEDIUM, Resolution::ST_HIGH]));
+    }
+
+    public function test_a_high_resolution_release_starts_on_a_monochrome_monitor(): void
+    {
+        $this->assertSame('high', $this->startResolution([Resolution::ST_HIGH]));
+        $this->assertSame('high', $this->startResolution([Resolution::ST_HIGH, 'Falcon VGA']));
     }
 
     public function test_the_emulator_offers_every_disk_of_the_release(): void
@@ -141,7 +182,8 @@ class EmulatorPageTest extends TestCase
         $this->get(route('menus.emulator', ['set' => $disk->menu->menuSet, 'disk' => $disk]))
             ->assertOk()
             ->assertSee($disk->menuDiskDump->download_url)
-            ->assertSee(asset('storage/' . EmulatorController::TOS));
+            ->assertSee(asset('storage/' . EmulatorController::TOS))
+            ->assertDontSee('data-resolution', false);
     }
 
     public function test_a_menu_on_several_disks_offers_its_dumped_disks(): void

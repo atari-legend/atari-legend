@@ -21,10 +21,11 @@ class EmulatorController extends Controller
         abort_unless($dump->media->release()->is($release), 404);
 
         return view('games.releases.emulator', [
-            'release'  => $release,
-            'disks'    => $this->releaseDisks($release, $dump),
-            'tosUrl'   => asset('storage/' . self::TOS),
-            'boxscans' => ReleaseHelper::boxScans($release),
+            'release'    => $release,
+            'disks'      => $this->releaseDisks($release, $dump),
+            'tosUrl'     => asset('storage/' . self::TOS),
+            'resolution' => $release->emulator_resolution,
+            'boxscans'   => ReleaseHelper::boxScans($release),
         ]);
     }
 

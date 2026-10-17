@@ -9,5 +9,9 @@ class Resolution extends Model
 {
     use HasFactory;
 
+    const ST_LOW = 'ST Low';
+    const ST_MEDIUM = 'ST Medium';
+    const ST_HIGH = 'ST High';
+
     public $timestamps = false;
 }

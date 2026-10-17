@@ -71,6 +71,21 @@ class GameRelease extends Model
     }
 
     /**
+     * @return string|null Resolution the emulator starts in when not ST low, either 'med' or 'high'
+     */
+    public function getEmulatorResolutionAttribute(): ?string
+    {
+        $resolutions = $this->resolutions->pluck('name');
+
+        return match (true) {
+            $resolutions->contains(Resolution::ST_LOW)    => null,
+            $resolutions->contains(Resolution::ST_MEDIUM) => 'med',
+            $resolutions->contains(Resolution::ST_HIGH)   => 'high',
+            default                                       => null,
+        };
+    }
+
+    /**
      * @return bool true if the release has goodies scans, false otherwise
      */
     public function getHasGoodiesAttribute()

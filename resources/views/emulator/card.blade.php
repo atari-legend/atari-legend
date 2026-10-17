@@ -1,6 +1,7 @@
 @php($currentDisk = $disks->firstWhere('current', true))
 <div class="card bg-dark mb-4 card-emulator" data-emulator data-tos-url="{{ $tosUrl }}"
-    data-disk-url="{{ $currentDisk['url'] }}" data-disk-id="{{ $currentDisk['id'] }}">
+    data-disk-url="{{ $currentDisk['url'] }}" data-disk-id="{{ $currentDisk['id'] }}"
+    @isset($resolution) data-resolution="{{ $resolution }}" @endisset>
     <div class="card-header text-center">
         <h2 class="text-uppercase">Emulator</h2>
     </div>

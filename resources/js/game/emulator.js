@@ -15,6 +15,13 @@ const TOS_PATH = '/tos.img';
 
 const DRIVE_A = 0;
 
+// Hatari's arguments for a release that does not run in ST low resolution: TOS
+// set to medium on a colour monitor, or a monochrome monitor for high
+const RESOLUTION_ARGUMENTS = {
+    med: ['--tos-res', 'med'],
+    high: ['--monitor', 'mono'],
+};
+
 const MEGABYTE = 1024 * 1024;
 
 // The keys Hatari's cursor-key joystick is on, as the browser describes them
@@ -403,6 +410,7 @@ async function start(container) {
             // size on the page instead, and squashes the picture into it
             '--resizable', 'false',
             '--disk-a', firstDiskPath,
+            ...(RESOLUTION_ARGUMENTS[container.dataset.resolution] ?? []),
         ],
         preRun: [() => {
             // Hatari takes the keyboard only while its screen has the focus,
