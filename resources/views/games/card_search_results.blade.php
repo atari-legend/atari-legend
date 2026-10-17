@@ -85,19 +85,13 @@
             @foreach ($games as $game)
                 <div class="col-4 text-center p-3 align-self-top">
 
-                    @if ($game->screenshots->isNotEmpty() && $game->emulator_url !== null)
-                        <x-play-screenshot class="mb-2" :url="$game->emulator_url" :label="$game->name">
-                            <img class="w-100 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
-                        </x-play-screenshot>
-                    @else
-                        <a href="{{ route('games.show', ['game' => $game]) }}">
-                            @if ($game->screenshots->isNotEmpty())
-                                <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
-                            @else
-                                <img class="w-100 mb-2 bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->name }}" loading="lazy">
-                            @endif
-                        </a>
-                    @endif
+                    <a href="{{ route('games.show', ['game' => $game]) }}">
+                        @if ($game->screenshots->isNotEmpty())
+                            <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
+                        @else
+                            <img class="w-100 mb-2 bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->name }}" loading="lazy">
+                        @endif
+                    </a>
 
                     <a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->name }}</a><br>
 
@@ -125,6 +119,11 @@
                     @endif
                     @if ($game->releases->pluck('medias')->flatten()->pluck('dumps')->isNotEmpty())
                         <i class="far fa-save fa-fw mt-1" title="as downloads"></i>
+                    @endif
+                    @if ($game->emulator_url !== null)
+                        <a href="{{ $game->emulator_url }}" title="Play in the emulator" aria-label="Play {{ $game->name }} in the emulator">
+                            <i class="fas fa-play fa-fw mt-1"></i>
+                        </a>
                     @endif
                 </div>
             @endforeach

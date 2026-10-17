@@ -11,7 +11,6 @@ use App\Models\Menu;
 use App\Models\MenuDisk;
 use App\Models\MenuDiskDump;
 use App\Models\MenuSet;
-use App\Models\Screenshot;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -83,18 +82,6 @@ class EmulatorPageTest extends TestCase
 
         $this->get(route('games.releases.emulator', ['release' => $otherRelease, 'dump' => $dump]))
             ->assertNotFound();
-    }
-
-    public function test_the_game_card_beside_the_emulator_does_not_offer_to_play(): void
-    {
-        $dump = Dump::factory()->create();
-        $game = $dump->media->release->game;
-        $game->screenshots()->attach(Screenshot::factory()->create());
-
-        $this->get(route('games.releases.emulator', ['release' => $dump->media->release, 'dump' => $dump]))
-            ->assertOk()
-            ->assertSee('Screenshot of ' . $game->name)
-            ->assertDontSee('play-screenshot', false);
     }
 
     private function dumpOn(Game $game, string $date, ?string $type = null): Dump

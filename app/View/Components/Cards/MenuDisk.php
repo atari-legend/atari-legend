@@ -9,18 +9,14 @@ class MenuDisk extends Component
 {
     public ?int $id = null;
 
-    /** Whether the screenshot offers to play the disk in the emulator. */
-    public bool $playOverlay = true;
-
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(?int $id = null, bool $playOverlay = true)
+    public function __construct(?int $id = null)
     {
         $this->id = $id;
-        $this->playOverlay = $playOverlay;
     }
 
     /**
@@ -42,9 +38,8 @@ class MenuDisk extends Component
 
         return view('components.cards.menu')
             ->with([
-                'id'          => $this->id,
-                'disk'        => $disk,
-                'playOverlay' => $this->playOverlay,
+                'id'   => $this->id,
+                'disk' => $disk,
             ]);
     }
 }

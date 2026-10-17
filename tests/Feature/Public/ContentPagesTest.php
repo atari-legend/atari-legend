@@ -408,7 +408,7 @@ class ContentPagesTest extends TestCase
         $this->assertSame('Item 8', $news->first()->headline);
     }
 
-    public function test_the_screenstar_screenshot_plays_a_dumped_game(): void
+    public function test_the_screenstar_screenshot_does_not_play_a_dumped_game(): void
     {
         $dump = Dump::factory()->create();
         $game = $dump->media->release->game;
@@ -417,7 +417,8 @@ class ContentPagesTest extends TestCase
 
         $this->get(route('home.index'))
             ->assertOk()
-            ->assertSee(route('games.releases.emulator', ['release' => $dump->media->release, 'dump' => $dump]));
+            ->assertSee('Screenshot of ' . $game->name)
+            ->assertDontSee(route('games.releases.emulator', ['release' => $dump->media->release, 'dump' => $dump]));
     }
 
     public function test_the_about_pages_render(): void

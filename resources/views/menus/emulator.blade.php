@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-12 col-sm-6 col-lg-3 order-3">
-            <x-cards.menu-disk :id="$disk->id" :play-overlay="false" />
+            <x-cards.menu-disk :id="$disk->id" />
         </div>
     </div>
 @endsection

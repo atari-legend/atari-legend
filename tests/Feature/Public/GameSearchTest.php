@@ -67,7 +67,7 @@ class GameSearchTest extends TestCase
     /**
      * A game with a screenshot and a dump.
      *
-     * @return array The game, and the emulator page its screenshot plays
+     * @return array The game, and the emulator page it plays on
      */
     private function dumpedGame(string $name): array
     {
@@ -80,26 +80,28 @@ class GameSearchTest extends TestCase
         return [$game, route('games.releases.emulator', ['release' => $release, 'dump' => $dump])];
     }
 
-    public function test_a_dumped_games_screenshot_plays_it(): void
+    public function test_a_dumped_game_has_a_play_link(): void
     {
         [$game, $url] = $this->dumpedGame('Xenon');
         Game::factory()->named('Xenophobe')->create()->screenshots()->attach(Screenshot::factory()->create());
 
         $response = $this->search(['title' => 'Xen'])
-            ->assertSee($url)
-            ->assertSee(route('games.show', $game));
+            ->assertSee('href="' . $url . '" title="Play in the emulator"', false)
+            ->assertSee(route('games.show', $game))
+            ->assertDontSee('class="play-screenshot', false);
 
-        $this->assertSame(1, substr_count($response->getContent(), 'class="play-screenshot'));
+        $this->assertSame(1, substr_count($response->getContent(), 'title="Play in the emulator"'));
     }
 
-    public function test_a_dumped_top_games_screenshot_plays_it(): void
+    public function test_a_dumped_top_games_screenshot_opens_the_game(): void
     {
         [$game, $url] = $this->dumpedGame('Xenon');
         GameVote::factory()->create(['game_id' => $game->getKey()]);
 
         $this->get(route('games.index'))
             ->assertOk()
-            ->assertSee($url);
+            ->assertSee(route('games.show', $game))
+            ->assertDontSee($url);
     }
 
     public function test_games_are_matched_on_part_of_the_title(): void

@@ -7,13 +7,7 @@
             @php ($game = $screenstar->game)
             @if ($game !== null && $game->screenshots->isNotEmpty())
                 <figure>
-                    @if ($game->emulator_url !== null)
-                        <x-play-screenshot :url="$game->emulator_url" :label="$game->name">
-                            <img class="w-100 pixelated" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}">
-                        </x-play-screenshot>
-                    @else
-                        <img class="w-100 pixelated" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}">
-                    @endif
+                    <img class="w-100 pixelated" src="{{ $game->screenshots->first()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}">
                     <figcaption class="py-2 px-3">
                         <div class="figcaption-caret"><i class="fas fa-angle-up fa-2x"></i></div>
                         <div class="figcaption-title"><a href="{{ route('games.show', ['game' => $game]) }}">{{ $game->name }}</a></div>

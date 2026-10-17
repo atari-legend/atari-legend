@@ -165,7 +165,7 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="download" name="download">
                         <label class="form-check-label" for="download">
-                            Download
+                            Download / playable
                         </label>
                     </div>
                 </div>

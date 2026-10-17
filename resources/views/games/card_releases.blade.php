@@ -9,8 +9,14 @@
                     <i title="Releases info" class="fas fa-info-circle text-muted fs-6"></i>
                 </a>
             </h2>
-
         </div>
+        @if ($game->non_menu_releases->contains(fn ($release) => $release->emulator_url !== null))
+            <div class="card-body p-2">
+                <p class="card-text text-muted small">
+                    <i class="fas fa-play text-primary"></i> plays the release in an emulator, in your browser.
+                </p>
+            </div>
+        @endif
         <div class="striped">
             @foreach ($game->non_menu_releases->sortBy('date') as $release)
                 <div class="card-body ps-2 py-2 ">
@@ -42,8 +48,12 @@
                         @endforeach
 
                         @if ($release->dumps->isNotEmpty())
-                            <span class="ms-2">
+                            <span class="ms-2 text-nowrap">
                                 <i title="Downloads" class="far fa-save"></i> &times; {{ $release->dumps->count() }}
+                                <a class="ms-2" href="{{ $release->emulator_url }}"
+                                    title="Play in the emulator" aria-label="Play {{ $release->year }} release in the emulator">
+                                    <i class="fas fa-play"></i>
+                                </a>
                             </span>
                         @endif
                     </div>

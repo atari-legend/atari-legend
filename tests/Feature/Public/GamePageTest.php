@@ -136,7 +136,7 @@ class GamePageTest extends TestCase
         $this->assertSame($disk->getKey(), $menuDisks->first()->getKey());
     }
 
-    public function test_a_dumped_similar_games_screenshot_plays_it(): void
+    public function test_a_dumped_similar_games_screenshot_does_not_play_it(): void
     {
         $game = Game::factory()->create();
         $dump = Dump::factory()->create();
@@ -146,7 +146,8 @@ class GamePageTest extends TestCase
 
         $this->get(route('games.show', $game))
             ->assertOk()
-            ->assertSee(route('games.releases.emulator', ['release' => $dump->media->release, 'dump' => $dump]));
+            ->assertSee('Screenshot of ' . $similar->name)
+            ->assertDontSee(route('games.releases.emulator', ['release' => $dump->media->release, 'dump' => $dump]));
     }
 
     public function test_developer_logos_are_shown_only_when_there_is_one(): void

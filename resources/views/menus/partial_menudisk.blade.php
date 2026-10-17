@@ -43,7 +43,7 @@
         <div class="col-12 col-sm-3">
             <div class="p-2">
             @if ($disk->screenshots->isNotEmpty())
-                @include('menus.partial_screenshot', ['imgClass' => 'card-img-top w-100', 'alt' => 'Screenshot of disk', 'lightbox' => true])
+                @include('menus.partial_screenshot', ['imgClass' => 'card-img-top w-100', 'alt' => 'Screenshot of disk', 'lightbox' => true, 'playOverlay' => true])
             @else
                 <img class="card-img-top w-100 bg-black" width="1209" height="756"
                     src="{{ asset('images/no-screenshot.svg') }}"
