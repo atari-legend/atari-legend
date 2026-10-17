@@ -111,6 +111,22 @@ function hatari(name, argTypes = [], args = []) {
     return window.Module.ccall(name, 'number', argTypes, args);
 }
 
+/**
+ * Keep the page's title.
+ *
+ * Hatari names its SDL window, which in a browser is the page's title. The
+ * Emscripten build sets it with no hook to override, so the page puts its own
+ * back each time.
+ */
+function keepTitle() {
+    const title = document.title;
+    new MutationObserver(() => {
+        if (document.title !== title) {
+            document.title = title;
+        }
+    }).observe(document.querySelector('title'), {childList: true, characterData: true, subtree: true});
+}
+
 const gains = new WeakMap();
 
 /**
@@ -404,6 +420,8 @@ async function start(container) {
         }],
         onAbort: (reason) => showStatus(`The emulator stopped. ${reason}`),
     };
+
+    keepTitle();
 
     const script = document.createElement('script');
     script.src = hatariUrl;
