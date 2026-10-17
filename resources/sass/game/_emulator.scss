@@ -4,43 +4,19 @@
         width: 100%;
         height: auto;
         image-rendering: pixelated;
+        outline: none;
     }
 
-    // The bezel's proportions and its hole are measured from its SVG by
-    // EmulatorBezelHelper, and set on the element by the card
+    // Bordered like the screenshots and box scans
     .emulator-screen {
-        position: relative;
-        aspect-ratio: var(--bezel-ratio);
-
-        // Over the screen rather than under it, so its rounded hole trims the corners
-        &::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            // Relative to app.scss, which imports this partial
-            background: url('../images/emulator/emulator-bezel.svg') center / 100% 100% no-repeat;
-            pointer-events: none;
-        }
-
-        canvas {
-            position: absolute;
-            left: var(--video-left);
-            top: var(--video-top);
-            width: var(--video-width);
-            height: var(--video-height);
-        }
+        border: solid 1px $primary-dark;
     }
 
     .emulator-screen:fullscreen {
+        border: none;
         background: #000;
 
-        &::after {
-            display: none;
-        }
-
         canvas {
-            position: static;
-            width: 100%;
             height: 100%;
             object-fit: contain;
         }

@@ -260,9 +260,8 @@ function enableControls(container, canvas, showStatus) {
         }
     });
 
-    // A press on the screen or its bezel gives Hatari the keyboard. The browser
-    // would not: Hatari's SDL layer cancels the press on the screen, and the
-    // bezel would hand the focus to the page
+    // A press on the screen gives Hatari the keyboard. The browser would not:
+    // Hatari's SDL layer cancels the press on the screen
     screen.addEventListener('mousedown', (event) => {
         event.preventDefault();
         canvas.focus({preventScroll: true});

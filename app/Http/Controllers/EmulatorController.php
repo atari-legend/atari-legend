@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\EmulatorBezelHelper;
 use App\Helpers\ReleaseHelper;
 use App\Models\Dump;
 use App\Models\GameRelease;
@@ -22,11 +21,10 @@ class EmulatorController extends Controller
         abort_unless($dump->media->release()->is($release), 404);
 
         return view('games.releases.emulator', [
-            'release'    => $release,
-            'disks'      => $this->releaseDisks($release, $dump),
-            'tosUrl'     => asset('storage/' . self::TOS),
-            'bezelStyle' => EmulatorBezelHelper::screenStyle(),
-            'boxscans'   => ReleaseHelper::boxScans($release),
+            'release'  => $release,
+            'disks'    => $this->releaseDisks($release, $dump),
+            'tosUrl'   => asset('storage/' . self::TOS),
+            'boxscans' => ReleaseHelper::boxScans($release),
         ]);
     }
 
@@ -35,10 +33,9 @@ class EmulatorController extends Controller
         abort_unless($disk->menu->menuSet()->is($set) && $disk->menuDiskDump !== null, 404);
 
         return view('menus.emulator', [
-            'disk'       => $disk,
-            'disks'      => $this->menuDisks($disk),
-            'tosUrl'     => asset('storage/' . self::TOS),
-            'bezelStyle' => EmulatorBezelHelper::screenStyle(),
+            'disk'   => $disk,
+            'disks'  => $this->menuDisks($disk),
+            'tosUrl' => asset('storage/' . self::TOS),
         ]);
     }
 
