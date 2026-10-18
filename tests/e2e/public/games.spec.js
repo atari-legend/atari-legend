@@ -237,7 +237,7 @@ test.describe('Games search', () => {
   });
 });
 
-// The search form is the only consumer of six of the nine /ajax/*.json
+// The search form is the only consumer of five of the eight /ajax/*.json
 // endpoints, so they are asserted here rather than as a sweep of their own.
 //
 // They are public - no session, no CSRF - and they take a user-supplied ?q=,
@@ -246,7 +246,6 @@ test.describe('Games search autocomplete', () => {
   const endpoints = [
     'games',
     'companies',
-    'release-years',
     'genres',
     'engines',
     'individuals',
@@ -284,17 +283,7 @@ test.describe('Games search autocomplete', () => {
     expect(names.indexOf(FIXTURE.game.akaName)).toBeLessThan(names.indexOf(FIXTURE.game.name));
   });
 
-  test('treats a quote in the query as data', async ({ page }) => {
-    // release-years builds its own SQL rather than going through the query
-    // builder, and shipped an injection because of it. A quote has to come
-    // back as an empty result, not as a 500 and not as the whole table.
-    const response = await page.request.get("/ajax/release-years.json?q=1990'");
-
-    expect(response.status()).toBe(200);
-    expect(await response.json()).toEqual([]);
-  });
-
-  // The four tests below drive the widget itself rather than the endpoint
+  // The tests below drive the widget itself rather than the endpoint
   // behind it. The title field carries data-autocomplete-submit, so picking a
   // suggestion submits the form; the others only fill a field, one of them
   // through a hidden companion input.
@@ -304,8 +293,10 @@ test.describe('Games search autocomplete', () => {
     await pickSuggestion(page, '#title', FIXTURE.game.akaName);
 
     await expect(page).toHaveURL(/\/games\/search\?/);
-    // The results page repopulates the field, so this is what was searched on.
-    await expect(page.locator('#title')).toHaveValue(FIXTURE.game.akaName);
+    // The results page lists the criteria, so this is what was searched on.
+    await expect(page.getByRole('list', { name: 'Search criteria' })).toContainText(
+      FIXTURE.game.akaName
+    );
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
     ).toBeVisible();
@@ -321,19 +312,6 @@ test.describe('Games search autocomplete', () => {
     await expect(page).toHaveURL(new RegExp(`/games/${FIXTURE.game.slug}$`));
   });
 
-  test('searches on a release year picked from the suggestions', async ({ page }) => {
-    await page.goto('/games');
-
-    await pickSuggestion(page, '#year', FIXTURE.release.year);
-    await expect(page.locator('#year')).toHaveValue(FIXTURE.release.year);
-
-    await page.getByRole('button', { name: 'Search' }).click();
-
-    await expect(
-      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
-    ).toBeVisible();
-  });
-
   test('searches on an individual picked from the suggestions', async ({ page }) => {
     await page.goto('/games');
 
@@ -347,7 +325,7 @@ test.describe('Games search autocomplete', () => {
       String(FIXTURE.individual.id)
     );
 
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByRole('button', { name: 'Search games' }).click();
 
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
@@ -362,7 +340,7 @@ test.describe('Games search autocomplete', () => {
     await pickSuggestion(page, '#publisher', FIXTURE.company.name);
     await expect(page.locator('#publisher')).toHaveValue(FIXTURE.company.name);
 
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByRole('button', { name: 'Search games' }).click();
 
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
@@ -378,7 +356,7 @@ test.describe('Games search autocomplete', () => {
     await pickSuggestion(page, '#developer', FIXTURE.company.name);
     await expect(page.locator('#developer')).toHaveValue(FIXTURE.company.name);
 
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByRole('button', { name: 'Search games' }).click();
 
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
@@ -391,7 +369,7 @@ test.describe('Games search autocomplete', () => {
     await pickSuggestion(page, '#engine', FIXTURE.engine.name);
     await expect(page.locator('#engine')).toHaveValue(FIXTURE.engine.name);
 
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByRole('button', { name: 'Search games' }).click();
 
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
@@ -399,12 +377,12 @@ test.describe('Games search autocomplete', () => {
   });
 });
 
-// The rest of the search form: the two controls that are not autocompletes.
+// The rest of the search form: the controls that are not autocompletes.
 //
-// Both are driven through the browser rather than through the query string,
-// because both depend on JavaScript - the dropdown on resources/js/game/search.js
-// and the checkboxes on nothing at all, which is exactly what makes the pair
-// worth asserting side by side.
+// They are driven through the browser rather than through the query string,
+// because the genre dropdown depends on resources/js/game/search.js and the
+// others on nothing at all, which is exactly what makes them worth asserting
+// side by side.
 test.describe('Games search form', () => {
   test('swaps the genre field for a dropdown and searches on the id', async ({ page }) => {
     // The chevron beside the Genre label toggles d-none on both the
@@ -419,7 +397,7 @@ test.describe('Games search form', () => {
     await expect(page.locator('#genre_id')).toBeVisible();
 
     await page.locator('#genre_id').selectOption({ label: FIXTURE.genre.name });
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByRole('button', { name: 'Search games' }).click();
 
     await expect(page).toHaveURL(new RegExp(`genre_id=${FIXTURE.genre.id}(&|$)`));
     await expect(
@@ -427,18 +405,100 @@ test.describe('Games search form', () => {
     ).toBeVisible();
   });
 
-  test('searches on the checkboxes as rendered', async ({ page }) => {
-    // The query-string tests above prove the controller; this proves the boxes
-    // in the markup are wired to those parameters at all.
+  test('searches on the yes/no dropdowns as rendered', async ({ page }) => {
+    // The query-string tests above prove the controller; this proves the
+    // dropdowns in the markup are wired to those parameters at all.
     await page.goto('/games');
 
     await page.locator('#title').fill(FIXTURE.game.akaName);
-    await page.getByRole('checkbox', { name: 'Screenshot' }).check();
-    await page.getByRole('checkbox', { name: 'Review' }).check();
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByLabel('Screenshot').selectOption({ label: 'Yes' });
+    await page.getByLabel('Review').selectOption({ label: 'Yes' });
+    await page.getByRole('button', { name: 'Search games' }).click();
 
-    await expect(page).toHaveURL(/screenshot=on/);
-    await expect(page).toHaveURL(/review=on/);
+    await expect(page).toHaveURL(/screenshot=1/);
+    await expect(page).toHaveURL(/review=1/);
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+  });
+
+  test('searches on a range of release years', async ({ page }) => {
+    // The seeded release is from 1989: a range around it finds the game, one
+    // that stops the year before does not.
+    await page.goto('/games');
+
+    await page.locator('#year_from').selectOption(FIXTURE.release.year);
+    await page.locator('#year_to').selectOption(FIXTURE.release.year);
+    await page.getByRole('button', { name: 'Search games' }).click();
+
+    await expect(page).toHaveURL(new RegExp(`year_from=${FIXTURE.release.year}&year_to=${FIXTURE.release.year}`));
+    await expect(page.getByRole('list', { name: 'Search criteria' })).toContainText(
+      `Release year: ${FIXTURE.release.year}`
+    );
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+
+    await page.goto(`/games/search?year_to=${Number(FIXTURE.release.year) - 1}`);
+    await expect(page.locator('#results').getByRole('link', { name: FIXTURE.game.name })).toHaveCount(0);
+  });
+
+  test('searches on the license, AI and coverage dropdowns as rendered', async ({ page }) => {
+    // One dropdown from each of the other sections. The seeded game has a
+    // commercial release, does not use AI and is in a magazine's index.
+    await page.goto('/games');
+
+    await page.locator('#title').fill(FIXTURE.game.akaName);
+    await page.getByLabel('License').selectOption('Commercial');
+    await page.getByLabel('Uses AI').selectOption({ label: 'No' });
+    await page.getByLabel('Magazine coverage').selectOption({ label: 'Yes' });
+    await page.getByRole('button', { name: 'Search games' }).click();
+
+    await expect(page).toHaveURL(/license=Commercial/);
+    await expect(page).toHaveURL(/ai=0/);
+    await expect(page).toHaveURL(/magazine=1/);
+    await expect(
+      page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
+    ).toBeVisible();
+
+    // And the other answer drops it.
+    await page.getByRole('link', { name: 'Magazine coverage: No' }).click();
+    await expect(page.locator('#results').getByRole('link', { name: FIXTURE.game.name })).toHaveCount(0);
+  });
+
+  test('refines a search from its results', async ({ page }) => {
+    // The results page only lists the criteria; "Refine search" takes them
+    // back to the form, which has to come back filled in, dropdowns included.
+    await page.goto(
+      `/games/search?title=${encodeURIComponent(FIXTURE.game.akaName)}&genre_id=${FIXTURE.genre.id}&screenshot=on`
+    );
+
+    const criteria = page.getByRole('list', { name: 'Search criteria' });
+    await expect(criteria).toContainText(FIXTURE.game.akaName);
+    await expect(criteria).toContainText(FIXTURE.genre.name);
+    await expect(criteria).toContainText('Screenshot');
+
+    // A yes/no criterion flips in place: the fixture game has a screenshot, so
+    // asking for the games without one drops it, and flipping back restores it.
+    await page.getByRole('link', { name: 'Screenshot: No' }).click();
+    await expect(page).toHaveURL(/screenshot=0/);
+    await expect(page.locator('#results').getByRole('link', { name: FIXTURE.game.name })).toHaveCount(0);
+    await page.getByRole('link', { name: 'Screenshot: Yes' }).click();
+    await expect(page).toHaveURL(/screenshot=1/);
+
+    await page.getByRole('link', { name: 'Refine search' }).click();
+
+    await expect(page).toHaveURL(/\/games\?/);
+    await expect(page.locator('#title')).toHaveValue(FIXTURE.game.akaName);
+    await expect(page.locator('#genre')).toBeHidden();
+    await expect(page.locator('#genre_id')).toHaveValue(String(FIXTURE.genre.id));
+    await expect(page.getByLabel('Screenshot')).toHaveValue('1');
+
+    // Swapping back to the free-text genre drops the id rather than posting both.
+    await page.locator('[data-dropdown-toggle="genre,genre_id"]').click();
+    await page.getByRole('button', { name: 'Search games' }).click();
+
+    await expect(page).not.toHaveURL(new RegExp(`genre_id=${FIXTURE.genre.id}`));
     await expect(
       page.locator('#results').getByRole('link', { name: FIXTURE.game.name }).first()
     ).toBeVisible();

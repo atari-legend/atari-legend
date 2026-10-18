@@ -6,7 +6,6 @@ use App\Models\Company;
 use App\Models\Crew;
 use App\Models\Engine;
 use App\Models\Game;
-use App\Models\GameRelease;
 use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
@@ -24,9 +23,6 @@ use Tests\TestCase;
  * and the boxes read them by name: `data-autocomplete-key` and
  * `data-autocomplete-id` in the search forms name the very keys asserted below,
  * so dropping or renaming one silently empties a dropdown.
- *
- * `ajax.release-years` is shaped differently - it matches a year prefix rather
- * than a name - so it is tested on its own at the end.
  */
 class AjaxEndpointsTest extends TestCase
 {
@@ -244,46 +240,5 @@ class AjaxEndpointsTest extends TestCase
             'Jochen Hippel [Wonderful Game 1, Wonderful Game 2, Wonderful…]',
             $label
         );
-    }
-
-    public function test_the_release_year_endpoint_is_routed(): void
-    {
-        $this->assertSame(url('/ajax/release-years.json'), route('ajax.release-years'));
-    }
-
-    public function test_the_release_year_endpoint_filters_on_the_year_typed_so_far(): void
-    {
-        foreach (['1988-05-02', '1989-11-30', '1992-01-01'] as $date) {
-            GameRelease::factory()->create(['date' => $date]);
-        }
-
-        $years = $this->getJson(route('ajax.release-years', ['q' => '198']))->assertOk()->json();
-
-        $this->assertSame(['1988', '1989'], array_column($years, 'year'));
-    }
-
-    /**
-     * `q` reaches a whereRaw(), so it has to arrive as a binding rather than be
-     * pasted into the SQL. Pasted, the first payload closes the quoted term and
-     * ors a true condition onto it - handing back every year in the database -
-     * and the second leaves a quote unbalanced, which is a syntax error rather
-     * than an empty dropdown.
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('injectionPayloads')]
-    public function test_the_release_year_endpoint_treats_the_query_as_data(string $payload): void
-    {
-        GameRelease::factory()->create(['date' => '1988-05-02']);
-
-        $this->getJson(route('ajax.release-years', ['q' => $payload]))
-            ->assertOk()
-            ->assertExactJson([]);
-    }
-
-    public static function injectionPayloads(): array
-    {
-        return [
-            'always true'      => ["1900' or '1' like '1"],
-            'unbalanced quote' => ["19'"],
-        ];
     }
 }

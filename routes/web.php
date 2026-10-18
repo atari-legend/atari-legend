@@ -8,7 +8,6 @@ use App\Http\Controllers\Ajax\GameAndSoftwareController;
 use App\Http\Controllers\Ajax\GameController as AjaxGameController;
 use App\Http\Controllers\Ajax\GenreController;
 use App\Http\Controllers\Ajax\IndividualController;
-use App\Http\Controllers\Ajax\ReleaseYearController;
 use App\Http\Controllers\Ajax\SoftwareController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\UserController;
@@ -125,7 +124,6 @@ Route::middleware(['verified', 'nondraft'])->group(function () {
     Route::name('ajax.')->group(function () {
         Route::prefix('/ajax')->group(function () {
             Route::get('companies.json', [CompanyController::class, 'companies'])->name('companies');
-            Route::get('release-years.json', [ReleaseYearController::class, 'releaseYears'])->name('release-years');
             Route::get('genres.json', [GenreController::class, 'genres'])->name('genres');
             Route::get('engines.json', [EngineController::class, 'engines'])->name('engines');
             Route::get('games.json', [AjaxGameController::class, 'games'])->name('games');

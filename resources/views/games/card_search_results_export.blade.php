@@ -9,6 +9,7 @@
              For more info regarding this plug in, visit the <a href="http://tabulator.info/">Tabulator website</a>.
         </p>
     </div>
+    @include('games.partial_search_criteria')
 
     <div class="card-body p-2">
         <button class="btn btn-primary me-2" id="download-csv">Download CSV</button>

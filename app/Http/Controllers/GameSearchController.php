@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Models\Company;
+use App\Models\Control;
 use App\Models\Engine;
 use App\Models\Game;
+use App\Models\GameSeries;
 use App\Models\Genre;
 use App\Models\Individual;
 use App\Models\MenuSoftware;
+use App\Models\ProgrammingLanguage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -17,6 +20,30 @@ use Illuminate\Support\Facades\DB;
 class GameSearchController extends Controller
 {
     const PAGE_SIZE = 48;
+
+    /**
+     * The yes/no criteria on what a game has, keyed on their query parameter:
+     * the relations of which at least one has to exist, and the label shown
+     * for it.
+     */
+    const FLAGS = [
+        'screenshot' => [['screenshots'], 'Screenshot'],
+        'boxscan'    => [['releases.boxscans'], 'Boxscan'],
+        'music'      => [['sndhs'], 'Music'],
+        'video'      => [['videos'], 'Video'],
+        'download'   => [['releases.medias.dumps'], 'Downloadable / playable'],
+        'review'     => [['reviews'], 'Review'],
+        'magazine'   => [['magazineIndices'], 'Magazine coverage'],
+        // A game is on a menu disk through one of its releases, or directly
+        // for the disks that carry something other than the game itself
+        // (docs, trainers, ...)
+        'menu'       => [['releases.menuDiskContents', 'menuDiskContents'], 'On a menu disk'],
+    ];
+
+    /**
+     * The choices of the minimum number of players.
+     */
+    const PLAYERS = [2, 3, 4];
 
     public function index()
     {
@@ -174,38 +201,82 @@ class GameSearchController extends Controller
             $softwareSearchPossible = false;
         }
 
-        if ($request->filled('review')) {
-            $games->has('reviews');
-            $searchPossible = true;
-            $softwareSearchPossible = false;
+        // Yes/no criteria: "1" (or a legacy checkbox's "on") keeps the games
+        // that have the thing, "0" the ones that don't. Both are filled.
+        foreach (self::FLAGS as $param => [$relations]) {
+            if ($request->filled($param)) {
+                if ($request->boolean($param)) {
+                    $games->where(function (Builder $query) use ($relations) {
+                        foreach ($relations as $relation) {
+                            $query->orHas($relation);
+                        }
+                    });
+                } else {
+                    foreach ($relations as $relation) {
+                        $games->doesntHave($relation);
+                    }
+                }
+                $searchPossible = true;
+                $softwareSearchPossible = false;
+            }
         }
 
-        if ($request->filled('download')) {
-            $games->whereHas('releases', function (Builder $query) {
-                $query->whereHas('medias', function (Builder $query2) {
-                    $query2->has('dumps');
-                });
+        if ($request->filled('year_from') || $request->filled('year_to')) {
+            // A single release in the range is enough
+            $games->whereHas('releases', function (Builder $query) use ($request) {
+                if ($request->filled('year_from')) {
+                    $query->whereYear('date', '>=', $request->input('year_from'));
+                }
+                if ($request->filled('year_to')) {
+                    $query->whereYear('date', '<=', $request->input('year_to'));
+                }
             });
             $searchPossible = true;
             $softwareSearchPossible = false;
         }
 
-        if ($request->filled('screenshot')) {
-            $games->has('screenshots');
+        if ($request->filled('series_id')) {
+            $games->where('games.game_series_id', $request->input('series_id'));
             $searchPossible = true;
             $softwareSearchPossible = false;
         }
 
-        if ($request->filled('boxscan')) {
-            $games->whereHas('releases', function (Builder $query) {
-                $query->has('boxscans');
+        if ($request->filled('programming_language_id')) {
+            $games->whereHas('programmingLanguages', function (Builder $query) use ($request) {
+                $query->where('programming_languages.id', $request->input('programming_language_id'));
             });
             $searchPossible = true;
             $softwareSearchPossible = false;
         }
 
-        if ($request->filled('music')) {
-            $games->has('sndhs');
+        if ($request->filled('control_id')) {
+            $games->whereHas('controls', function (Builder $query) use ($request) {
+                $query->where('controls.id', $request->input('control_id'));
+            });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
+        if ($request->filled('players')) {
+            // On the same machine, or across linked ones
+            $games->where(function (Builder $query) use ($request) {
+                $query->where('games.players_same_machine', '>=', $request->integer('players'))
+                    ->orWhere('games.players_multiple_machines', '>=', $request->integer('players'));
+            });
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
+        if ($request->filled('multiplayer')) {
+            $games->where('games.multiplayer_type', $request->input('multiplayer'));
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
+        if ($request->filled('license')) {
+            $games->whereHas('releases', function (Builder $query) use ($request) {
+                $query->where('license', $request->input('license'));
+            });
             $searchPossible = true;
             $softwareSearchPossible = false;
         }
@@ -248,23 +319,119 @@ class GameSearchController extends Controller
             return redirect()->route('games.show', $games->first());
         }
 
-        $referenceData = $this->getSearchReferenceData();
+        return view('games.search')->with([
+            'games'    => $games,
+            'title'    => $request->title,
+            'titleAZ'  => $request->titleAZ,
+            'export'   => $request->boolean('export'),
+            'software' => $software,
+            'criteria' => $this->getCriteria($request),
+        ]);
+    }
 
-        return view('games.search')->with(
-            array_merge($referenceData, [
-                'games'        => $games,
-                'title'        => $request->title,
-                'titleAZ'      => $request->titleAZ,
-                'publisher'    => $request->publisher,
-                'publisher_id' => $request->publisher_id,
-                'developer'    => $request->developer,
-                'developer_id' => $request->developer_id,
-                'year'         => $request->year,
-                'year_id'      => $request->year_id,
-                'export'       => $request->boolean('export'),
-                'software'     => $software,
-            ])
-        );
+    /**
+     * Describe the criteria a search was made with, so that the results page
+     * can show them.
+     *
+     * Each criterion comes with the query parameters that carry it, so that it
+     * can be removed from the search on its own. Criteria picked from a
+     * dropdown are resolved to their name rather than shown as an ID.
+     *
+     * @return array List of criteria, each with a `label`, a `value` (a bool
+     *               for the yes/no ones, which the results page can flip) and
+     *               the `params` that carry it
+     */
+    public function getCriteria(Request $request): array
+    {
+        $criteria = [];
+
+        $add = function (string $label, string|bool $value, array $params) use (&$criteria) {
+            $criteria[] = [
+                'label'  => $label,
+                'value'  => $value,
+                'params' => $params,
+            ];
+        };
+
+        if ($request->filled('titleAZ')) {
+            $add('Title starts with', $request->input('titleAZ'), ['titleAZ']);
+        }
+        if ($request->filled('title')) {
+            $add('Title', $request->input('title'), ['title']);
+        }
+
+        foreach (['publisher' => 'Publisher', 'developer' => 'Developer'] as $param => $label) {
+            if ($request->filled($param)) {
+                $add($label, $request->input($param), [$param]);
+            }
+            if ($request->filled("{$param}_id")) {
+                $add($label, Company::find($request->input("{$param}_id"))?->name ?? 'Unknown', ["{$param}_id"]);
+            }
+        }
+
+        if ($request->filled('individual_id') || $request->filled('individual_select')) {
+            $individual = Individual::find($request->individual_id ?? $request->individual_select);
+            $add('Involving', $individual?->name ?? 'Unknown', ['individual', 'individual_select', 'individual_id']);
+        }
+
+        if ($request->filled('year')) {
+            $add('Release year', $request->input('year'), ['year']);
+        }
+        if ($request->filled('year_id')) {
+            $add('Release year', $request->input('year_id'), ['year_id']);
+        }
+        if ($request->filled('year_from') || $request->filled('year_to')) {
+            $from = $request->input('year_from');
+            $to = $request->input('year_to');
+            $add('Release year', match (true) {
+                $from === $to => $from,
+                $to === null  => "{$from} or later",
+                $from === null => "{$to} or earlier",
+                default       => "{$from}–{$to}",
+            }, ['year_from', 'year_to']);
+        }
+
+        foreach (['genre' => [Genre::class, 'Genre'], 'engine' => [Engine::class, 'Engine']] as $param => [$model, $label]) {
+            if ($request->filled($param)) {
+                $add($label, $request->input($param), [$param]);
+            }
+            if ($request->filled("{$param}_id")) {
+                $add($label, $model::find($request->input("{$param}_id"))?->name ?? 'Unknown', ["{$param}_id"]);
+            }
+        }
+
+        $lookups = [
+            'series_id'               => [GameSeries::class, 'Series'],
+            'programming_language_id' => [ProgrammingLanguage::class, 'Programming language'],
+            'control_id'              => [Control::class, 'Controls'],
+        ];
+        foreach ($lookups as $param => [$model, $label]) {
+            if ($request->filled($param)) {
+                $add($label, $model::find($request->input($param))?->name ?? 'Unknown', [$param]);
+            }
+        }
+
+        if ($request->filled('players')) {
+            $add('Players', $request->integer('players') . ' or more', ['players']);
+        }
+        if ($request->filled('multiplayer')) {
+            $add('Multiplayer', $request->input('multiplayer'), ['multiplayer']);
+        }
+
+        foreach (self::FLAGS as $param => [, $label]) {
+            if ($request->filled($param)) {
+                $add($label, $request->boolean($param), [$param]);
+            }
+        }
+
+        if ($request->filled('license')) {
+            $add('License', $request->input('license'), ['license']);
+        }
+        if ($request->filled('ai')) {
+            $add('Uses AI', $request->boolean('ai'), ['ai']);
+        }
+
+        return $criteria;
     }
 
     /**
@@ -325,11 +492,14 @@ class GameSearchController extends Controller
             ->sortBy('name');
 
         return [
-            'companies'   => $companies,
-            'years'       => $years,
-            'genres'      => $genres,
-            'individuals' => $individuals,
-            'engines'     => $engines,
+            'companies'            => $companies,
+            'years'                => $years,
+            'genres'               => $genres,
+            'individuals'          => $individuals,
+            'engines'              => $engines,
+            'series'               => GameSeries::orderBy('name')->get(),
+            'programmingLanguages' => ProgrammingLanguage::orderBy('name')->get(),
+            'controls'             => Control::orderBy('name')->get(),
         ];
     }
 }

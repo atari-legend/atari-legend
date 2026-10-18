@@ -9,9 +9,28 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-dropdown-toggle]').forEach(el => {
         el.addEventListener('click', e => {
             el.dataset.dropdownToggle.split(',').forEach(id => {
-                document.querySelector(`#${id}`).classList.toggle('d-none');
+                const field = document.querySelector(`#${id}`);
+                field.classList.toggle('d-none');
+                // A hidden field is still submitted, and a refined search
+                // comes back with one of the pair filled: clear the one being
+                // hidden so it doesn't silently narrow the search
+                if (field.classList.contains('d-none')) {
+                    field.value = '';
+                    field.dispatchEvent(new Event('input'));
+                }
             });
             e.preventDefault();
         });
     });
+
+    // The individual is searched on the ID of the suggestion picked, held in
+    // a hidden companion. Typing over the name means that ID no longer
+    // matches what is shown
+    const individual = document.querySelector('#individual');
+    if (individual) {
+        individual.addEventListener('input', () => {
+            document.querySelectorAll(`input[name="${individual.dataset.autocompleteCompanion}"]`)
+                .forEach(companion => companion.value = '');
+        });
+    }
 });
