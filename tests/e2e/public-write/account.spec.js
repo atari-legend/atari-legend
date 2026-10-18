@@ -45,6 +45,8 @@ async function removeAvatar(page) {
   await expect(page.locator('#avatar-removed')).toHaveValue('on');
 
   await page.getByRole('button', { name: 'Update profile' }).click();
+  // Wait for the post to land: a goto issued while it is in flight cancels it.
+  await expect(page.getByRole('alert')).toContainText('Your profile has been updated');
 
   await page.goto('/profile');
   await expect(page.locator('#avatar-image')).toHaveCount(0);
@@ -81,6 +83,8 @@ test.describe('Profile', () => {
       await page.fill(field, '');
     }
     await page.getByRole('button', { name: 'Update profile' }).click();
+    // Wait for the post to land: a goto issued while it is in flight cancels it.
+    await expect(page.getByRole('alert')).toContainText('Your profile has been updated');
 
     await page.goto('/profile');
     await expect(page.locator('#website')).toHaveValue('');
@@ -108,6 +112,7 @@ test.describe('Profile', () => {
       buffer: PNG,
     });
     await page.getByRole('button', { name: 'Update profile' }).click();
+    await expect(page.getByRole('alert')).toContainText('Your profile has been updated');
 
     await page.goto('/profile');
     const avatar = page.locator('#avatar-image');
