@@ -771,8 +771,8 @@ class GameSearchTest extends TestCase
         \App\Models\MenuSoftware::factory()->named('Xtracker')->create();
 
         foreach (['year_from' => '1988', 'series_id' => 1, 'programming_language_id' => 1, 'control_id' => 1,
-            'players' => 2, 'multiplayer' => 'Simultaneous', 'license' => 'Commercial',
-            'video' => 1, 'magazine' => 1, 'menu' => 1, ] as $param => $value) {
+            'players'         => 2, 'multiplayer' => 'Simultaneous', 'license' => 'Commercial',
+            'video'           => 1, 'magazine' => 1, 'menu' => 1, ] as $param => $value) {
             $this->assertCount(
                 0,
                 $this->search(['title' => 'Xtracker', $param => $value])->viewData('software'),

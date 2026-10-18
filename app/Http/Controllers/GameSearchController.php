@@ -384,10 +384,10 @@ class GameSearchController extends Controller
             $from = $request->input('year_from');
             $to = $request->input('year_to');
             $add('Release year', match (true) {
-                $from === $to => $from,
-                $to === null  => "{$from} or later",
+                $from === $to  => $from,
+                $to === null   => "{$from} or later",
                 $from === null => "{$to} or earlier",
-                default       => "{$from}–{$to}",
+                default        => "{$from}–{$to}",
             }, ['year_from', 'year_to']);
         }
 
