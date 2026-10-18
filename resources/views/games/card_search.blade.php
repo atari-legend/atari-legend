@@ -218,7 +218,7 @@
                             </div>
                         </div>
                     </div>
-                    @include('games.partial_search_yesno', ['param' => 'ai', 'label' => 'Uses AI'])
+                    @include('games.partial_search_yesno', ['param' => 'ai', 'label' => 'Made with AI'])
                 </div>
                 <div class="row mb-3">
                     <div class="col offset-5 offset-sm-4 offset-md-3">

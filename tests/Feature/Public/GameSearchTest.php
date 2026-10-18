@@ -300,18 +300,18 @@ class GameSearchTest extends TestCase
         $this->assertSame(['With music'], $this->names(['music' => 1]));
     }
 
-    public function test_games_can_be_filtered_on_using_ai_or_not(): void
+    public function test_games_can_be_filtered_on_made_with_ai_or_not(): void
     {
-        Game::factory()->named('Ported')->create(['uses_ai' => true]);
+        Game::factory()->named('Ported')->create(['made_with_ai' => true]);
         Game::factory()->named('Hand made')->create();
 
         $this->assertSame(['Ported'], $this->names(['ai' => 1]));
         $this->assertSame(['Hand made'], $this->names(['ai' => 0]));
     }
 
-    public function test_a_game_using_ai_carries_the_robot_in_the_results(): void
+    public function test_a_game_made_with_ai_carries_the_robot_in_the_results(): void
     {
-        Game::factory()->named('Ported')->create(['uses_ai' => true]);
+        Game::factory()->named('Ported')->create(['made_with_ai' => true]);
         Game::factory()->named('Hand made')->create();
 
         $this->search(['ai' => 1])->assertSee('fa-robot', false);
@@ -341,7 +341,7 @@ class GameSearchTest extends TestCase
      */
     public function test_an_empty_ai_choice_is_not_a_criterion(): void
     {
-        Game::factory()->named('Ported')->create(['uses_ai' => true]);
+        Game::factory()->named('Ported')->create(['made_with_ai' => true]);
 
         $this->assertSame([], $this->names(['ai' => '']));
     }
@@ -434,7 +434,7 @@ class GameSearchTest extends TestCase
                 ['Developer', 'The Bitmap Brothers'],
                 ['Genre', 'Shoot-em-up'],
                 ['Screenshot', true],
-                ['Uses AI', false],
+                ['Made with AI', false],
             ],
             array_map(fn ($c) => [$c['label'], $c['value']], $criteria)
         );

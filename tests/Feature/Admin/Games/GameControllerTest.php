@@ -163,25 +163,25 @@ class GameControllerTest extends AdminTestCase
         $game = Game::factory()->named('Xenon')->create();
 
         $this->post(route('admin.games.games.update.base-info', $game), $this->payload([
-            'uses_ai'  => '1',
-            'ai_notes' => 'Ported from the 2600 version',
+            'made_with_ai' => '1',
+            'ai_notes'     => 'Ported from the 2600 version',
         ]))->assertRedirect(route('admin.games.games.edit', $game));
 
         $game->refresh();
-        $this->assertTrue($game->uses_ai);
+        $this->assertTrue($game->made_with_ai);
         $this->assertSame('Ported from the 2600 version', $game->ai_notes);
     }
 
     /**
      * An unticked checkbox is not posted, which has to clear the flag.
      */
-    public function test_unticking_uses_ai_clears_it(): void
+    public function test_unticking_made_with_ai_clears_it(): void
     {
-        $game = Game::factory()->named('Xenon')->create(['uses_ai' => true]);
+        $game = Game::factory()->named('Xenon')->create(['made_with_ai' => true]);
 
         $this->post(route('admin.games.games.update.base-info', $game), $this->payload());
 
-        $this->assertFalse($game->fresh()->uses_ai);
+        $this->assertFalse($game->fresh()->made_with_ai);
     }
 
     public function test_multiplayer_details_are_saved(): void

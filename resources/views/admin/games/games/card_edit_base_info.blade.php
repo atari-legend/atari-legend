@@ -142,9 +142,9 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" name="uses_ai" id="uses_ai" value="1"
-                                @if (old('uses_ai', $game->uses_ai ?? false)) checked @endif>
-                            <label class="form-check-label" for="uses_ai">Uses AI</label>
+                            <input class="form-check-input" type="checkbox" name="made_with_ai" id="made_with_ai" value="1"
+                                @if (old('made_with_ai', $game->made_with_ai ?? false)) checked @endif>
+                            <label class="form-check-label" for="made_with_ai">Made with AI</label>
                         </div>
                         <label for="ai_notes" class="form-label">AI notes</label>
                         <textarea class="form-control @error('ai_notes') is-invalid @enderror" rows="3"

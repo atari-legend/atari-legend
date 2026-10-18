@@ -173,7 +173,7 @@
             </div>
         @endif
 
-        @if ($game->uses_ai)
+        @if ($game->made_with_ai)
             <div class="row p-2 g-0">
                 <div class="col-4 text-muted">
                     AI
@@ -181,7 +181,7 @@
                 <div class="col-8">
                     <div class="mb-1">
                         <i class="fas fa-robot text-muted" title="Artificial Intelligence"></i>
-                        <a href="{{ route('games.search', ['ai' => 1]) }}">Uses AI</a>
+                        <a href="{{ route('games.search', ['ai' => 1]) }}">Made with AI</a>
                     </div>
                     @if ($game->ai_notes)
                         <div class="mb-1"><small class="text-muted">{!! nl2br(e($game->ai_notes)) !!}</small></div>

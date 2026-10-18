@@ -445,12 +445,12 @@ test.describe('Games search form', () => {
 
   test('searches on the license, AI and coverage dropdowns as rendered', async ({ page }) => {
     // One dropdown from each of the other sections. The seeded game has a
-    // commercial release, does not use AI and is in a magazine's index.
+    // commercial release, is not made with AI and is in a magazine's index.
     await page.goto('/games');
 
     await page.locator('#title').fill(FIXTURE.game.akaName);
     await page.getByLabel('License').selectOption('Commercial');
-    await page.getByLabel('Uses AI').selectOption({ label: 'No' });
+    await page.getByLabel('Made with AI').selectOption({ label: 'No' });
     await page.getByLabel('Magazine coverage').selectOption({ label: 'Yes' });
     await page.getByRole('button', { name: 'Search games' }).click();
 

@@ -153,23 +153,23 @@ class GamePageTest extends TestCase
     /**
      * The notes are free text typed in the admin, so they are escaped.
      */
-    public function test_a_game_using_ai_shows_it_with_its_notes(): void
+    public function test_a_game_made_with_ai_shows_it_with_its_notes(): void
     {
-        $game = Game::factory()->create(['uses_ai' => true, 'ai_notes' => 'Ported with <b>help</b>']);
+        $game = Game::factory()->create(['made_with_ai' => true, 'ai_notes' => 'Ported with <b>help</b>']);
 
         $this->get(route('games.show', $game))
             ->assertOk()
-            ->assertSee('Uses AI')
+            ->assertSee('Made with AI')
             ->assertSee('Ported with &lt;b&gt;help&lt;/b&gt;', false);
     }
 
-    public function test_a_game_not_using_ai_does_not_mention_it(): void
+    public function test_a_game_not_made_with_ai_does_not_mention_it(): void
     {
         $game = Game::factory()->create(['ai_notes' => 'Left over']);
 
         $this->get(route('games.show', $game))
             ->assertOk()
-            ->assertDontSee('Uses AI')
+            ->assertDontSee('Made with AI')
             ->assertDontSee('Left over');
     }
 

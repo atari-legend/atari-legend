@@ -286,7 +286,7 @@ class GameSearchController extends Controller
 
         if ($request->filled('ai')) {
             // Both ways: "0" is filled, and finds the games that do not
-            $games->where('games.uses_ai', $request->boolean('ai'));
+            $games->where('games.made_with_ai', $request->boolean('ai'));
             $searchPossible = true;
             $softwareSearchPossible = false;
         }
@@ -431,7 +431,7 @@ class GameSearchController extends Controller
             $add('License', $request->input('license'), ['license']);
         }
         if ($request->filled('ai')) {
-            $add('Uses AI', $request->boolean('ai'), ['ai']);
+            $add('Made with AI', $request->boolean('ai'), ['ai']);
         }
 
         return $criteria;
