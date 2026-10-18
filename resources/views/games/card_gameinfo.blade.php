@@ -173,6 +173,23 @@
             </div>
         @endif
 
+        @if ($game->uses_ai)
+            <div class="row p-2 g-0">
+                <div class="col-4 text-muted">
+                    AI
+                </div>
+                <div class="col-8">
+                    <div class="mb-1">
+                        <i class="fas fa-robot text-muted" title="Artificial Intelligence"></i>
+                        <a href="{{ route('games.search', ['ai' => 1]) }}">Uses AI</a>
+                    </div>
+                    @if ($game->ai_notes)
+                        <div class="mb-1"><small class="text-muted">{!! nl2br(e($game->ai_notes)) !!}</small></div>
+                    @endif
+                </div>
+            </div>
+        @endif
+
         @if ($game->gameProgressSystem !== null)
             <div class="row p-2 g-0">
                 <div class="col-4 text-muted">

@@ -17,6 +17,11 @@ class Game extends Model
         'name', 'slug', 'port_id', 'game_progress_system_id', 'game_series_id',
         'players_same_machine', 'players_multiple_machines',
         'multiplayer_type', 'multiplayer_hardware',
+        'uses_ai', 'ai_notes',
+    ];
+
+    protected $casts = [
+        'uses_ai' => 'boolean',
     ];
 
     /**

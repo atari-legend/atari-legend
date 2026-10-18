@@ -160,6 +160,16 @@
                 </div>
             </div>
             <div class="row mb-3">
+                <label for="ai" class="col-4 col-sm-3 col-form-label text-nowrap">Uses AI</label>
+                <div class="col">
+                    <select class="form-select" id="ai" name="ai">
+                        <option value="">-</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
                 <div class="col-4 col-sm-3 col-form-label text-nowrap"></div>
                 <div class="col">
                     <div class="form-check">

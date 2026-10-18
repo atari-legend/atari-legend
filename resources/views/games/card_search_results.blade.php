@@ -120,6 +120,9 @@
                     @if ($game->releases->pluck('medias')->flatten()->pluck('dumps')->isNotEmpty())
                         <i class="far fa-save fa-fw mt-1" title="as downloads"></i>
                     @endif
+                    @if ($game->uses_ai)
+                        <i class="fas fa-robot fa-fw mt-1" title="Uses AI"></i>
+                    @endif
                     @if ($game->emulator_url !== null)
                         <a href="{{ $game->emulator_url }}" title="Play in the emulator" aria-label="Play {{ $game->name }} in the emulator">
                             <i class="fas fa-play fa-fw mt-1"></i>

@@ -210,6 +210,13 @@ class GameSearchController extends Controller
             $softwareSearchPossible = false;
         }
 
+        if ($request->filled('ai')) {
+            // Both ways: "0" is filled, and finds the games that do not
+            $games->where('games.uses_ai', $request->boolean('ai'));
+            $searchPossible = true;
+            $softwareSearchPossible = false;
+        }
+
         if (! $searchPossible) {
             // Force no game results when there were no search
             // constraints

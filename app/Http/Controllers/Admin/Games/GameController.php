@@ -163,6 +163,9 @@ class GameController extends Controller
             'port_id'                 => $request->port,
             'game_progress_system_id' => $request->progress,
             'game_series_id'          => $request->series,
+            // An unticked checkbox is not posted at all
+            'uses_ai'                 => $request->boolean('uses_ai'),
+            'ai_notes'                => $request->ai_notes,
         ]);
 
         $game->genres()->detach();

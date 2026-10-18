@@ -140,6 +140,23 @@
                             </span>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="uses_ai" id="uses_ai" value="1"
+                                @if (old('uses_ai', $game->uses_ai ?? false)) checked @endif>
+                            <label class="form-check-label" for="uses_ai">Uses AI</label>
+                        </div>
+                        <label for="ai_notes" class="form-label">AI notes</label>
+                        <textarea class="form-control @error('ai_notes') is-invalid @enderror" rows="3"
+                            name="ai_notes" id="ai_notes">{{ old('ai_notes', $game->ai_notes ?? '') }}</textarea>
+                        <div class="form-text">How AI was used (whole port, assisted, …), and whether the author confirmed it or it is assumed</div>
+
+                        @error('ai_notes')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col">
@@ -157,25 +174,23 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>
-            </div>
 
-            <div class="mb-3 row row-cols-2">
-                <div class="mb-3">
-                    <label for="series" class="form-label">Series</label>
-                    <select class="form-select @error('series') is-invalid @enderror" name="series">
-                        <option value="">-</option>
-                        @foreach ($series as $serie)
-                            <option value="{{ $serie->id }}" @if (isset($game) && $game->gameSeries?->id === $serie->id) selected @endif>{{ $serie->name }}</option>
-                        @endforeach
-                    </select>
-                    <div class="form-text"><a href="{{ route('admin.games.series.index') }}">Edit series</a></div>
+                    <div class="mt-3 mb-3">
+                        <label for="series" class="form-label">Series</label>
+                        <select class="form-select @error('series') is-invalid @enderror" name="series">
+                            <option value="">-</option>
+                            @foreach ($series as $serie)
+                                <option value="{{ $serie->id }}" @if (isset($game) && $game->gameSeries?->id === $serie->id) selected @endif>{{ $serie->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="form-text"><a href="{{ route('admin.games.series.index') }}">Edit series</a></div>
 
-                    @error('series')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                        @error('series')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
