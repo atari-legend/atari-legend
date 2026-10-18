@@ -8,6 +8,7 @@ use App\Models\Control;
 use App\Models\Dump;
 use App\Models\Engine;
 use App\Models\Game;
+use App\Models\GameComment;
 use App\Models\GameRelease;
 use App\Models\GameSeries;
 use App\Models\GameVideo;
@@ -315,6 +316,24 @@ class GameSearchTest extends TestCase
 
         $this->search(['ai' => 1])->assertSee('fa-robot', false);
         $this->search(['ai' => 0])->assertDontSee('fa-robot', false);
+    }
+
+    public function test_the_results_overlay_the_score_and_comments_count(): void
+    {
+        $rated = Game::factory()->named('Xenon')->create();
+        GameVote::factory()->scored(4)->create(['game_id' => $rated->getKey()]);
+        GameVote::factory()->scored(2)->create(['game_id' => $rated->getKey()]);
+        GameComment::factory()->count(2)->create(['game_id' => $rated->getKey()]);
+
+        Game::factory()->named('Xenophobe')->create();
+
+        $response = $this->search(['title' => 'Xen'])
+            ->assertSee('title="2 comments"', false)
+            ->assertSeeInOrder(['fa-star', '3.75']);
+
+        // Only the rated and commented game carries them
+        $this->assertSame(1, substr_count($response->getContent(), 'fa-star'));
+        $this->assertSame(1, substr_count($response->getContent(), 'fa-comment'));
     }
 
     /**

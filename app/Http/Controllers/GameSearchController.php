@@ -63,7 +63,10 @@ class GameSearchController extends Controller
     {
         $games = Game::select('games.*')
             // The results walk them for the play overlay and the dumps icon
-            ->with('releases.medias.dumps');
+            ->with('releases.medias.dumps')
+            // For the score and comments overlaid on the screenshots
+            ->withAvg('votes', 'score')
+            ->withCount('comments');
         $software = MenuSoftware::select('menu_software.*');
 
         // Boolean to check if a search on software can be made

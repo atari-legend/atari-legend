@@ -12,11 +12,21 @@
             @foreach ($games as $game)
                 <div class="col-4 text-center p-3 align-self-top">
 
-                    <a href="{{ route('games.show', ['game' => $game]) }}">
+                    <a href="{{ route('games.show', ['game' => $game]) }}" class="d-block position-relative mb-2">
                         @if ($game->screenshots->isNotEmpty())
-                            <img class="w-100 mb-2 bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
+                            <img class="w-100 d-block bg-dark" src="{{ $game->screenshots->random()->getUrlRoute('game', $game) }}" alt="Screenshot of {{ $game->name }}" loading="lazy">
                         @else
-                            <img class="w-100 mb-2 bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->name }}" loading="lazy">
+                            <img class="w-100 d-block bg-black" width="1209" height="756" src="{{ asset('images/no-screenshot.svg') }}" alt="No screenshot for {{ $game->name }}" loading="lazy">
+                        @endif
+                        @if ($game->comments_count > 0)
+                            <span class="badge bg-primary-dark bg-opacity-75 text-shadow position-absolute bottom-0 start-0 m-1" title="{{ $game->comments_count }} {{ Str::plural('comment', $game->comments_count) }}">
+                                <i class="fas fa-comment"></i> {{ $game->comments_count }}
+                            </span>
+                        @endif
+                        @if ($game->votes_avg_score !== null)
+                            <span class="badge bg-primary-dark bg-opacity-75 text-shadow position-absolute bottom-0 end-0 m-1" title="Score">
+                                <i class="fas fa-star"></i> {{ number_format(GameHelper::normalizeScore((float) $game->votes_avg_score), 2) }}
+                            </span>
                         @endif
                     </a>
 
