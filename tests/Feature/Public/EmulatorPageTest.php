@@ -45,7 +45,7 @@ class EmulatorPageTest extends TestCase
     /**
      * The resolution the emulator page starts a release in.
      *
-     * @param string[] $resolutions Names of the release's resolutions
+     * @param  string[]  $resolutions  Names of the release's resolutions
      * @return string|null Value of the page's data-resolution attribute, or null without one
      */
     private function startResolution(array $resolutions): ?string
